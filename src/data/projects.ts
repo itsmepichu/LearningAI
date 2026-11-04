@@ -6,6 +6,8 @@ export interface DatasetFile { file: string; what: string; notes: string }
 export interface Project {
   id: ProjectId
   label: string
+  /** One word for the phone top bar. */
+  short: string
   kind: string
   company: string
   assistant: string

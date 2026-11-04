@@ -79,7 +79,7 @@ export function ChapterPage() {
           {WWW.map(([k, label]) =>
             ch.www[k] ? (
               <div key={k}>
-                <h4>{label}</h4>
+                <h2 className="as-h4">{label}</h2>
                 <p dangerouslySetInnerHTML={{ __html: ch.www[k]!.replace(/^<p>|<\/p>$/g, '') }} />
               </div>
             ) : null,

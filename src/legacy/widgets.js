@@ -74,8 +74,8 @@ try{
     tool:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>'};
   const I=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ic[k]}</svg>`;
   ROOT.querySelectorAll('.www').forEach(w=>['what','why','where'].forEach((k,j)=>{const h=w.children[j]&&w.children[j].querySelector('h4');if(h)h.insertAdjacentHTML('afterbegin',I(k))}));
-  ROOT.querySelectorAll('.box>h5').forEach(h=>{const b=h.parentElement,k=b.classList.contains('example')?'example':b.classList.contains('lab')?'lab':b.classList.contains('pit')?'pit':'info';if(k==='info'){b.style.setProperty('--hc','var(--accent)');b.style.setProperty('--hs','var(--accent-soft)')}h.insertAdjacentHTML('afterbegin',`<span class="ico">${I(k)}</span>`)});
-  ROOT.querySelectorAll('.tools>h3').forEach(h=>h.insertAdjacentHTML('afterbegin',I('tool')));
+  ROOT.querySelectorAll('.box>h5,.box>.as-h5').forEach(h=>{const b=h.parentElement,k=b.classList.contains('example')?'example':b.classList.contains('lab')?'lab':b.classList.contains('pit')?'pit':'info';if(k==='info'){b.style.setProperty('--hc','var(--accent)');b.style.setProperty('--hs','var(--accent-soft)')}h.insertAdjacentHTML('afterbegin',`<span class="ico">${I(k)}</span>`)});
+  ROOT.querySelectorAll('.tools>h3,.tools>.as-h3').forEach(h=>h.insertAdjacentHTML('afterbegin',I('tool')));
   ROOT.querySelectorAll('section.chapter').forEach(ch=>{const n=ch.querySelector('.ch-num'),h=ch.querySelector('.ch-head h2');if(!n||!h)return;const k=document.createElement('span');k.className='kicker';const t=ch.querySelectorAll('article.topic').length;k.textContent=(ch.id==='capstone'?'Appendix C · capstone project':ch.id.startsWith('app-')?'Appendix '+n.textContent:'Chapter '+n.textContent+(t?' · '+t+' topics':''));h.before(k)});
   /* code copy buttons */
   ROOT.querySelectorAll('pre').forEach(p=>{const w=document.createElement('div');w.className='codewrap';p.before(w);w.appendChild(p);const b=document.createElement('button');b.type='button';b.className='copy';b.textContent='Copy';w.appendChild(b);
@@ -105,7 +105,7 @@ try{
         n:{q:'Is the input or output open-ended language (free text, drafting, extraction, conversation)?',y:{r:'LLM with validation and rules',d:'Use an LLM for the language part, validate outputs against schemas, and keep business rules in code (chapter 7).'},n:{r:'Reconsider the problem',d:'None of the standard fits apply. Clarify the decision being made, the data available and how success is measured before choosing a technique.'}}}}};
   let path=[];function node(){let n=T;for(const a of path)n=n[a];return n}
   function render(){const n=node();let h='<div style="display:grid;gap:8px">';let m=T;path.forEach(a=>{h+=`<div style="font-size:.9rem;color:var(--muted)">${esc(m.q)} <b style="color:var(--ink)">${a==='y'?'Yes':'No'}</b></div>`;m=m[a]});
-    if(n.r)h+=`<div class="box" style="margin:0;border-color:var(--ok)"><h5 style="color:var(--ok)">Recommendation</h5><p><b style="font-family:var(--f-display);font-size:1.1rem">${n.r}</b></p><p>${n.d}</p></div>`;
+    if(n.r)h+=`<div class="box" style="margin:0;border-color:var(--ok)"><div class="as-h5" style="color:var(--ok)">Recommendation</div><p><b style="font-family:var(--f-display);font-size:1.1rem">${n.r}</b></p><p>${n.d}</p></div>`;
     else h+=`<div style="font-family:var(--f-display);font-weight:600">${esc(n.q)}</div><div class="ctl"><button class="btn primary" type="button" data-v="y">Yes</button><button class="btn" type="button" data-v="n">No</button></div>`;
     h+=path.length?'<div><button class="btn" type="button" data-v="r">Start over</button></div>':'';el.innerHTML=h+'</div>'}
   el.addEventListener('click',e=>{const v=e.target.dataset.v;if(!v)return;if(v==='r')path=[];else path.push(v);render()});render()})();
@@ -463,7 +463,7 @@ try{
   const stop=new Set('to your the then and or is are a an of in on at can be if that when you my me i it this for with'.split(' '));const tk=s=>s.toLowerCase().replace(/[^a-z0-9\- ]/g,' ').split(/\s+/).filter(w=>w&&!stop.has(w)).map(w=>w.replace(/s$/,''));
   const docs=D.map(tk),N=docs.length,avg=docs.reduce((s,d)=>s+d.length,0)/N,df={};docs.forEach(d=>new Set(d).forEach(t=>df[t]=(df[t]||0)+1));const k1=1.2,b=.75;
   function r(){const q=[...new Set(tk($('bmQ').value))];const sc=docs.map((d,i)=>{let s=0;const m=[];q.forEach(t=>{const f=d.filter(x=>x===t).length;if(!f)return;const idf=Math.log(1+(N-df[t]+.5)/(df[t]+.5));s+=idf*f*(k1+1)/(f+k1*(1-b+b*d.length/avg));m.push(t)});return{i,s,m}}).sort((a,b)=>b.s-a.s);
-    $('bmTbl').innerHTML='<tr><th>Rank</th><th>Doc</th><th>BM25</th><th>Text (matched terms)</th></tr>'+sc.map((x,r)=>`<tr style="${x.s?'':'opacity:.45'}"><td>${x.s?r+1:'–'}</td><td>d${x.i+1}</td><td>${fN(x.s,2)}</td><td>${esc(D[x.i]).replace(new RegExp('\\b('+x.m.map(t=>t.replace(/[-]/g,'\\-')).join('|')+')\\w*','gi'),m=>x.m.length?`<b style="color:var(--accent)">${m}</b>`:m)}</td></tr>`).join('');
+    $('bmTbl').innerHTML='<tr><th>Rank</th><th>Doc</th><th>BM25</th><th>Text (matched terms)</th></tr>'+sc.map((x,r)=>`<tr style="${x.s?'':'color:var(--muted)'}"><td>${x.s?r+1:'–'}</td><td>d${x.i+1}</td><td>${fN(x.s,2)}</td><td>${esc(D[x.i]).replace(new RegExp('\\b('+x.m.map(t=>t.replace(/[-]/g,'\\-')).join('|')+')\\w*','gi'),m=>x.m.length?`<b style="color:var(--accent)">${m}</b>`:m)}</td></tr>`).join('');
     $('bmIdx').textContent='Inverted index for query terms (term → posting list):\n'+(q.length?q.map(t=>`${t.padEnd(10)} → ${df[t]?docs.map((d,i)=>d.includes(t)?`d${i+1}(tf=${d.filter(x=>x===t).length})`:null).filter(Boolean).join(', ')+`   df=${df[t]}  idf=${fN(Math.log(1+(N-df[t]+.5)/(df[t]+.5)),2)}`:'(not in index: no keyword match possible)'}`).join('\n'):'(empty query)')}
   $('bmQ').addEventListener('input',r);r()})();
 
@@ -666,13 +666,13 @@ try{
 /* ===== 13.3 LoRA calculator + 13.4 shapes ===== */
 (function(){if(!$('loK'))return;const M={q:[4096,4096],k:[4096,1024],v:[4096,1024],o:[4096,4096],gate:[4096,14336],up:[4096,14336],down:[14336,4096]},sets={qv:['q','v'],attn:['q','k','v','o'],all:Object.keys(M)};
   function r(){const rk=+$('loR').value,ms=sets[$('loT').value];const per=ms.reduce((s,m)=>s+rk*(M[m][0]+M[m][1]),0),tot=per*32;kpis('loK',[['trainable parameters',fS(tot,1)],['share of 8.03B base',fN(tot/8.03e9*100,3)+'%'],['adapter file (BF16)',fB(tot*2)],['optimizer + grads for adapter (~16 B/param)',fB(tot*16)],['matrices adapted',ms.length*32]])}bind(['loR','loT'],r);
-  const f=$('ftShapes');if(f)f.innerHTML=`<div class="card"><h5>Extraction record</h5><pre><code>{"messages":[
+  const f=$('ftShapes');if(f)f.innerHTML=`<div class="card"><div class="as-h5">Extraction record</div><pre><code>{"messages":[
  {"role":"system","content":"Extract fields; use null if absent."},
  {"role":"user","content":"&lt;contract text…&gt;"},
  {"role":"assistant","content":"{\\"party_a\\":\\"Acme GmbH\\",
    \\"termination_notice_days\\":null,
    \\"governing_law\\":\\"Germany\\"}"}]}</code></pre></div>
-<div class="card"><h5>Tool-use record</h5><pre><code>{"messages":[
+<div class="card"><div class="as-h5">Tool-use record</div><pre><code>{"messages":[
  {"role":"user","content":"Status of A-1043?"},
  {"role":"assistant","tool_calls":[{"name":"get_order",
    "arguments":{"order_id":"A-1043"}}]},
@@ -866,7 +866,7 @@ try{
 /* ===== 17.4 AI panels ===== */
 (function(){const el=$('aiPanels');if(!el)return;const P=[['Task success (feedback)','%',[78,79,77,80,79,78,80,79,74,72,73,76,78,79],70,'min'],['Groundedness (judge sample)','%',[96,95,96,96,95,96,96,95,90,89,90,93,95,96],92,'min'],['Schema validation failures','%',[.3,.2,.4,.3,.3,.2,.3,.3,2.1,2.4,1.9,.8,.4,.3],1,'max'],['Zero-result retrievals','%',[2.1,2.3,2.0,2.2,2.4,2.1,2.2,2.6,2.3,2.2,2.5,2.4,2.3,2.2],4,'max'],['Tool errors','%',[.8,.9,.7,.8,1.0,.8,.9,.8,.9,1.1,.9,.8,.8,.9],2,'max'],['Escalation to human','%',[6.1,6.0,6.3,5.9,6.2,6.0,6.1,6.2,8.4,8.9,8.1,7.0,6.4,6.2],8,'max']];
   function r(){el.innerHTML=P.map(([t,u,d,th,dir])=>{const mn=Math.min(...d,th)*.95,mx=Math.max(...d,th)*1.05,X=i=>6+i*(188/13),Y=v=>70-(v-mn)/(mx-mn)*60;const last=d[d.length-1],bad=dir==='min'?d.some(v=>v<th):d.some(v=>v>th);
-    return `<div class="card"><h5 style="font-size:.82rem">${t}</h5><div style="font-family:var(--f-mono);font-size:1.1rem">${last}${u}</div><svg viewBox="0 0 200 80" style="margin-top:4px"><line x1="${X(8)}" y1="5" x2="${X(8)}" y2="75" class="ln dash"/><text x="${X(8)+3}" y="13" class="xs mut" style="font-size:8px">model update</text><line x1="0" y1="${Y(th)}" x2="200" y2="${Y(th)}" class="lnb dash" style="stroke-width:1"/><path d="M${X(0)} 75 ${d.map((v,i)=>'L'+X(i)+' '+Y(v)).join(' ')} L${X(13)} 75Z" class="fas" style="opacity:.6"/><path d="${d.map((v,i)=>(i?'L':'M')+X(i)+' '+Y(v)).join(' ')}" class="lna"/><circle cx="${X(13)}" cy="${Y(last)}" r="3" class="fa"/></svg><span style="font-family:var(--f-mono);font-size:.68rem;color:${bad?'var(--bad)':'var(--ok)'}">${bad?'breached threshold in window':'within threshold'}</span></div>`}).join('')}r()})();
+    return `<div class="card"><div class="as-h5" style="font-size:.82rem">${t}</div><div style="font-family:var(--f-mono);font-size:1.1rem">${last}${u}</div><svg viewBox="0 0 200 80" style="margin-top:4px"><line x1="${X(8)}" y1="5" x2="${X(8)}" y2="75" class="ln dash"/><text x="${X(8)+3}" y="13" class="xs mut" style="font-size:8px">model update</text><line x1="0" y1="${Y(th)}" x2="200" y2="${Y(th)}" class="lnb dash" style="stroke-width:1"/><path d="M${X(0)} 75 ${d.map((v,i)=>'L'+X(i)+' '+Y(v)).join(' ')} L${X(13)} 75Z" class="fas" style="opacity:.6"/><path d="${d.map((v,i)=>(i?'L':'M')+X(i)+' '+Y(v)).join(' ')}" class="lna"/><circle cx="${X(13)}" cy="${Y(last)}" r="3" class="fa"/></svg><span style="font-family:var(--f-mono);font-size:.68rem;color:${bad?'var(--bad)':'var(--ok)'}">${bad?'breached threshold in window':'within threshold'}</span></div>`}).join('')}r()})();
 
 
 }catch(e){console.error("legacy widget: 17.4 AI panels",e)}
@@ -1038,7 +1038,7 @@ try{
 (function(){if(!$('rcTbl'))return;const rel={P1:3,P4:2,P7:1},R={'Lexical (BM25)':['P1','P3','P9','P7','P2','P5','P8','P6'],'Dense':['P4','P2','P6','P1','P5','P3','P7','P8'],'Hybrid + rerank':['P1','P4','P2','P7','P3','P6','P5','P9']};
   const T={P1:'Germany parental leave policy §3',P2:'Parental leave overview (all countries)',P3:'German holiday calendar',P4:'"How much time off when I have a baby?" FAQ (DE)',P5:'UK shared parental leave',P6:'Childcare expenses',P7:'Elterngeld payment explainer',P8:'Payroll dates 2026',P9:'Leave request form (DE)'};
   function m(list,k,exp){const g=v=>exp?2**v-1:v,top=list.slice(0,k),hits=top.filter(d=>rel[d]).length,first=list.findIndex(d=>rel[d]),dcg=top.reduce((s,d,i)=>s+g(rel[d]||0)/Math.log2(i+2),0),ideal=Object.values(rel).sort((a,b)=>b-a).slice(0,k).reduce((s,v,i)=>s+g(v)/Math.log2(i+2),0);return{rec:hits/3,prec:hits/k,rr:first<0?0:1/(first+1),ndcg:dcg/ideal}}
-  function r(){const k=val('rcK');setO('rcK',k);$('rcCols').innerHTML=Object.entries(R).map(([n,l])=>`<div class="card"><h5>${n}</h5><ol style="margin:4px 0 0;padding-left:1.3em;font-size:.82rem">${l.map((d,i)=>`<li style="${i<k?'':'opacity:.45'};${rel[d]?'color:var(--ok);font-weight:600':''}">${d} ${T[d]}${rel[d]?' · grade '+rel[d]:''}</li>`).join('')}</ol></div>`).join('');
+  function r(){const k=val('rcK');setO('rcK',k);$('rcCols').innerHTML=Object.entries(R).map(([n,l])=>`<div class="card"><div class="as-h5">${n}</div><ol style="margin:4px 0 0;padding-left:1.3em;font-size:.82rem">${l.map((d,i)=>`<li style="${i<k?'':'opacity:.45'};${rel[d]?'color:var(--ok);font-weight:600':''}">${d} ${T[d]}${rel[d]?' · grade '+rel[d]:''}</li>`).join('')}</ol></div>`).join('');
     $('rcTbl').innerHTML=`<tr><th>Retriever</th><th>Recall@${k}</th><th>Precision@${k}</th><th>RR</th><th>nDCG@${k} linear</th><th>nDCG@${k} 2^rel−1</th></tr>`+Object.entries(R).map(([n,l])=>{const a=m(l,k,false),b=m(l,k,true);return`<tr><td>${n}</td><td>${fN(a.rec*100)}%</td><td>${fN(a.prec*100)}%</td><td>${fN(a.rr,2)}</td><td>${fN(a.ndcg,3)}</td><td>${fN(b.ndcg,3)}</td></tr>`}).join('')}bind(['rcK'],r)})();
 
 

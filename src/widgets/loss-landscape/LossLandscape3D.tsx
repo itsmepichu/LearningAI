@@ -28,10 +28,10 @@ function usePalette() {
     () => ({
       low: cssColor('--accent', '#0B7285'),
       mid: cssColor('--sim', '#6741D9'),
-      high: cssColor('--signal', '#B35C00'),
+      high: cssColor('--signal', '#9C5000'),
       ink: cssColor('--ink', '#0F1B2A'),
       surface: cssColor('--surface', '#ffffff'),
-      opt: { sgd: cssColor('--bad', '#C92A2A'), momentum: cssColor('--ok', '#2B8A3E'), adam: cssColor('--sim', '#6741D9') } as Record<OptName, string>,
+      opt: { sgd: cssColor('--bad', '#C92A2A'), momentum: cssColor('--ok', '#1F7330'), adam: cssColor('--sim', '#6741D9') } as Record<OptName, string>,
       dark: resolved === 'dark',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

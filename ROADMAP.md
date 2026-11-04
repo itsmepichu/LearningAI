@@ -16,7 +16,7 @@
   - The page is grouped by section (one per topic).
   - Each section has **10–12 choose-the-answer questions** and **8–10 likely interview questions**.
 - **A course-wide Practice page** (`/practice`):
-  - Filter by chapter, learning path, question kind, level and example project.
+  - Filter by chapter, question kind, level and example project.
   - Draw random sets of questions and review earlier mistakes, for interview preparation.
 
 ---
@@ -150,7 +150,7 @@ Planned fit by chapter (★ best, ● good, ○ limited). Each topic can still d
 The course-wide place to drill questions, linked from the sidebar and the home page.
 
 - **Filters:**
-  - chapter or section, learning path
+  - chapter or section
   - question kind (choose the answer, interview)
   - level (fundamentals, applied, system design)
   - example project (for project-framed interview questions)
@@ -179,7 +179,7 @@ The course-wide place to drill questions, linked from the sidebar and the home p
   - search (`/` or `Ctrl K`), an "On this page" rail, previous and next topic (`[` `]`)
 - Pages:
   - home, chapter (topic cards, lab, quiz), topic
-  - guide, learning paths, progress heatmap, 404
+  - guide, progress heatmap, 404
 - First 3D widget: SGD vs momentum vs Adam on a real loss surface (2.3).
 - End-to-end test of every route, the widgets, interactions, 3D, mobile and dark mode.
 - *At this point the only example is Harbor, and each chapter has a three-question quiz on the chapter page. Phases 2–3 replace both.*
@@ -287,7 +287,7 @@ Scroll-driven walkthroughs, each told through your selected project:
 
 ### Phase 8 — Learning system and hardening
 
-- A prerequisite map (2D/3D graph of topics), filtered by learning path and project.
+- A prerequisite map (2D/3D graph of topics), filtered by project.
 - A sandbox for your project that grows chapter by chapter.
 - Spaced-repetition scheduling on the Practice page: missed questions come back after increasing intervals (FSRS).
 - Export and import of progress (project choice, studied topics, check scores).
@@ -342,7 +342,7 @@ Every place that referred to Harbor as the only example, or to the chapter quiz.
   - change the "Self-check questions" stat to check and interview question counts
   - add a link to the Practice page
 - [x] `src/pages/PracticePage.tsx` (new): the Practice page.
-- [x] `src/components/Sidebar.tsx`: add a "Practice" link next to "Learning paths".
+- [x] `src/components/Sidebar.tsx`: add a "Practice" link.
 - [x] `src/pages/Misc.tsx`: progress page with check scores per chapter instead of the quiz ring; guide unchanged.
 - [x] `src/components/Layout.tsx`: add the top-bar project picker.
 - [x] `src/components/SearchDialog.tsx`: show the project on search hits from practice notes; deep-link with `?project=`.

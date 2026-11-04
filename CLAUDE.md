@@ -5,11 +5,14 @@
 - A topic body is an HTML fragment at `src/content/pages/<chapter>/<topic-id>.html`. It uses the content design system in `src/styles/content.css`:
   - `figure.fig`, `.box.example|pit|lab`, `.terms`, `.tools`, `.flow` steppers
   - evidence tags: `.tag cpu|real|sim|gpu`
+- `HtmlContent` rebuilds heading levels into a valid outline when it renders a fragment, and marks a changed heading with `as-hN`, where N is its level in the file. When you style a content heading, style `hN` and `.as-hN` alike.
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
 - Current state (phase 3 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
+- The course is one required sequence: every chapter, section and topic is a must-learn for an expert AI/ML engineer. Do not add learning paths, role-based tracks or wording that makes a topic optional.
+- Progress totals count the chapters and the capstone (`courseTopics` in `src/data/course.ts`), not the appendices.
 - Keep the course's standards:
   - Label simulations as simulations, and give illustrative numbers as illustrative.
   - Link to official documentation.
@@ -19,7 +22,7 @@
 - There are four projects, with ids `harbor`, `store`, `bank` and `travel`. Their profiles go in `src/content/projects.json`.
   - Company names must be fictional. Never use a real company's name, because the notes invent internal systems, figures and mistakes.
   - Scale figures are illustrative; say so where they appear.
-- There is no up-front project choice. Harbor is the default; readers switch from the top bar, the In practice tabs, the end-of-topic note or the Practice page filter.
+- There is no up-front project choice. Harbor is the default; readers switch from the top bar, the In practice tabs or the end-of-topic note.
 - Per-topic notes go in `src/content/practice/<chapter>.json`, keyed `topicId -> projectId -> { practice, failure, tryIt, fit, fitNote }`.
   - Each of `practice`, `failure` and `tryIt` is a short HTML string. Write the company and assistant as `{company}` and `{assistant}`, so names live only in `projects.json` (Harbor's existing notes name Harbor directly).
   - `fit` is `best`, `good` or `limited`. `fitNote` is a short phrase on why the project suits the topic; the end-of-topic note shows it when the reader's project is `limited`. A `limited` topic needs at least one other project rated `best` or `good`.
@@ -51,6 +54,8 @@
   - read colours from the CSS tokens (`--accent`, `--sim`, `--signal`, `--ok`, `--bad`, `--ink`, `--muted`, `--surface`, `--sunk`, `--rule`)
   - redraw when `useTheme().version` changes
   - respect reduced motion
+  - meet the 24 px target minimum and the 12 px text floor (`--fs-2xs`)
+  - use the colour tokens for text, which pass AA contrast, and not dim text with opacity
 - 3D (three.js / @react-three/fiber):
   - Mount only near the viewport.
   - Use `frameloop="demand"` unless animating.
@@ -67,5 +72,5 @@ npm run build
 
 ```bash
 npx vite preview --port 4173 &
-npm run test:e2e   # must print ALL CHECKS PASSED
+npm run test:e2e   # must print ALL CHECKS PASSED; includes the axe check in tests/axe.cjs
 ```

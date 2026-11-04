@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'motion/react'
 import { Search } from 'lucide-react'
 import type MiniSearch from 'minisearch'
-import { getChapter, getTopic } from '../data/course'
+import { courseTopics, getChapter, getTopic } from '../data/course'
 import { fill, getProject, loadPractice, practiceChapterIds, projects } from '../data/projects'
 
 interface Doc { id: string; ch: string; tn: string; title: string; text: string; topic: string; project?: string }
@@ -61,15 +61,44 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   const [idx, setIdx] = useState<Index | null>(null)
   const [sel, setSel] = useState(0)
   const input = useRef<HTMLInputElement>(null)
+  const opener = useRef<HTMLElement | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!open) return
-    loadIndex().then(setIdx)
-    const t = setTimeout(() => input.current?.select(), 30)
-    return () => clearTimeout(t)
+    if (open) loadIndex().then(setIdx)
   }, [open])
+
+  // A layout effect, so that focus moves before the next keystroke and the opener is
+  // read before focus leaves it.
+  useLayoutEffect(() => {
+    if (!open) return
+    opener.current = document.activeElement as HTMLElement | null
+    input.current?.focus()
+    input.current?.select()
+  }, [open])
+
+  // The input is the dialog's only Tab stop (results are reached with the arrow keys),
+  // so Tab stays on it and Escape works from anywhere. Focus is restored here and not
+  // in a layout effect: React refocuses the input, still mounted for its exit animation,
+  // straight after layout cleanups run.
+  useEffect(() => {
+    if (!open) return
+    const onDocKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+      } else if (e.key === 'Tab') {
+        e.preventDefault()
+        input.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', onDocKey)
+    return () => {
+      document.removeEventListener('keydown', onDocKey)
+      opener.current?.focus?.({ preventScroll: true })
+    }
+  }, [open, onClose])
 
   const results = useMemo(() => {
     if (!idx || q.trim().length < 2) return []
@@ -94,8 +123,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   }
 
   const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') onClose()
-    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault()
       if (!results.length) return
       setSel((s) => (s + (e.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length)
@@ -124,24 +152,32 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               <Search size={18} aria-hidden="true" />
               <input
                 ref={input}
-                type="search"
+                type="text"
+                inputMode="search"
+                enterKeyHint="search"
+                role="combobox"
+                aria-expanded={results.length > 0}
+                aria-autocomplete="list"
+                aria-activedescendant={results[sel] ? `srch-opt-${sel}` : undefined}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search 143 topics — e.g. KV cache, LoRA, idempotency"
+                placeholder={`Search ${courseTopics.length} topics and the appendices — e.g. KV cache, LoRA, idempotency`}
                 aria-label="Search"
                 aria-controls="srch-res"
                 autoComplete="off"
               />
               <kbd>Esc</kbd>
             </div>
-            <div className="srch-res" id="srch-res" ref={listRef} role="listbox">
+            <div className="srch-res" id="srch-res" ref={listRef} {...(results.length ? { role: 'listbox', 'aria-label': 'Search results' } : {})}>
               {!idx && <div className="srch-hint">Loading the search index…</div>}
               {idx && q.trim().length < 2 && <div className="srch-hint">Type at least two letters. Search covers every explanation, example, lab and failure note.</div>}
               {idx && q.trim().length >= 2 && !results.length && <div className="srch-hint">No match. Try a shorter term such as “cache”, “LoRA” or “permission”.</div>}
               {results.map((r, i) => (
                 <button
                   key={r.d.id}
+                  id={`srch-opt-${i}`}
                   type="button"
+                  tabIndex={-1}
                   role="option"
                   aria-selected={i === sel}
                   className={'srch-hit' + (i === sel ? ' sel' : '')}

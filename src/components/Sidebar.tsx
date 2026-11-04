@@ -25,11 +25,11 @@ export function Sidebar() {
       <NavLink to="/guide" className="side-top">
         How to use this manual
       </NavLink>
-      <NavLink to="/paths" className="side-top">
-        Learning paths
-      </NavLink>
       <NavLink to="/practice" className="side-top">
         Practice
+      </NavLink>
+      <NavLink to="/progress" className="side-top">
+        Your progress
       </NavLink>
       {parts.map((p) => (
         <div key={p.id} className="side-part">
@@ -59,7 +59,7 @@ export function Sidebar() {
                     <ChevronRight size={14} />
                   </button>
                 </div>
-                {c.kind === 'chapter' && n > 0 && (
+                {c.kind !== 'appendix' && n > 0 && (
                   <div className="side-bar" aria-hidden="true">
                     <i style={{ width: `${(n / ids.length) * 100}%` }} />
                   </div>

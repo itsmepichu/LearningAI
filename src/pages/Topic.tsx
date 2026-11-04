@@ -51,7 +51,7 @@ export function TopicPage() {
         label = 'In practice, failure to avoid, try it'
       } else if (cl.contains('terms')) label = 'Terms'
       else if (cl.contains('tools')) label = 'Tools'
-      else label = el.querySelector('h5')?.textContent || 'Note'
+      else label = el.querySelector('h2,h3,h4,h5,h6')?.textContent || 'Note'
       if (!el.id) el.id = `m-${topicId}-${i}`
       list.push({ id: el.id, label: label.replace(/\.$/, '').trim(), kind })
     })
@@ -120,14 +120,31 @@ export function TopicPage() {
             <Check size={14} /> {studied ? 'Studied' : 'Mark as studied'}
           </label>
         </div>
-        <div className="t-steps" aria-label={`Topic ${pos + 1} of ${chapter.topics.length} in this chapter`}>
+        <nav className="t-steps" aria-label="Topics in this chapter">
           {chapter.topics.map((t, i) => (
-            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${t.title}`}>
-              <span className="sr-only">{t.tn}</span>
+            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${t.title}`} aria-current={i === pos ? 'page' : undefined}>
+              <span className="sr-only">{t.tn} {t.title}</span>
             </Link>
           ))}
-        </div>
+        </nav>
       </motion.header>
+
+      <details className="t-toc">
+        <summary>On this page{marks.length > 0 && ` · ${marks.length} ${marks.length === 1 ? 'item' : 'items'}`}</summary>
+        {marks.length > 0 && (
+          <ol>
+            {marks.map((m) => (
+              <li key={m.id}>
+                <MarkLink mark={m} />
+              </li>
+            ))}
+          </ol>
+        )}
+        <p>
+          {chapter.hasLab && <Link to={`/${chapter.id}#lab`}><FlaskConical size={14} /> Chapter {chapter.num} lab</Link>}
+          <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>
+        </p>
+      </details>
 
       <div className="t-grid">
         <div ref={body} className="t-body">
@@ -172,16 +189,7 @@ export function TopicPage() {
               <ol>
                 {marks.map((m) => (
                   <li key={m.id}>
-                    <a
-                      href={'#' + m.id}
-                      className={(active === m.id ? 'on ' : '') + 'rk-' + m.kind}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        document.getElementById(m.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                      }}
-                    >
-                      {m.label}
-                    </a>
+                    <MarkLink mark={m} className={(active === m.id ? 'on ' : '') + 'rk-' + m.kind} />
                   </li>
                 ))}
               </ol>
@@ -198,6 +206,21 @@ export function TopicPage() {
         </aside>
       </div>
     </div>
+  )
+}
+
+function MarkLink({ mark, className }: { mark: Mark; className?: string }) {
+  return (
+    <a
+      href={'#' + mark.id}
+      className={className}
+      onClick={(e) => {
+        e.preventDefault()
+        document.getElementById(mark.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }}
+    >
+      {mark.label}
+    </a>
   )
 }
 

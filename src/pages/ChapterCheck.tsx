@@ -5,9 +5,8 @@ import { ArrowLeft, Dumbbell, ListChecks } from 'lucide-react'
 import { chapterCheckCount, getChapter, partOf, sectionCheckCount } from '../data/course'
 import { loadChecks, type ChapterChecks } from '../data/checks'
 import { CheckSection, sectionScore, visibleInterview, type Mode } from '../components/Checks'
-import { useActiveProject } from '../components/Practice'
-import { ProjectPicker } from '../components/ProjectPicker'
-import { useDocumentTitle } from '../components/common'
+import { ProjectFramingNote, useActiveProject } from '../components/Practice'
+import { onRovingKeyDown, useDocumentTitle } from '../components/common'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
 
@@ -73,21 +72,29 @@ export function ChapterCheckPage() {
           <Link to="/practice">Practice page</Link> too.
         </p>
         <div className="ck-bar">
-          <div className="seg" role="radiogroup" aria-label="Mode">
-            <button type="button" role="radio" aria-checked={mode === 'practice'} className={mode === 'practice' ? 'on' : ''} onClick={() => setMode('practice')}>
+          <div className="seg" role="radiogroup" aria-label="Mode" onKeyDown={onRovingKeyDown}>
+            <button type="button" role="radio" aria-checked={mode === 'practice'} tabIndex={mode === 'practice' ? 0 : -1} className={mode === 'practice' ? 'on' : ''} onClick={() => setMode('practice')}>
               Practice <small>feedback after each answer</small>
             </button>
-            <button type="button" role="radio" aria-checked={mode === 'check'} className={mode === 'check' ? 'on' : ''} onClick={() => setMode('check')}>
+            <button type="button" role="radio" aria-checked={mode === 'check'} tabIndex={mode === 'check' ? 0 : -1} className={mode === 'check' ? 'on' : ''} onClick={() => setMode('check')}>
               Check <small>answer a section, then score it</small>
             </button>
           </div>
           <label className="tgl">
             <input type="checkbox" checked={allProjects} onChange={(e) => setAllProjects(e.target.checked)} /> Show interview questions framed in all projects
           </label>
-          <ProjectPicker />
+          <ProjectFramingNote />
           {totals && (
-            <span className="ck-score" aria-live="polite">
-              <b>{totals.correct}</b>/{totals.mcq} correct · <b>{totals.practised}</b>/{totals.iv} interview practised
+            <span className="ck-score">
+              <span aria-live="polite">
+                <b>{totals.correct}</b>/{totals.mcq} correct · <b>{totals.practised}</b>/{totals.iv} interview practised
+              </span>
+              {count.interview > totals.iv && (
+                <>
+                  {' '}· {count.interview - totals.iv} framed for other projects {count.interview - totals.iv === 1 ? 'is' : 'are'} hidden{' '}
+                  (<button type="button" className="linkish" onClick={() => setAllProjects(true)}>show them</button>)
+                </>
+              )}
             </span>
           )}
         </div>

@@ -19,9 +19,12 @@ interface McqProps {
   reveal?: boolean
   index?: number
   context?: React.ReactNode
+  /** The card sits directly under the page h1, so its heading is an h2. */
+  topLevel?: boolean
 }
 
-export function McqCard({ q, mode, draft, onDraft, reveal, index, context }: McqProps) {
+export function McqCard({ q, mode, draft, onDraft, reveal, index, context, topLevel }: McqProps) {
+  const H = topLevel ? 'h2' : 'h4'
   const saved = useProgress((s) => s.answers[q.id])
   const answer = useProgress((s) => s.answer)
   const clear = useProgress((s) => s.clearAnswers)
@@ -52,7 +55,7 @@ export function McqCard({ q, mode, draft, onDraft, reveal, index, context }: Mcq
     <article className={'mcq' + (ok === true ? ' right' : ok === false ? ' wrong' : '')} aria-labelledby={`${q.id}-q`}>
       <header>
         {index !== undefined && <span className="qn">{index + 1}</span>}
-        <h4 id={`${q.id}-q`}>{q.q}</h4>
+        <H id={`${q.id}-q`} className="as-h4">{q.q}</H>
       </header>
       <div className="mcq-meta">
         {q.kind && <span className="badge">{KIND_LABEL[q.kind]}</span>}
@@ -125,7 +128,8 @@ const RATINGS: { id: Rating; label: string }[] = [
   { id: 'covered', label: 'Covered it' },
 ]
 
-export function InterviewCard({ q, index, context, defaultOpen = false }: { q: InterviewQ; index?: number; context?: React.ReactNode; defaultOpen?: boolean }) {
+export function InterviewCard({ q, index, context, defaultOpen = false, topLevel }: { q: InterviewQ; index?: number; context?: React.ReactNode; defaultOpen?: boolean; topLevel?: boolean }) {
+  const H = topLevel ? 'h2' : 'h4'
   const [open, setOpen] = useState(defaultOpen)
   const rating = useProgress((s) => s.ratings[q.id])
   const rate = useProgress((s) => s.rate)
@@ -134,7 +138,7 @@ export function InterviewCard({ q, index, context, defaultOpen = false }: { q: I
     <article className={'iv lv-' + q.level + (rating ? ' rated-' + rating : '')} aria-labelledby={`${q.id}-q`}>
       <header>
         {index !== undefined && <span className="qn"><MessagesSquare size={13} /></span>}
-        <h4 id={`${q.id}-q`}>{p ? fill(q.q, p) : q.q}</h4>
+        <H id={`${q.id}-q`} className="as-h4">{p ? fill(q.q, p) : q.q}</H>
       </header>
       <div className="mcq-meta">
         <span className={'badge lv ' + q.level}>{LEVEL_LABEL[q.level]}</span>
@@ -225,21 +229,23 @@ export function CheckSection({ id, tn, title, topicPath, sec, mode, project, all
 
   return (
     <section className={'csec' + (open ? ' open' : '')} id={id} aria-labelledby={`${id}-h`}>
-      <button type="button" className="csec-h" aria-expanded={open} onClick={onToggle}>
-        <span className="tn">{tn}</span>
-        <span className="csec-t" id={`${id}-h`}>{title}</span>
-        <span className="csec-s">
-          {empty ? (
-            <span className="muted">questions coming</span>
-          ) : (
-            <>
-              {mcq.length > 0 && <span className={'pill' + (score.answered === score.total && score.total ? ' done' : '')}>{score.correct}/{score.total}</span>}
-              {iv.length > 0 && <span className="pill iv">{practised}/{iv.length} practised</span>}
-            </>
-          )}
-        </span>
-        <ChevronDown size={16} className="csec-chev" />
-      </button>
+      <h2 className="csec-hh">
+        <button type="button" className="csec-h" aria-expanded={open} onClick={onToggle}>
+          <span className="tn">{tn}</span>
+          <span className="csec-t" id={`${id}-h`}>{title}</span>
+          <span className="csec-s">
+            {empty ? (
+              <span className="muted">questions coming</span>
+            ) : (
+              <>
+                {mcq.length > 0 && <span className={'pill' + (score.answered === score.total && score.total ? ' done' : '')}>{score.correct}/{score.total}</span>}
+                {iv.length > 0 && <span className="pill iv">{practised}/{iv.length} practised</span>}
+              </>
+            )}
+          </span>
+          <ChevronDown size={16} className="csec-chev" />
+        </button>
+      </h2>
       {open && (
         <div className="csec-b">
           {empty && (
