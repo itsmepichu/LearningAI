@@ -197,7 +197,7 @@ export function LabVariant({ practice }: { practice: ChapterPractice | null }) {
         <b>Do this lab with {p.label} <small>({p.company})</small></b>
         <span className="labvar-tabs">
           {projects.filter((x) => lab[x.id]).map((x) => (
-            <button key={x.id} type="button" className={'chip' + (x.id === project ? ' on' : '')} onClick={() => setOverride(x.id)}>{x.label}</button>
+            <button key={x.id} type="button" className={'lchip' + (x.id === project ? ' on' : '')} onClick={() => setOverride(x.id)}>{x.label}</button>
           ))}
         </span>
       </header>

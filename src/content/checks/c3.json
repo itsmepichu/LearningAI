@@ -13,9 +13,279 @@
     "answer": 2,
     "why": "Accuracy rewards the majority class; recall on the rare class reveals the failure.",
     "kind": "concept"
+   },
+   {
+    "id": "c3-3-m02",
+    "q": "How is agreement between two annotators commonly measured?",
+    "options": [
+     "Accuracy of the model",
+     "Mean squared error",
+     "Cohen's κ (kappa)",
+     "Perplexity"
+    ],
+    "answer": 2,
+    "why": "κ corrects raw agreement for agreement expected by chance. Low agreement means the task is ambiguous, which caps any model.",
+    "kind": "concept",
+    "distractors": [
+     "Model accuracy is a different question.",
+     "MSE measures regression error.",
+     "",
+     "Perplexity measures language models."
+    ]
+   },
+   {
+    "id": "c3-3-m03",
+    "q": "Two annotators label 200 tickets and reach κ = 0.58 on “urgent”. What is the right next step?",
+    "options": [
+     "Label 10,000 more tickets right away",
+     "Revise the guideline for the disputed cases before labelling more",
+     "Train the model and ignore the disagreement",
+     "Drop the urgent class"
+    ],
+    "answer": 1,
+    "why": "Disagreement shows the definition is unclear; fix it first or the labels will be noisy.",
+    "kind": "scenario",
+    "distractors": [
+     "More labels from an unclear guideline are more noise.",
+     "",
+     "No model can beat the label ceiling.",
+     "The class matters; the guideline needs work."
+    ]
+   },
+   {
+    "id": "c3-3-m04",
+    "q": "Which are remedies for class imbalance? Choose all that apply.",
+    "options": [
+     "Resampling",
+     "Class weights",
+     "Tuning the decision threshold",
+     "Reporting accuracy only"
+    ],
+    "answer": [
+     0,
+     1,
+     2
+    ],
+    "why": "Weights, resampling and threshold tuning all help, measured with precision and recall.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "",
+     "Accuracy hides the rare class: predicting the majority scores high."
+    ]
+   },
+   {
+    "id": "c3-3-m05",
+    "q": "You oversample the rare class and then split into train and test. What goes wrong?",
+    "options": [
+     "Copies of the same example land in both train and test, inflating scores",
+     "The rare class disappears",
+     "Nothing",
+     "Training becomes impossible"
+    ],
+    "answer": 0,
+    "why": "Split first, then resample only the training split.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Oversampling adds rare examples.",
+     "It leaks examples across splits.",
+     "Training runs; the evaluation is wrong."
+    ]
+   },
+   {
+    "id": "c3-3-m06",
+    "q": "Features must be computed using only information available…",
+    "options": [
+     "From the test set",
+     "At any time, including the future",
+     "After the outcome is known",
+     "At prediction time"
+    ],
+    "answer": 3,
+    "why": "Anything known only later leaks the answer and fails in production.",
+    "kind": "concept",
+    "distractors": [
+     "Test data must stay unseen.",
+     "Future information is leakage.",
+     "That is exactly the leakage trap.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-3-m07",
+    "q": "Why add an is_missing flag instead of only filling missing values?",
+    "options": [
+     "Models cannot read numbers",
+     "Missingness itself is often informative",
+     "Flags make the data smaller",
+     "It removes the need for cleaning"
+    ],
+    "answer": 1,
+    "why": "Whether a value is missing can correlate with the outcome, so keep that signal.",
+    "kind": "concept",
+    "distractors": [
+     "Models read numbers fine.",
+     "",
+     "A flag adds a column.",
+     "Cleaning is still needed."
+    ]
+   },
+   {
+    "id": "c3-3-m08",
+    "q": "With 2% positives, what class weight on positives (negatives ÷ positives) balances the classes?",
+    "options": [
+     "50",
+     "0.02",
+     "49",
+     "2"
+    ],
+    "answer": 2,
+    "why": "98 ÷ 2 = 49.",
+    "kind": "calculation",
+    "distractors": [
+     "That would be 100 ÷ 2.",
+     "That is the positive fraction.",
+     "",
+     "That is the positive percentage."
+    ]
+   },
+   {
+    "id": "c3-3-m09",
+    "q": "Near-duplicate documents end up split across train and test. What happens to your scores?",
+    "options": [
+     "Nothing",
+     "Training fails",
+     "They look better than they will be in production",
+     "They look worse"
+    ],
+    "answer": 2,
+    "why": "The model has effectively seen test examples, which is leakage (3.4).",
+    "kind": "scenario",
+    "distractors": [
+     "It changes the evaluation.",
+     "Training runs normally.",
+     "",
+     "Duplicates inflate scores."
+    ]
+   },
+   {
+    "id": "c3-3-m10",
+    "q": "Why keep raw data immutable?",
+    "options": [
+     "So you can rebuild the training table when code or raw data changes",
+     "Because editing is slow",
+     "So labels never change",
+     "To save disk space"
+    ],
+    "answer": 0,
+    "why": "Each preparation step is versioned code over untouched raw data.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Speed is not the reason.",
+     "Labels can be revised; the raw data stays.",
+     "It usually costs more space, not less."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c3-3-i01",
+    "q": "Why does data quality often matter more than model choice?",
+    "level": "fundamentals",
+    "covers": [
+     "Models learn whatever is in the data",
+     "Label noise caps performance",
+     "Leakage and duplicates distort evaluation",
+     "Most project time is spent here"
+    ]
+   },
+   {
+    "id": "c3-3-i02",
+    "q": "How do you handle class imbalance?",
+    "level": "fundamentals",
+    "covers": [
+     "Use precision, recall and PR curves",
+     "Class weights or resampling",
+     "Threshold tuning from costs",
+     "Keep real prevalence in evaluation"
+    ]
+   },
+   {
+    "id": "c3-3-i03",
+    "q": "What makes a good labelling guideline?",
+    "level": "fundamentals",
+    "covers": [
+     "Clear definitions and edge cases",
+     "Examples of each label",
+     "A double-labelled pilot with κ",
+     "Revisions before scaling up"
+    ]
+   },
+   {
+    "id": "c3-3-i04",
+    "q": "Your annotators agree only 60% of the time. What do you do?",
+    "level": "applied",
+    "covers": [
+     "Find which cases they disagree on",
+     "Clarify or split the labels",
+     "Add an adjudication step",
+     "Re-measure agreement"
+    ],
+    "followUp": "When would you accept a low agreement ceiling?"
+   },
+   {
+    "id": "c3-3-i05",
+    "q": "Walk through engineering features for a fraud model.",
+    "level": "applied",
+    "covers": [
+     "Amounts on a log scale",
+     "Counts and sums over recent windows",
+     "Time of day and channel",
+     "Deviation from the customer's own history",
+     "Everything computed as of the prediction time"
+    ]
+   },
+   {
+    "id": "c3-3-i06",
+    "q": "Cancellation labels at {company} are only final after the travel date. How do you build the training set?",
+    "level": "applied",
+    "covers": [
+     "Include only bookings whose travel date has passed",
+     "Compute features as of booking time",
+     "Exclude post-event columns such as fees",
+     "Handle seasonality in the split"
+    ],
+    "project": "travel"
+   },
+   {
+    "id": "c3-3-i07",
+    "q": "Design a labelling pipeline for 10,000 support tickets.",
+    "level": "system-design",
+    "covers": [
+     "Guideline with edge cases",
+     "Pilot with double labelling and κ",
+     "Adjudication of disagreements",
+     "Ongoing QA samples",
+     "Versioned labels with guideline versions"
+    ]
+   },
+   {
+    "id": "c3-3-i08",
+    "q": "Design {company}'s fraud training-data pipeline so it never leaks the label.",
+    "level": "system-design",
+    "covers": [
+     "Point-in-time feature computation",
+     "Label delay handled explicitly",
+     "No post-event columns such as chargeback flags",
+     "Out-of-time validation",
+     "Automated leakage checks"
+    ],
+    "project": "bank"
+   }
+  ]
  },
  "c3-4": {
   "mcq": [
@@ -31,9 +301,274 @@
     "answer": 1,
     "why": "Month-total refunds include future information that is not available on day 3.",
     "kind": "concept"
+   },
+   {
+    "id": "c3-4-m02",
+    "q": "What is the validation set for?",
+    "options": [
+     "Training the model",
+     "Choosing settings and comparing variants",
+     "A final, one-time estimate",
+     "Storing raw data"
+    ],
+    "answer": 1,
+    "why": "The test set is held back and used once at the end.",
+    "kind": "concept",
+    "distractors": [
+     "That is the training set.",
+     "",
+     "That is the test set.",
+     "That is not a split."
+    ]
+   },
+   {
+    "id": "c3-4-m03",
+    "q": "What is overfitting?",
+    "options": [
+     "A model too simple to capture the pattern",
+     "Memorising training noise, so training error is low but new-data error is high",
+     "Using too much data",
+     "Training for too few steps"
+    ],
+    "answer": 1,
+    "why": "Generalisation, performing well on new data, is what matters.",
+    "kind": "concept",
+    "distractors": [
+     "That is underfitting.",
+     "",
+     "More data usually reduces overfitting.",
+     "That usually underfits."
+    ]
+   },
+   {
+    "id": "c3-4-m04",
+    "q": "Which of these is not a regularisation technique?",
+    "options": [
+     "An L2 (ridge) penalty",
+     "Early stopping",
+     "Adding more features computed from the label",
+     "Limiting tree depth"
+    ],
+    "answer": 2,
+    "why": "Features computed from the label are leakage, not regularisation.",
+    "kind": "concept",
+    "distractors": [
+     "L2 penalises large weights.",
+     "Early stopping halts before overfitting.",
+     "",
+     "Depth limits restrict complexity."
+    ]
+   },
+   {
+    "id": "c3-4-m05",
+    "q": "A churn model used days since last login, computed at extraction time. Offline AUC was 0.97; in production it was 0.68. What is the fix?",
+    "options": [
+     "Lower the threshold",
+     "Compute features as of the prediction date (a point-in-time join)",
+     "Use a bigger model",
+     "Retrain more often"
+    ],
+    "answer": 1,
+    "why": "For churned customers the feature was large only because they had already left: future information leaked in.",
+    "kind": "scenario",
+    "distractors": [
+     "The threshold does not fix a leaking feature.",
+     "",
+     "A bigger model would exploit the leak even more.",
+     "Retraining keeps the leak."
+    ]
+   },
+   {
+    "id": "c3-4-m06",
+    "q": "How should you split time-dependent data?",
+    "options": [
+     "Put the newest data in training",
+     "Randomly",
+     "By alphabetical order",
+     "Train on the past, test on the future"
+    ],
+    "answer": 3,
+    "why": "A random split leaks the future into training.",
+    "kind": "scenario",
+    "distractors": [
+     "That trains on the future.",
+     "That mixes future and past.",
+     "Order must follow time.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-4-m07",
+    "q": "The same customer appears in both train and test. What split prevents this?",
+    "options": [
+     "A random split",
+     "Shuffling twice",
+     "A larger test set",
+     "A group split by customer"
+    ],
+    "answer": 3,
+    "why": "Grouping keeps all of one customer's rows on the same side, so the model cannot memorise their habits.",
+    "kind": "scenario",
+    "distractors": [
+     "Random splits cause the problem.",
+     "Shuffling does not separate groups.",
+     "Size does not fix overlap.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-4-m08",
+    "q": "You check the test set after every change and adjust the model. What happens?",
+    "options": [
+     "Nothing",
+     "The test set gets bigger",
+     "The model generalises better",
+     "The test set quietly becomes validation data, and its estimate is no longer trustworthy"
+    ],
+    "answer": 3,
+    "why": "Use the test set once; tune on validation.",
+    "kind": "scenario",
+    "distractors": [
+     "It biases your final estimate.",
+     "Size does not change.",
+     "You are fitting to the test set.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-4-m09",
+    "q": "What is benchmark contamination for LLMs?",
+    "options": [
+     "Benchmark questions appeared in the pretraining data",
+     "A bug in the tokenizer",
+     "Running a benchmark twice",
+     "Benchmarks that are too hard"
+    ],
+    "answer": 0,
+    "why": "If the model saw the questions, its score overstates real ability (8.6).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Tokenizers are unrelated.",
+     "Repeats are not contamination.",
+     "Difficulty is a separate issue."
+    ]
+   },
+   {
+    "id": "c3-4-m10",
+    "q": "In the overfitting figure, at a high polynomial degree you raise λ (the ridge penalty). What happens?",
+    "options": [
+     "Validation error rises further",
+     "The curve smooths and validation error recovers",
+     "Training error falls further",
+     "Nothing changes"
+    ],
+    "answer": 1,
+    "why": "Penalising large weights reduces the wiggles that fit noise.",
+    "kind": "scenario",
+    "distractors": [
+     "Regularisation reduces overfitting.",
+     "",
+     "Training error usually rises slightly.",
+     "The penalty changes the fit."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c3-4-i01",
+    "q": "Explain train, validation and test sets, and why each exists.",
+    "level": "fundamentals",
+    "covers": [
+     "Train to fit",
+     "Validation to choose settings",
+     "Test once for a final estimate",
+     "Why reusing the test set breaks it"
+    ]
+   },
+   {
+    "id": "c3-4-i02",
+    "q": "What is overfitting, and how do you detect it?",
+    "level": "fundamentals",
+    "covers": [
+     "Training error low, new-data error high",
+     "Compare training and validation curves",
+     "Learning curves with more data",
+     "Regularisation as a remedy"
+    ]
+   },
+   {
+    "id": "c3-4-i03",
+    "q": "What is data leakage? Give three examples.",
+    "level": "fundamentals",
+    "covers": [
+     "Information unavailable at prediction time",
+     "A future-computed feature",
+     "Same user in train and test",
+     "Normalising on the full dataset",
+     "Benchmark contamination"
+    ]
+   },
+   {
+    "id": "c3-4-i04",
+    "q": "Offline AUC is 0.97, production 0.68. How do you investigate?",
+    "level": "applied",
+    "covers": [
+     "Suspect leakage first",
+     "Check each feature's availability at prediction time",
+     "Compare offline and online feature values",
+     "Check the split policy",
+     "Look for distribution shift"
+    ],
+    "followUp": "Which single check would you do first, and why?"
+   },
+   {
+    "id": "c3-4-i05",
+    "q": "How would you split data for a model that predicts customer churn?",
+    "level": "applied",
+    "covers": [
+     "By time",
+     "Grouped by customer",
+     "Features as of the prediction date",
+     "A gap for label delay"
+    ]
+   },
+   {
+    "id": "c3-4-i06",
+    "q": "{company}'s return model looks perfect offline. What do you check first?",
+    "level": "applied",
+    "covers": [
+     "Columns filled after delivery, such as refund amounts",
+     "A random split mixing sale and non-sale periods",
+     "Duplicate orders across splits",
+     "Re-test with a time split"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c3-4-i07",
+    "q": "Design an evaluation protocol that prevents leakage for a time-dependent problem.",
+    "level": "system-design",
+    "covers": [
+     "Out-of-time validation and test",
+     "Point-in-time feature store",
+     "Label-delay gaps",
+     "Automated checks for suspicious features",
+     "A frozen, access-controlled test set"
+    ]
+   },
+   {
+    "id": "c3-4-i08",
+    "q": "How do you prevent test-set overuse in a team that iterates quickly?",
+    "level": "system-design",
+    "covers": [
+     "Restrict access to the final test set",
+     "Use validation and cross-validation for iteration",
+     "Refresh test sets periodically",
+     "Log every test-set evaluation"
+    ]
+   }
+  ]
  },
  "c3-5": {
   "mcq": [
@@ -49,8 +584,1142 @@
     "answer": 1,
     "why": "With rare positives, ROC can look good while precision is poor; PR curves expose that.",
     "kind": "concept"
+   },
+   {
+    "id": "c3-5-m02",
+    "q": "A classifier has 40 true positives, 10 false positives and 20 false negatives. What is its precision?",
+    "options": [
+     "50%",
+     "33%",
+     "67%",
+     "80%"
+    ],
+    "answer": 3,
+    "why": "Precision = TP/(TP + FP) = 40/50 = 80%.",
+    "kind": "calculation",
+    "distractors": [
+     "That mixes the counts.",
+     "That is FN/(TP + FN).",
+     "That is the recall.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-5-m03",
+    "q": "With the same counts (TP 40, FP 10, FN 20), what is recall?",
+    "options": [
+     "80%",
+     "50%",
+     "20%",
+     "About 67%"
+    ],
+    "answer": 3,
+    "why": "Recall = TP/(TP + FN) = 40/60 ≈ 67%.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the precision.",
+     "That is not a standard ratio here.",
+     "That is FP/(TP + FP).",
+     ""
+    ]
+   },
+   {
+    "id": "c3-5-m04",
+    "q": "A model has precision 0.9 and recall 0.3. What is its F1?",
+    "options": [
+     "0.9",
+     "0.6",
+     "0.45",
+     "0.27"
+    ],
+    "answer": 2,
+    "why": "F1 = 2PR/(P + R) = 2(0.9)(0.3)/1.2 = 0.45. The harmonic mean is pulled towards the weaker of the two, so F1 is high only if both are high.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the precision alone.",
+     "That is the plain average; F1 is the harmonic mean.",
+     "",
+     "That is the product P × R."
+    ]
+   },
+   {
+    "id": "c3-5-m05",
+    "q": "A ROC AUC of 0.5 means…",
+    "options": [
+     "The threshold is 0.5",
+     "The model is perfect",
+     "Half the predictions are correct",
+     "The model ranks no better than random"
+    ],
+    "answer": 3,
+    "why": "AUC 0.5 is random ranking; 1.0 is perfect.",
+    "kind": "concept",
+    "distractors": [
+     "AUC covers all thresholds.",
+     "Perfect is 1.0.",
+     "AUC measures ranking, not accuracy.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-5-m06",
+    "q": "What does it mean for a model to be calibrated?",
+    "options": [
+     "Its accuracy is above 80%",
+     "Among cases scored 0.8, about 80% are positive",
+     "It always outputs 0 or 1",
+     "Its threshold is 0.5"
+    ],
+    "answer": 1,
+    "why": "Calibration is checked with a reliability diagram and summarised by expected calibration error.",
+    "kind": "concept",
+    "distractors": [
+     "Accuracy is a different property.",
+     "",
+     "Calibration concerns probabilities.",
+     "The threshold is a separate choice."
+    ]
+   },
+   {
+    "id": "c3-5-m07",
+    "q": "A missed fraud costs $400 and a false alarm costs $5 of analyst time. Where will the cost-minimising threshold sit?",
+    "options": [
+     "Exactly 0.5",
+     "Low, favouring high recall",
+     "High, favouring high precision",
+     "It cannot be chosen from costs"
+    ],
+    "answer": 1,
+    "why": "Misses are 80 times more expensive than false alarms, so catching more fraud is worth more alerts.",
+    "kind": "scenario",
+    "distractors": [
+     "0.5 ignores the costs.",
+     "",
+     "That would minimise false alarms, the cheap error.",
+     "Sweeping thresholds against expected cost is exactly how to choose it."
+    ]
+   },
+   {
+    "id": "c3-5-m08",
+    "q": "If a false alarm instead blocks a customer's card, costing about $60 in churn, what happens to the best threshold?",
+    "options": [
+     "It moves down",
+     "It becomes 1.0",
+     "It stays the same",
+     "It moves up"
+    ],
+    "answer": 3,
+    "why": "False alarms are now more expensive, so the optimum trades some recall for precision.",
+    "kind": "scenario",
+    "distractors": [
+     "Higher false-alarm cost pushes it up, not down.",
+     "1.0 would flag nothing.",
+     "The cost change moves it.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-5-m09",
+    "q": "Platt scaling or isotonic regression for calibration should be fitted on…",
+    "options": [
+     "Validation data",
+     "The training data",
+     "Production traffic without labels",
+     "The test set"
+    ],
+    "answer": 0,
+    "why": "Fitting on training data reuses the same overconfident predictions; the test set must stay untouched.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Training scores are optimistic.",
+     "Calibration needs labels.",
+     "The test set is for the final estimate."
+    ]
+   },
+   {
+    "id": "c3-5-m10",
+    "q": "An escalation classifier must keep precision at or above 80% because reviewers have limited time. How should the threshold be chosen?",
+    "options": [
+     "Maximise recall subject to precision ≥ 80%",
+     "Maximise accuracy",
+     "Maximise F1",
+     "Use 0.5"
+    ],
+    "answer": 0,
+    "why": "The product requirement is a precision floor; F1 can pick a threshold that breaks it.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Accuracy hides the rare class.",
+     "F1 ignores the precision requirement.",
+     "0.5 ignores both costs and capacity."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c3-5-i01",
+    "q": "Explain precision, recall and F1, and when each matters.",
+    "level": "fundamentals",
+    "covers": [
+     "Precision: how many flagged are right",
+     "Recall: how many true cases are caught",
+     "F1: harmonic mean",
+     "Choose by the cost of each error"
+    ]
+   },
+   {
+    "id": "c3-5-i02",
+    "q": "When is a PR curve more useful than a ROC curve?",
+    "level": "fundamentals",
+    "covers": [
+     "When positives are rare",
+     "ROC can look good while precision is poor",
+     "PR shows the alerts a team will actually see"
+    ]
+   },
+   {
+    "id": "c3-5-i03",
+    "q": "What does calibration mean, and how do you check it?",
+    "level": "fundamentals",
+    "covers": [
+     "Scores match observed frequencies",
+     "Reliability diagram and ECE",
+     "Platt or isotonic on validation data",
+     "Matters when probabilities drive decisions"
+    ]
+   },
+   {
+    "id": "c3-5-i04",
+    "q": "Choose a threshold for a fraud model given the cost of a miss and of a false alarm.",
+    "level": "applied",
+    "covers": [
+     "Expected cost = c_FN·FN + c_FP·FP",
+     "Sweep thresholds on validation data",
+     "Pick the minimum",
+     "Check capacity constraints",
+     "Revisit when costs change"
+    ],
+    "followUp": "What changes if analysts can only review 500 alerts a day?"
+   },
+   {
+    "id": "c3-5-i05",
+    "q": "Your model's AUC is 0.95, but users complain about false alarms. Explain.",
+    "level": "applied",
+    "covers": [
+     "AUC measures ranking across thresholds",
+     "At a low base rate, precision can still be poor",
+     "Look at precision at the chosen threshold",
+     "Adjust the threshold or improve the model on the rare class"
+    ]
+   },
+   {
+    "id": "c3-5-i06",
+    "q": "{company} holds refunds for manual review when abuse risk is high. How do you set the threshold?",
+    "level": "applied",
+    "covers": [
+     "Cost of delaying an honest refund versus a lost item",
+     "Review team capacity",
+     "Calibrated scores",
+     "Monitor precision and complaints after launch"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c3-5-i07",
+    "q": "Design a metrics dashboard for a classifier in production.",
+    "level": "system-design",
+    "covers": [
+     "Precision and recall at the operating threshold",
+     "Calibration over time",
+     "Slices by segment",
+     "Label delay handled explicitly",
+     "Alert volume and capacity"
+    ]
+   },
+   {
+    "id": "c3-5-i08",
+    "q": "How would you decide whether an LLM's self-reported confidence can trigger automatic actions?",
+    "level": "system-design",
+    "covers": [
+     "A labelled set of right and wrong outputs",
+     "Reliability diagram for the stated confidence",
+     "Thresholds with measured precision",
+     "Monitoring and re-calibration after changes"
+    ]
+   }
+  ]
+ },
+ "c3-1": {
+  "mcq": [
+   {
+    "id": "c3-1-m01",
+    "q": "Supervised learning learns from…",
+    "options": [
+     "Rewards for actions",
+     "Inputs with no labels",
+     "Input–output pairs with known labels",
+     "Hand-written rules"
+    ],
+    "answer": 2,
+    "why": "Examples: email → spam or not spam, house features → price.",
+    "kind": "concept",
+    "distractors": [
+     "That is reinforcement learning.",
+     "That is unsupervised learning.",
+     "",
+     "Rules are written, not learned."
+    ]
+   },
+   {
+    "id": "c3-1-m02",
+    "q": "Self-supervised learning gets its labels from…",
+    "options": [
+     "Human annotators only",
+     "A separate rule engine",
+     "A reward signal",
+     "The data itself, for example by hiding the next word and predicting it"
+    ],
+    "answer": 3,
+    "why": "Because the labels come free from the text, pretraining can use trillions of tokens.",
+    "kind": "concept",
+    "distractors": [
+     "Human labels are supervised learning.",
+     "Rules do not produce training labels here.",
+     "Rewards are reinforcement learning.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-1-m03",
+    "q": "Why can LLM pretraining use trillions of tokens without human labelling?",
+    "options": [
+     "Humans label every token",
+     "It uses reinforcement learning only",
+     "It is self-supervised: the next token is the label",
+     "It needs no data"
+    ],
+    "answer": 2,
+    "why": "Every position in the text provides its own target, so no annotation is needed.",
+    "kind": "concept",
+    "distractors": [
+     "Human labelling at that scale would be impossible.",
+     "RL is used later, in post-training (6.5).",
+     "",
+     "It needs enormous amounts of text."
+    ]
+   },
+   {
+    "id": "c3-1-m04",
+    "q": "In reinforcement learning, what does the agent learn?",
+    "options": [
+     "A policy that maximises total reward from its actions in an environment",
+     "A tokenizer",
+     "Labels for each example",
+     "Clusters of similar inputs"
+    ],
+    "answer": 0,
+    "why": "The agent acts, receives rewards and adjusts its policy to collect more reward.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Tokenizers are trained separately.",
+     "Labels are supervised learning.",
+     "Clusters are unsupervised learning."
+    ]
+   },
+   {
+    "id": "c3-1-m05",
+    "q": "You want to discover customer segments with no labels at all. Which paradigm fits?",
+    "options": [
+     "Supervised learning",
+     "Reinforcement learning",
+     "Rules",
+     "Unsupervised learning, such as clustering"
+    ],
+    "answer": 3,
+    "why": "With no answers to learn from, you look for structure in the inputs.",
+    "kind": "scenario",
+    "distractors": [
+     "There are no labels to supervise with.",
+     "There is no reward for actions here.",
+     "You do not know the segments well enough to write rules.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-1-m06",
+    "q": "A shop chooses which homepage layout to show and is rewarded by clicks. Which paradigm is this?",
+    "options": [
+     "A bandit, a simple form of reinforcement learning",
+     "Supervised learning",
+     "Self-supervised pretraining",
+     "Unsupervised learning"
+    ],
+    "answer": 0,
+    "why": "The system takes an action (a layout), observes a reward (clicks) and shifts towards better actions.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "There is no fixed label per example; feedback comes from actions taken.",
+     "Pretraining predicts hidden parts of data.",
+     "There is a reward, so it is not unsupervised."
+    ]
+   },
+   {
+    "id": "c3-1-m07",
+    "q": "Predicting whether an order will be returned, from past orders with known outcomes, is…",
+    "options": [
+     "Not machine learning",
+     "Reinforcement learning",
+     "Supervised learning",
+     "Unsupervised learning"
+    ],
+    "answer": 2,
+    "why": "Past orders with returned or not-returned outcomes are labelled examples.",
+    "kind": "scenario",
+    "distractors": [
+     "It is a standard ML problem.",
+     "Nothing is acting to collect rewards.",
+     "",
+     "The outcomes are known labels."
+    ]
+   },
+   {
+    "id": "c3-1-m08",
+    "q": "A multi-step LLM agent tries tools until a task is done. Is that reinforcement learning?",
+    "options": [
+     "Yes, because it uses tools",
+     "Yes, any loop is RL",
+     "Only if it runs on GPUs",
+     "No, unless its weights are actually updated from a reward signal"
+    ],
+    "answer": 3,
+    "why": "Trying options at inference time is a control loop. RL means learning from reward by changing weights.",
+    "kind": "scenario",
+    "distractors": [
+     "Tool use is not learning.",
+     "A loop alone learns nothing.",
+     "Hardware is irrelevant.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-1-m09",
+    "q": "What is the main difference between the learning paradigms?",
+    "options": [
+     "The programming language",
+     "The size of the model",
+     "Whether a GPU is used",
+     "The feedback signal: correct answers, no answers, or a score for actions"
+    ],
+    "answer": 3,
+    "why": "The paradigm is defined by what the learner is told, not by the model type.",
+    "kind": "concept",
+    "distractors": [
+     "Any paradigm can be written in any language.",
+     "Models of any size can use any paradigm.",
+     "Hardware does not define the paradigm.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-1-m10",
+    "q": "Detecting unusual transactions with no fraud labels yet is an example of…",
+    "options": [
+     "Reinforcement learning",
+     "Supervised classification",
+     "Unsupervised anomaly detection",
+     "Self-supervised pretraining"
+    ],
+    "answer": 2,
+    "why": "Without labels, you flag inputs that differ from the bulk of the data.",
+    "kind": "scenario",
+    "distractors": [
+     "Nothing collects reward.",
+     "There are no labels yet.",
+     "",
+     "This is not predicting hidden parts of text."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c3-1-i01",
+    "q": "Explain supervised, unsupervised, self-supervised and reinforcement learning, with one example each.",
+    "level": "fundamentals",
+    "covers": [
+     "Supervised: labelled pairs",
+     "Unsupervised: structure without labels",
+     "Self-supervised: labels from the data",
+     "Reinforcement: rewards for actions",
+     "A concrete example for each"
+    ]
+   },
+   {
+    "id": "c3-1-i02",
+    "q": "Why is LLM pretraining called self-supervised?",
+    "level": "fundamentals",
+    "covers": [
+     "The next token is the label",
+     "No human annotation needed",
+     "Scales to trillions of tokens",
+     "Later stages add supervised and RL tuning"
+    ]
+   },
+   {
+    "id": "c3-1-i03",
+    "q": "What is the feedback signal in each paradigm, and why does it matter for data collection?",
+    "level": "fundamentals",
+    "covers": [
+     "Labels, none, or rewards",
+     "Labels cost money and time",
+     "Rewards must be defined carefully",
+     "The signal decides what you can learn"
+    ]
+   },
+   {
+    "id": "c3-1-i04",
+    "q": "You have no labels for a new support category. What can you do?",
+    "level": "applied",
+    "covers": [
+     "Cluster to discover candidate themes",
+     "Label a sample by hand",
+     "Weak labels from rules or an LLM",
+     "Then train a supervised model",
+     "Measure agreement on the labels"
+    ]
+   },
+   {
+    "id": "c3-1-i05",
+    "q": "When is a bandit the right tool, and what are its risks?",
+    "level": "applied",
+    "covers": [
+     "Choosing among options with fast feedback",
+     "Exploration versus exploitation",
+     "Reward definition can be gamed",
+     "Guardrails for fairness and loss limits"
+    ]
+   },
+   {
+    "id": "c3-1-i06",
+    "q": "Fraud labels at {company} arrive weeks after the payment. How would you combine supervised and unsupervised methods?",
+    "level": "applied",
+    "covers": [
+     "Supervised model on matured labels",
+     "Unsupervised anomaly signals for new patterns",
+     "Investigator feedback as early labels",
+     "Time-aware evaluation"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c3-1-i07",
+    "q": "Design a system that discovers new complaint themes each week and routes them.",
+    "level": "system-design",
+    "covers": [
+     "Embed and cluster new tickets",
+     "Human review names and merges clusters",
+     "Promote stable themes to supervised classes",
+     "Monitor cluster drift",
+     "Close the loop with routing rules"
+    ]
+   },
+   {
+    "id": "c3-1-i08",
+    "q": "A team proposes RL to tune an assistant against live customer conversations. What would you require first?",
+    "level": "system-design",
+    "covers": [
+     "A sandbox or offline environment",
+     "A reward that cannot be gamed easily",
+     "Offline evaluation before any live exposure",
+     "Human oversight and rollback",
+     "Clear limits on what it may change"
+    ]
+   }
+  ]
+ },
+ "c3-2": {
+  "mcq": [
+   {
+    "id": "c3-2-m01",
+    "q": "Regression predicts…",
+    "options": [
+     "A category",
+     "A group of similar points",
+     "A number, such as a price or delivery time",
+     "A reward"
+    ],
+    "answer": 2,
+    "why": "Linear regression fits y = w·x + b by minimising squared error.",
+    "kind": "concept",
+    "distractors": [
+     "That is classification.",
+     "That is clustering.",
+     "",
+     "That is reinforcement learning."
+    ]
+   },
+   {
+    "id": "c3-2-m02",
+    "q": "How does logistic regression produce a decision?",
+    "options": [
+     "It clusters points",
+     "It uses a decision tree",
+     "It outputs a probability through the sigmoid, and a threshold turns it into a decision",
+     "It outputs a category directly"
+    ],
+    "answer": 2,
+    "why": "σ(z) = 1/(1 + e^−z) gives a probability; the threshold is a separate choice (3.5).",
+    "kind": "concept",
+    "distractors": [
+     "Clustering is k-means and similar.",
+     "Trees are a different model family.",
+     "",
+     "The output is a probability; the decision needs a threshold."
+    ]
+   },
+   {
+    "id": "c3-2-m03",
+    "q": "What is σ(0), the sigmoid of zero?",
+    "options": [
+     "1",
+     "0",
+     "0.5",
+     "e"
+    ],
+    "answer": 2,
+    "why": "1/(1 + e⁰) = 1/2.",
+    "kind": "calculation",
+    "distractors": [
+     "σ approaches 1 only for very positive inputs.",
+     "σ approaches 0 only for very negative inputs.",
+     "",
+     "The sigmoid's output is between 0 and 1."
+    ]
+   },
+   {
+    "id": "c3-2-m04",
+    "q": "What two steps does k-means alternate?",
+    "options": [
+     "Compute gradients, then update weights",
+     "Assign each point to its nearest centre, then move each centre to the mean of its points",
+     "Sort points, then count them",
+     "Split on features, then prune"
+    ],
+    "answer": 1,
+    "why": "It stops when assignments stop changing.",
+    "kind": "concept",
+    "distractors": [
+     "That describes gradient descent.",
+     "",
+     "That is not how clustering works.",
+     "That describes decision trees."
+    ]
+   },
+   {
+    "id": "c3-2-m05",
+    "q": "How does gradient boosting differ from a random forest?",
+    "options": [
+     "Boosting uses one deep tree",
+     "Boosting adds trees one at a time, each correcting the previous errors; a forest averages independent trees",
+     "They are the same",
+     "A forest corrects errors sequentially"
+    ],
+    "answer": 1,
+    "why": "Forests average many trees on random subsets; boosting stacks trees on residual errors.",
+    "kind": "concept",
+    "distractors": [
+     "A single deep tree overfits; boosting uses many shallow ones.",
+     "",
+     "They combine trees differently.",
+     "That describes boosting, not forests."
+    ]
+   },
+   {
+    "id": "c3-2-m06",
+    "q": "For tabular data, which is usually the strongest practical choice?",
+    "options": [
+     "An LLM prompt",
+     "Gradient boosting (XGBoost, LightGBM, CatBoost)",
+     "k-means",
+     "A single deep decision tree"
+    ],
+    "answer": 1,
+    "why": "Gradient boosting usually wins on structured tables.",
+    "kind": "concept",
+    "distractors": [
+     "LLMs are costly and poorly calibrated for tabular scoring.",
+     "",
+     "k-means does not predict labels.",
+     "A single deep tree overfits."
+    ]
+   },
+   {
+    "id": "c3-2-m07",
+    "q": "88% of tickets are “general”. A classifier reports 91% accuracy. What is the real gain over the majority-class baseline?",
+    "options": [
+     "91 percentage points",
+     "9 percentage points",
+     "12 percentage points",
+     "3 percentage points"
+    ],
+    "answer": 3,
+    "why": "Always predicting “general” already scores 88%, so the model adds 3 points, and rare-class recall may still be poor.",
+    "kind": "calculation",
+    "distractors": [
+     "That ignores the baseline.",
+     "That compares with 82%, which is not the baseline.",
+     "That is 100 − 88.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-2-m08",
+    "q": "A sophisticated model barely beats a simple baseline. What should you conclude?",
+    "options": [
+     "It is not adding much value yet; look at per-class results and costs",
+     "It is clearly better",
+     "Accuracy is the only thing that matters",
+     "The baseline is wrong"
+    ],
+    "answer": 0,
+    "why": "Report the baseline next to every result; if the gain is tiny, the complexity may not be worth it.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "A tiny gain may not justify the cost.",
+     "Per-class metrics matter, especially for rare classes.",
+     "The baseline is a reference, not an error."
+    ]
+   },
+   {
+    "id": "c3-2-m09",
+    "q": "In the k-means figure, you choose a k that does not match the true groups. What happens?",
+    "options": [
+     "k-means still returns tidy-looking clusters",
+     "It refuses to run",
+     "All points join one cluster",
+     "It finds the true number of groups automatically"
+    ],
+    "answer": 0,
+    "why": "k-means always produces k clusters, so clean-looking clusters do not prove real structure.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "It runs for any k.",
+     "Points are spread across all k centres.",
+     "k must be chosen; it is not discovered."
+    ]
+   },
+   {
+    "id": "c3-2-m10",
+    "q": "A tuned model is measured on validation data, and the baseline on a different test set. What is wrong?",
+    "options": [
+     "The comparison is unfair: both must be measured on the same data",
+     "Nothing",
+     "The baseline should not be measured",
+     "Validation data is always harder"
+    ],
+    "answer": 0,
+    "why": "Different data gives different difficulty; compare like with like.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "It can make either look better than it is.",
+     "The baseline is what keeps you honest.",
+     "Difficulty depends on the data, not the split's name."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c3-2-i01",
+    "q": "Compare regression, classification and clustering, with an example of each.",
+    "level": "fundamentals",
+    "covers": [
+     "Number, category, groups",
+     "Labelled versus unlabelled",
+     "Losses and metrics differ",
+     "Concrete examples"
+    ]
+   },
+   {
+    "id": "c3-2-i02",
+    "q": "How does k-means work, and what are its limitations?",
+    "level": "fundamentals",
+    "covers": [
+     "Assign then update, until stable",
+     "k must be chosen",
+     "Assumes roughly round clusters and is sensitive to scale",
+     "Results depend on initialisation"
+    ]
+   },
+   {
+    "id": "c3-2-i03",
+    "q": "Explain the difference between random forests and gradient boosting.",
+    "level": "fundamentals",
+    "covers": [
+     "Averaging independent trees versus sequential residual fitting",
+     "Variance versus bias reduction",
+     "Boosting usually stronger on tabular data",
+     "Boosting needs more tuning"
+    ]
+   },
+   {
+    "id": "c3-2-i04",
+    "q": "Why should you always report a baseline? Which baselines would you use for a ticket router?",
+    "level": "applied",
+    "covers": [
+     "Shows whether the model adds value",
+     "Majority class",
+     "A keyword rule",
+     "The current production system",
+     "Same test data for all"
+    ]
+   },
+   {
+    "id": "c3-2-i05",
+    "q": "Your classifier is 91% accurate. What else do you need to know before you trust it?",
+    "level": "applied",
+    "covers": [
+     "The base rate and baseline",
+     "Per-class precision and recall",
+     "The confusion matrix",
+     "How the split was made",
+     "Cost of each error type"
+    ]
+   },
+   {
+    "id": "c3-2-i06",
+    "q": "Build a first return-prediction model for {company}. Which baseline and model do you start with, and how do you judge them?",
+    "level": "applied",
+    "covers": [
+     "Majority-class and a simple rule baseline",
+     "Logistic regression, then gradient boosting",
+     "Time-based split",
+     "Recall at a usable precision, not accuracy",
+     "Check for leakage columns"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c3-2-i07",
+    "q": "Design a model-selection process for a tabular problem with a strict deadline.",
+    "level": "system-design",
+    "covers": [
+     "Baseline first",
+     "Gradient boosting with sensible defaults",
+     "Cross-validation or a time split",
+     "One primary metric agreed up front",
+     "Short error analysis before shipping"
+    ]
+   },
+   {
+    "id": "c3-2-i08",
+    "q": "When would you use an LLM instead of a gradient-boosted model for classification, and how would you compare them fairly?",
+    "level": "system-design",
+    "covers": [
+     "Unstructured text and few labels favour LLMs",
+     "Same test set and metrics",
+     "Cost and latency per item",
+     "Calibration and auditability",
+     "Consider using the LLM to create labels for a cheaper model"
+    ]
+   }
+  ]
+ },
+ "c3-6": {
+  "mcq": [
+   {
+    "id": "c3-6-m01",
+    "q": "What does error analysis involve?",
+    "options": [
+     "Sampling failures, tagging each with a cause, counting buckets and fixing the largest",
+     "Increasing model size",
+     "Re-running training with a new seed",
+     "Reading only the best predictions"
+    ],
+    "answer": 0,
+    "why": "The biggest bucket, weighted by impact, tells you what to fix next.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Size rarely fixes the biggest bucket.",
+     "A new seed does not explain failures.",
+     "Errors are what you study."
+    ]
+   },
+   {
+    "id": "c3-6-m02",
+    "q": "Why compute metrics per slice?",
+    "options": [
+     "Averages are always wrong",
+     "Slices replace the test set",
+     "Slices make the model faster",
+     "An overall average can hide a group where the model fails badly"
+    ],
+    "answer": 3,
+    "why": "A model at 89% overall may be far worse on mixed-language or new-product inputs.",
+    "kind": "concept",
+    "distractors": [
+     "Averages are useful but incomplete.",
+     "Slices are views of the test set.",
+     "Speed is unaffected.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-6-m03",
+    "q": "Hyperparameters should be tuned on…",
+    "options": [
+     "The training set's own score",
+     "Production traffic",
+     "The test set",
+     "The validation set (or cross-validation)"
+    ],
+    "answer": 3,
+    "why": "Touch the test set once; tune on validation.",
+    "kind": "concept",
+    "distractors": [
+     "Training scores favour overfit settings.",
+     "Production needs labels and carries risk.",
+     "Tuning on test data overfits to it.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-6-m04",
+    "q": "Why is random search often better than grid search per trial?",
+    "options": [
+     "It always finds the global optimum",
+     "It is deterministic",
+     "It explores more distinct values of the hyperparameters that matter",
+     "It needs no validation set"
+    ],
+    "answer": 2,
+    "why": "When only a few hyperparameters matter, random sampling tries more of their values in the same budget.",
+    "kind": "concept",
+    "distractors": [
+     "Neither guarantees the optimum.",
+     "Random search is random by design.",
+     "",
+     "Both need validation."
+    ]
+   },
+   {
+    "id": "c3-6-m05",
+    "q": "Covariate shift means…",
+    "options": [
+     "The inputs change, for example a new customer region",
+     "The class balance changes",
+     "The relationship between inputs and labels changes",
+     "The model's code changes"
+    ],
+    "answer": 0,
+    "why": "The input distribution moves, so the model sees regions it rarely trained on.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That is label or prior shift.",
+     "That is concept drift.",
+     "Code changes are not shift."
+    ]
+   },
+   {
+    "id": "c3-6-m06",
+    "q": "Fraud suddenly spikes from 0.5% to 2% of transactions with the same tactics. This is…",
+    "options": [
+     "Concept drift",
+     "Covariate shift",
+     "Label (prior) shift",
+     "Leakage"
+    ],
+    "answer": 2,
+    "why": "The class balance changed; the input-label relationship did not.",
+    "kind": "scenario",
+    "distractors": [
+     "Concept drift would mean new tactics.",
+     "The question is about class balance.",
+     "",
+     "Nothing leaked."
+    ]
+   },
+   {
+    "id": "c3-6-m07",
+    "q": "Fraudsters adopt a new tactic that old features do not capture. This is…",
+    "options": [
+     "Overfitting",
+     "Covariate shift only",
+     "Label shift only",
+     "Concept drift"
+    ],
+    "answer": 3,
+    "why": "The relationship between inputs and the label has changed.",
+    "kind": "scenario",
+    "distractors": [
+     "Overfitting is about training, not the world changing.",
+     "Inputs may look normal while the meaning changes.",
+     "Balance alone did not change.",
+     ""
+    ]
+   },
+   {
+    "id": "c3-6-m08",
+    "q": "A document classifier drops from 92% to 84% after scanned PDFs rise from 5% to 30% of traffic. What does the topic recommend?",
+    "options": [
+     "Ignore it; averages fluctuate",
+     "Improve OCR, add scanned samples to training and add a scanned slice to the dashboard",
+     "Raise the learning rate",
+     "Switch to a larger model only"
+    ],
+    "answer": 1,
+    "why": "Error analysis showed most new errors were scanned documents, so fix data and monitor that slice.",
+    "kind": "scenario",
+    "distractors": [
+     "An 8-point drop with a known cause needs action.",
+     "",
+     "The learning rate is unrelated.",
+     "The fix is data, not size."
+    ]
+   },
+   {
+    "id": "c3-6-m09",
+    "q": "An input-drift alarm fires. What is the right first response?",
+    "options": [
+     "Measure performance; drift is a reason to check, not proof that accuracy fell",
+     "Disable the model",
+     "Retrain immediately",
+     "Ignore it"
+    ],
+    "answer": 0,
+    "why": "Inputs can drift without harming accuracy, and accuracy can fall without visible input drift.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Disabling is drastic without evidence.",
+     "Retraining blindly can make things worse.",
+     "It deserves a check."
+    ]
+   },
+   {
+    "id": "c3-6-m10",
+    "q": "When is cross-validation most useful?",
+    "options": [
+     "When data is small",
+     "Only for LLMs",
+     "When data is huge",
+     "Never for tuning"
+    ],
+    "answer": 0,
+    "why": "It reuses scarce data for more reliable estimates; with lots of data a single validation split is often enough.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "It applies to many model types.",
+     "With lots of data it is often unnecessary.",
+     "It is a standard tuning tool."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c3-6-i01",
+    "q": "Describe the error-analysis loop.",
+    "level": "fundamentals",
+    "covers": [
+     "Sample failures randomly",
+     "Tag causes",
+     "Count and rank by impact",
+     "Fix the biggest, often in the data",
+     "Re-evaluate on the same test set and slices"
+    ]
+   },
+   {
+    "id": "c3-6-i02",
+    "q": "Explain the difference between covariate shift, label shift and concept drift.",
+    "level": "fundamentals",
+    "covers": [
+     "Inputs change",
+     "Class balance changes",
+     "The input–label relationship changes",
+     "Detection and response differ for each"
+    ]
+   },
+   {
+    "id": "c3-6-i03",
+    "q": "How should you tune hyperparameters without fooling yourself?",
+    "level": "fundamentals",
+    "covers": [
+     "Validation or cross-validation only",
+     "Random or Bayesian search",
+     "A fixed budget",
+     "Test set used once"
+    ]
+   },
+   {
+    "id": "c3-6-i04",
+    "q": "Accuracy dropped eight points last month. Walk through your investigation.",
+    "level": "applied",
+    "covers": [
+     "Confirm the drop and its timing",
+     "Slice by segment and input type",
+     "Check input drift and data pipeline changes",
+     "Error analysis on a sample",
+     "Fix, then re-check all slices"
+    ],
+    "followUp": "How would you tell a data-pipeline bug from real-world drift?"
+   },
+   {
+    "id": "c3-6-i05",
+    "q": "Why is random search often better than grid search?",
+    "level": "applied",
+    "covers": [
+     "Few hyperparameters usually matter",
+     "Random covers more values of those",
+     "Grid wastes trials",
+     "Bayesian optimisation as a next step"
+    ]
+   },
+   {
+    "id": "c3-6-i06",
+    "q": "Recall on UPI payments at {company} fell in November while the inputs looked normal. What happened, and what do you do?",
+    "level": "applied",
+    "covers": [
+     "Likely concept drift from a new tactic",
+     "Find it by slicing labelled outcomes",
+     "Add features and fresh labels",
+     "Retrain and backtest",
+     "Add the slice to monitoring"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c3-6-i07",
+    "q": "Design drift monitoring for a model whose labels arrive weeks late.",
+    "level": "system-design",
+    "covers": [
+     "Input statistics as an early signal",
+     "Proxy outcomes and investigator feedback",
+     "Performance on matured labels",
+     "Slice dashboards",
+     "Clear runbook for when to retrain"
+    ]
+   },
+   {
+    "id": "c3-6-i08",
+    "q": "Monsoon disruptions break {company}'s cancellation model every year. Design a process so they do not.",
+    "level": "system-design",
+    "covers": [
+     "Seasonal and disruption features",
+     "A disruption data feed",
+     "Backtests on past monsoons",
+     "Scheduled retraining before the season",
+     "Slice dashboards by route and month"
+    ],
+    "project": "travel"
+   }
+  ]
  }
 }

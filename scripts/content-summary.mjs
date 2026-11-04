@@ -9,6 +9,7 @@ const manifest = JSON.parse(readFileSync(join(root, 'manifest.json'), 'utf8'))
 const projects = JSON.parse(readFileSync(join(root, 'projects.json'), 'utf8')).projects.map((p) => p.id)
 const topicIds = new Set(manifest.chapters.flatMap((c) => c.topics.map((t) => t.id)))
 const errors = []
+const warnings = []
 const err = (where, msg) => errors.push(`${where}: ${msg}`)
 
 // ---- practice notes
@@ -64,6 +65,12 @@ for (const c of manifest.chapters) {
       if (!LEVELS.has(q.level)) err(w, `bad level ${q.level}`)
       if (q.project && !projects.includes(q.project)) err(w, `unknown project ${q.project}`)
     }
+    // warn when the right answer sits in the same position too often (readers learn to pick it)
+    const pos = (sec.mcq ?? []).filter((q) => Number.isInteger(q.answer)).map((q) => q.answer)
+    if (pos.length >= 6) {
+      const top = Math.max(...[0, 1, 2, 3].map((i) => pos.filter((x) => x === i).length))
+      if (top / pos.length > 0.5) warnings.push(`${c.id}.json ${tid}: ${top} of ${pos.length} answers in one position`)
+    }
     const framed = (sec.interview ?? []).filter((q) => q.project).length
     if (framed > 2) err(`${c.id}.json ${tid}`, `${framed} project-framed interview questions (max 2)`)
     const s = { mcq: (sec.mcq ?? []).length, interview: (sec.interview ?? []).length }
@@ -80,5 +87,6 @@ if (errors.length) {
   console.error('Content errors:\n- ' + errors.join('\n- '))
   process.exit(1)
 }
+if (warnings.length) console.warn('Content warnings:\n- ' + warnings.join('\n- '))
 writeFileSync(join(root, 'checks', 'summary.json'), JSON.stringify(summary, null, 1) + '\n')
 console.log(`content ok · ${summary.totals.mcq} choose-the-answer · ${summary.totals.interview} interview questions`)

@@ -2,37 +2,195 @@
  "c1-1": {
   "harbor": {
    "practice": "Harbor mixes all four: a deterministic permission check (rules), keyword search over policies (classic IR), a learned reranker (deep learning) and an answer-writing LLM (generative AI). Naming each part separately tells you where an error or a cost came from.",
-   "failure": "Calling the whole pipeline &quot;the AI&quot; hides which component failed; and a generative model is not automatically better than a small classifier for a fixed labelling task."
+   "failure": "Calling the whole pipeline &quot;the AI&quot; hides which component failed; and a generative model is not automatically better than a small classifier for a fixed labelling task.",
+   "fit": "good",
+   "fitNote": "one pipeline mixes rules, search, a learned reranker and an LLM",
+   "tryIt": "Open <code>tickets.csv</code>. For ten tickets, write which of the four approaches you would use to route each one and why, and mark the ones a simple keyword rule already gets right."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "returns mix a rule, a learned risk score, image tagging and generated replies",
+   "practice": "{assistant} uses all four. A rule blocks returns outside the return window, a gradient-boosted model scores return risk from order data, a deep image model tags product photos by colour and pattern, and an LLM writes the reply to the shopper. When a refund goes wrong, the team first asks which of the four produced it.",
+   "failure": "Using an LLM to decide return eligibility that a two-line rule computes exactly. The LLM adds cost and a chance of being wrong where the rule cannot be.",
+   "tryIt": "In <code>orders.csv</code>, write a one-line rule such as “cash on delivery and delivery over 7 days”, then count how many returned orders (<code>returned = 1</code>) it catches and how many it flags wrongly. That count is the baseline any learned model has to beat."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "rules, a fraud model and an explaining LLM must stay separately auditable",
+   "practice": "At {company}, rules check UPI limits and KYC status, a trained model scores every transaction for fraud, a deep model reads cheque images, and {assistant} (an LLM) explains a declined payment to the customer. Each component's decision is logged separately, because an auditor will ask which one made it.",
+   "failure": "Letting the LLM decide whether to block a card. A fraud decision needs a calibrated, auditable score; the LLM can explain the decision, not make it.",
+   "tryIt": "In <code>transactions.csv</code>, compute the fraud rate for <code>is_foreign = 1</code> and for <code>hour &lt; 5</code>. Each is a candidate hand-written rule: compare how many frauds it catches with how many genuine payments it would block."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "free-text requests need an LLM, while fees and deadlines need rules",
+   "practice": "{assistant} uses rules for fare arithmetic (change fees, deadlines), search over fare rules, a learned model that predicts cancellation risk, and an LLM to read free text such as “move my Goa hotel by two days”. Each part is tested on its own: a wrong fee is a rule bug, a wrong date is an extraction bug.",
+   "failure": "Asking the LLM to compute a change fee from the fare-rule text. Compute it in code from structured rules and let the LLM only explain it.",
+   "tryIt": "Take the messages in <code>messages.json</code>. For each, write the structured request an LLM should extract (action, product, dates) and mark which part then becomes a rule (fee, deadline) rather than a model."
   }
  },
  "c1-2": {
   "harbor": {
    "practice": "Harbor&#x27;s support routing grew the same way the field did: keyword rules, then a trained ticket classifier, then retrieval-augmented answers, then a bounded tool-using workflow. Each stage fixed a specific failure of the last; none made the earlier one useless.",
-   "failure": "An agent is an application architecture (a model in a control loop), not a new kind of neural network and not evidence of human-like reasoning."
+   "failure": "An agent is an application architecture (a model in a control loop), not a new kind of neural network and not evidence of human-like reasoning.",
+   "fit": "good",
+   "fitNote": "support routing went through every era",
+   "tryIt": "Step through the eras figure and, for each era, write what Harbor's ticket routing would have looked like: keyword rules, naive Bayes on words, an LSTM, a fine-tuned encoder, then an LLM prompt."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "product search moved from keywords to embeddings to an assistant",
+   "practice": "Product search at {company} followed the same path as the field: exact keyword match, then a ranking model learned from clicks, then embeddings that match “red cotton kurta” to “maroon handloom kurta”, and now {assistant} answering questions about a product page. Keyword search stayed, because shoppers still type exact sizes and brand names.",
+   "failure": "Retiring keyword search when embeddings arrive. Exact sizes, model numbers and brand names are still matched better by keywords (9.3).",
+   "tryIt": "In <code>products.csv</code>, search the titles for “UK 8” with plain substring matching. This rule-era method is exact and instant; list two shopper queries it cannot handle (a synonym, a misspelling) that a learned model would."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "fraud scoring stayed statistical while LLMs arrived elsewhere",
+   "practice": "{company}'s fraud detection moved from fixed rules (“block foreign transactions above a limit”) to logistic regression, then to gradient-boosted trees on behaviour features. LLMs arrived somewhere else entirely: summarising dispute cases for investigators, not scoring fraud.",
+   "failure": "Assuming the newest era replaces the earlier ones. For tabular fraud scoring, gradient-boosted trees still beat LLMs on accuracy, cost and auditability.",
+   "tryIt": "In <code>transactions.csv</code>, try a rules-era detector, “flag if <code>amount_vs_customer_avg</code> is above 5”, and count its true and false alarms against the <code>fraud</code> column. Chapter 3 measures a statistical-era model against this baseline."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "the agent era maps directly onto planning and booking",
+   "practice": "Travel booking went from fixed search forms (origin, destination, date) to ranking by learned conversion models, then to {assistant}, an agent that plans, compares and books across flights and hotels. The agent era brought a new failure: a booking that only half completes (11.6).",
+   "failure": "Treating the agent era as just a nicer interface. An agent that books things needs undo, approvals and limits that a search form never needed.",
+   "tryIt": "Step through the eras with one request from <code>messages.json</code>: “Book the cheapest flight from Bengaluru to Delhi next Friday morning for 2 adults.” Write what a search form, a ranking model and an agent would each do with it."
   }
  },
  "c1-3": {
   "harbor": {
    "practice": "Asked &quot;When is invoice 4471 due?&quot; with no invoice in context, Harbor&#x27;s model would still produce a fluent date, because a date is the likely continuation. Harbor therefore always retrieves the record and only states facts it can cite.",
-   "failure": "Treating a token probability as factual confidence: a likely continuation can be false, and &quot;large&quot; has no fixed parameter threshold that guarantees quality."
+   "failure": "Treating a token probability as factual confidence: a likely continuation can be false, and &quot;large&quot; has no fixed parameter threshold that guarantees quality.",
+   "fit": "good",
+   "fitNote": "invoice and policy questions show likely-but-false answers",
+   "tryIt": "Ask a local model (for example through Ollama) “When is invoice 4471 due?” with no context, three times. Then paste one policy from <code>policies.json</code> into the prompt and ask about it. Compare the fluent but unfounded answers with the grounded one."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "missing product attributes invite fluent guesses",
+   "practice": "Asked “Is this smartphone waterproof?” with no listing in context, a model answers yes or no fluently, because either is a likely continuation. {assistant} therefore answers product questions only from the listing and reviews it retrieves, and says “the listing doesn't say” otherwise.",
+   "failure": "Letting the model fill gaps in a listing. A likely-sounding spec (waterproof, 5G, pure silk) becomes a return and a consumer-protection problem.",
+   "tryIt": "Pick a product from <code>products.csv</code> and ask a local model about an attribute its listing does not contain: first with no context, then with the listing pasted in and the instruction “answer only from the listing; say not stated if it is missing”. Record both answers."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "fees, rates and limits are exactly what models guess plausibly",
+   "practice": "Asked “What is the penalty for breaking my fixed deposit early?” with no policy in context, a model produces a confident percentage. {assistant} must quote {company}'s own policy, because a fluent wrong number about money is both a complaint and a compliance issue.",
+   "failure": "Treating a fluent numeric answer as reliable. Interest rates, fees and limits are exactly the facts a model guesses plausibly and wrongly.",
+   "tryIt": "Ask a local model the fixed-deposit question with no context, then with the “Fixed deposit premature withdrawal” policy from <code>policies.json</code> in the prompt. Note how the unfounded answer still sounds authoritative."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "fare-rule questions get the internet's common answer, not your rule",
+   "practice": "Asked “Can I cancel my saver fare for free?” with no rules in context, the likely continuation reflects what is common online, not {company}'s rules. {assistant} retrieves the fare rule for the booking's fare family before it answers.",
+   "failure": "Answering a fare question from general knowledge. Airlines' common policies are a likely continuation, not the rule attached to this booking.",
+   "tryIt": "Ask a local model the saver-fare question with no context, then with the “Saver fare: cancellation” rule from <code>fare_rules.json</code> in the prompt, and compare."
   }
  },
  "c1-4": {
   "harbor": {
    "practice": "A Harbor request carries a 900-token system prompt, about 2,500 tokens of policy passages, 600 tokens of history and an 800-token output reserve. The team budgets with the real tokenizer and has found the same German policy costs about 30% more tokens than its English version.",
-   "failure": "Assuming a long chat is teaching the model, or that a word count is a token count. Neither the weights nor the token budget work that way."
+   "failure": "Assuming a long chat is teaching the model, or that a word count is a token count. Neither the weights nor the token budget work that way.",
+   "fit": "good",
+   "fitNote": "German and English tickets show token differences",
+   "tryIt": "Paste a German and an English ticket from <code>tickets.csv</code> into the estimator and compare the estimates. Then count both with a real tokenizer (the laptop lab above) to see how far the four-characters-per-token rule is off."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "Hindi, Tamil and Hinglish chats show real token-cost differences",
+   "practice": "A typical {assistant} request carries a 700-token system prompt, about 1,500 tokens of listing and review text and a 250-token reply (illustrative). Festival-sale traffic multiplies the request count, so trimming 200 tokens of reviews is a visible line in the monthly bill. Hindi and Tamil chats usually cost more tokens than English ones that say the same thing.",
+   "failure": "Budgeting with English word counts. With most tokenizers Devanagari and Tamil text produces many more tokens per word, so a budget built on English traffic under-estimates an Indian marketplace.",
+   "tryIt": "Paste the English, Hindi and Tamil messages from <code>chats.json</code> into the estimator one at a time, then count them with the laptop-lab tokenizer and compare tokens per character across the three scripts. Set requests per day to 500,000 to see what the difference does to cost."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "case summaries make input versus output cost visible",
+   "practice": "{assistant}'s dispute summaries read a case file of up to about 3,000 tokens and write about 150. Because every case uses it, the team sets a hard output limit and tracks cost per resolved case, not per request.",
+   "failure": "Pasting a customer's full transaction history into every prompt. It costs tokens on every call and puts personal data where it is not needed; send only the transactions the case refers to.",
+   "tryIt": "In the estimator, set input to 3,000 tokens, output to 150 and requests per day to 400 (a day of cases from <code>disputes.csv</code>). Then halve the input, as if you sent only the disputed transaction rows, and compare the daily cost and latency."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "multilingual requests and long itineraries make token costs visible",
+   "practice": "{assistant} plans trips in English, Hindi, Tamil and Hinglish. With some tokenizers a Tamil request uses several times as many tokens as the English one, and itinerary replies are long, so output tokens dominate both cost and waiting time.",
+   "failure": "Letting itinerary replies run long. Output tokens are slower to generate and usually pricier than input, so a 600-token itinerary costs more waiting time than a 3,000-token prompt.",
+   "tryIt": "Paste the English and Tamil cancellation messages from <code>messages.json</code> into the estimator, then raise output tokens from 150 to 600 (a full itinerary) and watch latency and cost. Confirm the token counts with the laptop-lab tokenizer."
   }
  },
  "c1-5": {
   "harbor": {
    "practice": "Harbor&#x27;s test set includes a policy that never existed, a policy revised last week and a question asked in Tamil. The team grades whether each claim is supported, whether the cited version is current, and per-language failure rates, not just fluency.",
-   "failure": "Accepting a citation as proof: the cited passage must actually support the specific claim, and the model&#x27;s &quot;I&#x27;m 90% sure&quot; means nothing until measured."
+   "failure": "Accepting a citation as proof: the cited passage must actually support the specific claim, and the model&#x27;s &quot;I&#x27;m 90% sure&quot; means nothing until measured.",
+   "fit": "best",
+   "fitNote": "current and outdated policy versions make grounding testable",
+   "tryIt": "Write five test questions from <code>policies.json</code>: one answered by a current policy, one by an outdated revision (<code>current: false</code>), one about a policy that does not exist, one in Tamil and one that needs two policies. Grade a local model's answers for support, not fluency."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "reviews contain contradictions and hidden instructions",
+   "practice": "{assistant}'s evaluation set includes a product with no warranty information, a review that contradicts its listing, a Hinglish question and a review carrying hidden instructions. Answers are graded on whether they stay inside the listing and treat reviews as opinions, not facts.",
+   "failure": "Trusting the assistant's tone. “Yes, this is definitely pure silk” sounds the same whether or not the listing says so.",
+   "tryIt": "From <code>reviews.json</code>, pick one review with <code>is_injection: true</code> and one Hinglish review. Put each in a prompt with its product listing and ask a local model to summarise what shoppers say. Check whether it follows the injected instruction or invents details."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "regulated answers make hallucination and bias concrete",
+   "practice": "{company} treats bias and stale knowledge as compliance risks: {assistant} must give the same service whatever the customer's name, language or region, and must never quote a rate from an outdated policy. Its test set asks the same question in English, Hindi and Tamil, and includes a policy changed yesterday.",
+   "failure": "Using the model's own “I'm confident” to decide whether to show an answer about fees or limits. Confidence has to be measured against labelled cases first (3.5).",
+   "tryIt": "With the “Card dispute timelines” policy in context, ask a local model the same dispute question in English and in Hindi (both are in <code>disputes.csv</code>). Check that both answers give the same 30-day and 5-working-day figures."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "fares go stale within hours",
+   "practice": "Fares and schedules change by the hour, so anything a model “knows” about prices is out of date. {assistant} never states a fare or seat availability from the model; it quotes only live inventory results, with the time they were fetched.",
+   "failure": "Letting the model estimate a fare “for planning”. Travellers treat any number they see as a quote.",
+   "tryIt": "Ask a local model for “the usual fare from Mumbai to Goa in December”. Then look up BOM to GOI rows with December travel dates in <code>bookings.csv</code> and compare. Even the dataset is a snapshot, which is why live inventory calls exist."
   }
  },
  "c1-6": {
   "harbor": {
    "practice": "For Harbor&#x27;s expense feature: &quot;Is this receipt over the limit?&quot; is a rule; &quot;Which policy covers client dinners?&quot; is search; &quot;Is this claim likely fraudulent?&quot; is a trained classifier; &quot;Explain the decision to the employee&quot; is the LLM&#x27;s job.",
-   "failure": "Choosing an agent framework first and then looking for a problem it fits."
+   "failure": "Choosing an agent framework first and then looking for a problem it fits.",
+   "fit": "good",
+   "fitNote": "the expense feature splits into four techniques",
+   "tryIt": "Run these four through the decision guide: “Is this expense over the limit?”, “Which policy covers client dinners?”, “Is this ticket a security incident?” and “Explain the refund decision to the employee”. Compare its suggestions with Harbor's choices above."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "returns split into rule, search, model and LLM parts",
+   "practice": "For returns at {company}: “Is the order inside the return window?” is a rule. “What does the policy say about opened beauty products?” is search. “Is this return likely to be abuse?” is a trained model on order history. “Write a polite reply in the shopper's language” is the LLM's job.",
+   "failure": "Building an LLM “returns agent” that decides eligibility. Eligibility is a rule, and it must give the same answer for every shopper.",
+   "tryIt": "In <code>orders.csv</code>, <code>returned</code> is a classic ML target with structured features (<code>category</code>, <code>payment</code>, <code>delivery_days</code>). Answer the decision guide's questions for “predict which orders will be returned” and note why an LLM is the wrong first tool."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "every dispute splits cleanly into rule, search, model and LLM parts",
+   "practice": "For a disputed payment at {company}: “Is the dispute inside 30 days?” is a rule. “What is our policy on failed UPI debits?” is search. “Is this transaction likely fraud?” is a trained classifier. “Summarise the case for the investigator and draft the customer letter” is the LLM, reviewed before anything is sent.",
+   "failure": "Asking an LLM to decide refund eligibility from the case text. The decision must follow the written rule and be reproducible in an audit.",
+   "tryIt": "Use the decision guide for three tasks from <code>disputes.csv</code>: classify the dispute reason, decide the outcome, and write the customer update. Note which tasks already have labels in the file (<code>reason</code>, <code>outcome</code>)."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "a change request splits into language, lookup and arithmetic",
+   "practice": "For a change request at {company}: “Can this fare change 4 hours before departure?” is a rule. “What are this hotel's cancellation terms?” is search. “Will this booking be cancelled?” is a trained model used to price flexible fares. “Understand ‘move my Goa hotel by two days’ and confirm it” is the LLM.",
+   "failure": "Letting the agent pick between rebooking options by “judgement” when the cheapest valid option is a deterministic search over fares.",
+   "tryIt": "Take “Kal ki flight cancel karni hai, refund milega?” from <code>messages.json</code> and split it with the decision guide into language understanding, fare-rule lookup and fee calculation."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use five Harbor tasks instead of your own:</p><ol><li>Check that every ticket in <code>tickets.csv</code> has an account ID.</li><li>Find the policy that covers client dinners.</li><li>Draft a reply to a billing ticket.</li><li>Predict resolution time (<code>resolved_hours</code>) for a new ticket.</li><li>Summarise a week of security tickets for the security lead.</li></ol><p>Write the ten acceptance examples for task 3, including one German and one Tamil ticket.</p>"
+  },
+  "store": {
+   "scenario": "<p>Use five {company} tasks:</p><ol><li>Flag orders in <code>orders.csv</code> with a missing city.</li><li>Find the returns rule for opened beauty products.</li><li>Reply to the chat “Refund kab milega? UPI se pay kiya tha.”</li><li>Predict which orders will be returned.</li><li>Summarise this week's reviews for one product.</li></ol><p>Write ten acceptance examples for task 3, including Hindi, Tamil and Hinglish messages from <code>chats.json</code>.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use five {company} tasks:</p><ol><li>Check that a dispute is raised within 30 days of the transaction.</li><li>Find the policy on failed UPI debits.</li><li>Draft the customer update for a dispute in <code>disputes.csv</code>.</li><li>Score a transaction for fraud.</li><li>Summarise a case for the investigator.</li></ol><p>Write ten acceptance examples for task 3. Make the cost of a wrong answer explicit for each (a wrong refund promise, a missed deadline).</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use five {company} tasks:</p><ol><li>Check that a booking's travel date is after its booking date.</li><li>Find the change rule for a saver fare.</li><li>Understand and confirm “Goa wala hotel do din aage kar do please”.</li><li>Predict whether a booking will be cancelled (<code>bookings.csv</code>).</li><li>Explain the change fee to the traveller.</li></ol><p>Write ten acceptance examples for task 3 using the messages in <code>messages.json</code>.</p>"
   }
  }
 }

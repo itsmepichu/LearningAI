@@ -85,12 +85,12 @@ export function McqCard({ q, mode, draft, onDraft, reveal, index, context }: Mcq
         </button>
       )}
       {revealed && (
-        <div className="fb" role="status">
+        <div className="mfb" role="status">
           <p>
             <b>{ok ? 'Correct.' : shown === undefined ? 'Not answered.' : 'Not quite.'}</b> {q.why}
           </p>
           {!ok && shown !== undefined && q.distractors && (
-            <ul className="fb-why">
+            <ul className="mfb-why">
               {[...picked].filter((j) => !right.has(j) && q.distractors![j]).map((j) => (
                 <li key={j}>
                   <b>“{q.options[j]}”</b>: {q.distractors![j]}
@@ -99,7 +99,7 @@ export function McqCard({ q, mode, draft, onDraft, reveal, index, context }: Mcq
             </ul>
           )}
           {q.distractors && (
-            <details className="fb-all">
+            <details className="mfb-all">
               <summary>Why the other options are wrong</summary>
               <ul>
                 {q.options.map((o, j) => (!right.has(j) && q.distractors![j] ? <li key={j}><b>{o}</b>: {q.distractors![j]}</li> : null))}
@@ -165,7 +165,7 @@ export function InterviewCard({ q, index, context, defaultOpen = false }: { q: I
       <div className="iv-rate" role="group" aria-label="How well did you answer?">
         <span>How did you do?</span>
         {RATINGS.map((r) => (
-          <button key={r.id} type="button" className={'chip r-' + r.id + (rating === r.id ? ' on' : '')} aria-pressed={rating === r.id} onClick={() => rate(q.id, rating === r.id ? undefined : r.id)}>
+          <button key={r.id} type="button" className={'lchip r-' + r.id + (rating === r.id ? ' on' : '')} aria-pressed={rating === r.id} onClick={() => rate(q.id, rating === r.id ? undefined : r.id)}>
             {r.label}
           </button>
         ))}

@@ -150,7 +150,7 @@ export function PracticePage() {
             {available.map((c) => {
               const n = chapterCheckCount(c.id)
               return (
-                <button key={c.id} type="button" className={'chip' + (chapters.includes(c.id) ? ' on' : '')} aria-pressed={chapters.includes(c.id)} onClick={() => toggleCh(c.id)} title={`${c.title} · ${n.mcq + n.interview} questions`}>
+                <button key={c.id} type="button" className={'lchip' + (chapters.includes(c.id) ? ' on' : '')} aria-pressed={chapters.includes(c.id)} onClick={() => toggleCh(c.id)} title={`${c.title} · ${n.mcq + n.interview} questions`}>
                   {c.num}
                 </button>
               )

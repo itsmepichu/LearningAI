@@ -2,37 +2,195 @@
  "c3-1": {
   "harbor": {
    "practice": "Harbor uses supervised learning to route tickets, unsupervised clustering to discover new complaint themes, and never uses reinforcement learning against live customer accounts: any reward-driven tuning happens in a sandbox.",
-   "failure": "Calling a multi-step LLM agent &quot;reinforcement learning&quot;: nothing is learning from reward unless weights are actually updated from a reward signal."
+   "failure": "Calling a multi-step LLM agent &quot;reinforcement learning&quot;: nothing is learning from reward unless weights are actually updated from a reward signal.",
+   "fit": "good",
+   "fitNote": "labelled routing next to unlabelled theme discovery",
+   "tryIt": "The <code>category</code> column in <code>tickets.csv</code> makes routing a supervised problem. Drop it, cluster the ticket texts (TF-IDF plus k-means), and compare the clusters with the real categories."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "returns, shopper segments and layout bandits show all three paradigms",
+   "practice": "{company} predicts returns with supervised learning on orders, clusters shoppers into segments without labels, and uses a bandit (a simple form of reinforcement learning) to choose which homepage layout to show, rewarded by clicks.",
+   "failure": "Running a bandit on prices without guardrails. Optimising clicks or revenue alone can learn unfair or loss-making prices.",
+   "tryIt": "With <code>orders.csv</code>, train a supervised return model (target <code>returned</code>), then run k-means on <code>price_inr</code> and <code>delivery_days</code> with no target and describe what each cluster means."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "labels arrive late, so unsupervised signals fill the gap",
+   "practice": "{company} uses supervised learning for fraud, with labels that arrive when chargebacks are confirmed. Unsupervised anomaly detection covers brand-new patterns that have no labels yet. Reinforcement learning is never run on live customer accounts.",
+   "failure": "Waiting for fraud labels before reacting to a new pattern. Labels arrive weeks later, so unsupervised anomaly signals must cover the gap.",
+   "tryIt": "On <code>transactions.csv</code>, train a supervised model on January to October, then run scikit-learn's <code>IsolationForest</code> on November and December and check whether it flags the new UPI-scam rows (small <code>p2p_transfer</code> payments marked fraud)."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "trip types discovered without labels",
+   "practice": "{company} trains supervised cancellation models, clusters trips into types (business, family holiday, pilgrimage) without labels, and tests search-ranking changes with bandits.",
+   "failure": "Calling the booking agent “reinforcement learning” because it tries options. Nothing is learning from reward unless weights are updated from a reward signal.",
+   "tryIt": "Cluster <code>bookings.csv</code> on <code>lead_days</code>, <code>passengers</code> and <code>fare_inr</code> with k-means (k = 3), name the clusters, then compare their cancellation rates."
   }
  },
  "c3-2": {
   "harbor": {
    "practice": "Before any LLM routing, Harbor&#x27;s team trained a TF-IDF + logistic-regression router (91% accuracy) against a majority-class baseline (62%). That baseline is still the number every new router must beat.",
-   "failure": "Comparing a tuned model on validation data with a baseline measured on a different test set."
+   "failure": "Comparing a tuned model on validation data with a baseline measured on a different test set.",
+   "fit": "good",
+   "fitNote": "a majority-class baseline every router must beat",
+   "tryIt": "In <code>tickets.csv</code>, compute the majority-class baseline (always predict the most common category) and the recall it gets on <code>security</code> (zero). Any router has to beat both numbers."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "a 14% return rate makes baselines and trees easy to compare",
+   "practice": "Before {company} shipped its return-risk model, the baseline was “predict not returned”, about 86% accurate. The gradient-boosted model added only a point of accuracy but caught many of the returns at a precision the warehouse could act on, and that was the number that mattered.",
+   "failure": "Reporting accuracy for a 14%-positive target. “Nothing is ever returned” already scores about 86%.",
+   "tryIt": "On <code>orders.csv</code>, compute the majority-class baseline, then fit a decision tree (max_depth 3) on <code>category</code>, <code>payment</code>, <code>delivery_days</code> and <code>festive_sale</code>. Compare recall on <code>returned = 1</code>, not just accuracy, and print the tree to read its splits."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "replacing investigator rules only when a model beats them",
+   "practice": "{company}'s fraud baseline is the rule set investigators already use. Gradient-boosted trees replaced it only after beating it on recall at the same daily alert volume, measured on the same months.",
+   "failure": "Comparing a new model on recent months with the old rules measured on last year. Both must be scored on the same period.",
+   "tryIt": "In the k-means figure, choose a k that does not match the true groups and notice it still returns tidy clusters. Then run k-means on <code>amount_vs_customer_avg</code> and <code>txns_last_24h</code> from <code>transactions.csv</code> and check the fraud rate in each cluster: clusters are not fraud labels."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "per-route regression against a simple baseline",
+   "practice": "{company} predicts fares with regression and cancellations with classification. The fare baseline is “last week's average for the route”, and a model must beat it on each route, not just on average.",
+   "failure": "Reporting one average error across all routes. A model can be good on Delhi to Mumbai and poor on the rare international routes.",
+   "tryIt": "Fit a linear regression of <code>fare_inr</code> on <code>lead_days</code> for each route in <code>bookings.csv</code>, compare it with a route-average baseline using mean absolute error, and list the routes where the model loses."
   }
  },
  "c3-3": {
   "harbor": {
    "practice": "Only 2% of Harbor tickets are security incidents. The router uses class weights and a threshold tuned for 95% recall on that class, and its evaluation set keeps the real 2% prevalence.",
-   "failure": "Oversampling before splitting, which puts copies of the same example in both train and test."
+   "failure": "Oversampling before splitting, which puts copies of the same example in both train and test.",
+   "fit": "good",
+   "fitNote": "a 2% security class with a labelling guideline",
+   "tryIt": "In the class-imbalance figure, set the positive rate to 2% (Harbor's share of security tickets). Train without weights, then with class weights and a lower threshold, and write down recall and precision each time."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "late return labels and a leakage column",
+   "practice": "Return labels at {company} arrive up to two weeks after delivery, so the newest orders have no label yet and are left out of training. Features such as delivery time and payment method are known when the order is placed; the refund amount is not.",
+   "failure": "Using <code>refund_amount_inr</code> as a feature. It is non-zero only for returned orders, so the model scores almost perfectly offline and is useless at prediction time.",
+   "tryIt": "In the figure, choose 15% positives (close to the store's 14% returns) and see how much less class weighting matters than at 2%. Then train on <code>orders.csv</code> with and without <code>refund_amount_inr</code> and explain the jump."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "1.4% fraud is a real rare-class problem with a leakage trap",
+   "practice": "Fraud is about 1.4% of {company}'s transactions. Labels arrive only when a chargeback is confirmed, and investigators disagree on some cases, so a double-labelled sample sets the agreement ceiling. The model uses class weights and a threshold tuned to a fixed daily alert budget.",
+   "failure": "Training with <code>chargeback_filed</code> as a feature. It is only known weeks after the payment, so it leaks the label.",
+   "tryIt": "In the figure, set positives to 2% (the nearest setting to 1.4%) and compare fraud recall and precision with and without class weights. Then train logistic regression on <code>transactions.csv</code> with <code>class_weight=\"balanced\"</code> and compare recall at the same number of alerts."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "rarer non-refundable cancellations and a leakage column",
+   "practice": "About 14% of {company}'s bookings are cancelled, but cancellations of non-refundable fares are rarer and matter more for revenue. Labels are only final after the travel date, so the most recent bookings are excluded from training.",
+   "failure": "Using <code>cancellation_fee_inr</code> as a feature. It only exists after a cancellation.",
+   "tryIt": "In <code>bookings.csv</code>, compute the cancellation rate separately for <code>refundable = 0</code> and <code>refundable = 1</code>. Set the figure's positive rate to the nearer of 5% or 15% for each and compare how much weighting helps."
   }
  },
  "c3-4": {
   "harbor": {
    "practice": "Harbor splits ticket data by customer account and by time, because the same customer reuses templates and a random split let the model memorise them.",
-   "failure": "Repeatedly checking the test set and adjusting the model: the test set quietly becomes validation data."
+   "failure": "Repeatedly checking the test set and adjusting the model: the test set quietly becomes validation data.",
+   "fit": "good",
+   "fitNote": "a time split exposes the September channel change",
+   "tryIt": "Split <code>tickets.csv</code> by time (train before 1 September 2025, validate after) and also randomly, train the same router on each, and compare validation accuracy. The time split scores lower because in-app chat starts in September, which the random split hides."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a festival sale that random splits hide",
+   "practice": "{company} splits orders by time: train on January to September, validate on October to December. A random split mixed festival-sale orders into training and overstated how well the model would do at the next sale.",
+   "failure": "Using any column filled in after delivery, such as <code>refund_amount_inr</code>, or a random split that puts the same shopper's orders on both sides.",
+   "tryIt": "In the overfitting figure, raise the degree until validation error climbs, then add λ. Then train a deep decision tree on <code>orders.csv</code> with a random split and with a time split at 1 October, and compare the gap between training and validation scores."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "a leakage column and a drift period are built into the data",
+   "practice": "{company} validates fraud models out of time only: train on earlier months, test on later ones, with a gap for labels that arrive late. A random split let the model learn individual customers' habits and inflated recall.",
+   "failure": "Including <code>chargeback_filed</code>, or computing <code>txns_last_24h</code> with transactions that happened after the one being scored.",
+   "tryIt": "Train on <code>transactions.csv</code> with and without <code>chargeback_filed</code> and compare ROC AUC. Then train on January to October and test on November and December to watch the new scam lower recall."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "labels that depend on the travel date, not the booking date",
+   "practice": "{company} predicts cancellations at booking time, so every feature must be known then: lead time, product, refundability, passengers. A model trained with <code>cancellation_fee_inr</code> looked perfect offline and failed in production.",
+   "failure": "Splitting by booking date when the label depends on the travel date. A booking made in June for August is not labelled until August.",
+   "tryIt": "Train with and without <code>cancellation_fee_inr</code> on <code>bookings.csv</code>. Then split by <code>booked_on</code> and drop from training any booking whose <code>travel_date</code> falls after the split date."
   }
  },
  "c3-5": {
   "harbor": {
    "practice": "Harbor&#x27;s escalation classifier must keep precision ≥ 80% (human reviewers have limited capacity) while maximising recall; F1 is reported but not used to pick the threshold.",
-   "failure": "Optimising F1 by habit when the product actually needs a minimum precision or a strict missed-case limit."
+   "failure": "Optimising F1 by habit when the product actually needs a minimum precision or a strict missed-case limit.",
+   "fit": "good",
+   "fitNote": "a minimum-precision threshold for limited reviewers",
+   "tryIt": "In the threshold figure, find the lowest threshold that keeps precision at or above 80% and read the recall there. That is how Harbor's escalation threshold is chosen."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a threshold chosen from the cost of delaying an honest refund",
+   "practice": "{company} holds a refund for manual review when the return-abuse score is high. A false alarm delays an honest shopper's refund (a support contact and lost goodwill); a miss costs the item. The threshold comes from those two costs, not from F1.",
+   "failure": "Optimising ROC AUC and then shipping the default 0.5 threshold.",
+   "tryIt": "In the figure, move the threshold to find the lowest expected cost if a false alarm costs ₹150 and a miss costs ₹1,200 (count false positives and false negatives at each step). Then do the same sweep in code on a return model trained on <code>orders.csv</code>."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "alert budgets and calibrated fraud scores",
+   "practice": "{company}'s fraud team can review a fixed number of alerts a day, so the threshold is set to that budget and the PR curve, not ROC, is the main chart. Scores are calibrated, so a 0.8 risk means about 80% of such transactions are fraud, which investigators use to prioritise.",
+   "failure": "Reading a high ROC AUC as “the model is great” when fraud is 1.4% of traffic. The PR curve shows how many alerts are false.",
+   "tryIt": "Train a fraud model on <code>transactions.csv</code>, plot its PR curve, and find the threshold that gives 200 alerts per 10,000 transactions; report precision and recall there. Then draw a reliability diagram with scikit-learn's <code>CalibrationDisplay</code>."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "flexible-fare prices computed from calibrated probabilities",
+   "practice": "{company} offers a flexible-fare upgrade when cancellation risk is high. Calibration matters because the upgrade price is computed from the probability: if the model says 30%, about 30% of those bookings should cancel.",
+   "failure": "Pricing from uncalibrated scores. A model that says 60% when the truth is 30% overprices every flexible fare.",
+   "tryIt": "Train a cancellation model on <code>bookings.csv</code> and draw its reliability diagram, then fit isotonic calibration on a validation split and compare the two diagrams."
   }
  },
  "c3-6": {
   "harbor": {
    "practice": "When Harbor launched in-app chat, short chat messages dropped router accuracy by 9 points. Slicing errors by channel found it within a day, and 600 labelled chat examples fixed it.",
-   "failure": "Treating input drift as proof that accuracy fell; it is a reason to measure, not a verdict."
+   "failure": "Treating input drift as proof that accuracy fell; it is a reason to measure, not a verdict.",
+   "fit": "good",
+   "fitNote": "a chat-channel slice that the average hid",
+   "tryIt": "Train a router on <code>tickets.csv</code> rows before September, evaluate on rows after, and slice accuracy by <code>channel</code>. The chat slice should stand out, as it did for Harbor."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a temporary covariate shift during the sale",
+   "practice": "During the festival sale, {company}'s return model lost precision. Slicing by category showed mobiles and decor were far more common in sale traffic: a covariate shift. The team added a festival-sale slice to the dashboard and trains with last year's sale data included.",
+   "failure": "Retraining on sale data as soon as a drift alarm fires. The sale is temporary, so a model refit only on sale weeks will be wrong in December.",
+   "tryIt": "Compare category shares for <code>festive_sale = 1</code> and <code>festive_sale = 0</code> in <code>orders.csv</code>, then evaluate a model trained on non-sale months on the sale period, sliced by category."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "a planted concept-drift period to find by slicing",
+   "practice": "In November a new small-amount UPI scam appeared. Input statistics barely moved, but recall on UPI peer-to-peer payments fell: concept drift. It was found by slicing confirmed fraud by channel and category, and fixed with new features and fresh labels.",
+   "failure": "Watching only input drift. This scam looks like ordinary payments, so only performance monitoring on labelled cases catches it.",
+   "tryIt": "Train on January to October from <code>transactions.csv</code>, then compute recall on November and December sliced by <code>channel</code> and <code>merchant_category</code>. Find the slice that collapsed."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "disruption days that a new feature explains",
+   "practice": "When the monsoon arrived, change requests rose sharply and {company}'s cancellation model under-predicted. Error analysis by travel month and route showed the misses clustered on Mumbai, Kochi and Chennai departures on disruption days.",
+   "failure": "Tuning hyperparameters to win back the monsoon loss. The relationship changed, which needs a new feature (disruption days), not a different tree depth.",
+   "tryIt": "Join <code>bookings.csv</code> with <code>disruptions.csv</code> on travel date, add a disruption-day feature, and compare monsoon-month recall with and without it."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use <code>tickets.csv</code>: predict <code>category</code> from <code>text</code>, split by time at 1 September 2025, and report recall on <code>security</code> next to the majority-class baseline. Slice errors by <code>channel</code> and <code>language</code>.</p>"
+  },
+  "store": {
+   "scenario": "<p>Use <code>reviews.json</code>: label reviews with 4–5 stars positive and 1–2 negative, drop the 3-star ones, and train TF-IDF plus logistic regression. Report results per language (English, Hindi, Tamil, Hinglish) and check what the model does with the six <code>is_injection</code> reviews.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use <code>disputes.csv</code>: predict <code>reason</code> from <code>text</code>. Split by <code>opened</code> date, compare with the majority-class baseline, and report recall on the rarest reason. Note which errors come from the Hindi, Tamil and Hinglish cases.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use <code>bookings.csv</code> as a tabular variant: predict <code>cancelled</code> from <code>lead_days</code>, <code>product</code>, <code>refundable</code>, <code>passengers</code> and travel month, with a time split. Leave out <code>cancellation_fee_inr</code> and explain why in the model card.</p>"
   }
  }
 }

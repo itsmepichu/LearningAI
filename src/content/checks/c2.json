@@ -13,9 +13,275 @@
     "answer": 2,
     "why": "Cosine normalises by length, so scaling one vector leaves it unchanged.",
     "kind": "concept"
+   },
+   {
+    "id": "c2-1-m02",
+    "q": "What is the cosine similarity of [1, 0] and [1, 1]?",
+    "options": [
+     "About 0.71",
+     "0.5",
+     "About 1.41",
+     "1.0"
+    ],
+    "answer": 0,
+    "why": "a·b = 1, ‖a‖ = 1, ‖b‖ = √2, so cos = 1/√2 ≈ 0.71 (a 45° angle).",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "0.5 is cos 60°, not 45°.",
+     "1.41 is √2, the length of b; cosine is never above 1.",
+     "1.0 would mean the same direction."
+    ]
+   },
+   {
+    "id": "c2-1-m03",
+    "q": "What is the dot product of [2, 1, 0] and [1, 3, 4]?",
+    "options": [
+     "6",
+     "5",
+     "9",
+     "0"
+    ],
+    "answer": 1,
+    "why": "2·1 + 1·3 + 0·4 = 5.",
+    "kind": "calculation",
+    "distractors": [
+     "That adds the products wrongly; the last term is 0·4 = 0.",
+     "",
+     "That adds all the entries instead of multiplying pairs.",
+     "Only one pair multiplies to zero."
+    ]
+   },
+   {
+    "id": "c2-1-m04",
+    "q": "What is the norm (length) of [3, 4]?",
+    "options": [
+     "7",
+     "12",
+     "25",
+     "5"
+    ],
+    "answer": 3,
+    "why": "‖a‖ = √(3² + 4²) = √25 = 5.",
+    "kind": "calculation",
+    "distractors": [
+     "7 adds the entries.",
+     "12 multiplies the entries.",
+     "25 is the squared length, before the square root.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-1-m05",
+    "q": "Why do vector databases usually normalise embeddings to length 1?",
+    "options": [
+     "So the embedding model can be changed freely",
+     "So vectors take less disk space",
+     "So every score is positive",
+     "So cosine similarity equals the cheaper dot product"
+    ],
+    "answer": 3,
+    "why": "For unit vectors, a·b = cos θ, so ranking by dot product gives cosine ranking at lower cost.",
+    "kind": "concept",
+    "distractors": [
+     "Vectors from different models are not comparable, normalised or not.",
+     "Normalised vectors have the same number of entries.",
+     "Cosine can still be negative.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-1-m06",
+    "q": "What is the projection of a = [2, 2] onto b = [1, 0]?",
+    "options": [
+     "[1, 1]",
+     "[2, 2]",
+     "[2, 0]",
+     "[0, 2]"
+    ],
+    "answer": 2,
+    "why": "(a·b / ‖b‖²)·b = (2/1)·[1, 0] = [2, 0]: the part of a that points along b.",
+    "kind": "calculation",
+    "distractors": [
+     "That halves a; it is not a projection onto b.",
+     "That is a itself.",
+     "",
+     "That is the part of a perpendicular to b."
+    ]
+   },
+   {
+    "id": "c2-1-m07",
+    "q": "A cosine similarity of 0 means the two vectors are…",
+    "options": [
+     "Identical",
+     "Opposite",
+     "Both zero vectors",
+     "Perpendicular, so unrelated in that space"
+    ],
+    "answer": 3,
+    "why": "Cosine 1 means same direction, 0 perpendicular, −1 opposite.",
+    "kind": "concept",
+    "distractors": [
+     "Identical directions give 1.",
+     "Opposite directions give −1.",
+     "Cosine of a zero vector is undefined, not 0.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-1-m08",
+    "q": "Multiplying one token's vector by a 4096 × 4096 weight matrix takes about how many multiply-adds?",
+    "options": [
+     "About 67 million",
+     "8,192",
+     "About 16.7 million",
+     "4,096"
+    ],
+    "answer": 2,
+    "why": "Each of the 4,096 outputs is a dot product of length 4,096: 4,096² ≈ 16.7 million multiply-adds.",
+    "kind": "calculation",
+    "distractors": [
+     "That is four times too many.",
+     "That adds the dimensions instead of multiplying them.",
+     "",
+     "That is one row's worth."
+    ]
+   },
+   {
+    "id": "c2-1-m09",
+    "q": "An embedding call failed and your code stored a zero vector. What happens when you compute its cosine similarity?",
+    "options": [
+     "It is 1",
+     "It is −1",
+     "It is undefined (division by zero), so NaN scores can reach ranking",
+     "It is 0, which is safe"
+    ],
+    "answer": 2,
+    "why": "Cosine divides by both norms; a zero norm makes it undefined. Detect failed or empty embeddings explicitly.",
+    "kind": "scenario",
+    "distractors": [
+     "Nothing makes it 1.",
+     "Nothing makes it −1.",
+     "",
+     "It is not 0; the formula breaks."
+    ]
+   },
+   {
+    "id": "c2-1-m10",
+    "q": "A neural network layer is mostly…",
+    "options": [
+     "A sorting step",
+     "A matrix multiplication",
+     "A lookup table of facts",
+     "A set of IF–THEN rules"
+    ],
+    "answer": 1,
+    "why": "A layer multiplies its input by a weight matrix (plus a bias and an activation), which is why AI hardware is built around fast matrix multiplication.",
+    "kind": "concept",
+    "distractors": [
+     "Layers do not sort.",
+     "",
+     "Facts are not stored as lookups.",
+     "Rules are hand-written; layers are learned weights."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c2-1-i01",
+    "q": "Explain the dot product, the norm and cosine similarity, and when you would use each.",
+    "level": "fundamentals",
+    "covers": [
+     "Dot product measures alignment and grows with length",
+     "Norm is length",
+     "Cosine is the angle only, from 1 to −1",
+     "Cosine compares meaning when length is irrelevant",
+     "For unit vectors, cosine equals the dot product"
+    ]
+   },
+   {
+    "id": "c2-1-i02",
+    "q": "Why is a matrix multiplication “many dot products at once”, and why does that matter for hardware?",
+    "level": "fundamentals",
+    "covers": [
+     "Each output is a row-by-vector dot product",
+     "Layers are matrix multiplications",
+     "Huge numbers of identical operations parallelise well",
+     "GPUs and their matrix units are built for this"
+    ]
+   },
+   {
+    "id": "c2-1-i03",
+    "q": "What does it mean for embeddings to be normalised, and why do vector stores do it?",
+    "level": "fundamentals",
+    "covers": [
+     "Scaled to length 1",
+     "Cosine then equals the dot product",
+     "Cheaper ranking",
+     "Removes length effects that do not carry meaning"
+    ]
+   },
+   {
+    "id": "c2-1-i04",
+    "q": "Your retrieval returns NaN scores for some documents. What would you check?",
+    "level": "applied",
+    "covers": [
+     "Zero or empty vectors from failed embedding calls",
+     "Normalising a zero vector",
+     "Wrong data types or corrupted values",
+     "Mismatched dimensions or model versions",
+     "Validation at write time"
+    ]
+   },
+   {
+    "id": "c2-1-i05",
+    "q": "How do you choose between cosine similarity, dot product and Euclidean distance for retrieval?",
+    "level": "applied",
+    "covers": [
+     "What the embedding model was trained with",
+     "Equivalence for normalised vectors",
+     "Whether magnitude carries information",
+     "What the index supports efficiently"
+    ]
+   },
+   {
+    "id": "c2-1-i06",
+    "q": "{company}'s “similar products” row shows unrelated items for some listings. How would you debug it with vector maths?",
+    "level": "applied",
+    "covers": [
+     "Check normalisation and that all vectors come from the same model version",
+     "Look for short or empty titles producing weak vectors",
+     "Inspect the cosine values of the nearest neighbours",
+     "Set a minimum similarity before showing anything"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c2-1-i07",
+    "q": "Design an embedding pipeline that keeps vectors comparable across re-indexing.",
+    "level": "system-design",
+    "covers": [
+     "Store the model name and version with each vector",
+     "Normalise and validate (dimension, non-zero) at write time",
+     "Re-embed everything when the model changes",
+     "Never mix versions in one index",
+     "Tests on known similar and dissimilar pairs"
+    ],
+    "followUp": "How would you migrate a live index to a new embedding model without downtime?"
+   },
+   {
+    "id": "c2-1-i08",
+    "q": "How would you reduce the cost of similarity search over ten million vectors?",
+    "level": "system-design",
+    "covers": [
+     "Normalise and use dot product",
+     "Approximate nearest-neighbour indexes (9.4)",
+     "Lower dimensions or quantised vectors",
+     "Batch queries",
+     "Measure recall against exact search"
+    ]
+   }
+  ]
  },
  "c2-2": {
   "mcq": [
@@ -31,9 +297,274 @@
     "answer": 1,
     "why": "With a 0.1% base rate, false alarms from the 99.9% negatives vastly outnumber true detections (Bayes).",
     "kind": "concept"
+   },
+   {
+    "id": "c2-2-m02",
+    "q": "A prompt passes 86 of 100 test cases. Roughly what is the 95% confidence interval for its pass rate?",
+    "options": [
+     "About 78% to 91%",
+     "Exactly 86%",
+     "About 50% to 100%",
+     "About 85% to 87%"
+    ],
+    "answer": 0,
+    "why": "With only 100 cases the Wilson interval is roughly 78%–91%, so a 4-point difference from another prompt is within noise.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "A sample gives an estimate, not the exact rate.",
+     "That is far too wide for 100 cases.",
+     "That interval is far too narrow for 100 cases."
+    ]
+   },
+   {
+    "id": "c2-2-m03",
+    "q": "To halve the width of a confidence interval for a pass rate, you need about…",
+    "options": [
+     "Four times as many test cases",
+     "The same number, run twice",
+     "Twice as many test cases",
+     "Half as many test cases"
+    ],
+    "answer": 0,
+    "why": "Interval width shrinks with √n, so halving it needs four times the cases.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Rerunning the same cases does not add information about new inputs.",
+     "Doubling cases shrinks the width by only about 30%.",
+     "Fewer cases widen the interval."
+    ]
+   },
+   {
+    "id": "c2-2-m04",
+    "q": "A fraud model has 95% recall and a 2% false-positive rate, and 0.5% of transactions are fraud. Roughly what share of flagged transactions are fraud?",
+    "options": [
+     "About 95%",
+     "About 50%",
+     "About 2%",
+     "About 19%"
+    ],
+    "answer": 3,
+    "why": "Per 1,000 transactions: 5 are fraud and 4.75 are caught; 995 are genuine and 19.9 are flagged. 4.75 ÷ 24.65 ≈ 19%.",
+    "kind": "calculation",
+    "distractors": [
+     "95% is the recall, not the precision.",
+     "That ignores the base rate.",
+     "2% is the false-positive rate.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-2-m05",
+    "q": "What does P(A | B) mean?",
+    "options": [
+     "The probability of A given that B is true",
+     "A divided by B",
+     "The probability of B given A",
+     "The probability of A and B both being true"
+    ],
+    "answer": 0,
+    "why": "It is a conditional probability. Bayes' theorem turns P(B | A) into P(A | B) using the base rate.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "It is not a ratio of the events.",
+     "That is the reverse conditional, which Bayes' theorem converts.",
+     "That is the joint probability P(A and B)."
+    ]
+   },
+   {
+    "id": "c2-2-m06",
+    "q": "Language modelling estimates which probability?",
+    "options": [
+     "P(next token | previous tokens)",
+     "P(document is true)",
+     "P(user is satisfied)",
+     "P(previous tokens | next token)"
+    ],
+    "answer": 0,
+    "why": "A language model gives a conditional distribution over the next token given the text so far.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Truth is not what the model estimates.",
+     "Satisfaction is a product metric, not the model's output.",
+     "That is the reverse direction."
+    ]
+   },
+   {
+    "id": "c2-2-m07",
+    "q": "Why is a paired comparison more powerful when two models ran on the same test cases?",
+    "options": [
+     "It doubles the sample size",
+     "It compares per-case differences, so the variation in case difficulty cancels out",
+     "It makes both models score higher",
+     "It removes the need for any test cases"
+    ],
+    "answer": 1,
+    "why": "Counting cases where only one model passed (a sign or McNemar test) focuses on the actual differences between them.",
+    "kind": "concept",
+    "distractors": [
+     "The number of cases is unchanged.",
+     "",
+     "The test does not change either model's score.",
+     "You still need test cases."
+    ]
+   },
+   {
+    "id": "c2-2-m08",
+    "q": "You compute a tight confidence interval from a sample of only English tickets and report it for all traffic. What is the problem?",
+    "options": [
+     "Confidence intervals only work for English",
+     "The sample is biased, so the interval can be precisely wrong about real traffic",
+     "The interval is too wide",
+     "Nothing; the interval is valid for all traffic"
+    ],
+    "answer": 1,
+    "why": "An interval reflects sampling noise, not bias. A sample that does not represent traffic gives a confident wrong answer.",
+    "kind": "scenario",
+    "distractors": [
+     "Intervals are not language-specific.",
+     "",
+     "Width is not the issue; representativeness is.",
+     "It is only valid for the population sampled."
+    ]
+   },
+   {
+    "id": "c2-2-m09",
+    "q": "Under the method's assumptions, a 95% confidence interval is a range that…",
+    "options": [
+     "Contains 95% of the data points",
+     "Would contain the true value in about 95% of repeated experiments",
+     "Has a 95% chance of being wrong",
+     "Is always centred on the true value"
+    ],
+    "answer": 1,
+    "why": "It quantifies how far the estimate could be off because you only tested a sample.",
+    "kind": "concept",
+    "distractors": [
+     "That describes the spread of data, not uncertainty in the estimate.",
+     "",
+     "That inverts the meaning.",
+     "The interval is centred on the estimate, which may differ from the truth."
+    ]
+   },
+   {
+    "id": "c2-2-m10",
+    "q": "In evaluation, what is being sampled?",
+    "options": [
+     "Test cases drawn from all possible inputs",
+     "Model weights",
+     "Random seeds",
+     "Tokens from the vocabulary"
+    ],
+    "answer": 0,
+    "why": "An evaluation set is a sample of possible inputs, which is why results carry uncertainty.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Weights are fixed during evaluation.",
+     "Seeds control randomness; they are not the sample.",
+     "Sampling tokens happens during generation."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c2-2-i01",
+    "q": "Explain Bayes' theorem using an alert or fraud example.",
+    "level": "fundamentals",
+    "covers": [
+     "P(A | B) = P(B | A)·P(A) / P(B)",
+     "The base rate P(A) matters",
+     "Counting example with real numbers",
+     "Precision can be low even with high recall"
+    ]
+   },
+   {
+    "id": "c2-2-i02",
+    "q": "What is a confidence interval, and what does it not tell you?",
+    "level": "fundamentals",
+    "covers": [
+     "Range from sampling uncertainty",
+     "Width shrinks with √n",
+     "Does not cover bias or an unrepresentative sample",
+     "Not the probability the true value lies in this specific interval"
+    ]
+   },
+   {
+    "id": "c2-2-i03",
+    "q": "Why do base rates matter when you judge a detector?",
+    "level": "fundamentals",
+    "covers": [
+     "Rare positives mean most alerts can be false",
+     "Recall alone hides that",
+     "Precision depends on prevalence",
+     "Operational load follows from alerts per day"
+    ]
+   },
+   {
+    "id": "c2-2-i04",
+    "q": "A new prompt scores 86% and the old one 82% on the same 100 cases. Is the new one better?",
+    "level": "applied",
+    "covers": [
+     "Intervals overlap widely",
+     "Use a paired comparison on the same cases",
+     "Look at which cases flipped",
+     "Get more cases, or accept uncertainty explicitly"
+    ],
+    "followUp": "How many cases would you want, and why?"
+   },
+   {
+    "id": "c2-2-i05",
+    "q": "How many test cases do you need to detect a two-point improvement?",
+    "level": "applied",
+    "covers": [
+     "Interval width scales with 1/√n",
+     "Paired tests need fewer cases",
+     "Rough power calculation or simulation",
+     "Trade-off against labelling cost"
+    ]
+   },
+   {
+    "id": "c2-2-i06",
+    "q": "{company}'s fraud model has 90% recall and 2% false positives. Roughly how many alerts a day does it raise on one million transactions, and what does that mean for the team?",
+    "level": "applied",
+    "covers": [
+     "Base rate about 1.4%: about 12,600 frauds caught",
+     "About 19,700 false alarms",
+     "About 32,000 alerts a day at roughly 39% precision",
+     "Analysts needed follows from minutes per alert",
+     "Set the threshold to an alert budget instead"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c2-2-i07",
+    "q": "Design an evaluation report a manager can trust when comparing two models.",
+    "level": "system-design",
+    "covers": [
+     "Same, representative cases for both",
+     "Paired comparison with intervals",
+     "Results by slice",
+     "Decision rule agreed in advance",
+     "Known limitations stated"
+    ]
+   },
+   {
+    "id": "c2-2-i08",
+    "q": "A data-leak alert fires mostly false alarms. How would you redesign it?",
+    "level": "system-design",
+    "covers": [
+     "Quantify base rate and precision",
+     "Route alerts to review instead of blocking",
+     "Two-stage detection: cheap filter then precise check",
+     "Threshold from review capacity",
+     "Measure and tune with labelled outcomes"
+    ]
+   }
+  ]
  },
  "c2-4": {
   "mcq": [
@@ -49,8 +580,1144 @@
     "answer": 2,
     "why": "Loss = −ln(0.1) ≈ 2.30 nats.",
     "kind": "concept"
+   },
+   {
+    "id": "c2-4-m02",
+    "q": "What is the entropy of a fair coin, in bits?",
+    "options": [
+     "1 bit",
+     "0.5 bits",
+     "0 bits",
+     "2 bits"
+    ],
+    "answer": 0,
+    "why": "H = −(0.5 log₂ 0.5 + 0.5 log₂ 0.5) = 1 bit.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That halves the correct value.",
+     "0 bits is a coin that always lands the same way.",
+     "2 bits would need four equally likely outcomes."
+    ]
+   },
+   {
+    "id": "c2-4-m03",
+    "q": "For a language model with a 50,000-token vocabulary, what should the first training-step loss be near?",
+    "options": [
+     "About 1",
+     "About 10.8 nats",
+     "50,000",
+     "About 4.7 nats"
+    ],
+    "answer": 1,
+    "why": "An untrained model is close to uniform, so the loss is ln(50,000) ≈ 10.8.",
+    "kind": "calculation",
+    "distractors": [
+     "A loss near 1 would mean it already predicts well.",
+     "",
+     "The loss is a logarithm, not a count.",
+     "4.7 is log₁₀(50,000); training logs use natural logs."
+    ]
+   },
+   {
+    "id": "c2-4-m04",
+    "q": "When the true distribution puts all its mass on the real next token, cross-entropy reduces to…",
+    "options": [
+     "log q(real token)",
+     "The entropy of q",
+     "−log q(real token)",
+     "Zero"
+    ],
+    "answer": 2,
+    "why": "With p = 1 on the real token, H(p, q) = −log q(real token).",
+    "kind": "concept",
+    "distractors": [
+     "That has the wrong sign; the loss is positive.",
+     "The entropy of q ignores the real token.",
+     "",
+     "It is zero only if q gives the real token probability 1."
+    ]
+   },
+   {
+    "id": "c2-4-m05",
+    "q": "Which statement about KL divergence KL(p‖q) is correct?",
+    "options": [
+     "It equals cross-entropy",
+     "It is symmetric in p and q",
+     "It is H(p,q) − H(p), never negative, and zero only when q = p",
+     "It can be negative"
+    ],
+    "answer": 2,
+    "why": "KL is the extra surprise from using q instead of p.",
+    "kind": "concept",
+    "distractors": [
+     "Cross-entropy includes H(p); KL subtracts it.",
+     "KL(p‖q) and KL(q‖p) usually differ.",
+     "",
+     "KL is always ≥ 0."
+    ]
+   },
+   {
+    "id": "c2-4-m06",
+    "q": "Where is KL divergence used when tuning LLMs?",
+    "options": [
+     "To pick the tokenizer",
+     "To keep a tuned model close to its original in RLHF and DPO",
+     "To set the context window",
+     "To compress weights"
+    ],
+    "answer": 1,
+    "why": "A KL term penalises drifting too far from the reference model while optimising rewards or preferences (6.5).",
+    "kind": "concept",
+    "distractors": [
+     "Tokenizers are trained separately.",
+     "",
+     "Context length is an architecture choice.",
+     "Compression is a different topic."
+    ]
+   },
+   {
+    "id": "c2-4-m07",
+    "q": "A model's average loss is 2.0 nats per token. What is its perplexity?",
+    "options": [
+     "About 7.4",
+     "100",
+     "About 0.13",
+     "2.0"
+    ],
+    "answer": 0,
+    "why": "Perplexity = e^loss = e² ≈ 7.4: roughly the number of tokens it is choosing between.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That would be 10², using the wrong base.",
+     "That is e^−2.",
+     "That is the loss itself."
+    ]
+   },
+   {
+    "id": "c2-4-m08",
+    "q": "A model gives the correct answer only 1% probability. What is its loss on that example?",
+    "options": [
+     "About 4.6 nats",
+     "0.01",
+     "1",
+     "46"
+    ],
+    "answer": 0,
+    "why": "−ln 0.01 ≈ 4.6. Being confidently wrong is expensive.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the probability, not the loss.",
+     "That would be a probability near 37%.",
+     "That is ten times too large."
+    ]
+   },
+   {
+    "id": "c2-4-m09",
+    "q": "A model improves perplexity but fails critical extraction cases. What should you conclude?",
+    "options": [
+     "Lower token loss does not guarantee task success; evaluate the task directly",
+     "The model is now strictly better",
+     "The extraction tests are wrong",
+     "Perplexity is the only metric that matters"
+    ],
+    "answer": 0,
+    "why": "Perplexity measures average next-token prediction; specific tasks need their own evaluation.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "It may be better on average and worse where it counts.",
+     "Task tests measure what users need.",
+     "Task metrics matter at least as much."
+    ]
+   },
+   {
+    "id": "c2-4-m10",
+    "q": "What is the entropy of a coin that always lands heads?",
+    "options": [
+     "0",
+     "0.5 bits",
+     "1 bit",
+     "Infinite"
+    ],
+    "answer": 0,
+    "why": "There is no surprise, so the entropy is 0.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "There is no uncertainty to measure.",
+     "1 bit is a fair coin.",
+     "Entropy is finite; it is 0 here."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c2-4-i01",
+    "q": "Explain entropy, cross-entropy and KL divergence in plain terms.",
+    "level": "fundamentals",
+    "covers": [
+     "Entropy: average surprise of a distribution",
+     "Cross-entropy: surprise when predicting with q",
+     "KL: the extra surprise from using q instead of p",
+     "KL is never negative and zero only when they match"
+    ]
+   },
+   {
+    "id": "c2-4-i02",
+    "q": "Why is cross-entropy the training loss for language models?",
+    "level": "fundamentals",
+    "covers": [
+     "It rewards probability on the real next token",
+     "It reduces to −log q(real token)",
+     "Punishes confident mistakes heavily",
+     "Matches maximum-likelihood training"
+    ]
+   },
+   {
+    "id": "c2-4-i03",
+    "q": "What is perplexity, and how do you read it?",
+    "level": "fundamentals",
+    "covers": [
+     "e to the cross-entropy",
+     "Roughly the number of choices the model is hedging between",
+     "Lower is better",
+     "Only comparable with the same tokenizer and data"
+    ]
+   },
+   {
+    "id": "c2-4-i04",
+    "q": "Your first training-step loss is far from ln(vocabulary size). What might be wrong?",
+    "level": "applied",
+    "covers": [
+     "Initialisation bug",
+     "Labels misaligned with inputs",
+     "Wrong loss reduction or masking",
+     "Data leakage making it too low"
+    ],
+    "followUp": "What would you do in the first ten minutes?"
+   },
+   {
+    "id": "c2-4-i05",
+    "q": "Two models report different perplexities. Can you say which is better?",
+    "level": "applied",
+    "covers": [
+     "Only with the same tokenizer and evaluation text",
+     "Per-token loss depends on token size",
+     "Task metrics decide usefulness",
+     "Normalise per character or byte if needed"
+    ]
+   },
+   {
+    "id": "c2-4-i06",
+    "q": "How would you use KL divergence to detect a shift in where {company}'s customers book?",
+    "level": "applied",
+    "covers": [
+     "Build destination distributions per period",
+     "Smooth zero counts",
+     "Compare against the same season last year",
+     "Set thresholds and alert",
+     "Check the forecast models when it fires"
+    ],
+    "project": "travel"
+   },
+   {
+    "id": "c2-4-i07",
+    "q": "Design a monitoring check that compares this week's inputs with the training data.",
+    "level": "system-design",
+    "covers": [
+     "Choose features and bins",
+     "KL, Jensen–Shannon or PSI",
+     "Smoothing for empty bins",
+     "Seasonal baselines",
+     "An action when it fires: measure performance, not retrain blindly"
+    ]
+   },
+   {
+    "id": "c2-4-i08",
+    "q": "Explain how a KL penalty keeps an RLHF- or DPO-tuned model from drifting, and what goes wrong without it.",
+    "level": "system-design",
+    "covers": [
+     "Reward or preference optimisation alone can exploit the reward",
+     "KL to a reference model limits the drift",
+     "Its weight trades reward against staying close",
+     "Without it: degenerate or unsafe outputs"
+    ]
+   }
+  ]
+ },
+ "c2-3": {
+  "mcq": [
+   {
+    "id": "c2-3-m01",
+    "q": "In gradient descent, why do we step against the gradient?",
+    "options": [
+     "The gradient points in the direction of steepest increase",
+     "It makes the learning rate larger",
+     "The gradient points to the minimum",
+     "The gradient is always negative"
+    ],
+    "answer": 0,
+    "why": "∇L points uphill, so θ ← θ − η·∇L moves downhill.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "The learning rate is set separately.",
+     "It points uphill locally, not at the minimum.",
+     "Its sign depends on the slope."
+    ]
+   },
+   {
+    "id": "c2-3-m02",
+    "q": "For L(w) = (w − 3)², what is dL/dw at w = 1?",
+    "options": [
+     "0",
+     "−4",
+     "4",
+     "−2"
+    ],
+    "answer": 1,
+    "why": "dL/dw = 2(w − 3) = 2(1 − 3) = −4.",
+    "kind": "calculation",
+    "distractors": [
+     "The derivative is 0 only at the minimum, w = 3.",
+     "",
+     "That has the wrong sign: w is below 3, so the slope is negative.",
+     "That forgets the factor of 2."
+    ]
+   },
+   {
+    "id": "c2-3-m03",
+    "q": "For L(w) = (w − 3)², learning rate 0.1, starting at w = 1, what is w after one step?",
+    "options": [
+     "0.6",
+     "1.4",
+     "1.1",
+     "3"
+    ],
+    "answer": 1,
+    "why": "w ← 1 − 0.1·(−4) = 1.4: a step towards the minimum at 3.",
+    "kind": "calculation",
+    "distractors": [
+     "That adds the gradient instead of subtracting it.",
+     "",
+     "That uses a gradient of −1.",
+     "One small step does not reach the minimum."
+    ]
+   },
+   {
+    "id": "c2-3-m04",
+    "q": "For y = (3x)², what is dy/dx at x = 2?",
+    "options": [
+     "18",
+     "36",
+     "12",
+     "6"
+    ],
+    "answer": 1,
+    "why": "With u = 3x: dy/du = 2u = 12 and du/dx = 3, so dy/dx = 12 × 3 = 36.",
+    "kind": "calculation",
+    "distractors": [
+     "That uses 2u with u = 3.",
+     "",
+     "That is only dy/du.",
+     "That is u, not a derivative."
+    ]
+   },
+   {
+    "id": "c2-3-m05",
+    "q": "What happens when the learning rate is too large?",
+    "options": [
+     "The model stops using gradients",
+     "Training becomes slower but always converges",
+     "Nothing changes",
+     "Steps overshoot: the loss oscillates or explodes, often to NaN"
+    ],
+    "answer": 3,
+    "why": "Too large a step jumps past the minimum and can grow each time.",
+    "kind": "concept",
+    "distractors": [
+     "Gradients are still used, just badly scaled.",
+     "A too-large rate can prevent convergence entirely.",
+     "The rate changes every step size.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-3-m06",
+    "q": "Backpropagation is…",
+    "options": [
+     "The chain rule applied through every layer",
+     "A way to pick the learning rate",
+     "A data-cleaning step",
+     "A decoding strategy"
+    ],
+    "answer": 0,
+    "why": "Each operation only needs its local derivative; the framework multiplies them on the way back.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Learning-rate choice is separate.",
+     "Data cleaning happens before training.",
+     "Decoding happens at inference."
+    ]
+   },
+   {
+    "id": "c2-3-m07",
+    "q": "Training loss falls steadily while validation loss rises. What does that show?",
+    "options": [
+     "Training is working perfectly",
+     "The learning rate is too small",
+     "The model is overfitting: it is not generalising",
+     "The validation set is too big"
+    ],
+    "answer": 2,
+    "why": "Falling training loss alone is not proof of learning; validation loss shows generalisation.",
+    "kind": "scenario",
+    "distractors": [
+     "Rising validation loss is a warning, not success.",
+     "A small rate would slow both curves.",
+     "",
+     "Validation size does not cause divergence between the curves."
+    ]
+   },
+   {
+    "id": "c2-3-m08",
+    "q": "In the 3D figure, why can momentum roll through a small dip that stops plain SGD?",
+    "options": [
+     "It uses a larger loss",
+     "It ignores the gradient",
+     "It keeps a running velocity from earlier steps",
+     "It sees the whole surface"
+    ],
+    "answer": 2,
+    "why": "Momentum accumulates past gradients, so it keeps moving across small flat or uphill stretches.",
+    "kind": "concept",
+    "distractors": [
+     "All three optimisers see the same loss.",
+     "It still uses gradients, accumulated.",
+     "",
+     "No optimiser sees the whole surface; each sees only local gradients."
+    ]
+   },
+   {
+    "id": "c2-3-m09",
+    "q": "What does Adam do differently from plain SGD?",
+    "options": [
+     "Computes exact second derivatives",
+     "Only updates one parameter per step",
+     "Uses no learning rate",
+     "Scales each parameter's step by a running estimate of its gradient size"
+    ],
+    "answer": 3,
+    "why": "Dividing by the running gradient size gives each parameter a similar pace, whatever its slope.",
+    "kind": "concept",
+    "distractors": [
+     "It approximates scale from first-moment statistics, not exact second derivatives.",
+     "It updates all parameters each step.",
+     "Adam has a learning rate.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-3-m10",
+    "q": "For L(w) = (w − 3)² with learning rate 1.1, starting at w = 1, what happens?",
+    "options": [
+     "It converges smoothly",
+     "It stops at w = 1",
+     "It oscillates around 3 with growing amplitude and diverges",
+     "It reaches 3 in one step"
+    ],
+    "answer": 2,
+    "why": "Each step multiplies the distance from 3 by (1 − 2η) = −1.2: 1, 5.4, 0.12… the error grows and flips sign.",
+    "kind": "calculation",
+    "distractors": [
+     "Convergence needs |1 − 2η| < 1, i.e. η < 1.",
+     "The gradient at w = 1 is not zero.",
+     "",
+     "Only η = 0.5 reaches 3 in one step."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c2-3-i01",
+    "q": "Explain gradient descent and the role of the learning rate.",
+    "level": "fundamentals",
+    "covers": [
+     "Loss, gradient, step against it",
+     "Learning rate sets step size",
+     "Too small crawls, too large overshoots or diverges",
+     "Checked on validation loss"
+    ]
+   },
+   {
+    "id": "c2-3-i02",
+    "q": "What is the chain rule, and how does backpropagation use it?",
+    "level": "fundamentals",
+    "covers": [
+     "Derivative of a composition is the product of local derivatives",
+     "Forward pass records operations",
+     "Backward pass multiplies local derivatives",
+     "Frameworks do it automatically (autograd)"
+    ]
+   },
+   {
+    "id": "c2-3-i03",
+    "q": "What is the difference between a loss function and an evaluation metric?",
+    "level": "fundamentals",
+    "covers": [
+     "Loss is what training minimises and must be differentiable",
+     "Metrics are what the business cares about",
+     "They can disagree",
+     "Choose the threshold and model with metrics"
+    ]
+   },
+   {
+    "id": "c2-3-i04",
+    "q": "Your training loss becomes NaN after a few hundred steps. What would you check?",
+    "level": "applied",
+    "covers": [
+     "Learning rate too high or no warm-up",
+     "Exploding gradients; use clipping",
+     "Bad inputs such as infinities",
+     "FP16 overflow; use BF16 or loss scaling",
+     "Inspect the batch where it happened"
+    ],
+    "followUp": "How would you find the exact batch that caused it?"
+   },
+   {
+    "id": "c2-3-i05",
+    "q": "The loss curve is jagged and never settles. What do you try, and in what order?",
+    "level": "applied",
+    "covers": [
+     "Lower the learning rate",
+     "Use a schedule or warm-up",
+     "Check batch size and shuffling",
+     "Check data quality for noisy labels"
+    ]
+   },
+   {
+    "id": "c2-3-i06",
+    "q": "{company}'s fraud model trains slowly and unstably on raw rupee amounts. Explain why, and fix it.",
+    "level": "applied",
+    "covers": [
+     "Badly scaled features create a stretched loss surface",
+     "Gradient descent zig-zags along the steep direction",
+     "Standardise or log-transform amounts",
+     "Confirm with loss curves before and after"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c2-3-i07",
+    "q": "How would you choose a learning rate for a fine-tuning run you can afford only once?",
+    "level": "system-design",
+    "covers": [
+     "Short runs on a sample at a few learning rates",
+     "Plot training and validation loss",
+     "Warm-up and a decay schedule",
+     "Checkpoints and early stopping",
+     "Decide the stopping rule in advance"
+    ]
+   },
+   {
+    "id": "c2-3-i08",
+    "q": "Explain to a junior engineer why momentum and Adam exist, using a loss surface.",
+    "level": "system-design",
+    "covers": [
+     "Ravines make plain SGD zig-zag",
+     "Momentum smooths with velocity",
+     "Adam adapts per-parameter steps",
+     "Trade-offs: extra memory and hyperparameters"
+    ]
+   }
+  ]
+ },
+ "c2-5": {
+  "mcq": [
+   {
+    "id": "c2-5-m01",
+    "q": "What does vectorisation mean in NumPy?",
+    "options": [
+     "Running code on a GPU only",
+     "Splitting data into vectors by hand",
+     "Converting text to embeddings",
+     "Expressing computation as whole-array operations instead of Python loops"
+    ],
+    "answer": 3,
+    "why": "Whole-array operations run in fast compiled code; Python loops are typically hundreds of times slower.",
+    "kind": "concept",
+    "distractors": [
+     "Vectorised NumPy runs on the CPU.",
+     "It is about how you write computation, not splitting data.",
+     "Embeddings are a different meaning of “vector”.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-5-m02",
+    "q": "What is broadcasting?",
+    "options": [
+     "Sending data to several GPUs",
+     "Printing an array",
+     "Combining arrays of different shapes by stretching size-1 axes",
+     "Shuffling rows"
+    ],
+    "answer": 2,
+    "why": "For example, adding a (3, 1) array to a (1, 4) array gives a (3, 4) result.",
+    "kind": "concept",
+    "distractors": [
+     "That is data parallelism.",
+     "Printing is unrelated.",
+     "",
+     "Shuffling is unrelated."
+    ]
+   },
+   {
+    "id": "c2-5-m03",
+    "q": "Why move code out of notebooks once it stabilises?",
+    "options": [
+     "Notebooks cannot plot",
+     "Notebooks hide execution order, so results can depend on cells run out of order",
+     "Notebooks cannot run Python",
+     "Modules are always faster"
+    ],
+    "answer": 1,
+    "why": "Hidden state makes notebooks fragile; versioned modules run the same way each time.",
+    "kind": "concept",
+    "distractors": [
+     "Notebooks plot well.",
+     "",
+     "Notebooks run Python.",
+     "Speed is not the main reason."
+    ]
+   },
+   {
+    "id": "c2-5-m04",
+    "q": "Which of these must you pin to make an experiment reproducible? Choose all that apply.",
+    "options": [
+     "Random seeds",
+     "The data snapshot",
+     "Library versions",
+     "Your screen resolution"
+    ],
+    "answer": [
+     0,
+     1,
+     2
+    ],
+    "why": "Seeds, package versions and data (plus model, prompt and hardware notes) determine the result.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "",
+     "Screen resolution does not affect results."
+    ]
+   },
+   {
+    "id": "c2-5-m05",
+    "q": "Your dataset version is recorded as “data.csv”. What is wrong with that?",
+    "options": [
+     "A file name is not a version; record a content hash or use a versioning tool",
+     "The name is too short",
+     "Nothing",
+     "CSV cannot store data"
+    ],
+    "answer": 0,
+    "why": "The file can change under the same name; a hash or a tool such as DVC pins the exact content.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Length is not the issue.",
+     "It will not let anyone rebuild the result.",
+     "CSV is a fine format."
+    ]
+   },
+   {
+    "id": "c2-5-m06",
+    "q": "GPU kernels are not always bit-for-bit deterministic. What should you record?",
+    "options": [
+     "The tolerance you accept between runs",
+     "Nothing; results are always identical",
+     "The time of day",
+     "Only the GPU's brand"
+    ],
+    "answer": 0,
+    "why": "Record that small differences are expected, and how large they may be.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "They can differ slightly across runs.",
+     "Time of day is irrelevant.",
+     "The model, driver and library versions matter more than the brand."
+    ]
+   },
+   {
+    "id": "c2-5-m07",
+    "q": "You fit a normalisation (mean and standard deviation) on the full dataset and then split it. What is the problem?",
+    "options": [
+     "It changes the labels",
+     "It is slower",
+     "Nothing",
+     "Test-set statistics leak into training"
+    ],
+    "answer": 3,
+    "why": "Fit preprocessing on the training split only, then apply it to validation and test.",
+    "kind": "scenario",
+    "distractors": [
+     "Labels are untouched.",
+     "Speed is not the issue.",
+     "It inflates scores.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-5-m08",
+    "q": "What is pandas mainly used for?",
+    "options": [
+     "Tables with named columns: loading, cleaning, joining and grouping",
+     "Drawing 3D graphics",
+     "Serving models",
+     "Training neural networks"
+    ],
+    "answer": 0,
+    "why": "DataFrames hold datasets and evaluation results.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Plotting libraries draw charts.",
+     "Serving uses other tools.",
+     "Frameworks such as PyTorch train networks."
+    ]
+   },
+   {
+    "id": "c2-5-m09",
+    "q": "A decision between two runs should cite…",
+    "options": [
+     "What the team remembers",
+     "The newest notebook",
+     "Run IDs from the experiment tracker",
+     "The fastest run"
+    ],
+    "answer": 2,
+    "why": "Tracked runs record config, commit, metrics and artefacts, so the decision can be checked.",
+    "kind": "scenario",
+    "distractors": [
+     "Memory is unreliable.",
+     "The newest notebook may not match the run.",
+     "",
+     "Speed is not quality."
+    ]
+   },
+   {
+    "id": "c2-5-m10",
+    "q": "A NumPy dot product over a million numbers takes about 1 ms. A plain Python loop is hundreds of times slower. Roughly how long might the loop take?",
+    "options": [
+     "About 0.1 to 0.5 seconds",
+     "About 1 millisecond",
+     "About an hour",
+     "About 1 microsecond"
+    ],
+    "answer": 0,
+    "why": "Hundreds of times 1 ms is a few hundred milliseconds.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the vectorised time.",
+     "That is far too slow.",
+     "That is faster than NumPy."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c2-5-i01",
+    "q": "What does vectorisation mean, and why does it matter in Python?",
+    "level": "fundamentals",
+    "covers": [
+     "Whole-array operations in compiled code",
+     "Python loops are slow",
+     "Broadcasting",
+     "Memory and dtype awareness"
+    ]
+   },
+   {
+    "id": "c2-5-i02",
+    "q": "What do you need to record to make an ML experiment reproducible?",
+    "level": "fundamentals",
+    "covers": [
+     "Code commit and config",
+     "Data version or hash",
+     "Seeds and library versions",
+     "Model and prompt versions",
+     "Hardware notes and tolerance"
+    ]
+   },
+   {
+    "id": "c2-5-i03",
+    "q": "When do you use a notebook, and when do you move code into a package?",
+    "level": "fundamentals",
+    "covers": [
+     "Notebooks for exploration",
+     "Packages for anything rerun or shared",
+     "Hidden state risk",
+     "Tests and CI for packaged code"
+    ]
+   },
+   {
+    "id": "c2-5-i04",
+    "q": "A colleague cannot reproduce your evaluation numbers. How do you find out why?",
+    "level": "applied",
+    "covers": [
+     "Compare environments and lockfiles",
+     "Compare data versions",
+     "Check seeds and non-determinism",
+     "Check model or prompt versions",
+     "Rerun from a clean start"
+    ],
+    "followUp": "What would you change so this cannot happen again?"
+   },
+   {
+    "id": "c2-5-i05",
+    "q": "Your pandas pipeline is slow on ten million rows. What do you look at?",
+    "level": "applied",
+    "covers": [
+     "Row-wise loops or apply",
+     "Data types and memory",
+     "Vectorised and groupby operations",
+     "Chunking or a faster engine"
+    ]
+   },
+   {
+    "id": "c2-5-i06",
+    "q": "Build the festival-sale returns report for {company} so it can be rebuilt exactly after the sale.",
+    "level": "applied",
+    "covers": [
+     "Snapshot the data with a hash",
+     "Pin the environment",
+     "Config and code in the repository",
+     "Seeds for any sampling",
+     "Record the run ID with the report"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c2-5-i07",
+    "q": "Design an experiment-tracking setup for a small team.",
+    "level": "system-design",
+    "covers": [
+     "A tracker such as MLflow",
+     "Committed configs",
+     "Data versioning",
+     "Artefacts and comparisons",
+     "A habit: decisions cite run IDs"
+    ]
+   },
+   {
+    "id": "c2-5-i08",
+    "q": "How would you make an LLM evaluation pipeline reproducible when model APIs change underneath you?",
+    "level": "system-design",
+    "covers": [
+     "Pin model versions and record dates",
+     "Record prompts and decoding settings",
+     "Cache responses",
+     "Run repeats and report variance",
+     "Re-baseline when the provider changes"
+    ]
+   }
+  ]
+ },
+ "c2-6": {
+  "mcq": [
+   {
+    "id": "c2-6-m01",
+    "q": "About how much memory do the weights of an 8-billion-parameter model need in BF16?",
+    "options": [
+     "About 4 GB",
+     "About 8 GB",
+     "About 16 GB",
+     "About 32 GB"
+    ],
+    "answer": 2,
+    "why": "8 × 10⁹ parameters × 2 bytes ≈ 16 GB, before the KV cache and runtime overhead.",
+    "kind": "calculation",
+    "distractors": [
+     "That is roughly 4-bit.",
+     "That is 1 byte per parameter (INT8 or FP8).",
+     "",
+     "That is 4 bytes per parameter (FP32)."
+    ]
+   },
+   {
+    "id": "c2-6-m02",
+    "q": "About how much memory do an 8B model's weights need at 4-bit, including quantisation scales?",
+    "options": [
+     "About 4–5 GB",
+     "About 32 GB",
+     "About 16 GB",
+     "About 1 GB"
+    ],
+    "answer": 0,
+    "why": "About 0.56 byte per parameter × 8 billion ≈ 4.5 GB.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is FP32.",
+     "That is BF16.",
+     "That is far too small."
+    ]
+   },
+   {
+    "id": "c2-6-m03",
+    "q": "Each generated token from an 8B BF16 model reads about 16 GB of weights. With 80 GB/s of memory bandwidth, what is the speed ceiling?",
+    "options": [
+     "About 0.2 tokens per second",
+     "About 80 tokens per second",
+     "About 5 tokens per second",
+     "About 1,280 tokens per second"
+    ],
+    "answer": 2,
+    "why": "Ceiling ≈ bandwidth ÷ bytes per token = 80 ÷ 16 = 5 tokens/s. Real speed is lower.",
+    "kind": "calculation",
+    "distractors": [
+     "That inverts the division.",
+     "That ignores the bytes read per token.",
+     "",
+     "That multiplies instead of dividing."
+    ]
+   },
+   {
+    "id": "c2-6-m04",
+    "q": "Why do most LLM training and serving stacks use BF16 rather than FP16?",
+    "options": [
+     "BF16 keeps FP32's exponent range, so large values do not overflow",
+     "BF16 uses 1 byte",
+     "FP16 is not supported anywhere",
+     "BF16 is more precise than FP16"
+    ],
+    "answer": 0,
+    "why": "FP16's largest value is about 65,504, so large activations overflow; BF16 trades precision for FP32's range.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Both use 2 bytes.",
+     "FP16 is widely supported.",
+     "BF16 has less mantissa precision (7 bits versus 10)."
+    ]
+   },
+   {
+    "id": "c2-6-m05",
+    "q": "Many AI inference workloads are limited by…",
+    "options": [
+     "Screen refresh rate",
+     "Disk space",
+     "Keyboard input",
+     "Memory bandwidth"
+    ],
+    "answer": 3,
+    "why": "Generating each token reads the weights from memory, so bytes per second often set the limit.",
+    "kind": "concept",
+    "distractors": [
+     "Irrelevant.",
+     "Disk is not on the per-token path.",
+     "Irrelevant.",
+     ""
+    ]
+   },
+   {
+    "id": "c2-6-m06",
+    "q": "A 16 GB laptop has about 11 GB free. A 70B model at 4-bit needs about 40 GB. What happens?",
+    "options": [
+     "It fits with room to spare",
+     "It does not fit; use a hosted API or a rented GPU",
+     "It runs at full speed from disk",
+     "It fits if you close the browser"
+    ],
+    "answer": 1,
+    "why": "40 GB of weights exceeds 11 GB of free memory by far.",
+    "kind": "scenario",
+    "distractors": [
+     "It needs almost four times the free memory.",
+     "",
+     "Running from disk is impractically slow.",
+     "Closing apps frees a few GB, not 29."
+    ]
+   },
+   {
+    "id": "c2-6-m07",
+    "q": "A batch of token embeddings is a tensor of what shape?",
+    "options": [
+     "3-D: batch × sequence × dimension",
+     "2-D: rows × columns only",
+     "0-D",
+     "1-D"
+    ],
+    "answer": 0,
+    "why": "Each sequence has one vector per token, and there are several sequences in a batch.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "One sequence of vectors is 2-D; a batch adds a dimension.",
+     "A scalar is 0-D.",
+     "A single vector is 1-D."
+    ]
+   },
+   {
+    "id": "c2-6-m08",
+    "q": "1 GiB is about how many GB?",
+    "options": [
+     "About 1.074",
+     "1.0",
+     "About 0.931",
+     "About 1.024"
+    ],
+    "answer": 0,
+    "why": "1 GiB = 2³⁰ bytes ≈ 1.074 × 10⁹ bytes. Mixing the two introduces about a 7% error at GB scale.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "They are different units.",
+     "That is GB to GiB, the other direction.",
+     "That is the ratio for KiB versus kB, not GiB versus GB."
+    ]
+   },
+   {
+    "id": "c2-6-m09",
+    "q": "You download an “8 GB model file” for a laptop with 8 GB of RAM. What will happen?",
+    "options": [
+     "The file shrinks when loaded",
+     "It runs faster than on a GPU",
+     "It will not run well: the KV cache, runtime and operating system also need memory",
+     "It runs perfectly"
+    ],
+    "answer": 2,
+    "why": "Weights are only part of memory use; the OS, the runtime and the KV cache need room too.",
+    "kind": "scenario",
+    "distractors": [
+     "Loading does not shrink the weights.",
+     "Laptops have less bandwidth than GPUs.",
+     "",
+     "There is no headroom for anything else."
+    ]
+   },
+   {
+    "id": "c2-6-m10",
+    "q": "Mixed-precision Adam training needs roughly how many bytes per parameter?",
+    "options": [
+     "About 16",
+     "About 4",
+     "About 0.5",
+     "About 2"
+    ],
+    "answer": 0,
+    "why": "Weights, gradients and optimizer state together come to about 16 bytes per parameter (6.6).",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is FP32 weights only.",
+     "That is 4-bit inference.",
+     "That is weights only in BF16."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c2-6-i01",
+    "q": "Why are GPUs faster than CPUs for neural networks?",
+    "level": "fundamentals",
+    "covers": [
+     "Thousands of simple cores and matrix units",
+     "Same operation on huge arrays",
+     "Much higher memory bandwidth",
+     "CPUs suit branching, sequential logic"
+    ]
+   },
+   {
+    "id": "c2-6-i02",
+    "q": "Explain FP32, BF16, FP16, INT8 and INT4, and their trade-offs.",
+    "level": "fundamentals",
+    "covers": [
+     "Bytes per number",
+     "Range versus precision (FP16 vs BF16)",
+     "Quantisation saves memory and bandwidth",
+     "Accuracy loss must be measured"
+    ]
+   },
+   {
+    "id": "c2-6-i03",
+    "q": "How do you estimate the memory needed to load and run a model?",
+    "level": "fundamentals",
+    "covers": [
+     "Parameters × bytes per parameter",
+     "Plus the KV cache, which grows with context and concurrency",
+     "Plus runtime overhead",
+     "Plus the OS on a laptop"
+    ]
+   },
+   {
+    "id": "c2-6-i04",
+    "q": "Will an 8B model run on a 16 GB laptop? Walk through the estimate.",
+    "level": "applied",
+    "covers": [
+     "About 11 GB free after the OS",
+     "4-bit weights about 5 GB",
+     "KV cache for the context length",
+     "Speed ceiling from bandwidth",
+     "Conclusion and caveats"
+    ]
+   },
+   {
+    "id": "c2-6-i05",
+    "q": "Why does quantisation make generation faster on a laptop?",
+    "level": "applied",
+    "covers": [
+     "Generation is bandwidth-bound",
+     "Fewer bytes read per token",
+     "Ceiling rises roughly in proportion",
+     "Check quality on your tasks"
+    ]
+   },
+   {
+    "id": "c2-6-i06",
+    "q": "{company} must self-host a model for case summaries. How would you size the hardware?",
+    "level": "applied",
+    "covers": [
+     "Weights at the chosen precision",
+     "KV cache for long case files × concurrent requests",
+     "Throughput from benchmarks, not laptops",
+     "Redundancy",
+     "Re-evaluate accuracy after quantising"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c2-6-i07",
+    "q": "Estimate the token-generation speed ceiling for a model on given hardware, and explain why real speed is lower.",
+    "level": "system-design",
+    "covers": [
+     "Bandwidth ÷ bytes per token",
+     "Plus KV-cache reads",
+     "Kernel efficiency and overheads",
+     "Batching changes the picture (14.x)"
+    ],
+    "followUp": "How does batching change the bandwidth argument?"
+   },
+   {
+    "id": "c2-6-i08",
+    "q": "Your team wants to fine-tune a 7B model. Estimate the memory and explain the options if it does not fit.",
+    "level": "system-design",
+    "covers": [
+     "About 16 bytes per parameter: roughly 112 GB",
+     "LoRA or QLoRA to train far fewer parameters",
+     "Sharding across GPUs (ZeRO, FSDP)",
+     "Gradient checkpointing",
+     "Rent hardware for the run"
+    ]
+   }
+  ]
  }
 }
