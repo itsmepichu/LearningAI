@@ -11,8 +11,14 @@ An Interactive AI Learning Path For My DD: the **Enterprise AI Field Manual**, r
 
 Two changes are planned next (see [ROADMAP.md](ROADMAP.md), phases 2–3):
 
-- **Choose your example project.** Harbor (an internal company assistant) stays as one of four projects, alongside an online store, a bank and a travel-booking agent. The project you pick decides which practical notes, datasets, lab variants and experiments you see. When another project suits a topic better, a short note at the end of the topic says so.
-- **Chapter check pages.** Questions move off the chapter page onto a separate check page per chapter, grouped by section. Each section has choose-the-answer questions and likely interview questions.
+- **Choose your example project.** Harbor (an internal company assistant) stays as one of four projects, alongside an online store, a bank and a travel-booking agent.
+  - There is no choice to make up front: you start with Harbor and can switch at any time.
+  - The project you pick decides which practical notes, datasets, lab variants and experiments you see.
+  - When another project suits a topic better, a short note at the end of the topic says so.
+- **Chapter check pages and a Practice page.**
+  - Questions move off the chapter page onto a separate check page per chapter, grouped by section.
+  - Each section has 10–12 choose-the-answer questions and 8–10 likely interview questions.
+  - A course-wide Practice page lets you filter questions, draw random sets, review mistakes and run interview drills.
 
 Interactive figures run in the browser. Each one carries an evidence label:
 

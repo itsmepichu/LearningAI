@@ -8,12 +8,16 @@
 - **Four example projects you choose between:**
   - Harbor stays.
   - Online store, Bank and Travel booking are added.
+  - No choice is needed up front: everyone starts with Harbor and can switch at any time.
   - The project you pick decides which practical content, datasets, labs and experiments you see.
   - When another project suits a topic better, a short note at the end of the topic says so.
 - **Chapter checks on their own page:**
   - Questions move out of the chapter page to a separate check page at the end of each chapter.
   - The page is grouped by section (one per topic).
-  - Each section has choose-the-answer questions and likely interview questions.
+  - Each section has **10–12 choose-the-answer questions** and **8–10 likely interview questions**.
+- **A course-wide Practice page** (`/practice`):
+  - Filter by chapter, learning path, question kind, level and example project.
+  - Draw random sets of questions and review earlier mistakes, for interview preparation.
 
 ---
 
@@ -21,21 +25,25 @@
 
 ### The four projects
 
-All names are fictional working names. Before the content is written, check that none of them matches a real company, and rename any that does. Scale figures are illustrative.
+Company names must be fictional; see open decision 1. Scale figures are illustrative.
 
-| Id | Project | Assistant at | Scale (illustrative) | Teaches best |
+| Id | Project | Assistant at (company name) | Scale (illustrative) | Teaches best |
 |---|---|---|---|---|
 | `harbor` | **Harbor**: internal company assistant | Tidewell, a software company | 8,000 employees, 1,200 business customers | Per-user document permissions, tenant isolation, approvals, audit |
-| `store` | **Online store**: shopping and support assistant | Meridian Market, an online marketplace | ~5M monthly shoppers, 2M product listings, holiday peak ~40× normal traffic | Consumer scale, latency, caching, cost per conversation, product search, images |
-| `bank` | **Bank**: customer and dispute-operations assistant | Fernhill Bank, a retail bank | ~3M customers, card disputes, strict audit | Idempotent money movements, evaluation rigour, regulation, fraud and social engineering |
-| `travel` | **Travel booking**: trip-planning and booking agent | Skyway Travel, an online travel agency | ~1.5M bookings a month, 9 languages, live fares | Multi-step agents and sagas (book, then cancel or refund), fresh prices, many languages, disruption spikes |
+| `store` | **Online store**: shopping and support assistant | *To be decided*, an online marketplace | ~5M monthly shoppers, 2M product listings, holiday peak ~40× normal traffic | Consumer scale, latency, caching, cost per conversation, product search, images |
+| `bank` | **Bank**: customer and dispute-operations assistant | *To be decided*, a retail bank | ~3M customers, card disputes, strict audit | Idempotent money movements, evaluation rigour, regulation, fraud and social engineering |
+| `travel` | **Travel booking**: trip-planning and booking agent | Skyway Travel (to be checked), an online travel agency | ~1.5M bookings a month, 9 languages, live fares | Multi-step agents and sagas (book, then cancel or refund), fresh prices, many languages, disruption spikes |
 
 ### How selection works
 
-- **Picking a project:**
-  - A project picker on the home page ("Choose your example project"), as four cards that each show the company, its scale and what the project teaches best.
-  - A compact picker in the top bar, so you can change it anywhere.
-- **Your choice is saved in this browser.** Harbor is the default until you choose.
+- **No choice up front.** Readers do not pick a project before starting. Everyone starts with Harbor, and the course reads normally without ever switching.
+- **Switch at any time, from:**
+  - a compact picker in the top bar
+  - the project tabs on each topic's In practice block, which also offer "Make this my default"
+  - the end-of-topic note, when another project fits the topic better
+  - the project filter on the Practice page
+- The home page shows only a small "Example project: Harbor · change" line, with no onboarding step.
+- **Your choice is saved in this browser.**
 - **What the choice changes:**
   - **In practice** note: the topic applied to your project.
   - **Failure to avoid** note: the most likely mistake in your project.
@@ -43,7 +51,7 @@ All names are fictional working names. Before the content is written, check that
   - **Interactive figures that use data** (chunking, BM25, retrieval metrics, memory, saga, cache keys, queueing…) load your project's synthetic dataset.
   - **Chapter lab variant:** the same structure and pass condition, with your project's data and scenario.
   - **Capstone:** "Build *your project*-lite", with milestones in your project's terms.
-  - **Interview questions**, where a project framing helps (for example "design the refund flow for Meridian Market").
+  - **Interview questions**, where a project framing helps (for example "design the refund flow for the online store").
 - **Peeking without switching:** tabs on the In practice block let you read another project's version without changing your default.
 - **Deep links:** `?project=store` in the address opens a topic with that project for this visit only, so links and search results can point at a specific project's version.
 
@@ -103,19 +111,28 @@ Planned fit by chapter (★ best, ● good, ○ limited). Each topic can still d
 
 - **A separate page per chapter**, at `/<chapter>/check` (for example `/c5/check`), titled "Chapter 5 check".
   - The chapter page no longer contains a quiz. It ends with the lab and then a card linking to the check.
-  - Each topic page ends with a link to its section on the check page ("3 questions and 2 interview questions for 5.3 →").
-- **Grouped by section:** one block per topic, in topic order, with a section index at the top.
+  - Each topic page ends with a link to its section on the check page ("Check this section: 12 questions · 9 interview questions →").
+- **Grouped by section:** one block per topic, in topic order.
+  - A section index at the top shows each section's score.
+  - Each section is collapsible, because a chapter page holds roughly 130–170 questions.
 - **Two kinds of question per section:**
 
-  | Kind | Per section | Format |
-  |---|---|---|
-  | Choose the answer | 3 (the current 54 chapter questions move to their sections, and more are added) | Single choice or "choose all that apply", each with an explanation of the right answer and why the distractors are wrong |
-  | Interview questions | 2–3 | The question; a level (fundamentals, applied, or system design); a hidden "What a strong answer covers" checklist; a likely follow-up question; an optional framing in your example project |
+  | Kind | Per section | Mix | Format |
+  |---|---|---|---|
+  | Choose the answer | **10–12** (the current 54 chapter questions move to their sections and count towards this) | Concept, calculation or estimate, and scenario or debugging questions | Single choice or "choose all that apply"; each explains why the right answer is right and why each distractor is wrong |
+  | Interview questions | **8–10** | About 3 fundamentals, 3–4 applied and 2–3 system design | The question; its level; a hidden "What a strong answer covers" checklist; a likely follow-up question |
 
   Example interview question (14.3, system design):
   > *Continuous batching raised throughput but p99 latency got worse. Why, and what would you change?*
   > A strong answer covers: new requests' prefill competes with ongoing decode steps; chunked prefill or a prefill token budget; prefix caching for shared system prompts; measuring time to first token and time between tokens separately.
   > Likely follow-up: how do you choose the batch-size limit?
+
+- **Project framing:** up to 2 interview questions per section may be framed in an example project. The page shows the ones framed in your selected project; an "All projects" switch shows the rest.
+- **Totals for the 18 chapters (135 sections):** about 1,350–1,600 choose-the-answer and 1,100–1,350 interview questions. The new chapters add more.
+- **Quality rules:**
+  - Every question is traceable to its topic's content or a cited primary source.
+  - No near-duplicates within or across sections.
+  - Distractors are real misconceptions, not filler.
 - **Two modes:**
   - **Practice:** feedback after each answer.
   - **Check:** answer a whole section or chapter, then see the score and review your mistakes.
@@ -123,7 +140,25 @@ Planned fit by chapter (★ best, ● good, ○ limited). Each topic can still d
   - Scores are saved per section, and interview questions can be marked "practised".
   - The chapter page shows the check result.
   - The progress page shows check scores next to topics studied.
-- **Suggested addition (not part of your request; your call):** a course-wide **Practice** page (`/practice`). You could filter by chapter, learning path, question kind and level, draw "10 random questions", or review earlier mistakes. Useful for interview preparation across the whole course.
+
+---
+
+## Design: Practice page (`/practice`)
+
+The course-wide place to drill questions, linked from the sidebar and the home page.
+
+- **Filters:**
+  - chapter or section, learning path
+  - question kind (choose the answer, interview)
+  - level (fundamentals, applied, system design)
+  - example project (for project-framed interview questions)
+  - status (new, answered wrongly before, practised)
+- **Modes:**
+  - **Random set:** 10, 20 or 50 questions drawn from the current filters, scored at the end.
+  - **Review mistakes:** only questions you answered wrongly before, until you get them right.
+  - **Interview drill:** one interview question at a time. Answer out loud or in notes, then reveal the strong-answer checklist and rate yourself (missed, partly, covered).
+- **Shared progress:** answers and ratings count on the chapter check pages and the progress page too.
+- **Loading:** question files load per chapter, and only for the chapters the filters select. All questions together are expected to be about 2 MB of text, so they are never loaded at once.
 
 ---
 
@@ -161,22 +196,24 @@ Planned fit by chapter (★ best, ● good, ○ limited). Each topic can still d
   - Remove `quiz` from `manifest.json`.
   - Migrate saved answers from the old chapter-level keys to section keys, so learners keep their progress.
 - **Build:**
-  - the project pickers (home page and top bar)
+  - the top-bar project picker, and the small "Example project" line on the home page
   - the In practice block with project tabs
   - the end-of-topic project note
   - `?project=` deep links
   - the chapter check page with practice and check modes
+  - the course-wide Practice page (filters, random set, review mistakes, interview drill)
   - the "Check this section" link on topic pages
   - check results on the chapter and progress pages
 - **Build the four synthetic datasets.**
-- **Pilot: chapters 1–3 complete for all four projects**, with full section checks (3 choose-the-answer and 2–3 interview questions per section), so you can review the format before it is rolled out.
+- **Pilot: chapters 1–3 complete for all four projects**, so you can review the format before it is rolled out. The pilot covers 18 sections with full checks: about 180–215 choose-the-answer and 145–180 interview questions.
 - **Update every place listed in the change checklist below**, and extend the end-to-end test.
 
 ### Phase 3 — Roll out projects and checks to every chapter
 
 - In practice, Failure to avoid and Try it notes for Online store, Bank and Travel on every remaining topic: chapters 4–18 and the capstone, about 400 notes in all.
 - A topic-fit rating for every topic.
-- Section checks for every topic: about 400 choose-the-answer and about 300 interview questions.
+- Section checks for the remaining 117 sections (chapters 4–18): about 1,170–1,400 choose-the-answer and 940–1,170 interview questions, at 10–12 and 8–10 per section.
+- Delivered two or three chapters at a time, with each batch checked against the quality rules before the next starts.
 - Lab variants per project for all 18 chapter labs, and capstone milestones per project.
 - Delivered chapter by chapter, each reviewed against the course's standards: simulations labelled as such, illustrative numbers called illustrative, links to official documentation.
 
@@ -245,7 +282,7 @@ Scroll-driven walkthroughs, each told through your selected project:
 
 - A prerequisite map (2D/3D graph of topics), filtered by learning path and project.
 - A sandbox for your project that grows chapter by chapter.
-- The course-wide Practice page, if you approve it.
+- Spaced-repetition scheduling on the Practice page: missed questions come back after increasing intervals (FSRS).
 - Export and import of progress (project choice, studied topics, check scores).
 - PWA offline mode, accessibility audit (WCAG 2.1 AA), performance budgets.
 
@@ -280,7 +317,7 @@ Every place that refers to Harbor as the only example, or to the chapter quiz, a
 **App code**
 - [ ] `src/main.tsx`:
   - add the `/:chapterId/check` route, placed before `/:chapterId/:topicId` so "check" is not read as a topic id
-  - add `/practice` if approved
+  - add the `/practice` route; React Router ranks the static segment above `/:chapterId`, and a test confirms it
 - [ ] `src/data/course.ts`:
   - replace the `QuizQ` type and `totals.questions` with check types and counts
   - add project types and topic fit
@@ -296,7 +333,12 @@ Every place that refers to Harbor as the only example, or to the chapter quiz, a
   - end-of-topic project note
   - "Check this section" link
   - change the rail link "lab and self-check"
-- [ ] `src/pages/Home.tsx`: add the project picker cards; change the "Self-check questions" stat.
+- [ ] `src/pages/Home.tsx`:
+  - add the small "Example project: Harbor · change" line (no picker cards)
+  - change the "Self-check questions" stat to check and interview question counts
+  - add a link to the Practice page
+- [ ] `src/pages/Practice.tsx` (new): the Practice page.
+- [ ] `src/components/Sidebar.tsx`: add a "Practice" link next to "Learning paths".
 - [ ] `src/pages/Misc.tsx`: progress page with check scores per chapter instead of the quiz ring; guide unchanged.
 - [ ] `src/components/Layout.tsx`: add the top-bar project picker.
 - [ ] `src/components/SearchDialog.tsx`: show the project on search hits from practice notes; deep-link with `?project=`.
@@ -306,12 +348,21 @@ Every place that refers to Harbor as the only example, or to the chapter quiz, a
 **Tests**
 - [ ] `tests/e2e.cjs`:
   - replace the quiz selectors (`.qq2`, `.quiz-score`)
-  - visit every `/<chapter>/check` route
+  - visit every `/<chapter>/check` route and `/practice`
+  - draw a random set on the Practice page, filter it, and review mistakes
   - switch projects and check that the practice note and dataset change
   - check the end-of-topic note on a `limited` topic
 
 ## Open decisions
 
-1. **Names:** Meridian Market, Fernhill Bank and Skyway Travel are working names; check them against real companies before phase 2 content is written.
-2. **Question counts:** 3 choose-the-answer and 2–3 interview questions per section is the plan; adjust after the chapters 1–3 pilot if you like.
-3. **Practice page:** build the course-wide `/practice` page or not.
+1. **Company names for the store and bank projects.**
+   - The proposed Meesho Marketplace and SBI Bank are real companies: Meesho, an Indian online marketplace, and State Bank of India.
+   - The course invents scale figures, internal systems and mistakes for each project, and publishes them on a public site. That cannot be done under real companies' names.
+   - Choose fictional names. An Indian setting works well: rupee prices, UPI payments, and Hindi and Tamil text for the tokenisation and multilingual topics.
+   - Check every candidate name, including Skyway Travel, against real companies before content is written.
+2. **Pilot review:** after chapters 1–3, confirm the question mix and length before phase 3 writes the remaining ~2,100–2,600 questions.
+
+Decided:
+- **Question counts:** 10–12 choose-the-answer and 8–10 interview questions per section.
+- **Practice page:** yes, built in phase 2.
+- **Project choice:** no up-front choice; Harbor by default, switchable at any time.

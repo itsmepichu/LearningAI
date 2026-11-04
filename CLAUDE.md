@@ -14,7 +14,10 @@
   - Say what a lab result does and does not prove.
 
 ## Example projects (design agreed; built in phase 2)
-- There are four projects, with ids `harbor`, `store`, `bank` and `travel`. Their profiles go in `src/content/projects.json`. Company names and scale figures are fictional and illustrative; say so where they appear.
+- There are four projects, with ids `harbor`, `store`, `bank` and `travel`. Their profiles go in `src/content/projects.json`.
+  - Company names must be fictional. Never use a real company's name, because the notes invent internal systems, figures and mistakes.
+  - Scale figures are illustrative; say so where they appear.
+- There is no up-front project choice. Harbor is the default; readers switch from the top bar, the In practice tabs, the end-of-topic note or the Practice page filter.
 - Per-topic notes go in `src/content/practice/<chapter>.json`, keyed `topicId -> projectId -> { practice, failure, tryIt, fit }`.
   - Each of `practice`, `failure` and `tryIt` is a short HTML string.
   - `fit` is `best`, `good` or `limited`.
@@ -27,8 +30,13 @@
 ## Chapter checks (design agreed; built in phase 2)
 - Each chapter has a separate check page at `/<chapter>/check`. The chapter page shows no quiz, only a link card after the lab.
 - Questions go in `src/content/checks/<chapter>.json`, keyed by topic id (one section per topic):
-  - `mcq`: 3 per section, `{ q, options, answer (index or array for "choose all"), why, distractors? }`
-  - `interview`: 2–3 per section, `{ q, level: "fundamentals" | "applied" | "system-design", covers: [..], followUp, project? }`
+  - `mcq`: 10–12 per section, `{ id, q, options, answer (index or array for "choose all"), why, distractors?, kind: "concept" | "calculation" | "scenario" }`
+  - `interview`: 8–10 per section, `{ id, q, level: "fundamentals" | "applied" | "system-design", covers: [..], followUp, project? }`
+    - Aim for about 3 fundamentals, 3–4 applied and 2–3 system design per section.
+    - At most 2 per section are framed in a project (`project` set).
+  - `id` is stable (for example `c5-3-m07`, `c5-3-i04`), because saved answers and Practice-page history are keyed by it. Never reuse or renumber ids.
+- Every question must be traceable to its topic's content or a cited primary source. Avoid near-duplicates within and across sections.
+- The course-wide Practice page (`/practice`) reads the same files, loading only the chapters its filters select.
 - Explain why the right answer is right. Use distractors that are real misconceptions, not filler.
 - Write interview questions the way interviewers ask them, with a checklist of what a strong answer covers. Do not write a script to memorise.
 
