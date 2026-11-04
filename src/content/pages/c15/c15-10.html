@@ -1,0 +1,30 @@
+<p>Three kinds of numbers are routinely confused in capacity discussions. Label every figure with which kind it is.</p>
+<div class="tw"><table>
+<tr><th>Kind</th><th>Source</th><th>Example</th><th>Trust</th></tr>
+<tr><td><b>Measured performance</b></td><td>Benchmarks and load tests you ran, under stated conditions</td><td>"One replica sustains 2,400 output tok/s at p95 ITL 45 ms with our traffic mix (load test 2026-10-28)"</td><td>High for those conditions; does not transfer to other prompt mixes or hardware</td></tr>
+<tr><td><b>Projected capacity</b></td><td>Calculation from measured numbers + assumptions</td><td>"12 replicas should support 30k output tok/s at peak"</td><td>As good as its assumptions; state them</td></tr>
+<tr><td><b>Actual production usage</b></td><td>Telemetry from real traffic</td><td>"Peak last Monday: 18.2k output tok/s; p95 ITL 52 ms"</td><td>Ground truth for the past; the input to the next forecast</td></tr>
+</table></div>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 640 230" role="img" data-chart aria-label="Measured, projected and actual capacity over time">
+<rect x="50" y="15" width="570" height="180" class="fsunk"/>
+<line x1="50" y1="60" x2="620" y2="60" class="lna"/><text x="56" y="54" class="xs acc">projected capacity (12 replicas × measured per-replica rate)</text>
+<line x1="50" y1="95" x2="620" y2="95" class="ln dash"/><text x="56" y="89" class="xs mut">safe operating limit (75% of projected)</text>
+<path d="M50 180 L 100 170 L 150 175 L 200 150 L 250 160 L 300 130 L 350 140 L 400 110 L 450 120 L 500 98 L 520 88" class="lns"/>
+<path d="M520 88 L 570 72 L 620 58" class="lns dash"/>
+<circle cx="520" cy="88" r="4" class="fs"/><text x="470" y="80" class="xs sig">actual peak</text><text x="560" y="50" class="xs sig">forecast</text>
+<rect x="330" y="150" width="140" height="34" rx="3" class="fsurf"/><text x="400" y="164" text-anchor="middle" class="xs">load test: 1 replica measured</text><text x="400" y="178" text-anchor="middle" class="xs">at 2,400 tok/s (2026-10-28)</text>
+<text x="335" y="214" text-anchor="middle" class="xs mut">weeks →</text>
+</svg></div><figcaption><b>Three lines, three meanings.</b> The actual peak has crossed the safe limit and the forecast reaches projected capacity in about two weeks: time to add replicas or re-measure with the current traffic mix, since the projection rests on a load test that may no longer match production.</figcaption></figure>
+<div class="box example"><h5>Example: a projection that failed (illustrative scenario)</h5><p>A vendor benchmark said 5,000 tok/s per GPU; the team projected 20 GPUs would cover launch. Their own load test with real prompt lengths (median 3k input tokens, long tail to 30k) measured 1,700 tok/s at their latency SLO. Production at launch needed 52 GPUs. The fix is procedural: capacity plans cite measured numbers with test conditions, and launch reviews compare them with the first week's actual usage.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s launch review states: &quot;measured 60 RPS on staging with p95 1.8 s for this workload; projected 100 RPS with two more replicas, not yet validated&quot;.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Describing a simulation or extrapolation as a system that served millions of users.</div></div>
+<div class="tools">
+<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for scale</h3>
+<div class="cols3">
+<div class="card"><h5><a href="https://docs.litellm.ai/docs/simple_proxy">LiteLLM Proxy</a></h5><span class="meta">model gateway</span><p>Self-hosted gateway with routing, fallbacks, per-key/team budgets and rate limits, and usage tracking.</p></div>
+<div class="card"><h5><a href="https://aigateway.envoyproxy.io/">Envoy AI Gateway</a></h5><span class="meta">gateway on Envoy / Kubernetes</span><p>Token-based rate limiting, provider routing and fallback built on Envoy Gateway.</p></div>
+<div class="card"><h5><a href="https://grafana.com/docs/k6/latest/">k6</a> · <a href="https://docs.locust.io/">Locust</a></h5><span class="meta">load testing</span><p>Scriptable load tests with arrival-rate scenarios and thresholds (k6: JavaScript; Locust: Python).</p></div>
+<div class="card"><h5><a href="https://keda.sh/docs/">KEDA</a></h5><span class="meta">event-driven autoscaling</span><p>Scale Kubernetes workloads on queue depth or custom metrics such as waiting requests.</p></div>
+<div class="card"><h5><a href="https://chaos-mesh.org/docs/">Chaos Mesh</a> · <a href="https://github.com/Shopify/toxiproxy">Toxiproxy</a></h5><span class="meta">failure injection</span><p>Inject latency, errors and outages into dependencies to test breakers and fallbacks; Toxiproxy runs locally.</p></div>
+<div class="card"><h5><a href="https://redis.io/docs/latest/">Redis</a> / <a href="https://valkey.io/docs/">Valkey</a></h5><span class="meta">caches · rate limiting</span><p>Response caches, token-bucket rate limiters and session state for stateless services.</p></div>
+</div></div>

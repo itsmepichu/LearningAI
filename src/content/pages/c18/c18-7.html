@@ -1,0 +1,30 @@
+<ul>
+<li><b>Ownership</b>: every AI system has a named owning team accountable for quality, cost, incidents and compliance; every component (prompts, index, fine-tuned model, gateway routes, eval suite) has an owner. Shared platforms (gateway, vector DB, observability) have platform owners with clear interfaces.</li>
+<li><b>Release documentation</b>: release notes per release manifest: what changed, evaluation results vs previous, known limitations, rollout plan, rollback procedure. Model cards (13.7) and system cards (intended use, risks, controls) for governance (16.8).</li>
+<li><b>Operational readiness review</b>: before launch or handover, verify the system can be operated: SLOs defined, dashboards and alerts live, runbooks written and tested, on-call staffed and trained, capacity plan with measured numbers (15.10), DR tested, security review done, cost budgets configured.</li>
+<li><b>Service handover</b>: when a project team hands a system to an operations or product team: walkthrough of architecture and traces, access granted, runbook drills, shadow on-call, and a period of joint ownership before the original team steps back.</li>
+</ul>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div id="orrList" style="display:grid;gap:4px"></div>
+<div class="kpis" id="orrK"></div></div></div>
+<figcaption><b>Operational readiness checklist</b> (interactive; your ticks are not saved). Items reference the chapters where each is covered. A launch review typically requires every item in the "must" group.</figcaption></figure>
+<div class="tw"><table>
+<tr><th>Activity</th><th>Product owner</th><th>AI engineering</th><th>Platform / SRE</th><th>Security &amp; compliance</th></tr>
+<tr><td>Acceptance criteria &amp; eval set</td><td>A</td><td>R</td><td>C</td><td>C</td></tr>
+<tr><td>Prompt / model / index changes</td><td>C</td><td>A/R</td><td>I</td><td>I</td></tr>
+<tr><td>SLOs, alerts, on-call</td><td>C</td><td>R</td><td>A</td><td>I</td></tr>
+<tr><td>Threat model, data protection</td><td>I</td><td>R</td><td>C</td><td>A</td></tr>
+<tr><td>Cost budgets</td><td>A</td><td>R</td><td>C</td><td>I</td></tr>
+</table></div>
+<p style="font-size:.86rem;color:var(--muted)">Example RACI: R = responsible, A = accountable, C = consulted, I = informed.</p>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s handover pack names who handles stale ACLs, how to disable a write tool, how to restore an index-and-encoder pair and how to verify recovery.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating a successful demo and an architecture diagram as a handover.</div></div>
+<div class="tools">
+<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for LLMOps and delivery</h3>
+<div class="cols3">
+<div class="card"><h5><a href="https://mlflow.org/docs/latest/">MLflow</a></h5><span class="meta">tracking · registry · GenAI evals</span><p>Experiment tracking, model registry, prompt registry and LLM evaluation/tracing features.</p></div>
+<div class="card"><h5><a href="https://dvc.org/doc">DVC</a></h5><span class="meta">data and pipeline versioning</span><p>Version datasets and pipelines alongside Git; reproduce any stage.</p></div>
+<div class="card"><h5><a href="https://opentofu.org/docs/">OpenTofu</a> / <a href="https://developer.hashicorp.com/terraform/docs">Terraform</a></h5><span class="meta">infrastructure as code</span><p>Declarative infrastructure for GPU pools, databases, IAM and networking.</p></div>
+<div class="card"><h5><a href="https://argo-cd.readthedocs.io/">Argo CD</a> · <a href="https://argo-rollouts.readthedocs.io/">Argo Rollouts</a></h5><span class="meta">GitOps · canaries</span><p>Sync clusters from Git; progressive delivery with automated analysis and rollback. Practise on a local kind/k3d cluster.</p></div>
+<div class="card"><h5><a href="https://openfeature.dev/docs/reference/intro">OpenFeature</a></h5><span class="meta">feature flags standard</span><p>Vendor-neutral flag API for routing cohorts to prompt/model/index versions and for kill switches.</p></div>
+<div class="card"><h5><a href="https://www.promptfoo.dev/docs/integrations/ci-cd/">promptfoo CI</a> · <a href="https://langfuse.com/docs/prompt-management/overview">Langfuse prompts</a></h5><span class="meta">prompt gates · prompt registry</span><p>Run evaluation gates in CI; manage versioned prompts with labels for environments.</p></div>
+</div></div>

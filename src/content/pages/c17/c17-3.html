@@ -1,0 +1,14 @@
+<p>The classic "golden signals" still apply: <b>latency</b>, <b>traffic</b>, <b>errors</b> and <b>saturation</b>. For AI services, measure them per stage and per model.</p>
+<ul>
+<li><b>Latency percentiles</b>: report p50, p95, p99, never only the mean. LLM latency distributions are skewed; the mean hides the slow tail that users complain about. Track TTFT, ITL and total time separately (14.2), and per-step durations for agents.</li>
+<li><b>Errors</b>: by type (timeouts, 429 rate limits, 5xx, schema-validation failures, tool errors, content-filter blocks). A rise in validation failures is often the first sign of a model change.</li>
+<li><b>Saturation</b>: GPU KV-cache usage, running/waiting sequences, provider rate-limit headroom, connection pool use, index node memory.</li>
+<li><b>Queue depth and age</b>: number of waiting items and age of the oldest one, for ingestion, agent tasks and request queues. Age is the better alert signal: it directly measures delay.</li>
+<li><b>Availability</b>: successful requests ÷ valid requests, against the SLO (15.2).</li>
+</ul>
+<figure class="fig live"><div class="stage"><div class="wid">
+<label for="lpTail">Tail heaviness <input type="range" id="lpTail" min="0" max="100" value="40"><span id="lpTailO"></span></label>
+<svg id="lpSvg" viewBox="0 0 640 210"></svg><div class="kpis" id="lpK"></div></div></div>
+<figcaption><b>Why percentiles</b> (5,000 latencies generated in your browser from a mixture of normal and slow requests). As the tail gets heavier, p99 moves dramatically while the median barely changes; the mean lands somewhere that describes no real user.</figcaption></figure>
+<div class="box example"><h5>Example: an early warning</h5><p>p50 latency is flat, but p99 climbs from 6 s to 19 s over an hour while the waiting-sequences gauge on one model replica rises. A long-context tenant has started sending 100k-token prompts that occupy KV cache. Admission limits per tenant (15.5) and a separate long-context pool resolve it.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s average latency stayed flat while p99 and oldest-job age rose: a noisy tenant&#x27;s long tasks, found from those two signals.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Trusting a low error rate when requests are hanging instead of failing.</div></div>

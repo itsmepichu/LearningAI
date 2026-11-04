@@ -1,0 +1,30 @@
+<p>Work through a chain of assumptions, each of which you should measure from product analytics or a pilot:</p>
+<ol><li>Registered users → <b>daily active users</b> of the AI feature (activation rate).</li>
+<li>× requests per active user per day → requests per day.</li>
+<li>Requests concentrate in busy hours: <b>peak-hour share</b> (e.g. 15% of the day's requests in the peak hour), and within the hour a further burst factor (peak minute vs hour average, often 1.5–3×).</li>
+<li>→ <b>peak requests per second (RPS)</b>.</li>
+<li><b>Little's law</b>: concurrency = arrival rate × time in system. 50 RPS × 8 s average = 400 requests in flight. This sizes connection pools, GPU batch slots and rate limits. Little's law gives the <em>average</em> in flight for a stable system (arrivals below capacity); it is not a p99 or burst figure, so plan headroom above it.</li>
+<li>× tokens per request → <b>peak input and output tokens/second</b>, which sizes model capacity or API rate limits.</li>
+<li>Add <b>background workload</b>: ingestion and re-embedding (chapter 10), evaluation runs, batch summarisation, agent jobs, which should be scheduled away from peaks.</li></ol>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2">
+<label for="cpReg">Registered users (millions) <input type="range" id="cpReg" min="0.1" max="50" step="0.1" value="10"><span id="cpRegO"></span></label>
+<label for="cpDau">AI-feature daily active % <input type="range" id="cpDau" min="1" max="60" step="0.5" value="8"><span id="cpDauO"></span></label>
+<label for="cpReq">Requests per active user per day <input type="range" id="cpReq" min="1" max="40" value="6"><span id="cpReqO"></span></label>
+<label for="cpPh">Peak-hour share of daily traffic % <input type="range" id="cpPh" min="4" max="30" value="12"><span id="cpPhO"></span></label>
+<label for="cpBurst">Peak-minute burst factor <input type="range" id="cpBurst" min="1" max="4" step="0.1" value="2"><span id="cpBurstO"></span></label>
+<label for="cpLat">Avg time per request (s) <input type="range" id="cpLat" min="0.5" max="60" step="0.5" value="6"><span id="cpLatO"></span></label>
+<label for="cpIn">Input tokens / request <input type="range" id="cpIn" min="100" max="20000" step="100" value="3000"><span id="cpInO"></span></label>
+<label for="cpOut">Output tokens / request <input type="range" id="cpOut" min="20" max="3000" step="10" value="350"><span id="cpOutO"></span></label>
+</div>
+<div class="kpis" id="cpK"></div></div></div>
+<figcaption><b>Capacity calculator.</b> Peak RPS = DAU × requests/day × peak-hour share ÷ 3600 × burst. Concurrency by Little's law (an average, not a p99). Equivalent form used by many capacity sheets: average RPS = DAU × requests/day ÷ 86,400, then × a peak factor (here the peak factor = peak-hour share × 24 × burst). Change the latency: concurrency, and therefore GPU slots and connection pools, scale with it directly.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
+<label for="qsL">Arrival rate λ (requests/s) <input type="range" id="qsL" min="0.5" max="20" step="0.5" value="7"><span id="qsLO"></span></label>
+<label for="qsC">Servers (concurrent slots) c <input type="range" id="qsC" min="1" max="16" value="4"><span id="qsCO"></span></label>
+<label for="qsS">Mean service time (s) <input type="range" id="qsS" min="0.1" max="3" step="0.1" value="0.5"><span id="qsSO"></span></label></div>
+<canvas id="qsCan" width="640" height="200"></canvas><div class="kpis" id="qsK"></div>
+<div class="ctl"><button class="btn primary" type="button" id="qsRun">Run 5 simulated minutes</button></div></div></div>
+<figcaption><b>Queue simulation, computed live</b> (random arrivals and service times, c parallel servers). Utilisation ρ = λ × service time ÷ c. Below about 80% the queue stays short; near 100% waits explode; above 100% the queue grows without limit. The in-flight average matches Little's law, but the p95 wait is much higher than the mean.</figcaption></figure>
+<div class="box example"><h5>Example: the default numbers</h5><p>10M registered × 8% = 800k DAU × 6 = 4.8M requests/day. 12% in the peak hour = 576k/hour = 160 RPS average, × 2 burst = 320 RPS at the peak minute. × 6 s = ~1,900 requests in flight. Output: 320 × 350 = 112k output tokens/s; input 960k tokens/s (much of it cacheable system prompt). That is a large deployment, and every assumption deserves a measurement before buying capacity.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor: 8,000 employees + 1,200 customer tenants; 21,000 daily users × 6 requests, 14% in the peak hour, burst 2 → about 10 RPS at peak, about 60 in flight at 6 s each.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Multiplying by a peak factor twice, or putting p99 latency into Little&#x27;s law.</div></div>

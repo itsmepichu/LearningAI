@@ -1,0 +1,21 @@
+<div class="terms">
+<div><b>SLI</b> (indicator): a measured quantity, e.g. "fraction of requests completed successfully within 10 s".</div>
+<div><b>SLO</b> (objective): the target for an SLI over a window, e.g. "99.5% over 28 days".</div>
+<div><b>Error budget</b>: 100% − SLO; the amount of failure you can afford (0.5% of requests). Spending it fast triggers alerts and freezes risky releases (17.8).</div>
+<div><b>SLA</b>: a contractual promise to customers, usually looser than the internal SLO.</div>
+</div>
+<div class="tw"><table>
+<tr><th>Dimension</th><th>Example SLI</th><th>Example SLO</th></tr>
+<tr><td><b>Availability</b></td><td>Successful responses ÷ valid requests (excluding user errors)</td><td>99.9% / 28 days</td></tr>
+<tr><td><b>Latency</b></td><td>TTFT; end-to-end time for non-streaming; per-step time for agents</td><td>p95 TTFT ≤ 1.5 s; p99 ≤ 4 s</td></tr>
+<tr><td><b>Quality</b></td><td>Sampled groundedness score; task success from feedback; escalation rate</td><td>Groundedness ≥ 95% on daily 500-sample judge run</td></tr>
+<tr><td><b>Cost</b></td><td>Cost per successful task; cost per tenant per day</td><td>≤ $0.012 per resolved conversation (monthly)</td></tr>
+<tr><td><b>Freshness</b> (RAG)</td><td>Edit-to-searchable lag</td><td>p99 ≤ 10 min</td></tr>
+</table></div>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="ebS">SLO % <select id="ebS"><option>99</option><option>99.5</option><option selected>99.9</option><option>99.95</option><option>99.99</option></select></label>
+<label for="ebR">Requests per month (millions) <input type="range" id="ebR" min="1" max="500" value="140"><span id="ebRO"></span></label></div>
+<div class="kpis" id="ebK"></div></div></div>
+<figcaption><b>Error budget calculator.</b> Each extra "nine" cuts the budget tenfold. For AI features, a provider outage can consume a month's 99.9% budget in under an hour, which is why fallbacks (15.7) matter.</figcaption></figure>
+<div class="box example"><h5>Example: why quality needs an SLO too</h5><p>A deployment keeps 99.95% availability while a silent retrieval bug drops groundedness from 96% to 81% for three days. No availability alert fires. A daily sampled-quality SLO with an alert at 92% would have caught it on day one (17.4).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s SLOs: 99.9% availability, p95 first token ≤ 1.5 s, sampled groundedness ≥ 95%, ≤ $0.01 per resolved question, each with a written measurement boundary.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating a sampled judge score as a complete measurement of all production answers.</div></div>

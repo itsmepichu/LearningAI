@@ -1,0 +1,40 @@
+<p>For AI systems, a trace should let you answer, for any single request: what did the user ask, what was retrieved (IDs and scores), what exactly was sent to the model (prompt version, and the content if policy allows), what came back, which tools ran with what arguments and results, how long each step took, how many tokens and dollars it cost, and what the user did next. Agent runs produce traces with dozens of nested spans; multi-agent runs link child traces to the parent task.</p>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div id="trWf"></div><div class="out" id="trAttr">Click a span to see its attributes.</div></div></div>
+<figcaption><b>A trace waterfall</b> for one RAG request with an agentic tool call (example data). Bars are positioned to scale on the time axis. Notice the reranker span dominates retrieval time and the model call has a long TTFT; click spans to inspect GenAI attributes.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
+<label for="cpRw">Query rewrite (ms) <input type="range" id="cpRw" min="0" max="1500" step="50" value="400"><span id="cpRwO"></span></label>
+<label for="cpBm">BM25 (ms) <input type="range" id="cpBm" min="10" max="800" step="10" value="40"><span id="cpBmO"></span></label>
+<label for="cpVe">Vector search (ms) <input type="range" id="cpVe" min="10" max="800" step="10" value="60"><span id="cpVeO"></span></label>
+<label for="cpRr">Rerank (ms) <input type="range" id="cpRr" min="0" max="2000" step="50" value="800"><span id="cpRrO"></span></label>
+<label for="cpM1">Model call 1 (ms) <input type="range" id="cpM1" min="100" max="4000" step="50" value="850"><span id="cpM1O"></span></label>
+<label for="cpTo">Tool call (ms) <input type="range" id="cpTo" min="20" max="2000" step="10" value="240"><span id="cpToO"></span></label>
+<label for="cpM2">Model call 2 (ms) <input type="range" id="cpM2" min="100" max="6000" step="50" value="2900"><span id="cpM2O"></span></label>
+<label for="cpRt"><input type="checkbox" id="cpRt"> tool times out once (2 s) and retries</label></div>
+<div id="cpWf"></div><div class="kpis" id="cpKp"></div></div></div>
+<figcaption><b>Critical path, recomputed live.</b> BM25 and vector search run in parallel, so only the slower one is on the critical path (outlined). Speeding up a span that is not on the critical path changes nothing; speeding up the longest one helps most. Toggle the tool retry to see how one hidden timeout dominates the request.</figcaption></figure>
+<div class="box example"><h5>Example: what the trace revealed</h5><p>Users report "the assistant is slow on Mondays". Traces show p95 end-to-end time of 9 s, of which 5 s is <code>retrieval.rerank</code> waiting for a GPU shared with the Monday ingestion backfill. Metrics alone showed "latency up"; the trace showed where and why, and led to separating the reranker pool (15.3).</p></div>
+<div class="box lab"><h5>Laptop lab: trace a local RAG call into Jaeger <span class="tag cpu">Laptop · CPU · Docker</span></h5>
+<pre><code>docker run --rm -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/jaeger:latest     # UI: http://localhost:16686
+pip install opentelemetry-sdk opentelemetry-exporter-otlp-proto-http ollama</code></pre>
+<pre><code>import ollama
+from opentelemetry import trace
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+tp = TracerProvider(resource=Resource.create({"service.name": "rag-demo"}))
+tp.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint="http://localhost:4318/v1/traces")))
+trace.set_tracer_provider(tp); tracer = trace.get_tracer("rag-demo")
+
+with tracer.start_as_current_span("rag.request", attributes={"tenant": "demo", "prompt.version": "answer@v1"}):
+    with tracer.start_as_current_span("retrieval.search") as s:
+        chunks = ["[1] Refunds within 14 days."]; s.set_attribute("retrieval.k", 1)
+    with tracer.start_as_current_span("chat qwen2.5:1.5b") as s:          # GenAI span naming: "{operation} {model}"
+        s.set_attribute("gen_ai.operation.name", "chat"); s.set_attribute("gen_ai.request.model", "qwen2.5:1.5b")
+        r = ollama.chat(model="qwen2.5:1.5b", messages=[{"role": "user", "content": f"{chunks}\nRefund window?"}])
+        s.set_attribute("gen_ai.usage.input_tokens", r.prompt_eval_count)
+        s.set_attribute("gen_ai.usage.output_tokens", r.eval_count)
+tp.shutdown()</code></pre>
+<p>Alternatives with LLM-specific UIs (prompt/response views, token costs, evaluations): <code>pip install arize-phoenix &amp;&amp; phoenix serve</code>, or self-host Langfuse with Docker Compose. Both accept OpenTelemetry data.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A slow Harbor answer turned out to be a ticket tool retrying twice after generation finished; only the end-to-end trace showed it.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Starting a new unrelated trace in each worker, which breaks the causal chain.</div></div>

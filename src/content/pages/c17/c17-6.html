@@ -1,0 +1,26 @@
+<ul>
+<li><b>Sampling</b>: storing every span for millions of requests is expensive. <em>Head sampling</em> decides at the start (keep 5% at random): cheap but misses rare failures. <em>Tail sampling</em> (in the Collector) decides after the trace completes: keep all errors, slow traces, low quality scores and flagged safety events, plus a random baseline. Keep metrics unsampled.</li>
+<li><b>Redaction</b>: prompts and outputs contain personal and confidential data. Options per field: do not record (default for message content in many conventions), record hashed, record redacted (16.5), or record in a separate, more restricted store with shorter retention. Never log secrets or auth tokens.</li>
+<li><b>Retention</b>: e.g. metrics 13 months, sampled traces 30 days, full content 7 days in a restricted store, audit logs per legal requirement. Deletion requests must reach telemetry too.</li>
+<li><b>Telemetry costs</b>: LLM traces are large (prompts can be tens of KB). Budget storage and ingest; drop high-cardinality attributes from metrics (e.g. never use raw user IDs as metric labels).</li>
+<li><b>Watch for missing telemetry</b>: export dropped-span and queue-full counters from SDKs and the Collector, and alert on them. A silent pipeline looks exactly like a healthy, quiet system.</li></ul>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="tsRps">Requests/second <input type="range" id="tsRps" min="10" max="2000" step="10" value="300"><span id="tsRpsO"></span></label>
+<label for="tsKb">Avg trace size with content (KB) <input type="range" id="tsKb" min="2" max="200" value="40"><span id="tsKbO"></span></label>
+<label for="tsHead">Random baseline sampling % <input type="range" id="tsHead" min="0" max="100" step="0.5" value="5"><span id="tsHeadO"></span></label>
+<label for="tsErr">Error + slow + flagged share % (always kept) <input type="range" id="tsErr" min="0" max="20" step="0.5" value="3"><span id="tsErrO"></span></label></div>
+<div class="kpis" id="tsK"></div></div></div>
+<figcaption><b>Telemetry volume calculator</b> for tail sampling (keep all interesting traces + a random baseline of the rest). Storage cost uses an illustrative $0.30 per GB ingested and stored for 30 days.</figcaption></figure>
+<div class="box example"><h5>Example: a Collector redaction rule</h5>
+<pre><code>processors:
+  attributes/redact:
+    actions:
+      - {key: gen_ai.input.messages,  action: delete}          # content not kept in the main trace store
+      - {key: gen_ai.output.messages, action: delete}
+      - {key: user.email, action: hash}
+  tail_sampling:
+    policies:
+      - {name: errors,  type: status_code, status_code: {status_codes: [ERROR]}}
+      - {name: slow,    type: latency,     latency: {threshold_ms: 8000}}
+      - {name: baseline, type: probabilistic, probabilistic: {sampling_percentage: 5}}</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor keeps all error and slow traces, a 5% random sample of the rest, strips document bodies, and alerts on dropped spans.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Logging every prompt forever: a security liability and a cost problem.</div></div>

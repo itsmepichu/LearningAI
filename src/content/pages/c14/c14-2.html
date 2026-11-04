@@ -1,0 +1,26 @@
+<div class="terms">
+<div><b>Prefill</b>: process all prompt tokens in one parallel forward pass, filling the KV cache. <b>Compute-bound</b>: lots of matrix maths per weight read, so GPUs run near their FLOP limit.</div>
+<div><b>Decode</b>: generate one token per forward pass per sequence. <b>Memory-bandwidth-bound</b>: each step reads all weights (and the sequence's KV cache) to do a small amount of maths. Batching many sequences shares the weight read across them.</div>
+<div><b>TTFT</b> (time to first token): queueing + prefill time. Grows with prompt length. <b>ITL</b> / TPOT (inter-token latency / time per output token): time between streamed tokens. <b>End-to-end latency</b> ≈ TTFT + (output tokens − 1) × ITL.</div>
+</div>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="row2"><label for="pdIn">Prompt tokens <input type="range" id="pdIn" min="100" max="32000" step="100" value="4000"><span id="pdInO"></span></label>
+<label for="pdOut">Output tokens <input type="range" id="pdOut" min="10" max="2000" step="10" value="400"><span id="pdOutO"></span></label>
+<label for="pdQ">Queue wait (ms) <input type="range" id="pdQ" min="0" max="3000" step="50" value="100"><span id="pdQO"></span></label></div>
+<svg id="pdSvg" viewBox="0 0 640 120"></svg><div class="kpis" id="pdK"></div></div></div>
+<figcaption><b>Request timeline</b> for an 8B model on one datacentre GPU (illustrative rates: prefill ≈ 10,000 tokens/s, decode ≈ 60 tokens/s per sequence at moderate batch). Long prompts mostly hurt TTFT; long outputs mostly hurt total time. Users perceive TTFT for chat; batch jobs care about total time and throughput.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: measure TTFT and ITL for real <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># Start a local server first:  ollama serve   (or llama-server -m model.gguf --port 8080)
+import time, ollama
+prompt = "Summarise the following text in 3 bullet points:\n" + ("The cache stores keys and values. " * 300)
+t0 = time.perf_counter(); first = None; n = 0
+for chunk in ollama.generate(model="llama3.2:1b", prompt=prompt, stream=True, options={"num_predict": 120}):
+    if chunk.response:
+        n += 1; now = time.perf_counter()
+        if first is None: first = now
+    if chunk.done:
+        print(f"TTFT {first - t0:.2f}s | {n} chunks | ITL {(now - first) / max(n - 1, 1) * 1000:.0f} ms"
+              f" | engine: prefill {chunk.prompt_eval_count / (chunk.prompt_eval_duration / 1e9):.0f} tok/s,"
+              f" decode {chunk.eval_count / (chunk.eval_duration / 1e9):.1f} tok/s")</code></pre>
+<p>Multiply the prompt length by 4 and re-run: TTFT grows roughly linearly while decode speed barely changes. That is prefill vs decode, measured on your own CPU. Run it twice: the second TTFT is lower because Ollama reuses the cached prompt prefix (14.3).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s long-document summaries (20k-token prompts) are prefill-heavy; its email drafts (short prompts, 800-token outputs) are decode-heavy, and they are monitored separately.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Dividing total tokens by total time, which hides whether the wait happened before or during generation.</div></div>

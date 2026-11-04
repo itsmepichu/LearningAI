@@ -1,0 +1,25 @@
+<p>Every artefact that can change behaviour needs an immutable version, and every production request should record the versions that served it. Bundle them into a <dfn>release manifest</dfn>: one identifier for "the system as deployed".</p>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 260" role="img" aria-label="Release manifest pins every behaviour-affecting artefact">
+<g class="sm">
+<rect x="290" y="105" width="180" height="56" rx="5" class="nda"/><text x="380" y="128" text-anchor="middle" class="lg">Release r2026.11.3</text><text x="380" y="146" text-anchor="middle" class="xs">manifest (immutable)</text>
+<rect x="20" y="20" width="160" height="44" rx="4" class="nd"/><text x="100" y="40" text-anchor="middle">Code</text><text x="100" y="55" text-anchor="middle" class="xs mono">git 7f3c2e1 · image@sha256:…</text>
+<rect x="20" y="110" width="160" height="44" rx="4" class="nd"/><text x="100" y="130" text-anchor="middle">Prompts</text><text x="100" y="145" text-anchor="middle" class="xs mono">answer@v12 · triage@v7</text>
+<rect x="20" y="200" width="160" height="44" rx="4" class="nd"/><text x="100" y="220" text-anchor="middle">Config</text><text x="100" y="235" text-anchor="middle" class="xs mono">k=8, temp=0.2, flags@41</text>
+<rect x="580" y="20" width="160" height="44" rx="4" class="nd"/><text x="660" y="40" text-anchor="middle">Models</text><text x="660" y="55" text-anchor="middle" class="xs mono">provider-a/large-2026-09</text>
+<rect x="580" y="110" width="160" height="44" rx="4" class="nd"/><text x="660" y="130" text-anchor="middle">Index</text><text x="660" y="145" text-anchor="middle" class="xs mono">kb-v4 (bge-base@rev2)</text>
+<rect x="580" y="200" width="160" height="44" rx="4" class="nd"/><text x="660" y="220" text-anchor="middle">Eval suite + judge</text><text x="660" y="235" text-anchor="middle" class="xs mono">suite@v31 · judge@v4</text>
+<rect x="290" y="20" width="180" height="44" rx="4" class="nd"/><text x="380" y="40" text-anchor="middle">Datasets</text><text x="380" y="55" text-anchor="middle" class="xs mono">ft-invoices@v12 (adapter)</text>
+<rect x="290" y="200" width="180" height="44" rx="4" class="nd"/><text x="380" y="220" text-anchor="middle">Infrastructure</text><text x="380" y="235" text-anchor="middle" class="xs mono">tofu plan 2026-11-03</text>
+<path d="M180 42 L290 120 M180 132H290 M180 222 L290 150 M580 42 L470 120 M580 132H470 M580 222 L470 150 M380 64V105 M380 200V161" class="lna"/></g>
+</svg></div><figcaption><b>A release manifest.</b> Changing any one input produces a new release ID, even if no code changed. Traces carry the release ID (17.5), so any output can be reproduced and any regression bisected.</figcaption></figure>
+<div class="box example"><h5>Example: manifest file</h5>
+<pre><code>release: r2026.11.3
+code: {commit: 7f3c2e1, image: registry.local/kb-api@sha256:9b1e…}
+prompts: {answer: v12, triage: v7, rewrite_query: v3}
+models: {answer: provider-a/large-2026-09, triage: pool/small-8b@ft-r431, judge: provider-b/mid-2026-06}
+index: {alias: kb-search, target: kb-v4, embedder: bge-base@rev2, chunker: v5}
+config: {retrieval_k: 8, rerank_top: 50, temperature: 0.2, flags_revision: 41}
+evaluation: {suite: v31, judge_prompt: v4, results: s3://evals/r2026.11.3/}
+approved_by: [kb-owner, sec-review]   created: 2026-11-03T16:20Z</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor release r2026.11.3 maps code SHA, prompt versions, tool schemas, model revision, embedder + index, ACL watermark and eval suite.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Rolling back code only, while an incompatible prompt, index or adapter stays live.</div></div>

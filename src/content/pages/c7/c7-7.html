@@ -1,0 +1,34 @@
+<p>A model's output is a <em>suggestion</em> drawn from a distribution. Business rules (pricing, eligibility, permissions, compliance limits, workflow state) must be exact, auditable and identical every time. The core design pattern is: <b>the model interprets and proposes; deterministic code validates, decides and executes.</b></p>
+<ul>
+<li>Let the model do what is fuzzy: understand intent, extract fields from free text, draft wording, rank options.</li>
+<li>Let code do what is exact: compute amounts, check limits, enforce permissions, choose state transitions, format legal text.</li>
+<li>Keep the boundary explicit: the model outputs a typed proposal; a rules engine or plain code accepts, modifies or rejects it, and logs why.</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 240" role="img" aria-label="Probabilistic zone proposes, deterministic zone decides">
+<rect x="10" y="10" width="330" height="220" rx="6" class="fvs"/><rect x="360" y="10" width="390" height="220" rx="6" class="fgs"/>
+<text x="175" y="34" text-anchor="middle" class="lg simc">Probabilistic zone</text><text x="555" y="34" text-anchor="middle" class="lg okc">Deterministic zone</text>
+<g class="sm">
+<rect x="30" y="55" width="130" height="44" rx="4" class="nd"/><text x="95" y="75" text-anchor="middle">Customer email</text><text x="95" y="90" text-anchor="middle" class="xs">"refund my 2 seats"</text>
+<rect x="190" y="55" width="130" height="44" rx="4" class="ndv"/><text x="255" y="75" text-anchor="middle">LLM extracts</text><text x="255" y="90" text-anchor="middle" class="xs">intent + fields</text>
+<rect x="110" y="140" width="210" height="64" rx="4" class="nd"/><text x="120" y="160" class="mono">{"intent":"refund",</text><text x="120" y="176" class="mono"> "seats":2,"reason":"unused"}</text><text x="120" y="194" class="xs mut">typed proposal</text>
+<path d="M160 77H190M255 99 V140" class="ln"/>
+<rect x="380" y="55" width="160" height="44" rx="4" class="ndg"/><text x="460" y="75" text-anchor="middle">Validate schema</text><text x="460" y="90" text-anchor="middle" class="xs">+ customer owns seats?</text>
+<rect x="570" y="55" width="160" height="44" rx="4" class="ndg"/><text x="650" y="75" text-anchor="middle">Policy engine</text><text x="650" y="90" text-anchor="middle" class="xs">within 14 days? ≤ limit?</text>
+<rect x="380" y="140" width="160" height="44" rx="4" class="ndg"/><text x="460" y="160" text-anchor="middle">Compute amount</text><text x="460" y="175" text-anchor="middle" class="xs">price table, pro-rata</text>
+<rect x="570" y="140" width="160" height="44" rx="4" class="ndg"/><text x="650" y="160" text-anchor="middle">Execute + audit log</text><text x="650" y="175" text-anchor="middle" class="xs">or route to human</text>
+<path d="M320 172 C 350 172 350 77 380 77" class="lna"/><path d="M540 77H570M650 99 C 650 120 460 120 460 140 M540 162H570" class="ln"/>
+<text x="555" y="218" text-anchor="middle" class="xs">LLM may then draft the reply using the decided outcome</text></g>
+</svg></div><figcaption><b>The model never computes the refund amount or decides eligibility.</b> If it extracts "2 seats" wrongly, validation against the account catches it; if policy says no, the reply explains the real policy.</figcaption></figure>
+<div class="box example"><h5>Example: what goes wrong otherwise</h5><p>A team prompts "Apply a 10% discount for customers over 2 years, max $500". In testing it works. In production, the model sometimes gives 15% to persuasive customers, rounds differently, and once applies it to a 1-year customer who claimed otherwise. Moving the rule into code with the model only extracting "customer requests loyalty discount" makes the behaviour exact, testable and auditable.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor drafts the refund explanation, but code computes eligibility and amount from the order record and the refund API enforces the cap.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Reporting success because the model said &quot;done&quot; when the database write actually failed.</div></div>
+<div class="tools">
+<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for LLM applications</h3>
+<div class="cols3">
+<div class="card"><h5><a href="https://docs.ollama.com/">Ollama</a></h5><span class="meta">local models · CPU OK</span><p>One-command local model runtime with a REST API, OpenAI-compatible endpoint, tool calling, structured outputs and streaming. The default for this course's labs.</p></div>
+<div class="card"><h5><a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a></h5><span class="meta">CPU/GPU inference · GGUF</span><p>Efficient C/C++ inference; <code>llama-server</code> exposes an OpenAI-compatible API with JSON-schema/grammar constrained output. Use for benchmarking (14).</p></div>
+<div class="card"><h5><a href="https://docs.litellm.ai/">LiteLLM</a></h5><span class="meta">unified API · gateway</span><p>One interface for 100+ providers, plus a proxy with retries, fallbacks, budgets and rate limits. Point it at Ollama locally to prototype a model gateway (15.5).</p></div>
+<div class="card"><h5><a href="https://docs.pydantic.dev/">Pydantic</a> · <a href="https://python.useinstructor.com/">Instructor</a></h5><span class="meta">schemas · validation</span><p>Define output types in Python and validate model output; Instructor adds automatic re-asking on validation failure.</p></div>
+<div class="card"><h5><a href="https://github.com/dottxt-ai/outlines">Outlines</a></h5><span class="meta">constrained generation</span><p>Guarantees output matches a regex, JSON Schema or grammar for local models via token masking.</p></div>
+<div class="card"><h5><a href="https://dspy.ai/">DSPy</a></h5><span class="meta">programmatic prompting</span><p>Write LLM pipelines as modules and let optimisers tune prompts and examples against your metric. Use after you have an eval set.</p></div>
+</div></div>

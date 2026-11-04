@@ -1,0 +1,45 @@
+<ul>
+<li><b>Hybrid retrieval</b>: run keyword (BM25) and dense search in parallel and fuse the lists. <dfn>Reciprocal rank fusion (RRF)</dfn> is simple and robust: score(d) = Σ<sub>lists</sub> 1/(k + rank(d)), with k ≈ 60. It needs no score normalisation because it uses ranks only.</li>
+<li><b>Reranking</b>: a <dfn>cross-encoder</dfn> reads query and passage together and outputs a relevance score. Much more accurate than comparing separate embeddings, but too slow to run on the whole corpus, so it re-scores the top 50–200 candidates. LLMs can also rerank (listwise), at higher cost.</li>
+<li><b>Metadata filtering</b>: restrict results by fields like tenant, department, document type, language, date or permissions. <em>Pre-filtering</em> applies the filter during search; <em>post-filtering</em> after, which can leave too few results when the filter is selective. Permission filters must never be post-hoc "best effort" (10.6).</li>
+<li><b>Context assembly</b>: deduplicate overlapping chunks, merge adjacent chunks from the same document, order by relevance (or by document position for readability), label each with a citation ID, and fit the token budget (7.3).</li>
+</ul>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="cols3"><div><b style="font-family:var(--f-display);font-size:.85rem">BM25 ranking</b><ol id="rrfA" style="font-family:var(--f-mono);font-size:.8rem;padding-left:1.4em"></ol></div>
+<div><b style="font-family:var(--f-display);font-size:.85rem">Dense ranking</b><ol id="rrfB" style="font-family:var(--f-mono);font-size:.8rem;padding-left:1.4em"></ol></div>
+<div><b style="font-family:var(--f-display);font-size:.85rem">RRF fused (k=<span id="rrfKv">60</span>)</b><ol id="rrfC" style="font-family:var(--f-mono);font-size:.8rem;padding-left:1.4em"></ol></div></div>
+<label for="rrfK">k <input type="range" id="rrfK" min="1" max="100" value="60"></label></div></div>
+<figcaption><b>Reciprocal rank fusion, computed live.</b> Documents found by both methods (doc-C, doc-F) rise to the top even if neither method ranked them first. Small k emphasises top ranks; large k flattens differences.</figcaption></figure>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Query</div><div class="nd">Permission + metadata filter</div><div class="nd">BM25 top-100 ∥ Dense top-100</div><div class="nd">RRF fuse → top-50</div><div class="nd">Cross-encoder rerank → top-8</div><div class="nd">Dedupe, merge, label [1]…[8]</div><div class="nd">Prompt</div></div>
+<ol class="steps"><li data-n="0">User question arrives with the user's identity.</li><li data-n="1">Build a filter from the user's groups and any query metadata (e.g. "2026 policies only").</li><li data-n="2">Both retrievers run in parallel with the filter applied inside the search.</li><li data-n="3">Fuse ranked lists; keep the top 50.</li><li data-n="4">The reranker scores each (query, chunk) pair; keep the best 8 (or those above a score threshold).</li><li data-n="5">Assemble context with stable citation labels mapped back to document IDs and URLs.</li><li data-n="6">Generation prompt with instructions to cite and abstain (9.6).</li></ol></div>
+<figcaption><b>A production retrieval pipeline.</b> Typical latency budget: filters + retrieval 30–80 ms, reranking 50–200 ms on GPU (longer on CPU), before generation.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: hybrid RAG with reranking, end to end <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># pip install bm25s sentence-transformers faiss-cpu ollama
+import bm25s, faiss, numpy as np, ollama
+from sentence_transformers import SentenceTransformer, CrossEncoder
+docs = ["To reset your password, open Settings > Security and choose Reset.",
+        "Error E-4012 means the payment processor rejected the card.",
+        "Invoices are emailed on the 1st of each month and can be downloaded in Billing.",
+        "If you cannot sign in, check that your 2FA device clock is correct.",
+        "Refunds are available within 14 days of purchase for annual plans."]
+bm = bm25s.BM25(); bm.index(bm25s.tokenize(docs))
+emb = SentenceTransformer("BAAI/bge-small-en-v1.5")
+V = emb.encode(docs, normalize_embeddings=True); index = faiss.IndexFlatIP(V.shape[1]); index.add(V)
+rerank = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+
+def retrieve(q, k=4):
+    kw, _ = bm.retrieve(bm25s.tokenize(q), k=k)                     # doc indices
+    _, dn = index.search(emb.encode([q], normalize_embeddings=True), k)
+    rrf = {}
+    for ranking in (kw[0], dn[0]):
+        for r, d in enumerate(ranking): rrf[int(d)] = rrf.get(int(d), 0) + 1 / (60 + r + 1)
+    cands = sorted(rrf, key=rrf.get, reverse=True)
+    scores = rerank.predict([(q, docs[d]) for d in cands])
+    return [cands[i] for i in np.argsort(-scores)][:3]
+
+q = "I can't log in"
+ctx = "\n".join(f"[{d}] {docs[d]}" for d in retrieve(q))
+prompt = f"Answer using only the sources. Cite like [n]. If not answerable, say so.\n{ctx}\nQuestion: {q}"
+print(ollama.chat(model="qwen2.5:1.5b", messages=[{"role": "user", "content": prompt}]).message.content)</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor fetches 50 lexical + 50 dense candidates under the user&#x27;s ACL filter, fuses with RRF, reranks the top 30 and assembles 5 non-duplicate passages.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Adding raw BM25 and cosine scores together; their scales mean different things.</div></div>

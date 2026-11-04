@@ -1,0 +1,42 @@
+<div class="terms">
+<div><b>Tensor</b>: an n-dimensional array (a scalar is 0-D, a vector 1-D, a matrix 2-D; a batch of token embeddings is 3-D: batch × sequence × dimension). Frameworks run tensor operations on CPU or GPU.</div>
+<div><b>CPU</b>: a few to a few dozen powerful cores, optimised for branching, sequential logic. <b>GPU</b>: thousands of simpler cores plus specialised matrix units (Tensor Cores), optimised for doing the same arithmetic on huge arrays.</div>
+<div><b>FLOPs</b>: floating-point operations; a measure of compute. <b>Memory bandwidth</b>: bytes per second that can be read from memory. Many AI workloads are limited by bandwidth, not FLOPs.</div>
+<div><b>Precision</b>: bits per number. FP32 (4 bytes), FP16/BF16 (2 bytes), FP8 and INT8 (1 byte), INT4 (0.5 byte). Fewer bits = less memory and faster, with some accuracy loss.</div>
+</div>
+<p>A rule of thumb you will use constantly: <b>model memory ≈ parameters × bytes per parameter</b>. An 8B model needs about 16 GB in BF16, 8 GB in INT8 and 4–5 GB in 4-bit. Your laptop's RAM bounds which models you can run; a GPU's VRAM bounds what it can serve, and inference needs extra memory for the KV cache (14.1).</p>
+<p>Why GPUs are faster for AI: generating one token from an 8B model needs ~16 GB of weights read from memory. A laptop with ~60–100 GB/s memory bandwidth can do that at most ~4–6 times a second at BF16; a datacentre GPU with several TB/s of HBM bandwidth can do it hundreds of times a second. Quantising to 4-bit reads a quarter of the bytes, which is why quantised models run usefully on laptops.</p>
+<p><b>FP16 vs BF16.</b> Both use 2 bytes. FP16 has more precision (10-bit mantissa) but a small range (largest value ≈ 65,504), so large activations overflow and training needs loss scaling. BF16 keeps FP32's 8-bit exponent, so it has the same range as FP32 with less precision (7-bit mantissa). That is why most LLM training and serving use BF16. <b>Units:</b> this manual writes GB = 10⁹ bytes and GiB = 2³⁰ bytes (≈ 1.074 GB); per-token KV sizes are given in KiB (1,024 bytes). Mixing the two silently introduces a 7% error at GB scale.</p>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 220" role="img" aria-label="CPU few large cores versus GPU many small cores">
+<text x="20" y="22" class="lg">CPU</text><text x="20" y="40" class="xs mut">8–24 complex cores · large caches</text>
+<g>
+<rect x="20" y="52" width="70" height="60" rx="4" class="nda"/><rect x="100" y="52" width="70" height="60" rx="4" class="nda"/><rect x="180" y="52" width="70" height="60" rx="4" class="nda"/><rect x="260" y="52" width="70" height="60" rx="4" class="nda"/>
+<rect x="20" y="120" width="310" height="34" rx="4" class="nds"/><text x="175" y="142" text-anchor="middle" class="sm">Cache + control logic</text>
+<rect x="20" y="162" width="310" height="34" rx="4" class="fsunk"/><text x="175" y="184" text-anchor="middle" class="sm">System RAM · ~50–120 GB/s</text></g>
+<text x="400" y="22" class="lg">GPU</text><text x="400" y="40" class="xs mut">thousands of simple cores + matrix units</text>
+<g id="gpuCores"></g>
+<rect x="400" y="162" width="340" height="34" rx="4" class="fsunk"/><text x="570" y="184" text-anchor="middle" class="sm">HBM VRAM · ~1–8 TB/s</text>
+</svg></div><figcaption><b>Different designs for different work.</b> The GPU core grid pulses to suggest many identical operations in parallel. Bandwidth figures are typical ranges for current laptops and datacentre GPUs, not specific products.</figcaption></figure>
+<figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">Memory to hold the weights of an 8-billion-parameter model</p>
+<div class="bars" data-unit=" GB"><div data-v="32" data-c="b">FP32 · 4 bytes</div><div data-v="16">BF16 / FP16 · 2 bytes</div><div data-v="8" data-c="s">INT8 / FP8 · 1 byte</div><div data-v="4.5" data-c="g">4-bit (incl. scales) · ~0.56 byte</div></div></div>
+<figcaption><b>Weights only.</b> Training needs far more: gradients and optimizer state bring mixed-precision Adam to roughly 16 bytes per parameter (6.6).</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
+<label for="lfM">Model <select id="lfM"><option value="0">0.5B (24 layers, 2 KV heads × 64)</option><option value="1">1B (16 layers, 8 KV heads × 64)</option><option value="2" selected>3B (28 layers, 8 KV heads × 128)</option><option value="3">8B (32 layers, 8 KV heads × 128)</option><option value="4">14B (48 layers, 8 KV heads × 128)</option><option value="5">70B (80 layers, 8 KV heads × 128)</option></select></label>
+<label for="lfQ">Weights format <select id="lfQ"><option value="2">FP16 / BF16</option><option value="1.06">Q8_0 (≈ 8.5 bits)</option><option value="0.69">Q5_K_M (≈ 5.5 bits)</option><option value="0.56" selected>Q4_K_M (≈ 4.5 bits)</option></select></label>
+<label for="lfR">Laptop RAM <select id="lfR"><option>8</option><option selected>16</option><option>32</option><option>64</option></select> GB</label>
+<label for="lfOs">Used by OS + apps (GB) <input type="range" id="lfOs" min="2" max="14" value="5"><span id="lfOsO"></span></label>
+<label for="lfC">Context (tokens) <input type="range" id="lfC" min="11" max="17" value="13"><span id="lfCO"></span></label>
+<label for="lfBw">Memory bandwidth (GB/s) <input type="range" id="lfBw" min="20" max="400" step="10" value="70"><span id="lfBwO"></span></label>
+</div><div id="lfBar" style="display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--rule)"></div><div class="kpis" id="lfK"></div></div></div>
+<figcaption><b>Will it fit on my laptop?</b> Weights = parameters × bytes per parameter (quantised formats include their scales). KV cache assumes FP16 cache values, as llama.cpp uses by default. The speed ceiling is bandwidth ÷ bytes read per token; real speeds are lower. Apple-silicon and recent laptops reach 100–400 GB/s; typical x86 laptops 50–100 GB/s.</figcaption></figure>
+<div class="box example"><h5>Example: will it run on my laptop?</h5><p>A 16 GB laptop. Operating system and apps use ~5 GB, leaving ~11 GB. A 3B model at 4-bit ≈ 2 GB: comfortable. An 8B model at 4-bit ≈ 5 GB: works, a few tokens per second. A 70B model at 4-bit ≈ 40 GB: does not fit. Use a hosted API or rented GPU for that.</p></div>
+<div class="box lab"><h5>Laptop lab: measure your bandwidth ceiling <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>import numpy as np, time
+a = np.ones(500_000_000 // 8)        # ~500 MB of float64
+t = time.perf_counter(); s = a.sum(); dt = time.perf_counter() - t
+print(f"~{a.nbytes/dt/1e9:.1f} GB/s effective read bandwidth")
+# tokens/sec upper bound for a model of size M GB ≈ bandwidth / M
+for m in (0.8, 2.0, 4.5): print(f"{m} GB model → ≤ {a.nbytes/dt/1e9/m:.0f} tok/s")</code></pre>
+<p>This single-threaded NumPy read underestimates true bandwidth, but it shows why model size in bytes, not parameter count alone, sets your CPU generation speed.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s developers prototype on laptops with a 3B model in 4-bit (≈ 2 GB). Production serving runs an 8B model in FP8 on datacentre GPUs, and capacity numbers come only from benchmarks on those GPUs.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming an &quot;8 GB model file&quot; runs in 8 GB of RAM: the KV cache, runtime overhead and the operating system need room too.</div></div>

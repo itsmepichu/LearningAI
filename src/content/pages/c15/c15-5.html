@@ -1,0 +1,23 @@
+<p>A <dfn>model gateway</dfn> is a central service between applications and all model backends (hosted providers and self-hosted pools). It provides one API, credentials management, routing, quotas, retries and fallbacks, caching, usage metering, logging and policy enforcement. Without one, every team reimplements these and nobody can see total spend.</p>
+<ul>
+<li><b>Routing</b>: by task (cheap model for classification, strong model for complex reasoning), by tenant tier, by load (least-loaded replica, prefix affinity), by region/data residency, by health (skip a degraded provider).</li>
+<li><b>Tenant quotas</b>: per-tenant limits on requests/min, tokens/min, concurrent requests, and spend/day, enforced with token buckets.</li>
+<li><b>Fairness</b>: when capacity is short, give each tenant its fair share instead of first-come-first-served, e.g. weighted fair queuing by tier.</li>
+<li><b>Noisy-neighbour protection</b>: one tenant's spike (a runaway agent, a bulk script) must not raise latency for everyone; quotas plus per-tenant queues plus admission control contain it.</li>
+</ul>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="row2"><label for="nnBurst">Tenant A's burst (× normal) <input type="range" id="nnBurst" min="1" max="20" value="10"><span id="nnBurstO"></span></label>
+<label for="nnMode">Scheduling <select id="nnMode"><option value="fifo">shared FIFO queue</option><option value="fair" selected>per-tenant quota + fair queuing</option></select></label></div>
+<div class="bars" id="nnBars"></div><div class="out" id="nnOut"></div></div></div>
+<figcaption><b>Noisy neighbour</b> (steady-state queueing model, illustrative). Capacity 100 units/s; tenants B–E send 15 units/s each; tenant A normally sends 10. With FIFO, A's burst inflates everyone's wait. With quotas and fair queuing, A is throttled to its share and others are unaffected.</figcaption></figure>
+<div class="box example"><h5>Example: gateway routing rules</h5>
+<pre><code>routes:
+  - match: {task: classify}                      to: pool/small-8b-selfhosted
+  - match: {task: answer, tenant_tier: free}     to: provider-b/mid-model
+  - match: {task: answer}                        to: provider-a/large-model
+    fallback: [provider-b/large-model, pool/self-hosted-70b]
+  - match: {region: eu}                          constrain: {provider_region: eu}
+quotas:
+  default:    {rpm: 600, tpm: 400000, concurrent: 40, usd_per_day: 200}
+  enterprise: {rpm: 6000, tpm: 4000000, concurrent: 400, usd_per_day: 5000}</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s gateway gives each tenant token-per-minute and concurrency quotas, weighted by estimated context size.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Automatic fallback to a model that does not support the same tools or schema behaviour.</div></div>

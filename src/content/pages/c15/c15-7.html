@@ -1,0 +1,25 @@
+<ul>
+<li><b>Multi-region</b>: run in two or more regions. <em>Active-active</em>: both serve traffic, routed by latency or residency; more complex data consistency. <em>Active-passive</em>: standby region takes over on failure; simpler, slower failover.</li>
+<li><b>Data residency</b>: EU users' data and prompts may need to stay in EU regions and EU-hosted model endpoints; this constrains routing and failover targets.</li>
+<li><b>Disaster recovery</b>: define <dfn>RPO</dfn> (recovery point objective: how much data you may lose, e.g. 5 minutes) and <dfn>RTO</dfn> (recovery time objective: how fast you must recover, e.g. 30 minutes) per component. Vector indexes can be rebuilt from stored chunks and embeddings, but rebuilding takes hours at scale, so replicate or snapshot them.</li>
+<li><b>Provider outages</b>: hosted model APIs have outages and regional incidents. Mitigate with a second provider or self-hosted fallback (evaluated for quality and prompt compatibility), regional endpoints, circuit breakers, and the degradation ladder. Test failover regularly; untested failover usually fails.</li>
+<li><b>Restore, don't just back up</b>: test restores on a schedule. Replicas copy corruption and accidental deletes instantly, so they are not backups. Rehearse failing <em>back</em> to the primary region too, including replaying queued writes exactly once.</li></ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 270" role="img" aria-label="Active-active multi-region with provider fallback">
+<g class="sm">
+<rect x="300" y="10" width="160" height="44" rx="4" class="nd"/><text x="380" y="36" text-anchor="middle">Global DNS / anycast LB</text>
+<rect x="20" y="80" width="330" height="170" rx="6" class="fas"/><text x="185" y="100" text-anchor="middle" class="acc">Region EU-1</text>
+<rect x="410" y="80" width="330" height="170" rx="6" class="fas"/><text x="575" y="100" text-anchor="middle" class="acc">Region US-1</text>
+<rect x="40" y="115" width="120" height="40" rx="4" class="nd"/><text x="100" y="140" text-anchor="middle">App + gateway</text>
+<rect x="190" y="115" width="140" height="40" rx="4" class="nd"/><text x="260" y="140" text-anchor="middle">Index replicas</text>
+<rect x="40" y="175" width="120" height="56" rx="4" class="nds"/><text x="100" y="197" text-anchor="middle">Provider A (EU)</text><text x="100" y="215" text-anchor="middle" class="xs">fallback: self-host EU</text>
+<rect x="190" y="175" width="140" height="56" rx="4" class="nd"/><text x="260" y="197" text-anchor="middle">Postgres primary</text><text x="260" y="215" text-anchor="middle" class="xs">EU tenants</text>
+<rect x="430" y="115" width="120" height="40" rx="4" class="nd"/><text x="490" y="140" text-anchor="middle">App + gateway</text>
+<rect x="580" y="115" width="140" height="40" rx="4" class="nd"/><text x="650" y="140" text-anchor="middle">Index replicas</text>
+<rect x="430" y="175" width="120" height="56" rx="4" class="nds"/><text x="490" y="197" text-anchor="middle">Provider A (US)</text><text x="490" y="215" text-anchor="middle" class="xs">fallback: provider B</text>
+<rect x="580" y="175" width="140" height="56" rx="4" class="nd"/><text x="650" y="197" text-anchor="middle">Postgres primary</text><text x="650" y="215" text-anchor="middle" class="xs">US tenants</text>
+<path d="M340 54 L185 80 M420 54 L575 80" class="lna"/>
+<path d="M330 203 C 370 260 400 260 580 210" class="ln dash"/><text x="380" y="266" text-anchor="middle" class="xs">async replica for DR (non-resident data only)</text></g>
+</svg></div><figcaption><b>Active-active regions with residency.</b> EU tenants fail over only to EU capacity; US tenants can fail over across providers. Each region holds its own index replicas so a regional outage does not require rebuilding.</figcaption></figure>
+<div class="box example"><h5>Example: a game-day exercise</h5><p>Quarterly, the team blocks Provider A at the gateway in staging, then in production for 10% of traffic. Findings from the first run: the fallback model ignored the JSON schema in 4% of responses (fixed by enabling constrained decoding), and fallback quota was too small for full traffic (raised in the provider contract). Without the exercise, both would have surfaced during a real outage.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor fails read-only search over to a second region, but queued write actions have one designated execution owner to avoid duplicates.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming active-active APIs give consistent business actions across regions.</div></div>

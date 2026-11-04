@@ -1,0 +1,26 @@
+<p>These workloads have different resource profiles, latency needs and failure modes. Running them on shared capacity lets one starve the others (a backfill saturating embedding GPUs that also serve query embeddings; long agent runs holding all model slots during peak chat).</p>
+<div class="tw"><table>
+<tr><th>Workload</th><th>Profile</th><th>Latency need</th><th>Scaling unit</th></tr>
+<tr><td>Ingestion</td><td>Bursty bulk; CPU (parse, OCR) + GPU (embed)</td><td>Minutes (freshness SLO)</td><td>Queue consumers; spot/preemptible OK</td></tr>
+<tr><td>Retrieval</td><td>Many small reads; RAM-heavy; low latency</td><td>Tens of ms</td><td>Index replicas</td></tr>
+<tr><td>Generation</td><td>GPU-heavy; seconds per request; streaming</td><td>TTFT ~1 s</td><td>Model replicas / API quota</td></tr>
+<tr><td>Agent execution</td><td>Long-running, many calls, durable state</td><td>Seconds to hours</td><td>Workflow workers; separate model quota</td></tr>
+</table></div>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 300" role="img" aria-label="Separated workload architecture">
+<g class="sm">
+<rect x="10" y="120" width="90" height="50" rx="4" class="nd"/><text x="55" y="149" text-anchor="middle">Clients</text>
+<rect x="130" y="120" width="110" height="50" rx="4" class="nda"/><text x="185" y="141" text-anchor="middle">API gateway</text><text x="185" y="157" text-anchor="middle" class="xs">auth · quotas</text>
+<rect x="280" y="20" width="150" height="56" rx="4" class="nda"/><text x="355" y="42" text-anchor="middle">Chat service</text><text x="355" y="58" text-anchor="middle" class="xs">stateless · streaming</text>
+<rect x="280" y="117" width="150" height="56" rx="4" class="nda"/><text x="355" y="139" text-anchor="middle">Retrieval service</text><text x="355" y="155" text-anchor="middle" class="xs">index replicas</text>
+<rect x="280" y="214" width="150" height="56" rx="4" class="ndv"/><text x="355" y="236" text-anchor="middle">Agent workers</text><text x="355" y="252" text-anchor="middle" class="xs">durable workflows</text>
+<rect x="470" y="20" width="140" height="56" rx="4" class="nds"/><text x="540" y="42" text-anchor="middle">Model gateway</text><text x="540" y="58" text-anchor="middle" class="xs">pools: interactive | agent</text>
+<rect x="640" y="20" width="110" height="56" rx="4" class="nd"/><text x="695" y="42" text-anchor="middle">GPU pools /</text><text x="695" y="58" text-anchor="middle" class="xs">providers</text>
+<rect x="470" y="214" width="140" height="56" rx="4" class="nds"/><text x="540" y="236" text-anchor="middle">Ingestion pipeline</text><text x="540" y="252" text-anchor="middle" class="xs">queues · batch embed</text>
+<rect x="640" y="117" width="110" height="56" rx="4" class="nd"/><text x="695" y="139" text-anchor="middle">Embedding</text><text x="695" y="155" text-anchor="middle" class="xs">query pool ≠ batch pool</text>
+<path d="M100 145H130M240 140 L280 50 M240 145H280 M240 150 L280 240 M430 48H470 M610 48H640 M430 242 L470 60 M430 145 L640 145 M610 242 C 640 242 660 200 680 173" class="ln"/>
+<path d="M540 214 V 160 L 640 152" class="ln dash"/>
+<text x="10" y="290" class="xs mut">Separate pools and quotas per workload: a backfill or an agent storm cannot exhaust interactive capacity.</text></g>
+</svg></div><figcaption><b>Workload separation.</b> Query-time embeddings use a small low-latency pool; bulk ingestion uses a separate batch pool. Agents draw from their own model quota.</figcaption></figure>
+<div class="box example"><h5>Example</h5><p>Monday 09:00: a large tenant triggers re-ingestion of 2M documents, and 40,000 employees open the assistant. Because query embeddings and ingestion embeddings run on separate pools, search latency stays at 40 ms while the backfill queue simply takes longer, within its freshness budget.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s OCR backfill runs in its own pool and cannot take interactive inference slots; the assistant answers from the last consistent index while lag is visible.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Splitting services but leaving them on one shared unbounded queue or saturated database.</div></div>

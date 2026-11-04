@@ -1,0 +1,40 @@
+<p>The basic agent loop (often called <dfn>ReAct</dfn>: reason + act): the model receives the goal, the tool list and the history; it either calls a tool or gives a final answer; the tool result (<dfn>observation</dfn>) is appended; repeat. <b>Tool selection</b> depends on clear tool names and descriptions, few overlapping tools, and examples. <b>Planning</b> can be implicit (decide one step at a time) or explicit (write a plan first, then execute and revise it), which helps on long tasks and makes traces readable.</p>
+<p><b>Termination</b> must be engineered, not hoped for: final-answer detection, a maximum number of steps, a token/cost budget, a wall-clock deadline, loop detection (same tool with same arguments twice), and a "give up and escalate" path.</p>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="ctl"><button class="btn primary" id="agStep" type="button">Next step</button><button class="btn" id="agPlay" type="button">Play</button><button class="btn" id="agReset" type="button">Reset</button>
+<label for="agMax" style="font-family:var(--f-display);font-size:.82rem">step limit <input type="number" id="agMax" value="6" min="2" max="10" style="width:56px"></label>
+<label for="agLoop" style="font-family:var(--f-display);font-size:.82rem"><input type="checkbox" id="agLoop"> inject a tool failure</label><span class="count" id="agCnt"></span></div>
+<div id="agTrace" style="display:grid;gap:6px"></div></div></div>
+<figcaption><b>An agent loop, step by step</b> (scripted trace, no model runs). Task: "Why was invoice INV-2291 charged twice, and fix it if it's our error." Each step shows the model's tool choice, the observation and the running cost. Enable the failure to see retry, loop detection and escalation.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: a minimal agent loop with real termination rules <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>import json, ollama
+ORDERS = {"A-1043": {"status": "delivered_late", "paid": 120.0}}
+def get_order(order_id: str) -> str:
+    """Return order status and amount paid as JSON."""
+    return json.dumps(ORDERS.get(order_id, {"error": "not found"}))
+def propose_credit(order_id: str, amount: float) -> str:
+    """Propose a credit for an order. Requires human approval before it is applied."""
+    return json.dumps({"proposal_id": "P-1", "order_id": order_id, "amount": amount, "status": "pending_approval"})
+TOOLS = {"get_order": get_order, "propose_credit": propose_credit}
+
+def run(task, max_steps=6):
+    msgs = [{"role": "system", "content": "You resolve order issues. Late delivery earns a 10% credit. "
+                                          "Use tools; never invent order data. Stop when done."},
+            {"role": "user", "content": task}]
+    seen = set()
+    for step in range(max_steps):
+        r = ollama.chat(model="qwen2.5:1.5b", messages=msgs, tools=list(TOOLS.values()))
+        msgs.append(r.message)
+        if not r.message.tool_calls: return r.message.content            # final answer
+        for c in r.message.tool_calls:
+            key = (c.function.name, json.dumps(c.function.arguments, sort_keys=True))
+            if key in seen: return "ESCALATE: loop detected"                 # same call twice
+            seen.add(key)
+            fn = TOOLS.get(c.function.name)
+            out = fn(**c.function.arguments) if fn else json.dumps({"error": "unknown tool"})
+            print(f"step {step}: {c.function.name}{c.function.arguments} -> {out}")
+            msgs.append({"role": "tool", "content": out, "tool_name": c.function.name})
+    return "ESCALATE: step limit reached"
+print(run("Order A-1043 arrived late. Sort it out."))</code></pre>
+<p>Run it several times: a small model will sometimes compute the credit wrongly or skip the lookup. That is exactly why the credit amount should be computed in code (7.7) and why agents need evaluation over repeated runs (8.8).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s agent rewrites a failed search once, then abstains; it stops at 12 steps, $0.40 or 10 minutes, whichever comes first.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Trusting a model-written plan to be executable, authorised or complete.</div></div>

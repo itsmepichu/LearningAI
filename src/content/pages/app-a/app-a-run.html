@@ -1,0 +1,93 @@
+<p>Use Python 3.10+ in an isolated environment: <code>python -m pip install numpy</code>, copy the script below into <code>tiny_bigram_lab.py</code>, then run <code>python tiny_bigram_lab.py</code> in a writable folder. It needs no model download, API key or GPU. It writes <code>tiny_bigram_checkpoint.npz</code> and <code>tiny_bigram_report.json</code>.</p>
+<div class="box lab"><h5>Complete source <span class="tag cpu">Laptop · CPU · under 1 s</span></h5>
+<pre><code>&quot;&quot;&quot;Tiny character language model, trained end to end on CPU with NumPy only.
+
+What it shows: vocabulary from training text only, separate train / validation / test
+splits, next-character targets, softmax cross-entropy, gradients, SGD updates,
+checkpoint selection on validation loss, a unigram baseline, save + reload + verify,
+temperature sampling, and a JSON report. Context is ONE character (a bigram model),
+so it cannot learn long-range structure; that is what transformers add.
+Run:  python -m pip install numpy   then   python tiny_bigram_lab.py
+&quot;&quot;&quot;
+import json, time
+from pathlib import Path
+import numpy as np
+
+SEED, STEPS, BATCH, LR = 11, 1500, 256, 2.0
+rng = np.random.default_rng(SEED)
+
+train_text = &quot;&quot;&quot;the gateway checks the tenant before the request reaches a model.
+the retriever returns passages with their source ids and versions.
+the reranker reads the query and each passage together.
+the assistant cites a passage or says it cannot find an answer.
+the queue keeps jobs until a worker has finished them.
+a worker retries a failed job with backoff and a fresh deadline.
+the same idempotency key returns the same ticket on a retry.
+an evaluation set holds real questions with expected answers.
+the judge is checked against people before it gates a release.
+the index stores vectors, text and the permissions of each chunk.
+the trace links retrieval, generation and tool calls for one task.
+the release manifest records the model, prompt and index versions.
+a canary sends a small share of traffic to the new version first.
+if quality falls, the rollout returns traffic to the old version.
+&quot;&quot;&quot;
+val_text = &quot;the worker checks the index before the release.\nthe assistant reads the trace and cites the source.\n&quot;
+test_text = &quot;a retry keeps the same key so the ticket is not repeated.\nthe gateway sends traffic to the new model version.\n&quot;
+
+chars = [&quot;&lt;unk&gt;&quot;] + sorted(set(train_text))          # vocabulary from TRAIN only
+stoi = {c: i for i, c in enumerate(chars)}
+enc = lambda t: np.array([stoi.get(c, 0) for c in t], dtype=np.int64)
+tr, va, te = enc(train_text), enc(val_text), enc(test_text)
+V = len(chars)
+
+def softmax(z):
+    z = z - z.max(axis=-1, keepdims=True)
+    e = np.exp(z)
+    return e / e.sum(axis=-1, keepdims=True)
+
+def loss(seq, W):                                     # mean cross-entropy in nats/char
+    p = softmax(W[seq[:-1]])
+    return float(-np.log(p[np.arange(len(seq) - 1), seq[1:]] + 1e-12).mean())
+
+W = rng.normal(0, 0.01, (V, V))                       # one V x V table of logits
+best_val, best_W, history = float(&quot;inf&quot;), W.copy(), []
+t0 = time.perf_counter()
+for step in range(STEPS + 1):
+    i = rng.integers(0, len(tr) - 1, size=BATCH)      # random (current, next) pairs
+    x, y = tr[i], tr[i + 1]
+    g = softmax(W[x]); g[np.arange(BATCH), y] -= 1     # dLoss/dlogits = p - onehot
+    grad = np.zeros_like(W); np.add.at(grad, x, g / BATCH)
+    W -= LR * grad
+    if step % 100 == 0:
+        h = {&quot;step&quot;: step, &quot;train&quot;: loss(tr, W), &quot;val&quot;: loss(va, W)}
+        history.append(h)
+        if h[&quot;val&quot;] &lt; best_val:
+            best_val, best_W = h[&quot;val&quot;], W.copy()
+secs = time.perf_counter() - t0
+
+uni = np.bincount(tr, minlength=V).astype(float) + 1.0  # add-one smoothed unigram
+uni /= uni.sum()
+baseline = float(-np.log(uni[te[1:]]).mean())
+test_loss = loss(te, best_W)
+
+np.savez(&quot;tiny_bigram_checkpoint.npz&quot;, W=best_W, chars=np.array(chars))
+ck = np.load(&quot;tiny_bigram_checkpoint.npz&quot;, allow_pickle=False)
+assert np.array_equal(ck[&quot;W&quot;], best_W), &quot;reloaded weights differ&quot;
+assert abs(loss(te, ck[&quot;W&quot;]) - test_loss) &lt; 1e-12, &quot;reloaded model scores differently&quot;
+
+def sample(W, start=&quot;t&quot;, n=160, temperature=0.8, seed=SEED + 1):
+    r, out = np.random.default_rng(seed), [stoi[start]]
+    for _ in range(n):
+        out.append(int(r.choice(V, p=softmax(W[out[-1]] / temperature))))
+    return &quot;&quot;.join(chars[i] for i in out)
+
+report = {&quot;numpy&quot;: np.__version__, &quot;seed&quot;: SEED, &quot;vocab&quot;: V, &quot;parameters&quot;: int(W.size),
+          &quot;steps&quot;: STEPS, &quot;batch&quot;: BATCH, &quot;lr&quot;: LR, &quot;train_seconds&quot;: round(secs, 2),
+          &quot;uniform_loss&quot;: float(np.log(V)), &quot;best_val&quot;: best_val, &quot;test&quot;: test_loss,
+          &quot;unigram_baseline_test&quot;: baseline, &quot;history&quot;: history,
+          &quot;sample_t0.8&quot;: sample(ck[&quot;W&quot;])}
+Path(&quot;tiny_bigram_report.json&quot;).write_text(json.dumps(report, indent=2))
+print(f&quot;vocab {V}  params {W.size}  {secs:.2f}s&quot;)
+print(f&quot;uniform {np.log(V):.3f}  unigram test {baseline:.3f}  bigram test {test_loss:.3f}  best val {best_val:.3f}&quot;)
+print(&quot;sample:&quot;, report[&quot;sample_t0.8&quot;][:120].replace(&quot;\n&quot;, &quot; / &quot;))
+</code></pre></div>

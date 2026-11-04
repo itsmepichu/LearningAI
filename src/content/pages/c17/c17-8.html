@@ -1,0 +1,27 @@
+<ul>
+<li><b>Dashboards</b>: one overview per service (SLOs, golden signals, AI signals, cost) with drill-downs per stage, model, tenant and feature. Put deploys, model changes and config changes as annotations.</li>
+<li><b>Actionable alerts</b>: alert on symptoms users feel (SLO burn), not on every cause. Use <dfn>burn-rate alerts</dfn>: page when the error budget is being consumed fast (e.g. 2% of a 30-day budget in 1 hour, a burn rate of 14.4), ticket when slow. Each alert links to a runbook.</li>
+<li><b>Runbooks</b>: for each alert, what it means, how to confirm, first mitigations (flags, rollbacks, degradation levels, failover), escalation contacts, and how to verify recovery.</li>
+<li><b>Incident investigation</b>: start from affected traces (exemplars linked from metrics), compare with healthy traces, check recent changes (deploys, prompt versions, model versions, index versions, provider status).</li>
+<li><b>Postmortems</b>: blameless write-up of timeline, impact, root causes, what went well, and action items with owners, including new evaluation cases and alerts.</li>
+</ul>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="brS">SLO % <select id="brS"><option>99</option><option>99.5</option><option selected>99.9</option></select></label>
+<label for="brE">Current error rate % <input type="range" id="brE" min="0" max="10" step="0.05" value="1.5"><span id="brEO"></span></label></div>
+<div class="kpis" id="brK"></div></div></div>
+<figcaption><b>Burn-rate calculator.</b> Burn rate = current error rate ÷ error budget rate. At burn rate 14.4 a 30-day budget is gone in about 2 days; the multi-window rule in the Google SRE Workbook pages at that rate over 1 hour (confirmed over 5 minutes).</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div class="wid"><div class="row2">
+<label for="bwS">Scenario <select id="bwS"><option value="spike" selected>sharp incident (2 hours at 3% errors)</option><option value="leak">slow leak (0.25% errors for 5 days)</option><option value="flap">flapping (short 2% bursts)</option><option value="calm">normal month</option></select></label>
+<label for="bwO">SLO <select id="bwO"><option value="99.9" selected>99.9%</option><option value="99.5">99.5%</option></select></label></div>
+<canvas id="bwCan" width="640" height="230"></canvas><div class="kpis" id="bwK"></div></div></div>
+<figcaption><b>Multi-window burn-rate alerting over 30 days</b> (hourly error rates, generated). Fast page: 1-hour burn ≥ 14.4. Slow page: 6-hour burn ≥ 6. Ticket: 3-day burn ≥ 1. A sharp incident pages within an hour; a slow leak never trips the fast rule but quietly drains the budget, which is why the longer windows exist. The amber line is error budget remaining.</figcaption></figure>
+<div class="box example"><h5>Example: runbook excerpt</h5>
+<pre><code>ALERT: kb-assistant groundedness below 92% (sampled judge, 2h window)
+1. Confirm: open "AI quality" dashboard → groundedness by model_version, prompt_version, index_version.
+2. Recent change? Check annotations: deploys, prompt registry, model alias changes, index cutovers.
+3. If a provider model version changed in the window: switch gateway route to pinned previous
+   snapshot (flag kb.model_pin=true). Verify recovery within 1h of sampled traffic.
+4. If index_version changed: switch search alias back (10.7). Verify Recall@10 smoke test.
+5. If neither: pull 30 low-scoring traces; classify retrieval vs generation failure (8.5); escalate to owners.
+6. Record timeline in incident channel; create eval cases from failing traces (17.9).</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s &quot;unsupported answers rising&quot; alert links to affected versions, recent deploys, sample traces and a tested rollback, so on-call can act without guessing.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Alerts without an owner or a mitigation: noise, not reliability.</div></div>

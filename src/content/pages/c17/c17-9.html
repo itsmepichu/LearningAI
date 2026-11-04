@@ -1,0 +1,16 @@
+<p>The most valuable evaluation data comes from production failures, because they are real and they were missed. Make the path from "bad trace" to "regression test" short and routine:</p>
+<figure class="fig flow loop"><div class="stage">
+<div class="nodes"><div class="nd">Failure signal<small>thumbs-down, low judge score, incident</small></div><div class="nd">Triage queue<small>sampled traces</small></div><div class="nd">Label root cause<small>retrieval / generation / tool / data</small></div><div class="nd">Create eval case<small>+ paraphrases, redacted</small></div><div class="nd">Fix<small>prompt, data, retrieval, model</small></div><div class="nd">Gate release<small>suite incl. new cases</small></div><div class="nd">Deploy + monitor</div></div>
+<ol class="steps"><li data-n="0">Signals from 17.4 and incidents from 17.8 flag traces.</li><li data-n="1">A daily or weekly review samples flagged traces across tenants and features.</li><li data-n="2">Reviewers classify the failure and stage (8.5), and note the correct behaviour.</li><li data-n="3">Convert to an evaluation case: input, context snapshot (or the documents), expected properties, tags linking to the trace and issue. Redact personal data and get approval if content is sensitive.</li><li data-n="4">Fix the root cause rather than the single example (e.g. improve parsing for that document type).</li><li data-n="5">The release must pass the suite including the new cases and all old ones (8.6, 18.3).</li><li data-n="6">After deploy, confirm the failure signal falls for that category. The loop repeats.</li></ol></div>
+<figcaption><b>The improvement flywheel.</b> Over months the evaluation suite becomes a precise description of what your users actually need.</figcaption></figure>
+<div class="box example"><h5>Example: from trace to test in one file</h5>
+<pre><code>- id: prod-2026-11-02-0412
+  source: {trace_id: "9a1c…", issue: "AI-882", reason: "cited outdated 2024 policy"}
+  input: "What's the travel per-diem for Berlin?"
+  context_snapshot: kb@2026-11-02          # pinned index snapshot for reproducibility
+  expect:
+    - type: contains_citation_from: {doc: "travel-policy-2026", section: "per-diem"}
+    - type: not_contains: "2024"
+    - type: judge_groundedness: {min: 1.0}
+  tags: [freshness, policy, critical]</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A Harbor duplicate-ticket incident became a timeout-after-commit test; the release gate now checks exactly one ticket and the correct reported ID.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Copying raw customer conversations into a shared evaluation or training set without review and redaction.</div></div>

@@ -1,0 +1,14 @@
+<ul>
+<li><b>Token accounting</b>: record input, cached input, output and reasoning tokens per call (from the provider response, not estimates), with model and price version.</li>
+<li><b>Cost attribution</b>: tag every call with tenant, user (or hashed ID), feature, environment and prompt version, so cost can be grouped any way. Include non-token costs (embeddings, vector DB, GPU-hours, tool APIs) allocated by usage.</li>
+<li><b>GPU utilisation</b> (self-hosted): tokens/s per GPU, KV usage, batch size, MFU/bandwidth utilisation (14.7), idle hours; cost per million tokens actually served.</li>
+<li><b>Tenant-level usage</b>: usage vs quota and contract, for billing, abuse detection and capacity forecasts (15.9).</li>
+</ul>
+<figure class="fig"><div class="stage"><div class="ctl" id="caBtns" style="margin-bottom:8px"></div><div class="bars" id="caBars"></div></div>
+<figcaption><b>One month of AI spend</b> grouped three ways (example data, total $48,200). Switch the grouping: by feature, the agent workflow is the largest cost; by tenant, one tenant is 31% of spend; by token type, output and uncached input dominate, suggesting prompt-caching and output-length work.</figcaption></figure>
+<div class="box example"><h5>Example: a usage record</h5>
+<pre><code>{"trace_id":"4bf9…","ts":"2026-11-04T10:14:23Z","tenant":"acme","feature":"kb-assistant","user_hash":"u_9c1e",
+ "provider":"provider-a","model":"large-2026-09","prompt_version":"answer@v12",
+ "tokens":{"input":5120,"input_cached":4096,"output":388},"price_table":"2026-10",
+ "cost_usd":0.00618,"latency_ms":{"ttft":690,"total":4210},"outcome":"answered"}</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A Harbor task with four model calls and two retries shows its full attributed cost and outcome, not just the last call&#x27;s tokens.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Reading 95% GPU utilisation as good economics while cost per successful task is poor.</div></div>

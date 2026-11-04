@@ -1,0 +1,40 @@
+<ul>
+<li><b>Regression</b> predicts a number (delivery time, price). Linear regression fits y = w·x + b by minimising squared error.</li>
+<li><b>Classification</b> predicts a category. <b>Logistic regression</b> outputs a probability via the sigmoid σ(z) = 1/(1+e<sup>−z</sup>); a threshold turns it into a decision.</li>
+<li><b>Clustering</b> groups similar points. <b>k-means</b> alternates two steps: assign each point to its nearest centre, then move each centre to the mean of its points.</li>
+<li><b>Decision trees</b> split data with yes/no questions on features ("amount &gt; 500?"). Easy to read, but a single deep tree overfits.</li>
+<li><b>Ensembles</b> combine many models. <b>Random forests</b> average many trees trained on random subsets. <b>Gradient boosting</b> (XGBoost, LightGBM, CatBoost) adds trees one at a time, each correcting the previous errors. For tabular data, gradient boosting is usually the strongest practical choice.</li>
+<li><b>Baselines</b> are the simplest reasonable models: always predict the most common class, predict the mean, a keyword rule. If your sophisticated model barely beats the baseline, it is not adding value. Always report the baseline next to your result, including for LLM systems.</li>
+</ul>
+<figure class="fig live"><div class="stage"><canvas id="kmCan" width="640" height="300"></canvas>
+<div class="ctl"><button class="btn primary" id="kmStep" type="button">Next step</button><button class="btn" id="kmNew" type="button">New data</button><label for="kmK" style="font-family:var(--f-display);font-size:.82rem">k <select id="kmK"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label><span class="count" id="kmOut">step 0</span></div></div>
+<figcaption><b>k-means, one step at a time.</b> Odd steps assign each point to the nearest centre (colour); even steps move each centre (ring) to the mean of its points. It stops when assignments stop changing. Try k that does not match the true number of groups.</figcaption></figure>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 700 220" role="img" aria-label="Decision tree for loan default">
+<g class="sm">
+<rect x="270" y="10" width="160" height="38" rx="4" class="nda"/><text x="350" y="34" text-anchor="middle">debt/income &gt; 0.45?</text>
+<rect x="110" y="90" width="160" height="38" rx="4" class="nda"/><text x="190" y="114" text-anchor="middle">late payments ≥ 2?</text>
+<rect x="430" y="90" width="160" height="38" rx="4" class="nda"/><text x="510" y="114" text-anchor="middle">tenure &lt; 1 year?</text>
+<rect x="30" y="170" width="120" height="38" rx="4" class="ndb"/><text x="90" y="194" text-anchor="middle">default 38%</text>
+<rect x="210" y="170" width="120" height="38" rx="4" class="nds"/><text x="270" y="194" text-anchor="middle">default 12%</text>
+<rect x="390" y="170" width="120" height="38" rx="4" class="nds"/><text x="450" y="194" text-anchor="middle">default 7%</text>
+<rect x="560" y="170" width="120" height="38" rx="4" class="ndg"/><text x="620" y="194" text-anchor="middle">default 2%</text>
+<path d="M320 48 L210 90 M380 48 L490 90 M160 128 L95 170 M220 128 L265 170 M480 128 L455 170 M540 128 L615 170" class="ln"/>
+<text x="250" y="70" class="xs mut">yes</text><text x="440" y="70" class="xs mut">no</text><text x="110" y="152" class="xs mut">yes</text><text x="250" y="152" class="xs mut">no</text><text x="450" y="152" class="xs mut">yes</text><text x="590" y="152" class="xs mut">no</text></g>
+</svg></div><figcaption><b>A small decision tree</b> (illustrative numbers). A random forest averages hundreds of trees like this; gradient boosting stacks them so each fixes the residual errors of the ones before.</figcaption></figure>
+<div class="box example"><h5>Example: baselines keep you honest</h5><p>A ticket classifier reports 91% accuracy. But 88% of tickets are "general", so always predicting "general" scores 88%. The real gain is 3 points, and recall on the rare "security incident" class might be terrible. Report per-class metrics (3.5) and the baseline.</p></div>
+<div class="box lab"><h5>Laptop lab: baseline vs model <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+X, y = load_breast_cancer(return_X_y=True)
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.25, stratify=y, random_state=0)
+for name, m in [("baseline", DummyClassifier(strategy="most_frequent")),
+                ("logistic", make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))),
+                ("boosting", HistGradientBoostingClassifier(random_state=0))]:
+    print(f"{name:9} accuracy = {m.fit(Xtr, ytr).score(Xte, yte):.3f}")</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Before any LLM routing, Harbor&#x27;s team trained a TF-IDF + logistic-regression router (91% accuracy) against a majority-class baseline (62%). That baseline is still the number every new router must beat.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Comparing a tuned model on validation data with a baseline measured on a different test set.</div></div>

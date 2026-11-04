@@ -1,0 +1,18 @@
+<ul>
+<li><b>Decomposition</b>: split the goal into subtasks that are as independent as possible, each with a clear objective, scope, expected output format and stopping rule. Vague delegation ("research the market") produces overlapping, unfocused work.</li>
+<li><b>Delegation</b>: send each worker a task brief (objective, constraints, tools allowed, budget, output schema) and only the context it needs.</li>
+<li><b>Parallel execution</b>: independent subtasks run concurrently, cutting wall-clock time. Concurrency limits protect rate limits and budgets.</li>
+<li><b>Synthesis</b>: combine worker outputs, resolve overlaps and conflicts (12.6), and keep evidence links so the final result is traceable. Workers return <em>condensed</em> findings, not raw dumps, to protect the coordinator's context.</li>
+</ul>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="ctl"><label for="pxMode" style="font-family:var(--f-display);font-size:.82rem">Execution <select id="pxMode"><option value="seq">sequential</option><option value="par" selected>parallel (limit 3)</option><option value="par6">parallel (limit 6)</option></select></label><button class="btn primary" id="pxRun" type="button">Run</button><span class="count" id="pxOut"></span></div>
+<canvas id="pxCan" width="640" height="230"></canvas></div></div>
+<figcaption><b>Plan → parallel workers → synthesis</b> (simulated durations). Six subtasks of varying length. Parallelism cuts wall-clock time, but the total work (and token cost) is the same or higher, and synthesis must wait for the slowest worker unless you set a deadline.</figcaption></figure>
+<div class="box example"><h5>Example: a task brief</h5>
+<pre><code>{"task_id": "T-17.3", "parent": "T-17", "role": "worker:app-reviews",
+ "objective": "Find the top 5 onboarding complaints in Q3 2026 app-store reviews.",
+ "scope": {"sources": ["appstore", "playstore"], "date_range": ["2026-07-01", "2026-09-30"]},
+ "tools": ["reviews.search", "reviews.get"], "budget": {"max_steps": 10, "max_cost_usd": 0.15},
+ "output_schema": {"themes": [{"theme": "str", "count": "int", "evidence_ids": ["str"]}]},
+ "deadline": "2026-11-04T15:10:00Z"}</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s India and UK policy workers run in parallel; the comparison waits for both or explicitly marks one region as missing.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Delegating an unclear objective, which produces several unclear objectives.</div></div>

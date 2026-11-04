@@ -1,0 +1,35 @@
+<p>A prompt is the program you give the model. Messages usually have roles: <b>system</b> (persistent instructions from the developer), <b>user</b> (the request), <b>assistant</b> (prior model replies), and <b>tool</b> (results of tool calls). A well-structured prompt has distinct parts:</p>
+<ol><li><b>Role and goal</b>: who the model is acting as and what success looks like.</li>
+<li><b>Instructions and constraints</b>: specific, positive ("answer in under 80 words"), with the reason when it helps the model generalise.</li>
+<li><b>Context</b>: documents, data, user profile; clearly delimited (e.g. XML-style tags) so the model knows what is data versus instruction.</li>
+<li><b>Examples</b> (<dfn>few-shot</dfn>): 2–5 input→output pairs showing format and edge cases. They are very strong signals; make them diverse so the model does not copy surface details.</li>
+<li><b>Output format</b>: a schema or template.</li>
+<li><b>The input</b> itself, last.</li></ol>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 700 300" role="img" data-noarrow aria-label="Anatomy of a structured prompt">
+<g class="sm">
+<rect x="20" y="10" width="420" height="40" rx="4" class="nda"/><text x="34" y="35">SYSTEM · role, goal, rules</text><text x="460" y="35" class="xs mut">stable; versioned; cacheable prefix</text>
+<rect x="20" y="56" width="420" height="40" rx="4" class="nda"/><text x="34" y="81">SYSTEM · output schema + 3 examples</text><text x="460" y="81" class="xs mut">stable; versioned</text>
+<rect x="20" y="102" width="420" height="56" rx="4" class="nds"/><text x="34" y="124">&lt;documents&gt; retrieved chunks with IDs &lt;/documents&gt;</text><text x="34" y="144" class="xs mut">treated as data, never as instructions</text><text x="460" y="128" class="xs mut">per request</text>
+<rect x="20" y="164" width="420" height="40" rx="4" class="nds"/><text x="34" y="189">conversation summary + last 6 turns</text><text x="460" y="189" class="xs mut">per session</text>
+<rect x="20" y="210" width="420" height="40" rx="4" class="ndv"/><text x="34" y="235">USER · current question</text><text x="460" y="235" class="xs mut">per request</text>
+<rect x="20" y="256" width="420" height="34" rx="4" class="nd"/><text x="34" y="278">→ model output (bounded by max_tokens)</text>
+<path d="M450 20 V100" class="lna"/><path d="M450 108 V250" class="lns"/></g>
+</svg></div><figcaption><b>Prompt anatomy.</b> Stable parts first (they can be prompt-cached, 14.3), variable parts last. Delimiting retrieved content matters for security (16.2).</figcaption></figure>
+<p><b>Prompt versioning.</b> Treat prompts as code: store them in the repository or a prompt registry with an ID and version (<code>ticket_triage@v7</code>), review changes, run the evaluation set on every change, and log the prompt version with every production request so any output can be traced to the exact prompt that produced it (18.1).</p>
+<div class="box example"><h5>Example: a versioned prompt file</h5>
+<pre><code># prompts/ticket_triage/v7.yaml
+id: ticket_triage
+version: 7
+model: provider/model-name-2026-xx      # pinned snapshot, not an alias
+params: {temperature: 0, max_tokens: 200}
+system: |
+  You classify customer support tickets for Acme Cloud.
+  Categories: billing, access, delivery, other. Use "other" when unsure.
+  Mark urgent only for outages, data loss or security concerns, not for angry tone.
+  Respond with JSON matching the schema. Do not add commentary.
+examples:
+  - in: "I was charged twice this month"           out: {"category":"billing","urgent":false}
+  - in: "Nobody on my team can log in since 9am"   out: {"category":"access","urgent":true}
+changelog: "v7: clarified urgency rule after eval case #118 regression"</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s answer prompt is file answer@v12 in the repository; its changelog links each change to the evaluation case that motivated it.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Adding more and more instructions without re-running the regression suite; new rules often conflict with old ones.</div></div>

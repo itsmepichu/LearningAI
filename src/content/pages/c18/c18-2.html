@@ -1,0 +1,21 @@
+<ul>
+<li><b>Reproducible builds</b>: lockfiles, pinned base images by digest, pinned engine versions (vLLM, CUDA), deterministic container builds; the same commit produces the same image.</li>
+<li><b>Infrastructure as code (IaC)</b>: GPU node pools, vector databases, queues, gateways, IAM, secrets references, dashboards and alerts are defined in code (OpenTofu/Terraform, Pulumi, Kubernetes manifests with Helm/Kustomize), reviewed and applied by pipelines, not clicked in consoles.</li>
+<li><b>Environment promotion</b>: dev → staging → production with the <em>same</em> artefacts (image digests, prompt versions, model IDs); only configuration differs. Staging mirrors production shape (same engine, same index type, a realistic data sample) so tests are meaningful.</li>
+<li><b>GitOps</b>: the desired state of each environment lives in a repository; a controller (Argo CD, Flux) syncs clusters to it, giving an audit trail and easy rollback by reverting a commit.</li>
+</ul>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">PR merged<small>code / prompt / config</small></div><div class="nd">Build once<small>image digest</small></div><div class="nd">Dev<small>smoke tests</small></div><div class="nd">Staging<small>full gates (18.3)</small></div><div class="nd">Prod canary<small>(18.4)</small></div><div class="nd">Prod 100%</div></div>
+<ol class="steps"><li data-n="0">Any behaviour change, including a prompt edit, goes through review.</li><li data-n="1">CI builds the artefact once; later stages reuse the same digest.</li><li data-n="2">Quick checks: does it start, answer, and pass deterministic tests.</li><li data-n="3">Production-like environment: evaluation suites, security scans, load test, cost estimate.</li><li data-n="4">Progressive exposure in production with automatic analysis.</li><li data-n="5">Promotion recorded; the previous release stays deployable for rollback.</li></ol></div>
+<figcaption><b>Build once, promote the same artefact.</b> Rebuilding per environment means you never tested what you shipped.</figcaption></figure>
+<div class="box example"><h5>Example: GPU pool as code (OpenTofu/Terraform, illustrative)</h5>
+<pre><code>module "llm_pool" {
+  source        = "./modules/gpu-node-pool"
+  name          = "answer-8b-fp8"
+  gpu_type      = var.gpu_type            # per environment
+  min_nodes     = var.env == "prod" ? 3 : 0
+  max_nodes     = var.env == "prod" ? 24 : 2
+  labels        = { workload = "interactive", model = "8b-fp8" }
+  taints        = ["gpu=true:NoSchedule"]
+}</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>The same signed Harbor image and model artifact tested in staging is promoted to production; only credentials and capacity differ.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>A container that downloads &quot;latest&quot; model weights at start-up; the release is not reproducible.</div></div>

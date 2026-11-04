@@ -1,0 +1,43 @@
+<p>Training memory per parameter with mixed-precision Adam is about <b>16 bytes</b>: 2 (BF16 weights) + 2 (BF16 gradients) + 12 (FP32 master weights, Adam first and second moments). An 8B model needs ~128 GB before counting activations, more than any single GPU. Work is therefore split in several ways, usually combined ("3D parallelism"):</p>
+<ul>
+<li><b>Data parallelism (DP)</b>: every GPU holds a full model copy and processes different batches; gradients are averaged with an <b>all-reduce</b> each step. Simple; limited by per-GPU memory.</li>
+<li><b>Sharding (ZeRO / FSDP)</b>: data parallelism where optimiser states, gradients and even weights are split across GPUs and gathered just in time. Removes the memory redundancy of plain DP.</li>
+<li><b>Tensor parallelism (TP)</b>: split individual weight matrices across GPUs (e.g. half the columns each). Needs very fast interconnect (NVLink), so used within a node.</li>
+<li><b>Pipeline parallelism (PP)</b>: assign consecutive layers to different GPUs; micro-batches flow through like an assembly line. Creates idle "bubbles".</li>
+<li>Also: <b>sequence/context parallelism</b> (split long sequences) and <b>expert parallelism</b> (place MoE experts on different GPUs).</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 780 240" role="img" aria-label="Data, tensor and pipeline parallelism">
+<g class="sm">
+<text x="120" y="20" text-anchor="middle" class="lg">Data parallel</text>
+<rect x="20" y="35" width="90" height="70" rx="4" class="nda"/><text x="65" y="65" text-anchor="middle">GPU 0</text><text x="65" y="82" text-anchor="middle" class="xs">full model</text>
+<rect x="130" y="35" width="90" height="70" rx="4" class="nda"/><text x="175" y="65" text-anchor="middle">GPU 1</text><text x="175" y="82" text-anchor="middle" class="xs">full model</text>
+<text x="65" y="125" text-anchor="middle" class="xs">batch A</text><text x="175" y="125" text-anchor="middle" class="xs">batch B</text>
+<path d="M110 70 H130" class="lns flowing"/><text x="120" y="150" text-anchor="middle" class="xs sig">all-reduce gradients</text>
+<text x="390" y="20" text-anchor="middle" class="lg">Tensor parallel</text>
+<rect x="290" y="35" width="90" height="70" rx="4" class="nds"/><text x="335" y="65" text-anchor="middle">GPU 0</text><text x="335" y="82" text-anchor="middle" class="xs">left half of W</text>
+<rect x="400" y="35" width="90" height="70" rx="4" class="nds"/><text x="445" y="65" text-anchor="middle">GPU 1</text><text x="445" y="82" text-anchor="middle" class="xs">right half of W</text>
+<path d="M380 70 H400" class="lns flowing"/><text x="390" y="125" text-anchor="middle" class="xs">same batch, every layer split</text><text x="390" y="150" text-anchor="middle" class="xs sig">exchange activations per layer</text>
+<text x="660" y="20" text-anchor="middle" class="lg">Pipeline parallel</text>
+<rect x="560" y="35" width="90" height="70" rx="4" class="ndv"/><text x="605" y="65" text-anchor="middle">GPU 0</text><text x="605" y="82" text-anchor="middle" class="xs">layers 1–16</text>
+<rect x="670" y="35" width="90" height="70" rx="4" class="ndv"/><text x="715" y="65" text-anchor="middle">GPU 1</text><text x="715" y="82" text-anchor="middle" class="xs">layers 17–32</text>
+<path d="M650 70 H670" class="lna flowing"/><text x="660" y="125" text-anchor="middle" class="xs">micro-batches flow through</text><text x="660" y="150" text-anchor="middle" class="xs sig">pass activations between stages</text>
+<rect x="20" y="175" width="740" height="50" rx="4" class="fsunk"/><text x="390" y="197" text-anchor="middle">ZeRO-3 / FSDP: data parallel, but each GPU stores only 1/N of weights, gradients and optimiser state;</text><text x="390" y="214" text-anchor="middle">layers are all-gathered just before use and freed after.</text></g>
+</svg></div><figcaption><b>Ways to split training.</b> Large runs use TP inside a node, PP across a few nodes, and sharded DP across everything.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="row2"><label for="ppS">Pipeline stages (GPUs) <input type="range" id="ppS" min="2" max="6" value="4"><span id="ppSO"></span></label>
+<label for="ppM">Micro-batches <input type="range" id="ppM" min="1" max="12" value="4"><span id="ppMO"></span></label></div>
+<svg id="ppSvg" viewBox="0 0 700 200"></svg><div class="out" id="ppOut"></div></div></div>
+<figcaption><b>Pipeline bubble (GPipe schedule).</b> Each row is a GPU; F = forward, B = backward for a numbered micro-batch; grey = idle. Idle fraction = (stages − 1)/(micro-batches + stages − 1). More micro-batches shrink the bubble; schedules like 1F1B interleave forward and backward to reduce memory.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div id="dpViz"></div>
+<div class="ctl"><button class="btn primary" type="button" id="dpNext">Next stage</button><button class="btn" type="button" id="dpReset">Reset</button><span class="count" id="dpOut"></span></div></div></div>
+<figcaption><b>One synchronous data-parallel step.</b> Four workers hold identical copies of one weight (w = 2.00), compute gradients on different batches (illustrative values), average them with an all-reduce, and apply the same update, so the copies stay identical. The arithmetic is computed; real jobs move whole gradient tensors over NVLink or the network.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
+<label for="zrN">Parameters (B) <input type="range" id="zrN" min="1" max="180" value="8"><span id="zrNO"></span></label>
+<label for="zrG">GPUs <select id="zrG"><option>1</option><option>2</option><option>4</option><option selected>8</option><option>16</option><option>64</option><option>256</option></select></label>
+<label for="zrV">GPU memory <select id="zrV"><option value="24">24 GB</option><option value="40">40 GB</option><option value="80" selected>80 GB</option><option value="141">141 GB</option></select></label></div>
+<div class="bars" id="zrBars"></div><div class="out" id="zrOut"></div></div></div>
+<figcaption><b>ZeRO / FSDP memory per GPU</b> for mixed-precision Adam (2 bytes weights + 2 bytes gradients + 12 bytes optimiser state per parameter), excluding activations. Stage 1 shards optimiser state, stage 2 also gradients, stage 3 (≈ FSDP full sharding) also weights: per-GPU bytes are 16Ψ, 4Ψ + 12Ψ/N, 2Ψ + 14Ψ/N and 16Ψ/N for Ψ parameters on N GPUs.</figcaption></figure>
+<div class="box example"><h5>Example: fitting a 70B fine-tune</h5><p>Full fine-tuning 70B × 16 bytes ≈ 1.1 TB of state. On 8 × 80 GB GPUs (640 GB) it does not fit even with full sharding, before activations. Options: more nodes with FSDP, CPU offloading (slow), or parameter-efficient fine-tuning, where only small adapter matrices are trained (13.3). QLoRA can fine-tune a 70B model on a single 80 GB GPU.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s one larger fine-tune ran on 8 GPUs with FSDP; the team measured 5.6× speed-up, not 8×, because of communication overhead.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Expecting N GPUs to give N times the throughput.</div></div>

@@ -1,0 +1,36 @@
+<ul>
+<li><b>Convolutional neural networks (CNNs)</b> slide small learned filters (kernels) across an image, detecting local patterns (edges → textures → parts → objects). Weight sharing makes them efficient. Still used for vision and OCR components in document pipelines.</li>
+<li><b>Recurrent neural networks (RNNs)</b> process a sequence one element at a time, updating a hidden state h<sub>t</sub> = f(W·x<sub>t</sub> + U·h<sub>t−1</sub>). The same weights are applied at each step. Information from early tokens must survive many multiplications, so it fades.</li>
+<li><b>LSTMs</b> add a cell state and gates (forget, input, output) that learn what to keep, write and expose, which preserves information over longer spans. GRUs are a simpler variant.</li>
+<li><b>Sequence-to-sequence (seq2seq)</b>: an encoder RNN reads the input into a vector; a decoder RNN generates the output from it. The single fixed vector is a bottleneck for long inputs, which is exactly what attention was invented to fix (1.2, 5.2).</li>
+</ul>
+<figure class="fig"><div class="stage">
+<div class="cols2">
+<div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Convolution: a 3×3 filter sliding over an image</p>
+<svg viewBox="0 0 240 200" role="img" aria-label="Convolution kernel sliding"><g id="convViz"></g></svg></div>
+<div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">RNN unrolled over 4 tokens</p>
+<svg viewBox="0 0 300 200" role="img" aria-label="RNN unrolled">
+<g class="sm"><rect x="10" y="80" width="50" height="40" rx="4" class="nda"/><rect x="85" y="80" width="50" height="40" rx="4" class="nda"/><rect x="160" y="80" width="50" height="40" rx="4" class="nda"/><rect x="235" y="80" width="50" height="40" rx="4" class="nda"/>
+<text x="35" y="104" text-anchor="middle">h₁</text><text x="110" y="104" text-anchor="middle">h₂</text><text x="185" y="104" text-anchor="middle">h₃</text><text x="260" y="104" text-anchor="middle">h₄</text>
+<path d="M60 100H85M135 100H160M210 100H235" class="lna flowing"/>
+<text x="35" y="160" text-anchor="middle">the</text><text x="110" y="160" text-anchor="middle">cat</text><text x="185" y="160" text-anchor="middle">sat</text><text x="260" y="160" text-anchor="middle">down</text>
+<path d="M35 145V120M110 145V120M185 145V120M260 145V120" class="ln"/>
+<text x="150" y="40" text-anchor="middle" class="xs mut">same weights at each step;</text><text x="150" y="54" text-anchor="middle" class="xs mut">h₄ must carry "the" through 3 updates</text></g></svg></div></div>
+</div><figcaption><b>Two pre-transformer architectures.</b> The CNN filter (animated) computes one output per position. The RNN must pass information strictly left to right, so it cannot be parallelised across time during training.</figcaption></figure>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 720 150" role="img" aria-label="Seq2seq bottleneck vs attention">
+<g class="sm">
+<rect x="10" y="30" width="60" height="34" rx="4" class="nd"/><rect x="80" y="30" width="60" height="34" rx="4" class="nd"/><rect x="150" y="30" width="60" height="34" rx="4" class="nd"/>
+<text x="40" y="52" text-anchor="middle">Je</text><text x="110" y="52" text-anchor="middle">suis</text><text x="180" y="52" text-anchor="middle">étudiant</text>
+<path d="M210 47H250" class="lnb"/><circle cx="270" cy="47" r="18" class="ndb"/><text x="270" y="51" text-anchor="middle" class="xs">vec</text><path d="M288 47H320" class="lnb"/>
+<rect x="320" y="30" width="60" height="34" rx="4" class="nd"/><rect x="390" y="30" width="60" height="34" rx="4" class="nd"/><rect x="460" y="30" width="60" height="34" rx="4" class="nd"/>
+<text x="350" y="52" text-anchor="middle">I</text><text x="420" y="52" text-anchor="middle">am</text><text x="490" y="52" text-anchor="middle">student</text>
+<text x="540" y="45" class="bad">one vector for</text><text x="540" y="60" class="bad">the whole input</text>
+<rect x="10" y="100" width="60" height="34" rx="4" class="nd"/><rect x="80" y="100" width="60" height="34" rx="4" class="nd"/><rect x="150" y="100" width="60" height="34" rx="4" class="nd"/>
+<text x="40" y="122" text-anchor="middle">Je</text><text x="110" y="122" text-anchor="middle">suis</text><text x="180" y="122" text-anchor="middle">étudiant</text>
+<rect x="460" y="100" width="60" height="34" rx="4" class="nda"/><text x="490" y="122" text-anchor="middle">student</text>
+<path d="M40 100 C 40 84, 470 84, 480 100" class="ln"/><path d="M110 100 C 110 88, 470 88, 485 100" class="ln"/><path d="M180 100 C 180 90, 470 90, 490 100" class="lna"/>
+<text x="540" y="115" class="okc">attention: look at every</text><text x="540" y="130" class="okc">input position directly</text></g>
+</svg></div><figcaption><b>The bottleneck and its fix.</b> With attention, generating "student" can weight "étudiant" most heavily, regardless of input length.</figcaption></figure>
+<div class="box example"><h5>Example: where these still appear</h5><p>A document-ingestion pipeline (10.3) may use a CNN-based layout detector and a CNN/transformer OCR model before any LLM sees the text. Time-series anomaly detectors on GPU telemetry sometimes use LSTMs because they are small and fast.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s document pipeline still uses a CNN-based layout detector to find tables in scanned PDFs before any transformer sees the text.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming an LSTM (or any model) remembers arbitrarily long inputs reliably.</div></div>

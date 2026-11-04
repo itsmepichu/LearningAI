@@ -1,0 +1,77 @@
+<p>Each chapter opens with three short panels: <b>what</b> the subject is, <b>why</b> you study it, and <b>where</b> it shows up in real systems. Every subtopic then gives an explanation, a concrete example, and a visual. Many visuals are step-through walkthroughs: press <b>Next</b> or <b>Play</b> to move through a process one stage at a time, or click any step in the list.</p>
+  <p>New terms are introduced in a <b>Terms</b> box or as <dfn>dotted-underlined words</dfn> before they are used. Chapters build on each other, but the cross-links let you jump around.</p>
+
+  <h3 class="sub-h">What the labels mean</h3>
+  <div class="tw"><table>
+    <tr><th>Label</th><th>Meaning</th></tr>
+    <tr><td><span class="tag cpu">Laptop · CPU</span></td><td>You can run this on an ordinary laptop with no dedicated GPU. Expect 8–16 GB of RAM to be enough unless stated otherwise.</td></tr>
+    <tr><td><span class="tag real">Runs in browser</span></td><td>The figure does real computation in this page (a real algorithm on real input), for example BPE merges, BM25 scoring or a tiny language model trained by counting.</td></tr>
+    <tr><td><span class="tag sim">Simulation</span></td><td>An animated model of system behaviour. It shows the steps and the shape of the tradeoffs, using made-up but realistic numbers. <b>No neural network is executed.</b></td></tr>
+    <tr><td><span class="tag gpu">Needs external compute</span></td><td>Realistic only with a GPU or a cluster. Free or cheap options: Google Colab, Kaggle Notebooks, or renting an hourly cloud GPU. Free tiers change, so check their current limits.</td></tr>
+  </table></div>
+
+
+  <h3 class="sub-h" id="harbor">The running example: Harbor</h3>
+  <p><b>Harbor</b> is a fictional internal assistant at <b>Tidewell</b>, a software company with 8,000 employees and 1,200 business customers. Harbor answers policy and product questions with citations, respects each user's document permissions, and drafts and files support actions (tickets, credits, emails) with human approval for anything consequential. Every topic ends with an <b>In practice · Harbor</b> note showing the idea applied to this one system, next to a <b>Failure to avoid</b> note naming the most common mistake. Following one system through all 18 chapters shows how the pieces connect: the evaluation set from chapter 8 gates the retrieval changes in chapter 9, the idempotency keys in chapter 11 become a release test in chapter 18, and so on.</p>
+  <h3 class="sub-h">Each chapter ends with</h3>
+  <ul><li>A <b>lab</b> with numbered steps, a <b>Keep as evidence</b> deliverable and a <b>pass condition</b>, sized to run on a laptop wherever possible.</li><li>A three-question <b>self-check</b> with explained answers.</li><li>A <b>Mark chapter studied</b> button. Tick topics as you go; your progress shows in the sidebar and is stored only in this browser.</li></ul>
+  <p>Press <kbd>/</kbd> or the Search button to search every explanation, example, lab and failure note.</p>
+  <div class="box pit"><h5>Lab rules</h5><ul>
+  <li>Use synthetic or public data and synthetic test tenants. Never put real customer or employee data into a learning exercise.</li>
+  <li>Keep API keys on the server side or in environment variables, never in prompts, notebooks you share, or the repository.</li>
+  <li>Label anything that calls a paid or external service, and set a spending limit before you start.</li>
+  <li>No model available? Run stubbed outputs through the same validators and checks, and label the results as mocked.</li>
+  <li>Say what each result does and does not prove ("300-example toy sample; does not establish production accuracy").</li></ul></div>
+  <h3 class="sub-h">Your laptop setup (do this once)</h3>
+  <div class="box lab"><h5>Laptop lab <span class="tag cpu">Laptop · CPU</span></h5>
+  <p>Create one isolated Python environment for the whole course. <a href="https://docs.astral.sh/uv/">uv</a> is a fast package manager; plain <code>python -m venv</code> works too.</p>
+<pre><code># 1. Python environment
+uv venv ai-course &amp;&amp; source ai-course/bin/activate     # Windows: ai-course\Scripts\activate
+uv pip install numpy pandas matplotlib jupyterlab scikit-learn
+uv pip install torch --index-url https://download.pytorch.org/whl/cpu   # CPU-only PyTorch build
+uv pip install transformers datasets sentence-transformers faiss-cpu bm25s pydantic
+
+# 2. Local model runtime (pick one)
+#    Ollama: install from https://ollama.com, then:
+ollama pull llama3.2:1b          # ~1.3 GB, usable on CPU
+ollama pull qwen2.5:1.5b         # alternative small model
+#    llama.cpp: https://github.com/ggml-org/llama.cpp (prebuilt binaries in Releases)
+
+# 3. Optional: Docker for vector databases, tracing and dashboards
+docker --version</code></pre>
+  <p><b>Limitations to expect:</b> small models (0.5–3B parameters) run at a few to a few dozen tokens per second on CPU. They are good enough to learn APIs, prompting, RAG plumbing, agents and evaluation, but they reason worse than large hosted models. When a lab needs quality, call a hosted API instead and keep the rest of the code the same.</p>
+  </div>
+
+  <h3 class="sub-h">The course map</h3>
+  <figure class="fig"><div class="stage">
+  <svg viewBox="0 0 820 300" role="img" aria-label="Course map in four bands: foundations, models, applications, production">
+    <rect x="10" y="20" width="190" height="260" rx="6" class="fsunk"/><rect x="215" y="20" width="190" height="260" rx="6" class="fsunk"/>
+    <rect x="420" y="20" width="190" height="260" rx="6" class="fsunk"/><rect x="625" y="20" width="185" height="260" rx="6" class="fsunk"/>
+    <text x="105" y="44" text-anchor="middle" class="lg acc">Foundations</text><text x="310" y="44" text-anchor="middle" class="lg acc">Models</text>
+    <text x="515" y="44" text-anchor="middle" class="lg acc">Applications</text><text x="717" y="44" text-anchor="middle" class="lg acc">Production</text>
+    <g class="sm">
+      <rect x="25" y="60" width="160" height="40" rx="4" class="nd"/><text x="105" y="85" text-anchor="middle">1 · AI foundations</text>
+      <rect x="25" y="110" width="160" height="40" rx="4" class="nd"/><text x="105" y="135" text-anchor="middle">2 · Math &amp; toolkit</text>
+      <rect x="25" y="160" width="160" height="40" rx="4" class="nd"/><text x="105" y="185" text-anchor="middle">3 · ML fundamentals</text>
+      <rect x="25" y="210" width="160" height="40" rx="4" class="nd"/><text x="105" y="235" text-anchor="middle">4 · Deep learning</text>
+      <rect x="230" y="60" width="160" height="40" rx="4" class="nd"/><text x="310" y="85" text-anchor="middle">5 · Transformers</text>
+      <rect x="230" y="110" width="160" height="40" rx="4" class="nd"/><text x="310" y="135" text-anchor="middle">6 · Training</text>
+      <rect x="230" y="160" width="160" height="40" rx="4" class="nd"/><text x="310" y="185" text-anchor="middle">13 · Model adaptation</text>
+      <rect x="230" y="210" width="160" height="40" rx="4" class="nd"/><text x="310" y="235" text-anchor="middle">14 · Inference serving</text>
+      <rect x="435" y="60" width="160" height="40" rx="4" class="nda"/><text x="515" y="85" text-anchor="middle">7 · LLM applications</text>
+      <rect x="435" y="110" width="160" height="40" rx="4" class="nds"/><text x="515" y="135" text-anchor="middle">8 · Evaluation (always)</text>
+      <rect x="435" y="160" width="160" height="40" rx="4" class="nda"/><text x="515" y="185" text-anchor="middle">9–10 · RAG at scale</text>
+      <rect x="435" y="210" width="160" height="40" rx="4" class="nda"/><text x="515" y="235" text-anchor="middle">11–12 · Agents</text>
+      <rect x="640" y="60" width="155" height="40" rx="4" class="nd"/><text x="717" y="85" text-anchor="middle">15 · Millions of users</text>
+      <rect x="640" y="110" width="155" height="40" rx="4" class="nd"/><text x="717" y="135" text-anchor="middle">16 · Security</text>
+      <rect x="640" y="160" width="155" height="40" rx="4" class="nd"/><text x="717" y="185" text-anchor="middle">17 · Observability</text>
+      <rect x="640" y="210" width="155" height="40" rx="4" class="nd"/><text x="717" y="235" text-anchor="middle">18 · LLMOps &amp; delivery</text>
+    </g>
+    <path d="M200 150 H215 M405 150 H420 M610 150 H625" class="lna"/>
+  </svg></div>
+  <figcaption><b>Four bands.</b> Evaluation (chapter 8) is highlighted because it is not a phase: it starts with your first application in chapter 7 and every later chapter adds to it.</figcaption></figure>
+
+  
+
+  <div class="box"><h5>A note on accuracy and dates</h5>
+  <p>This manual was written in November 2026. The concepts are stable; tool versions, model names and prices move every few months. Links point to official documentation so you can check current behaviour. Two items were checked directly while writing: the Model Context Protocol specification (latest stable revision 2025-11-25) and the OpenTelemetry GenAI semantic conventions (still marked <em>Development</em>, now maintained in their own repository). All throughput, latency and cost figures in simulations are illustrative, not benchmarks.</p></div>

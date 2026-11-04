@@ -1,0 +1,25 @@
+<p>A <dfn>gate</dfn> is an automated check that blocks promotion when a threshold is not met. Gates make the acceptance criteria of 8.1 and the release criteria of 13.7 enforceable for every change.</p>
+<div class="tw"><table>
+<tr><th>Gate</th><th>Checks</th><th>Example threshold</th></tr>
+<tr><td><b>Quality</b></td><td>Regression suite, critical set, per-segment scores, judge-based metrics with CIs</td><td>No critical case regresses; overall ≥ baseline − 0.5 pts (within CI); no language drops &gt; 2 pts</td></tr>
+<tr><td><b>Safety / security</b></td><td>Injection and jailbreak suites, isolation tests, secret scanning, dependency and model scans</td><td>0 cross-tenant leaks; injection success rate ≤ baseline; no critical CVEs</td></tr>
+<tr><td><b>Performance</b></td><td>Load test at forecast peak with realistic traffic</td><td>p95 TTFT ≤ 1.5 s; p99 total ≤ 12 s; error rate ≤ 0.5%</td></tr>
+<tr><td><b>Cost</b></td><td>Tokens per task on the eval suite × prices; projected monthly cost</td><td>Cost per successful task ≤ +10% vs current release unless approved</td></tr>
+</table></div>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="ctl"><label for="gtCase" style="font-family:var(--f-display);font-size:.82rem">Change <select id="gtCase"><option value="ok">prompt v13: tighter citation rule</option><option value="q">model swap to cheaper model</option><option value="s">new tool: send_email</option><option value="p">retrieval k 8 → 20</option></select></label><button class="btn primary" id="gtRun" type="button">Run pipeline</button></div>
+<div id="gtViz" style="display:grid;gap:6px"></div></div></div>
+<figcaption><b>A gated pipeline</b> (scripted results for four typical changes). Each gate shows its measured value against its threshold. Notice that different changes fail different gates: that is why all four are needed.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: a quality gate in CI <span class="tag cpu">Laptop · CPU (runner) · or GitHub Actions</span></h5>
+<pre><code># .github/workflows/eval.yml (sketch) — runs promptfoo against a model endpoint on every PR touching prompts/
+on: {pull_request: {paths: ["prompts/**", "promptfooconfig.yaml"]}}
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx promptfoo@latest eval -c promptfooconfig.yaml -o results.json
+        env: {OPENAI_API_KEY: "${{ secrets.EVAL_API_KEY }}"}     # or point providers at a hosted test endpoint
+      - run: python scripts/gate.py results.json --min-pass-rate 0.95 --critical-tag critical</code></pre>
+<p><code>gate.py</code> is 20 lines: load results, compute pass rate overall and on cases tagged <code>critical</code>, exit non-zero if below thresholds. Locally you can run the same command against Ollama before pushing.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A Harbor candidate improved average accuracy but failed one cross-tenant case; promotion was blocked.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating a green CI badge as proof that every production failure is covered.</div></div>

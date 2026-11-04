@@ -1,0 +1,40 @@
+<p><b>PyTorch</b> gives you tensors that can live on CPU or GPU and <dfn>autograd</dfn>: every operation on a tensor with <code>requires_grad=True</code> is recorded in a computation graph, and <code>loss.backward()</code> runs backpropagation through it, filling each parameter's <code>.grad</code>. You write the forward computation; PyTorch derives the backward pass.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Load batch<small>DataLoader</small></div><div class="nd">Forward<small>model(x)</small></div><div class="nd">Loss<small>loss_fn(ŷ, y)</small></div><div class="nd">Zero grads<small>opt.zero_grad()</small></div><div class="nd">Backward<small>loss.backward()</small></div><div class="nd">Clip &amp; step<small>opt.step()</small></div><div class="nd">Schedule<small>sched.step()</small></div><div class="nd">Eval &amp; checkpoint<small>every N steps</small></div></div>
+<ol class="steps"><li data-n="0">Fetch the next mini-batch, move it to the device (CPU here).</li><li data-n="1">Run the model to get predictions; the autograd graph is recorded.</li><li data-n="2">Compute a scalar loss.</li><li data-n="3">Clear gradients from the previous step, because PyTorch accumulates them by default (forgetting this is a classic bug).</li><li data-n="4">Backpropagate: every parameter's <code>.grad</code> is filled.</li><li data-n="5">Optionally clip gradient norm, then let the optimiser update weights.</li><li data-n="6">Advance the learning-rate schedule.</li><li data-n="7">Periodically switch to <code>model.eval()</code> with <code>torch.no_grad()</code>, compute validation loss, and save a checkpoint containing model <em>and</em> optimiser state so training can resume exactly.</li></ol></div>
+<figcaption><b>The training loop.</b> Libraries like Hugging Face Trainer and TRL wrap this loop, but it is always these steps underneath.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: a complete training loop <span class="tag cpu">Laptop · CPU · ~1 minute</span></h5>
+<pre><code>import torch, torch.nn as nn
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+torch.manual_seed(0)
+X, y = load_digits(return_X_y=True)                          # 8x8 images of digits, 1,797 samples
+Xtr, Xva, ytr, yva = train_test_split(X / 16.0, y, test_size=0.2, random_state=0)
+Xtr, Xva = map(lambda a: torch.tensor(a, dtype=torch.float32), (Xtr, Xva))
+ytr, yva = torch.tensor(ytr), torch.tensor(yva)
+model = nn.Sequential(nn.Linear(64, 128), nn.GELU(), nn.Dropout(0.1), nn.Linear(128, 10))
+opt = torch.optim.AdamW(model.parameters(), lr=3e-3, weight_decay=0.01)
+sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=40)
+loss_fn = nn.CrossEntropyLoss()
+for epoch in range(40):
+    model.train()
+    for i in torch.randperm(len(Xtr)).split(64):                 # mini-batches of 64
+        loss = loss_fn(model(Xtr[i]), ytr[i])
+        opt.zero_grad(); loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step()
+    sched.step()
+    model.eval()
+    with torch.no_grad():
+        acc = (model(Xva).argmax(1) == yva).float().mean()
+    if epoch % 10 == 9: print(f"epoch {epoch+1} loss {loss.item():.3f} val_acc {acc:.3f}")
+torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "epoch": epoch}, "ckpt.pt")</code></pre></div>
+<div class="box pit"><h5>Debugging checklist</h5><ul>
+<li><b>Overfit one batch first.</b> If the model cannot drive loss near zero on 8 examples, there is a bug (wrong labels, wrong loss, frozen weights).</li>
+<li><b>Check the initial loss</b> against ln(number of classes) (2.4).</li>
+<li><b>Shapes</b>: print tensor shapes at each step; silent broadcasting causes wrong but runnable code.</li>
+<li><b>Train/eval mode</b>: dropout and normalisation behave differently; forgetting <code>model.eval()</code> gives noisy validation numbers.</li>
+<li><b>NaN</b>: enable <code>torch.autograd.set_detect_anomaly(True)</code> briefly to find the operation; lower LR; clip gradients.</li>
+<li><b>no_grad is not eval mode</b>: <code>torch.no_grad()</code> stops gradient recording but does not disable dropout or switch normalisation to inference behaviour; call <code>model.eval()</code> as well, and <code>model.train()</code> before resuming training.</li>
+<li><b>Watch gradient norms</b> per layer; zeros mean a disconnected graph or dead ReLUs.</li>
+</ul></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Every Harbor training script first overfits 8 examples to near-zero loss, then saves and reloads a checkpoint and compares predictions, before the real run starts.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Saving a checkpoint and never reloading it: a file that cannot be restored is not a checkpoint.</div></div>

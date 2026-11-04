@@ -1,0 +1,32 @@
+<p>These four terms describe nested sets. Each inner one is a particular way of doing the outer one.</p>
+<div class="terms">
+<div><b>Artificial intelligence (AI)</b>: any technique that makes a computer perform a task we would call intelligent if a person did it, such as planning, recognising, deciding or conversing. Hand-written rules count.</div>
+<div><b>Machine learning (ML)</b>: AI where behaviour is <em>learned from data</em> instead of written by hand. You supply examples; an algorithm fits a function to them.</div>
+<div><b>Deep learning (DL)</b>: ML using <em>neural networks</em> with many layers. Layers learn their own intermediate features, so you do not hand-design them.</div>
+<div><b>Generative AI (GenAI)</b>: models that produce new content (text, images, audio, code) by learning the distribution of their training data and sampling from it. Today almost all GenAI is deep learning.</div>
+</div>
+<p>The practical difference is <b>where the knowledge comes from</b>. In rule-based AI it comes from the programmer. In classical ML it comes from labelled examples plus features the engineer chose. In deep learning it comes from large amounts of data, and the model chooses the features. In generative AI the model has learned enough about the data to create plausible new samples.</p>
+<p>A second difference is the <b>output type</b>. Classical ML typically outputs a number or a label from a fixed set ("fraud: 0.93"). Generative models output open-ended content ("Dear customer, we noticed…"). Open-ended output is more flexible and much harder to verify, which is why evaluation (chapter 8) is so central to GenAI work.</p>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 330" role="img" aria-label="Nested sets: AI contains ML contains deep learning contains generative AI">
+  <ellipse cx="300" cy="168" rx="285" ry="150" class="nd"/>
+  <ellipse cx="345" cy="185" rx="225" ry="122" class="nda"/>
+  <ellipse cx="390" cy="200" rx="160" ry="92" class="nds"/>
+  <ellipse cx="430" cy="215" rx="95" ry="58" class="ndv"/>
+  <text x="70" y="110" class="lg">AI</text><text x="70" y="128" class="xs mut">search, planning,</text><text x="70" y="141" class="xs mut">expert rules</text>
+  <text x="150" y="170" class="lg acc">ML</text><text x="138" y="188" class="xs mut">regression, trees,</text><text x="138" y="201" class="xs mut">clustering</text>
+  <text x="245" y="215" class="lg sig">Deep learning</text><text x="245" y="233" class="xs mut">CNNs, RNNs,</text><text x="245" y="246" class="xs mut">transformers</text>
+  <text x="430" y="210" text-anchor="middle" class="lg simc">Generative AI</text><text x="430" y="228" text-anchor="middle" class="xs mut">LLMs, diffusion</text>
+  <g class="sm"><text x="600" y="60">Examples</text>
+  <text x="600" y="84" class="xs">AI only: chess engine with</text><text x="600" y="97" class="xs">hand-coded evaluation</text>
+  <text x="600" y="124" class="xs acc">ML: credit-risk gradient</text><text x="600" y="137" class="xs acc">boosting on 40 features</text>
+  <text x="600" y="164" class="xs sig">DL: image classifier that</text><text x="600" y="177" class="xs sig">learns its own features</text>
+  <text x="600" y="204" class="xs simc">GenAI: LLM drafting a</text><text x="600" y="217" class="xs simc">support reply</text></g>
+</svg></div><figcaption><b>Nested sets.</b> Every LLM is generative, deep and machine-learned, so it inherits all the outer sets' concerns: it needs data, it can overfit, and its behaviour is statistical.</figcaption></figure>
+<div class="box example"><h5>Example: one business problem, four approaches</h5>
+<p>Routing incoming support emails to the right team:</p>
+<ul><li><b>Rules (AI):</b> <code>if "invoice" in subject → Billing</code>. Transparent, brittle when wording changes.</li>
+<li><b>Classical ML:</b> TF-IDF word features + logistic regression trained on 20,000 labelled emails. Cheap, fast, accurate on common categories.</li>
+<li><b>Deep learning:</b> fine-tuned BERT-style encoder. Handles paraphrase and context better; needs more compute.</li>
+<li><b>Generative AI:</b> prompt an LLM with the team descriptions and ask for a label plus a one-line reason. Zero training data needed to start; higher cost per email; must validate that the label is one of the allowed values.</li></ul></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor mixes all four: a deterministic permission check (rules), keyword search over policies (classic IR), a learned reranker (deep learning) and an answer-writing LLM (generative AI). Naming each part separately tells you where an error or a cost came from.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Calling the whole pipeline &quot;the AI&quot; hides which component failed; and a generative model is not automatically better than a small classifier for a fixed labelling task.</div></div>

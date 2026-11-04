@@ -1,0 +1,46 @@
+<p>A multi-agent system must beat the strongest simple alternative on the metrics that matter, at acceptable cost. Run the same evaluation set (8.8) through:</p>
+<ol><li>a single well-prompted agent with all tools,</li><li>a fixed parallel workflow written in code,</li><li>the multi-agent design,</li></ol>
+<p>and compare task success, pass^k reliability, latency percentiles, cost per successful task, and failure types. Also evaluate components: routing accuracy, worker success per subtask, synthesis faithfulness to worker outputs, and how often conflicts are surfaced correctly. Run ablations: remove the evaluator agent; merge two workers; does quality actually drop?</p>
+<div class="tw"><table>
+<tr><th>Design</th><th>Task success</th><th>pass^3</th><th>p95 latency</th><th>Cost / successful task</th><th>Verdict</th></tr>
+<tr><td>Single agent</td><td>64%</td><td>41%</td><td>48 s</td><td>$0.19</td><td>Fails on broad tasks</td></tr>
+<tr><td>Parallel workflow</td><td>78%</td><td>66%</td><td>31 s</td><td>$0.21</td><td style="color:var(--ok);font-weight:600">Ship this</td></tr>
+<tr><td>Coordinator + 4 workers + critic</td><td>81%</td><td>63%</td><td>112 s</td><td>$0.88</td><td>+3 pts not worth 4× cost and latency</td></tr>
+</table></div>
+<p style="font-size:.86rem;color:var(--muted)">Illustrative numbers. The pattern is common: a code-defined workflow captures most of the gain of a multi-agent design.</p>
+<figure class="fig"><div class="stage"><div class="cols2">
+<div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Reliability (pass^3)</p><div class="bars" data-max="100" data-unit="%"><div data-v="41" data-c="b">Single agent</div><div data-v="66" data-c="g">Parallel workflow</div><div data-v="63">Coordinator + workers + critic</div></div></div>
+<div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Cost per successful task</p><div class="bars" data-max="1" data-unit=""><div data-v="0.19">Single agent · $0.19</div><div data-v="0.21" data-c="g">Parallel workflow · $0.21</div><div data-v="0.88" data-c="b">Coordinator + workers + critic · $0.88</div></div></div>
+</div></div><figcaption><b>Compare designs on the same suite.</b> The decision rests on reliability per dollar, not on which design looks most sophisticated. Re-run the comparison when models improve: a stronger single agent may close the gap.</figcaption></figure>
+<div class="box example"><h5>Example: an ablation that simplified a system</h5><p>A team removed the critic agent from a four-agent report generator. Task success fell from 81% to 80% (within the confidence interval), latency fell 35% and cost fell 30%. They kept the critic only for reports flagged as high-stakes.</p></div>
+<div class="box lab"><h5>Laptop lab: baseline vs coordinator on one machine <span class="tag cpu">Laptop · CPU · slow but workable</span></h5>
+<pre><code>import asyncio, ollama
+client = ollama.AsyncClient()
+DOCS = {"tickets": "...", "sales_notes": "...", "reviews": "..."}      # paste ~1-2k words each
+async def ask(prompt, model="qwen2.5:1.5b"):
+    r = await client.chat(model=model, messages=[{"role": "user", "content": prompt}], options={"temperature": 0})
+    return r.message.content
+
+async def parallel_workflow(q):                                         # decomposition in code
+    parts = await asyncio.gather(*[ask(f"From this {k} text, list onboarding complaints with quotes:\n{v}")
+                                   for k, v in DOCS.items()])
+    return await ask("Merge these findings into the top 5 themes, keep quotes:\n" + "\n---\n".join(parts))
+
+async def single_agent(q):
+    return await ask(q + "\n\n" + "\n\n".join(f"## {k}\n{v}" for k, v in DOCS.items()))
+
+q = "What are the top onboarding complaints?"
+print(asyncio.run(single_agent(q))); print(asyncio.run(parallel_workflow(q)))
+# Score both against a hand-written answer key of themes; repeat 3x; compare tokens and time.</code></pre>
+<p>On CPU, parallel calls queue behind each other in one Ollama instance (set <code>OLLAMA_NUM_PARALLEL</code> to allow concurrency; memory use rises), so wall-clock gains are smaller than with a hosted API. The quality and token comparison is still valid.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor compared one answerer, two workers plus a synthesiser, and a fixed hybrid pipeline on 120 paired tasks; the fixed pipeline matched quality at half the cost and shipped.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Comparing a well-resourced agent team with a deliberately weak single-agent baseline.</div></div>
+<div class="tools">
+<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for multi-agent systems</h3>
+<div class="cols3">
+<div class="card"><h5><a href="https://github.com/langchain-ai/langgraph">LangGraph</a></h5><span class="meta">supervisor · swarm · subgraphs</span><p>Multi-agent graphs with explicit state, checkpointing and human-in-the-loop interrupts.</p></div>
+<div class="card"><h5><a href="https://github.com/microsoft/agent-framework">Microsoft Agent Framework</a></h5><span class="meta">successor to AutoGen + Semantic Kernel</span><p>Python and .NET framework for agents and multi-agent workflows (1.0 released). AutoGen is being archived and its README directs new users here.</p></div>
+<div class="card"><h5><a href="https://docs.crewai.com/">CrewAI</a></h5><span class="meta">role-based crews · flows</span><p>Define agents with roles and tasks; "flows" add deterministic orchestration around crews.</p></div>
+<div class="card"><h5><a href="https://google.github.io/adk-docs/">Google ADK</a></h5><span class="meta">agent development kit</span><p>Code-first agents and multi-agent hierarchies, with evaluation tooling; model-agnostic.</p></div>
+<div class="card"><h5><a href="https://a2a-protocol.org/">A2A protocol</a></h5><span class="meta">agent interoperability</span><p>Open protocol (Linux Foundation project) for agent discovery and task exchange across frameworks and vendors.</p></div>
+<div class="card"><h5><a href="https://openai.github.io/openai-agents-python/">OpenAI Agents SDK</a></h5><span class="meta">handoffs · agents-as-tools</span><p>Simple handoff and agent-as-tool primitives with built-in tracing; good for learning the patterns.</p></div>
+</div></div>

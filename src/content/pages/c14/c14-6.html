@@ -1,0 +1,27 @@
+<div class="tw"><table>
+<tr><th>Engine</th><th>Strengths</th><th>Typical use</th></tr>
+<tr><td><a href="https://docs.vllm.ai/">vLLM</a></td><td>PagedAttention, continuous batching, prefix caching, broad model and quantisation support, OpenAI-compatible server, TP/PP/EP</td><td>Default open-source GPU serving engine</td></tr>
+<tr><td><a href="https://github.com/sgl-project/sglang">SGLang</a></td><td>RadixAttention prefix caching, fast structured output, strong performance on agent-style workloads</td><td>High-throughput serving, many shared prefixes</td></tr>
+<tr><td><a href="https://nvidia.github.io/TensorRT-LLM/">TensorRT-LLM</a></td><td>Compiled, heavily optimised kernels for NVIDIA GPUs; FP8/FP4</td><td>Maximum performance on NVIDIA hardware</td></tr>
+<tr><td><a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> / <a href="https://docs.ollama.com/">Ollama</a></td><td>CPU, Apple silicon and consumer GPUs; GGUF quantisation; simple</td><td>Laptops, edge, development</td></tr>
+<tr><td><a href="https://github.com/huggingface/text-generation-inference">TGI</a></td><td>Hugging Face serving engine</td><td>Now in maintenance mode; Hugging Face recommends vLLM/SGLang for new deployments (check its README)</td></tr>
+</table></div>
+<ul>
+<li><b>Packaging</b>: a container image with a pinned engine version, model weights pulled from an internal registry or object storage at start (or baked in for faster starts), configuration (TP size, max model length, memory fraction, quantisation) as versioned config, health and readiness endpoints.</li>
+<li><b>Cold start</b>: scheduling a GPU node (minutes if the cluster must scale), pulling the image (GBs), loading weights (tens of GB from storage), allocating KV cache, compiling CUDA graphs. Total can be several minutes, so autoscaling must anticipate demand.</li>
+<li><b>Warm-up</b>: send synthetic requests of typical shapes before marking ready, so first real users do not pay compilation and cache-allocation costs.</li>
+<li><b>Autoscaling signals</b>: GPU utilisation is a poor signal; use queue depth / waiting requests, KV-cache utilisation, and TTFT against SLO. Keep a minimum warm pool; scale down slowly.</li>
+<li><b>Readiness means a real answer</b>: mark a replica ready only after the model and tokenizer are loaded and a small validation inference succeeds, not when the port opens. Scale-to-zero saves money but conflicts with tight first-request latency targets.</li></ul>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="row2"><label for="asCold">Cold-start time (min) <input type="range" id="asCold" min="1" max="12" value="6"><span id="asColdO"></span></label>
+<label for="asMin">Minimum warm replicas <input type="range" id="asMin" min="1" max="6" value="2"><span id="asMinO"></span></label>
+<label for="asSig">Scale on <select id="asSig"><option value="queue" selected>queue depth (leading)</option><option value="util">GPU utilisation (lagging)</option></select></label></div>
+<canvas id="asCan" width="640" height="220"></canvas><div class="kpis" id="asK"></div></div></div>
+<figcaption><b>Autoscaling through a morning traffic ramp</b> (simulated). Grey = demand in replicas' worth of load; blue = ready replicas; amber = replicas still starting; red shading = periods where demand exceeds ready capacity (SLO violations). Long cold starts make reactive scaling miss the ramp; a larger warm pool or scheduled pre-scaling fixes it.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: run an OpenAI-compatible server locally <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>llama-server -m model-Q4_K_M.gguf --port 8080 -c 8192 --parallel 4     # 4 concurrent slots
+curl http://localhost:8080/health
+curl http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" \
+  -d '{"messages":[{"role":"user","content":"Say hello in five words."}],"max_tokens":20}'</code></pre>
+<p>Send 1, then 4, then 8 concurrent requests (e.g. with a small Python asyncio script) and watch per-request speed fall as slots share your CPU: the throughput–latency tradeoff of 14.7 in miniature.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A Harbor replica reports ready only after a real 20-token validation answer succeeds.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Scaling to zero while promising fast first responses.</div></div>

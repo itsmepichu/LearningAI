@@ -1,0 +1,18 @@
+<p><b>Cost per request</b> is misleading: retries, failed agent runs, abandoned conversations and escalations to humans all cost money without delivering value. <b>Cost per successful task</b> = total cost (model tokens, embeddings, retrieval infrastructure, tools, GPU time, human review) ÷ number of tasks that met the success definition (8.1). It ties engineering choices to business value and makes tradeoffs visible: a cheaper model with a lower success rate can cost more per success.</p>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="cols2">
+<div><b style="font-family:var(--f-display);font-size:.85rem">Option A</b>
+<label for="csA1">Cost per attempt ($) <input type="range" id="csA1" min="0.001" max="0.1" step="0.001" value="0.004"><span id="csA1O"></span></label>
+<label for="csA2">Success rate % <input type="range" id="csA2" min="20" max="100" value="62"><span id="csA2O"></span></label></div>
+<div><b style="font-family:var(--f-display);font-size:.85rem">Option B</b>
+<label for="csB1">Cost per attempt ($) <input type="range" id="csB1" min="0.001" max="0.1" step="0.001" value="0.011"><span id="csB1O"></span></label>
+<label for="csB2">Success rate % <input type="range" id="csB2" min="20" max="100" value="91"><span id="csB2O"></span></label></div></div>
+<label for="csH">Cost of a failure handled by a human ($) <input type="range" id="csH" min="0" max="20" step="0.5" value="4"><span id="csHO"></span></label>
+<div class="kpis" id="csK"></div></div></div>
+<figcaption><b>Cost per successful task</b>, including the human cost of failures. By default the "cheap" option A costs more per resolved task than B once escalations are counted.</figcaption></figure>
+<ul>
+<li><b>Capacity forecasting</b>: project the 15.1 chain forward with growth assumptions per tenant and feature; add known events (launches, onboarding of a large customer, seasonal peaks); compare to measured capacity per replica (15.10); order GPUs or raise provider quotas with lead time.</li>
+<li><b>Budget enforcement</b>: hard limits per request (max tokens), per task (agent budgets, 11.7), per user and tenant (daily spend in the gateway), and per feature (monthly). Alert at 50/80/100%; at the limit, degrade (smaller model) or block, depending on the tenant's contract.</li>
+</ul>
+<div class="box example"><h5>Example: attributing cost</h5><p>Monthly AI spend rises 40% with flat traffic. Cost attribution by feature and tenant (17.5) shows one tenant's integration calling the summarise endpoint on every page view. A per-tenant daily budget and a cache for identical documents cut that tenant's cost by 85%.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>If Harbor spends $10 on 100 tasks and 50 succeed, the figure reported is $0.20 per successful task, plus the support cost of fixing the 50 failures.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Optimising price per call while completion rate falls.</div></div>

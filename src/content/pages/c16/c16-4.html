@@ -1,0 +1,26 @@
+<p>Multi-tenant AI systems have many places where data from one customer can surface for another. Every store and every key needs a tenant dimension, set by the server from the authenticated identity.</p>
+<div class="tw"><table>
+<tr><th>Surface</th><th>Leak example</th><th>Isolation control</th></tr>
+<tr><td>Retrieval index</td><td>Missing tenant filter returns another tenant's chunks</td><td>Mandatory server-side tenant filter; per-tenant collections for sensitive tenants; isolation tests</td></tr>
+<tr><td>Agent memory</td><td>Memory search across all users</td><td>Memory keyed and filtered by tenant + user; no global memories from user content</td></tr>
+<tr><td>Caches</td><td>Semantic cache serves tenant A's answer to tenant B</td><td>Tenant and ACL scope in every cache key (15.4)</td></tr>
+<tr><td>Prefix / KV cache</td><td>Timing differences reveal another tenant's prompt prefix</td><td>Isolate prefix caches per tenant for sensitive workloads (check engine support)</td></tr>
+<tr><td>Logs &amp; traces</td><td>Support staff see all tenants' prompts</td><td>Tenant-scoped access to observability; redaction (17.6)</td></tr>
+<tr><td>Agent state / workflows</td><td>Task IDs guessable; resume another tenant's task</td><td>Unguessable IDs + ownership check on every load</td></tr>
+<tr><td>Fine-tuned models</td><td>Model trained on tenant A's data serves tenant B</td><td>Per-tenant adapters, or only train shared models on consented, de-identified data</td></tr>
+</table></div>
+<figure class="fig"><div class="stage">
+<div class="tw"><table class="heat" id="isoGrid"></table></div>
+<div class="legend"><span><i class="tok" style="background:var(--ok-soft)">✓</i> automated cross-tenant test passing</span><span><i class="tok" style="background:var(--bad-soft)">✕</i> failing</span><span><i class="tok" style="background:var(--sunk)">–</i> not applicable</span></div></div>
+<figcaption><b>An isolation test matrix</b> (example state). Each cell is an automated test in which tenant A's identity tries to reach tenant B's data through that surface. Run it in CI and continuously in production with synthetic tenants.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2" id="ckbF"></div>
+<div class="tw"><table id="ckbT"></table></div><div class="kpis" id="ckbK"></div></div></div>
+<figcaption><b>Cache-key builder.</b> Choose which fields go into the answer-cache key. Each scenario shows whether the cache would serve a wrong or leaked answer. The hit-rate estimate (illustrative multipliers per field, starting from 30%) shows the cost of safety: every field you add splits the cache. Tenant and access scope are never optional.</figcaption></figure>
+<div class="box example"><h5>Example: an automated isolation probe</h5>
+<pre><code>def test_retrieval_isolation(client_tenant_a, seed_tenant_b_doc):
+    secret = seed_tenant_b_doc(text="Project Kestrel budget is 4.2M")        # unique canary
+    r = client_tenant_a.ask("What is the Project Kestrel budget?")
+    assert "4.2M" not in r.answer
+    assert all(c.tenant == "A" for c in r.retrieved_chunks)              # checked from the trace</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s cache key includes tenant, access scope, prompt, model, prompt and index versions; a weekly probe tries to read a canary from another tenant.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Isolating vector collections but sharing logs, memories or answer caches.</div></div>
