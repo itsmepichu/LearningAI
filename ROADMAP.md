@@ -215,7 +215,7 @@ The course-wide place to drill questions, linked from the sidebar and the home p
 
 ### Phase 3 — Roll out projects and checks to every chapter
 
-*Progress: batch A (chapters 4–6) done. Remaining: chapters 7–18 and the capstone.*
+*Progress: batches A and B (chapters 4–9) done. Remaining: chapters 10–18 and the capstone.*
 
 - In practice, Failure to avoid and Try it notes for Online store, Bank and Travel on every remaining topic: chapters 4–18 and the capstone, about 400 notes in all.
 - A topic-fit rating for every topic.

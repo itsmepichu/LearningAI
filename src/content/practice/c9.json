@@ -2,43 +2,223 @@
  "c9-1": {
   "harbor": {
    "practice": "Harbor retrieves current expense limits at query time; a small fine-tune only fixed answer formatting.",
-   "failure": "Putting private facts into model weights and assuming deleting the source document removes them."
+   "failure": "Putting private facts into model weights and assuming deleting the source document removes them.",
+   "fit": "best",
+   "fitNote": "changing, permissioned policies are a knowledge problem",
+   "tryIt": "Classify five Harbor gaps as knowledge or behaviour: a new expense limit, the mandated answer format, an acronym the model misreads, a policy only some staff may see, and a tone complaint. Decide prompt, RAG or fine-tune for each."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "prices, stock and listings change daily",
+   "practice": "{company}'s listings, prices and stock change constantly, so {assistant} retrieves them at question time. A small fine-tune taught the reply style (short, friendly, order ID first) that prompting kept getting wrong.",
+   "failure": "Fine-tuning on the catalogue so the model “knows” products. Prices go stale the next day, and deleted listings cannot be removed from the weights.",
+   "tryIt": "List five facts {assistant} needs (price, stock, return window, size chart, delivery estimate) and five behaviours (tone, language, length, order ID first, escalation), and mark each as retrieval, tool or fine-tune."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "the topic's own example: weekly-changing policies plus a format fine-tune",
+   "practice": "The topic's example is a bank: {company} retrieves its weekly-changing policies with citations and role filters, and used a small fine-tune only for the mandated “Decision / Basis / Exceptions” format.",
+   "failure": "Putting customer-specific facts into a fine-tune. They cannot then be deleted on request.",
+   "tryIt": "Write the knowledge-versus-behaviour table for {company}'s dispute assistant using <code>policies.json</code> and <code>disputes.csv</code>."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "fares and disruptions change by the minute",
+   "practice": "Fares, seat availability and disruption notices are knowledge that changes by the minute, so they come from tools and retrieval. How {assistant} phrases a rebooking offer is behaviour, tuned separately.",
+   "failure": "Expecting a fine-tuned model to know today's disrupted flights.",
+   "tryIt": "Classify ten traveller questions (from <code>messages.json</code> and your own) as knowledge, served by retrieval or a tool, or behaviour, served by a prompt or fine-tune."
   }
  },
  "c9-2": {
   "harbor": {
    "practice": "Harbor keeps each reimbursement limit and its exception in the same chunk, with a parent link to the full section and the policy&#x27;s effective date as metadata.",
-   "failure": "Trying to fix poor PDF parsing by switching to a stronger answer model."
+   "failure": "Trying to fix poor PDF parsing by switching to a stronger answer model.",
+   "fit": "good",
+   "fitNote": "each limit stays in the same chunk as its exception",
+   "tryIt": "In the chunking figure, compare fixed-size 40-word chunks with paragraph-aware chunking and find a rule separated from its exception. Then chunk the texts in <code>policies.json</code> and check every limit stays with its exception."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "listings, size charts and policy pages chunk differently",
+   "practice": "{company}'s documents are short listings, long size charts and policy pages. Listings are indexed whole with attributes as metadata; size charts are split by table section with the product category in every chunk's header.",
+   "failure": "Chunking a size chart by fixed word count, which separates the size column from the measurements.",
+   "tryIt": "Write the chunk header (category › product › section) for three products in <code>products.csv</code>, and decide whether each listing needs chunking at all."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "policy chunks carry IDs, effective dates and audience",
+   "practice": "{company}'s policy chunks carry the policy ID, effective date, product and audience as metadata, and each chunk is prefixed with its section path, so “the limit is 1 lakh per day” is never ambiguous.",
+   "failure": "Indexing scanned policy PDFs with poor OCR and then blaming the answer model for wrong limits.",
+   "tryIt": "Chunk the texts in <code>policies.json</code> with a section-path header and effective date, and write the metadata record for one chunk."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "a fee and its exception must stay together",
+   "practice": "{company} chunks fare rules so a fee and its exception (“no changes within 4 hours”) stay in one chunk, with the fare family and product in the header.",
+   "failure": "Fixed-size chunks that split “changes allowed for a fee” from “not within 4 hours of departure”.",
+   "tryIt": "Chunk the saver-fare rules in <code>fare_rules.json</code> by hand into 15-word windows, find where a fixed size separates a rule from its exception, then re-chunk by sentence with a header."
   }
  },
  "c9-3": {
   "harbor": {
    "practice": "Harbor&#x27;s BM25 leg finds error codes like E-4012 and part numbers; the dense leg finds &quot;can&#x27;t get into my account&quot; → &quot;authentication recovery&quot;.",
-   "failure": "Assuming a vector database chooses a good embedding model for you; it only stores and searches vectors."
+   "failure": "Assuming a vector database chooses a good embedding model for you; it only stores and searches vectors.",
+   "fit": "good",
+   "fitNote": "error codes for BM25, paraphrases for dense search",
+   "tryIt": "Type “E-4012” and then “can't log in” into the BM25 figure and explain each result. Then run bm25s over <code>policies.json</code> with “PTO carry over”."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "SKUs, sizes and brand names are keyword territory",
+   "practice": "Shoppers type exact things: “UK 8”, a SKU, a brand name. BM25 finds those instantly; dense retrieval handles “shoes for a wedding” and Hinglish paraphrases. {company} runs both.",
+   "failure": "Relying on dense retrieval alone and missing exact SKU and size matches.",
+   "tryIt": "Index the titles in <code>products.csv</code> with bm25s and search “UK 8 sneakers” and one SKU; then repeat with a small embedding model and compare the top three results."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "references from SMS alerts versus paraphrased complaints",
+   "practice": "Customers quote transaction references and error codes from SMS alerts; BM25 finds those exactly, while dense retrieval matches “money cut but payment failed” to the failed-UPI policy.",
+   "failure": "Expecting an embedding model to match a 12-digit reference number.",
+   "tryIt": "Run BM25 and a multilingual embedding model over <code>policies.json</code> for the Hinglish “paise kat gaye payment fail” and for “UPI debit reversal”, and compare."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "airport codes and fare-family names are exact tokens",
+   "practice": "Airport codes, booking references and fare-family names are exact tokens for BM25; dense retrieval matches “can I shift my trip” to the change rules.",
+   "failure": "Lowercasing and stemming airport codes into common words in the keyword index.",
+   "tryIt": "Search <code>fare_rules.json</code> for “saver change fee” with BM25 and with embeddings, and for the exact phrase “48 hours”."
   }
  },
  "c9-4": {
   "harbor": {
    "practice": "Harbor measures its HNSW index against exact search (ANN recall) and, separately, against human relevance labels (retrieval quality).",
-   "failure": "Raising ANN recall to fix a representation that ranks the wrong passages close to the query."
+   "failure": "Raising ANN recall to fix a representation that ranks the wrong passages close to the query.",
+   "fit": "good",
+   "fitNote": "ANN recall measured separately from relevance",
+   "tryIt": "Run the HNSW figure five times and compare its distance computations with the 300 of brute force. Then compute memory for 2 million 768-dimension vectors in float32 (about 6.1 GB) and int8 (about 1.5 GB)."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "millions of listings need ANN and compression",
+   "practice": "{company} has millions of listing vectors, so search uses HNSW over int8 vectors and re-scores the top 200 with full precision. efSearch was tuned on real shopper queries against exact search.",
+   "failure": "Tuning efSearch on random vectors instead of real shopper queries.",
+   "tryIt": "Embed the 300 titles in <code>products.csv</code>, run exact and FAISS HNSW search for 20 queries, and measure HNSW's Recall@10 against exact search at two efSearch values."
+  },
+  "bank": {
+   "fit": "limited",
+   "practice": "{company}'s policy corpus is small (thousands of chunks), so exact search is fast enough and avoids explaining approximate results in audits.",
+   "failure": "Adding an ANN index to a small corpus and then having to justify its approximate results to auditors.",
+   "tryIt": "Time exact cosine search in NumPy over embeddings of <code>policies.json</code> and the dispute texts, and confirm it takes milliseconds."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "Fare rules are few; hotel descriptions are many. {company} uses ANN only for the hotel catalogue.",
+   "failure": "Using one ANN configuration for every collection regardless of its size.",
+   "tryIt": "Estimate memory for 1 million hotel-description vectors of 384 dimensions in float32 (about 1.5 GB), int8 and binary, using the figure's ratios."
   }
  },
  "c9-5": {
   "harbor": {
    "practice": "Harbor fetches 50 lexical + 50 dense candidates under the user&#x27;s ACL filter, fuses with RRF, reranks the top 30 and assembles 5 non-duplicate passages.",
-   "failure": "Adding raw BM25 and cosine scores together; their scales mean different things."
+   "failure": "Adding raw BM25 and cosine scores together; their scales mean different things.",
+   "fit": "best",
+   "fitNote": "ACL-filtered hybrid search with reranking",
+   "tryIt": "In the RRF figure, set k to 5 and then to 100 and watch doc-C and doc-F. Then write Harbor's pipeline as code with the ACL filter inside both searches, not after them."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "stock, pincode and category filters inside the search",
+   "practice": "{company} fuses BM25 and dense results with RRF, filters by stock, delivery pincode and category inside the search, and reranks the top 50 with a cross-encoder trained on clicks.",
+   "failure": "Post-filtering by stock after retrieving 20 results, leaving shoppers with two.",
+   "tryIt": "Fuse BM25 and dense rankings for “red cotton kurta under ₹1000” over <code>products.csv</code> with RRF (k = 60), applying the price filter before fusion and then after, and compare."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "product and role filters keep rules from mixing",
+   "practice": "{company} applies the customer's product and role filters inside retrieval, so a credit-card question never retrieves another product's dispute rules, then reranks and assembles cited clauses.",
+   "failure": "Adding raw BM25 and cosine scores to rank policy clauses. The scales mean different things.",
+   "tryIt": "Implement RRF over BM25 and dense lists for three queries over <code>policies.json</code>, and check whether the fused order beats each list by your own relevance judgement."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "fare-family filters prevent mixed-up fees",
+   "practice": "{assistant} filters fare rules by the booking's product and fare family inside search, so a saver-fare question cannot retrieve flex rules.",
+   "failure": "Retrieving across all fare families and letting the model pick, which mixes up change fees.",
+   "tryIt": "Add product and fare-family metadata to the entries in <code>fare_rules.json</code>, and write the filter a saver-fare flight booking should apply."
   }
  },
  "c9-6": {
   "harbor": {
    "practice": "&quot;Can my team claim this?&quot; makes Harbor resolve &quot;this&quot; from history, look up the user&#x27;s region and role, then retrieve both the base policy and the regional exception, or ask a clarifying question.",
-   "failure": "Citing a whole 80-page document when the answer depends on one clause."
+   "failure": "Citing a whole 80-page document when the answer depends on one clause.",
+   "fit": "good",
+   "fitNote": "resolving “this” from history before retrieval",
+   "tryIt": "Write the standalone rewrite for “Can my team claim this?” given a two-turn history. Then check citations in code: every cited ID must exist among the retrieved chunks."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "follow-up questions about the product in view",
+   "practice": "“Does it come in blue?” is rewritten with the product from the chat before retrieval. Comparison questions are decomposed per product, and answers cite listing and review IDs; if nothing supports an answer, {assistant} says the listing does not say.",
+   "failure": "Citing the whole listing page when the answer depends on one attribute line.",
+   "tryIt": "Write rewrites for three follow-up questions about one product in <code>products.csv</code>, plus an abstention message for an attribute the listing lacks."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "deadline questions need the transaction and the rule",
+   "practice": "{company}'s questions are often two-hop: “What is my dispute deadline?” needs the transaction's statement date, then the policy's 30-day rule. Each hop is cited, and a failed hop leads to abstention.",
+   "failure": "Answering a deadline from the policy alone, without the transaction's date, which gives a generic and possibly wrong date.",
+   "tryIt": "For a case in <code>disputes.csv</code>, write the two hops (transaction lookup, then policy lookup) and the cited answer; then remove the transaction and write the abstention."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "questions that span a booking and a rule",
+   "practice": "“Can I get a refund if my flight is cancelled for fog?” needs the booking's fare family, then the weather-disruption rule. {assistant} decomposes it, retrieves both and cites them.",
+   "failure": "Answering from the general weather rule without checking the booking's fare family.",
+   "tryIt": "Decompose that question into hops over <code>bookings.csv</code> and <code>fare_rules.json</code>, then write the cited answer and the abstain path if the booking is not found."
   }
  },
  "c9-7": {
   "harbor": {
    "practice": "Harbor reports Recall@10 on 300 pooled, labelled real queries per release, with per-query diffs for anything that regressed.",
-   "failure": "Reading retrieval metrics as answer quality; they do not measure whether the answer was supported."
+   "failure": "Reading retrieval metrics as answer quality; they do not measure whether the answer was supported.",
+   "fit": "good",
+   "fitNote": "Recall@10 on 300 pooled, labelled real queries",
+   "tryIt": "In the metrics figure, mark rank 1 as grade 3 and watch MRR and nDCG rise while Recall@k stays the same. Then label five queries over <code>policies.json</code> and compute Recall@10."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "plentiful shopper queries give cheap pooled labels",
+   "practice": "{company} labels retrieval with pooled results from BM25, dense and hybrid for 300 real shopper queries, and tracks Recall@10 and nDCG@10 per language and query type (SKU, attribute, vague).",
+   "failure": "Labelling only the old retriever's results, which penalises a new retriever for finding different good results.",
+   "tryIt": "Pool the top 5 from BM25 and dense for 10 queries over <code>products.csv</code>, label relevance 0–3 yourself, and compute Recall@5 and nDCG@5 for each retriever with both gain conventions."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "only the first cited clause usually gets read",
+   "practice": "{company} reports MRR for policy questions, because customers and agents read the first cited clause and rarely look further.",
+   "failure": "Reporting Recall@20 when only the first two passages ever reach the letter.",
+   "tryIt": "Label the relevant policy for ten dispute questions from <code>disputes.csv</code> and compute MRR for BM25 over <code>policies.json</code>."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "one right rule per question, graded relevance for hotels",
+   "practice": "{company}'s fare-rule queries have one right rule each, so Recall@3 and MRR are the main numbers; hotel search uses graded nDCG.",
+   "failure": "Reporting graded nDCG without stating the gain convention, so two teams' numbers cannot be compared.",
+   "tryIt": "Compute nDCG@3 with linear and exponential gains for one hotel query using relevance grades you assign, and note the difference."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use <code>policies.json</code> as the corpus (tenant labels from <code>access_groups</code>) and write queries from <code>tickets.csv</code>. Include exact identifiers (error codes, order IDs) and paraphrases, and check that outdated revisions are not counted as relevant.</p>"
+  },
+  "store": {
+   "scenario": "<p>Use the listings in <code>products.csv</code> as documents. Queries include SKUs, sizes (“UK 8”), brand names, vague requests and Hinglish questions; report metrics per query type.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use <code>policies.json</code> plus 20 short product documents you write. Turn dispute texts from <code>disputes.csv</code> into queries, including Hinglish ones, and report MRR alongside Recall@k.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use <code>fare_rules.json</code> plus 30 short hotel descriptions you write. Queries come from <code>messages.json</code> and change or refund questions; each fare-rule query has exactly one relevant rule.</p>"
   }
  }
 }

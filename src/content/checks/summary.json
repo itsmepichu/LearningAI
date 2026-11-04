@@ -1,7 +1,7 @@
 {
  "totals": {
-  "mcq": 417,
-  "interview": 304
+  "mcq": 629,
+  "interview": 480
  },
  "chapters": {
   "c1": {
@@ -193,48 +193,108 @@
    }
   },
   "c7": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 70,
+   "interview": 56,
    "sections": {
     "c7-7": {
-     "mcq": 2,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c7-6": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c7-1": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c7-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c7-3": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c7-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c7-5": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
   "c8": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 81,
+   "interview": 64,
    "sections": {
     "c8-7": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 11,
+     "interview": 8
     },
     "c8-8": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c8-3": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c8-1": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c8-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c8-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c8-5": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c8-6": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
   "c9": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 70,
+   "interview": 56,
    "sections": {
     "c9-3": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c9-5": {
-     "mcq": 2,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c9-1": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c9-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c9-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c9-6": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c9-7": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
