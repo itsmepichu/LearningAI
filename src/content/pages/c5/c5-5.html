@@ -19,4 +19,4 @@ probs = torch.softmax(logits, -1); top = torch.topk(probs, 8)
 for p, i in zip(top.values, top.indices): print(f"{p:.3f}  {tok.decode(i)!r}")
 out = model.generate(ids, max_new_tokens=12, do_sample=False)  # greedy autoregressive loop
 print(tok.decode(out[0]))</code></pre></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor streams answers token by token; its UI shows the first words after about 0.7 s even though the full answer takes 4 s.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Reading a high next-token probability as evidence that the whole sentence is factually correct.</div></div>
+<div data-slot="practice"></div>

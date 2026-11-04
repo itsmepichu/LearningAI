@@ -1,0 +1,44 @@
+{
+ "c7-1": {
+  "harbor": {
+   "practice": "Harbor runs the same 150-case suite against three hosted models and one self-hosted 8B model each quarter and picks the cheapest one that meets the bar for each feature.",
+   "failure": "Choosing from a public leaderboard or an advertised context length instead of your own task evidence."
+  }
+ },
+ "c7-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s answer prompt is file answer@v12 in the repository; its changelog links each change to the evaluation case that motivated it.",
+   "failure": "Adding more and more instructions without re-running the regression suite; new rules often conflict with old ones."
+  }
+ },
+ "c7-3": {
+  "harbor": {
+   "practice": "Harbor assembles context in priority order (instructions, tools, account facts, top reranked passages with dates and IDs, summary, last turns) and stops at 60% of the window.",
+   "failure": "Compressing context and losing the exception clause or effective date that the answer depends on."
+  }
+ },
+ "c7-4": {
+  "harbor": {
+   "practice": "Harbor&#x27;s create_ticket tool takes category and summary from the model but derives the customer ID from the authenticated session, never from model output.",
+   "failure": "Executing a tool just because its arguments passed JSON schema validation."
+  }
+ },
+ "c7-5": {
+  "harbor": {
+   "practice": "Harbor stores the full transcript in Postgres, keeps a running summary plus extracted facts (account plan, region) in context, and lets users see and delete remembered preferences.",
+   "failure": "Using a conversation ID as authorisation to read that conversation&#x27;s state."
+  }
+ },
+ "c7-6": {
+  "harbor": {
+   "practice": "Harbor retries a failed retrieval once within the remaining deadline; if generation capacity is exhausted it returns cited search excerpts instead of retrying indefinitely.",
+   "failure": "Retrying without a retry budget or admission control, which turns a slowdown into an outage."
+  }
+ },
+ "c7-7": {
+  "harbor": {
+   "practice": "Harbor drafts the refund explanation, but code computes eligibility and amount from the order record and the refund API enforces the cap.",
+   "failure": "Reporting success because the model said &quot;done&quot; when the database write actually failed."
+  }
+ }
+}

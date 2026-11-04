@@ -38,4 +38,4 @@ for call in r.message.tool_calls or []:
 for chunk in ollama.chat(model="qwen2.5:1.5b", messages=msg, stream=True):
     print(chunk.message.content, end="", flush=True)</code></pre>
 <p>Small models make more tool-call mistakes (wrong arguments, calling when not needed). That is useful: you will see the failure modes your validation must handle.</p></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s create_ticket tool takes category and summary from the model but derives the customer ID from the authenticated session, never from model output.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Executing a tool just because its arguments passed JSON schema validation.</div></div>
+<div data-slot="practice"></div>

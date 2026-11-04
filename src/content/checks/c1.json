@@ -1,0 +1,56 @@
+{
+ "c1-6": {
+  "mcq": [
+   {
+    "id": "c1-6-m01",
+    "q": "A support team wants to check that every purchase order has a valid PO number. What fits best?",
+    "options": [
+     "An LLM with few-shot examples",
+     "A deterministic rule",
+     "A fine-tuned classifier",
+     "An agent with tools"
+    ],
+    "answer": 1,
+    "why": "The logic is explicit and must be exact, so a rule is cheaper, auditable and correct every time.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c1-3": {
+  "mcq": [
+   {
+    "id": "c1-3-m01",
+    "q": "Why can an LLM state a wrong invoice due date fluently?",
+    "options": [
+     "It looked it up in a stale database",
+     "It predicts a likely continuation, which need not be true",
+     "Its temperature was too low",
+     "Its context window was too small"
+    ],
+    "answer": 1,
+    "why": "Generation picks plausible tokens; without the invoice in context, a plausible date is still the likely continuation.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c1-4": {
+  "mcq": [
+   {
+    "id": "c1-4-m01",
+    "q": "What changes the model's weights?",
+    "options": [
+     "A long conversation",
+     "A better system prompt",
+     "Training or fine-tuning",
+     "Retrieval"
+    ],
+    "answer": 2,
+    "why": "Only training updates parameters. Prompts, chats and retrieved text change the input only.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

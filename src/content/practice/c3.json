@@ -1,0 +1,38 @@
+{
+ "c3-1": {
+  "harbor": {
+   "practice": "Harbor uses supervised learning to route tickets, unsupervised clustering to discover new complaint themes, and never uses reinforcement learning against live customer accounts: any reward-driven tuning happens in a sandbox.",
+   "failure": "Calling a multi-step LLM agent &quot;reinforcement learning&quot;: nothing is learning from reward unless weights are actually updated from a reward signal."
+  }
+ },
+ "c3-2": {
+  "harbor": {
+   "practice": "Before any LLM routing, Harbor&#x27;s team trained a TF-IDF + logistic-regression router (91% accuracy) against a majority-class baseline (62%). That baseline is still the number every new router must beat.",
+   "failure": "Comparing a tuned model on validation data with a baseline measured on a different test set."
+  }
+ },
+ "c3-3": {
+  "harbor": {
+   "practice": "Only 2% of Harbor tickets are security incidents. The router uses class weights and a threshold tuned for 95% recall on that class, and its evaluation set keeps the real 2% prevalence.",
+   "failure": "Oversampling before splitting, which puts copies of the same example in both train and test."
+  }
+ },
+ "c3-4": {
+  "harbor": {
+   "practice": "Harbor splits ticket data by customer account and by time, because the same customer reuses templates and a random split let the model memorise them.",
+   "failure": "Repeatedly checking the test set and adjusting the model: the test set quietly becomes validation data."
+  }
+ },
+ "c3-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s escalation classifier must keep precision ≥ 80% (human reviewers have limited capacity) while maximising recall; F1 is reported but not used to pick the threshold.",
+   "failure": "Optimising F1 by habit when the product actually needs a minimum precision or a strict missed-case limit."
+  }
+ },
+ "c3-6": {
+  "harbor": {
+   "practice": "When Harbor launched in-app chat, short chat messages dropped router accuracy by 9 points. Slicing errors by channel found it within a day, and 600 labelled chat examples fixed it.",
+   "failure": "Treating input drift as proof that accuracy fell; it is a reason to measure, not a verdict."
+  }
+ }
+}

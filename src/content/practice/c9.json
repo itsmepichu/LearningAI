@@ -1,0 +1,44 @@
+{
+ "c9-1": {
+  "harbor": {
+   "practice": "Harbor retrieves current expense limits at query time; a small fine-tune only fixed answer formatting.",
+   "failure": "Putting private facts into model weights and assuming deleting the source document removes them."
+  }
+ },
+ "c9-2": {
+  "harbor": {
+   "practice": "Harbor keeps each reimbursement limit and its exception in the same chunk, with a parent link to the full section and the policy&#x27;s effective date as metadata.",
+   "failure": "Trying to fix poor PDF parsing by switching to a stronger answer model."
+  }
+ },
+ "c9-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s BM25 leg finds error codes like E-4012 and part numbers; the dense leg finds &quot;can&#x27;t get into my account&quot; → &quot;authentication recovery&quot;.",
+   "failure": "Assuming a vector database chooses a good embedding model for you; it only stores and searches vectors."
+  }
+ },
+ "c9-4": {
+  "harbor": {
+   "practice": "Harbor measures its HNSW index against exact search (ANN recall) and, separately, against human relevance labels (retrieval quality).",
+   "failure": "Raising ANN recall to fix a representation that ranks the wrong passages close to the query."
+  }
+ },
+ "c9-5": {
+  "harbor": {
+   "practice": "Harbor fetches 50 lexical + 50 dense candidates under the user&#x27;s ACL filter, fuses with RRF, reranks the top 30 and assembles 5 non-duplicate passages.",
+   "failure": "Adding raw BM25 and cosine scores together; their scales mean different things."
+  }
+ },
+ "c9-6": {
+  "harbor": {
+   "practice": "&quot;Can my team claim this?&quot; makes Harbor resolve &quot;this&quot; from history, look up the user&#x27;s region and role, then retrieve both the base policy and the regional exception, or ask a clarifying question.",
+   "failure": "Citing a whole 80-page document when the answer depends on one clause."
+  }
+ },
+ "c9-7": {
+  "harbor": {
+   "practice": "Harbor reports Recall@10 on 300 pooled, labelled real queries per release, with per-query diffs for anything that regressed.",
+   "failure": "Reading retrieval metrics as answer quality; they do not measure whether the answer was supported."
+  }
+ }
+}

@@ -12,7 +12,7 @@
 <g id="colbertViz"></g></g>
 </svg></div><figcaption><b>Late interaction (MaxSim), animated.</b> Each query token finds its best-matching document token (highlighted line); the document's score is the sum of those maxima. Precise tokens like "E-4012" must find an exact counterpart, which a single averaged vector can lose.</figcaption></figure>
 <div class="box example"><h5>Example: evaluation-driven adoption</h5><p>A team considering GraphRAG labels 300 real queries by type and finds only 6% are multi-hop. On those, GraphRAG improves accuracy from 41% to 63%, but query-decomposition (9.6) with the existing index reaches 58% at a fraction of the cost. They adopt decomposition and revisit graphs if multi-hop traffic grows.</p></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Only 6% of Harbor queries were multi-hop; query decomposition fixed most of them, so a knowledge graph was deferred.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Adopting an advanced retrieval technique because of its name, without a failure analysis showing the gap.</div></div>
+<div data-slot="practice"></div>
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for RAG at scale</h3>
 <div class="cols3">

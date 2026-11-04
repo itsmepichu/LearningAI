@@ -4,11 +4,14 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/content-summary.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/content-summary.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "import:legacy": "python3 scripts/import_legacy.py",
+    "check:content": "node scripts/content-summary.mjs",
+    "datasets": "python3 scripts/make_datasets.py",
     "test:e2e": "node tests/e2e.cjs"
   },
   "dependencies": {

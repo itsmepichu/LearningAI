@@ -1,0 +1,406 @@
+[
+ {
+  "id": "HP-001",
+  "title": "Annual leave",
+  "team": "People",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2026-02-11",
+  "current": true,
+  "text": "Employees receive 25 days of annual leave per calendar year. Up to 5 unused days carry over to March 31 of the next year. Leave of more than 10 consecutive working days needs manager approval 30 days in advance."
+ },
+ {
+  "id": "HP-002",
+  "title": "Parental leave",
+  "team": "People",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2025-10-22",
+  "current": true,
+  "text": "Birth and adoptive parents receive 26 weeks of paid parental leave, taken in up to three blocks within 18 months. Notify People Operations at least 8 weeks before the first block."
+ },
+ {
+  "id": "HP-003",
+  "title": "Expense limits for client dinners",
+  "team": "Finance",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2024-08-16",
+  "current": true,
+  "text": "Client dinners are reimbursed up to 4,000 rupees per attendee including tax. Alcohol is reimbursed only when a client is present. Submit itemised receipts within 30 days."
+ },
+ {
+  "id": "HP-004",
+  "title": "Travel booking",
+  "team": "Finance",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2024-12-10",
+  "current": true,
+  "text": "Book flights through the travel portal at least 14 days ahead where possible. Economy class applies to flights under 6 hours. Hotel nightly caps depend on city tier and are listed in the portal."
+ },
+ {
+  "id": "HP-005",
+  "title": "Laptop security",
+  "team": "Security",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2025-01-28",
+  "current": true,
+  "text": "Company laptops must use full-disk encryption, automatic screen lock after 5 minutes and the managed endpoint agent. Report a lost device to the security desk within 1 hour."
+ },
+ {
+  "id": "HP-006",
+  "title": "Incident severity levels",
+  "team": "Security",
+  "access_groups": [
+   "engineering",
+   "security"
+  ],
+  "updated": "2025-06-08",
+  "current": true,
+  "text": "SEV1: customer data exposed or the platform unavailable for all customers. SEV2: a major feature unavailable or data at risk for one customer. SEV3: degraded performance with a workaround."
+ },
+ {
+  "id": "HP-007",
+  "title": "Production access",
+  "team": "Security",
+  "access_groups": [
+   "engineering"
+  ],
+  "updated": "2025-09-11",
+  "current": true,
+  "text": "Production access is granted just in time for up to 4 hours, through the access portal, with a linked ticket. Standing production access is not permitted for any role."
+ },
+ {
+  "id": "HP-008",
+  "title": "Customer data retention",
+  "team": "Legal",
+  "access_groups": [
+   "legal",
+   "engineering",
+   "support"
+  ],
+  "updated": "2024-02-04",
+  "current": true,
+  "text": "Customer content is deleted 30 days after contract end unless a legal hold applies. Backups expire after 35 days. Deletion certificates are issued on request."
+ },
+ {
+  "id": "HP-009",
+  "title": "Refund policy for annual plans",
+  "team": "Billing",
+  "access_groups": [
+   "support",
+   "finance"
+  ],
+  "updated": "2024-09-04",
+  "current": true,
+  "text": "Annual plans can be refunded pro rata within the first 60 days. After 60 days, refunds need a director's approval and are given as account credit, not cash."
+ },
+ {
+  "id": "HP-010",
+  "title": "Service credits",
+  "team": "Billing",
+  "access_groups": [
+   "support",
+   "finance"
+  ],
+  "updated": "2025-02-14",
+  "current": true,
+  "text": "If monthly availability falls below 99.9%, customers receive a service credit: 10% of the monthly fee below 99.9%, 25% below 99.0%. Credits must be requested within 30 days."
+ },
+ {
+  "id": "HP-011",
+  "title": "Data export",
+  "team": "Product",
+  "access_groups": [
+   "all-staff",
+   "support"
+  ],
+  "updated": "2024-01-21",
+  "current": true,
+  "text": "Admins can export workspace data as JSON or CSV from Settings, Data, Export. Exports over 5 GB are delivered as a download link that expires after 7 days."
+ },
+ {
+  "id": "HP-012",
+  "title": "Single sign-on setup",
+  "team": "Product",
+  "access_groups": [
+   "support",
+   "engineering"
+  ],
+  "updated": "2025-11-09",
+  "current": true,
+  "text": "Workspaces on the Business plan can enable SAML single sign-on. After enabling it, password login is disabled for all members except two break-glass admins."
+ },
+ {
+  "id": "HP-013",
+  "title": "API rate limits",
+  "team": "Product",
+  "access_groups": [
+   "support",
+   "engineering"
+  ],
+  "updated": "2026-06-15",
+  "current": true,
+  "text": "The public API allows 600 requests per minute per workspace and 60 per minute per token. Responses over the limit return HTTP 429 with a Retry-After header."
+ },
+ {
+  "id": "HP-014",
+  "title": "Audit log",
+  "team": "Product",
+  "access_groups": [
+   "support",
+   "engineering",
+   "security"
+  ],
+  "updated": "2025-07-22",
+  "current": true,
+  "text": "The audit log records sign-ins, permission changes, exports and API token creation. Entries are kept for 400 days and can be streamed to a customer's own storage."
+ },
+ {
+  "id": "HP-015",
+  "title": "Salary bands",
+  "team": "People",
+  "access_groups": [
+   "people-ops",
+   "leadership"
+  ],
+  "updated": "2025-09-06",
+  "current": true,
+  "text": "Salary bands are reviewed every April. Band documents are restricted to People Operations and leadership and must not be shared with other staff."
+ },
+ {
+  "id": "HP-016",
+  "title": "Reorganisation plan (draft)",
+  "team": "Leadership",
+  "access_groups": [
+   "leadership"
+  ],
+  "updated": "2026-04-28",
+  "current": true,
+  "text": "Draft plan for the next financial year. Restricted to the leadership group until it is announced."
+ },
+ {
+  "id": "HP-017",
+  "title": "Annual leave (revision 2)",
+  "team": "People",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2025-12-24",
+  "current": false,
+  "text": "Employees receive 25 days of annual leave per calendar year. Up to 5 unused days carry over to March 31 of the next year. Leave of more than 10 consecutive working days needs manager approval 30 days in advance."
+ },
+ {
+  "id": "HP-018",
+  "title": "Expense limits for client dinners (revision 2)",
+  "team": "Finance",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2025-04-18",
+  "current": false,
+  "text": "Client dinners are reimbursed up to 4,000 rupees per attendee including tax. Alcohol is reimbursed only when a client is present. Submit itemised receipts within 30 days."
+ },
+ {
+  "id": "HP-019",
+  "title": "Travel booking (revision 2)",
+  "team": "Finance",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2024-06-27",
+  "current": false,
+  "text": "Book flights through the travel portal at least 14 days ahead where possible. Economy class applies to flights under 6 hours. Hotel nightly caps depend on city tier and are listed in the portal."
+ },
+ {
+  "id": "HP-020",
+  "title": "Laptop security (revision 2)",
+  "team": "Security",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2025-05-11",
+  "current": false,
+  "text": "Company laptops must use full-disk encryption, automatic screen lock after 5 minutes and the managed endpoint agent. Report a lost device to the security desk within 1 hour."
+ },
+ {
+  "id": "HP-021",
+  "title": "Incident severity levels (revision 2)",
+  "team": "Security",
+  "access_groups": [
+   "engineering",
+   "security"
+  ],
+  "updated": "2026-05-19",
+  "current": false,
+  "text": "SEV1: customer data exposed or the platform unavailable for all customers. SEV2: a major feature unavailable or data at risk for one customer. SEV3: degraded performance with a workaround."
+ },
+ {
+  "id": "HP-022",
+  "title": "Production access (revision 2)",
+  "team": "Security",
+  "access_groups": [
+   "engineering"
+  ],
+  "updated": "2026-06-10",
+  "current": false,
+  "text": "Production access is granted just in time for up to 4 hours, through the access portal, with a linked ticket. Standing production access is not permitted for any role."
+ },
+ {
+  "id": "HP-023",
+  "title": "Single sign-on setup (revision 2)",
+  "team": "Product",
+  "access_groups": [
+   "support",
+   "engineering"
+  ],
+  "updated": "2024-12-07",
+  "current": false,
+  "text": "Workspaces on the Business plan can enable SAML single sign-on. After enabling it, password login is disabled for all members except two break-glass admins."
+ },
+ {
+  "id": "HP-024",
+  "title": "Audit log (revision 2)",
+  "team": "Product",
+  "access_groups": [
+   "support",
+   "engineering",
+   "security"
+  ],
+  "updated": "2026-05-05",
+  "current": false,
+  "text": "The audit log records sign-ins, permission changes, exports and API token creation. Entries are kept for 400 days and can be streamed to a customer's own storage."
+ },
+ {
+  "id": "HP-025",
+  "title": "Parental leave (revision 3)",
+  "team": "People",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2024-07-18",
+  "current": false,
+  "text": "Birth and adoptive parents receive 26 weeks of paid parental leave, taken in up to three blocks within 18 months. Notify People Operations at least 8 weeks before the first block."
+ },
+ {
+  "id": "HP-026",
+  "title": "Expense limits for client dinners (revision 3)",
+  "team": "Finance",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2026-02-18",
+  "current": false,
+  "text": "Client dinners are reimbursed up to 4,000 rupees per attendee including tax. Alcohol is reimbursed only when a client is present. Submit itemised receipts within 45 days."
+ },
+ {
+  "id": "HP-027",
+  "title": "Production access (revision 3)",
+  "team": "Security",
+  "access_groups": [
+   "engineering"
+  ],
+  "updated": "2025-07-13",
+  "current": false,
+  "text": "Production access is granted just in time for up to 4 hours, through the access portal, with a linked ticket. Standing production access is not permitted for any role."
+ },
+ {
+  "id": "HP-028",
+  "title": "Salary bands (revision 3)",
+  "team": "People",
+  "access_groups": [
+   "people-ops",
+   "leadership"
+  ],
+  "updated": "2026-04-20",
+  "current": false,
+  "text": "Salary bands are reviewed every April. Band documents are restricted to People Operations and leadership and must not be shared with other staff."
+ },
+ {
+  "id": "HP-029",
+  "title": "Reorganisation plan (draft) (revision 3)",
+  "team": "Leadership",
+  "access_groups": [
+   "leadership"
+  ],
+  "updated": "2026-04-02",
+  "current": false,
+  "text": "Draft plan for the next financial year. Restricted to the leadership group until it is announced."
+ },
+ {
+  "id": "HP-030",
+  "title": "Annual leave (revision 4)",
+  "team": "People",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2025-07-07",
+  "current": false,
+  "text": "Employees receive 25 days of annual leave per calendar year. Up to 5 unused days carry over to March 31 of the next year. Leave of more than 10 consecutive working days needs manager approval 30 days in advance."
+ },
+ {
+  "id": "HP-031",
+  "title": "Travel booking (revision 4)",
+  "team": "Finance",
+  "access_groups": [
+   "all-staff"
+  ],
+  "updated": "2026-03-21",
+  "current": false,
+  "text": "Book flights through the travel portal at least 14 days ahead where possible. Economy class applies to flights under 6 hours. Hotel nightly caps depend on city tier and are listed in the portal."
+ },
+ {
+  "id": "HP-032",
+  "title": "Service credits (revision 4)",
+  "team": "Billing",
+  "access_groups": [
+   "support",
+   "finance"
+  ],
+  "updated": "2026-01-21",
+  "current": false,
+  "text": "If monthly availability falls below 99.9%, customers receive a service credit: 10% of the monthly fee below 99.9%, 25% below 99.0%. Credits must be requested within 30 days."
+ },
+ {
+  "id": "HP-033",
+  "title": "Data export (revision 4)",
+  "team": "Product",
+  "access_groups": [
+   "all-staff",
+   "support"
+  ],
+  "updated": "2026-06-02",
+  "current": false,
+  "text": "Admins can export workspace data as JSON or CSV from Settings, Data, Export. Exports over 5 GB are delivered as a download link that expires after 7 days."
+ },
+ {
+  "id": "HP-034",
+  "title": "Single sign-on setup (revision 4)",
+  "team": "Product",
+  "access_groups": [
+   "support",
+   "engineering"
+  ],
+  "updated": "2024-10-05",
+  "current": false,
+  "text": "Workspaces on the Business plan can enable SAML single sign-on. After enabling it, password login is disabled for all members except two break-glass admins."
+ },
+ {
+  "id": "HP-035",
+  "title": "Reorganisation plan (draft) (revision 4)",
+  "team": "Leadership",
+  "access_groups": [
+   "leadership"
+  ],
+  "updated": "2025-01-25",
+  "current": false,
+  "text": "Draft plan for the next financial year. Restricted to the leadership group until it is announced."
+ }
+]

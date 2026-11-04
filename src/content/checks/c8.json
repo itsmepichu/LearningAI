@@ -1,0 +1,56 @@
+{
+ "c8-7": {
+  "mcq": [
+   {
+    "id": "c8-7-m01",
+    "q": "Model A passes 82%, B 86% on 100 cases. The right next step is…",
+    "options": [
+     "Ship B",
+     "Compute confidence intervals or a paired test",
+     "Add more few-shot examples",
+     "Switch judges"
+    ],
+    "answer": 1,
+    "why": "At n = 100 the difference is within noise; measure uncertainty, preferably paired on the same cases.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c8-8": {
+  "mcq": [
+   {
+    "id": "c8-8-m01",
+    "q": "An agent succeeds 80% per run. pass^5 (succeeds in all 5 runs) is about…",
+    "options": [
+     "99.97%",
+     "80%",
+     "33%",
+     "5%"
+    ],
+    "answer": 2,
+    "why": "0.8⁵ ≈ 0.33; pass@5 would be about 99.97%.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c8-3": {
+  "mcq": [
+   {
+    "id": "c8-3-m01",
+    "q": "Raw agreement with humans is 87.5% but κ is 0.48. This means…",
+    "options": [
+     "The judge is excellent",
+     "Much of the agreement is due to chance or class imbalance",
+     "κ is wrong",
+     "More data is impossible"
+    ],
+    "answer": 1,
+    "why": "κ corrects for chance; with imbalanced labels a lazy judge can agree often while knowing little.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

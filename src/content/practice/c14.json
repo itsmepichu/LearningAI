@@ -1,0 +1,50 @@
+{
+ "c14-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s 8B FP8 model uses 8 GB of weights on an 80 GB GPU, leaving about 64 GB for KV cache: roughly 60 concurrent 8k-token conversations.",
+   "failure": "Assuming the model&#x27;s maximum context is affordable at the target concurrency."
+  }
+ },
+ "c14-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s long-document summaries (20k-token prompts) are prefill-heavy; its email drafts (short prompts, 800-token outputs) are decode-heavy, and they are monitored separately.",
+   "failure": "Dividing total tokens by total time, which hides whether the wait happened before or during generation."
+  }
+ },
+ "c14-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s 6,000-token system prompt and tool list hit the prefix cache on most requests, cutting median first-token time by about 70%.",
+   "failure": "Assuming prefix caching removes decode cost or is automatically safe across tenants."
+  }
+ },
+ "c14-4": {
+  "harbor": {
+   "practice": "Harbor tested 4-bit weights on its extraction suite and rejected them: two missed decimal places per 1,000 invoices was too many; FP8 passed.",
+   "failure": "Assuming &quot;4-bit&quot; means exactly 0.5 bytes per parameter; scales and other tensors add more."
+  }
+ },
+ "c14-5": {
+  "harbor": {
+   "practice": "Harbor runs its 70B model as two TP=4 units; losing one GPU takes one unit out while the other keeps serving.",
+   "failure": "Counting each GPU in a tensor-parallel group as an independent server."
+  }
+ },
+ "c14-6": {
+  "harbor": {
+   "practice": "A Harbor replica reports ready only after a real 20-token validation answer succeeds.",
+   "failure": "Scaling to zero while promising fast first responses."
+  }
+ },
+ "c14-7": {
+  "harbor": {
+   "practice": "Harbor caps 100k-token requests to a separate long-context pool so they cannot crowd out short chats.",
+   "failure": "Running production at the throughput maximum near saturation, where tail latency explodes."
+  }
+ },
+ "c14-8": {
+  "harbor": {
+   "practice": "Harbor&#x27;s cost review compares $ per resolved question, not $ per token, for hosted and self-hosted options at the same quality bar.",
+   "failure": "Calling a cheap token cheap when the task needs many calls or human fixes."
+  }
+ }
+}

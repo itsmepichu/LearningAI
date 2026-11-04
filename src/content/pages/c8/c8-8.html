@@ -15,7 +15,7 @@
 <svg id="pkSvg" viewBox="0 0 620 220"></svg><div class="kpis" id="pkKp"></div></div></div>
 <figcaption><b>pass@k vs pass^k, computed.</b> pass@k = 1 − (1 − p)ᵏ (at least one success in k independent runs) rises towards 100%; pass^k = pᵏ (all k succeed) falls. A workflow that runs every day needs the second number, and it collapses quickly unless p is very close to 1.</figcaption></figure>
 <div class="box example"><h5>Example: pass@k vs pass^k</h5><p>An agent succeeds 80% of the time per run, independently. pass@5 = 1 − 0.2⁵ ≈ 99.97%, which looks great. pass^5 = 0.8⁵ ≈ 33%, which shows that in a workflow run five times a day, a failure almost every day is likely. Production readiness depends on the second number.</p></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A Harbor ticket agent passes a case only if exactly one ticket exists in the right tenant with the right fields, no forbidden data was read, and the user got the real ticket ID.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Requiring one golden tool sequence and rejecting a different valid, cheaper path.</div></div>
+<div data-slot="practice"></div>
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for evaluation</h3>
 <div class="cols3">

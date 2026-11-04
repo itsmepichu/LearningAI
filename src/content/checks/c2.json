@@ -1,0 +1,56 @@
+{
+ "c2-1": {
+  "mcq": [
+   {
+    "id": "c2-1-m01",
+    "q": "Two vectors point the same way but one is twice as long. Which is unchanged?",
+    "options": [
+     "Dot product",
+     "Euclidean distance",
+     "Cosine similarity",
+     "Both norms"
+    ],
+    "answer": 2,
+    "why": "Cosine normalises by length, so scaling one vector leaves it unchanged.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c2-2": {
+  "mcq": [
+   {
+    "id": "c2-2-m01",
+    "q": "A detector has 95% recall and 1% false positives; the condition occurs in 0.1% of cases. Most alerts are…",
+    "options": [
+     "true positives",
+     "false positives",
+     "impossible to estimate",
+     "exactly half true"
+    ],
+    "answer": 1,
+    "why": "With a 0.1% base rate, false alarms from the 99.9% negatives vastly outnumber true detections (Bayes).",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c2-4": {
+  "mcq": [
+   {
+    "id": "c2-4-m01",
+    "q": "A model assigns probability 0.1 to the correct token. Its cross-entropy loss is about…",
+    "options": [
+     "0.10 nats",
+     "0.69 nats",
+     "2.30 nats",
+     "10 nats"
+    ],
+    "answer": 2,
+    "why": "Loss = −ln(0.1) ≈ 2.30 nats.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "c15-1": {
+  "harbor": {
+   "practice": "Harbor: 8,000 employees + 1,200 customer tenants; 21,000 daily users × 6 requests, 14% in the peak hour, burst 2 → about 10 RPS at peak, about 60 in flight at 6 s each.",
+   "failure": "Multiplying by a peak factor twice, or putting p99 latency into Little&#x27;s law."
+  }
+ },
+ "c15-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s SLOs: 99.9% availability, p95 first token ≤ 1.5 s, sampled groundedness ≥ 95%, ≤ $0.01 per resolved question, each with a written measurement boundary.",
+   "failure": "Treating a sampled judge score as a complete measurement of all production answers."
+  }
+ },
+ "c15-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s OCR backfill runs in its own pool and cannot take interactive inference slots; the assistant answers from the last consistent index while lag is visible.",
+   "failure": "Splitting services but leaving them on one shared unbounded queue or saturated database."
+  }
+ },
+ "c15-4": {
+  "harbor": {
+   "practice": "Harbor&#x27;s hour-long imports return a job receipt; the query API reads only published index versions, never half-written chunks.",
+   "failure": "A semantic cache keyed without permissions or source version."
+  }
+ },
+ "c15-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s gateway gives each tenant token-per-minute and concurrency quotas, weighted by estimated context size.",
+   "failure": "Automatic fallback to a model that does not support the same tools or schema behaviour."
+  }
+ },
+ "c15-6": {
+  "harbor": {
+   "practice": "When the model pool saturates, Harbor serves authorised policy excerpts with a status line and pauses optional agent investigations.",
+   "failure": "Unbounded queues, which trade visible rejections for long delays and cascading failure."
+  }
+ },
+ "c15-7": {
+  "harbor": {
+   "practice": "Harbor fails read-only search over to a second region, but queued write actions have one designated execution owner to avoid duplicates.",
+   "failure": "Assuming active-active APIs give consistent business actions across regions."
+  }
+ },
+ "c15-8": {
+  "harbor": {
+   "practice": "Harbor&#x27;s load test replays logged prompt lengths with an open-loop arrival rate and a mocked model, then benchmarks the real inference pool separately; the two reports are labelled differently.",
+   "failure": "Testing with empty prompts and one-token answers."
+  }
+ },
+ "c15-9": {
+  "harbor": {
+   "practice": "If Harbor spends $10 on 100 tasks and 50 succeed, the figure reported is $0.20 per successful task, plus the support cost of fixing the 50 failures.",
+   "failure": "Optimising price per call while completion rate falls."
+  }
+ },
+ "c15-10": {
+  "harbor": {
+   "practice": "Harbor&#x27;s launch review states: &quot;measured 60 RPS on staging with p95 1.8 s for this workload; projected 100 RPS with two more replicas, not yet validated&quot;.",
+   "failure": "Describing a simulation or extrapolation as a system that served millions of users."
+  }
+ }
+}

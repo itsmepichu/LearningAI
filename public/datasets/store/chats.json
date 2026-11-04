@@ -1,0 +1,72 @@
+[
+ {
+  "id": "CH-001",
+  "language": "en",
+  "text": "Where is my order OD-2503112? It was supposed to arrive yesterday."
+ },
+ {
+  "id": "CH-002",
+  "language": "en",
+  "text": "Can I exchange these running shoes for UK 9?"
+ },
+ {
+  "id": "CH-003",
+  "language": "en",
+  "text": "Is this saree pure silk or a blend?"
+ },
+ {
+  "id": "CH-004",
+  "language": "en",
+  "text": "Do you deliver to Coimbatore on Sunday?"
+ },
+ {
+  "id": "CH-005",
+  "language": "hi",
+  "text": "मेरा ऑर्डर अभी तक नहीं आया है।"
+ },
+ {
+  "id": "CH-006",
+  "language": "hi",
+  "text": "मुझे यह उत्पाद वापस करना है।"
+ },
+ {
+  "id": "CH-007",
+  "language": "hi",
+  "text": "रिफंड कब मिलेगा?"
+ },
+ {
+  "id": "CH-008",
+  "language": "hi",
+  "text": "क्या यह साइज़ में बड़ा आता है?"
+ },
+ {
+  "id": "CH-009",
+  "language": "ta",
+  "text": "என் ஆர்டர் இன்னும் வரவில்லை."
+ },
+ {
+  "id": "CH-010",
+  "language": "ta",
+  "text": "இந்த பொருளைத் திருப்பி அனுப்ப வேண்டும்."
+ },
+ {
+  "id": "CH-011",
+  "language": "ta",
+  "text": "பணம் எப்போது திரும்ப கிடைக்கும்?"
+ },
+ {
+  "id": "CH-012",
+  "language": "hinglish",
+  "text": "Mera order abhi tak nahi aaya, kab aayega?"
+ },
+ {
+  "id": "CH-013",
+  "language": "hinglish",
+  "text": "Refund kab milega? UPI se pay kiya tha."
+ },
+ {
+  "id": "CH-014",
+  "language": "hinglish",
+  "text": "Size bada hai, exchange ho sakta hai?"
+ }
+]

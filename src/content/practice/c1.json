@@ -1,0 +1,38 @@
+{
+ "c1-1": {
+  "harbor": {
+   "practice": "Harbor mixes all four: a deterministic permission check (rules), keyword search over policies (classic IR), a learned reranker (deep learning) and an answer-writing LLM (generative AI). Naming each part separately tells you where an error or a cost came from.",
+   "failure": "Calling the whole pipeline &quot;the AI&quot; hides which component failed; and a generative model is not automatically better than a small classifier for a fixed labelling task."
+  }
+ },
+ "c1-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s support routing grew the same way the field did: keyword rules, then a trained ticket classifier, then retrieval-augmented answers, then a bounded tool-using workflow. Each stage fixed a specific failure of the last; none made the earlier one useless.",
+   "failure": "An agent is an application architecture (a model in a control loop), not a new kind of neural network and not evidence of human-like reasoning."
+  }
+ },
+ "c1-3": {
+  "harbor": {
+   "practice": "Asked &quot;When is invoice 4471 due?&quot; with no invoice in context, Harbor&#x27;s model would still produce a fluent date, because a date is the likely continuation. Harbor therefore always retrieves the record and only states facts it can cite.",
+   "failure": "Treating a token probability as factual confidence: a likely continuation can be false, and &quot;large&quot; has no fixed parameter threshold that guarantees quality."
+  }
+ },
+ "c1-4": {
+  "harbor": {
+   "practice": "A Harbor request carries a 900-token system prompt, about 2,500 tokens of policy passages, 600 tokens of history and an 800-token output reserve. The team budgets with the real tokenizer and has found the same German policy costs about 30% more tokens than its English version.",
+   "failure": "Assuming a long chat is teaching the model, or that a word count is a token count. Neither the weights nor the token budget work that way."
+  }
+ },
+ "c1-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s test set includes a policy that never existed, a policy revised last week and a question asked in Tamil. The team grades whether each claim is supported, whether the cited version is current, and per-language failure rates, not just fluency.",
+   "failure": "Accepting a citation as proof: the cited passage must actually support the specific claim, and the model&#x27;s &quot;I&#x27;m 90% sure&quot; means nothing until measured."
+  }
+ },
+ "c1-6": {
+  "harbor": {
+   "practice": "For Harbor&#x27;s expense feature: &quot;Is this receipt over the limit?&quot; is a rule; &quot;Which policy covers client dinners?&quot; is search; &quot;Is this claim likely fraudulent?&quot; is a trained classifier; &quot;Explain the decision to the employee&quot; is the LLM&#x27;s job.",
+   "failure": "Choosing an agent framework first and then looking for a problem it fits."
+  }
+ }
+}

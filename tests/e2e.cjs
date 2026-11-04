@@ -26,9 +26,10 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   }
 
   // 1. every route
-  const routes = ['/', '/guide', '/paths', '/progress', '/does-not-exist']
+  const routes = ['/', '/guide', '/paths', '/progress', '/practice', '/does-not-exist']
   for (const c of manifest.chapters) {
     routes.push('/' + c.id)
+    if (c.kind === 'chapter') routes.push(`/${c.id}/check`)
     for (const t of c.topics) routes.push(`/${c.id}/${t.id}`)
   }
   for (const r of routes) {
@@ -36,7 +37,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
     await page.waitForTimeout(r.split('/').length > 2 ? 350 : 150)
     const h1 = await page.$('main h1')
     if (!h1) fails.push(`${r}: no h1`)
-    if (r.split('/').length > 2) {
+    if (r.split('/').length > 2 && !r.endsWith('/check')) {
       const n = await page.$$eval('.lai-topic > *', (x) => x.length)
       if (!n) fails.push(`${r}: empty topic body`)
     }
@@ -81,9 +82,31 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   console.log('progress after toggle:', ring)
   if (!/^1 of/.test(ring)) fails.push('studied toggle did not update progress')
 
+  // chapter check page: answer a question, see feedback, score updates
+  await page.goto(BASE + '/c5/check#c5-2', { waitUntil: 'networkidle' })
+  await page.waitForSelector('.csec.open .opt')
+  await page.click('.csec.open .opt')
+  const fb = await page.$$eval('.csec.open .fb', (x) => x.length)
+  console.log('check page feedback shown:', fb, '|', (await page.textContent('.ck-score')).trim())
+  if (!fb) fails.push('check page: no feedback after answering')
+
+  // example project: switching tabs sets ?project= and changes the note
+  await page.goto(BASE + '/c1/c1-1', { waitUntil: 'networkidle' })
+  const before = await page.textContent('.pb-body')
+  await page.click('.pb-tab:nth-child(3)')
+  await page.waitForTimeout(200)
+  const after = await page.textContent('.pb-body')
+  console.log('project tab ->', new URL(page.url()).search, '| changed:', before !== after)
+  if (!page.url().includes('project=bank') || before === after) fails.push('project tab did not switch the practice note')
+
+  // practice page: draw a random set
+  await page.goto(BASE + '/practice', { waitUntil: 'networkidle' })
+  await page.waitForFunction(() => !/Loading/.test(document.querySelector('.pf-count')?.textContent || 'Loading'))
+  await page.click('.pm-bar .btn.primary')
+  const drawn = await page.$$eval('.pm-prog button', (x) => x.length)
+  console.log('practice set drawn:', drawn)
+  if (!drawn) fails.push('practice page: no random set drawn')
   await page.goto(BASE + '/c5', { waitUntil: 'networkidle' })
-  await page.click('.qq2 label:nth-child(2)')
-  console.log('quiz:', (await page.textContent('.quiz-score')).trim())
   const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
   await page.click('button[aria-label^="Switch to"]')
   const themeAfter = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))

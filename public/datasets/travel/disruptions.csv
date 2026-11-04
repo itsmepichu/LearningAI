@@ -1,0 +1,20 @@
+date,region,type,flights_cancelled
+2025-06-15,Kolkata,monsoon rain,111
+2025-06-16,Kochi,monsoon rain,89
+2025-06-18,Chennai,monsoon rain,43
+2025-06-22,Chennai,monsoon rain,112
+2025-06-23,Guwahati,monsoon rain,20
+2025-06-27,Mumbai,monsoon rain,53
+2025-07-06,Kolkata,monsoon rain,28
+2025-07-11,Kolkata,monsoon rain,52
+2025-07-15,Kochi,monsoon rain,84
+2025-07-29,Kolkata,monsoon rain,70
+2025-08-09,Kolkata,monsoon rain,91
+2025-08-14,Kochi,monsoon rain,105
+2025-08-16,Guwahati,monsoon rain,21
+2025-08-25,Chennai,monsoon rain,33
+2025-08-27,Chennai,monsoon rain,92
+2025-12-11,Delhi,fog,41
+2025-12-20,Delhi,fog,24
+2025-12-25,Delhi,fog,77
+2025-12-28,Delhi,fog,76

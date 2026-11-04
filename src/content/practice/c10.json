@@ -1,0 +1,56 @@
+{
+ "c10-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s 4.2M documents become ≈ 38M chunks; at 768 dims in int8 that is ≈ 29 GB of vectors per replica before graph links and metadata.",
+   "failure": "Treating raw vector bytes as total storage or RAM demand."
+  }
+ },
+ "c10-2": {
+  "harbor": {
+   "practice": "A Harbor parser pod crashed after writing chunks but before acking; redelivery produced no duplicates because chunk IDs are deterministic and writes carry a version guard.",
+   "failure": "Watching worker latency while the queue&#x27;s oldest-message age grows: that is a freshness incident."
+  }
+ },
+ "c10-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s travel policy table (rows = regions, columns = per-day limits) is stored as structured rows; flattening it had caused wrong per-diem answers.",
+   "failure": "Assuming a parse that produced lots of text was read correctly."
+  }
+ },
+ "c10-4": {
+  "harbor": {
+   "practice": "Harbor&#x27;s freshness SLO is &quot;99% of edits searchable within 10 minutes; deletions within 5&quot;, measured per change from source timestamp to index timestamp.",
+   "failure": "Deleting the source file and forgetting the vectors, caches and summaries derived from it."
+  }
+ },
+ "c10-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s three largest customers have dedicated shards; the other 1,197 share placement-by-hash shards, and a tenant is promoted when it passes 5M chunks or 50 QPS.",
+   "failure": "Adding replicas to fix an ingestion bottleneck; replicas help reads, not writes."
+  }
+ },
+ "c10-6": {
+  "harbor": {
+   "practice": "When an employee leaves Finance, Harbor&#x27;s deny list blocks Finance documents for them immediately, before the next ACL sync updates the index.",
+   "failure": "Filtering restricted documents after the model has already seen them."
+  }
+ },
+ "c10-7": {
+  "harbor": {
+   "practice": "Harbor&#x27;s index manifest binds embedder v2 to index v2; rollback switches both the alias and the query encoder together.",
+   "failure": "Assuming equal vector dimensions make two embedding models compatible."
+  }
+ },
+ "c10-8": {
+  "harbor": {
+   "practice": "Harbor&#x27;s benchmark replays 2,000 logged queries with real ACL filters while 5% of the corpus is updated, and reports p95 latency and Recall@10 together.",
+   "failure": "Benchmarking with repeated identical queries, which mostly measures the cache."
+  }
+ },
+ "c10-9": {
+  "harbor": {
+   "practice": "Only 6% of Harbor queries were multi-hop; query decomposition fixed most of them, so a knowledge graph was deferred.",
+   "failure": "Adopting an advanced retrieval technique because of its name, without a failure analysis showing the gap."
+  }
+ }
+}

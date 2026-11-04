@@ -1,0 +1,62 @@
+{
+ "c17-1": {
+  "harbor": {
+   "practice": "A Harbor trace shows 300 ms retrieval and 4 s generation; the metric shows how often that happens; the log line records the validation failure and versions.",
+   "failure": "Using metric labels for request IDs or prompts, which explodes cardinality and cost."
+  }
+ },
+ "c17-2": {
+  "harbor": {
+   "practice": "A slow Harbor answer turned out to be a ticket tool retrying twice after generation finished; only the end-to-end trace showed it.",
+   "failure": "Starting a new unrelated trace in each worker, which breaks the causal chain."
+  }
+ },
+ "c17-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s average latency stayed flat while p99 and oldest-job age rose: a noisy tenant&#x27;s long tasks, found from those two signals.",
+   "failure": "Trusting a low error rate when requests are hanging instead of failing."
+  }
+ },
+ "c17-4": {
+  "harbor": {
+   "practice": "After an index migration, Harbor&#x27;s HTTP success stayed at 99.98% but grounded-answer acceptance fell for German; the quality monitor caught it.",
+   "failure": "Treating the model saying &quot;complete&quot; as a verified task-success label."
+  }
+ },
+ "c17-5": {
+  "harbor": {
+   "practice": "A Harbor task with four model calls and two retries shows its full attributed cost and outcome, not just the last call&#x27;s tokens.",
+   "failure": "Reading 95% GPU utilisation as good economics while cost per successful task is poor."
+  }
+ },
+ "c17-6": {
+  "harbor": {
+   "practice": "Harbor keeps all error and slow traces, a 5% random sample of the rest, strips document bodies, and alerts on dropped spans.",
+   "failure": "Logging every prompt forever: a security liability and a cost problem."
+  }
+ },
+ "c17-7": {
+  "harbor": {
+   "practice": "Harbor&#x27;s answer quality fell after a policy source changed its table layout; the parser-quality dashboard pointed to ingestion, not the model.",
+   "failure": "Reading a rise in negative ratings as a model regression when the traffic mix changed."
+  }
+ },
+ "c17-8": {
+  "harbor": {
+   "practice": "Harbor&#x27;s &quot;unsupported answers rising&quot; alert links to affected versions, recent deploys, sample traces and a tested rollback, so on-call can act without guessing.",
+   "failure": "Alerts without an owner or a mitigation: noise, not reliability."
+  }
+ },
+ "c17-9": {
+  "harbor": {
+   "practice": "A Harbor duplicate-ticket incident became a timeout-after-commit test; the release gate now checks exactly one ticket and the correct reported ID.",
+   "failure": "Copying raw customer conversations into a shared evaluation or training set without review and redaction."
+  }
+ },
+ "c17-10": {
+  "harbor": {
+   "practice": "Harbor records which instrumentation version and convention revision emitted each trace, and tests dashboards against old and new attribute names before upgrading.",
+   "failure": "Assuming the GenAI conventions are stable because OpenTelemetry itself is mature."
+  }
+ }
+}

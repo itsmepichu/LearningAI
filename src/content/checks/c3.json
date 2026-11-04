@@ -1,0 +1,56 @@
+{
+ "c3-3": {
+  "mcq": [
+   {
+    "id": "c3-3-m01",
+    "q": "Only 2% of tickets are urgent. A model predicting \"not urgent\" for everything scores…",
+    "options": [
+     "2% accuracy",
+     "50% accuracy",
+     "98% accuracy but 0% urgent recall",
+     "98% recall"
+    ],
+    "answer": 2,
+    "why": "Accuracy rewards the majority class; recall on the rare class reveals the failure.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c3-4": {
+  "mcq": [
+   {
+    "id": "c3-4-m01",
+    "q": "Which is leakage when predicting churn on day 3?",
+    "options": [
+     "Using plan type",
+     "Using total refunds this month",
+     "Splitting by customer",
+     "Using a validation set"
+    ],
+    "answer": 1,
+    "why": "Month-total refunds include future information that is not available on day 3.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c3-5": {
+  "mcq": [
+   {
+    "id": "c3-5-m01",
+    "q": "When is a PR curve more informative than ROC?",
+    "options": [
+     "When classes are balanced",
+     "When positives are rare",
+     "Only for regression",
+     "Never"
+    ],
+    "answer": 1,
+    "why": "With rare positives, ROC can look good while precision is poor; PR curves expose that.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

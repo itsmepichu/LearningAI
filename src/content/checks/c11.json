@@ -1,0 +1,51 @@
+{
+ "c11-6": {
+  "mcq": [
+   {
+    "id": "c11-6-m01",
+    "q": "A ticket was created but the response was lost. A safe retry needs…",
+    "options": [
+     "A longer timeout",
+     "The same idempotency key",
+     "A new request ID",
+     "A second agent"
+    ],
+    "answer": 1,
+    "why": "The server returns the stored result for a repeated key instead of creating a duplicate.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c11-7": {
+  "mcq": [
+   {
+    "id": "c11-7-m01",
+    "q": "Where are step and cost limits enforced?",
+    "options": [
+     "In the system prompt",
+     "In the runtime",
+     "By the user",
+     "By the model provider"
+    ],
+    "answer": 1,
+    "why": "Prompts can be ignored; the runtime must stop the loop.",
+    "kind": "concept"
+   },
+   {
+    "id": "c11-7-m02",
+    "q": "An approved email is edited by the agent afterwards. What should happen?",
+    "options": [
+     "Send it",
+     "It needs a new approval",
+     "Log a warning",
+     "Ask the model"
+    ],
+    "answer": 1,
+    "why": "An approval applies to one exact version of the action.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

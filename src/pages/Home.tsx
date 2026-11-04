@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
-import { ArrowRight, BookOpen, Compass, FlaskConical, MousePointerClick, Route as RouteIcon } from 'lucide-react'
+import { ArrowRight, BookOpen, Compass, Dumbbell, FlaskConical, MousePointerClick, Route as RouteIcon } from 'lucide-react'
+import { ProjectPicker } from '../components/ProjectPicker'
 import { chapters, courseTopics, getChapter, getTopic, parts, paths, totals } from '../data/course'
 import { ProgressRing } from '../components/Icons'
 import { useDocumentTitle } from '../components/common'
@@ -41,6 +42,9 @@ export function Home() {
               <BookOpen size={16} /> How to use this manual
             </Link>
           </div>
+          <div className="hero-proj">
+            Example project: <ProjectPicker inline /> <span className="muted">· change it any time; the practical notes, data and labs follow it.</span>
+          </div>
         </motion.div>
         <motion.div className="hero-panel" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="hp-ring">
@@ -54,11 +58,16 @@ export function Home() {
             <div><dt>Chapters</dt><dd>{totals.chapters}</dd></div>
             <div><dt>Figures</dt><dd>{totals.figures}</dd></div>
             <div><dt>Interactive</dt><dd>{totals.interactive}</dd></div>
-            <div><dt>Self-check questions</dt><dd>{totals.questions}</dd></div>
+            <div><dt>Check questions</dt><dd>{totals.mcq + totals.interview}</dd></div>
           </dl>
-          <Link to="/progress" className="hp-link">
-            Your progress <ArrowRight size={14} />
-          </Link>
+          <div className="hp-links">
+            <Link to="/progress" className="hp-link">
+              Your progress <ArrowRight size={14} />
+            </Link>
+            <Link to="/practice" className="hp-link">
+              <Dumbbell size={14} /> Practice for interviews <ArrowRight size={14} />
+            </Link>
+          </div>
         </motion.div>
       </section>
 

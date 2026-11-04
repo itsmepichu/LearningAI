@@ -1,0 +1,44 @@
+{
+ "c18-1": {
+  "harbor": {
+   "practice": "Harbor release r2026.11.3 maps code SHA, prompt versions, tool schemas, model revision, embedder + index, ACL watermark and eval suite.",
+   "failure": "Rolling back code only, while an incompatible prompt, index or adapter stays live."
+  }
+ },
+ "c18-2": {
+  "harbor": {
+   "practice": "The same signed Harbor image and model artifact tested in staging is promoted to production; only credentials and capacity differ.",
+   "failure": "A container that downloads &quot;latest&quot; model weights at start-up; the release is not reproducible."
+  }
+ },
+ "c18-3": {
+  "harbor": {
+   "practice": "A Harbor candidate improved average accuracy but failed one cross-tenant case; promotion was blocked.",
+   "failure": "Treating a green CI badge as proof that every production failure is covered."
+  }
+ },
+ "c18-4": {
+  "harbor": {
+   "practice": "Harbor shadows retrieval and generation but never ticket writes; a canary on 3 tenants rolls back automatically if unsupported answers rise.",
+   "failure": "Sending shadow traffic to a real write tool."
+  }
+ },
+ "c18-5": {
+  "harbor": {
+   "practice": "A provider upgrade changed how Harbor&#x27;s tool calls stream; the parser had to pass compatibility tests before write-capable tasks moved over.",
+   "failure": "Assuming the same API method name means the same model behaviour."
+  }
+ },
+ "c18-6": {
+  "harbor": {
+   "practice": "A recurring Harbor failure on a new document type led to a parser fix and a regression case first; only a remaining extraction gap justified new training data.",
+   "failure": "Feeding user corrections straight into training; some are wrong, malicious or out of scope."
+  }
+ },
+ "c18-7": {
+  "harbor": {
+   "practice": "Harbor&#x27;s handover pack names who handles stale ACLs, how to disable a write tool, how to restore an index-and-encoder pair and how to verify recovery.",
+   "failure": "Treating a successful demo and an architecture diagram as a handover."
+  }
+ }
+}

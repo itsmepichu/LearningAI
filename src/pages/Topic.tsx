@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { motion } from 'motion/react'
-import { ArrowLeft, ArrowRight, Check, Clock, Layers, MousePointerClick } from 'lucide-react'
-import { allTopics, getChapter, getTopic, minutes, partOf, topicPath } from '../data/course'
+import { ArrowLeft, ArrowRight, Check, Clock, FlaskConical, Layers, ListChecks, MousePointerClick } from 'lucide-react'
+import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, topicPath } from '../data/course'
+import { PracticeBlock, ProjectFitNote, useChapterPractice } from '../components/Practice'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
 
 interface Mark { id: string; label: string; kind: 'fig' | 'box' | 'ff' }
+
 
 export function TopicPage() {
   const { chapterId, topicId } = useParams()
@@ -24,6 +26,8 @@ export function TopicPage() {
   const [marks, setMarks] = useState<Mark[]>([])
   const [active, setActive] = useState<string>('')
   const body = useRef<HTMLDivElement>(null)
+  const chapterPractice = useChapterPractice(chapterId)
+  const practice = topicId ? chapterPractice?.[topicId] : undefined
   useDocumentTitle(topic ? `${topic.tn} ${topic.title}` : 'Not found')
 
   useEffect(() => {
@@ -33,7 +37,7 @@ export function TopicPage() {
   // Build "On this page" from figures and callouts, then follow the reader.
   useEffect(() => {
     if (!html || !body.current) return
-    const els = [...body.current.querySelectorAll<HTMLElement>('figure, .box, .ff, .terms, .tools')]
+    const els = [...body.current.querySelectorAll<HTMLElement>('figure, .box, .ff, [data-slot="practice"], .terms, .tools')]
     const list: Mark[] = []
     els.forEach((el, i) => {
       let label = ''
@@ -42,9 +46,9 @@ export function TopicPage() {
       if (el.tagName === 'FIGURE') {
         kind = 'fig'
         label = el.querySelector('figcaption b')?.textContent || el.querySelector('figcaption')?.textContent?.slice(0, 60) || 'Figure'
-      } else if (cl.contains('ff')) {
+      } else if (cl.contains('ff') || el.dataset.slot === 'practice') {
         kind = 'ff'
-        label = 'In practice and failure to avoid'
+        label = 'In practice, failure to avoid, try it'
       } else if (cl.contains('terms')) label = 'Terms'
       else if (cl.contains('tools')) label = 'Tools'
       else label = el.querySelector('h5')?.textContent || 'Note'
@@ -132,8 +136,11 @@ export function TopicPage() {
               <i /><i /><i /><i className="tall" /><i />
             </div>
           ) : (
-            <HtmlContent key={topic.id} html={html} className="topic lai-topic" />
+            <HtmlContent key={topic.id} html={html} className="topic lai-topic" slots={{ practice: <PracticeBlock practice={practice} /> }} />
           )}
+
+          {html !== null && <ProjectFitNote practice={practice} />}
+          {html !== null && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
 
           <div className="t-finish">
             <button type="button" className={'btn ' + (studied ? '' : 'primary')} onClick={() => setStudied(topic.id, !studied)}>
@@ -182,11 +189,33 @@ export function TopicPage() {
           )}
           {chapter.hasLab && (
             <Link className="rail-lab" to={`/${chapter.id}#lab`}>
-              Chapter {chapter.num} lab and self-check <ArrowRight size={13} />
+              <span><FlaskConical size={13} /> Chapter {chapter.num} lab</span> <ArrowRight size={13} />
             </Link>
           )}
+          <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>
+            <span><ListChecks size={13} /> Check this section</span> <ArrowRight size={13} />
+          </Link>
         </aside>
       </div>
     </div>
+  )
+}
+
+function SectionCheckLink({ chapterId, topicId, tn }: { chapterId: string; topicId: string; tn: string }) {
+  const n = sectionCheckCount(chapterId, topicId)
+  const total = n.mcq + n.interview
+  return (
+    <Link to={`/${chapterId}/check#${topicId}`} className="seccheck">
+      <ListChecks size={18} />
+      <span>
+        <b>Check section {tn}</b>
+        <small>
+          {total
+            ? `${n.mcq} choose-the-answer · ${n.interview} interview ${n.interview === 1 ? 'question' : 'questions'}`
+            : 'Questions for this section are being written'}
+        </small>
+      </span>
+      <ArrowRight size={16} />
+    </Link>
   )
 }

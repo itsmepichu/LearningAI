@@ -1,0 +1,57 @@
+[
+ {
+  "id": "MS-001",
+  "language": "en",
+  "text": "I need to cancel my flight to Mumbai tomorrow. Will I get a refund?"
+ },
+ {
+  "id": "MS-002",
+  "language": "en",
+  "text": "Can I move my Goa hotel stay by two days?"
+ },
+ {
+  "id": "MS-003",
+  "language": "en",
+  "text": "My train is running 5 hours late. What happens to my hotel check-in?"
+ },
+ {
+  "id": "MS-004",
+  "language": "en",
+  "text": "Book the cheapest flight from Bengaluru to Delhi next Friday morning for 2 adults."
+ },
+ {
+  "id": "MS-005",
+  "language": "hi",
+  "text": "मुझे कल की फ्लाइट रद्द करनी है।"
+ },
+ {
+  "id": "MS-006",
+  "language": "hi",
+  "text": "क्या मैं अपनी यात्रा की तारीख बदल सकता हूँ?"
+ },
+ {
+  "id": "MS-007",
+  "language": "hi",
+  "text": "मेरी ट्रेन देर से चल रही है, होटल का क्या होगा?"
+ },
+ {
+  "id": "MS-008",
+  "language": "ta",
+  "text": "நாளைய விமான முன்பதிவை ரத்து செய்ய வேண்டும்."
+ },
+ {
+  "id": "MS-009",
+  "language": "ta",
+  "text": "பயண தேதியை மாற்ற முடியுமா?"
+ },
+ {
+  "id": "MS-010",
+  "language": "hinglish",
+  "text": "Kal ki flight cancel karni hai, refund milega?"
+ },
+ {
+  "id": "MS-011",
+  "language": "hinglish",
+  "text": "Goa wala hotel do din aage kar do please."
+ }
+]

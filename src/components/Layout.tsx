@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router'
 import { Menu, Moon, Search, Sun, X } from 'lucide-react'
 import { Sidebar } from './Sidebar'
 import { SearchDialog } from './SearchDialog'
+import { ProjectPicker } from './ProjectPicker'
 import { Logo, ProgressRing } from './Icons'
 import { useTheme } from '../store/theme'
 import { useProgress } from '../store/progress'
@@ -61,6 +62,7 @@ export function Layout() {
             </span>
           )}
         </nav>
+        <ProjectPicker />
         <button className="search-btn" type="button" onClick={() => setSearchOpen(true)} aria-label="Search all topics">
           <Search size={15} />
           <span className="lbl">Search</span>
