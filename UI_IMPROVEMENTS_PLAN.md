@@ -1,6 +1,8 @@
 # UI improvements plan
 
-A review of the LearningAI app's page structure, components and UI/UX, with the code changes it suggests. Nothing in this plan has been implemented yet.
+A review of the LearningAI app's page structure, components and UI/UX, with the code changes it suggests.
+
+**Status:** phase A is implemented (see the notes at the start of phase A). Phases B, C and D have not been started.
 
 - **Reviewed:** branch `phase-3-rollout` at commit d229907, built and served with `vite preview`.
 - **Method:** the ui-ux-pro-max design skill (UX guideline and React stack searches) and the design-critique framework.
@@ -113,6 +115,25 @@ The WCAG 2.2 AA web minimum is 24 × 24 CSS px, per the guidelines search; the 4
 Four phases, ordered by impact. Each item names the files to change, gives the suggested code, and lists the check that proves it.
 
 ### Phase A: keyboard, focus and contrast (fixes every 🔴)
+
+**Status: implemented.** The snippets below are the original suggestions. The code differs from them where a snippet would not have worked:
+
+- **Drawer (A1):**
+  - The top bar and skip link are inert too, not only `main`. Otherwise Shift+Tab leaves the drawer for controls behind the scrim.
+  - `role="dialog"` sits on a `div` inside the `aside`, because ARIA in HTML does not allow that role on `aside`.
+  - Following a drawer link moves focus to `main`, so the reader does not have to tab through the top bar again. Other ways of closing return focus to the menu button.
+- **Search (A2):**
+  - Focus moves in a layout effect instead of through `autoFocus`. With `autoFocus`, the suggested effect reads `document.activeElement` after focus has moved, so it records the input as the opener and never restores focus. The restore itself stays in a passive effect, because React refocuses the input straight after layout cleanups run.
+  - Results are not Tab stops (`tabIndex={-1}`), as the combobox pattern expects. This also fixes a bug where Enter on a tabbed-to result opened the highlighted result instead.
+  - The input is `type="text"` with `inputMode="search"`, because ARIA in HTML does not allow `role="combobox"` on `type="search"`.
+  - `role="listbox"` is set only while there are results, because the hint text is not a valid listbox child.
+  - The dialog marks the Escape it handles, so one press closes the dialog and not the drawer behind it.
+
+**Found while implementing, not yet fixed:**
+
+- **`--accent-2` in light mode:** link hover text is 4.05:1 on paper and white text on a hovered primary button is 4.35:1. Both are below AA.
+- **Search input ring:** the global `input:focus` rule draws a ring around the input inside the search panel, which already has its own frame.
+- **Playwright:** `tests/e2e.cjs` needs it, but it is not listed in `package.json`, so a fresh checkout cannot run the tests without a separate install.
 
 **A1. Make the mobile drawer a real modal drawer (K1, K2).** In `src/components/Layout.tsx`:
 

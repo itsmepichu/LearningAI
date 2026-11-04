@@ -169,6 +169,121 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   }
   if (errs.length) fails.push('mobile: ' + errs.join(' | '))
 
+  // 6. keyboard, focus and contrast (phone width, then desktop)
+  const focusIn = (p, sel) => p.evaluate((s) => !!document.activeElement?.closest(s), sel)
+  const k = await b.newPage({ viewport: { width: 390, height: 844 } })
+  await k.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+
+  // the closed drawer is skipped: the page is reached quickly, without entering the sidebar
+  await k.keyboard.press('Tab') // skip link
+  let presses = 0
+  let enteredDrawer = false
+  while (presses < 10 && !(await focusIn(k, 'main'))) {
+    await k.keyboard.press('Tab')
+    presses++
+    if (await focusIn(k, '.side')) enteredDrawer = true
+  }
+  console.log('tabs from skip link to main:', presses, '| entered closed drawer:', enteredDrawer)
+  if (enteredDrawer) fails.push('keyboard: Tab entered the closed drawer')
+  if (!(await focusIn(k, 'main'))) fails.push('keyboard: 10 Tab presses did not reach main')
+
+  // the open drawer takes focus, keeps it, and gives it back on Escape
+  await k.focus('.nav-toggle')
+  await k.keyboard.press('Enter')
+  if (!(await focusIn(k, '.side-head button'))) fails.push('drawer: focus did not move to the close button')
+  await k.keyboard.press('Shift+Tab')
+  if (await focusIn(k, '.topbar, .skip, main')) fails.push('drawer: Shift+Tab left the drawer for the page behind it')
+  await k.focus('.side-head button')
+  for (let n = 0; n < 8; n++) await k.keyboard.press('Tab')
+  if (await focusIn(k, '.topbar, .skip, main')) fails.push('drawer: Tab left the drawer for the page behind it')
+  await k.keyboard.press('Escape')
+  if (await k.$('.side.open')) fails.push('drawer: Escape did not close it')
+  if (!(await focusIn(k, '.nav-toggle'))) fails.push('drawer: focus did not return to the menu button')
+
+  // following a drawer link closes it and moves focus to the new page
+  await k.click('.nav-toggle')
+  await k.waitForTimeout(350) // drawer slide
+  await k.click('.side-top[href="/guide"]')
+  await k.waitForSelector('main h1')
+  await k.waitForTimeout(100)
+  if (await k.$('.side.open')) fails.push('drawer: following a link did not close it')
+  if (!(await k.evaluate(() => document.activeElement?.id === 'main'))) fails.push('drawer: focus did not move to the new page after following a link')
+
+  // search: no keystroke is lost, Tab stays inside, Escape closes and restores focus
+  await k.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+  await k.keyboard.press('/')
+  await k.keyboard.type('bm25')
+  const typed = await k.inputValue('.srch-in input')
+  if (typed !== 'bm25') fails.push(`search: typed "bm25" right after "/" but the input holds "${typed}"`)
+  await k.waitForSelector('.srch-hit', { timeout: 15000 })
+  const activeOption = () => k.evaluate(() => {
+    const id = document.querySelector('.srch-in input').getAttribute('aria-activedescendant')
+    return id && document.getElementById(id)?.getAttribute('aria-selected') === 'true' ? id : null
+  })
+  const opt0 = await activeOption()
+  await k.keyboard.press('ArrowDown')
+  const opt1 = await activeOption()
+  console.log('search typed:', typed, '| active option:', opt0, '->', opt1)
+  if (!opt0 || !opt1 || opt0 === opt1) fails.push('search: aria-activedescendant does not follow the highlighted result')
+  await k.keyboard.press('Escape')
+  await k.waitForSelector('.srch', { state: 'detached' })
+
+  await k.focus('.search-btn')
+  await k.keyboard.press('Enter')
+  await k.waitForSelector('.srch-pnl')
+  for (let n = 0; n < 6; n++) {
+    await k.keyboard.press('Tab')
+    if (!(await focusIn(k, '.srch-pnl'))) { fails.push('search: Tab left the dialog'); break }
+  }
+  await k.keyboard.press('Escape')
+  await k.waitForSelector('.srch', { state: 'detached', timeout: 3000 }).catch(() => fails.push('search: Escape did not close the dialog'))
+  if (!(await focusIn(k, '.search-btn'))) fails.push('search: focus did not return to the search button')
+
+  // the search dialog closes before the drawer behind it
+  await k.click('.nav-toggle')
+  await k.keyboard.press('/')
+  await k.waitForSelector('.srch-pnl')
+  await k.keyboard.press('Escape')
+  await k.waitForSelector('.srch', { state: 'detached' })
+  if (!(await k.$('.side.open'))) fails.push('Escape in search also closed the drawer')
+  await k.keyboard.press('Escape')
+
+  // progress segments have a 24 px target, in a labelled nav that marks the current topic
+  const seg = await k.$$eval('nav.t-steps a', (x) => x.map((a) => a.getBoundingClientRect().height))
+  if (!seg.length || Math.min(...seg) < 24) fails.push(`progress segments: target height ${Math.min(...seg)}px`)
+  if ((await k.$$('nav.t-steps a[aria-current="page"]')).length !== 1) fails.push('progress segments: no single aria-current link')
+  await k.close()
+
+  // theme colours used for small text reach AA, on the paper and sunk backgrounds, in both themes
+  const contrast = () => {
+    const root = getComputedStyle(document.documentElement)
+    const rgb = (name) => { const h = root.getPropertyValue(name).trim().slice(1); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255) }
+    const lum = (c) => { const [r, g, b] = c.map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * r + 0.7152 * g + 0.0722 * b }
+    const out = []
+    for (const fg of ['--ink', '--muted', '--accent', '--sim', '--ok', '--signal', '--bad']) {
+      for (const bg of ['--paper', '--sunk']) {
+        const [a, c] = [lum(rgb(fg)), lum(rgb(bg))]
+        const ratio = (Math.max(a, c) + 0.05) / (Math.min(a, c) + 0.05)
+        if (ratio < 4.5) out.push(`${fg} on ${bg}: ${ratio.toFixed(2)}:1`)
+      }
+    }
+    // sidebar numbers use a text token, not a rule colour
+    const num = document.querySelector('.side-ch:not(.current) .side-ch-link .n')
+    const probe = document.createElement('i')
+    probe.style.color = root.getPropertyValue('--rule-2')
+    document.body.append(probe)
+    if (getComputedStyle(num).color === getComputedStyle(probe).color) out.push('sidebar numbers use --rule-2')
+    probe.remove()
+    return out
+  }
+  for (const colorScheme of ['light', 'dark']) {
+    const t = await b.newPage({ viewport: { width: 1280, height: 900 }, colorScheme })
+    await t.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+    const bad = await t.evaluate(contrast)
+    if (bad.length) fails.push(`contrast (${colorScheme}): ${bad.join(', ')}`)
+    await t.close()
+  }
+
   await b.close()
   console.log(fails.length ? 'FAILURES:\n- ' + fails.join('\n- ') : 'ALL CHECKS PASSED')
   process.exit(fails.length ? 1 : 0)

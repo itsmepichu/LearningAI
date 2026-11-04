@@ -120,13 +120,13 @@ export function TopicPage() {
             <Check size={14} /> {studied ? 'Studied' : 'Mark as studied'}
           </label>
         </div>
-        <div className="t-steps" aria-label={`Topic ${pos + 1} of ${chapter.topics.length} in this chapter`}>
+        <nav className="t-steps" aria-label="Topics in this chapter">
           {chapter.topics.map((t, i) => (
-            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${t.title}`}>
-              <span className="sr-only">{t.tn}</span>
+            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${t.title}`} aria-current={i === pos ? 'page' : undefined}>
+              <span className="sr-only">{t.tn} {t.title}</span>
             </Link>
           ))}
-        </div>
+        </nav>
       </motion.header>
 
       <div className="t-grid">
