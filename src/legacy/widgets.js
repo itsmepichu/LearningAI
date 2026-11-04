@@ -32,6 +32,14 @@ function kpis(el,arr){if(typeof el==='string')el=$(el);if(!el)return;el.innerHTM
 function bars(el,items,o={}){if(typeof el==='string')el=$(el);if(!el)return;const max=o.max||Math.max(...items.map(i=>i.v),1e-9);el.innerHTML=items.map(i=>`<div class="row ${i.c||''}"><div class="lbl">${i.l}</div><div class="track"><div class="fill" style="width:${Math.max(0.5,Math.min(100,i.v/max*100))}%"></div><span class="val">${i.t!==undefined?i.t:(fN(i.v,i.v<10&&i.v%1?1:0)+(o.unit||''))}</span></div></div>`).join('')}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function sleep(ms){return new Promise(r=>setTimeout(r,RM?Math.min(ms,60):ms))}
+/* A region that scrolls sideways must be reachable by keyboard. It joins the tab order only while it overflows, so a block that fits adds no tab stop. */
+const scrollFits=new Map();
+const scrollRO=new ResizeObserver(es=>es.forEach(e=>scrollFits.get(e.target)?.()));
+rt.disconnect=()=>scrollRO.disconnect();
+document.fonts?.ready.then(()=>scrollFits.forEach(f=>f()));
+function keyScroll(el,label){const role=el.getAttribute('role');
+  scrollFits.set(el,()=>{if(el.scrollWidth>el.clientWidth){el.setAttribute('tabindex','0');el.setAttribute('role',role||'group');el.setAttribute('aria-label',label)}else{el.removeAttribute('tabindex');el.removeAttribute('aria-label');if(!role)el.removeAttribute('role')}});
+  scrollRO.observe(el)}
 function axis(x0,y0,x1,y1){return `<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" class="grid"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" class="grid"/>`}
 
 try{
@@ -46,9 +54,9 @@ ROOT.querySelectorAll('.flow').forEach(f=>{
   const nodes=[...f.querySelectorAll('.nodes > .nd')],steps=[...f.querySelectorAll('ol.steps > li')];if(!steps.length)return;
   const track=document.createElement('div');track.className='track';track.setAttribute('role','list');
   const stops=nodes.map((n,j)=>{const d=document.createElement('div');d.className='stop';d.setAttribute('role','listitem');d.innerHTML=`<span class="dot">${j+1}</span><span class="lab2">${n.innerHTML}</span>`;track.appendChild(d);return d});
-  f.querySelector('.nodes').after(track);
+  f.querySelector('.nodes').after(track);keyScroll(track,'Flow steps, scrolls sideways');
   const ctl=document.createElement('div');ctl.className='ctl';
-  ctl.innerHTML='<button class="btn" type="button" data-a="prev" aria-label="Previous step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Prev</button><button class="btn primary" type="button" data-a="next">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><button class="btn" type="button" data-a="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5v14l11-7z"/></svg><span>Play</span></button><span class="count"></span>';
+  ctl.innerHTML='<button class="btn" type="button" data-a="prev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Prev</button><button class="btn primary" type="button" data-a="next">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button><button class="btn" type="button" data-a="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5v14l11-7z"/></svg><span>Play</span></button><span class="count"></span>';
   const meter=document.createElement('div');meter.className='meter';meter.innerHTML='<i></i>';
   f.querySelector('ol.steps').before(ctl);ctl.after(meter);let i=0,timer=null;const playB=ctl.querySelector('[data-a=play] span');
   function show(k,scroll){i=(k+steps.length)%steps.length;const cur=(steps[i].dataset.n||'').split(',').filter(s=>s!=='').map(Number);const mn=cur.length?Math.min(...cur):-1;
@@ -78,8 +86,10 @@ try{
   ROOT.querySelectorAll('.tools>h3,.tools>.as-h3').forEach(h=>h.insertAdjacentHTML('afterbegin',I('tool')));
   ROOT.querySelectorAll('section.chapter').forEach(ch=>{const n=ch.querySelector('.ch-num'),h=ch.querySelector('.ch-head h2');if(!n||!h)return;const k=document.createElement('span');k.className='kicker';const t=ch.querySelectorAll('article.topic').length;k.textContent=(ch.id==='capstone'?'Appendix C · capstone project':ch.id.startsWith('app-')?'Appendix '+n.textContent:'Chapter '+n.textContent+(t?' · '+t+' topics':''));h.before(k)});
   /* code copy buttons */
-  ROOT.querySelectorAll('pre').forEach(p=>{const w=document.createElement('div');w.className='codewrap';p.before(w);w.appendChild(p);const b=document.createElement('button');b.type='button';b.className='copy';b.textContent='Copy';w.appendChild(b);
+  ROOT.querySelectorAll('pre').forEach(p=>{const w=document.createElement('div');w.className='codewrap';p.before(w);w.appendChild(p);keyScroll(p,'Code, scrolls sideways');const b=document.createElement('button');b.type='button';b.className='copy';b.textContent='Copy';w.appendChild(b);
     b.addEventListener('click',()=>{const t=p.innerText;const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1400)};try{navigator.clipboard.writeText(t).then(done,()=>{sel(p);b.textContent='Selected'})}catch(e){sel(p);b.textContent='Selected'}})});
+  /* table wrappers; React widgets set their own tabindex */
+  ROOT.querySelectorAll('.tw:not([tabindex])').forEach(t=>keyScroll(t,'Table, scrolls sideways'));
   function sel(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}
   /* range slider fill */
   const fill=r=>{const mn=+r.min||0,mx=+r.max||100;r.style.setProperty('--p',((r.value-mn)/(mx-mn)*100)+'%')};ROOT.querySelectorAll('input[type=range]').forEach(r=>{fill(r);r.addEventListener('input',()=>fill(r))});

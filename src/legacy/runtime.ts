@@ -46,6 +46,7 @@ export async function mountLegacyWidgets(root: HTMLElement): Promise<LegacyHandl
     rerender: () => (rt.rerender as (() => void) | undefined)?.(),
     dispose: () => {
       disposed = true
+      ;(rt.disconnect as (() => void) | undefined)?.()
       intervals.forEach((i) => clearInterval(i))
       timeouts.forEach((i) => clearTimeout(i))
       frames.forEach((i) => cancelAnimationFrame(i))
