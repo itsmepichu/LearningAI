@@ -4,8 +4,8 @@ import { ArrowLeft, ArrowRight, Dumbbell, Filter, MessagesSquare, RotateCcw, Shu
 import { chapterCheckCount, chaptersWithChecks, getChapter, getTopic, paths } from '../data/course'
 import { LEVEL_LABEL, isCorrect, loadChecks, type ChapterChecks, type InterviewQ, type Level, type Mcq } from '../data/checks'
 import { McqCard, InterviewCard } from '../components/Checks'
-import { useActiveProject } from '../components/Practice'
-import { ProjectPicker } from '../components/ProjectPicker'
+import { ProjectFramingNote, useActiveProject } from '../components/Practice'
+import { onRovingKeyDown } from '../components/common'
 import { useDocumentTitle } from '../components/common'
 import { useProgress } from '../store/progress'
 
@@ -185,21 +185,21 @@ export function PracticePage() {
               <option value="all">All projects</option>
             </select>
           </label>
-          <ProjectPicker />
+          <ProjectFramingNote />
         </div>
         <p className="pf-count" aria-live="polite">
           {loading ? 'Loading questions…' : `${counts.mcq} choose-the-answer and ${counts.iv} interview questions match.`}
         </p>
       </section>
 
-      <div className="seg tabs" role="tablist" aria-label="Practice mode">
-        <button role="tab" type="button" aria-selected={tab === 'random'} className={tab === 'random' ? 'on' : ''} onClick={() => setTab('random')}><Shuffle size={15} /> Random set</button>
-        <button role="tab" type="button" aria-selected={tab === 'mistakes'} className={tab === 'mistakes' ? 'on' : ''} onClick={() => { setTab('mistakes'); setMistakeSnap(null) }}><Target size={15} /> Review mistakes</button>
-        <button role="tab" type="button" aria-selected={tab === 'drill'} className={tab === 'drill' ? 'on' : ''} onClick={() => { setTab('drill'); setDrillPos(0) }}><MessagesSquare size={15} /> Interview drill</button>
+      <div className="seg tabs" role="tablist" aria-label="Practice mode" onKeyDown={onRovingKeyDown}>
+        <button role="tab" type="button" id="pm-tab-random" aria-selected={tab === 'random'} aria-controls={tab === 'random' ? 'pm-panel' : undefined} tabIndex={tab === 'random' ? 0 : -1} className={tab === 'random' ? 'on' : ''} onClick={() => setTab('random')}><Shuffle size={15} /> Random set</button>
+        <button role="tab" type="button" id="pm-tab-mistakes" aria-selected={tab === 'mistakes'} aria-controls={tab === 'mistakes' ? 'pm-panel' : undefined} tabIndex={tab === 'mistakes' ? 0 : -1} className={tab === 'mistakes' ? 'on' : ''} onClick={() => { setTab('mistakes'); setMistakeSnap(null) }}><Target size={15} /> Review mistakes</button>
+        <button role="tab" type="button" id="pm-tab-drill" aria-selected={tab === 'drill'} aria-controls={tab === 'drill' ? 'pm-panel' : undefined} tabIndex={tab === 'drill' ? 0 : -1} className={tab === 'drill' ? 'on' : ''} onClick={() => { setTab('drill'); setDrillPos(0) }}><MessagesSquare size={15} /> Interview drill</button>
       </div>
 
       {tab === 'random' && (
-        <section className="pm" role="tabpanel">
+        <section className="pm" role="tabpanel" id="pm-panel" aria-labelledby={`pm-tab-${tab}`}>
           <div className="pm-bar">
             <label>Questions
               <select value={size} onChange={(e) => setSize(+e.target.value)}>
@@ -219,7 +219,7 @@ export function PracticePage() {
                 })}
               </div>
               <div className="pm-card" key={cur.q.id}>
-                {cur.type === 'mcq' ? <McqCard q={cur.q} mode="practice" context={<Ctx it={cur} />} /> : <InterviewCard q={cur.q} context={<Ctx it={cur} />} />}
+                {cur.type === 'mcq' ? <McqCard topLevel q={cur.q} mode="practice" context={<Ctx it={cur} />} /> : <InterviewCard topLevel q={cur.q} context={<Ctx it={cur} />} />}
               </div>
               <div className="pm-nav">
                 <button type="button" className="btn" disabled={pos === 0} onClick={() => setPos((p) => p - 1)}><ArrowLeft size={15} /> Previous</button>
@@ -239,7 +239,7 @@ export function PracticePage() {
       )}
 
       {tab === 'mistakes' && (
-        <section className="pm" role="tabpanel">
+        <section className="pm" role="tabpanel" id="pm-panel" aria-labelledby={`pm-tab-${tab}`}>
           {mistakes.length ? (
             <>
               <p className="muted">
@@ -247,7 +247,7 @@ export function PracticePage() {
                 <button type="button" className="linkish" onClick={() => setMistakeSnap(null)}>refresh it</button>.
               </p>
               <div className="cards" onClickCapture={() => mistakeSnap === null && setMistakeSnap(mistakes.map((m) => m.q.id))}>
-                {mistakes.map((it) => it.type === 'mcq' && <McqCard key={it.q.id} q={it.q} mode="practice" context={<Ctx it={it} />} />)}
+                {mistakes.map((it) => it.type === 'mcq' && <McqCard topLevel key={it.q.id} q={it.q} mode="practice" context={<Ctx it={it} />} />)}
               </div>
             </>
           ) : (
@@ -257,12 +257,12 @@ export function PracticePage() {
       )}
 
       {tab === 'drill' && (
-        <section className="pm" role="tabpanel">
+        <section className="pm" role="tabpanel" id="pm-panel" aria-labelledby={`pm-tab-${tab}`}>
           {drill.length ? (
             <>
               <p className="muted">One interview question at a time, unrated ones first. Answer out loud or in notes, then reveal the checklist and rate yourself.</p>
               <div className="pm-card" key={drill[drillPos % drill.length].q.id}>
-                <InterviewCard q={drill[drillPos % drill.length].q as InterviewQ} context={<Ctx it={drill[drillPos % drill.length]} />} />
+                <InterviewCard topLevel q={drill[drillPos % drill.length].q as InterviewQ} context={<Ctx it={drill[drillPos % drill.length]} />} />
               </div>
               <div className="pm-nav">
                 <button type="button" className="btn" disabled={drillPos === 0} onClick={() => setDrillPos((p) => p - 1)}><ArrowLeft size={15} /> Previous</button>

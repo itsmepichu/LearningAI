@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { Building2, Check, ChevronDown, Landmark, Plane, ShoppingBag } from 'lucide-react'
 import { projects, type ProjectId } from '../data/projects'
 import { useProgress } from '../store/progress'
@@ -15,6 +16,7 @@ export function ProjectIcon({ id, size = 15 }: { id: ProjectId; size?: number })
 export function ProjectPicker({ inline = false }: { inline?: boolean }) {
   const project = useProgress((s) => s.project)
   const setProject = useProgress((s) => s.setProject)
+  const [params, setParams] = useSearchParams()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const listId = useId()
@@ -33,6 +35,17 @@ export function ProjectPicker({ inline = false }: { inline?: boolean }) {
     }
   }, [open])
 
+  const choose = (id: ProjectId) => {
+    setProject(id)
+    setOpen(false)
+    // A ?project= override for this visit would otherwise hide the new choice.
+    if (params.has('project')) {
+      const next = new URLSearchParams(params)
+      next.delete('project')
+      setParams(next, { replace: true, preventScrollReset: true })
+    }
+  }
+
   return (
     <div className={'pp' + (inline ? ' inline' : '')} ref={ref}>
       <button
@@ -41,12 +54,13 @@ export function ProjectPicker({ inline = false }: { inline?: boolean }) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
+        aria-label={`Example project: ${current.label}`}
         onClick={() => setOpen((o) => !o)}
         title="Example project used for practical notes, data and labs"
         style={{ ['--pc' as string]: `var(${current.accent})` }}
       >
         <span className="pp-ico"><ProjectIcon id={current.id} /></span>
-        <span className="pp-lbl">{inline ? current.label : <><small>Example</small>{current.label}</>}</span>
+        <span className="pp-lbl">{inline ? current.label : <><small>Example</small><span className="pp-full">{current.label}</span><span className="pp-short">{current.short}</span></>}</span>
         <ChevronDown size={14} />
       </button>
       {open && (
@@ -60,10 +74,7 @@ export function ProjectPicker({ inline = false }: { inline?: boolean }) {
               aria-selected={p.id === project}
               className={'pp-opt' + (p.id === project ? ' on' : '')}
               style={{ ['--pc' as string]: `var(${p.accent})` }}
-              onClick={() => {
-                setProject(p.id)
-                setOpen(false)
-              }}
+              onClick={() => choose(p.id)}
             >
               <span className="pp-ico"><ProjectIcon id={p.id} /></span>
               <span className="pp-b">

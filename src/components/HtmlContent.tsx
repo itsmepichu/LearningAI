@@ -9,10 +9,35 @@ import { widgets } from '../widgets/registry'
 interface Slot { el: HTMLElement; name: string; props: Record<string, unknown>; key: string }
 
 /**
+ * Content fragments choose heading levels for their look (mostly h5, with h3 for tool
+ * lists), so rendered as written they skip levels below the page's h1. This gives them
+ * a valid outline: a heading sits one level below the nearest earlier heading with a
+ * higher source level, or at h2 if there is none. A changed heading gets an `as-hN`
+ * class naming its source level, and the stylesheets style `hN` and `.as-hN` alike.
+ * Running it again changes nothing.
+ */
+function normaliseHeadings(root: HTMLElement) {
+  const open: { from: number; to: number }[] = []
+  for (const h of root.querySelectorAll<HTMLElement>('h1,h2,h3,h4,h5,h6')) {
+    const from = +h.tagName[1]
+    while (open.length && open[open.length - 1].from >= from) open.pop()
+    const to = open.length ? open[open.length - 1].to + 1 : 2
+    open.push({ from, to })
+    if (to === from) continue
+    const n = document.createElement('h' + to)
+    for (const a of h.attributes) n.setAttribute(a.name, a.value)
+    n.classList.add('as-h' + from)
+    n.append(...h.childNodes)
+    h.replaceWith(n)
+  }
+}
+
+/**
  * Renders an HTML content fragment, then:
  *  - mounts React widgets into `<div data-widget="name" data-props='{...}'>` placeholders,
  *  - starts the v3 vanilla widgets found in the fragment (when `legacy` is on),
- *  - turns in-content "#id" links into app navigation.
+ *  - turns in-content "#id" links into app navigation,
+ *  - normalises heading levels, before the legacy widgets look for headings.
  */
 export function HtmlContent({
   html,
@@ -37,6 +62,7 @@ export function HtmlContent({
   useLayoutEffect(() => {
     const root = ref.current
     if (!root) return
+    normaliseHeadings(root)
     root.querySelectorAll<HTMLAnchorElement>('a[href^="http"]').forEach((a) => {
       a.target = '_blank'
       a.rel = 'noopener noreferrer'

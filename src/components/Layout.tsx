@@ -37,7 +37,22 @@ export function Layout() {
   const studied = useProgress((s) => s.studied)
   const done = courseTopics.filter((t) => studied[t.id]).length
 
+  const [, chId, tId] = loc.pathname.split('/')
+  const ch = getChapter(chId)
+  const tp = getTopic(tId)
+
   useEffect(() => setNavOpen(false), [loc.pathname])
+
+  // The topic crumb repeats the h1, so show it only once the h1 has scrolled away.
+  const [titleHidden, setTitleHidden] = useState(false)
+  useEffect(() => {
+    setTitleHidden(false)
+    const h1 = document.querySelector('main h1')
+    if (!tId || !h1) return
+    const io = new IntersectionObserver(([e]) => setTitleHidden(!e.isIntersecting), { rootMargin: '-60px 0px 0px 0px' })
+    io.observe(h1)
+    return () => io.disconnect()
+  }, [loc.pathname, tId])
 
   // Move focus into the open drawer. On close, return it to the menu button, or to
   // the new page if the reader closed the drawer by following one of its links.
@@ -69,10 +84,6 @@ export function Layout() {
     return () => removeEventListener('keydown', onKey)
   }, [navOpen])
 
-  const [, chId, tId] = loc.pathname.split('/')
-  const ch = getChapter(chId)
-  const tp = getTopic(tId)
-
   return (
     <div className="app">
       <a className="skip" href="#main" inert={drawerOpen}>Skip to content</a>
@@ -93,7 +104,7 @@ export function Layout() {
               <span className="mono">{ch.num}</span> {ch.title}
             </Link>
           )}
-          {tp && (
+          {tp && titleHidden && (
             <span aria-current="page">
               <span className="mono">{tp.tn}</span> {tp.title}
             </span>
@@ -106,7 +117,7 @@ export function Layout() {
           <kbd>/</kbd>
         </button>
         <Link to="/progress" className="top-prog" title={`${done} of ${courseTopics.length} topics studied`} aria-label="Your progress">
-          <ProgressRing value={done / courseTopics.length} size={30} stroke={3.5} />
+          <ProgressRing value={done / courseTopics.length} size={34} stroke={3} text={done ? `${Math.max(1, Math.round((done / courseTopics.length) * 100))}%` : undefined} />
         </Link>
         <button className="icon-btn" type="button" onClick={toggle} aria-label={`Switch to ${resolved === 'dark' ? 'light' : 'dark'} theme`}>
           {resolved === 'dark' ? <Sun size={17} /> : <Moon size={17} />}

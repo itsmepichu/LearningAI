@@ -2,7 +2,7 @@
 
 A review of the LearningAI app's page structure, components and UI/UX, with the code changes it suggests.
 
-**Status:** phase A is implemented (see the notes at the start of phase A). Phases B, C and D have not been started.
+**Status:** phases A and B are implemented (see the notes at the start of each). Phases C and D have not been started.
 
 - **Reviewed:** branch `phase-3-rollout` at commit d229907, built and served with `vite preview`.
 - **Method:** the ui-ux-pro-max design skill (UX guideline and React stack searches) and the design-critique framework.
@@ -250,6 +250,27 @@ Also give `.t-steps` a visible label for screen readers: wrap it in `<nav aria-l
 - Contrast: assert the computed colour of `.side-ch-link .n` is not `--rule-2`. For full coverage, see phase D (axe).
 
 ### Phase B: structure and navigation (S1–S6, K6)
+
+**Status: implemented.** The snippets below are the original suggestions. The code differs from them where a snippet would not have worked or the review had missed something:
+
+- **Headings (B1):**
+  - Levels come from an outline walk, not a relative shift. A shift turns the 14 topics that mix `h3` and `h5` into `h1 → h4`.
+  - Changed headings get an `as-hN` class, and the stylesheets style `hN` and `.as-hN` alike.
+  - Normalising runs before the legacy widgets mount, so their `.box>h5` and `.tools>h3` lookups, which add the icons, now match both forms.
+  - Labels that legacy widgets inject into their own output are now `div.as-h5`, because they are not part of the page outline.
+  - The review had also missed two skipped levels: the chapter page's What/Why/Where panels and the Practice page's question cards. Both now use `h2` with the same look. `tests/e2e.cjs` checks heading order on every route, and on the Practice page with a drawn set.
+- **Contents (B3):** the summary counts "items", because the list holds figures and notes as well as sections. No hook was needed, because both renderings read the same `marks` state.
+- **One picker (B4):** choosing in the top bar now clears a `?project=` override. Otherwise the override hid the new choice, and the top bar would have looked broken as the only control.
+- **Phone top bar (B5):**
+  - `projects.json` gains a `short` label, because the full labels "Online store" and "Travel booking" do not fit.
+  - The brand text hides below 480 px so the bar fits at 320 px.
+  - The project menus (top bar and home page) now stay on screen on phones. They ran off the left edge at 390 px.
+- **Progress ring (B5):** the top-bar ring grows from 30 to 34 px so a 12 px percentage fits inside it.
+- **Arrow keys (B7):** one `onRovingKeyDown` handler clicks the next item, so each list keeps its own selection logic. The check page's mode switch is a radio group, so it also takes the up and down arrows.
+
+**Found while implementing, not yet fixed:**
+
+- **Interview count pill:** `.pill.iv` picks up the `.iv` card's padding and left border, so the "0/6 practised" pill on check pages is too tall.
 
 **B1. Normalise heading levels in rendered content (S1).** Shift headings once when topic HTML is rendered, instead of editing 135 content files: the body's first heading level becomes `h2`, and the rest follow relative to it. In `src/components/HtmlContent.tsx`, after the HTML is parsed into the container:
 

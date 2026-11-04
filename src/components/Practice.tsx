@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { ArrowRightLeft, Database, Download, FlaskConical, Lightbulb, TriangleAlert } from 'lucide-react'
 import { fill, getProject, isProjectId, loadPractice, projects, datasetUrl, type ChapterPractice, type ProjectId, type TopicPractice } from '../data/projects'
 import { useProgress } from '../store/progress'
+import { onRovingKeyDown } from './common'
 import { ProjectIcon } from './ProjectPicker'
 
 /** The project to show on this page: a `?project=` override for this visit, else the saved default. */
@@ -33,6 +34,16 @@ export function useChapterPractice(chapterId: string | undefined) {
   return data && data.id === chapterId ? data.practice : null
 }
 
+/** Says which project frames the questions on pages where the top bar's picker controls it. */
+export function ProjectFramingNote() {
+  const { project } = useActiveProject()
+  return (
+    <span className="muted small">
+      Questions framed for <b>{getProject(project)!.label}</b>. Change the example in the top bar.
+    </span>
+  )
+}
+
 const Html = ({ html, className }: { html: string; className?: string }) => <div className={className} dangerouslySetInnerHTML={{ __html: html }} />
 
 /** "In practice" block: one tab per example project, with the active project's note, failure, try-it steps and dataset. */
@@ -41,10 +52,13 @@ export function PracticeBlock({ practice }: { practice: TopicPractice | undefine
   const setProject = useProgress((s) => s.setProject)
   const p = getProject(project)!
   const note = practice?.[project]
+  const baseId = useId()
+  const tabId = (id: ProjectId) => `${baseId}-tab-${id}`
+  const panelId = `${baseId}-panel`
 
   return (
     <section className="pb" aria-label="In practice" style={{ ['--pc' as string]: `var(${p.accent})` }}>
-      <div className="pb-tabs" role="tablist" aria-label="Example project">
+      <div className="pb-tabs" role="tablist" aria-label="Example project" onKeyDown={onRovingKeyDown}>
         {projects.map((x) => {
           const has = !!practice?.[x.id]
           return (
@@ -52,7 +66,10 @@ export function PracticeBlock({ practice }: { practice: TopicPractice | undefine
               key={x.id}
               type="button"
               role="tab"
+              id={tabId(x.id)}
               aria-selected={x.id === project}
+              aria-controls={x.id === project ? panelId : undefined}
+              tabIndex={x.id === project ? 0 : -1}
               className={'pb-tab' + (x.id === project ? ' on' : '') + (has ? '' : ' empty')}
               style={{ ['--pc' as string]: `var(${x.accent})` }}
               onClick={() => setOverride(x.id)}
@@ -73,7 +90,7 @@ export function PracticeBlock({ practice }: { practice: TopicPractice | undefine
         </div>
       )}
       {note ? (
-        <div className="pb-body" role="tabpanel">
+        <div className="pb-body" role="tabpanel" id={panelId} aria-labelledby={tabId(project)}>
           <div className="pb-row ip2">
             <b><Lightbulb size={15} /> In practice · {p.label} <small>({p.company})</small></b>
             <Html html={fill(note.practice, p)} />
@@ -91,7 +108,7 @@ export function PracticeBlock({ practice }: { practice: TopicPractice | undefine
           <DatasetLinks projectId={project} />
         </div>
       ) : (
-        <div className="pb-body pb-empty" role="tabpanel">
+        <div className="pb-body pb-empty" role="tabpanel" id={panelId} aria-labelledby={tabId(project)}>
           The {p.label} version of this topic's practical note has not been written yet.
           {practice?.harbor && project !== 'harbor' && (
             <button type="button" className="linkish" onClick={() => setOverride('harbor')}>Read the Harbor version</button>

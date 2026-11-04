@@ -19,7 +19,7 @@
 - There are four projects, with ids `harbor`, `store`, `bank` and `travel`. Their profiles go in `src/content/projects.json`.
   - Company names must be fictional. Never use a real company's name, because the notes invent internal systems, figures and mistakes.
   - Scale figures are illustrative; say so where they appear.
-- There is no up-front project choice. Harbor is the default; readers switch from the top bar, the In practice tabs, the end-of-topic note or the Practice page filter.
+- There is no up-front project choice. Harbor is the default; readers switch from the top bar, the In practice tabs or the end-of-topic note.
 - Per-topic notes go in `src/content/practice/<chapter>.json`, keyed `topicId -> projectId -> { practice, failure, tryIt, fit, fitNote }`.
   - Each of `practice`, `failure` and `tryIt` is a short HTML string. Write the company and assistant as `{company}` and `{assistant}`, so names live only in `projects.json` (Harbor's existing notes name Harbor directly).
   - `fit` is `best`, `good` or `limited`. `fitNote` is a short phrase on why the project suits the topic; the end-of-topic note shows it when the reader's project is `limited`. A `limited` topic needs at least one other project rated `best` or `good`.

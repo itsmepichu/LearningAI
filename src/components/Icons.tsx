@@ -1,7 +1,7 @@
 /** Small inline icon set (stroke icons, 24px grid). Lucide is used for the rest. */
 import type { SVGProps } from 'react'
 
-export function ProgressRing({ value, size = 40, stroke = 4, label }: { value: number; size?: number; stroke?: number; label?: string }) {
+export function ProgressRing({ value, size = 40, stroke = 4, label, text }: { value: number; size?: number; stroke?: number; label?: string; text?: string }) {
   const r = (size - stroke) / 2
   const c = 2 * Math.PI * r
   const v = Math.max(0, Math.min(1, value))
@@ -20,6 +20,7 @@ export function ProgressRing({ value, size = 40, stroke = 4, label }: { value: n
         strokeDashoffset={c * (1 - v)}
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
       />
+      {text && <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" className="ring-t">{text}</text>}
     </svg>
   )
 }

@@ -25,6 +25,21 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
     if (errs.length) fails.push(`${label}: ${errs.splice(0).join(' | ')}`)
   }
 
+  // heading levels never skip one on the way down
+  const checkHeadings = async (label) => {
+    const skips = await page.$$eval('main :is(h1,h2,h3,h4,h5,h6)', (hs) => {
+      const out = []
+      let prev = 0
+      for (const h of hs) {
+        const l = +h.tagName[1]
+        if (l > prev + 1) out.push(`h${prev} -> h${l} "${h.textContent.trim().slice(0, 40)}"`)
+        prev = l
+      }
+      return out
+    })
+    if (skips.length) fails.push(`${label}: heading order: ${skips.join('; ')}`)
+  }
+
   // 1. every route
   const routes = ['/', '/guide', '/paths', '/progress', '/practice', '/does-not-exist']
   for (const c of manifest.chapters) {
@@ -37,6 +52,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
     await page.waitForTimeout(r.split('/').length > 2 ? 350 : 150)
     const h1 = await page.$('main h1')
     if (!h1) fails.push(`${r}: no h1`)
+    await checkHeadings(r)
     if (r.split('/').length > 2 && !r.endsWith('/check')) {
       const n = await page.$$eval('.lai-topic > *', (x) => x.length)
       if (!n) fails.push(`${r}: empty topic body`)
@@ -119,6 +135,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   const drawn = await page.$$eval('.pm-prog button', (x) => x.length)
   console.log('practice set drawn:', drawn)
   if (!drawn) fails.push('practice page: no random set drawn')
+  await checkHeadings('practice page with a drawn set')
   // answer a multiple-choice question wrongly, then find it under Review mistakes
   await page.selectOption('.pf-row label:nth-of-type(1) select', 'mcq')
   await page.click('.pm-bar .btn.primary')
@@ -283,6 +300,101 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
     if (bad.length) fails.push(`contrast (${colorScheme}): ${bad.join(', ')}`)
     await t.close()
   }
+
+  // 7. structure and navigation
+  const s = await b.newPage({ viewport: { width: 1440, height: 900 } })
+  await s.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+  // content headings changed level but kept their look and the icons the legacy code adds
+  const boxIcons = await s.$$eval('.box>:is(h2,h3).as-h5', (x) => x.length && x.every((h) => h.querySelector('.ico svg')))
+  if (!boxIcons) fails.push('headings: callout headings lost their icons')
+  // the topic crumb appears only after the h1 scrolls away
+  const crumb = () => s.$('.crumbs [aria-current="page"]')
+  if (await crumb()) fails.push('breadcrumb: topic crumb shown while the h1 is visible')
+  await s.evaluate(() => window.scrollTo(0, 900))
+  await s.waitForTimeout(200)
+  if (!(await crumb())) fails.push('breadcrumb: topic crumb missing after the h1 scrolled away')
+  if (await s.isVisible('.t-toc')) fails.push('contents: .t-toc visible beside the rail at 1440 px')
+  // arrow keys move focus and selection in the In practice tabs
+  await s.focus('.pb-tab.on')
+  await s.keyboard.press('ArrowRight')
+  await s.waitForTimeout(100)
+  const tabState = await s.evaluate(() => ({
+    focused: document.activeElement?.classList.contains('on'),
+    second: [...document.querySelectorAll('.pb-tab')].indexOf(document.activeElement),
+    stops: document.querySelectorAll('.pb-tab[tabindex="0"]').length,
+  }))
+  if (!tabState.focused || tabState.second !== 1 || tabState.stops !== 1) fails.push('tabs: ArrowRight did not move focus and selection: ' + JSON.stringify(tabState))
+  if (!s.url().includes('project=store')) fails.push('tabs: ArrowRight did not switch the project')
+  // choosing in the top bar wins over a ?project= override
+  await s.click('.topbar .pp-btn')
+  await s.click('.pp-opt:nth-of-type(3)')
+  await s.waitForTimeout(100)
+  if (s.url().includes('project=')) fails.push('picker: the top bar choice did not clear the ?project= override')
+  const onTab = await s.textContent('.pb-tab.on')
+  if (!/Bank/.test(onTab)) fails.push(`picker: In practice shows "${onTab}" after choosing Bank`)
+  await s.click('.topbar .pp-btn')
+  await s.click('.pp-opt:nth-of-type(1)')
+  // check page: one h2 per section, one picker, arrow keys in the mode switch
+  await s.goto(BASE + '/c5/check', { waitUntil: 'networkidle' })
+  await s.waitForSelector('.csec')
+  const secs = await s.$$eval('.csec', (x) => [x.length, x.filter((e) => e.querySelector(':scope > h2 > button.csec-h')).length])
+  if (!secs[0] || secs[0] !== secs[1]) fails.push(`check page: ${secs[1]} of ${secs[0]} sections have an h2`)
+  if ((await s.$$('.pp')).length !== 1) fails.push('check page: more than one project picker')
+  await s.focus('.ck-bar [role=radio][aria-checked=true]')
+  await s.keyboard.press('ArrowRight')
+  if ((await s.getAttribute('.ck-bar [role=radio]:nth-child(2)', 'aria-checked')) !== 'true') fails.push('check page: ArrowRight did not switch the mode')
+  // practice page: one picker, arrow keys in the mode tabs
+  await s.goto(BASE + '/practice', { waitUntil: 'networkidle' })
+  if ((await s.$$('.pp')).length !== 1) fails.push('practice page: more than one project picker')
+  await s.focus('.seg.tabs [role=tab][aria-selected=true]')
+  await s.keyboard.press('End')
+  if ((await s.getAttribute('#pm-tab-drill', 'aria-selected')) !== 'true') fails.push('practice page: End did not select the last tab')
+  if ((await s.getAttribute('#pm-panel', 'aria-labelledby')) !== 'pm-tab-drill') fails.push('practice page: the panel is not labelled by its tab')
+  await s.close()
+
+  // in-page contents below 1240 px
+  const c = await b.newPage({ viewport: { width: 1024, height: 900 } })
+  await c.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+  if (!(await c.isVisible('.t-toc'))) fails.push('contents: .t-toc not visible at 1024 px')
+  await c.click('.t-toc summary')
+  const tocId = (await c.getAttribute('.t-toc ol a', 'href')).slice(1)
+  await c.click('.t-toc ol a')
+  await c.waitForTimeout(900)
+  const tocTop = await c.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, tocId)
+  console.log('contents link target top:', Math.round(tocTop))
+  if (tocTop < -5 || tocTop > 450) fails.push(`contents: the first link did not scroll to its target (top ${tocTop})`)
+  await c.close()
+
+  // phone top bar: fits, names the project, and progress is reachable from the drawer
+  for (const width of [390, 320]) {
+    const t = await b.newPage({ viewport: { width, height: 800 } })
+    await t.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+    const bar = await t.evaluate(() => ({
+      over: document.querySelector('.topbar').scrollWidth - document.querySelector('.topbar').clientWidth,
+      short: document.querySelector('.topbar .pp-short').textContent,
+      shown: getComputedStyle(document.querySelector('.topbar .pp-short')).display !== 'none',
+      ring: getComputedStyle(document.querySelector('.top-prog')).display,
+    }))
+    if (bar.over > 0) fails.push(`phone top bar at ${width}: overflows by ${bar.over}px`)
+    if (!bar.shown || bar.short !== 'Harbor') fails.push(`phone top bar at ${width}: no short project label`)
+    if (bar.ring !== 'none') fails.push(`phone top bar at ${width}: progress ring still shown`)
+    await t.click('.topbar .pp-btn')
+    const menu = await t.$eval('.pp-menu', (m) => { const r = m.getBoundingClientRect(); return [r.left, r.right] })
+    if (menu[0] < 0 || menu[1] > width) fails.push(`phone top bar at ${width}: project menu runs off screen (${menu})`)
+    await t.goto(BASE + '/', { waitUntil: 'networkidle' })
+    await t.click('.pp.inline .pp-btn')
+    const inlineMenu = await t.$eval('.pp.inline .pp-menu', (m) => { const r = m.getBoundingClientRect(); return [r.left, r.right] })
+    if (inlineMenu[0] < 0 || inlineMenu[1] > width) fails.push(`home at ${width}: inline project menu runs off screen (${inlineMenu})`)
+    await t.close()
+  }
+  const dr = await b.newPage({ viewport: { width: 390, height: 844 } })
+  await dr.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+  await dr.click('.nav-toggle')
+  await dr.waitForTimeout(350)
+  await dr.click('.side-top[href="/progress"]')
+  await dr.waitForSelector('.page-h')
+  if (!dr.url().endsWith('/progress')) fails.push('drawer: no link to the progress page')
+  await dr.close()
 
   await b.close()
   console.log(fails.length ? 'FAILURES:\n- ' + fails.join('\n- ') : 'ALL CHECKS PASSED')

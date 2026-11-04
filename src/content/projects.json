@@ -5,6 +5,7 @@
   {
    "id": "harbor",
    "label": "Harbor",
+   "short": "Harbor",
    "kind": "Internal company assistant",
    "company": "Tidewell",
    "assistant": "Harbor",
@@ -21,6 +22,7 @@
   {
    "id": "store",
    "label": "Online store",
+   "short": "Store",
    "kind": "Shopping and support assistant",
    "company": "Bazrova",
    "assistant": "Aisle",
@@ -39,6 +41,7 @@
   {
    "id": "bank",
    "label": "Bank",
+   "short": "Bank",
    "kind": "Customer and dispute-operations assistant",
    "company": "Navakosh Bank",
    "assistant": "Ledger",
@@ -56,6 +59,7 @@
   {
    "id": "travel",
    "label": "Travel booking",
+   "short": "Travel",
    "kind": "Trip-planning and booking agent",
    "company": "Safarnova",
    "assistant": "Compass",
