@@ -36,6 +36,7 @@ npm run typecheck
 End-to-end check: build, then run the preview server and the test. The test visits every route, starts every widget, and checks search, progress, the quiz, the theme switch and the 3D widget.
 
 ```bash
+npx playwright install chromium   # once, to download the test browser
 npm run build && (npx vite preview --port 4173 &) && npm run test:e2e
 ```
 

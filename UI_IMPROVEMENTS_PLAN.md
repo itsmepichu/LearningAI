@@ -2,7 +2,7 @@
 
 A review of the LearningAI app's page structure, components and UI/UX, with the code changes it suggests.
 
-**Status:** phases A, B and C are implemented (see the notes at the start of each). Phase D has not been started. The full e2e suite last ran on phase B: it runs next after phase D, and its new phase C checks have not run as part of it.
+**Status:** all four phases are implemented (see the notes at the start of each). The full e2e suite, including the axe check, passes on the finished work. Two issues found along the way are still open, listed at the start of phase A.
 
 - **Reviewed:** branch `phase-3-rollout` at commit d229907, built and served with `vite preview`.
 - **Method:** the ui-ux-pro-max design skill (UX guideline and React stack searches) and the design-critique framework.
@@ -129,11 +129,11 @@ Four phases, ordered by impact. Each item names the files to change, gives the s
   - `role="listbox"` is set only while there are results, because the hint text is not a valid listbox child.
   - The dialog marks the Escape it handles, so one press closes the dialog and not the drawer behind it.
 
-**Found while implementing, not yet fixed:**
+**Found while implementing, still open:**
 
 - **`--accent-2` in light mode:** link hover text is 4.05:1 on paper and white text on a hovered primary button is 4.35:1. Both are below AA.
 - **Search input ring:** the global `input:focus` rule draws a ring around the input inside the search panel, which already has its own frame.
-- **Playwright:** `tests/e2e.cjs` needs it, but it is not listed in `package.json`, so a fresh checkout cannot run the tests without a separate install.
+- **Playwright (fixed in phase D):** `tests/e2e.cjs` needed it, but it was not listed in `package.json`.
 
 **A1. Make the mobile drawer a real modal drawer (K1, K2).** In `src/components/Layout.tsx`:
 
@@ -431,6 +431,14 @@ export function useRovingTabs(count: number, index: number, onSelect: (i: number
 **C8. Best-fit marker.** In `Practice.tsx`, the ★ on a project tab is an `<i>` with only a `title`. Add `<span className="sr-only">best fit for this topic</span>` so screen readers announce it.
 
 ### Phase D: guard against regressions
+
+**Status: implemented.**
+
+- **axe:** `tests/axe.cjs` runs inside `tests/e2e.cjs`, and can also run alone with `node tests/axe.cjs`. It covers the eight pages in both themes at 1280 px, and fails on serious or critical violations. It does not cover other routes, phone width, or hover and focus states.
+- **Violations fixed:** a top-bar link and the project button had names that did not match their visible text, and the BM25 widget dimmed rows with opacity, leaving their text at 2.9:1.
+- **Dependencies:** `@axe-core/playwright` and `playwright` are now dev dependencies. Playwright was added because installing axe would otherwise remove the unlisted copy the tests need. The browser still needs `npx playwright install chromium`, as the README now says.
+- **UX scan:** `node tests/ux-scan.cjs` reports text under 12 px, targets under 24 px and sideways scroll, and fails on nothing. `--shots=name` also saves the screenshots for before-and-after review.
+- **Widget checklist:** added to `CLAUDE.md`, along with a note on how to style content headings.
 
 - **Automated accessibility checks:** add `@axe-core/playwright` as a dev dependency (a new dependency; needs your approval). Run axe in `tests/e2e.cjs` on the eight pages in both themes, and fail on `serious` or `critical` violations. This catches contrast, label and ARIA issues on every future change, including the phase 4 React widgets.
 - **Keep the UX scripts:** move the target-size and text-size scans used for this review into `tests/ux-scan.cjs`. Print a short report, with no failing thresholds at first.

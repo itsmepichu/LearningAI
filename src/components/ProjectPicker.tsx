@@ -54,7 +54,6 @@ export function ProjectPicker({ inline = false }: { inline?: boolean }) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
-        aria-label={`Example project: ${current.label}`}
         onClick={() => setOpen((o) => !o)}
         title="Example project used for practical notes, data and labs"
         style={{ ['--pc' as string]: `var(${current.accent})` }}

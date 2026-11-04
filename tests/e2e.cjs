@@ -2,6 +2,7 @@
    v3 widgets start, search/progress/quiz/theme work, and the 3D widget runs.
    Usage: npm run build && npx vite preview --port 4173 & node tests/e2e.cjs [baseUrl] */
 const { chromium } = require('playwright')
+const { runAxe } = require('./axe.cjs')
 const path = require('path')
 const fs = require('fs')
 const manifest = require('../src/content/manifest.json')
@@ -437,6 +438,11 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   if (!ph.includes(String(manifest.chapters.filter((c) => c.kind === 'chapter').reduce((n, c) => n + c.topics.length, 0)))) fails.push(`search placeholder count looks wrong: "${ph}"`)
   await r.close()
   if (errs.length) fails.push('readability checks: ' + errs.join(' | '))
+
+  // 9. accessibility: no serious or critical axe violations on the eight review pages, in both themes
+  const axeProblems = await runAxe(b, BASE)
+  console.log('axe serious or critical violations:', axeProblems.length)
+  fails.push(...axeProblems.map((p) => 'axe: ' + p))
 
   await b.close()
   console.log(fails.length ? 'FAILURES:\n- ' + fails.join('\n- ') : 'ALL CHECKS PASSED')
