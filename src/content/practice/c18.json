@@ -2,43 +2,225 @@
  "c18-1": {
   "harbor": {
    "practice": "Harbor release r2026.11.3 maps code SHA, prompt versions, tool schemas, model revision, embedder + index, ACL watermark and eval suite.",
-   "failure": "Rolling back code only, while an incompatible prompt, index or adapter stays live."
+   "failure": "Rolling back code only, while an incompatible prompt, index or adapter stays live.",
+   "fit": "good",
+   "fitNote": "one release ID for code, prompts, model and index",
+   "tryIt": "Write Harbor's release manifest for r2026.11.3 as a file, then change only the prompt version and write the new release ID. Check that traces would show which release served each answer."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "prompts and indexes change weekly",
+   "practice": "{company} changes prompts and the product index more often than code. Each change creates a new release manifest, so a bad answer during a sale can be traced to the exact prompt, model and index that produced it.",
+   "failure": "Rolling back code after a bad sale-day answer, while the new prompt and index stay live.",
+   "tryIt": "Write {company}'s release manifest with code SHA, prompt versions, tool schemas, model, embedder, index version and evaluation suite. Then list which fields change most often."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "auditors must reproduce any output",
+   "practice": "{company} must be able to show which system produced any letter or summary. Every trace carries the release ID, and every release manifest is kept for the full audit retention period.",
+   "failure": "Keeping only the code history, so nobody can say which prompt drafted a disputed letter.",
+   "tryIt": "Write the audit question “which system drafted this letter?” as a lookup: trace → release ID → manifest fields. List what must be kept, and for how long."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "supplier tool schemas change",
+   "practice": "{company}'s manifest includes the version of each supplier tool schema, because a supplier API change can break rebooking without any code change on {company}'s side.",
+   "failure": "Leaving tool schemas out of the manifest, so a schema change is invisible in release history.",
+   "tryIt": "Write {company}'s manifest and add a field for each supplier tool schema version. Then describe a regression you could bisect with it."
   }
  },
  "c18-2": {
   "harbor": {
    "practice": "The same signed Harbor image and model artifact tested in staging is promoted to production; only credentials and capacity differ.",
-   "failure": "A container that downloads &quot;latest&quot; model weights at start-up; the release is not reproducible."
+   "failure": "A container that downloads &quot;latest&quot; model weights at start-up; the release is not reproducible.",
+   "fit": "good",
+   "fitNote": "the same signed image in staging and production",
+   "tryIt": "Step through the promotion figure and write, for each stage, which artefact digests stay the same and which configuration values differ."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "GPU pools defined in code",
+   "practice": "{company}'s GPU pools, vector database, queues and alerts are defined in code and applied by a pipeline. Pre-sale scaling is a reviewed change, not a console click.",
+   "failure": "Scaling GPU pools by hand before a sale, then losing the settings when the cluster is rebuilt.",
+   "tryIt": "Write the promotion steps for a prompt change at {company} from merge to 100%, naming the artefact that is built once and reused."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "every change has an audit trail",
+   "practice": "{company} uses GitOps: the state of each environment is in a repository, every change is reviewed, and a rollback is a reverted commit with its own record.",
+   "failure": "A hotfix applied directly in production that the next sync silently undid.",
+   "tryIt": "List {company}'s infrastructure that should be in code (pools, databases, IAM, secret references, dashboards, alerts), and who reviews changes to each."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "staging must look like production",
+   "practice": "{company}'s staging uses the same engine and index type as production with a realistic sample of bookings and fare rules, so tests mean something.",
+   "failure": "A container that downloads the “latest” model at start-up, so staging and production run different models.",
+   "tryIt": "Write the differences {company} allows between staging and production (credentials, capacity) and the ones it forbids (images, models, prompts)."
   }
  },
  "c18-3": {
   "harbor": {
    "practice": "A Harbor candidate improved average accuracy but failed one cross-tenant case; promotion was blocked.",
-   "failure": "Treating a green CI badge as proof that every production failure is covered."
+   "failure": "Treating a green CI badge as proof that every production failure is covered.",
+   "fit": "good",
+   "fitNote": "one cross-tenant failure blocked promotion",
+   "tryIt": "In the gated pipeline figure, run each of the four changes and note which gate fails for each. Then write the threshold Harbor uses for cross-tenant leaks."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "cost gates matter at sale volume",
+   "practice": "{company}'s cost gate compares cost per resolved chat with the current release; a cheaper model that resolves fewer chats fails it.",
+   "failure": "Gating on average accuracy only, so a change that broke Hindi answers shipped.",
+   "tryIt": "In the figure, run “model swap to cheaper model” and read which gate fails. Then write {company}'s four gates with one threshold each."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "critical cases and security gates block release",
+   "practice": "{company}'s gates block release on any critical-case regression, any cross-customer leak, any critical vulnerability, or a cost rise above the approved limit. Exceptions need a named approver.",
+   "failure": "Overriding a failed security gate because the release date was fixed.",
+   "tryIt": "In the figure, run “new tool: send_email” and see which gate fails. Then write {company}'s critical-case list for disputes and the rule for approving an exception."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "per-language quality gates",
+   "practice": "{company}'s quality gate checks each language separately, so a change that helps English but hurts Tamil is blocked.",
+   "failure": "One overall quality score that hides a drop in one language.",
+   "tryIt": "In the figure, run “retrieval k 8 → 20” and read the failing gate. Then write {company}'s per-language quality thresholds."
   }
  },
  "c18-4": {
   "harbor": {
    "practice": "Harbor shadows retrieval and generation but never ticket writes; a canary on 3 tenants rolls back automatically if unsupported answers rise.",
-   "failure": "Sending shadow traffic to a real write tool."
+   "failure": "Sending shadow traffic to a real write tool.",
+   "fit": "good",
+   "fitNote": "shadow reads, never ticket writes",
+   "tryIt": "In the canary figure, start a rollout with a healthy candidate, then with one that regresses at 25%. Then, in the gate-driven figure, untick “rollback rehearsed” and try to advance."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "seller cohorts and refund tools",
+   "practice": "{company} shadows new prompts on real chats with order and refund tools stubbed, then canaries to internal staff and a small seller cohort before all shoppers.",
+   "failure": "Shadow traffic reaching the real refund tool, which paid refunds twice.",
+   "tryIt": "In the canary figure, run the regressing candidate and note where it rolls back. Then write {company}'s cohorts (staff, small sellers, all shoppers) and the metric that stops each step."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "rollback does not unsend letters",
+   "practice": "{company}'s rollout plan includes reconciliation: if a bad version sends wrong letters, rollback stops new ones, and a listed process corrects the ones already sent.",
+   "failure": "Assuming rollback undoes the customer letters a bad version already sent.",
+   "tryIt": "In the gate figure, inject a regression at the next stage and advance. Then write the reconciliation steps for letters sent by a bad version."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "booking changes cannot be shadowed",
+   "practice": "{company} shadows search and answer generation, but booking changes run only in canary, for a small share of travellers, with automatic rollback if failed bookings rise.",
+   "failure": "Shadowing the rebooking agent with live supplier holds, which held seats twice.",
+   "tryIt": "Run the healthy and regressing candidates in the canary figure. Then mark which {company} tools must be stubbed in shadow mode."
   }
  },
  "c18-5": {
   "harbor": {
    "practice": "A provider upgrade changed how Harbor&#x27;s tool calls stream; the parser had to pass compatibility tests before write-capable tasks moved over.",
-   "failure": "Assuming the same API method name means the same model behaviour."
+   "failure": "Assuming the same API method name means the same model behaviour.",
+   "fit": "good",
+   "fitNote": "streaming tool calls changed with the provider",
+   "tryIt": "Read the compatibility report and write the action for each row. Then add a row for “tool-call streaming format” as Harbor found it."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "verbosity changes cost",
+   "practice": "A new model wrote 38% longer answers for {company}, which raised cost and made chat slower; length guidance and the cost gate caught it before rollout. (Illustrative.)",
+   "failure": "Calling a “latest” model alias that the provider moved to a new version.",
+   "tryIt": "From the compatibility report, compute the cost change if median output tokens rise 38% and output tokens are 70% of {company}'s per-chat cost."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "retirement dates on the calendar",
+   "practice": "{company} keeps an inventory of which features use which model versions, with provider retirement dates and owners, and starts compatibility testing three months before each date.",
+   "failure": "Discovering a model retirement the week it happens.",
+   "tryIt": "Write {company}'s model inventory table: feature, model version, retirement date, owner, compatibility test status."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "multilingual and tool-call compatibility",
+   "practice": "When {company} upgrades models, it tests tool-call format for supplier tools, refusal rates and every language separately, and keeps prompt variants per model versioned together.",
+   "failure": "Reusing prompts tuned for the old model without re-tuning, which raised over-refusal in Hindi.",
+   "tryIt": "Write {company}'s compatibility checklist for a model upgrade, including a row per language and per supplier tool."
   }
  },
  "c18-6": {
   "harbor": {
    "practice": "A recurring Harbor failure on a new document type led to a parser fix and a regression case first; only a remaining extraction gap justified new training data.",
-   "failure": "Feeding user corrections straight into training; some are wrong, malicious or out of scope."
+   "failure": "Feeding user corrections straight into training; some are wrong, malicious or out of scope.",
+   "fit": "good",
+   "fitNote": "fix the parser before adding training data",
+   "tryIt": "Step through the improvement loop and write Harbor's retraining triggers. Then say why a parser fix came before new training data."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "agents edit AI-drafted replies",
+   "practice": "{company}'s support agents edit {assistant}'s drafted replies before sending. The edit fraction per prompt version is a quality metric, and reviewed (draft, sent) pairs become training data.",
+   "failure": "Feeding agents' edits straight into training without review, including edits that added wrong information.",
+   "tryIt": "Write three (draft, sent) reply pairs for chats in <code>chats.json</code> and compute the edit fraction of each (characters changed ÷ length). Then write the review rule before any pair is used for training."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "staff letter edits as signal",
+   "practice": "{company}'s staff edit drafted letters before approval. Edits are logged with the trace, and after compliance review they become evaluation cases first and training data only if the gap remains.",
+   "failure": "Mixing new labels into both evaluation and training sets, so the evaluation measures memory.",
+   "tryIt": "Write {company}'s retraining triggers (SLO breach, drift, labelled data volume, new base model, policy change) with a threshold for each."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "seasonal re-evaluation",
+   "practice": "{company} re-runs its full suite every week even without changes, and refreshes the suite each quarter with new messages, including monsoon-season ones.",
+   "failure": "An evaluation set from last year that never saw this season's disruption questions.",
+   "tryIt": "Write {company}'s weekly re-evaluation job: suite, thresholds, and what opens a work item."
   }
  },
  "c18-7": {
   "harbor": {
    "practice": "Harbor&#x27;s handover pack names who handles stale ACLs, how to disable a write tool, how to restore an index-and-encoder pair and how to verify recovery.",
-   "failure": "Treating a successful demo and an architecture diagram as a handover."
+   "failure": "Treating a successful demo and an architecture diagram as a handover.",
+   "fit": "good",
+   "fitNote": "a handover pack with recovery steps",
+   "tryIt": "Tick through the operational readiness checklist for Harbor and list the items you could not tick. Then fill one RACI row for index changes."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "ownership before the sale",
+   "practice": "Before each sale, {company} runs an operational readiness review: SLOs, dashboards, runbooks tested, on-call staffed, capacity from measured numbers, budgets set.",
+   "failure": "Treating a successful demo as readiness for sale-day traffic.",
+   "tryIt": "Use the readiness checklist for {assistant}'s sale launch and write the owner for each “must” item."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "named owners, approvals and audit",
+   "practice": "Every {company} AI system has a named owning team, a system card for governance, and release notes per manifest. Handover to operations includes runbook drills and a period of joint on-call.",
+   "failure": "A project team handing over an architecture diagram and leaving.",
+   "tryIt": "Fill the RACI table for {company}'s dispute assistant, then write the handover plan: walkthrough, access, drills, shadow on-call, joint period."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "handover across teams",
+   "practice": "{company}'s rebooking assistant moved from a project team to the operations team with shadow on-call during one disruption season before the project team stepped back.",
+   "failure": "Handing over in the quiet season and meeting the first disruption without the original team.",
+   "tryIt": "Write {company}'s release notes for one manifest: what changed, evaluation results, known limits, rollout plan and rollback."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Build a release manifest for {assistant}: code, prompts, order and refund tool schemas, model, embedder and product index. Run the four gates, shadow with refund tools stubbed, inject a regression in the seller canary, and restore the previous manifest.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Build a release manifest for the dispute assistant with approval records for each gate. Inject a regression in canary, roll back, and write how letters sent by the bad version are found and corrected. Keep the audit trail as evidence.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Build a release manifest including supplier tool schemas. Gate per language, shadow search only, canary booking changes, inject a regression and restore the previous manifest with a rebooking task as the end-to-end check.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Write Harbor's release manifest (code, prompts, tool schemas, model, embedder, index, ACL watermark, eval suite). Run the four gates, shadow without ticket writes, inject a regression in the tenant canary and restore the previous manifest.</p>"
   }
  }
 }

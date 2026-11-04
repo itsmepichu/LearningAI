@@ -248,6 +248,9 @@
   },
   "travel": {
    "scenario": "<p>Write 20 trip-planning tasks, half multi-city, using routes from <code>bookings.csv</code> and rules from <code>fare_rules.json</code>. Compare one agent with flight and hotel workers plus a synthesiser. Inject a supplier timeout and a cached-versus-live fare conflict.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Write 20 Harbor questions that need policies from two regions. Compare one answerer with India and UK workers plus a synthesiser on the same budget; inject a UK timeout and a conflict between a 2024 policy and a 2026 amendment.</p>"
   }
  }
 }

@@ -248,6 +248,9 @@
   },
   "travel": {
    "scenario": "<p>Use a package booking from <code>bookings.csv</code> on a disruption day in <code>disruptions.csv</code> as a saga: hold new flight → hold hotel → charge change fee → confirm. Fail each step in turn and show the completed holds are released in reverse order, and that no booking is charged twice.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Use a Harbor support request from <code>tickets.csv</code>: search policies in <code>policies.json</code> → draft → approve → create ticket. Inject a timeout after a successful create and retry with the same key; the pass condition is exactly one ticket with the correct reported ID.</p>"
   }
  }
 }

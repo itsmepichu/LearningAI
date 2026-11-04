@@ -218,6 +218,9 @@
   },
   "travel": {
    "scenario": "<p>Task: extract intent and travel date from <code>messages.json</code>. Freeze a prompt baseline, label examples per language, train the adapter, and gate each language separately in the release decision.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Task: extract effective dates and owners from <code>policies.json</code>-style documents, with null when absent. Freeze a prompt baseline, label with a written guideline, keep policy families separate between train and test, and block release on any invented date.</p>"
   }
  }
 }

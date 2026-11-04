@@ -2,7 +2,61 @@
  "app-c-ms": {
   "harbor": {
    "practice": "Harbor's real team followed the same order: a measured search baseline first, generation second, actions only after durable state and idempotency existed, and adaptation only for the one gap evaluation could not close otherwise.",
-   "failure": "Starting with the agent or the fine-tune because it is the interesting part. Each milestone's evidence is what justifies the next one."
+   "failure": "Starting with the agent or the fine-tune because it is the interesting part. Each milestone's evidence is what justifies the next one.",
+   "fit": "good",
+   "fitNote": "the default end-to-end build",
+   "tryIt": "<p>Build Harbor-lite from <code>policies.json</code> and <code>tickets.csv</code>:</p><ol><li>Baseline: BM25 over the policies, 100 labelled employee questions (15 unanswerable), Recall@5 and MRR.</li><li>Answer service: a small local model with citation IDs and abstention for missing policies.</li><li>Better retrieval: dense + RRF + reranker, with a paired comparison against the baseline.</li><li>Durable actions: search → draft → approve → create ticket, with an idempotency key; exactly one ticket after every crash.</li><li>Adaptation: one remaining gap (for example effective-date extraction), with a LoRA study and scorecard.</li><li>Operations: traces, a quality sample and a runbook for a slow retriever.</li><li>Security: a second tenant with a canary policy, and injection text in one wiki-style document.</li><li>Scale and release: a release manifest, a measured mock load test, a separate projection, and a rollback drill.</li></ol>"
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a shopping assistant over listings, reviews and orders",
+   "practice": "{company}'s team would build in the same order: product search first, answers about listings and orders second, return actions only after durable state and idempotency, and adaptation only for attribute extraction if evaluation shows a gap.",
+   "failure": "Starting with a coupon or refund agent before product search and answers are measured.",
+   "tryIt": "<p>Build {company}-lite from <code>products.csv</code>, <code>reviews.json</code>, <code>orders.csv</code> and <code>chats.json</code>:</p><ol><li>Baseline: BM25 over listings and reviews, 100 labelled shopper questions (15 unanswerable), Recall@5 and MRR.</li><li>Answer service: a small local model answering product and return-policy questions with listing and review IDs, abstaining on unknown sizes or materials.</li><li>Better retrieval: dense + RRF + reranker for Hinglish and size queries, compared with the baseline.</li><li>Durable actions: look up order → check return window → draft → approve → create return, with an idempotency key; exactly one return per order after every crash.</li><li>Adaptation: attribute extraction from titles, with null rules and a LoRA study.</li><li>Operations: cost per resolved chat, rephrase rate and a runbook for a slow reranker.</li><li>Security: the six injection reviews, a second seller as tenant with a canary listing, and PII redaction of chats.</li><li>Scale and release: sale-day assumptions, a measured mock load test, a separate projection, and a rollback drill.</li></ol>"
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a staff assistant with strict controls",
+   "practice": "{company}'s team would keep every money movement out of scope until the end: policy search and case summaries first, proposed credits only with approvals and audit, and no customer-facing answers until security and isolation tests pass.",
+   "failure": "Letting the prototype propose credits before isolation, approvals and audit logs exist.",
+   "tryIt": "<p>Build {company}-lite from <code>policies.json</code>, <code>disputes.csv</code> and <code>transactions.csv</code>:</p><ol><li>Baseline: BM25 over the policies, 100 labelled staff questions (15 unanswerable), Recall@5 and MRR.</li><li>Answer service: case summaries and policy answers with citation IDs, schema validation and abstention.</li><li>Better retrieval: dense + RRF + reranker for banking abbreviations, compared with the baseline.</li><li>Durable actions: look up transaction → check policy → propose provisional credit → named approval → commit, with an idempotency key and an audit record; exactly one credit after every crash.</li><li>Adaptation: the dispute-reason classifier, compared with a TF-IDF baseline, with canary probes.</li><li>Operations: redacted traces, outcome joins using <code>days_to_resolve</code>, and a runbook for a slow core-system lookup.</li><li>Security: social-engineering and case-note injection tests, a second business customer with a canary, and redaction before logging.</li><li>Scale and release: month-end assumptions, a release manifest with approval records, and a rollback drill with reconciliation steps.</li></ol>"
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "a rebooking assistant with suppliers",
+   "practice": "{company}'s team would measure answers about fare rules first, then add rebooking as a saga with holds and compensations, and test multilingual quality and disruption spikes before any booking change goes live.",
+   "failure": "Building the multi-supplier agent before fare-rule answers are measured in each language.",
+   "tryIt": "<p>Build {company}-lite from <code>fare_rules.json</code>, <code>bookings.csv</code>, <code>messages.json</code> and <code>disruptions.csv</code>:</p><ol><li>Baseline: BM25 over the fare rules, 100 labelled traveller questions in several languages (15 unanswerable), Recall@5 and MRR.</li><li>Answer service: change and cancellation answers with rule IDs and abstention, checked per language.</li><li>Better retrieval: dense + RRF + reranker for airport codes and city names, compared with the baseline.</li><li>Durable actions: a rebooking saga (hold flight → hold hotel → charge change fee → confirm) with compensations and idempotency keys; no booking charged twice after any failure.</li><li>Adaptation: intent extraction from messages, gated per language.</li><li>Operations: traces with supplier spans and an async callback, and a runbook for a slow supplier.</li><li>Security: hidden instructions in hotel descriptions, a second corporate client with a canary policy, and passport-number redaction.</li><li>Scale and release: disruption-day spike assumptions, a measured mock spike test, a separate projection, and a rollback drill.</li></ol>"
+  }
+ },
+ "app-c-int": {
+  "harbor": {
+   "fit": "good",
+   "fitNote": "the default story",
+   "practice": "Harbor's story starts from the risk: a wrong policy answer misleads an employee, and a duplicate ticket wastes support time. The answer then walks through baseline numbers, the failures that justified the reranker and the durable ticket flow, and labels every capacity figure as measured or projected.",
+   "failure": "Describing the final architecture without the baseline and the failures that justified each component.",
+   "tryIt": "Write a two-minute answer about your Harbor-lite build using the five points in this topic, and mark each number as simulated, measured locally, projected or production."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "cost per resolved chat and injection in reviews",
+   "practice": "A {company}-lite story centres on cost per resolved chat, the reranker gain on shopper queries, and how injection reviews were stopped by capability limits, not filters.",
+   "failure": "Quoting sale-day capacity from a laptop test as if it were measured production capacity.",
+   "tryIt": "Write a two-minute answer about your {company}-lite build: task and risk, baseline, the failure behind each added component, operational limits, and the evidence category of each number."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "controls and evidence carry the story",
+   "practice": "A {company}-lite story leads with controls: what the assistant may never do, how approvals and audit work, how isolation was tested, and what the evidence shows and does not show.",
+   "failure": "Claiming the design is compliant instead of describing the controls and evidence.",
+   "tryIt": "Write a two-minute answer about your {company}-lite build, and include one sentence on what your tests do not prove."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "sagas, languages and spikes",
+   "practice": "A {company}-lite story explains the rebooking saga and its compensations, per-language quality gates, and how the system degrades during a disruption spike.",
+   "failure": "Averaging quality across languages in the answer, which hides the weakest one.",
+   "tryIt": "Write a two-minute answer about your {company}-lite build, including one per-language result and one labelled projection for disruption days."
   }
  }
 }

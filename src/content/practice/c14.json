@@ -248,6 +248,9 @@
   },
   "travel": {
    "scenario": "<p>Use prompts from <code>messages.json</code> with rules from <code>fare_rules.json</code>. Measure first-token time and decode speed, compare Q8_0 and Q4_K_M per language, and keep projected disruption-day capacity in a separate table.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Use Harbor prompts with the 6,000-token system prompt and tool list. Measure first-token time with and without a repeated prefix, compare Q8_0 and Q4_K_M on 20 policy questions, and keep projected GPU capacity in a separate table.</p>"
   }
  }
 }

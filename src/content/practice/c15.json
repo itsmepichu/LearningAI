@@ -308,6 +308,9 @@
   },
   "travel": {
    "scenario": "<p>Plan for a disruption day using <code>disruptions.csv</code>: state the burst factor, rebooking task duration and supplier fan-out. Run a spike test against the mock with one supplier failing, and label projections separately from measurements.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Plan for Harbor's 21,000 daily users and 1,200 tenants: state the assumptions, compute peak RPS and in-flight requests, and load-test the mock with tenant skew and a provider failure. Label measured and projected figures separately.</p>"
   }
  }
 }
