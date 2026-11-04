@@ -13,9 +13,274 @@
     "answer": 0,
     "why": "If you know the split, code is cheaper and more predictable.",
     "kind": "concept"
+   },
+   {
+    "id": "c12-1-m02",
+    "q": "Choose all the conditions under which multiple agents help.",
+    "options": [
+     "The subtasks are tightly coupled and short",
+     "The task needs more material than fits in one context",
+     "Subtasks need different tools or permissions",
+     "An independent reviewer with fresh context is useful"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Breadth, separable expertise, independent verification and organisational boundaries justify multiple agents.",
+    "kind": "concept",
+    "distractors": [
+     "Tightly coupled, short tasks are where multiple agents do not help.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c12-1-m03",
+    "q": "Published reports on research agents describe multi-agent systems using how many tokens compared with single-agent chat?",
+    "options": [
+     "A fixed 10% more",
+     "About the same",
+     "Several times to an order of magnitude more",
+     "About half"
+    ],
+    "answer": 2,
+    "why": "Parallel workers each read and summarise, so token use grows a lot.",
+    "kind": "concept",
+    "distractors": [
+     "The reported range is much wider.",
+     "Workers add briefs, summaries and synthesis.",
+     "",
+     "Multi-agent designs rarely save tokens."
+    ]
+   },
+   {
+    "id": "c12-1-m04",
+    "q": "Why does a single agent fail the chapter's Q3 complaints example?",
+    "options": [
+     "It cannot call tools",
+     "It would exhaust its context on the first of three sources (about 40,000 records)",
+     "It is slower to start",
+     "It is not allowed to read tickets"
+    ],
+    "answer": 1,
+    "why": "Breadth exceeds one context, so workers read parts and return condensed findings.",
+    "kind": "concept",
+    "distractors": [
+     "Single agents can call tools.",
+     "",
+     "Start-up time is not the problem.",
+     "Access is a separate issue."
+    ]
+   },
+   {
+    "id": "c12-1-m05",
+    "q": "Mixing billing tools and identity tools in one agent's prompt tends to…",
+    "options": [
+     "Reduce cost",
+     "Improve accuracy",
+     "Degrade tool selection",
+     "Have no effect"
+    ],
+    "answer": 2,
+    "why": "Separable tools and permissions are a reason to split agents.",
+    "kind": "concept",
+    "distractors": [
+     "It does not cut cost.",
+     "More overlapping tools confuse selection.",
+     "",
+     "Tool count affects selection."
+    ]
+   },
+   {
+    "id": "c12-1-m06",
+    "q": "Why does independent verification need a separate reviewer?",
+    "options": [
+     "Two agents always agree on the truth",
+     "The reviewer is always a bigger model",
+     "It halves the cost",
+     "A fresh context catches errors the producer is blind to"
+    ],
+    "answer": 3,
+    "why": "A reviewer that shares the producer's context shares its blind spots.",
+    "kind": "concept",
+    "distractors": [
+     "Agreement is not proof, especially from the same source.",
+     "Model size is not the point.",
+     "Review adds cost.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-1-m07",
+    "q": "Three agents agree on an answer, but all read the same outdated document. What does the agreement show?",
+    "options": [
+     "Little; they share the same wrong source",
+     "That the answer is correct",
+     "That the document is current",
+     "That no verification is needed"
+    ],
+    "answer": 0,
+    "why": "Agreement between agents with the same evidence is not independent validation.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Agreement from one source is not independent.",
+     "Agreement says nothing about freshness.",
+     "This is exactly when verification is needed."
+    ]
+   },
+   {
+    "id": "c12-1-m08",
+    "q": "Each worker in the example returns a 300-word summary with evidence IDs. Why not return raw records?",
+    "options": [
+     "Raw records cannot be sent",
+     "Summaries are cheaper to store",
+     "To protect the coordinator's context and keep the result traceable",
+     "Evidence IDs are optional"
+    ],
+    "answer": 2,
+    "why": "Condensed findings with evidence let the coordinator synthesise without overflowing.",
+    "kind": "concept",
+    "distractors": [
+     "They can, but they would flood the coordinator.",
+     "Storage is not the issue.",
+     "",
+     "Evidence IDs make the result checkable."
+    ]
+   },
+   {
+    "id": "c12-1-m09",
+    "q": "Which is an organisational reason for multiple agents?",
+    "options": [
+     "The team prefers more agents",
+     "The task has one step",
+     "Agents owned by different teams or vendors must interoperate",
+     "One model is too cheap"
+    ],
+    "answer": 2,
+    "why": "Ownership boundaries can require separate agents.",
+    "kind": "concept",
+    "distractors": [
+     "Preference is not a reason.",
+     "One-step tasks need one call.",
+     "",
+     "Cost does not create a boundary."
+    ]
+   },
+   {
+    "id": "c12-1-m10",
+    "q": "A task is “summarise each of these 20 contracts, then compare”. What should you build?",
+    "options": [
+     "A single agent with 20 tools",
+     "A coordinator agent that discovers the plan",
+     "A supervisor hierarchy",
+     "Parallel LLM calls in code, then a compare call"
+    ],
+    "answer": 3,
+    "why": "If the decomposition can be written in code, do that; it is cheaper and more predictable.",
+    "kind": "scenario",
+    "distractors": [
+     "The task needs parallel calls, not more tools.",
+     "The plan is already known.",
+     "Hierarchy adds cost and latency.",
+     ""
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c12-1-i01",
+    "q": "When do multiple agents help, and when do they not?",
+    "level": "fundamentals",
+    "covers": [
+     "breadth beyond one context",
+     "separable tools or permissions",
+     "independent verification",
+     "not for coupled or short tasks"
+    ]
+   },
+   {
+    "id": "c12-1-i02",
+    "q": "What does a multi-agent design cost compared with a single agent?",
+    "level": "fundamentals",
+    "covers": [
+     "several to many times the tokens",
+     "coordination overhead",
+     "latency",
+     "harder debugging"
+    ]
+   },
+   {
+    "id": "c12-1-i03",
+    "q": "Why is agreement between agents not proof of correctness?",
+    "level": "fundamentals",
+    "covers": [
+     "shared sources",
+     "shared model blind spots",
+     "need independent evidence"
+    ]
+   },
+   {
+    "id": "c12-1-i04",
+    "q": "A team wants a coordinator agent for a report whose steps are always the same. What do you suggest?",
+    "level": "applied",
+    "covers": [
+     "parallel workflow in code",
+     "compare cost and quality",
+     "keep agents for parts that vary"
+    ],
+    "followUp": "What would change your mind?"
+   },
+   {
+    "id": "c12-1-i05",
+    "q": "How would you decide whether to split one agent into a billing agent and an account agent?",
+    "level": "applied",
+    "covers": [
+     "tool selection errors",
+     "permission boundaries",
+     "evaluate both designs",
+     "handoff cost"
+    ]
+   },
+   {
+    "id": "c12-1-i06",
+    "q": "Your multi-agent research system costs 8× a single agent. How do you decide if it is worth it?",
+    "level": "applied",
+    "covers": [
+     "task value",
+     "quality gain on the same suite",
+     "cost per successful task",
+     "use it only where it wins"
+    ]
+   },
+   {
+    "id": "c12-1-i07",
+    "q": "{company} wants an agent system that plans multi-city trips. Single agent, workflow or several agents? Justify.",
+    "level": "system-design",
+    "covers": [
+     "one worker per supplier type",
+     "parallel searches",
+     "coordinator builds itineraries",
+     "compare against a workflow"
+    ],
+    "followUp": "Where would you put human confirmation?",
+    "project": "travel"
+   },
+   {
+    "id": "c12-1-i08",
+    "q": "Design a system that summarises complaints across tickets, sales notes and app reviews, each with different access rules.",
+    "level": "system-design",
+    "covers": [
+     "worker per source",
+     "least-privilege access",
+     "condensed findings with evidence",
+     "synthesis and cost limits"
+    ]
+   }
+  ]
  },
  "c12-6": {
   "mcq": [
@@ -31,9 +296,276 @@
     "answer": 1,
     "why": "0.95⁶ ≈ 0.74; errors compound along the chain.",
     "kind": "concept"
+   },
+   {
+    "id": "c12-6-m02",
+    "q": "Two workers report different facts. How should the coordinator resolve it?",
+    "options": [
+     "Pick the more confident one",
+     "Use evidence, recency, source authority or a verification step, and surface unresolved conflicts",
+     "Pick the first one returned",
+     "Average them"
+    ],
+    "answer": 1,
+    "why": "Resolve with rules and evidence; do not average conflicts away.",
+    "kind": "concept",
+    "distractors": [
+     "Confidence is not evidence.",
+     "",
+     "Arrival order is arbitrary.",
+     "Averaging hides the conflict."
+    ]
+   },
+   {
+    "id": "c12-6-m03",
+    "q": "Each of 10 sequential steps is 90% reliable. What is end-to-end reliability?",
+    "options": [
+     "About 35%",
+     "About 10%",
+     "About 65%",
+     "About 90%"
+    ],
+    "answer": 0,
+    "why": "0.9^10 ≈ 0.349.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Too low.",
+     "Too high: errors compound.",
+     "That is one step's reliability."
+    ]
+   },
+   {
+    "id": "c12-6-m04",
+    "q": "Each of 6 steps is 95% reliable, and a verifier catches 50% of each step's errors. What is end-to-end reliability?",
+    "options": [
+     "About 86%",
+     "About 50%",
+     "About 95%",
+     "About 74%"
+    ],
+    "answer": 0,
+    "why": "Per step: 0.95 + 0.05 × 0.5 = 0.975; 0.975^6 ≈ 0.859.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Too low.",
+     "That ignores compounding.",
+     "That is without a verifier."
+    ]
+   },
+   {
+    "id": "c12-6-m05",
+    "q": "How does one worker's hallucination become a bigger problem?",
+    "options": [
+     "It is always caught by synthesis",
+     "It becomes the coordinator's premise and the final report's headline",
+     "It only affects that worker",
+     "It reduces token cost"
+    ],
+    "answer": 1,
+    "why": "Errors propagate through the chain; evidence requirements break it.",
+    "kind": "concept",
+    "distractors": [
+     "Synthesis trusts worker inputs unless verified.",
+     "",
+     "Downstream agents build on it.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c12-6-m06",
+    "q": "Choose all the defences against runaway loops.",
+    "options": [
+     "Telling the evaluator to approve only perfect work",
+     "A run-level budget",
+     "Global step, depth and spawn limits",
+     "A maximum number of critique rounds"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Hard limits stop loops; “perfect” criteria cause them.",
+    "kind": "concept",
+    "distractors": [
+     "That is how the chapter's 14-round loop happened.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c12-6-m07",
+    "q": "In the chapter's runaway critique example, what fixed it?",
+    "options": [
+     "Removing the producer",
+     "A rubric with concrete pass criteria, at most 2 revision rounds, then ship with notes for a human",
+     "Raising the budget",
+     "A stronger evaluator model"
+    ],
+    "answer": 1,
+    "why": "Concrete criteria and a round limit end the loop.",
+    "kind": "concept",
+    "distractors": [
+     "Then there is nothing to evaluate.",
+     "",
+     "More budget means more rounds.",
+     "A stronger evaluator still has no stopping rule."
+    ]
+   },
+   {
+    "id": "c12-6-m08",
+    "q": "When can coordination overhead exceed the useful work?",
+    "options": [
+     "Only with one worker",
+     "Never",
+     "On small tasks",
+     "Only on very large tasks"
+    ],
+    "answer": 2,
+    "why": "Briefs, summaries and synthesis cost tokens whatever the task size.",
+    "kind": "concept",
+    "distractors": [
+     "One worker has the least overhead.",
+     "Overhead is real.",
+     "",
+     "Large tasks amortise overhead."
+    ]
+   },
+   {
+    "id": "c12-6-m09",
+    "q": "A 2024 policy and a 2026 amendment conflict. Which rule should decide?",
+    "options": [
+     "The first worker to finish",
+     "The more articulate answer",
+     "Authority and effective date",
+     "The longer document"
+    ],
+    "answer": 2,
+    "why": "Source authority and recency rules resolve the conflict.",
+    "kind": "scenario",
+    "distractors": [
+     "Arrival order is arbitrary.",
+     "Style is not authority.",
+     "",
+     "Length is irrelevant."
+    ]
+   },
+   {
+    "id": "c12-6-m10",
+    "q": "Agents send “please clarify” to each other repeatedly. Which control detects this?",
+    "options": [
+     "Loop detection on repeated messages",
+     "A faster model",
+     "More workers",
+     "A larger context window"
+    ],
+    "answer": 0,
+    "why": "Repeated messages are a loop signal.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Speed makes it loop faster.",
+     "More agents add more loops.",
+     "More context does not stop the loop."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c12-6-i01",
+    "q": "How should a coordinator resolve conflicting worker outputs?",
+    "level": "fundamentals",
+    "covers": [
+     "evidence",
+     "recency and authority",
+     "verification step",
+     "surface unresolved conflicts"
+    ]
+   },
+   {
+    "id": "c12-6-i02",
+    "q": "Why does reliability compound across steps, and what breaks the chain?",
+    "level": "fundamentals",
+    "covers": [
+     "product of step reliabilities",
+     "worked example",
+     "verification",
+     "evidence requirements"
+    ],
+    "followUp": "Compute 0.95^6."
+   },
+   {
+    "id": "c12-6-i03",
+    "q": "What causes runaway loops in multi-agent systems?",
+    "level": "fundamentals",
+    "covers": [
+     "mutual clarification",
+     "evaluator never approves",
+     "coordinator keeps spawning",
+     "limits and budgets"
+    ]
+   },
+   {
+    "id": "c12-6-i04",
+    "q": "An evaluator agent rejected a report 14 times. How do you fix the system?",
+    "level": "applied",
+    "covers": [
+     "concrete rubric",
+     "max rounds",
+     "ship with notes for a human",
+     "budget limit"
+    ]
+   },
+   {
+    "id": "c12-6-i05",
+    "q": "Where would you add verification in a six-step chain, given a fixed budget?",
+    "level": "applied",
+    "covers": [
+     "steps with highest error or impact",
+     "cheap deterministic checks first",
+     "measure catch rate",
+     "compare end-to-end reliability"
+    ]
+   },
+   {
+    "id": "c12-6-i06",
+    "q": "A false fact from one worker appeared in an executive report. Trace and prevent it.",
+    "level": "applied",
+    "covers": [
+     "trace evidence IDs",
+     "find the worker",
+     "require evidence per claim",
+     "verifier before synthesis"
+    ]
+   },
+   {
+    "id": "c12-6-i07",
+    "q": "Two of {company}'s workers return different fares for the same route. Design the resolution rule and what the traveller sees.",
+    "level": "system-design",
+    "covers": [
+     "live over cached",
+     "timestamps",
+     "authority",
+     "tell the traveller the price changed"
+    ],
+    "followUp": "What if the live check fails?",
+    "project": "travel"
+   },
+   {
+    "id": "c12-6-i08",
+    "q": "Design run-level guards for a platform where agents can spawn other agents.",
+    "level": "system-design",
+    "covers": [
+     "spawn and depth limits",
+     "run budget",
+     "loop detection",
+     "kill switch and audit"
+    ]
+   }
+  ]
  },
  "c12-7": {
   "mcq": [
@@ -49,8 +581,1719 @@
     "answer": 1,
     "why": "Pass the user's identity and narrow scopes at each hop instead.",
     "kind": "concept"
+   },
+   {
+    "id": "c12-7-m02",
+    "q": "When agent A asks agent B to act, whose permissions should apply by default?",
+    "options": [
+     "The broadest available",
+     "Agent A's",
+     "The original user's, narrowed at each hop",
+     "Agent B's service account"
+    ],
+    "answer": 2,
+    "why": "Narrowing the user's rights at each hop prevents escalation.",
+    "kind": "concept",
+    "distractors": [
+     "Broad rights cause confused deputies.",
+     "A's rights may exceed the user's.",
+     "",
+     "Service accounts may exceed the user's rights."
+    ]
+   },
+   {
+    "id": "c12-7-m03",
+    "q": "What does OAuth 2.0 Token Exchange (RFC 8693) do at each hop?",
+    "options": [
+     "Exchanges the incoming token for a new one with narrower audience and scopes",
+     "Removes the user's identity",
+     "Copies the token unchanged",
+     "Adds the agent's admin scopes"
+    ],
+    "answer": 0,
+    "why": "Each hop can only reduce permissions; tokens are short-lived.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "The user's identity must be kept.",
+     "Unchanged tokens are valid too broadly.",
+     "Scopes must never grow."
+    ]
+   },
+   {
+    "id": "c12-7-m04",
+    "q": "Why pass a user token rather than a user ID string?",
+    "options": [
+     "Tokens are faster",
+     "IDs are not unique",
+     "Any agent could forge a plain ID string",
+     "Strings are too long"
+    ],
+    "answer": 2,
+    "why": "A signed token proves who the user is; a string does not.",
+    "kind": "concept",
+    "distractors": [
+     "Speed is not the reason.",
+     "Uniqueness is not the issue.",
+     "",
+     "Length is irrelevant."
+    ]
+   },
+   {
+    "id": "c12-7-m05",
+    "q": "Where should the final access decision be made?",
+    "options": [
+     "By the coordinator agent",
+     "By the model",
+     "At the resource (tool or API), using the user's and the agent's identities",
+     "By the worker that holds the token"
+    ],
+    "answer": 2,
+    "why": "Agents never decide access for themselves.",
+    "kind": "concept",
+    "distractors": [
+     "The coordinator is not the authority.",
+     "Models cannot enforce access.",
+     "",
+     "The holder is not the authority."
+    ]
+   },
+   {
+    "id": "c12-7-m06",
+    "q": "What does an agent's own workload identity (e.g. SPIFFE/mTLS) add?",
+    "options": [
+     "Logs and policies can show which agent acted for which user",
+     "It encrypts prompts",
+     "It replaces the user's identity",
+     "It grants admin rights"
+    ],
+    "answer": 0,
+    "why": "Both identities appear: “agent B acting for Alice, requested by agent A”.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Both are needed.",
+     "Identity is not a grant of rights."
+    ]
+   },
+   {
+    "id": "c12-7-m07",
+    "q": "In the chapter's figure, the finance API checks…",
+    "options": [
+     "Only the worker's scopes",
+     "Whatever the model requests",
+     "Alice's rights intersected with the worker's allowed scopes",
+     "Only Alice's rights"
+    ],
+    "answer": 2,
+    "why": "The intersection means writes are refused even if the model asks.",
+    "kind": "concept",
+    "distractors": [
+     "The worker alone may be too broad or too narrow.",
+     "Requests are not authorisation.",
+     "",
+     "The worker's allowed scopes matter too."
+    ]
+   },
+   {
+    "id": "c12-7-m08",
+    "q": "An intern asks a reporting agent with a service account for HR salary data. With on-behalf-of tokens, what happens?",
+    "options": [
+     "The agent returns the data",
+     "The agent asks HR by email",
+     "The request is queued for later",
+     "The HR API sees the intern's identity and denies the request"
+    ],
+    "answer": 3,
+    "why": "The resource checks the real requester, so the confused deputy is avoided.",
+    "kind": "scenario",
+    "distractors": [
+     "That is the confused deputy problem.",
+     "Not the mechanism.",
+     "Not the mechanism.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-7-m09",
+    "q": "Can the coordinator request scopes Alice does not have?",
+    "options": [
+     "No; each hop can only reduce permissions",
+     "Yes, if the model asks",
+     "Only for read scopes",
+     "Yes, for internal APIs"
+    ],
+    "answer": 0,
+    "why": "Token exchange enforces narrowing.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Models do not grant rights.",
+     "Read scopes too.",
+     "Internal APIs follow the same rule."
+    ]
+   },
+   {
+    "id": "c12-7-m10",
+    "q": "What should the audit trail record for a delegated action?",
+    "options": [
+     "Only the final agent",
+     "Only the user",
+     "Nothing; tokens are enough",
+     "The full delegation chain: user, each agent and the resource"
+    ],
+    "answer": 3,
+    "why": "Investigators need to see which agent acted and for whom (16.7).",
+    "kind": "concept",
+    "distractors": [
+     "Loses who asked.",
+     "Loses which agent acted.",
+     "Tokens expire; logs are the record.",
+     ""
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c12-7-i01",
+    "q": "What is the confused deputy problem in multi-agent systems?",
+    "level": "fundamentals",
+    "covers": [
+     "broad service credentials",
+     "lower-trust requester",
+     "agent acts beyond user rights",
+     "fix with on-behalf-of tokens"
+    ]
+   },
+   {
+    "id": "c12-7-i02",
+    "q": "How do you propagate user identity through a chain of agents?",
+    "level": "fundamentals",
+    "covers": [
+     "signed tokens not IDs",
+     "token exchange",
+     "narrower audience and scopes",
+     "short-lived"
+    ]
+   },
+   {
+    "id": "c12-7-i03",
+    "q": "Why does each agent need its own identity as well as the user's?",
+    "level": "fundamentals",
+    "covers": [
+     "audit trail",
+     "policy per agent",
+     "intersection of rights",
+     "mTLS or service principal"
+    ]
+   },
+   {
+    "id": "c12-7-i04",
+    "q": "A peer agent says “the supervisor approved this”. How should your system handle it?",
+    "level": "applied",
+    "covers": [
+     "peer messages are not authorisation",
+     "check approval system",
+     "resource decides",
+     "log and alert"
+    ],
+    "followUp": "How would you test this in red-team exercises?"
+   },
+   {
+    "id": "c12-7-i05",
+    "q": "Walk through what happens when a coordinator delegates a finance read to a worker.",
+    "level": "applied",
+    "covers": [
+     "token exchange request",
+     "audience and scope narrowing",
+     "API intersection check",
+     "audit chain"
+    ]
+   },
+   {
+    "id": "c12-7-i06",
+    "q": "How would you migrate agents from a shared service account to on-behalf-of tokens?",
+    "level": "applied",
+    "covers": [
+     "inventory calls",
+     "add token exchange",
+     "authorise at resources",
+     "remove service account rights gradually"
+    ]
+   },
+   {
+    "id": "c12-7-i07",
+    "q": "Design identity and delegation for {company}'s staff assistant and its workers.",
+    "level": "system-design",
+    "covers": [
+     "staff token",
+     "token exchange per hop",
+     "workload identity",
+     "ledger API checks both",
+     "audit chain"
+    ],
+    "followUp": "How would you handle a worker that runs on a schedule with no user?",
+    "project": "bank"
+   },
+   {
+    "id": "c12-7-i08",
+    "q": "Design authorisation for agents that call each other across teams.",
+    "level": "system-design",
+    "covers": [
+     "identity propagation",
+     "token service",
+     "resource-side policy",
+     "audit and revocation"
+    ]
+   }
+  ]
+ },
+ "c12-2": {
+  "mcq": [
+   {
+    "id": "c12-2-m01",
+    "q": "Which pattern lets the active agent transfer the conversation to another agent?",
+    "options": [
+     "Coordinator–worker",
+     "Evaluator–optimiser",
+     "Routing",
+     "Handoff"
+    ],
+    "answer": 3,
+    "why": "In a handoff, control of the conversation moves to the next agent.",
+    "kind": "concept",
+    "distractors": [
+     "The coordinator keeps control and delegates subtasks.",
+     "That is a draft–critique loop.",
+     "Routing sends a request to one specialist before work starts.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-2-m02",
+    "q": "What is the main risk of routing?",
+    "options": [
+     "Endless critique loops",
+     "Context too large for one model",
+     "Misrouting, so it needs an “other” path",
+     "Deep hierarchies"
+    ],
+    "answer": 2,
+    "why": "A router can send a request to the wrong specialist; an “other” path catches unknown types.",
+    "kind": "concept",
+    "distractors": [
+     "That is the evaluator–optimiser risk.",
+     "Not the main routing risk.",
+     "",
+     "That is the supervisor risk."
+    ]
+   },
+   {
+    "id": "c12-2-m03",
+    "q": "What should a handoff pass to the next agent?",
+    "options": [
+     "A structured summary: customer ID, issue, evidence collected, what the customer was told",
+     "Nothing; the next agent starts fresh",
+     "The full transcript and every tool",
+     "Only the customer's name"
+    ],
+    "answer": 0,
+    "why": "A summary keeps context without overloading or over-sharing; the next agent gets only its own tools.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "The customer should not have to repeat themselves.",
+     "Full transcripts and all tools over-share.",
+     "A name loses the case context."
+    ]
+   },
+   {
+    "id": "c12-2-m04",
+    "q": "When does the evaluator–optimiser pattern work well?",
+    "options": [
+     "For real-time routing",
+     "When no criteria exist",
+     "When the evaluator is the same model with the same context",
+     "When there are clear quality criteria for drafts"
+    ],
+    "answer": 3,
+    "why": "Without clear criteria, the loop may never end; the same model and context share blind spots.",
+    "kind": "concept",
+    "distractors": [
+     "Routing is a different pattern.",
+     "That is how endless loops start.",
+     "That is its main risk.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-2-m05",
+    "q": "What is the main risk of a supervisor hierarchy?",
+    "options": [
+     "No one can override workers",
+     "It has no central control",
+     "It cannot replan",
+     "Deep hierarchies multiply cost and latency"
+    ],
+    "answer": 3,
+    "why": "Each management layer adds calls.",
+    "kind": "concept",
+    "distractors": [
+     "Supervisors can override.",
+     "It does have central control.",
+     "Replanning is its strength.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-2-m06",
+    "q": "Two agents keep handing a customer back and forth. What is this called and what limits it?",
+    "options": [
+     "A saga; add compensations",
+     "Caching; clear the cache",
+     "Ping-pong; limit the number of handoffs and escalate",
+     "Routing; add more routes"
+    ],
+    "answer": 2,
+    "why": "Handoff ping-pong is a known risk; cap handoffs and send to a person.",
+    "kind": "scenario",
+    "distractors": [
+     "Sagas are about undoing actions.",
+     "Unrelated.",
+     "",
+     "More routes do not stop ping-pong."
+    ]
+   },
+   {
+    "id": "c12-2-m07",
+    "q": "Which pattern fits a breadth-first task with separable parts?",
+    "options": [
+     "Coordinator–worker",
+     "Handoff",
+     "Routing",
+     "Evaluator–optimiser"
+    ],
+    "answer": 0,
+    "why": "The coordinator decomposes, delegates and synthesises.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Handoffs move a conversation.",
+     "Routing picks one specialist.",
+     "That loops on one draft."
+    ]
+   },
+   {
+    "id": "c12-2-m08",
+    "q": "In the handoff example, what tools does the billing agent receive?",
+    "options": [
+     "No tools",
+     "Every tool the general agent had",
+     "Only billing tools",
+     "Admin tools"
+    ],
+    "answer": 2,
+    "why": "Least privilege applies to each agent after a handoff.",
+    "kind": "concept",
+    "distractors": [
+     "It needs billing tools to act.",
+     "That defeats the separation.",
+     "",
+     "Admin tools are never appropriate."
+    ]
+   },
+   {
+    "id": "c12-2-m09",
+    "q": "Who should own completion of a task in a multi-agent design?",
+    "options": [
+     "Every agent equally",
+     "Whoever finishes last",
+     "No one; agents agree among themselves",
+     "One clearly named agent or component"
+    ],
+    "answer": 3,
+    "why": "Unclear ownership leads each agent to assume another will finish.",
+    "kind": "concept",
+    "distractors": [
+     "Shared ownership means no ownership.",
+     "That is unpredictable.",
+     "Agreement is not ownership.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-2-m10",
+    "q": "A coordinator in Harbor's design is plain code. Which pattern is that closest to?",
+    "options": [
+     "Handoff",
+     "Coordinator–worker, with a deterministic coordinator",
+     "Evaluator–optimiser",
+     "Supervisor hierarchy"
+    ],
+    "answer": 1,
+    "why": "The coordinator role can be code rather than a model when the plan is fixed.",
+    "kind": "concept",
+    "distractors": [
+     "No conversation moves.",
+     "",
+     "No draft–critique loop.",
+     "No manager layer."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c12-2-i01",
+    "q": "Describe the five multi-agent patterns and when to use each.",
+    "level": "fundamentals",
+    "covers": [
+     "coordinator–worker",
+     "routing",
+     "handoff",
+     "supervisor",
+     "evaluator–optimiser"
+    ]
+   },
+   {
+    "id": "c12-2-i02",
+    "q": "What should a handoff carry, and why not the whole transcript?",
+    "level": "fundamentals",
+    "covers": [
+     "structured summary",
+     "evidence and what the customer was told",
+     "least privilege",
+     "context size"
+    ]
+   },
+   {
+    "id": "c12-2-i03",
+    "q": "What are the risks of evaluator–optimiser loops?",
+    "level": "fundamentals",
+    "covers": [
+     "endless loops",
+     "shared blind spots",
+     "need clear criteria and round limits"
+    ]
+   },
+   {
+    "id": "c12-2-i04",
+    "q": "Customers complain they repeat themselves after being transferred between agents. How do you fix it?",
+    "level": "applied",
+    "covers": [
+     "structured handoff summary",
+     "check what is passed",
+     "single conversation view",
+     "test handoffs"
+    ],
+    "followUp": "How would you measure improvement?"
+   },
+   {
+    "id": "c12-2-i05",
+    "q": "When would you choose routing over a coordinator?",
+    "level": "applied",
+    "covers": [
+     "distinct request types",
+     "one specialist per request",
+     "cheaper",
+     "needs an other path"
+    ]
+   },
+   {
+    "id": "c12-2-i06",
+    "q": "How would you stop handoff ping-pong?",
+    "level": "applied",
+    "covers": [
+     "cap handoffs",
+     "clear ownership rules",
+     "supervisor or human escalation",
+     "trace analysis"
+    ]
+   },
+   {
+    "id": "c12-2-i07",
+    "q": "Design {assistant}'s path from a general question to a disputed charge, with the agents, tools and handoffs.",
+    "level": "system-design",
+    "covers": [
+     "routing",
+     "handoff summary",
+     "least-privilege tools",
+     "human decision"
+    ],
+    "followUp": "What would the customer see at each step?",
+    "project": "bank"
+   },
+   {
+    "id": "c12-2-i08",
+    "q": "Design a support system where several departments each own an agent.",
+    "level": "system-design",
+    "covers": [
+     "router with other path",
+     "handoff contracts",
+     "ownership and escalation",
+     "shared tracing"
+    ]
+   }
+  ]
+ },
+ "c12-3": {
+  "mcq": [
+   {
+    "id": "c12-3-m01",
+    "q": "What should a task brief include?",
+    "options": [
+     "Objective, constraints, allowed tools, budget and output schema",
+     "The coordinator's full context",
+     "Only the objective",
+     "The final answer"
+    ],
+    "answer": 0,
+    "why": "A clear brief keeps workers focused and outputs combinable.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Workers need only the context relevant to them.",
+     "An objective alone leaves scope and format open.",
+     "Workers produce findings, not the final answer."
+    ]
+   },
+   {
+    "id": "c12-3-m02",
+    "q": "Six subtasks take 10, 20, 30, 10, 20 and 30 seconds. Ignoring overhead, how long does sequential execution take, and how long with all six in parallel?",
+    "options": [
+     "120 s both ways",
+     "60 s sequential; 20 s parallel",
+     "120 s sequential; 30 s parallel",
+     "30 s sequential; 120 s parallel"
+    ],
+    "answer": 2,
+    "why": "Sequential is the sum (120 s); unlimited parallel waits for the slowest (30 s).",
+    "kind": "calculation",
+    "distractors": [
+     "Parallelism cuts wall-clock time.",
+     "Neither number matches.",
+     "",
+     "Reversed."
+    ]
+   },
+   {
+    "id": "c12-3-m03",
+    "q": "Parallel execution cuts wall-clock time. What happens to total token cost?",
+    "options": [
+     "It halves",
+     "It drops to zero for workers",
+     "It stays the same or rises",
+     "It falls in proportion to parallelism"
+    ],
+    "answer": 2,
+    "why": "The same work is done, plus coordination overhead.",
+    "kind": "concept",
+    "distractors": [
+     "No such saving.",
+     "Workers still use tokens.",
+     "",
+     "Parallelism does not reduce work."
+    ]
+   },
+   {
+    "id": "c12-3-m04",
+    "q": "Why set a concurrency limit?",
+    "options": [
+     "To protect rate limits and budgets",
+     "To make workers smarter",
+     "To reduce the number of subtasks",
+     "To avoid synthesis"
+    ],
+    "answer": 0,
+    "why": "Unbounded parallel calls can hit provider rate limits and spend fast.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Concurrency does not affect reasoning.",
+     "Subtasks are set by decomposition.",
+     "Synthesis still runs."
+    ]
+   },
+   {
+    "id": "c12-3-m05",
+    "q": "A coordinator delegates “research the market” to three workers. What is the likely result?",
+    "options": [
+     "A faster, cheaper run",
+     "Three complementary reports",
+     "An error from the framework",
+     "Overlapping, unfocused work"
+    ],
+    "answer": 3,
+    "why": "Vague delegation produces vague, overlapping outputs.",
+    "kind": "scenario",
+    "distractors": [
+     "Overlap wastes tokens.",
+     "Without scope, workers overlap.",
+     "Frameworks accept vague briefs.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-3-m06",
+    "q": "Synthesis must wait for the slowest worker unless…",
+    "options": [
+     "You set a deadline and proceed with what returned",
+     "You use a bigger model",
+     "You add more workers",
+     "You remove the output schema"
+    ],
+    "answer": 0,
+    "why": "A deadline bounds latency; missing parts are marked.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Model size does not change worker latency.",
+     "More workers do not speed the slowest.",
+     "Schemas do not affect timing."
+    ]
+   },
+   {
+    "id": "c12-3-m07",
+    "q": "Which describes good decomposition?",
+    "options": [
+     "Subtasks that each need the others' full detail",
+     "As many subtasks as possible",
+     "One subtask per tool",
+     "Subtasks as independent as possible, each with objective, scope, output format and stopping rule"
+    ],
+    "answer": 3,
+    "why": "Independence enables parallelism; clarity prevents overlap.",
+    "kind": "concept",
+    "distractors": [
+     "Tightly coupled subtasks defeat decomposition.",
+     "Too many subtasks add overhead.",
+     "Tool count is not the unit of work.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-3-m08",
+    "q": "What should synthesis keep so the final result is traceable?",
+    "options": [
+     "The workers' token counts",
+     "Only the final text",
+     "Each worker's full transcript",
+     "Evidence links from the workers"
+    ],
+    "answer": 3,
+    "why": "Evidence links let reviewers check each claim.",
+    "kind": "concept",
+    "distractors": [
+     "Token counts are cost data.",
+     "Text alone cannot be checked.",
+     "Transcripts are too large for synthesis.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-3-m09",
+    "q": "Workers each return 5,000-token raw dumps to a coordinator with a 32,000-token window and an 8,000-token system prompt and policy. How many workers fit before the window is full?",
+    "options": [
+     "8",
+     "Unlimited",
+     "6",
+     "4 (24,000 tokens of results)"
+    ],
+    "answer": 3,
+    "why": "32,000 − 8,000 = 24,000 tokens left; 24,000 / 5,000 = 4.8, so 4 full results fit. Condensed findings avoid this limit.",
+    "kind": "calculation",
+    "distractors": [
+     "8 × 5,000 = 40,000 exceeds the window.",
+     "The window is finite.",
+     "6 × 5,000 = 30,000 exceeds the 24,000 left.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-3-m10",
+    "q": "What context should a worker receive?",
+    "options": [
+     "Everything the coordinator knows",
+     "Only the context it needs for its subtask",
+     "The other workers' results",
+     "Nothing but the objective"
+    ],
+    "answer": 1,
+    "why": "Minimal context reduces cost and keeps data access least-privilege.",
+    "kind": "concept",
+    "distractors": [
+     "That wastes tokens and over-shares.",
+     "",
+     "Independent workers do not need each other's results.",
+     "It needs constraints and inputs too."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c12-3-i01",
+    "q": "How do you decompose a task for workers?",
+    "level": "fundamentals",
+    "covers": [
+     "independent subtasks",
+     "objective, scope, format, stopping rule",
+     "avoid overlap"
+    ]
+   },
+   {
+    "id": "c12-3-i02",
+    "q": "What goes into a task brief?",
+    "level": "fundamentals",
+    "covers": [
+     "objective",
+     "constraints and tools",
+     "budget",
+     "output schema",
+     "only needed context"
+    ]
+   },
+   {
+    "id": "c12-3-i03",
+    "q": "What does parallel execution save and what does it not?",
+    "level": "fundamentals",
+    "covers": [
+     "wall-clock time",
+     "not tokens",
+     "concurrency limits",
+     "slowest worker bound"
+    ]
+   },
+   {
+    "id": "c12-3-i04",
+    "q": "Your workers keep returning overlapping findings. How do you fix it?",
+    "level": "applied",
+    "covers": [
+     "sharper scopes",
+     "non-overlapping partitions",
+     "deduplicate in synthesis",
+     "measure overlap"
+    ],
+    "followUp": "Where would you partition: by source, by topic or by time?"
+   },
+   {
+    "id": "c12-3-i05",
+    "q": "The coordinator's context overflows when results come back. What do you change?",
+    "level": "applied",
+    "covers": [
+     "condensed findings",
+     "output schema with limits",
+     "evidence IDs instead of raw text",
+     "hierarchical synthesis"
+    ]
+   },
+   {
+    "id": "c12-3-i06",
+    "q": "How do you set a deadline for synthesis when one worker is often slow?",
+    "level": "applied",
+    "covers": [
+     "deadline per worker",
+     "proceed with partial results",
+     "mark missing coverage",
+     "monitor p95 per worker"
+    ]
+   },
+   {
+    "id": "c12-3-i07",
+    "q": "Design {company}'s trip-search fan-out: workers, concurrency limits per supplier, deadlines and synthesis.",
+    "level": "system-design",
+    "covers": [
+     "worker per product or supplier",
+     "rate limits",
+     "deadline and partial results",
+     "itinerary synthesis with rule IDs"
+    ],
+    "followUp": "How would you handle a supplier that is down?",
+    "project": "travel"
+   },
+   {
+    "id": "c12-3-i08",
+    "q": "Design a research system that reads 200 documents and returns a cited report.",
+    "level": "system-design",
+    "covers": [
+     "partition documents",
+     "worker briefs",
+     "condensed findings with evidence",
+     "synthesis and verification"
+    ]
+   }
+  ]
+ },
+ "c12-4": {
+  "mcq": [
+   {
+    "id": "c12-4-m01",
+    "q": "What is a blackboard in multi-agent design?",
+    "options": [
+     "A private context per agent",
+     "An approval UI",
+     "A shared store that agents read and write",
+     "A logging system"
+    ],
+    "answer": 2,
+    "why": "Shared state is easy to coordinate but risks conflicts and leakage.",
+    "kind": "concept",
+    "distractors": [
+     "That is isolated state.",
+     "Not related.",
+     "",
+     "Logs are not the coordination medium."
+    ]
+   },
+   {
+    "id": "c12-4-m02",
+    "q": "Choose all the risks of shared state.",
+    "options": [
+     "Conflicting writes",
+     "Permission leakage",
+     "Context pollution (everyone sees everything)",
+     "Agents cannot communicate"
+    ],
+    "answer": [
+     0,
+     1,
+     2
+    ],
+    "why": "Shared stores spread data and conflicts; communication is easy, not impossible.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "",
+     "Shared state makes communication easy."
+    ]
+   },
+   {
+    "id": "c12-4-m03",
+    "q": "What does isolated state require?",
+    "options": [
+     "Explicit, well-designed messages",
+     "A shared scratchpad",
+     "One model for all agents",
+     "No schemas"
+    ],
+    "answer": 0,
+    "why": "Agents communicate only through messages, so contracts matter.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That is shared state.",
+     "Model choice is separate.",
+     "Messages need schemas."
+    ]
+   },
+   {
+    "id": "c12-4-m04",
+    "q": "Which fields belong in a result contract, per the chapter?",
+    "options": [
+     "The worker's chain of thought",
+     "The worker's API keys",
+     "Only the answer text",
+     "Status, errors, confidence and evidence"
+    ],
+    "answer": 3,
+    "why": "Typed, versioned contracts with status and evidence let the coordinator decide.",
+    "kind": "concept",
+    "distractors": [
+     "Hidden reasoning is not a contract field.",
+     "Secrets never travel in messages.",
+     "Text alone gives no status or evidence.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-4-m05",
+    "q": "What does A2A define?",
+    "options": [
+     "How agents connect to tools and data",
+     "A model training method",
+     "An embedding format",
+     "Agent discovery (agent cards), task lifecycle and message exchange between agents"
+    ],
+    "answer": 3,
+    "why": "A2A is for agent-to-agent interoperability; MCP connects agents to tools and data.",
+    "kind": "concept",
+    "distractors": [
+     "That is MCP.",
+     "Not related.",
+     "Not related.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-4-m06",
+    "q": "How do A2A and MCP relate?",
+    "options": [
+     "MCP replaces A2A",
+     "They are complementary",
+     "A2A replaces MCP",
+     "They are the same protocol"
+    ],
+    "answer": 1,
+    "why": "One connects agents to each other; the other connects agents to tools.",
+    "kind": "concept",
+    "distractors": [
+     "They solve different problems.",
+     "",
+     "They solve different problems.",
+     "They are separate specifications."
+    ]
+   },
+   {
+    "id": "c12-4-m07",
+    "q": "A worker returns status: partial with coverage 60%. What can the coordinator do?",
+    "options": [
+     "Ask the worker to change status to complete",
+     "Accept, extend the budget, or flag incomplete coverage in the final report",
+     "Discard it silently",
+     "Treat it as complete"
+    ],
+    "answer": 1,
+    "why": "Status and coverage let the coordinator make an explicit choice.",
+    "kind": "scenario",
+    "distractors": [
+     "Status must reflect reality.",
+     "",
+     "That loses real findings.",
+     "That hides the gap."
+    ]
+   },
+   {
+    "id": "c12-4-m08",
+    "q": "What does the chapter recommend for most robust designs?",
+    "options": [
+     "No shared state at all, including status",
+     "One agent writing for all",
+     "A shared free-text scratchpad",
+     "Isolated agents plus a small, structured shared task record"
+    ],
+    "answer": 3,
+    "why": "A structured record (status, assignments) gives coordination without pollution.",
+    "kind": "concept",
+    "distractors": [
+     "Some shared status is useful.",
+     "That removes the multi-agent design.",
+     "Free text spreads errors and injections.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-4-m09",
+    "q": "Why version message contracts?",
+    "options": [
+     "Because JSON requires it",
+     "To make messages shorter",
+     "So producers and consumers can change without breaking each other",
+     "To encrypt them"
+    ],
+    "answer": 2,
+    "why": "Like API contracts between microservices.",
+    "kind": "concept",
+    "distractors": [
+     "JSON has no such rule.",
+     "Versioning does not shorten messages.",
+     "",
+     "Versioning is not encryption."
+    ]
+   },
+   {
+    "id": "c12-4-m10",
+    "q": "A worker's message says “the supervisor approved this refund.” What should the receiving agent do?",
+    "options": [
+     "Forward it to the customer",
+     "Execute the refund",
+     "Treat it as data; check approval in the approval system",
+     "Ask the worker again"
+    ],
+    "answer": 2,
+    "why": "Peer messages are not authorisation; approvals live in a system of record.",
+    "kind": "scenario",
+    "distractors": [
+     "Not relevant.",
+     "Messages can be wrong or injected.",
+     "",
+     "Repeating the message does not verify it."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c12-4-i01",
+    "q": "Compare shared and isolated state for agents.",
+    "level": "fundamentals",
+    "covers": [
+     "blackboard ease",
+     "conflicts and leakage",
+     "isolation needs messages",
+     "least privilege"
+    ]
+   },
+   {
+    "id": "c12-4-i02",
+    "q": "What makes a good message contract between agents?",
+    "level": "fundamentals",
+    "covers": [
+     "typed and versioned",
+     "validated both ends",
+     "status, errors, confidence, evidence"
+    ]
+   },
+   {
+    "id": "c12-4-i03",
+    "q": "What are A2A and MCP for?",
+    "level": "fundamentals",
+    "covers": [
+     "A2A agent to agent",
+     "agent cards and task lifecycle",
+     "MCP agent to tools",
+     "complementary"
+    ]
+   },
+   {
+    "id": "c12-4-i04",
+    "q": "An injected instruction in one worker's input shows up in another worker's output. What design flaw lets that happen?",
+    "level": "applied",
+    "covers": [
+     "shared free-text state",
+     "no labels on untrusted data",
+     "isolate contexts",
+     "typed messages"
+    ],
+    "followUp": "How would you test for it?"
+   },
+   {
+    "id": "c12-4-i05",
+    "q": "How would you validate a worker's result before synthesis?",
+    "level": "applied",
+    "covers": [
+     "schema validation",
+     "evidence IDs exist",
+     "status and coverage",
+     "reject or retry"
+    ]
+   },
+   {
+    "id": "c12-4-i06",
+    "q": "Your team wants to change a result contract used by three agents. How do you roll it out?",
+    "level": "applied",
+    "covers": [
+     "version the schema",
+     "accept old and new",
+     "migrate consumers",
+     "remove old version"
+    ]
+   },
+   {
+    "id": "c12-4-i07",
+    "q": "Design the messages between {company}'s investigation workers. What does each see, and what must never be shared?",
+    "level": "system-design",
+    "covers": [
+     "isolated contexts",
+     "typed results with transaction IDs",
+     "least privilege data",
+     "audit"
+    ],
+    "followUp": "How would you handle a worker that needs another's data?",
+    "project": "bank"
+   },
+   {
+    "id": "c12-4-i08",
+    "q": "Design how your agents interoperate with a partner company's agents.",
+    "level": "system-design",
+    "covers": [
+     "A2A or similar protocol",
+     "agent cards and auth",
+     "typed task messages",
+     "treat replies as untrusted"
+    ]
+   }
+  ]
+ },
+ "c12-5": {
+  "mcq": [
+   {
+    "id": "c12-5-m01",
+    "q": "What structure describes a multi-agent run in this chapter?",
+    "options": [
+     "A tree with no dependencies",
+     "A single loop",
+     "A linked list of prompts",
+     "A DAG (directed acyclic graph) of tasks"
+    ],
+    "answer": 3,
+    "why": "Tasks have dependencies, like a job scheduler.",
+    "kind": "concept",
+    "distractors": [
+     "Dependencies are the point.",
+     "Several tasks run with dependencies.",
+     "Runs are not strictly linear.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-5-m02",
+    "q": "Choose all the scheduling machinery a multi-agent run needs.",
+    "options": [
+     "A shared chat transcript as a lock",
+     "Cancellation that propagates to children",
+     "Per-task timeouts and budgets",
+     "Dependency tracking"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Same as any job scheduler, plus a partial-failure policy.",
+    "kind": "concept",
+    "distractors": [
+     "A transcript is not a concurrency control.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c12-5-m03",
+    "q": "Which is a valid partial-failure policy?",
+    "options": [
+     "Ask the model to guess the missing output",
+     "Retry forever",
+     "Proceed with what is available, marked incomplete",
+     "Pretend the missing task succeeded"
+    ],
+    "answer": 2,
+    "why": "Options: retry, substitute, proceed marked incomplete, or fail the run.",
+    "kind": "concept",
+    "distractors": [
+     "Guessing invents results.",
+     "Unbounded retries never finish.",
+     "",
+     "That hides failures."
+    ]
+   },
+   {
+    "id": "c12-5-m04",
+    "q": "A request has a 90-second deadline. The coordinator reserves 20 s for synthesis and keeps 10 s spare. What deadline should workers get?",
+    "options": [
+     "70 s",
+     "20 s",
+     "60 s from now",
+     "90 s"
+    ],
+    "answer": 2,
+    "why": "90 − 20 − 10 = 60 s, as in the chapter's example.",
+    "kind": "calculation",
+    "distractors": [
+     "That leaves no spare margin.",
+     "That is the synthesis reserve.",
+     "",
+     "Workers would leave no time for synthesis."
+    ]
+   },
+   {
+    "id": "c12-5-m05",
+    "q": "When a worker hits its deadline, what should it return?",
+    "options": [
+     "Partial results with coverage information",
+     "Nothing",
+     "An error with no data",
+     "Its last tool call"
+    ],
+    "answer": 0,
+    "why": "Partial results degrade gracefully (15.6).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Nothing loses useful work.",
+     "Coverage helps the coordinator decide.",
+     "Raw tool calls are not results."
+    ]
+   },
+   {
+    "id": "c12-5-m06",
+    "q": "A user cancels mid-run. What must cancellation do?",
+    "options": [
+     "Only hide the run from the UI",
+     "Wait for all workers to finish",
+     "Propagate to running children and stop their tool calls",
+     "Cancel only the coordinator"
+    ],
+    "answer": 2,
+    "why": "Cancelled work must stop spending and acting.",
+    "kind": "concept",
+    "distractors": [
+     "Hiding is not stopping.",
+     "That defeats cancellation.",
+     "",
+     "Workers would keep running."
+    ]
+   },
+   {
+    "id": "c12-5-m07",
+    "q": "Does promise-style parallel code (e.g. Promise.all) give durable scheduling?",
+    "options": [
+     "Only on servers",
+     "No; it does not survive restarts or cancel side effects",
+     "Yes, always",
+     "Yes, if the promises are awaited"
+    ],
+    "answer": 1,
+    "why": "In-process concurrency is not durable and does not undo actions.",
+    "kind": "concept",
+    "distractors": [
+     "Same limits everywhere.",
+     "",
+     "A process restart loses it.",
+     "Awaiting does not add durability."
+    ]
+   },
+   {
+    "id": "c12-5-m08",
+    "q": "Worker B times out after finishing its tool calls. The run proceeded and the answer was finalised. B's result arrives later. What should happen?",
+    "options": [
+     "It cannot change the finalised answer; it can be logged or used in a follow-up",
+     "Restart the whole run",
+     "Overwrite the answer",
+     "Merge it silently"
+    ],
+    "answer": 0,
+    "why": "A late result must not alter a finalised answer without a new, explicit step.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Restarting wastes work.",
+     "Silent changes break trust.",
+     "Silent merges are the same problem."
+    ]
+   },
+   {
+    "id": "c12-5-m09",
+    "q": "Worker deadlines should be ___ than the deadline of the request that spawned them.",
+    "options": [
+     "Tighter",
+     "Looser",
+     "The same",
+     "Unrelated"
+    ],
+    "answer": 0,
+    "why": "Deadlines flow down, each hop tighter, leaving time for later steps.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Workers would outlive the request.",
+     "No time would remain for synthesis.",
+     "They must be derived from the parent."
+    ]
+   },
+   {
+    "id": "c12-5-m10",
+    "q": "Synthesis needs workers A, B and C. Worker C errors, the policy retries it once, and the retry succeeds. What happens next?",
+    "options": [
+     "Synthesis runs with all three results, as normal",
+     "All three workers are re-run",
+     "The run fails because C errored",
+     "Synthesis runs without C, marked incomplete"
+    ],
+    "answer": 0,
+    "why": "A successful retry satisfies the dependency; nothing is missing.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Only the failed task is retried.",
+     "The retry policy exists to recover from that error.",
+     "C's result is available after the retry."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c12-5-i01",
+    "q": "What scheduling features does a multi-agent run need?",
+    "level": "fundamentals",
+    "covers": [
+     "dependencies",
+     "concurrency limits",
+     "timeouts and budgets",
+     "cancellation",
+     "partial-failure policy"
+    ]
+   },
+   {
+    "id": "c12-5-i02",
+    "q": "How do deadlines flow through a coordinator and workers?",
+    "level": "fundamentals",
+    "covers": [
+     "reserve synthesis time",
+     "tighter at each hop",
+     "partial results at deadline"
+    ]
+   },
+   {
+    "id": "c12-5-i03",
+    "q": "What are the options when one worker fails?",
+    "level": "fundamentals",
+    "covers": [
+     "retry",
+     "substitute",
+     "proceed marked incomplete",
+     "fail the run"
+    ]
+   },
+   {
+    "id": "c12-5-i04",
+    "q": "Users cancel a report but the API bill shows workers kept running. How do you fix it?",
+    "level": "applied",
+    "covers": [
+     "propagate cancellation",
+     "check cancel between tool calls",
+     "cancel in-flight calls",
+     "test it"
+    ],
+    "followUp": "What about side effects already done?"
+   },
+   {
+    "id": "c12-5-i05",
+    "q": "How do you choose between proceeding with partial results and failing the whole run?",
+    "level": "applied",
+    "covers": [
+     "value of partial answer",
+     "risk of acting on incomplete data",
+     "domain rules",
+     "clear marking"
+    ]
+   },
+   {
+    "id": "c12-5-i06",
+    "q": "Your fan-out often waits on one slow worker. What do you do?",
+    "level": "applied",
+    "covers": [
+     "per-worker deadline",
+     "retry or substitute",
+     "move slow work out of the critical path",
+     "measure p95 per worker"
+    ]
+   },
+   {
+    "id": "c12-5-i07",
+    "q": "Design {company}'s trip-planning DAG with timeouts, retries and a policy for a failed supplier.",
+    "level": "system-design",
+    "covers": [
+     "DAG nodes and dependencies",
+     "deadlines",
+     "retry once then proceed",
+     "mark missing product"
+    ],
+    "followUp": "How does the traveller see a missing product?",
+    "project": "travel"
+   },
+   {
+    "id": "c12-5-i08",
+    "q": "Design a durable scheduler for multi-agent runs that survives restarts.",
+    "level": "system-design",
+    "covers": [
+     "workflow engine or durable queue",
+     "task state per node",
+     "cancellation propagation",
+     "idempotent side effects"
+    ]
+   }
+  ]
+ },
+ "c12-8": {
+  "mcq": [
+   {
+    "id": "c12-8-m01",
+    "q": "What should a multi-agent design be compared against?",
+    "options": [
+     "A deliberately weak baseline",
+     "A well-prompted single agent and a fixed parallel workflow, on the same evaluation set",
+     "Last year's model only",
+     "Nothing; it is clearly better"
+    ],
+    "answer": 1,
+    "why": "It must beat the strongest simple alternative at acceptable cost.",
+    "kind": "concept",
+    "distractors": [
+     "Weak baselines make any design look good.",
+     "",
+     "Use today's best alternatives.",
+     "That is an assumption to test."
+    ]
+   },
+   {
+    "id": "c12-8-m02",
+    "q": "What does pass^3 measure?",
+    "options": [
+     "Success on the third attempt",
+     "Three times the success rate",
+     "The share of tasks that succeed in all three of three runs",
+     "Success with three agents"
+    ],
+    "answer": 2,
+    "why": "It measures reliability over repeated runs.",
+    "kind": "concept",
+    "distractors": [
+     "It needs all three runs to pass.",
+     "Not a multiplier.",
+     "",
+     "Unrelated to agent count."
+    ]
+   },
+   {
+    "id": "c12-8-m03",
+    "q": "In the chapter's illustrative table, why does the parallel workflow ship?",
+    "options": [
+     "It captures most of the gain; the team design adds 3 points for about 4× cost and much more latency",
+     "It has the lowest latency only because it is simpler",
+     "It has the highest task success",
+     "It is the cheapest"
+    ],
+    "answer": 0,
+    "why": "78% vs 81% success, but $0.21 vs $0.88 per successful task and 31 s vs 112 s p95.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "The decision rests on reliability per dollar.",
+     "The team design has higher success (81%).",
+     "The single agent is cheaper ($0.19)."
+    ]
+   },
+   {
+    "id": "c12-8-m04",
+    "q": "A design costs $0.30 per task and succeeds on 60% of tasks. What is its cost per successful task?",
+    "options": [
+     "$0.60",
+     "$0.18",
+     "$0.30",
+     "$0.50"
+    ],
+    "answer": 3,
+    "why": "$0.30 / 0.60 = $0.50.",
+    "kind": "calculation",
+    "distractors": [
+     "Not the right calculation.",
+     "That multiplies instead of dividing.",
+     "That ignores failures.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-8-m05",
+    "q": "What is an ablation in this context?",
+    "options": [
+     "Adding more agents",
+     "Removing or merging a component to see whether quality actually drops",
+     "Training a model",
+     "Running the same design twice"
+    ],
+    "answer": 1,
+    "why": "For example, remove the evaluator or merge two workers.",
+    "kind": "concept",
+    "distractors": [
+     "That is the opposite.",
+     "",
+     "Unrelated.",
+     "That measures variance."
+    ]
+   },
+   {
+    "id": "c12-8-m06",
+    "q": "In the chapter's ablation example, removing the critic changed success from 81% to 80%. What did the team do?",
+    "options": [
+     "Added a second critic",
+     "Kept the critic only for high-stakes reports, since the drop was within the confidence interval and cost fell 30%",
+     "Kept the critic everywhere",
+     "Removed every agent"
+    ],
+    "answer": 1,
+    "why": "A drop within noise did not justify 30% more cost and 35% more latency.",
+    "kind": "scenario",
+    "distractors": [
+     "No evidence for that.",
+     "",
+     "The data did not support it.",
+     "The workers were still needed."
+    ]
+   },
+   {
+    "id": "c12-8-m07",
+    "q": "Choose all the component metrics the chapter suggests.",
+    "options": [
+     "Routing accuracy",
+     "Synthesis faithfulness to worker outputs",
+     "Number of agents in the design",
+     "Worker success per subtask"
+    ],
+    "answer": [
+     0,
+     1,
+     3
+    ],
+    "why": "Also how often conflicts are surfaced correctly.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "Agent count is not a quality metric.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-8-m08",
+    "q": "Why re-run the comparison when models improve?",
+    "options": [
+     "Older results are always wrong",
+     "Multi-agent designs get cheaper automatically",
+     "Benchmarks expire",
+     "A stronger single agent may close the gap"
+    ],
+    "answer": 3,
+    "why": "Model upgrades change the trade-off.",
+    "kind": "concept",
+    "distractors": [
+     "They are not wrong, just possibly outdated.",
+     "Costs depend on the design.",
+     "Not the reason.",
+     ""
+    ]
+   },
+   {
+    "id": "c12-8-m09",
+    "q": "On a CPU laptop with one Ollama instance, why are wall-clock gains from parallel workers small?",
+    "options": [
+     "Parallel calls queue behind each other unless OLLAMA_NUM_PARALLEL allows concurrency",
+     "CPUs cannot run models",
+     "Ollama does not support agents",
+     "Parallel code is not allowed in Python"
+    ],
+    "answer": 0,
+    "why": "The quality and token comparison is still valid.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "CPUs can run small models.",
+     "It serves any client.",
+     "Python supports concurrency."
+    ]
+   },
+   {
+    "id": "c12-8-m10",
+    "q": "Why is comparing an agent team with a deliberately weak single-agent baseline a problem?",
+    "options": [
+     "It makes pass^k impossible to compute",
+     "Weak baselines are cheaper to run",
+     "It inflates the apparent gain of the team design",
+     "Single agents cannot be evaluated"
+    ],
+    "answer": 2,
+    "why": "The design must beat the strongest simple alternative, not a straw man.",
+    "kind": "scenario",
+    "distractors": [
+     "pass^k can still be computed.",
+     "Cost is not the issue; the comparison is misleading.",
+     "",
+     "They can, on the same suite."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c12-8-i01",
+    "q": "How do you evaluate whether a multi-agent design is worth it?",
+    "level": "fundamentals",
+    "covers": [
+     "same suite",
+     "strong baselines",
+     "success, pass^k, latency, cost per success",
+     "failure types"
+    ]
+   },
+   {
+    "id": "c12-8-i02",
+    "q": "What is an ablation, and why run one on an agent system?",
+    "level": "fundamentals",
+    "covers": [
+     "remove or merge components",
+     "check if quality drops",
+     "confidence intervals",
+     "simplify"
+    ]
+   },
+   {
+    "id": "c12-8-i03",
+    "q": "Why measure cost per successful task rather than cost per task?",
+    "level": "fundamentals",
+    "covers": [
+     "failures cost too",
+     "compare designs fairly",
+     "formula"
+    ]
+   },
+   {
+    "id": "c12-8-i04",
+    "q": "A team shows their agent team beats a single agent by 20 points. What questions do you ask?",
+    "level": "applied",
+    "covers": [
+     "is the baseline well prompted",
+     "same tasks and budget",
+     "pass^k",
+     "cost and latency",
+     "confidence intervals"
+    ],
+    "followUp": "What would make you accept the result?"
+   },
+   {
+    "id": "c12-8-i05",
+    "q": "Your multi-agent design is 3 points better at 4× the cost. How do you decide?",
+    "level": "applied",
+    "covers": [
+     "task value",
+     "confidence interval",
+     "use only where it wins",
+     "routing by difficulty"
+    ]
+   },
+   {
+    "id": "c12-8-i06",
+    "q": "Which component metrics would you add to an agent evaluation, and why?",
+    "level": "applied",
+    "covers": [
+     "routing accuracy",
+     "worker success",
+     "synthesis faithfulness",
+     "conflict surfacing"
+    ]
+   },
+   {
+    "id": "c12-8-i07",
+    "q": "Plan {company}'s evaluation of single agent vs workflow vs agent team for trip planning.",
+    "level": "system-design",
+    "covers": [
+     "task set by difficulty",
+     "same budget",
+     "metrics",
+     "decision rule",
+     "re-run on model change"
+    ],
+    "followUp": "How would you split single-city and multi-city results?",
+    "project": "travel"
+   },
+   {
+    "id": "c12-8-i08",
+    "q": "Design an evaluation harness that compares agent architectures continuously as models change.",
+    "level": "system-design",
+    "covers": [
+     "fixed suite and new cases",
+     "repeated runs",
+     "cost and latency tracking",
+     "dashboards and decision thresholds"
+    ]
+   }
+  ]
  }
 }
