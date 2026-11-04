@@ -77,7 +77,7 @@ export function PracticeBlock({ practice }: { practice: TopicPractice | undefine
             >
               <ProjectIcon id={x.id} size={14} />
               <span>{x.label}</span>
-              {practice?.[x.id]?.fit === 'best' && <i className="pb-best" title="Best fit for this topic">★</i>}
+              {practice?.[x.id]?.fit === 'best' && <><i className="pb-best" title="Best fit for this topic" aria-hidden="true">★</i><span className="sr-only">best fit for this topic</span></>}
             </button>
           )
         })}

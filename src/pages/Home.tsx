@@ -4,7 +4,7 @@ import { ArrowRight, BookOpen, Compass, Dumbbell, FlaskConical, MousePointerClic
 import { ProjectPicker } from '../components/ProjectPicker'
 import { chapters, courseTopics, getChapter, getTopic, parts, paths, totals } from '../data/course'
 import { ProgressRing } from '../components/Icons'
-import { useDocumentTitle } from '../components/common'
+import { useDocumentTitle, useNextTopic } from '../components/common'
 import { useProgress } from '../store/progress'
 
 export function Home() {
@@ -12,6 +12,7 @@ export function Home() {
   const studied = useProgress((s) => s.studied)
   const last = useProgress((s) => s.last)
   const done = courseTopics.filter((t) => studied[t.id]).length
+  const nextTopic = useNextTopic()
   const lastTopic = last ? getTopic(last.split('/')[2]) : undefined
 
   return (
@@ -43,16 +44,24 @@ export function Home() {
             </Link>
           </div>
           <div className="hero-proj">
-            Example project: <ProjectPicker inline /> <span className="muted">· change it any time; the practical notes, data and labs follow it.</span>
+            Example project: <ProjectPicker inline />
           </div>
+          <p className="muted hero-proj-note">Change it any time; the practical notes, data and labs follow it.</p>
         </motion.div>
         <motion.div className="hero-panel" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="hp-ring">
             <ProgressRing value={done / totals.topics} size={112} stroke={9} />
-            <div>
-              <b>{done}</b>
-              <span>of {totals.topics} topics</span>
-            </div>
+            {done > 0 ? (
+              <div>
+                <b>{done}</b>
+                <span>of {totals.topics} topics</span>
+              </div>
+            ) : (
+              <div className="hp-zero">
+                <span>No topics studied yet.</span>
+                <Link className="btn sm" to={nextTopic.to}>{nextTopic.label}</Link>
+              </div>
+            )}
           </div>
           <dl className="hp-stats">
             <div><dt>Chapters</dt><dd>{totals.chapters}</dd></div>

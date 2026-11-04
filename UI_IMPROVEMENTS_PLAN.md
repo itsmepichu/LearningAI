@@ -2,7 +2,7 @@
 
 A review of the LearningAI app's page structure, components and UI/UX, with the code changes it suggests.
 
-**Status:** phases A and B are implemented (see the notes at the start of each). Phases C and D have not been started.
+**Status:** phases A, B and C are implemented (see the notes at the start of each). Phase D has not been started. The full e2e suite last ran on phase B: it runs next after phase D, and its new phase C checks have not run as part of it.
 
 - **Reviewed:** branch `phase-3-rollout` at commit d229907, built and served with `vite preview`.
 - **Method:** the ui-ux-pro-max design skill (UX guideline and React stack searches) and the design-critique framework.
@@ -268,10 +268,6 @@ Also give `.t-steps` a visible label for screen readers: wrap it in `<nav aria-l
 - **Progress ring (B5):** the top-bar ring grows from 30 to 34 px so a 12 px percentage fits inside it.
 - **Arrow keys (B7):** one `onRovingKeyDown` handler clicks the next item, so each list keeps its own selection logic. The check page's mode switch is a radio group, so it also takes the up and down arrows.
 
-**Found while implementing, not yet fixed:**
-
-- **Interview count pill:** `.pill.iv` picks up the `.iv` card's padding and left border, so the "0/6 practised" pill on check pages is too tall.
-
 **B1. Normalise heading levels in rendered content (S1).** Shift headings once when topic HTML is rendered, instead of editing 135 content files: the body's first heading level becomes `h2`, and the rest follow relative to it. In `src/components/HtmlContent.tsx`, after the HTML is parsed into the container:
 
 ```ts
@@ -369,6 +365,21 @@ export function useRovingTabs(count: number, index: number, onSelect: (i: number
 - On the In practice tabs, ArrowRight moves focus and selection.
 
 ### Phase C: readability and visual consistency (R3, R4, T2, T3, C1–C8)
+
+**Status: implemented.** The snippets below are the original suggestions. The code differs from them in these places:
+
+- **Type scale (C1):**
+  - Sizes below 12 px now use `--fs-2xs`, and `.mono` has a 12 px minimum.
+  - Dense figure internals (`.flow`, `.ctl .count`, `.bars .val`, `.kpi span`, `.heat`), the rail's small markers and the sizes inside legacy widget code keep their old sizes.
+  - Literal sizes of 12 px and above were not moved onto the scale, so the ad hoc sizes in C8 are only partly addressed.
+- **Zero rings (C3):** the ring draws thin as well as dashed at zero, because a dash on the thick home ring looked like a row of spikes. The call to action goes to the reader's last topic if they have one, and otherwise to 1.1.
+- **Progress page (C5):** `.hm-check` was already in its own grid cell, so only the column width changed. The counts and topic links also get a 24 px minimum height.
+- **Practice filter (C6):** the select stays, renamed "Any learning path". The review read it as a repeat of the chips, but it picks chapters by learning path, and removing it would have lost that feature.
+- **Interview count pill:** fixed here too. `.pill.iv` was picking up the `.iv` card's padding and left border.
+
+**Checked:** typecheck, build, screenshots of the eight pages at both sizes and themes, and a script for the new behaviour. Outside figures and code, the scan now finds no text under 12 px on any of the eight pages at either size (home at 1440 px was 116 of 210 text elements) and no sideways scroll.
+
+**Not fixed:** a few standalone text links are 22–23 px tall, just under the 24 px minimum (`.hp-link`, `.ck-back`, `.iv-toggle`). They have clear space around them, which WCAG allows.
 
 **C1. A type scale with a 12 px floor (R3, R4).** Add size tokens to `:root` in `content.css`, then replace the 0.60–0.72 rem literals in the three stylesheets:
 

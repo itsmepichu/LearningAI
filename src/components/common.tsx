@@ -1,6 +1,7 @@
 import { useEffect, useState, type KeyboardEvent } from 'react'
 import type { Tag } from '../data/course'
-import { loadPage } from '../data/course'
+import { courseTopics, getTopic, loadPage, topicPath } from '../data/course'
+import { useProgress } from '../store/progress'
 
 const TAGS: Record<Tag, string> = { cpu: 'Laptop · CPU', real: 'Runs in browser', sim: 'Simulation', gpu: 'Needs external compute' }
 
@@ -52,6 +53,15 @@ export function usePage(chapterId: string | undefined, file: string | undefined,
     }
   }, [chapterId, file, enabled, key])
   return state && state.key === key ? state.html : null
+}
+
+/** Where a reader with nothing studied should go next: their last topic, else the first one. */
+export function useNextTopic() {
+  const last = useProgress((s) => s.last)
+  const lastTopic = last ? getTopic(last.split('/')[2]) : undefined
+  const topic = lastTopic ?? courseTopics[0]
+  const title = topic.title.length > 38 ? topic.title.slice(0, 36) + '…' : topic.title
+  return { to: topicPath(topic), label: `${lastTopic ? 'Continue' : 'Start'} with ${topic.tn} ${title}` }
 }
 
 export function useDocumentTitle(title: string) {

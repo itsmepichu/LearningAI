@@ -85,8 +85,16 @@ export function ChapterCheckPage() {
           </label>
           <ProjectFramingNote />
           {totals && (
-            <span className="ck-score" aria-live="polite">
-              <b>{totals.correct}</b>/{totals.mcq} correct · <b>{totals.practised}</b>/{totals.iv} interview practised
+            <span className="ck-score">
+              <span aria-live="polite">
+                <b>{totals.correct}</b>/{totals.mcq} correct · <b>{totals.practised}</b>/{totals.iv} interview practised
+              </span>
+              {count.interview > totals.iv && (
+                <>
+                  {' '}· {count.interview - totals.iv} framed for other projects {count.interview - totals.iv === 1 ? 'is' : 'are'} hidden{' '}
+                  (<button type="button" className="linkish" onClick={() => setAllProjects(true)}>show them</button>)
+                </>
+              )}
             </span>
           )}
         </div>

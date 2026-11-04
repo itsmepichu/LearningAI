@@ -396,6 +396,48 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   if (!dr.url().endsWith('/progress')) fails.push('drawer: no link to the progress page')
   await dr.close()
 
+  // 8. readability and consistency
+  const r = await b.newPage({ viewport: { width: 1440, height: 900 } })
+  // zero state: no empty counter on the home card, and it goes once a topic is studied
+  await r.goto(BASE + '/', { waitUntil: 'networkidle' })
+  if (!(await r.$('.hp-zero .btn'))) fails.push('home: no call to action at zero progress')
+  await r.goto(BASE + '/c1/c1-1', { waitUntil: 'networkidle' })
+  await r.click('.studied-toggle')
+  await r.goto(BASE + '/', { waitUntil: 'networkidle' })
+  if (await r.$('.hp-zero')) fails.push('home: zero state still shown after studying a topic')
+  // progress page: 24 px cells whose rows all start at the same x
+  await r.goto(BASE + '/progress', { waitUntil: 'networkidle' })
+  const hm = await r.$$eval('.hm-cells', (x) => ({
+    lefts: new Set(x.map((e) => Math.round(e.getBoundingClientRect().left))).size,
+    minCell: Math.min(...[...document.querySelectorAll('.hm-cell')].map((c) => c.getBoundingClientRect().height)),
+  }))
+  if (hm.lefts !== 1) fails.push(`progress page: heatmap rows start at ${hm.lefts} different positions`)
+  if (hm.minCell < 24) fails.push(`progress page: heatmap cell height ${hm.minCell}px`)
+  // practice page filter: All and None, with a count; learning paths are still available
+  await r.goto(BASE + '/practice', { waitUntil: 'networkidle' })
+  const chipCount = () => r.$$eval('.pf-chips .lchip.on', (x) => x.length)
+  const allChips = await chipCount()
+  await r.click('.pf-row .linkish:text-is("None")')
+  if ((await chipCount()) !== 0) fails.push('practice page: None did not clear the chapters')
+  if (!(await r.isDisabled('.pm-bar .btn.primary'))) fails.push('practice page: a set can be drawn with no chapters selected')
+  await r.click('.pf-row .linkish:text-is("All")')
+  if ((await chipCount()) !== allChips) fails.push('practice page: All did not select every chapter')
+  await r.selectOption('.pf-row select[aria-label="Learning path"]', { index: 1 })
+  if ((await chipCount()) >= allChips) fails.push('practice page: picking a learning path did not narrow the chapters')
+  if (await r.$('.pm-foot')) fails.push('practice page: stale coverage sentence is back')
+  // check page: hidden interview questions are explained, and the link shows them
+  await r.goto(BASE + '/c5/check', { waitUntil: 'networkidle' })
+  await r.waitForSelector('.ck-score .linkish')
+  await r.click('.ck-score .linkish')
+  if (await r.$('.ck-score .linkish')) fails.push('check page: "show them" did not show the hidden questions')
+  if (!(await r.isChecked('.ck-bar .tgl input'))) fails.push('check page: "show them" did not tick the toggle')
+  // search placeholder comes from the data
+  await r.keyboard.press('/')
+  const ph = await r.getAttribute('.srch-in input', 'placeholder')
+  if (!ph.includes(String(manifest.chapters.filter((c) => c.kind === 'chapter').reduce((n, c) => n + c.topics.length, 0)))) fails.push(`search placeholder count looks wrong: "${ph}"`)
+  await r.close()
+  if (errs.length) fails.push('readability checks: ' + errs.join(' | '))
+
   await b.close()
   console.log(fails.length ? 'FAILURES:\n- ' + fails.join('\n- ') : 'ALL CHECKS PASSED')
   process.exit(fails.length ? 1 : 0)

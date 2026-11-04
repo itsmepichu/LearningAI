@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'motion/react'
 import { Search } from 'lucide-react'
 import type MiniSearch from 'minisearch'
-import { getChapter, getTopic } from '../data/course'
+import { courseTopics, getChapter, getTopic } from '../data/course'
 import { fill, getProject, loadPractice, practiceChapterIds, projects } from '../data/projects'
 
 interface Doc { id: string; ch: string; tn: string; title: string; text: string; topic: string; project?: string }
@@ -161,7 +161,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                 aria-activedescendant={results[sel] ? `srch-opt-${sel}` : undefined}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search 143 topics — e.g. KV cache, LoRA, idempotency"
+                placeholder={`Search ${courseTopics.length} topics and the appendices — e.g. KV cache, LoRA, idempotency`}
                 aria-label="Search"
                 aria-controls="srch-res"
                 autoComplete="off"

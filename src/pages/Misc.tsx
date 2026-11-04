@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router'
 import { ArrowRight, ListChecks, RotateCcw } from 'lucide-react'
 import { chapterCheckCount, courseChapters, courseTopics, getChapter, paths, totals } from '../data/course'
 import { HtmlContent } from '../components/HtmlContent'
-import { useDocumentTitle, usePage } from '../components/common'
+import { useDocumentTitle, useNextTopic, usePage } from '../components/common'
 import { ProgressRing } from '../components/Icons'
 import { useProgress } from '../store/progress'
 
@@ -78,6 +78,7 @@ export function ProgressPage() {
   useDocumentTitle('Your progress')
   const { studied, results, ratings, reset } = useProgress()
   const done = courseTopics.filter((t) => studied[t.id]).length
+  const nextTopic = useNextTopic()
   const right = Object.values(results).filter(Boolean).length
   const tried = Object.keys(results).length
   const practised = Object.keys(ratings).length
@@ -90,6 +91,11 @@ export function ProgressPage() {
     <div className="page-narrow">
       <span className="c-kicker">Stored only in this browser</span>
       <h1 className="page-h">Your progress</h1>
+      {done === 0 && (
+        <p className="muted prog-zero">
+          No topics studied yet. <Link to={nextTopic.to}>{nextTopic.label}</Link>
+        </p>
+      )}
       <div className="prog-sum">
         <div><ProgressRing value={done / totals.topics} size={96} stroke={8} /><b>{done}/{totals.topics}</b><span>topics studied</span></div>
         <div><ProgressRing value={totals.mcq ? right / totals.mcq : 0} size={96} stroke={8} /><b>{right}/{totals.mcq}</b><span>choose-the-answer correct{tried > right ? ` · ${tried - right} wrong` : ''}</span></div>

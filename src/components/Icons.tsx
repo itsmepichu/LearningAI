@@ -7,19 +7,21 @@ export function ProgressRing({ value, size = 40, stroke = 4, label, text }: { va
   const v = Math.max(0, Math.min(1, value))
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="ring" role="img" aria-label={label ?? `${Math.round(v * 100)}% complete`}>
-      <circle cx={size / 2} cy={size / 2} r={r} className="ring-bg" strokeWidth={stroke} fill="none" />
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={r}
-        className="ring-fg"
-        strokeWidth={stroke}
-        fill="none"
-        strokeLinecap="round"
-        strokeDasharray={c}
-        strokeDashoffset={c * (1 - v)}
-        transform={`rotate(-90 ${size / 2} ${size / 2})`}
-      />
+      <circle cx={size / 2} cy={size / 2} r={r} className={'ring-bg' + (v === 0 ? ' zero' : '')} strokeWidth={v === 0 ? Math.min(stroke, 2) : stroke} strokeDasharray={v === 0 ? '3 5' : undefined} fill="none" />
+      {v > 0 && (
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          className="ring-fg"
+          strokeWidth={stroke}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - v)}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+        />
+      )}
       {text && <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" className="ring-t">{text}</text>}
     </svg>
   )

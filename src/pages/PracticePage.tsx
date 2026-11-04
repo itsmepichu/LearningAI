@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { ArrowLeft, ArrowRight, Dumbbell, Filter, MessagesSquare, RotateCcw, Shuffle, Target } from 'lucide-react'
-import { chapterCheckCount, chaptersWithChecks, getChapter, getTopic, paths } from '../data/course'
+import { chapterCheckCount, chaptersWithChecks, getTopic, paths } from '../data/course'
 import { LEVEL_LABEL, isCorrect, loadChecks, type ChapterChecks, type InterviewQ, type Level, type Mcq } from '../data/checks'
 import { McqCard, InterviewCard } from '../components/Checks'
 import { ProjectFramingNote, useActiveProject } from '../components/Practice'
@@ -140,8 +140,11 @@ export function PracticePage() {
       <section className="pf" aria-label="Filters">
         <div className="pf-row">
           <span className="pf-l"><Filter size={14} /> Chapters</span>
+          <button type="button" className="linkish" onClick={() => pickPath('')}>All</button>
+          <button type="button" className="linkish" onClick={() => { setPathId(''); setChapters([]) }}>None</button>
+          <span className="muted small">{chapters.length} of {available.length} chapters</span>
           <select value={pathId} onChange={(e) => pickPath(e.target.value)} aria-label="Learning path">
-            <option value="">All chapters with questions</option>
+            <option value="">Any learning path</option>
             {paths.map((p) => (
               <option key={p.id} value={p.id}>Path: {p.title}</option>
             ))}
@@ -275,10 +278,6 @@ export function PracticePage() {
           )}
         </section>
       )}
-
-      <p className="muted small pm-foot">
-        Questions so far cover {available.map((c) => getChapter(c.id)!.num).join(', ')}. More chapters are added as their checks are written.
-      </p>
     </div>
   )
 }
