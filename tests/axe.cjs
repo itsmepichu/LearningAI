@@ -1,16 +1,19 @@
-/* Accessibility check with axe: the seven review pages in both themes. Fails on serious or critical violations.
+/* Accessibility check with axe: the review pages, and the React widgets on other pages, in both themes. Fails on serious or critical violations.
    Part of tests/e2e.cjs. To run it alone, against a served build: node tests/axe.cjs [baseUrl] */
 const { chromium } = require('playwright')
 const { AxeBuilder } = require('@axe-core/playwright')
 
 const PAGES = ['/', '/guide', '/c9', '/c9/c9-3', '/c5/check', '/practice', '/progress']
+// Other pages with a React widget from src/widgets/kit: only the widgets are checked here, because these pages
+// still hold v3 elements with known findings (flow stepper buttons and track, code blocks, some tables).
+const WIDGET_PAGES = ['/c9/c9-2', '/c9/c9-7', '/c7/c7-4', '/c11/c11-6']
 
 async function runAxe(browser, base) {
   const problems = []
   for (const colorScheme of ['light', 'dark']) {
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme, reducedMotion: 'reduce' })
     const page = await context.newPage()
-    for (const url of PAGES) {
+    for (const url of [...PAGES, ...WIDGET_PAGES]) {
       await page.goto(base + url, { waitUntil: 'networkidle' })
       // Sections that fade in on scroll must finish, or axe measures them part-way through.
       await page.evaluate(async () => {
@@ -21,7 +24,9 @@ async function runAxe(browser, base) {
         window.scrollTo(0, 0)
       })
       await page.waitForTimeout(700)
-      const { violations } = await new AxeBuilder({ page }).analyze()
+      const builder = new AxeBuilder({ page })
+      if (WIDGET_PAGES.includes(url)) builder.include('[data-kit-widget]')
+      const { violations } = await builder.analyze()
       for (const v of violations) {
         if (v.impact !== 'serious' && v.impact !== 'critical') continue
         const where = [...new Set(v.nodes.map((n) => n.target.join(' ')))]

@@ -11,7 +11,17 @@ const BASE = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '')
 const OUT = path.join(__dirname, 'out')
 fs.mkdirSync(OUT, { recursive: true })
 
-const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl', 'pkKp', 'rcTbl', 'rvOut', 'bgmLog', 'twDb', 'lsK', 'pcK', 'qsK', 'lsdBars', 'ckbT', 'cpWf', 'bwK', 'mgLog', 'bmTbl', 'gdOut', 'kmCan']
+const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl', 'pkKp', 'rvOut', 'bgmLog', 'twDb', 'lsK', 'pcK', 'qsK', 'lsdBars', 'ckbT', 'cpWf', 'bwK', 'mgLog', 'gdOut', 'kmCan']
+// React widgets from src/widgets, and the page each is embedded on
+const KIT_WIDGETS = [
+  ['chunking', '/c9/c9-2'],
+  ['bm25', '/c9/c9-3'],
+  ['retrieval-metrics', '/c9/c9-7'],
+  ['retriever-compare', '/c9/c9-7'],
+  ['streaming', '/c7/c7-4'],
+  ['saga', '/c11/c11-6'],
+]
+const PROJECTS = require('../src/content/projects.json').projects
 
 ;(async () => {
   const b = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
@@ -80,6 +90,156 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   console.log('legacy widgets checked:', WIDGETS.length, 'empty:', empty)
   if (empty.length) fails.push('legacy widgets not started: ' + empty.join(', '))
   await check('widgets')
+
+  // 2b. React widgets: each loads every project's data and meets the 12 px and 24 px floors
+  const kitSel = (name) => `[data-kit-widget="${name}"]`
+  for (const [name, route] of KIT_WIDGETS) {
+    for (const p of PROJECTS) {
+      const label = `${name} (${p.id})`
+      await page.goto(`${BASE}${route}?project=${p.id}`, { waitUntil: 'networkidle' })
+      const ready = await page.waitForSelector(`${kitSel(name)} .wk-src`, { timeout: 15000 }).catch(() => null)
+      if (!ready) {
+        fails.push(`${label}: its data did not load`)
+        continue
+      }
+      const source = await page.textContent(`${kitSel(name)} .wk-src-co`)
+      if (source !== p.company) fails.push(`${label}: shows data for "${source}"`)
+      const problems = await page.$eval(kitSel(name), (root) => {
+        const out = []
+        for (const e of root.querySelectorAll('*')) {
+          const box = e.getBoundingClientRect()
+          if (!box.width || !box.height) continue
+          const hasText = [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())
+          if (hasText && parseFloat(getComputedStyle(e).fontSize) < 12) out.push(`${e.tagName.toLowerCase()} text under 12 px: "${e.textContent.trim().slice(0, 30)}"`)
+          // a checkbox's target includes its label
+          const target = e.matches('button,select,input:not([type=checkbox]),label')
+          if (target && (box.width < 24 || box.height < 24)) out.push(`${e.tagName.toLowerCase()} target ${Math.round(box.width)}x${Math.round(box.height)}: "${e.textContent.trim().slice(0, 30)}"`)
+        }
+        return [...new Set(out)]
+      })
+      problems.forEach((x) => fails.push(`${label}: ${x}`))
+      await check(label)
+    }
+  }
+  const kpi = (name, re) =>
+    page.$$eval(`${kitSel(name)} .kpi`, (ks, src) => {
+      const k = ks.find((x) => new RegExp(src).test(x.querySelector('span').textContent))
+      return k ? k.querySelector('b').textContent : null
+    }, re)
+
+  // BM25 runs for real over the project's documents
+  const chip = (t) => page.click(`${kitSel('bm25')} .wk-chip:has-text("${t}")`)
+  const topHit = () => page.textContent(`${kitSel('bm25')} tbody tr:first-child code`)
+  await page.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('bm25')} .wk-chip`)
+  await chip('HTTP 429')
+  if ((await topHit()) !== 'HP-013' || (await kpi('bm25', 'with a match')) !== '1') fails.push('bm25: an exact code should find one document, HP-013')
+  await chip('cannot log in')
+  if ((await topHit()) !== 'HP-014') fails.push('bm25: "cannot log in" should show the vocabulary mismatch (only the audit log)')
+  // switching project without a reload swaps the documents and the queries
+  await page.click('.pb-tab:nth-child(2)')
+  await page.waitForSelector(`${kitSel('bm25')} .wk-src-co:has-text("Bazrova")`)
+  await chip('BZ-FOO-1130')
+  if ((await topHit()) !== 'BZ-FOO-1130') fails.push('bm25: an exact SKU should rank first for the store project')
+  await check('bm25')
+
+  // chunking: strategy and size change the result
+  await page.goto(BASE + '/c9/c9-2', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('chunking')} .wk-chunk`)
+  if ((await kpi('chunking', 'mix sections')) === '0') fails.push('chunking: 40-word fixed chunks should mix sections')
+  const before9 = await kpi('chunking', '^chunks$')
+  await page.selectOption(`${kitSel('chunking')} select`, 'section')
+  if ((await kpi('chunking', 'mix sections')) !== '0') fails.push('chunking: paragraph-aware chunks should not mix sections')
+  if (!(await page.$(`${kitSel('chunking')} .wk-chunk-h`))) fails.push('chunking: paragraph-aware chunks should show their header')
+  await page.selectOption(`${kitSel('chunking')} select`, 'fixed')
+  await page.locator(`${kitSel('chunking')} input[type=range]`).first().fill('15')
+  if (+(await kpi('chunking', '^chunks$')) <= +before9) fails.push('chunking: a smaller chunk size should make more chunks')
+  await check('chunking')
+
+  // retrieval metrics: moving the best result to rank 1 raises RR and nDCG, and recall stays the same
+  await page.goto(BASE + '/c9/c9-7', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('retrieval-metrics')} .wk-row`)
+  const m0 = { recall: await kpi('retrieval-metrics', '^Recall'), rr: await kpi('retrieval-metrics', 'Reciprocal'), ndcg: await kpi('retrieval-metrics', 'nDCG') }
+  for (const rank of [4, 3, 2]) await page.click(`${kitSel('retrieval-metrics')} li:nth-child(${rank}) .wk-up`)
+  const firstRow = await page.textContent(`${kitSel('retrieval-metrics')} li:first-child .wk-row`)
+  if (!firstRow.includes('grade 3')) fails.push(`retrieval metrics: the grade 3 result did not move to rank 1: "${firstRow}"`)
+  const m1 = { recall: await kpi('retrieval-metrics', '^Recall'), rr: await kpi('retrieval-metrics', 'Reciprocal'), ndcg: await kpi('retrieval-metrics', 'nDCG') }
+  console.log('retrieval metrics:', JSON.stringify(m0), '->', JSON.stringify(m1))
+  if (m1.recall !== m0.recall || +m1.rr <= +m0.rr || +m1.ndcg <= +m0.ndcg) fails.push(`retrieval metrics: expected same recall, higher RR and nDCG: ${JSON.stringify([m0, m1])}`)
+  if (!(await page.$(`${kitSel('retrieval-metrics')} svg polyline`))) fails.push('retrieval metrics: no chart')
+  await page.hover(`${kitSel('retrieval-metrics')} .wk-chart svg rect`)
+  if (!(await page.$(`${kitSel('retrieval-metrics')} .wk-tip`))) fails.push('retrieval metrics: chart has no tooltip on hover')
+  // retriever comparison: a table row for each retriever, and live metrics
+  const rcRows = await page.$$eval(`${kitSel('retriever-compare')} tbody tr`, (x) => x.length)
+  if (rcRows !== 3) fails.push(`retriever comparison: expected 3 rows, got ${rcRows}`)
+  const rcPrecision = () => page.textContent(`${kitSel('retriever-compare')} tbody tr:first-child td:nth-child(3)`)
+  const rc5 = await rcPrecision()
+  await page.locator(`${kitSel('retriever-compare')} input[type=range]`).fill('1')
+  if ((await page.textContent(`${kitSel('retriever-compare')} thead th:nth-child(2)`)) !== 'Recall@1' || (await rcPrecision()) === rc5) fails.push('retriever comparison: the cutoff did not change the metrics')
+  await check('retriever comparison')
+
+  // streaming: plays near the viewport, paints its canvas, and redraws on a theme change
+  const canvasHash = () => page.$eval(`${kitSel('streaming')} canvas`, (c) => c.toDataURL())
+  const blank = (c) => c.getContext('2d').getImageData(0, 0, c.width, c.height).data.every((v) => v === 0)
+  await page.goto(BASE + '/c7/c7-4', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('streaming')} canvas`)
+  await page.locator(`${kitSel('streaming')} canvas`).scrollIntoViewIfNeeded()
+  await page.waitForTimeout(800)
+  const tPlayed = +(await page.inputValue(`${kitSel('streaming')} label:has-text("Time") >> nth=2 >> input`).catch(() => '0'))
+  if (!(tPlayed > 0)) fails.push('streaming: did not start playing near the viewport')
+  if (await page.$eval(`${kitSel('streaming')} canvas`, blank)) fails.push('streaming: the canvas is blank')
+  await page.locator(`${kitSel('streaming')} label:has-text("Time") >> nth=2 >> input`).fill('1')
+  const light = await canvasHash()
+  await page.click('button[aria-label^="Switch to"]')
+  await page.waitForTimeout(150)
+  if ((await canvasHash()) === light) fails.push('streaming: the canvas did not redraw on a theme change')
+  await page.click('button[aria-label^="Switch to"]')
+  await check('streaming')
+
+  // saga: steps forward, and compensates in reverse order
+  await page.goto(BASE + '/c11/c11-6?project=travel', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('saga')} .wk-ev`)
+  const sagaLog = () => page.$$eval(`${kitSel('saga')} .wk-ev`, (x) => x.map((e) => e.textContent))
+  if ((await sagaLog()).length !== 1) fails.push('saga: should start on the first event')
+  await page.click(`${kitSel('saga')} .btn.primary`)
+  if ((await sagaLog()).length !== 2) fails.push('saga: Next did not add an event')
+  if (!/SN-\d+/.test((await sagaLog())[0])) fails.push('saga: the idempotency key should use a booking from the dataset')
+  for (let i = 0; i < 12 && (await page.isEnabled(`${kitSel('saga')} .btn.primary`)); i++) await page.click(`${kitSel('saga')} .btn.primary`)
+  const undo = (await sagaLog()).filter((t) => t.startsWith('Compensated')).map((t) => +t.match(/Step (\d)/)[1])
+  if (undo.join() !== '2,1') fails.push(`saga: compensations should run in reverse order, got ${undo}`)
+  await page.selectOption(`${kitSel('saga')} select`, '-1')
+  if ((await sagaLog()).length !== 1) fails.push('saga: changing the failure should restart the run')
+  await check('saga')
+
+  // reduced motion: end states appear at once, and Play jumps to the end
+  {
+    const ctx = await b.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' })
+    const rm = await ctx.newPage()
+    await rm.goto(BASE + '/c7/c7-4', { waitUntil: 'networkidle' })
+    await rm.waitForSelector(`${kitSel('streaming')} .wk-stream`)
+    const outs = await rm.$$eval(`${kitSel('streaming')} .wk-stream`, (x) => x.map((e) => e.textContent))
+    if (outs[0] !== outs[1] || outs[0].includes('waiting')) fails.push('reduced motion: streaming should show the finished answer in both panes')
+    await rm.goto(BASE + '/c11/c11-6', { waitUntil: 'networkidle' })
+    await rm.waitForSelector(`${kitSel('saga')} .wk-ev`)
+    await rm.click(`${kitSel('saga')} .btn:has-text("Play")`)
+    const last = await rm.$$eval(`${kitSel('saga')} .wk-ev`, (x) => x[x.length - 1].textContent)
+    if (!last.startsWith('Saga ended')) fails.push(`reduced motion: Play should jump to the last event, got "${last}"`)
+    await ctx.close()
+  }
+
+  // a dataset that fails to load shows a message and can be retried
+  {
+    const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } })
+    const off = await ctx.newPage()
+    await off.route('**/datasets/**', (r) => r.abort())
+    await off.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
+    await off.waitForSelector(`${kitSel('bm25')} [role=alert]`)
+    await off.unroute('**/datasets/**')
+    await off.click(`${kitSel('bm25')} [role=alert] .btn`)
+    const back = await off.waitForSelector(`${kitSel('bm25')} .wk-chip`, { timeout: 15000 }).catch(() => null)
+    if (!back) fails.push('widget data: Try again did not recover after a failed load')
+    await ctx.close()
+  }
 
   // 3. interactions
   await page.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
@@ -451,7 +611,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   await r.close()
   if (errs.length) fails.push('readability checks: ' + errs.join(' | '))
 
-  // 9. accessibility: no serious or critical axe violations on the seven review pages, in both themes
+  // 9. accessibility: no serious or critical axe violations on the review pages and in the React widgets, in both themes
   const axeProblems = await runAxe(b, BASE)
   console.log('axe serious or critical violations:', axeProblems.length)
   fails.push(...axeProblems.map((p) => 'axe: ' + p))

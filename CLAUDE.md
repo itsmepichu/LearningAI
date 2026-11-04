@@ -50,6 +50,9 @@
 ## Widgets
 - New widgets are React components in `src/widgets/<name>/`. Register each one in `src/widgets/registry.ts`, lazily so each gets its own code chunk.
 - Embed a widget in content with `<div data-widget="name" data-props='{"k":1}'></div>`.
+- Build on the shared kit, `src/widgets/kit/`: `Widget` (the outer element), `Slider`, `KpiRow`, `StepPlayer`, `ThemeCanvas`, `LineChart`, `BarList`, `Legend`, and `useProjectData` with `DataGate` and `DataSource` for the selected project's dataset.
+- Keep logic that can run without a browser in a plain `.ts` module beside the component. File names are case-insensitive on Windows, so do not name it after the component (`saga/events.ts`, not `saga/saga.ts` next to `Saga.tsx`).
+- Add each new widget to `KIT_WIDGETS` in `tests/e2e.cjs` with a check of what it does, and its page to `WIDGET_PAGES` in `tests/axe.cjs`.
 - Each widget should:
   - read colours from the CSS tokens (`--accent`, `--sim`, `--signal`, `--ok`, `--bad`, `--ink`, `--muted`, `--surface`, `--sunk`, `--rule`)
   - redraw when `useTheme().version` changes

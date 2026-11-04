@@ -176,7 +176,7 @@
    "fitNote": "the saga example is a trip booking",
    "practice": "A {company} package booking is a saga: reserve flight, reserve hotel, charge card, send confirmation. If the charge fails, the hotel and flight holds are released in reverse order. The confirmation, which cannot be undone, goes last.",
    "failure": "Sending the confirmation before charging the card, so a failed payment leaves a traveller with an itinerary that does not exist.",
-   "tryIt": "In the saga figure, set the failure at step 3 and run it, then turn on the duplicate retry of step 1. Then write the compensations for a package booking in <code>bookings.csv</code>."
+   "tryIt": "In the saga figure, set the failure at step 3 and play it, then turn off the duplicate retry of step 1 and compare. Then write the compensations for a package booking in <code>bookings.csv</code>."
   }
  },
  "c11-7": {

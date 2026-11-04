@@ -404,17 +404,6 @@ try{
 
 }catch(e){console.error("legacy widget: 7.3 context assembler",e)}
 try{
-/* ===== 7.4 streaming ===== */
-(function(){const el=$('streamViz');if(!el)return;const txt='Your order A-1043 shipped on 2 November and should arrive by Friday. You can track it from the Orders page.'.split(/(?=\s)/),TT=.7,TOT=4.2;
-  el.innerHTML='<div class="cols2"><div><b style="font-family:var(--f-display);font-size:.85rem">Non-streaming</b><div class="out" id="svA" style="min-height:4.5em"></div></div><div><b style="font-family:var(--f-display);font-size:.85rem">Streaming</b><div class="out" id="svB" style="min-height:4.5em"></div></div></div><div class="ctl"><button class="btn" type="button" id="svR">Replay</button><span class="count" id="svT"></span></div>';
-  let t0,raf;function frame(now){const t=(now-t0)/1000;$('svT').textContent=`t = ${fN(Math.min(t,TOT),1)} s · TTFT ${TT} s · total ${TOT} s`;
-    $('svA').innerHTML=t<TOT?'<span class="pulse" style="color:var(--muted)">waiting for full response…</span>':esc(txt.join(''));const n=t<TT?0:Math.min(txt.length,Math.floor((t-TT)/(TOT-TT)*txt.length)+1);$('svB').innerHTML=t<TT?'<span class="pulse" style="color:var(--muted)">prefill…</span>':esc(txt.slice(0,n).join(''))+(n<txt.length?'<span class="pulse">▌</span>':'');
-    if(t<TOT+1.5)raf=requestAnimationFrame(frame);else{t0=performance.now();raf=requestAnimationFrame(frame)}}
-  function start(){cancelAnimationFrame(raf);t0=performance.now();if(RM){$('svA').textContent=txt.join('');$('svB').textContent=txt.join('');$('svT').textContent='Animation disabled (reduced motion).';return}raf=requestAnimationFrame(frame)}$('svR').onclick=start;start()})();
-
-
-}catch(e){console.error("legacy widget: 7.4 streaming",e)}
-try{
 /* ===== 7.6 retry storm ===== */
 (function(){if(!$('rtRun'))return;function run(){const jit=$('rtJit').checked,ev=[],cap=8,bin=.25,rec=6;const fails={},rnd=Math.random;let q=[];for(let c=0;c<30;c++)q.push({c,t:0,a:0});const hist=new Array(80).fill(0),served=new Array(80).fill(0);let failed=0;
     while(q.length){q.sort((a,b)=>a.t-b.t);const r=q.shift(),b=Math.floor(r.t/bin);if(b>=80)continue;hist[b]++;const ok=r.t>=rec&&served[b]<cap;if(ok){served[b]++;continue}failed++;if(r.a>=5)continue;const base=2**r.a;q.push({c:r.c,t:r.t+(jit?rnd()*base:base),a:r.a+1})}
@@ -445,31 +434,6 @@ try{
 
 }catch(e){console.error("legacy widget: 8.7 A/B sample size",e)}
 try{
-/* ===== 9.2 chunking ===== */
-(function(){if(!$('chOut'))return;const doc=[['Leave Policy',''],['Annual leave','Employees receive 25 days of annual leave per year. Unused days up to 5 may be carried over to the next year. Carry-over days expire on 31 March.'],['Sick leave','Employees may take up to 10 paid sick days per year. A medical certificate is required for absences longer than 3 consecutive days, except during declared public-health emergencies.'],['Bereavement leave','Employees receive 5 days of paid bereavement leave for the loss of an immediate family member. For extended family, 2 days are granted. Managers may approve additional unpaid leave.']];
-  function split(words,size,ov){const out=[];const st=Math.max(1,size-ov);for(let i=0;i<words.length;i+=st){out.push({w:words.slice(i,i+size),ovl:i>0?Math.min(ov,words.length-i):0});if(i+size>=words.length)break}return out}
-  function r(){const size=val('chSize'),ov=Math.min(val('chOv'),size-1),mode=$('chMode').value;setO('chSize',size);setO('chOv',ov);let chunks=[];
-    if(mode==='fixed'){const words=doc.flatMap(([h,t])=>(h+'. '+t).split(/\s+/).filter(Boolean));chunks=split(words,size,ov).map(c=>({h:'',...c}))}else{doc.slice(1).forEach(([h,t])=>split(t.split(/\s+/),size,ov).forEach(c=>chunks.push({h:'Leave Policy › '+h,...c})))}
-    const stored=chunks.reduce((s,c)=>s+c.w.length,0),orig=doc.reduce((s,[h,t])=>s+t.split(/\s+/).filter(Boolean).length,0);
-    $('chOut').innerHTML=chunks.map((c,i)=>`<div class="card" style="padding:8px 10px"><span style="font-family:var(--f-mono);font-size:.7rem;color:var(--accent)">chunk ${i+1} · ${c.w.length} words</span><div style="font-size:.88rem">${c.h?`<b style="font-family:var(--f-display);color:var(--sim)">${esc(c.h)}:</b> `:''}${c.w.map((w,k)=>k<c.ovl?`<mark style="background:var(--signal-soft);color:var(--ink)">${esc(w)}</mark>`:esc(w)).join(' ')}</div></div>`).join('');
-    $('chStat').textContent=`${chunks.length} chunks · ${stored} words stored for ${orig} words of text (+${fN((stored/orig-1)*100)}% overhead from overlap and repeated headings excluded)`}
-  bind(['chSize','chOv','chMode'],r)})();
-
-
-}catch(e){console.error("legacy widget: 9.2 chunking",e)}
-try{
-/* ===== 9.3 BM25 ===== */
-(function(){if(!$('bmQ'))return;const D=['To reset your password open Settings then Security and choose Reset password','Login failed errors usually mean the password is wrong or the account is locked','Error E-4012 means the payment processor rejected the card at checkout','Invoices are emailed on the first of each month and can be downloaded in Billing','If you cannot sign in check that your two factor device clock is correct','Checkout errors can happen when the cart session expires','Change your invoice address in Billing settings','Password rules require twelve characters including a number'];
-  const stop=new Set('to your the then and or is are a an of in on at can be if that when you my me i it this for with'.split(' '));const tk=s=>s.toLowerCase().replace(/[^a-z0-9\- ]/g,' ').split(/\s+/).filter(w=>w&&!stop.has(w)).map(w=>w.replace(/s$/,''));
-  const docs=D.map(tk),N=docs.length,avg=docs.reduce((s,d)=>s+d.length,0)/N,df={};docs.forEach(d=>new Set(d).forEach(t=>df[t]=(df[t]||0)+1));const k1=1.2,b=.75;
-  function r(){const q=[...new Set(tk($('bmQ').value))];const sc=docs.map((d,i)=>{let s=0;const m=[];q.forEach(t=>{const f=d.filter(x=>x===t).length;if(!f)return;const idf=Math.log(1+(N-df[t]+.5)/(df[t]+.5));s+=idf*f*(k1+1)/(f+k1*(1-b+b*d.length/avg));m.push(t)});return{i,s,m}}).sort((a,b)=>b.s-a.s);
-    $('bmTbl').innerHTML='<tr><th>Rank</th><th>Doc</th><th>BM25</th><th>Text (matched terms)</th></tr>'+sc.map((x,r)=>`<tr style="${x.s?'':'color:var(--muted)'}"><td>${x.s?r+1:'–'}</td><td>d${x.i+1}</td><td>${fN(x.s,2)}</td><td>${esc(D[x.i]).replace(new RegExp('\\b('+x.m.map(t=>t.replace(/[-]/g,'\\-')).join('|')+')\\w*','gi'),m=>x.m.length?`<b style="color:var(--accent)">${m}</b>`:m)}</td></tr>`).join('');
-    $('bmIdx').textContent='Inverted index for query terms (term → posting list):\n'+(q.length?q.map(t=>`${t.padEnd(10)} → ${df[t]?docs.map((d,i)=>d.includes(t)?`d${i+1}(tf=${d.filter(x=>x===t).length})`:null).filter(Boolean).join(', ')+`   df=${df[t]}  idf=${fN(Math.log(1+(N-df[t]+.5)/(df[t]+.5)),2)}`:'(not in index: no keyword match possible)'}`).join('\n'):'(empty query)')}
-  $('bmQ').addEventListener('input',r);r()})();
-
-
-}catch(e){console.error("legacy widget: 9.3 BM25",e)}
-try{
 /* ===== 9.4 HNSW-style search ===== */
 (function(){if(!$('hnswCan'))return;const r=mulberry(21),P=[];for(let i=0;i<300;i++)P.push([r(),r()]);const L1=[];for(let i=0;i<300;i+=10)L1.push(i);const d2=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2;
   const knn=(ids,k)=>{const g={};ids.forEach(i=>{g[i]=ids.filter(j=>j!==i).sort((a,b)=>d2(P[i],P[a])-d2(P[i],P[b])).slice(0,k)});ids.forEach(i=>g[i].forEach(j=>{if(!g[j].includes(i))g[j].push(i)}));return g};
@@ -495,17 +459,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 9.5 RRF",e)}
-try{
-/* ===== 9.7 retrieval metrics ===== */
-(function(){if(!$('rmList'))return;const titles=['Parental leave overview (all countries)','Germany: Elterngeld and parental leave days','Expense policy: childcare reimbursements','Germany parental leave FAQ: 14 months shared','UK shared parental leave','Benefits portal login help','Germany: notice periods before parental leave','France congé parental','Payroll calendar 2026','Office closures December'];let rel=[0,2,0,3,0,0,1,0,0,0];
-  function r(){const k=val('rmK');setO('rmK',k);const marked=rel.filter(v=>v>0).length,totalRel=Math.max(3,marked);const top=rel.slice(0,k),hits=top.filter(v=>v>0).length;const first=rel.findIndex(v=>v>0);
-    const dcg=top.reduce((s,v,i)=>s+v/Math.log2(i+2),0);const ideal=[...rel.filter(v=>v>0),...Array(Math.max(0,3-marked)).fill(1)].sort((a,b)=>b-a).slice(0,k);const idcg=ideal.reduce((s,v,i)=>s+v/Math.log2(i+2),0);
-    $('rmList').innerHTML=rel.map((v,i)=>`<button type="button" class="btn" data-i="${i}" style="text-align:left;display:flex;gap:10px;${i<k?'':'opacity:.5'};${v?'border-color:var(--ok);background:var(--ok-soft)':''}"><span style="font-family:var(--f-mono)">#${i+1}</span><span style="flex:1">${titles[i]}</span><span style="font-family:var(--f-mono)">rel ${v}</span></button>`).join('');
-    kpis('rmK2',[['Recall@'+k,fN(hits/totalRel*100)+'%'],['Precision@'+k,fN(hits/k*100)+'%'],['Reciprocal rank (this query)',first<0||first>=k?'0':fN(1/(first+1),3)],['nDCG@'+k,fN(idcg?dcg/idcg:0,3)]])}
-  $('rmList').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;rel[+b.dataset.i]=(rel[+b.dataset.i]+1)%4;r()});bind(['rmK'],r)})();
-
-
-}catch(e){console.error("legacy widget: 9.7 retrieval metrics",e)}
 try{
 /* ===== 10.1 corpus sizing ===== */
 (function(){if(!$('czD'))return;function r(){const D=val('czD')*1e6,P=val('czP'),T=val('czT'),C=val('czC'),O=val('czO')/100,dim=+$('czDim').value,bp=+$('czB').value,R=val('czR');setO('czD',fN(val('czD'),1)+'M');setO('czP',P);setO('czT',T);setO('czC',C);setO('czO',fN(O*100)+'%');setO('czR',R);
@@ -582,18 +535,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 11.5 state machine",e)}
-try{
-/* ===== 11.6 saga ===== */
-(function(){if(!$('sgRun'))return;const steps=[['reserve flight','cancel flight'],['reserve hotel','cancel hotel'],['charge card','refund card'],['send confirmation email','(cannot be undone)']];
-  async function run(){const f=+$('sgFail').value,dup=$('sgDup').checked,el=$('sgViz');el.innerHTML='';const add=(t,c)=>{const d=document.createElement('div');d.className='card';d.style.borderLeft='3px solid '+c;d.innerHTML=t;el.appendChild(d)};const done=[];
-    for(let i=0;i<steps.length;i++){await sleep(500);if(i===f){add(`<b>Step ${i+1}: ${steps[i][0]}</b> → <span style="color:var(--bad)">FAILED</span> (card declined)`,'var(--bad)');for(const j of done.reverse()){await sleep(500);add(`↩ compensate step ${j+1}: <b>${steps[j][1]}</b> (idempotency key comp-${j+1})`,'var(--signal)')}await sleep(300);add('<b>Saga ended: state consistent, no orphaned reservations.</b>','var(--signal)');return}
-      add(`<b>Step ${i+1}: ${steps[i][0]}</b> → <span style="color:var(--ok)">done</span> <span style="font-family:var(--f-mono);font-size:.75rem;color:var(--muted)">key trip-88:${i+1}</span>`,'var(--ok)');done.push(i);
-      if(i===0&&dup){await sleep(500);add('Network timeout on the response → client retries step 1 with the <b>same</b> key trip-88:1 → server returns the existing reservation. <span style="color:var(--ok)">No duplicate booking.</span>','var(--accent)')}}
-    await sleep(300);add('<b>Saga completed.</b>','var(--ok)')}
-  $('sgRun').onclick=run;run()})();
-
-
-}catch(e){console.error("legacy widget: 11.6 saga",e)}
 try{
 /* ===== 11.7 budget ===== */
 (function(){if(!$('bgRun'))return;const st=[['plan',.03],['get_order',.04],['get_shipping_events',.05],['compute credit (code)',0],['propose_credit',.05],['draft reply',.06]];
@@ -1033,16 +974,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 8.8 pass@k vs pass^k",e)}
-try{
-/* ===== 9.7 retriever comparison ===== */
-(function(){if(!$('rcTbl'))return;const rel={P1:3,P4:2,P7:1},R={'Lexical (BM25)':['P1','P3','P9','P7','P2','P5','P8','P6'],'Dense':['P4','P2','P6','P1','P5','P3','P7','P8'],'Hybrid + rerank':['P1','P4','P2','P7','P3','P6','P5','P9']};
-  const T={P1:'Germany parental leave policy §3',P2:'Parental leave overview (all countries)',P3:'German holiday calendar',P4:'"How much time off when I have a baby?" FAQ (DE)',P5:'UK shared parental leave',P6:'Childcare expenses',P7:'Elterngeld payment explainer',P8:'Payroll dates 2026',P9:'Leave request form (DE)'};
-  function m(list,k,exp){const g=v=>exp?2**v-1:v,top=list.slice(0,k),hits=top.filter(d=>rel[d]).length,first=list.findIndex(d=>rel[d]),dcg=top.reduce((s,d,i)=>s+g(rel[d]||0)/Math.log2(i+2),0),ideal=Object.values(rel).sort((a,b)=>b-a).slice(0,k).reduce((s,v,i)=>s+g(v)/Math.log2(i+2),0);return{rec:hits/3,prec:hits/k,rr:first<0?0:1/(first+1),ndcg:dcg/ideal}}
-  function r(){const k=val('rcK');setO('rcK',k);$('rcCols').innerHTML=Object.entries(R).map(([n,l])=>`<div class="card"><div class="as-h5">${n}</div><ol style="margin:4px 0 0;padding-left:1.3em;font-size:.82rem">${l.map((d,i)=>`<li style="${i<k?'':'opacity:.45'};${rel[d]?'color:var(--ok);font-weight:600':''}">${d} ${T[d]}${rel[d]?' · grade '+rel[d]:''}</li>`).join('')}</ol></div>`).join('');
-    $('rcTbl').innerHTML=`<tr><th>Retriever</th><th>Recall@${k}</th><th>Precision@${k}</th><th>RR</th><th>nDCG@${k} linear</th><th>nDCG@${k} 2^rel−1</th></tr>`+Object.entries(R).map(([n,l])=>{const a=m(l,k,false),b=m(l,k,true);return`<tr><td>${n}</td><td>${fN(a.rec*100)}%</td><td>${fN(a.prec*100)}%</td><td>${fN(a.rr,2)}</td><td>${fN(a.ndcg,3)}</td><td>${fN(b.ndcg,3)}</td></tr>`}).join('')}bind(['rcK'],r)})();
-
-
-}catch(e){console.error("legacy widget: 9.7 retriever comparison",e)}
 try{
 /* ===== 10.6 revocation exposure ===== */
 (function(){if(!$('rvSvg'))return;function r(){const S=val('rvS'),late=$('rvL').checked,deny=$('rvD').checked,cache=$('rvC').checked,cs=$('rvCs').checked;setO('rvS',S+' min');const syncAfter=Math.ceil(5/S)*S;let leak=0,tot=0,s='';const X=t=>30+t/60*590;
