@@ -1,0 +1,51 @@
+{
+ "c9-3": {
+  "mcq": [
+   {
+    "id": "c9-3-m01",
+    "q": "Which query is BM25 likely to handle better than dense retrieval?",
+    "options": [
+     "\"my card keeps getting declined\"",
+     "\"error E-4012\"",
+     "\"how do I feel valued at work\"",
+     "\"summarise our culture\""
+    ],
+    "answer": 1,
+    "why": "Exact identifiers and codes favour lexical matching.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c9-5": {
+  "mcq": [
+   {
+    "id": "c9-5-m01",
+    "q": "Why use reciprocal rank fusion?",
+    "options": [
+     "It needs no normalisation of different score scales",
+     "It is the most accurate reranker",
+     "It replaces embeddings",
+     "It reduces index size"
+    ],
+    "answer": 0,
+    "why": "RRF uses ranks only, so BM25 and cosine scores need not share a scale.",
+    "kind": "concept"
+   },
+   {
+    "id": "c9-5-m02",
+    "q": "Where must permission filtering happen?",
+    "options": [
+     "In the prompt",
+     "After generation",
+     "In retrieval, before content reaches the model",
+     "In the UI"
+    ],
+    "answer": 2,
+    "why": "Once the model has seen restricted text, the leak has already happened.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

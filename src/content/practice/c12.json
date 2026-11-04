@@ -1,0 +1,50 @@
+{
+ "c12-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s quarterly complaint report uses one worker per source (tickets, sales notes, reviews) because each needs different tools and permissions.",
+   "failure": "Taking agreement between several agents as validation when they all read the same wrong source."
+  }
+ },
+ "c12-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s coordinator is plain code: it routes to two read-only regional workers and one synthesiser, and a deterministic validator checks citations.",
+   "failure": "Leaving completion ownership unclear, so each agent assumes another one will finish or act."
+  }
+ },
+ "c12-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s India and UK policy workers run in parallel; the comparison waits for both or explicitly marks one region as missing.",
+   "failure": "Delegating an unclear objective, which produces several unclear objectives."
+  }
+ },
+ "c12-4": {
+  "harbor": {
+   "practice": "Harbor workers return {task, status, claims, evidence_ids, coverage, warnings}; nothing a worker sends can change the coordinator&#x27;s approved action.",
+   "failure": "Using a shared chat transcript as a concurrency-control or authorisation mechanism."
+  }
+ },
+ "c12-5": {
+  "harbor": {
+   "practice": "If Harbor&#x27;s UK worker times out, the answer covers India with a clear note that UK evidence is missing; the late UK result cannot alter a finalised answer.",
+   "failure": "Assuming promise-style parallel code gives durable scheduling or cancels side effects."
+  }
+ },
+ "c12-6": {
+  "harbor": {
+   "practice": "When Harbor workers return a 2024 policy and a 2026 amendment, an authority-and-effective-date rule decides, not the more articulate answer.",
+   "failure": "Passing one agent&#x27;s claim to another without its evidence and uncertainty, so the error is amplified."
+  }
+ },
+ "c12-7": {
+  "harbor": {
+   "practice": "Harbor&#x27;s research worker can request a ticket draft but cannot ask the execution worker to refund money unless the original user is authorised for that action.",
+   "failure": "Trusting a peer message that says &quot;the supervisor approved this&quot;."
+  }
+ },
+ "c12-8": {
+  "harbor": {
+   "practice": "Harbor compared one answerer, two workers plus a synthesiser, and a fixed hybrid pipeline on 120 paired tasks; the fixed pipeline matched quality at half the cost and shipped.",
+   "failure": "Comparing a well-resourced agent team with a deliberately weak single-agent baseline."
+  }
+ }
+}

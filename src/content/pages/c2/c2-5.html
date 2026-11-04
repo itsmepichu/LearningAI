@@ -22,4 +22,4 @@ df = pd.DataFrame({"case": range(5), "passed": [1,0,1,1,1], "latency_ms": [820,1
 print(df.describe())
 cfg = {"seed": 42, "model": "llama3.2:1b", "prompt_version": "v3"}
 print("config hash", hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()[:12])</code></pre></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s evaluation notebooks are throwaway; the cleaning and scoring code lives in a versioned package that the CI pipeline runs with pinned dependencies and seeds.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Fitting normalisation on the full dataset before splitting, or trusting a notebook that only works because of hidden cell order.</div></div>
+<div data-slot="practice"></div>

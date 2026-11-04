@@ -1,0 +1,149 @@
+{
+ "note": "All data is synthetic and invented for this course. No real people, accounts, card numbers or companies.",
+ "projects": {
+  "harbor": [
+   {
+    "file": "policies.json",
+    "rows": 35
+   },
+   {
+    "file": "tickets.csv",
+    "rows": 2000,
+    "fields": [
+     "ticket_id",
+     "created",
+     "channel",
+     "language",
+     "account_id",
+     "text",
+     "category",
+     "priority",
+     "resolved_hours"
+    ]
+   }
+  ],
+  "store": [
+   {
+    "file": "products.csv",
+    "rows": 300,
+    "fields": [
+     "sku",
+     "title",
+     "category",
+     "brand",
+     "price_inr",
+     "rating",
+     "review_count",
+     "attributes",
+     "has_photo"
+    ]
+   },
+   {
+    "file": "reviews.json",
+    "rows": 600
+   },
+   {
+    "file": "orders.csv",
+    "rows": 5535,
+    "fields": [
+     "order_id",
+     "order_date",
+     "sku",
+     "category",
+     "price_inr",
+     "payment",
+     "city",
+     "city_tier",
+     "delivery_days",
+     "festive_sale",
+     "returned",
+     "refund_amount_inr"
+    ]
+   },
+   {
+    "file": "chats.json",
+    "rows": 14
+   }
+  ],
+  "bank": [
+   {
+    "file": "transactions.csv",
+    "rows": 12000,
+    "fields": [
+     "txn_id",
+     "timestamp",
+     "customer_id",
+     "channel",
+     "merchant_category",
+     "amount_inr",
+     "city",
+     "hour",
+     "is_foreign",
+     "txns_last_24h",
+     "amount_vs_customer_avg",
+     "fraud",
+     "chargeback_filed"
+    ]
+   },
+   {
+    "file": "disputes.csv",
+    "rows": 400,
+    "fields": [
+     "case_id",
+     "txn_id",
+     "opened",
+     "language",
+     "text",
+     "reason",
+     "outcome",
+     "days_to_resolve"
+    ]
+   },
+   {
+    "file": "policies.json",
+    "rows": 8
+   }
+  ],
+  "travel": [
+   {
+    "file": "bookings.csv",
+    "rows": 9000,
+    "fields": [
+     "booking_id",
+     "booked_on",
+     "travel_date",
+     "lead_days",
+     "product",
+     "origin",
+     "destination",
+     "fare_inr",
+     "passengers",
+     "refundable",
+     "language",
+     "channel",
+     "cancelled",
+     "changed",
+     "cancellation_fee_inr"
+    ]
+   },
+   {
+    "file": "fare_rules.json",
+    "rows": 8
+   },
+   {
+    "file": "messages.json",
+    "rows": 11
+   },
+   {
+    "file": "disruptions.csv",
+    "rows": 19,
+    "fields": [
+     "date",
+     "region",
+     "type",
+     "flights_cancelled"
+    ]
+   }
+  ]
+ }
+}

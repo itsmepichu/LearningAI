@@ -1,0 +1,75 @@
+{
+ "note": "All companies, assistants, figures and data are fictional and illustrative.",
+ "default": "harbor",
+ "projects": [
+  {
+   "id": "harbor",
+   "label": "Harbor",
+   "kind": "Internal company assistant",
+   "company": "Tidewell",
+   "assistant": "Harbor",
+   "about": "Tidewell is a software company. Harbor answers staff and customer questions about policies and the product with citations, respects each person's document permissions, and drafts tickets, credits and emails for human approval.",
+   "scale": "8,000 employees · 1,200 business customers",
+   "teaches": "Per-user permissions, tenant isolation, approvals and audit",
+   "accent": "--accent",
+   "icon": "building",
+   "datasets": [
+    { "file": "policies.json", "what": "Policy and product documents with access groups, update dates and older revisions marked current: false.", "notes": "Use access_groups to test permission-aware retrieval; non-current revisions are near-duplicates on purpose." },
+    { "file": "tickets.csv", "what": "2,000 support tickets in English, German and Tamil with channel, category, priority and resolution time.", "notes": "security is the rare class (about 2%). In-app chat starts in September 2025, so short messages appear: a distribution shift. resolved_hours is only known after the ticket closes, so it leaks the answer if used to predict priority." }
+   ]
+  },
+  {
+   "id": "store",
+   "label": "Online store",
+   "kind": "Shopping and support assistant",
+   "company": "Bazrova",
+   "assistant": "Aisle",
+   "about": "Bazrova is an online marketplace in India. Its assistant, Aisle, helps shoppers find products, answers questions from listings and reviews, tracks orders and handles returns and refunds.",
+   "scale": "about 5 million monthly shoppers · 2 million listings · festival-sale peaks around 40× normal traffic",
+   "teaches": "Consumer scale, latency and cost, caching, product search and images",
+   "accent": "--signal",
+   "icon": "shopping-bag",
+   "datasets": [
+    { "file": "products.csv", "what": "300 product listings with category, brand, price in rupees, rating and attributes.", "notes": "Titles mix brand names, sizes and materials, which is where keyword search beats embeddings." },
+    { "file": "reviews.json", "what": "600 reviews in English, Hindi, Tamil and Hinglish.", "notes": "Six reviews contain prompt-injection attempts (is_injection: true)." },
+    { "file": "orders.csv", "what": "About 5,500 orders across 2025 with payment method, city, delivery time and whether the item was returned.", "notes": "returned is the target (about 14%). The festival sale (10 Oct to 10 Nov) changes the mix and the return rate: a covariate shift. refund_amount_inr is only known after a return, so it leaks the answer." },
+    { "file": "chats.json", "what": "Short shopper messages in English, Hindi, Tamil and Hinglish.", "notes": "Use them to compare token counts across languages and scripts." }
+   ]
+  },
+  {
+   "id": "bank",
+   "label": "Bank",
+   "kind": "Customer and dispute-operations assistant",
+   "company": "Navakosh Bank",
+   "assistant": "Ledger",
+   "about": "Navakosh Bank is a retail bank in India. Its assistant, Ledger, answers questions about accounts, cards and UPI payments, and helps the operations team investigate and resolve disputes, where every money movement must be exact and auditable.",
+   "scale": "about 3 million customers · card, UPI and transfer disputes · strict audit",
+   "teaches": "Idempotent money movements, evaluation rigour, regulation, fraud and social engineering",
+   "accent": "--ok",
+   "icon": "landmark",
+   "datasets": [
+    { "file": "transactions.csv", "what": "12,000 card and UPI transactions across 2025 with channel, merchant category, amount, hour and simple behaviour features.", "notes": "fraud is the rare class (about 1.4%). From November a new small-amount UPI scam appears that the old signals miss: concept drift. chargeback_filed is only known weeks later, so it leaks the answer." },
+    { "file": "disputes.csv", "what": "400 dispute cases with reason, language, outcome and days to resolve.", "notes": "Use reason as a classification target and outcome for evaluation." },
+    { "file": "policies.json", "what": "Short product and dispute policies.", "notes": "Fictional rules for a fictional bank, not real banking or regulatory guidance." }
+   ]
+  },
+  {
+   "id": "travel",
+   "label": "Travel booking",
+   "kind": "Trip-planning and booking agent",
+   "company": "Safarnova",
+   "assistant": "Compass",
+   "about": "Safarnova is an online travel agency in India. Its agent, Compass, plans trips and books, changes and cancels flights, hotels, rail and packages, where every multi-step booking must either complete or be undone cleanly.",
+   "scale": "about 1.5 million bookings a month · English, Hindi, Tamil and Hinglish · live fares",
+   "teaches": "Multi-step agents and sagas, fresh prices, multilingual input and disruption spikes",
+   "accent": "--sim",
+   "icon": "plane",
+   "datasets": [
+    { "file": "bookings.csv", "what": "9,000 bookings across 2025 with product, route, lead time, fare, passengers, refundability and outcome.", "notes": "cancelled is the target (about 14%). Monsoon travel (July and August) raises cancellations and changes: a shift. cancellation_fee_inr is only known after cancelling, so it leaks the answer." },
+    { "file": "fare_rules.json", "what": "Change and cancellation rules for flights, hotels, rail and packages.", "notes": "Fictional rules for a fictional company." },
+    { "file": "messages.json", "what": "Traveller messages in English, Hindi, Tamil and Hinglish.", "notes": "Use them for token counts and intent extraction." },
+    { "file": "disruptions.csv", "what": "Monsoon and fog disruption days with flights cancelled.", "notes": "Use them to explain traffic spikes and change requests." }
+   ]
+  }
+ ]
+}

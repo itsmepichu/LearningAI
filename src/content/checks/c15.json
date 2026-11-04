@@ -1,0 +1,51 @@
+{
+ "c15-1": {
+  "mcq": [
+   {
+    "id": "c15-1-m01",
+    "q": "10 M registered users means you need…",
+    "options": [
+     "10 M concurrent capacity",
+     "Unknown until you know active usage, peaks and task duration",
+     "1 M RPS",
+     "Nothing yet"
+    ],
+    "answer": 1,
+    "why": "Load comes from active users, peak behaviour and request cost, not registrations.",
+    "kind": "concept"
+   },
+   {
+    "id": "c15-1-m02",
+    "q": "50 RPS with 8 s average time in system gives about how many in flight?",
+    "options": [
+     "6",
+     "50",
+     "400",
+     "4,000"
+    ],
+    "answer": 2,
+    "why": "Little's law: L = λW = 50 × 8 (an average, not a p99).",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c15-9": {
+  "mcq": [
+   {
+    "id": "c15-9-m01",
+    "q": "A cheap model succeeds 62% at $0.004; failures cost $4 of human time. Per success it costs about…",
+    "options": [
+     "$0.006",
+     "$0.40",
+     "$2.46",
+     "$4"
+    ],
+    "answer": 2,
+    "why": "(0.004 + 0.38 × 4) / 0.62 ≈ $2.46.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

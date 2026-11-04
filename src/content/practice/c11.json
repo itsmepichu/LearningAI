@@ -1,0 +1,50 @@
+{
+ "c11-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s refund flow is a fixed workflow; only the &quot;investigate an unusual billing dispute&quot; path lets the model choose among read-only tools.",
+   "failure": "Calling a fixed chain of prompts an agent and expecting it to become more capable."
+  }
+ },
+ "c11-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s agent rewrites a failed search once, then abstains; it stops at 12 steps, $0.40 or 10 minutes, whichever comes first.",
+   "failure": "Trusting a model-written plan to be executable, authorised or complete."
+  }
+ },
+ "c11-3": {
+  "harbor": {
+   "practice": "Harbor exposes lookup_policy(query, region) instead of raw SQL, and its create_ticket credential can create tickets and nothing else.",
+   "failure": "Treating a tool description as a permission check."
+  }
+ },
+ "c11-4": {
+  "harbor": {
+   "practice": "Harbor remembers &quot;prefers answers in German&quot; with user scope and a 6-month expiry, but always re-checks spending authority live.",
+   "failure": "Turning a model&#x27;s guess about a user (&quot;probably a manager&quot;) into a permanent trusted fact."
+  }
+ },
+ "c11-5": {
+  "harbor": {
+   "practice": "A Harbor approval arrives two days later; the workflow resumes from its database checkpoint, re-checks the requester&#x27;s access, and executes only the approved version.",
+   "failure": "Relying on an in-memory checkpointer that disappears on restart."
+  }
+ },
+ "c11-6": {
+  "harbor": {
+   "practice": "Harbor&#x27;s ticket service committed a ticket and the response was lost; the retry with the same idempotency key returned the existing ticket ID.",
+   "failure": "Assuming a checkpoint written after a tool call prevents duplicates if the process crashes in between."
+  }
+ },
+ "c11-7": {
+  "harbor": {
+   "practice": "Harbor asks approval for an exact email draft; any edit after approval creates a new version that needs approving again.",
+   "failure": "Treating one approval as permission for related actions the agent decides on later."
+  }
+ },
+ "c11-8": {
+  "harbor": {
+   "practice": "Harbor connects to a read-only policy MCP server and a separate ticket server; reading a policy resource gives the ticket server no extra rights.",
+   "failure": "Assuming an MCP server is vetted or safe to hold powerful credentials because it implements the protocol."
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "c13-1": {
+  "mcq": [
+   {
+    "id": "c13-1-m01",
+    "q": "The model knows the policy but formats answers wrongly despite examples. Try…",
+    "options": [
+     "Continued pretraining",
+     "RAG",
+     "SFT (often LoRA)",
+     "A larger context window"
+    ],
+    "answer": 2,
+    "why": "Behaviour/format gaps are what supervised fine-tuning addresses.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c13-3": {
+  "mcq": [
+   {
+    "id": "c13-3-m01",
+    "q": "LoRA trainable parameters for one 4096×4096 matrix at rank 8?",
+    "options": [
+     "65,536",
+     "16.8M",
+     "8,192",
+     "4,096"
+    ],
+    "answer": 0,
+    "why": "r × (d_in + d_out) = 8 × 8,192 = 65,536.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c13-6": {
+  "mcq": [
+   {
+    "id": "c13-6-m01",
+    "q": "After fine-tuning, multilingual accuracy fell 7 points. You should…",
+    "options": [
+     "Ship; domain improved",
+     "Treat it as a regression gate failure and retrain with mixed data",
+     "Ignore non-English",
+     "Lower temperature"
+    ],
+    "answer": 1,
+    "why": "General-capability regressions are release blockers when they breach the gate.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

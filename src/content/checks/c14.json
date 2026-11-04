@@ -1,0 +1,56 @@
+{
+ "c14-2": {
+  "mcq": [
+   {
+    "id": "c14-2-m01",
+    "q": "Decode at small batch is usually limited by…",
+    "options": [
+     "FLOPs",
+     "Memory bandwidth",
+     "Disk speed",
+     "Network"
+    ],
+    "answer": 1,
+    "why": "Each step reads all weights for little arithmetic, so bandwidth dominates.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c14-3": {
+  "mcq": [
+   {
+    "id": "c14-3-m01",
+    "q": "What does paged attention mainly fix?",
+    "options": [
+     "Attention accuracy",
+     "KV-cache memory fragmentation and waste",
+     "Tokenisation",
+     "Model size"
+    ],
+    "answer": 1,
+    "why": "Fixed-size blocks allocated on demand avoid reserving max-length contiguous memory.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c14-5": {
+  "mcq": [
+   {
+    "id": "c14-5-m01",
+    "q": "A 70B model on 4 GPUs with TP=4 is how many serving units for redundancy?",
+    "options": [
+     "4",
+     "1",
+     "2",
+     "8"
+    ],
+    "answer": 1,
+    "why": "The tensor-parallel group serves as one unit; losing any GPU stops it.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

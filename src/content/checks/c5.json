@@ -1,0 +1,56 @@
+{
+ "c5-4": {
+  "mcq": [
+   {
+    "id": "c5-4-m01",
+    "q": "What does a causal mask do?",
+    "options": [
+     "Hides padding",
+     "Stops a token attending to later positions",
+     "Removes low-probability tokens",
+     "Masks rare words"
+    ],
+    "answer": 1,
+    "why": "It sets future scores to −∞ before softmax so each position sees only its prefix.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c5-2": {
+  "mcq": [
+   {
+    "id": "c5-2-m01",
+    "q": "Doubling context length roughly does what to attention compute?",
+    "options": [
+     "Doubles it",
+     "Quadruples it",
+     "Halves it",
+     "Leaves it unchanged"
+    ],
+    "answer": 1,
+    "why": "Full attention compares every pair of tokens: cost grows with n².",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c5-7": {
+  "mcq": [
+   {
+    "id": "c5-7-m01",
+    "q": "An MoE model has 47B total and 13B active parameters. Memory for weights is driven by…",
+    "options": [
+     "13B",
+     "47B",
+     "the average of the two",
+     "the number of experts used per token only"
+    ],
+    "answer": 1,
+    "why": "All experts must be resident, so weight memory follows total parameters.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

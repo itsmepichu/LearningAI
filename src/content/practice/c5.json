@@ -1,0 +1,44 @@
+{
+ "c5-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s chunker counts tokens with the answer model&#x27;s own tokenizer and refuses to split inside a table row or an order ID such as A-104322.",
+   "failure": "Budgeting context in words; a word can be several tokens and tokens often include the leading space."
+  }
+ },
+ "c5-2": {
+  "harbor": {
+   "practice": "When a Harbor answer ignores a key clause, engineers inspect which retrieved passage was attended to as one clue, alongside retrieval scores and the prompt.",
+   "failure": "Treating attention weights as a complete explanation of why the model answered as it did."
+  }
+ },
+ "c5-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s provider advertises a 1M-token context; the team measured accuracy dropping on facts placed mid-context beyond about 60k tokens, so retrieval stays the default.",
+   "failure": "Taking a configured context length as evidence that the model was trained or evaluated to use it well."
+  }
+ },
+ "c5-4": {
+  "harbor": {
+   "practice": "Harbor uses an encoder (bi-encoder) for retrieval, an encoder cross-encoder for reranking, and a decoder-only model to write answers.",
+   "failure": "Mean-pooling a generic encoder&#x27;s outputs and assuming the result is a good sentence embedding."
+  }
+ },
+ "c5-5": {
+  "harbor": {
+   "practice": "Harbor streams answers token by token; its UI shows the first words after about 0.7 s even though the full answer takes 4 s.",
+   "failure": "Reading a high next-token probability as evidence that the whole sentence is factually correct."
+  }
+ },
+ "c5-6": {
+  "harbor": {
+   "practice": "Harbor extraction calls use temperature 0 with constrained JSON; its reply drafts use temperature 0.6 and top-p 0.9; both are re-evaluated whenever the provider changes model version.",
+   "failure": "Interpreting top-p 0.9 as &quot;90% accurate&quot; or assuming temperature 0 guarantees identical outputs."
+  }
+ },
+ "c5-7": {
+  "harbor": {
+   "practice": "Harbor considered an MoE model with 13B active parameters: compute was cheap, but all 47B parameters still had to fit in GPU memory, which decided the hardware.",
+   "failure": "Sizing an MoE deployment by its active parameters only."
+  }
+ }
+}

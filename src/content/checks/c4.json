@@ -1,0 +1,56 @@
+{
+ "c4-1": {
+  "mcq": [
+   {
+    "id": "c4-1-m01",
+    "q": "Why are non-linear activations needed?",
+    "options": [
+     "They speed up training",
+     "Without them, stacked layers collapse into one linear map",
+     "They prevent overfitting",
+     "They normalise inputs"
+    ],
+    "answer": 1,
+    "why": "Compositions of linear maps are linear; non-linearity lets networks model curved boundaries.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c4-6": {
+  "mcq": [
+   {
+    "id": "c4-6-m01",
+    "q": "You call torch.no_grad() during evaluation but not model.eval(). What still happens?",
+    "options": [
+     "Gradients are recorded",
+     "Dropout stays active",
+     "Weights update",
+     "Nothing; that is correct"
+    ],
+    "answer": 1,
+    "why": "no_grad stops gradient recording only; eval() switches dropout and normalisation to inference mode.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c4-3": {
+  "mcq": [
+   {
+    "id": "c4-3-m01",
+    "q": "A 10-class classifier's first-step loss is 2.30. This suggests…",
+    "options": [
+     "a bug",
+     "a uniform starting guess, as expected",
+     "overfitting",
+     "a learning rate too high"
+    ],
+    "answer": 1,
+    "why": "ln(10) ≈ 2.30 is the loss of uniform predictions, the normal starting point.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

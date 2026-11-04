@@ -1,0 +1,56 @@
+{
+ "c6-1": {
+  "mcq": [
+   {
+    "id": "c6-1-m01",
+    "q": "Which stage usually uses the most compute?",
+    "options": [
+     "SFT",
+     "DPO",
+     "Pretraining",
+     "Evaluation"
+    ],
+    "answer": 2,
+    "why": "Pretraining over trillions of tokens dominates total compute by orders of magnitude.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c6-3": {
+  "mcq": [
+   {
+    "id": "c6-3-m01",
+    "q": "Training compute for N parameters and D tokens is roughly…",
+    "options": [
+     "2ND",
+     "6ND",
+     "N²D",
+     "ND/6"
+    ],
+    "answer": 1,
+    "why": "About 2ND for the forward pass and 4ND for the backward pass.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c6-4": {
+  "mcq": [
+   {
+    "id": "c6-4-m01",
+    "q": "Why mask user and system tokens during SFT?",
+    "options": [
+     "To save memory",
+     "So the model learns to produce answers, not to predict prompts",
+     "To speed up tokenisation",
+     "It is required by PyTorch"
+    ],
+    "answer": 1,
+    "why": "Loss on assistant tokens teaches the desired behaviour; predicting the user's words is not the goal.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

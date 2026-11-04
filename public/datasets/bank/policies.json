@@ -1,0 +1,50 @@
+[
+ {
+  "id": "NB-001",
+  "title": "Card dispute timelines",
+  "text": "Raise a card dispute within 30 days of the statement date. Provisional credit is given within 5 working days for unrecognised transactions while the case is investigated.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-002",
+  "title": "Failed UPI payments",
+  "text": "If money is debited but the UPI payment fails, the amount is normally reversed automatically within 2 working days. If it is not, raise a dispute with the transaction reference.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-003",
+  "title": "Blocking a lost card",
+  "text": "Block a lost or stolen card instantly in the app or by calling the 24-hour helpline. Transactions after the block is reported are not the customer's liability.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-004",
+  "title": "Foreign transaction fees",
+  "text": "Card payments in a foreign currency carry a 3.5% markup on the converted amount, shown separately on the statement.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-005",
+  "title": "Daily UPI limits",
+  "text": "The default UPI limit is 1 lakh rupees per day. Customers can lower it in the app; raising it needs branch verification.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-006",
+  "title": "Collect requests",
+  "text": "Navakosh Bank never sends a UPI collect request to refund money. Approving a collect request always sends money out of your account.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-007",
+  "title": "KYC updates",
+  "text": "Customers must update KYC documents when asked. Accounts with incomplete KYC may have credits restricted until the update is complete.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ },
+ {
+  "id": "NB-008",
+  "title": "Fixed deposit premature withdrawal",
+  "text": "Fixed deposits withdrawn before maturity earn the rate for the period actually held, minus a 1 percentage point penalty.",
+  "note": "Fictional policy for a fictional bank; not real banking or regulatory guidance."
+ }
+]

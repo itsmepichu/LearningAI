@@ -17,7 +17,7 @@ with mlflow.start_run(run_name="lora-r8-lr2e-4"):
     # ... train ...
     mlflow.log_metrics({"field_acc": 0.964, "fabrication_rate": 0.021, "general_if": 0.785})
     mlflow.log_artifacts("lora-out", artifact_path="adapter")</code></pre></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s adapter-r431 is registered with its exact base revision, tokenizer, dataset manifest, schema and evaluation suite; deploying it on another base revision requires re-testing.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Recording a model by name without an immutable revision.</div></div>
+<div data-slot="practice"></div>
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for model adaptation</h3>
 <div class="cols3">

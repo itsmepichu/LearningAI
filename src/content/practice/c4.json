@@ -1,0 +1,38 @@
+{
+ "c4-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s small guardrail classifier is a 2-layer MLP over sentence embeddings; its training loss is CrossEntropyLoss on raw logits.",
+   "failure": "Applying softmax before a loss that expects logits."
+  }
+ },
+ "c4-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s reranker fine-tune uses AdamW, 5% warm-up, cosine decay and gradient accumulation to reach an effective batch of 64 on a single GPU.",
+   "failure": "Changing the batch size without retuning the learning rate, then blaming the data when training becomes unstable."
+  }
+ },
+ "c4-3": {
+  "harbor": {
+   "practice": "A Harbor training run produced NaN at step 3,100. The cause was one 40,000-token corrupted document; length filtering plus gradient clipping fixed it, not a lower learning rate alone.",
+   "failure": "Using clipping to hide a data or loss bug: it treats the symptom, not the cause."
+  }
+ },
+ "c4-4": {
+  "harbor": {
+   "practice": "Harbor&#x27;s general embedding model placed &quot;PTO&quot; far from &quot;annual leave&quot;. A domain-tuned embedding (13.5) fixed the internal acronyms that a general model had never seen.",
+   "failure": "Using an LLM&#x27;s internal hidden states as search embeddings without evaluating them; general hidden vectors are not automatically good retrieval vectors."
+  }
+ },
+ "c4-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s document pipeline still uses a CNN-based layout detector to find tables in scanned PDFs before any transformer sees the text.",
+   "failure": "Assuming an LSTM (or any model) remembers arbitrarily long inputs reliably."
+  }
+ },
+ "c4-6": {
+  "harbor": {
+   "practice": "Every Harbor training script first overfits 8 examples to near-zero loss, then saves and reloads a checkpoint and compares predictions, before the real run starts.",
+   "failure": "Saving a checkpoint and never reloading it: a file that cannot be restored is not a checkpoint."
+  }
+ }
+}

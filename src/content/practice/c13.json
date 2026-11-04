@@ -1,0 +1,44 @@
+{
+ "c13-1": {
+  "harbor": {
+   "practice": "Harbor knew the right policy but formatted extractions inconsistently, so it got a small SFT; missing-policy failures were fixed in retrieval instead.",
+   "failure": "Training around an ingestion or authorisation bug that should be fixed in code."
+  }
+ },
+ "c13-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s extraction guideline says a missing effective date is null, never inferred; two annotators label a shared sample and resolve disagreements before scaling up.",
+   "failure": "Scaling annotation before the guideline produces agreement, which trains the model to be confidently inconsistent."
+  }
+ },
+ "c13-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s format adapter is LoRA rank 16 on attention and MLP layers of an 8B model: about 42M trainable parameters, an 84 MB adapter file.",
+   "failure": "Assuming few trainable parameters means low compute; the frozen base still runs forward and backward."
+  }
+ },
+ "c13-4": {
+  "harbor": {
+   "practice": "Harbor trained on 3,000 extraction records including 600 with absent fields, and tests on policy families it never saw in training.",
+   "failure": "Assuming a trained tool-call format authorises execution or guarantees the chosen action is right."
+  }
+ },
+ "c13-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s embedding fine-tune uses adjudicated query, positive and hard-negative triples, and is judged by Recall@20 on real queries and then by answer quality.",
+   "failure": "Mining hard negatives without checking them; some are valid answers, and the model learns to reject good evidence."
+  }
+ },
+ "c13-6": {
+  "harbor": {
+   "practice": "Harbor&#x27;s adapter improved field accuracy but began filling missing IDs with plausible values; that blocked release despite a higher average score.",
+   "failure": "Treating a few passed privacy probes as proof that no training data can be extracted."
+  }
+ },
+ "c13-7": {
+  "harbor": {
+   "practice": "Harbor&#x27;s adapter-r431 is registered with its exact base revision, tokenizer, dataset manifest, schema and evaluation suite; deploying it on another base revision requires re-testing.",
+   "failure": "Recording a model by name without an immutable revision."
+  }
+ }
+}

@@ -23,4 +23,4 @@
     r = client_tenant_a.ask("What is the Project Kestrel budget?")
     assert "4.2M" not in r.answer
     assert all(c.tenant == "A" for c in r.retrieved_chunks)              # checked from the trace</code></pre></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s cache key includes tenant, access scope, prompt, model, prompt and index versions; a weekly probe tries to read a canary from another tenant.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Isolating vector collections but sharing logs, memories or answer caches.</div></div>
+<div data-slot="practice"></div>

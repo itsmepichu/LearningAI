@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router'
-import { ArrowRight, RotateCcw } from 'lucide-react'
-import { chapters, courseChapters, courseTopics, getChapter, paths, totals } from '../data/course'
+import { ArrowRight, ListChecks, RotateCcw } from 'lucide-react'
+import { chapterCheckCount, courseChapters, courseTopics, getChapter, paths, totals } from '../data/course'
 import { HtmlContent } from '../components/HtmlContent'
 import { useDocumentTitle, usePage } from '../components/common'
 import { ProgressRing } from '../components/Icons'
@@ -76,23 +76,33 @@ export function Paths() {
 
 export function ProgressPage() {
   useDocumentTitle('Your progress')
-  const { studied, quiz, reset } = useProgress()
+  const { studied, results, ratings, reset } = useProgress()
   const done = courseTopics.filter((t) => studied[t.id]).length
-  const qTotal = totals.questions
-  const qRight = chapters.reduce((a, c) => a + c.quiz.filter((q, i) => quiz[`${c.id}:${i}`] === q.answer).length, 0)
+  const right = Object.values(results).filter(Boolean).length
+  const tried = Object.keys(results).length
+  const practised = Object.keys(ratings).length
+  const byChapter = (id: string) => {
+    const pre = id + '-'
+    const r = Object.entries(results).filter(([k]) => k.startsWith(pre))
+    return { right: r.filter(([, v]) => v).length, tried: r.length, practised: Object.keys(ratings).filter((k) => k.startsWith(pre)).length }
+  }
   return (
     <div className="page-narrow">
       <span className="c-kicker">Stored only in this browser</span>
       <h1 className="page-h">Your progress</h1>
       <div className="prog-sum">
         <div><ProgressRing value={done / totals.topics} size={96} stroke={8} /><b>{done}/{totals.topics}</b><span>topics studied</span></div>
-        <div><ProgressRing value={qRight / qTotal} size={96} stroke={8} /><b>{qRight}/{qTotal}</b><span>self-check answers correct</span></div>
+        <div><ProgressRing value={totals.mcq ? right / totals.mcq : 0} size={96} stroke={8} /><b>{right}/{totals.mcq}</b><span>choose-the-answer correct{tried > right ? ` · ${tried - right} wrong` : ''}</span></div>
+        <div><ProgressRing value={totals.interview ? practised / totals.interview : 0} size={96} stroke={8} /><b>{practised}/{totals.interview}</b><span>interview questions practised</span></div>
       </div>
       <div className="heatmap" role="table" aria-label="Topics studied per chapter">
         {courseChapters.map((c) => (
           <div key={c.id} className="hm-row" role="row">
             <Link to={`/${c.id}`} className="hm-ch" role="rowheader">
               <span className="mono">{c.num}</span> {c.title}
+            </Link>
+            <Link to={`/${c.id}/check`} className="hm-check" role="cell" title="Chapter check: correct answers and interview questions practised">
+              <ListChecks size={13} /> {byChapter(c.id).right}/{chapterCheckCount(c.id).mcq} · {byChapter(c.id).practised}/{chapterCheckCount(c.id).interview}
             </Link>
             <div className="hm-cells" role="cell">
               {c.topics.map((t) => (
@@ -108,7 +118,7 @@ export function ProgressPage() {
         type="button"
         className="btn"
         onClick={() => {
-          if (confirm('Clear all study progress and quiz answers in this browser?')) reset()
+          if (confirm('Clear all study progress, check answers and interview ratings in this browser? Your example project choice is kept.')) reset()
         }}
       >
         <RotateCcw size={14} /> Reset all progress

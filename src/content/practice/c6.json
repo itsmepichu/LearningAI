@@ -1,0 +1,44 @@
+{
+ "c6-1": {
+  "harbor": {
+   "practice": "Harbor uses retrieval for changing policy facts, a small SFT for the mandated answer format, and has not done continued pretraining because evaluation never showed a domain-language gap.",
+   "failure": "Using fine-tuning as a substitute for a permission-aware database of changing facts."
+  }
+ },
+ "c6-2": {
+  "harbor": {
+   "practice": "For any Harbor fine-tune, the dataset manifest records source, licence decision, content hash, language and filter outcome, and evaluation document families are excluded before training sequences are built.",
+   "failure": "Assuming publicly reachable text is licensed for any training or redistribution purpose."
+  }
+ },
+ "c6-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s team used C = 6ND to show that pretraining even a 1B model on their 20B-token corpus would cost far more than adapting an existing open model, which ended the discussion.",
+   "failure": "Repeating a small corpus to reach a big token count and expecting the diversity of a larger corpus."
+  }
+ },
+ "c6-4": {
+  "harbor": {
+   "practice": "Before each Harbor SFT run, an engineer renders one example with the model&#x27;s chat template and checks that only the assistant tokens carry labels.",
+   "failure": "Launching a run with a mismatched chat template or wrong loss mask; training will run and still optimise the wrong tokens."
+  }
+ },
+ "c6-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s extraction reward checks schema validity and exact field values, so an empty but valid JSON object scores zero instead of full marks.",
+   "failure": "Treating reward score, human preference, correctness and policy compliance as the same measurement."
+  }
+ },
+ "c6-6": {
+  "harbor": {
+   "practice": "Harbor&#x27;s one larger fine-tune ran on 8 GPUs with FSDP; the team measured 5.6× speed-up, not 8×, because of communication overhead.",
+   "failure": "Expecting N GPUs to give N times the throughput."
+  }
+ },
+ "c6-7": {
+  "harbor": {
+   "practice": "New Harbor engineers train the browser bigram model and the NumPy lab (Appendix A) in their first week, so later discussions about loss, validation and checkpoints share one picture.",
+   "failure": "Reading plausible samples from a tiny memorised corpus as evidence of generalisation."
+  }
+ }
+}

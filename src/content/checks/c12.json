@@ -1,0 +1,56 @@
+{
+ "c12-1": {
+  "mcq": [
+   {
+    "id": "c12-1-m01",
+    "q": "When is a plain parallel workflow better than a coordinator agent?",
+    "options": [
+     "When the decomposition can be written in code",
+     "Never",
+     "When tasks are open-ended",
+     "When tools differ"
+    ],
+    "answer": 0,
+    "why": "If you know the split, code is cheaper and more predictable.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c12-6": {
+  "mcq": [
+   {
+    "id": "c12-6-m01",
+    "q": "Each of 6 sequential steps is 95% reliable. End to end is about…",
+    "options": [
+     "95%",
+     "74%",
+     "50%",
+     "99%"
+    ],
+    "answer": 1,
+    "why": "0.95⁶ ≈ 0.74; errors compound along the chain.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c12-7": {
+  "mcq": [
+   {
+    "id": "c12-7-m01",
+    "q": "A worker with broad credentials executes a lower-trust user's request. This is…",
+    "options": [
+     "least privilege",
+     "a confused deputy",
+     "a race condition",
+     "prompt caching"
+    ],
+    "answer": 1,
+    "why": "Pass the user's identity and narrow scopes at each hop instead.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

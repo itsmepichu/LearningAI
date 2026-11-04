@@ -1,0 +1,56 @@
+{
+ "c10-7": {
+  "mcq": [
+   {
+    "id": "c10-7-m01",
+    "q": "You switch embedding models with the same dimensions. You must…",
+    "options": [
+     "Do nothing",
+     "Re-embed the corpus and switch query encoder and index together",
+     "Only re-embed new documents",
+     "Normalise old vectors"
+    ],
+    "answer": 1,
+    "why": "Different models produce incompatible vector spaces even at equal dimensions.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c10-4": {
+  "mcq": [
+   {
+    "id": "c10-4-m01",
+    "q": "A stale queued update overwrote a newer document. The fix is…",
+    "options": [
+     "More workers",
+     "A version (compare-and-set) guard on writes",
+     "A bigger queue",
+     "Lower retries"
+    ],
+    "answer": 1,
+    "why": "Write only if the incoming version is newer than the stored one.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c10-5": {
+  "mcq": [
+   {
+    "id": "c10-5-m01",
+    "q": "One tenant has 70% of traffic and lives on one shard. Best mitigation?",
+    "options": [
+     "More replicas everywhere",
+     "Dedicated shards/replicas sized for that tenant",
+     "Larger HNSW M",
+     "Higher efSearch"
+    ],
+    "answer": 1,
+    "why": "Isolate and scale the hot tenant's own capacity.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

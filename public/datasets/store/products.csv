@@ -1,0 +1,301 @@
+sku,title,category,brand,price_inr,rating,review_count,attributes,has_photo
+BZ-MOB-1000,"Aarav smartphone, 128 GB, 5G",Mobiles,Aarav,38629,4.8,20,128 GB; 5G,True
+BZ-BEA-1001,"Kesar Glow face wash, paraben-free, 100 ml",Beauty,Kesar Glow,189,3.9,38,paraben-free; 100 ml,True
+BZ-TOY-1002,"Blockbaba toy car, wooden, 6+ years",Toys,Blockbaba,1579,4.8,130,wooden; 6+ years,False
+BZ-HOM-1003,"Diya House wall hanging, set of 4, ceramic",Home decor,Diya House,1099,4.1,305,set of 4; ceramic,True
+BZ-KUR-1004,"Indigo Thread saree, XL, L",Kurtas and sarees,Indigo Thread,4359,4.5,26,XL; L,True
+BZ-MOB-1005,"Nimbus smartphone, 128 GB, 256 GB",Mobiles,Nimbus,11589,4.3,21,128 GB; 256 GB,False
+BZ-FOO-1006,"Stride sandals, UK 10, UK 8",Footwear,Stride,1419,4.6,148,UK 10; UK 8,True
+BZ-FOO-1007,"Trailfox sandals, UK 8, mesh",Footwear,Trailfox,799,3.7,44,UK 8; mesh,True
+BZ-KUR-1008,"Indigo Thread kurta set, XL, cotton",Kurtas and sarees,Indigo Thread,1729,4.3,94,XL; cotton,True
+BZ-TOY-1009,"Chhota Champ toy car, wooden, battery-free",Toys,Chhota Champ,1259,4.2,35,wooden; battery-free,False
+BZ-KIT-1010,"Annapurna Home mixer jar, induction-ready, stainless steel",Kitchen,Annapurna Home,379,3.7,40,induction-ready; stainless steel,True
+BZ-HOM-1011,"Nook cushion cover, set of 4, brass",Home decor,Nook,159,4.6,26,set of 4; brass,True
+BZ-MOB-1012,"Nimbus smartphone, 256 GB, 6 GB RAM",Mobiles,Nimbus,18929,4.2,29,256 GB; 6 GB RAM,True
+BZ-KIT-1013,"Masala Box mixer jar, 5 L, non-stick",Kitchen,Masala Box,6599,3.5,173,5 L; non-stick,True
+BZ-HOM-1014,"Jharokha diya set, set of 2, brass",Home decor,Jharokha,749,4.2,25,set of 2; brass,True
+BZ-TOY-1015,"Chhota Champ building blocks, 3+ years, battery-free",Toys,Chhota Champ,459,4.7,24,3+ years; battery-free,True
+BZ-BEA-1016,"Neem Leaf face wash, 100 ml, 50 ml",Beauty,Neem Leaf,159,4.9,90,100 ml; 50 ml,True
+BZ-BEA-1017,"Kesar Glow sunscreen, 100 ml, 50 ml",Beauty,Kesar Glow,1369,4.1,78,100 ml; 50 ml,True
+BZ-MOB-1018,"Kestrel smartphone, 128 GB, 256 GB",Mobiles,Kestrel,16179,4.3,25,128 GB; 256 GB,True
+BZ-TOY-1019,"Chhota Champ building blocks, wooden, 3+ years",Toys,Chhota Champ,789,3.9,30,wooden; 3+ years,False
+BZ-KUR-1020,"Rangoli Loom kurta set, XL, L",Kurtas and sarees,Rangoli Loom,649,4.7,32,XL; L,True
+BZ-MOB-1021,"Nimbus smartphone, 6 GB RAM, 128 GB",Mobiles,Nimbus,27129,3.7,24,6 GB RAM; 128 GB,True
+BZ-KIT-1022,"Annapurna Home tiffin box, induction-ready, 3 L",Kitchen,Annapurna Home,1479,4.3,102,induction-ready; 3 L,True
+BZ-KUR-1023,"Rangoli Loom kurta, XL, L",Kurtas and sarees,Rangoli Loom,4649,3.6,33,XL; L,False
+BZ-MOB-1024,"Kestrel smartphone, 6 GB RAM, 5G",Mobiles,Kestrel,8089,4.0,39,6 GB RAM; 5G,True
+BZ-HOM-1025,"Nook wall hanging, cotton, set of 2",Home decor,Nook,229,4.1,52,cotton; set of 2,True
+BZ-FOO-1026,"Pada sneakers, UK 6, mesh",Footwear,Pada,3269,4.0,31,UK 6; mesh,True
+BZ-BEA-1027,"Kesar Glow face wash, 100 ml, 50 ml",Beauty,Kesar Glow,489,3.8,42,100 ml; 50 ml,False
+BZ-TOY-1028,"Chhota Champ puzzle, 3+ years, battery-free",Toys,Chhota Champ,939,4.4,23,3+ years; battery-free,True
+BZ-TOY-1029,"Chhota Champ building blocks, 6+ years, wooden",Toys,Chhota Champ,249,3.5,1143,6+ years; wooden,False
+BZ-FOO-1030,"Stride running shoes, UK 9, UK 10",Footwear,Stride,399,3.6,20,UK 9; UK 10,True
+BZ-FOO-1031,"Pada sandals, mesh, UK 7",Footwear,Pada,1789,4.1,47,mesh; UK 7,True
+BZ-FOO-1032,"Pada running shoes, UK 9, leather",Footwear,Pada,2659,4.3,102,UK 9; leather,False
+BZ-TOY-1033,"Chhota Champ puzzle, 3+ years, battery-free",Toys,Chhota Champ,309,4.3,32,3+ years; battery-free,True
+BZ-BEA-1034,"Neem Leaf hair oil, SPF 30, 50 ml",Beauty,Neem Leaf,249,4.3,22,SPF 30; 50 ml,False
+BZ-FOO-1035,"Pada sneakers, leather, UK 6",Footwear,Pada,1049,3.8,20,leather; UK 6,True
+BZ-KUR-1036,"Tanaav saree, L, S",Kurtas and sarees,Tanaav,919,4.3,410,L; S,True
+BZ-TOY-1037,"Blockbaba toy car, wooden, 3+ years",Toys,Blockbaba,1819,3.9,22,wooden; 3+ years,True
+BZ-FOO-1038,"Trailfox sneakers, UK 10, leather",Footwear,Trailfox,419,4.2,74,UK 10; leather,True
+BZ-KUR-1039,"Rangoli Loom kurta set, cotton, L",Kurtas and sarees,Rangoli Loom,959,4.8,36,cotton; L,True
+BZ-MOB-1040,"Nimbus smartphone, 8 GB RAM, 5G",Mobiles,Nimbus,8259,4.5,77,8 GB RAM; 5G,True
+BZ-BEA-1041,"Velvet Dew face wash, SPF 30, 100 ml",Beauty,Velvet Dew,229,4.3,73,SPF 30; 100 ml,False
+BZ-MOB-1042,"Nimbus smartphone, 5G, 128 GB",Mobiles,Nimbus,8479,4.1,34,5G; 128 GB,True
+BZ-FOO-1043,"Pada sandals, UK 7, leather",Footwear,Pada,3869,4.2,29,UK 7; leather,True
+BZ-KIT-1044,"Masala Box pressure cooker, 3 L, 5 L",Kitchen,Masala Box,2089,3.9,34,3 L; 5 L,True
+BZ-BEA-1045,"Neem Leaf face wash, SPF 30, paraben-free",Beauty,Neem Leaf,939,4.1,70,SPF 30; paraben-free,True
+BZ-FOO-1046,"Pada sandals, UK 8, mesh",Footwear,Pada,3129,4.9,27,UK 8; mesh,True
+BZ-KUR-1047,"Rangoli Loom kurta, rayon, XL",Kurtas and sarees,Rangoli Loom,4069,4.0,23,rayon; XL,True
+BZ-FOO-1048,"Trailfox sneakers, UK 6, UK 8",Footwear,Trailfox,1789,3.7,20,UK 6; UK 8,True
+BZ-KIT-1049,"Masala Box tiffin box, 3 L, 5 L",Kitchen,Masala Box,279,4.1,37,3 L; 5 L,True
+BZ-TOY-1050,"Blockbaba building blocks, battery-free, 3+ years",Toys,Blockbaba,1009,4.7,344,battery-free; 3+ years,False
+BZ-KUR-1051,"Indigo Thread kurta, M, S",Kurtas and sarees,Indigo Thread,979,4.2,29,M; S,True
+BZ-FOO-1052,"Trailfox running shoes, UK 9, UK 7",Footwear,Trailfox,679,4.1,101,UK 9; UK 7,False
+BZ-MOB-1053,"Nimbus smartphone, 256 GB, 128 GB",Mobiles,Nimbus,9159,4.3,252,256 GB; 128 GB,True
+BZ-HOM-1054,"Jharokha wall hanging, set of 2, brass",Home decor,Jharokha,349,4.4,28,set of 2; brass,False
+BZ-KIT-1055,"Steelcraft pressure cooker, 3 L, 5 L",Kitchen,Steelcraft,869,4.3,82,3 L; 5 L,True
+BZ-TOY-1056,"Blockbaba puzzle, 3+ years, wooden",Toys,Blockbaba,1529,4.1,76,3+ years; wooden,True
+BZ-TOY-1057,"Chhota Champ puzzle, battery-free, 6+ years",Toys,Chhota Champ,239,4.0,42,battery-free; 6+ years,False
+BZ-MOB-1058,"Nimbus smartphone, 8 GB RAM, 256 GB",Mobiles,Nimbus,8829,4.0,21,8 GB RAM; 256 GB,True
+BZ-KIT-1059,"Steelcraft kadai, stainless steel, induction-ready",Kitchen,Steelcraft,1299,4.0,20,stainless steel; induction-ready,True
+BZ-BEA-1060,"Neem Leaf sunscreen, SPF 30, paraben-free",Beauty,Neem Leaf,1179,3.8,24,SPF 30; paraben-free,True
+BZ-KIT-1061,"Steelcraft pressure cooker, non-stick, induction-ready",Kitchen,Steelcraft,2709,4.3,23,non-stick; induction-ready,True
+BZ-HOM-1062,"Jharokha diya set, brass, cotton",Home decor,Jharokha,209,3.7,25,brass; cotton,True
+BZ-FOO-1063,"Pada sandals, UK 7, UK 10",Footwear,Pada,2969,4.6,50,UK 7; UK 10,True
+BZ-KUR-1064,"Indigo Thread kurta set, XL, silk blend",Kurtas and sarees,Indigo Thread,3409,4.2,27,XL; silk blend,True
+BZ-KIT-1065,"Steelcraft kadai, 3 L, non-stick",Kitchen,Steelcraft,789,4.4,20,3 L; non-stick,False
+BZ-HOM-1066,"Diya House diya set, brass, ceramic",Home decor,Diya House,259,4.5,28,brass; ceramic,False
+BZ-MOB-1067,"Kestrel smartphone, 5G, 8 GB RAM",Mobiles,Kestrel,33779,3.8,32,5G; 8 GB RAM,True
+BZ-BEA-1068,"Kesar Glow sunscreen, SPF 30, paraben-free",Beauty,Kesar Glow,99,4.3,36,SPF 30; paraben-free,True
+BZ-TOY-1069,"Kite & Co building blocks, battery-free, 6+ years",Toys,Kite & Co,2279,4.8,38,battery-free; 6+ years,True
+BZ-KIT-1070,"Masala Box mixer jar, 3 L, stainless steel",Kitchen,Masala Box,3179,3.4,35,3 L; stainless steel,True
+BZ-KUR-1071,"Tanaav saree, M, XL",Kurtas and sarees,Tanaav,799,4.1,22,M; XL,True
+BZ-HOM-1072,"Nook cushion cover, brass, set of 2",Home decor,Nook,289,4.4,26,brass; set of 2,True
+BZ-KIT-1073,"Annapurna Home kadai, stainless steel, non-stick",Kitchen,Annapurna Home,5549,4.9,30,stainless steel; non-stick,False
+BZ-TOY-1074,"Kite & Co puzzle, 6+ years, wooden",Toys,Kite & Co,719,3.8,32,6+ years; wooden,True
+BZ-BEA-1075,"Neem Leaf sunscreen, SPF 30, 50 ml",Beauty,Neem Leaf,149,4.4,3385,SPF 30; 50 ml,True
+BZ-TOY-1076,"Blockbaba toy car, 6+ years, 3+ years",Toys,Blockbaba,579,4.6,46,6+ years; 3+ years,True
+BZ-KIT-1077,"Steelcraft mixer jar, 3 L, induction-ready",Kitchen,Steelcraft,1359,3.0,20,3 L; induction-ready,True
+BZ-KIT-1078,"Masala Box pressure cooker, non-stick, induction-ready",Kitchen,Masala Box,509,4.1,42,non-stick; induction-ready,False
+BZ-MOB-1079,"Kestrel smartphone, 256 GB, 6 GB RAM",Mobiles,Kestrel,15529,4.5,23,256 GB; 6 GB RAM,True
+BZ-FOO-1080,"Trailfox running shoes, UK 7, UK 8",Footwear,Trailfox,1709,4.7,90,UK 7; UK 8,True
+BZ-FOO-1081,"Pada sneakers, leather, UK 9",Footwear,Pada,699,3.5,44,leather; UK 9,True
+BZ-BEA-1082,"Velvet Dew hair oil, 100 ml, paraben-free",Beauty,Velvet Dew,109,4.1,24,100 ml; paraben-free,True
+BZ-FOO-1083,"Trailfox sneakers, UK 7, leather",Footwear,Trailfox,2609,3.3,27,UK 7; leather,True
+BZ-FOO-1084,"Pada running shoes, UK 6, UK 7",Footwear,Pada,1809,4.6,87,UK 6; UK 7,True
+BZ-KUR-1085,"Tanaav kurta set, M, silk blend",Kurtas and sarees,Tanaav,4429,5,932,M; silk blend,False
+BZ-MOB-1086,"Nimbus smartphone, 8 GB RAM, 5G",Mobiles,Nimbus,10179,3.3,34,8 GB RAM; 5G,True
+BZ-TOY-1087,"Blockbaba toy car, battery-free, wooden",Toys,Blockbaba,2449,4.7,23,battery-free; wooden,True
+BZ-HOM-1088,"Nook diya set, set of 4, cotton",Home decor,Nook,789,3.6,88,set of 4; cotton,True
+BZ-HOM-1089,"Diya House diya set, brass, ceramic",Home decor,Diya House,399,4.4,23,brass; ceramic,True
+BZ-FOO-1090,"Trailfox sneakers, UK 7, UK 9",Footwear,Trailfox,1959,3.8,137,UK 7; UK 9,True
+BZ-BEA-1091,"Kesar Glow face wash, 100 ml, 50 ml",Beauty,Kesar Glow,739,4.2,39,100 ml; 50 ml,True
+BZ-MOB-1092,"Kestrel smartphone, 256 GB, 8 GB RAM",Mobiles,Kestrel,24899,4.5,30,256 GB; 8 GB RAM,True
+BZ-FOO-1093,"Trailfox sneakers, UK 6, UK 7",Footwear,Trailfox,1769,3.5,25,UK 6; UK 7,True
+BZ-HOM-1094,"Jharokha wall hanging, cotton, set of 2",Home decor,Jharokha,1849,4.1,21,cotton; set of 2,True
+BZ-KIT-1095,"Masala Box tiffin box, stainless steel, 5 L",Kitchen,Masala Box,409,4.3,25,stainless steel; 5 L,True
+BZ-HOM-1096,"Nook wall hanging, brass, set of 4",Home decor,Nook,2069,4.7,31,brass; set of 4,True
+BZ-KIT-1097,"Steelcraft pressure cooker, 3 L, non-stick",Kitchen,Steelcraft,259,3.3,261,3 L; non-stick,True
+BZ-BEA-1098,"Kesar Glow sunscreen, SPF 30, paraben-free",Beauty,Kesar Glow,749,3.4,41,SPF 30; paraben-free,True
+BZ-TOY-1099,"Kite & Co toy car, 3+ years, battery-free",Toys,Kite & Co,299,3.6,25,3+ years; battery-free,True
+BZ-HOM-1100,"Diya House wall hanging, cotton, set of 4",Home decor,Diya House,499,4.3,26,cotton; set of 4,True
+BZ-BEA-1101,"Kesar Glow hair oil, 50 ml, paraben-free",Beauty,Kesar Glow,169,4.3,27,50 ml; paraben-free,True
+BZ-FOO-1102,"Pada running shoes, mesh, UK 8",Footwear,Pada,789,3.5,22,mesh; UK 8,False
+BZ-KIT-1103,"Steelcraft pressure cooker, 5 L, stainless steel",Kitchen,Steelcraft,4159,4.0,28,5 L; stainless steel,True
+BZ-BEA-1104,"Neem Leaf hair oil, paraben-free, 50 ml",Beauty,Neem Leaf,359,4.6,20,paraben-free; 50 ml,True
+BZ-MOB-1105,"Nimbus smartphone, 128 GB, 256 GB",Mobiles,Nimbus,23169,3.1,27,128 GB; 256 GB,True
+BZ-KIT-1106,"Annapurna Home tiffin box, induction-ready, non-stick",Kitchen,Annapurna Home,3009,4.6,21,induction-ready; non-stick,True
+BZ-KUR-1107,"Tanaav saree, rayon, M",Kurtas and sarees,Tanaav,1449,4.6,25,rayon; M,False
+BZ-HOM-1108,"Jharokha diya set, brass, set of 4",Home decor,Jharokha,199,4.2,24,brass; set of 4,True
+BZ-HOM-1109,"Nook wall hanging, cotton, set of 4",Home decor,Nook,339,3.1,198,cotton; set of 4,True
+BZ-FOO-1110,"Pada sandals, mesh, UK 8",Footwear,Pada,559,3.5,42,mesh; UK 8,True
+BZ-BEA-1111,"Kesar Glow face wash, 100 ml, SPF 30",Beauty,Kesar Glow,389,4.2,50,100 ml; SPF 30,True
+BZ-BEA-1112,"Neem Leaf hair oil, 100 ml, paraben-free",Beauty,Neem Leaf,249,4.2,37,100 ml; paraben-free,True
+BZ-MOB-1113,"Aarav smartphone, 6 GB RAM, 8 GB RAM",Mobiles,Aarav,28679,4.8,23,6 GB RAM; 8 GB RAM,False
+BZ-KUR-1114,"Rangoli Loom kurta set, rayon, M",Kurtas and sarees,Rangoli Loom,759,4.9,126,rayon; M,True
+BZ-BEA-1115,"Kesar Glow face wash, 100 ml, paraben-free",Beauty,Kesar Glow,1499,3.6,20,100 ml; paraben-free,True
+BZ-FOO-1116,"Stride sneakers, UK 8, UK 9",Footwear,Stride,2469,3.4,41,UK 8; UK 9,True
+BZ-BEA-1117,"Kesar Glow hair oil, 100 ml, paraben-free",Beauty,Kesar Glow,689,4.3,40,100 ml; paraben-free,True
+BZ-KUR-1118,"Tanaav saree, cotton, XL",Kurtas and sarees,Tanaav,2609,3.7,44,cotton; XL,True
+BZ-HOM-1119,"Nook diya set, ceramic, set of 2",Home decor,Nook,279,4.6,20,ceramic; set of 2,True
+BZ-BEA-1120,"Kesar Glow hair oil, 50 ml, 100 ml",Beauty,Kesar Glow,149,4.5,45,50 ml; 100 ml,True
+BZ-MOB-1121,"Nimbus smartphone, 8 GB RAM, 256 GB",Mobiles,Nimbus,40789,3.4,22,8 GB RAM; 256 GB,True
+BZ-HOM-1122,"Jharokha cushion cover, set of 4, set of 2",Home decor,Jharokha,469,4.2,94,set of 4; set of 2,True
+BZ-TOY-1123,"Kite & Co building blocks, 6+ years, battery-free",Toys,Kite & Co,729,3.5,69,6+ years; battery-free,True
+BZ-BEA-1124,"Velvet Dew face wash, paraben-free, SPF 30",Beauty,Velvet Dew,1369,3.7,23,paraben-free; SPF 30,True
+BZ-KIT-1125,"Steelcraft tiffin box, stainless steel, non-stick",Kitchen,Steelcraft,2469,3.2,22,stainless steel; non-stick,True
+BZ-KIT-1126,"Annapurna Home kadai, non-stick, 3 L",Kitchen,Annapurna Home,2909,4.3,46,non-stick; 3 L,True
+BZ-HOM-1127,"Jharokha cushion cover, brass, ceramic",Home decor,Jharokha,1129,4.4,130,brass; ceramic,False
+BZ-TOY-1128,"Chhota Champ puzzle, 3+ years, battery-free",Toys,Chhota Champ,1359,4.6,21,3+ years; battery-free,True
+BZ-KUR-1129,"Indigo Thread kurta set, M, L",Kurtas and sarees,Indigo Thread,2879,4.3,115,M; L,True
+BZ-FOO-1130,"Stride sneakers, UK 7, leather",Footwear,Stride,2769,3.7,28,UK 7; leather,True
+BZ-BEA-1131,"Kesar Glow hair oil, 50 ml, 100 ml",Beauty,Kesar Glow,659,4.0,41,50 ml; 100 ml,True
+BZ-KIT-1132,"Steelcraft tiffin box, induction-ready, non-stick",Kitchen,Steelcraft,5089,3.6,62,induction-ready; non-stick,True
+BZ-HOM-1133,"Diya House diya set, ceramic, cotton",Home decor,Diya House,209,4.4,33,ceramic; cotton,True
+BZ-FOO-1134,"Trailfox sneakers, UK 7, UK 8",Footwear,Trailfox,3979,4.2,33,UK 7; UK 8,True
+BZ-MOB-1135,"Nimbus smartphone, 256 GB, 5G",Mobiles,Nimbus,17789,3.9,38,256 GB; 5G,True
+BZ-TOY-1136,"Chhota Champ toy car, wooden, 3+ years",Toys,Chhota Champ,219,3.9,20,wooden; 3+ years,True
+BZ-KIT-1137,"Annapurna Home mixer jar, induction-ready, 5 L",Kitchen,Annapurna Home,3289,4.2,32,induction-ready; 5 L,False
+BZ-BEA-1138,"Velvet Dew hair oil, SPF 30, 100 ml",Beauty,Velvet Dew,679,3.5,106,SPF 30; 100 ml,True
+BZ-MOB-1139,"Kestrel smartphone, 5G, 8 GB RAM",Mobiles,Kestrel,23869,4.2,30,5G; 8 GB RAM,True
+BZ-HOM-1140,"Nook diya set, set of 2, cotton",Home decor,Nook,189,3.8,40,set of 2; cotton,True
+BZ-MOB-1141,"Aarav smartphone, 6 GB RAM, 128 GB",Mobiles,Aarav,19349,3.8,20,6 GB RAM; 128 GB,True
+BZ-KIT-1142,"Annapurna Home pressure cooker, induction-ready, non-stick",Kitchen,Annapurna Home,449,3.9,36,induction-ready; non-stick,True
+BZ-KUR-1143,"Rangoli Loom kurta set, XL, rayon",Kurtas and sarees,Rangoli Loom,539,3.9,48,XL; rayon,False
+BZ-KUR-1144,"Indigo Thread saree, S, rayon",Kurtas and sarees,Indigo Thread,2279,5,33,S; rayon,True
+BZ-HOM-1145,"Diya House wall hanging, set of 4, ceramic",Home decor,Diya House,809,3.5,77,set of 4; ceramic,True
+BZ-HOM-1146,"Diya House diya set, set of 4, brass",Home decor,Diya House,319,3.9,21,set of 4; brass,True
+BZ-TOY-1147,"Kite & Co puzzle, 3+ years, 6+ years",Toys,Kite & Co,1509,3.2,40,3+ years; 6+ years,True
+BZ-MOB-1148,"Kestrel smartphone, 5G, 128 GB",Mobiles,Kestrel,22649,3.6,35,5G; 128 GB,False
+BZ-KIT-1149,"Annapurna Home kadai, non-stick, stainless steel",Kitchen,Annapurna Home,329,4.8,30,non-stick; stainless steel,True
+BZ-HOM-1150,"Jharokha diya set, ceramic, set of 2",Home decor,Jharokha,2049,5,21,ceramic; set of 2,True
+BZ-FOO-1151,"Trailfox sneakers, UK 9, mesh",Footwear,Trailfox,819,3.8,42,UK 9; mesh,True
+BZ-KIT-1152,"Annapurna Home mixer jar, stainless steel, 5 L",Kitchen,Annapurna Home,1859,4.2,30,stainless steel; 5 L,True
+BZ-BEA-1153,"Neem Leaf face wash, SPF 30, 100 ml",Beauty,Neem Leaf,899,4.6,28,SPF 30; 100 ml,True
+BZ-FOO-1154,"Pada sneakers, UK 6, leather",Footwear,Pada,1979,4.1,25,UK 6; leather,True
+BZ-TOY-1155,"Blockbaba toy car, battery-free, wooden",Toys,Blockbaba,2449,3.1,80,battery-free; wooden,True
+BZ-FOO-1156,"Pada running shoes, UK 7, UK 10",Footwear,Pada,1459,3.5,99,UK 7; UK 10,False
+BZ-MOB-1157,"Nimbus smartphone, 6 GB RAM, 256 GB",Mobiles,Nimbus,9319,4.0,24,6 GB RAM; 256 GB,True
+BZ-BEA-1158,"Neem Leaf face wash, 100 ml, SPF 30",Beauty,Neem Leaf,1439,4.3,205,100 ml; SPF 30,True
+BZ-BEA-1159,"Neem Leaf sunscreen, paraben-free, SPF 30",Beauty,Neem Leaf,159,4.1,23,paraben-free; SPF 30,False
+BZ-KUR-1160,"Indigo Thread kurta, S, rayon",Kurtas and sarees,Indigo Thread,929,3.7,82,S; rayon,True
+BZ-HOM-1161,"Diya House diya set, ceramic, set of 2",Home decor,Diya House,1909,4.1,54,ceramic; set of 2,True
+BZ-BEA-1162,"Kesar Glow sunscreen, SPF 30, 50 ml",Beauty,Kesar Glow,129,4.7,68,SPF 30; 50 ml,True
+BZ-KUR-1163,"Rangoli Loom saree, XL, L",Kurtas and sarees,Rangoli Loom,2039,3.9,21,XL; L,True
+BZ-TOY-1164,"Kite & Co puzzle, battery-free, wooden",Toys,Kite & Co,1669,4.7,38,battery-free; wooden,True
+BZ-HOM-1165,"Diya House wall hanging, ceramic, set of 2",Home decor,Diya House,2719,3.6,61,ceramic; set of 2,False
+BZ-BEA-1166,"Neem Leaf hair oil, 50 ml, 100 ml",Beauty,Neem Leaf,339,5,33,50 ml; 100 ml,True
+BZ-HOM-1167,"Nook diya set, cotton, brass",Home decor,Nook,1259,4.3,808,cotton; brass,False
+BZ-MOB-1168,"Nimbus smartphone, 128 GB, 8 GB RAM",Mobiles,Nimbus,16099,4.1,75,128 GB; 8 GB RAM,True
+BZ-MOB-1169,"Kestrel smartphone, 256 GB, 8 GB RAM",Mobiles,Kestrel,8919,3.3,41,256 GB; 8 GB RAM,True
+BZ-TOY-1170,"Chhota Champ toy car, 3+ years, battery-free",Toys,Chhota Champ,449,3.8,391,3+ years; battery-free,True
+BZ-KIT-1171,"Annapurna Home tiffin box, induction-ready, 3 L",Kitchen,Annapurna Home,5879,3.8,23,induction-ready; 3 L,True
+BZ-HOM-1172,"Nook cushion cover, cotton, brass",Home decor,Nook,249,3.4,26,cotton; brass,False
+BZ-KUR-1173,"Tanaav saree, XL, M",Kurtas and sarees,Tanaav,1599,4.2,60,XL; M,True
+BZ-FOO-1174,"Stride sandals, UK 9, UK 6",Footwear,Stride,629,4.7,20,UK 9; UK 6,True
+BZ-TOY-1175,"Blockbaba toy car, battery-free, wooden",Toys,Blockbaba,199,4.2,206,battery-free; wooden,True
+BZ-MOB-1176,"Aarav smartphone, 8 GB RAM, 6 GB RAM",Mobiles,Aarav,15569,4.3,60,8 GB RAM; 6 GB RAM,True
+BZ-TOY-1177,"Chhota Champ toy car, wooden, 3+ years",Toys,Chhota Champ,2289,4.4,34,wooden; 3+ years,True
+BZ-KIT-1178,"Steelcraft pressure cooker, stainless steel, induction-ready",Kitchen,Steelcraft,6339,3.7,29,stainless steel; induction-ready,True
+BZ-BEA-1179,"Neem Leaf face wash, 50 ml, SPF 30",Beauty,Neem Leaf,109,5,36,50 ml; SPF 30,True
+BZ-KIT-1180,"Steelcraft kadai, 3 L, non-stick",Kitchen,Steelcraft,419,4.5,25,3 L; non-stick,True
+BZ-TOY-1181,"Blockbaba building blocks, 6+ years, battery-free",Toys,Blockbaba,1419,4.2,25,6+ years; battery-free,True
+BZ-HOM-1182,"Jharokha cushion cover, brass, cotton",Home decor,Jharokha,219,4.6,21,brass; cotton,False
+BZ-MOB-1183,"Kestrel smartphone, 8 GB RAM, 5G",Mobiles,Kestrel,28549,3.8,46,8 GB RAM; 5G,True
+BZ-FOO-1184,"Pada sandals, UK 6, leather",Footwear,Pada,619,4.4,61,UK 6; leather,True
+BZ-TOY-1185,"Kite & Co puzzle, 3+ years, 6+ years",Toys,Kite & Co,249,3.7,37,3+ years; 6+ years,True
+BZ-HOM-1186,"Jharokha wall hanging, cotton, brass",Home decor,Jharokha,1159,3.9,30,cotton; brass,True
+BZ-KUR-1187,"Indigo Thread saree, cotton, L",Kurtas and sarees,Indigo Thread,839,3.6,97,cotton; L,True
+BZ-BEA-1188,"Kesar Glow hair oil, 50 ml, 100 ml",Beauty,Kesar Glow,1229,3.5,22,50 ml; 100 ml,True
+BZ-TOY-1189,"Chhota Champ toy car, 6+ years, 3+ years",Toys,Chhota Champ,679,4.0,63,6+ years; 3+ years,True
+BZ-FOO-1190,"Trailfox sneakers, UK 10, leather",Footwear,Trailfox,1529,3.1,120,UK 10; leather,True
+BZ-MOB-1191,"Nimbus smartphone, 256 GB, 128 GB",Mobiles,Nimbus,29019,4.2,21,256 GB; 128 GB,True
+BZ-KIT-1192,"Steelcraft tiffin box, 3 L, non-stick",Kitchen,Steelcraft,579,4.5,538,3 L; non-stick,True
+BZ-MOB-1193,"Nimbus smartphone, 5G, 128 GB",Mobiles,Nimbus,28919,3.7,20,5G; 128 GB,True
+BZ-BEA-1194,"Neem Leaf sunscreen, SPF 30, 100 ml",Beauty,Neem Leaf,789,4.9,29,SPF 30; 100 ml,False
+BZ-HOM-1195,"Diya House diya set, ceramic, set of 2",Home decor,Diya House,1069,4.2,22,ceramic; set of 2,False
+BZ-MOB-1196,"Kestrel smartphone, 8 GB RAM, 5G",Mobiles,Kestrel,14819,4.3,26,8 GB RAM; 5G,True
+BZ-MOB-1197,"Aarav smartphone, 5G, 128 GB",Mobiles,Aarav,8859,4.9,31,5G; 128 GB,True
+BZ-FOO-1198,"Stride sandals, UK 8, UK 7",Footwear,Stride,1499,3.6,104,UK 8; UK 7,True
+BZ-FOO-1199,"Stride sneakers, leather, UK 8",Footwear,Stride,1019,3.5,42,leather; UK 8,True
+BZ-FOO-1200,"Pada sandals, mesh, UK 8",Footwear,Pada,459,4.2,62,mesh; UK 8,False
+BZ-KIT-1201,"Masala Box pressure cooker, 5 L, induction-ready",Kitchen,Masala Box,509,4.0,222,5 L; induction-ready,True
+BZ-KUR-1202,"Rangoli Loom kurta, XL, M",Kurtas and sarees,Rangoli Loom,1219,3.7,20,XL; M,True
+BZ-MOB-1203,"Kestrel smartphone, 6 GB RAM, 8 GB RAM",Mobiles,Kestrel,22789,5,28,6 GB RAM; 8 GB RAM,True
+BZ-FOO-1204,"Trailfox sneakers, UK 9, mesh",Footwear,Trailfox,3069,3.5,39,UK 9; mesh,True
+BZ-FOO-1205,"Trailfox running shoes, UK 8, mesh",Footwear,Trailfox,739,4.5,20,UK 8; mesh,True
+BZ-MOB-1206,"Aarav smartphone, 6 GB RAM, 5G",Mobiles,Aarav,10529,5,86,6 GB RAM; 5G,True
+BZ-TOY-1207,"Kite & Co toy car, 3+ years, battery-free",Toys,Kite & Co,999,4.0,60,3+ years; battery-free,True
+BZ-MOB-1208,"Aarav smartphone, 8 GB RAM, 128 GB",Mobiles,Aarav,9599,4.1,31,8 GB RAM; 128 GB,True
+BZ-TOY-1209,"Kite & Co toy car, 3+ years, battery-free",Toys,Kite & Co,2349,4.6,40,3+ years; battery-free,True
+BZ-HOM-1210,"Diya House diya set, set of 2, brass",Home decor,Diya House,339,4.3,29,set of 2; brass,True
+BZ-KUR-1211,"Tanaav kurta, S, silk blend",Kurtas and sarees,Tanaav,2179,3.8,521,S; silk blend,True
+BZ-KUR-1212,"Tanaav kurta set, S, M",Kurtas and sarees,Tanaav,779,3.8,20,S; M,True
+BZ-TOY-1213,"Kite & Co building blocks, battery-free, wooden",Toys,Kite & Co,2449,3.8,44,battery-free; wooden,True
+BZ-KUR-1214,"Tanaav kurta set, rayon, XL",Kurtas and sarees,Tanaav,549,4.1,35,rayon; XL,True
+BZ-TOY-1215,"Blockbaba building blocks, 3+ years, wooden",Toys,Blockbaba,859,4.3,21,3+ years; wooden,True
+BZ-KUR-1216,"Tanaav kurta, L, silk blend",Kurtas and sarees,Tanaav,1349,3.7,48,L; silk blend,True
+BZ-KUR-1217,"Rangoli Loom kurta, rayon, XL",Kurtas and sarees,Rangoli Loom,2099,4.3,24,rayon; XL,True
+BZ-KUR-1218,"Indigo Thread kurta, XL, rayon",Kurtas and sarees,Indigo Thread,559,3.9,23,XL; rayon,False
+BZ-FOO-1219,"Pada sandals, UK 9, UK 6",Footwear,Pada,739,4.0,35,UK 9; UK 6,True
+BZ-HOM-1220,"Jharokha diya set, ceramic, brass",Home decor,Jharokha,289,4.5,23,ceramic; brass,True
+BZ-KUR-1221,"Indigo Thread kurta, M, rayon",Kurtas and sarees,Indigo Thread,1849,4.0,47,M; rayon,True
+BZ-FOO-1222,"Stride running shoes, leather, UK 6",Footwear,Stride,659,4.3,26,leather; UK 6,True
+BZ-KUR-1223,"Indigo Thread saree, M, L",Kurtas and sarees,Indigo Thread,929,4.1,57,M; L,True
+BZ-KUR-1224,"Rangoli Loom saree, M, silk blend",Kurtas and sarees,Rangoli Loom,2299,4.5,135,M; silk blend,True
+BZ-TOY-1225,"Blockbaba puzzle, 6+ years, battery-free",Toys,Blockbaba,949,4.4,32,6+ years; battery-free,True
+BZ-FOO-1226,"Stride sandals, UK 6, leather",Footwear,Stride,729,4.4,23,UK 6; leather,True
+BZ-FOO-1227,"Stride sneakers, leather, UK 8",Footwear,Stride,479,4.3,39,leather; UK 8,True
+BZ-MOB-1228,"Kestrel smartphone, 256 GB, 5G",Mobiles,Kestrel,34159,4.8,25,256 GB; 5G,False
+BZ-MOB-1229,"Kestrel smartphone, 8 GB RAM, 256 GB",Mobiles,Kestrel,38539,4.0,96,8 GB RAM; 256 GB,True
+BZ-BEA-1230,"Kesar Glow hair oil, paraben-free, SPF 30",Beauty,Kesar Glow,159,4.1,32,paraben-free; SPF 30,True
+BZ-HOM-1231,"Diya House diya set, set of 4, brass",Home decor,Diya House,2149,3.7,25,set of 4; brass,True
+BZ-KIT-1232,"Steelcraft pressure cooker, 3 L, induction-ready",Kitchen,Steelcraft,369,3.4,27,3 L; induction-ready,True
+BZ-TOY-1233,"Chhota Champ building blocks, 6+ years, battery-free",Toys,Chhota Champ,1409,4.5,44,6+ years; battery-free,False
+BZ-FOO-1234,"Trailfox running shoes, UK 9, UK 10",Footwear,Trailfox,2009,5.0,30,UK 9; UK 10,False
+BZ-MOB-1235,"Nimbus smartphone, 8 GB RAM, 5G",Mobiles,Nimbus,44389,4.3,31,8 GB RAM; 5G,True
+BZ-KUR-1236,"Tanaav kurta set, cotton, M",Kurtas and sarees,Tanaav,779,4.0,53,cotton; M,False
+BZ-FOO-1237,"Pada sandals, UK 9, mesh",Footwear,Pada,499,4.4,43,UK 9; mesh,True
+BZ-KUR-1238,"Tanaav saree, S, silk blend",Kurtas and sarees,Tanaav,909,4.4,177,S; silk blend,True
+BZ-BEA-1239,"Neem Leaf sunscreen, 50 ml, paraben-free",Beauty,Neem Leaf,209,3.9,35,50 ml; paraben-free,True
+BZ-BEA-1240,"Kesar Glow hair oil, 50 ml, paraben-free",Beauty,Kesar Glow,259,4.4,94,50 ml; paraben-free,True
+BZ-BEA-1241,"Kesar Glow hair oil, SPF 30, 50 ml",Beauty,Kesar Glow,99,4.5,57,SPF 30; 50 ml,True
+BZ-FOO-1242,"Trailfox running shoes, UK 8, mesh",Footwear,Trailfox,2809,4.3,164,UK 8; mesh,True
+BZ-KUR-1243,"Rangoli Loom saree, S, XL",Kurtas and sarees,Rangoli Loom,1159,3.5,21,S; XL,True
+BZ-BEA-1244,"Velvet Dew hair oil, paraben-free, SPF 30",Beauty,Velvet Dew,129,3.4,32,paraben-free; SPF 30,True
+BZ-FOO-1245,"Pada sandals, UK 8, UK 6",Footwear,Pada,1069,3.6,21,UK 8; UK 6,False
+BZ-MOB-1246,"Nimbus smartphone, 8 GB RAM, 256 GB",Mobiles,Nimbus,13969,3.7,117,8 GB RAM; 256 GB,True
+BZ-TOY-1247,"Blockbaba toy car, battery-free, wooden",Toys,Blockbaba,309,4.5,62,battery-free; wooden,True
+BZ-TOY-1248,"Blockbaba toy car, 6+ years, 3+ years",Toys,Blockbaba,309,4.9,35,6+ years; 3+ years,False
+BZ-KIT-1249,"Annapurna Home pressure cooker, 5 L, 3 L",Kitchen,Annapurna Home,319,3.8,39,5 L; 3 L,True
+BZ-KUR-1250,"Tanaav saree, S, XL",Kurtas and sarees,Tanaav,3729,4.4,192,S; XL,True
+BZ-MOB-1251,"Kestrel smartphone, 128 GB, 6 GB RAM",Mobiles,Kestrel,11489,3.8,312,128 GB; 6 GB RAM,True
+BZ-MOB-1252,"Aarav smartphone, 256 GB, 8 GB RAM",Mobiles,Aarav,9139,3.4,22,256 GB; 8 GB RAM,False
+BZ-MOB-1253,"Kestrel smartphone, 256 GB, 6 GB RAM",Mobiles,Kestrel,21809,4.7,43,256 GB; 6 GB RAM,True
+BZ-HOM-1254,"Diya House diya set, set of 2, cotton",Home decor,Diya House,189,4.4,20,set of 2; cotton,True
+BZ-BEA-1255,"Kesar Glow hair oil, SPF 30, 50 ml",Beauty,Kesar Glow,699,4.0,21,SPF 30; 50 ml,True
+BZ-HOM-1256,"Jharokha diya set, brass, set of 4",Home decor,Jharokha,189,4.8,46,brass; set of 4,False
+BZ-KUR-1257,"Tanaav saree, cotton, silk blend",Kurtas and sarees,Tanaav,659,4.1,123,cotton; silk blend,True
+BZ-HOM-1258,"Diya House wall hanging, cotton, brass",Home decor,Diya House,549,3.6,70,cotton; brass,True
+BZ-KIT-1259,"Steelcraft tiffin box, induction-ready, 3 L",Kitchen,Steelcraft,4529,4.2,21,induction-ready; 3 L,True
+BZ-KUR-1260,"Indigo Thread kurta set, cotton, M",Kurtas and sarees,Indigo Thread,4679,2.9,22,cotton; M,True
+BZ-HOM-1261,"Nook diya set, ceramic, brass",Home decor,Nook,1969,4.0,39,ceramic; brass,True
+BZ-KIT-1262,"Steelcraft pressure cooker, non-stick, induction-ready",Kitchen,Steelcraft,1969,4.2,434,non-stick; induction-ready,True
+BZ-KIT-1263,"Steelcraft mixer jar, 5 L, non-stick",Kitchen,Steelcraft,1399,4.1,21,5 L; non-stick,False
+BZ-KUR-1264,"Rangoli Loom kurta, S, rayon",Kurtas and sarees,Rangoli Loom,3149,4.0,48,S; rayon,False
+BZ-KIT-1265,"Annapurna Home tiffin box, 3 L, induction-ready",Kitchen,Annapurna Home,4989,4.2,53,3 L; induction-ready,False
+BZ-KUR-1266,"Indigo Thread kurta set, L, cotton",Kurtas and sarees,Indigo Thread,809,3.8,33,L; cotton,True
+BZ-KUR-1267,"Rangoli Loom kurta set, M, silk blend",Kurtas and sarees,Rangoli Loom,539,4.0,53,M; silk blend,True
+BZ-MOB-1268,"Nimbus smartphone, 128 GB, 8 GB RAM",Mobiles,Nimbus,14589,3.4,20,128 GB; 8 GB RAM,True
+BZ-KUR-1269,"Tanaav kurta set, cotton, silk blend",Kurtas and sarees,Tanaav,919,4.4,36,cotton; silk blend,False
+BZ-FOO-1270,"Pada running shoes, UK 6, UK 10",Footwear,Pada,829,3.7,23,UK 6; UK 10,True
+BZ-KUR-1271,"Indigo Thread kurta set, XL, silk blend",Kurtas and sarees,Indigo Thread,869,4.2,26,XL; silk blend,True
+BZ-KIT-1272,"Annapurna Home tiffin box, non-stick, stainless steel",Kitchen,Annapurna Home,789,4.0,22,non-stick; stainless steel,True
+BZ-KUR-1273,"Rangoli Loom kurta set, L, silk blend",Kurtas and sarees,Rangoli Loom,4349,4.2,29,L; silk blend,False
+BZ-TOY-1274,"Blockbaba toy car, 6+ years, wooden",Toys,Blockbaba,239,4.1,37,6+ years; wooden,False
+BZ-BEA-1275,"Neem Leaf face wash, SPF 30, 100 ml",Beauty,Neem Leaf,659,4.2,27,SPF 30; 100 ml,True
+BZ-FOO-1276,"Pada sneakers, UK 10, mesh",Footwear,Pada,1829,4.1,100,UK 10; mesh,True
+BZ-MOB-1277,"Kestrel smartphone, 128 GB, 6 GB RAM",Mobiles,Kestrel,43179,3.7,33,128 GB; 6 GB RAM,False
+BZ-KUR-1278,"Tanaav kurta set, XL, rayon",Kurtas and sarees,Tanaav,3599,3.5,47,XL; rayon,False
+BZ-MOB-1279,"Kestrel smartphone, 5G, 6 GB RAM",Mobiles,Kestrel,17439,3.7,27,5G; 6 GB RAM,True
+BZ-MOB-1280,"Kestrel smartphone, 256 GB, 6 GB RAM",Mobiles,Kestrel,19999,4.4,58,256 GB; 6 GB RAM,True
+BZ-KIT-1281,"Steelcraft kadai, 3 L, induction-ready",Kitchen,Steelcraft,429,4.2,27,3 L; induction-ready,True
+BZ-KIT-1282,"Steelcraft kadai, 5 L, non-stick",Kitchen,Steelcraft,419,3.9,818,5 L; non-stick,True
+BZ-MOB-1283,"Kestrel smartphone, 6 GB RAM, 256 GB",Mobiles,Kestrel,33499,4.2,22,6 GB RAM; 256 GB,True
+BZ-HOM-1284,"Nook diya set, ceramic, brass",Home decor,Nook,2129,3.7,23,ceramic; brass,True
+BZ-TOY-1285,"Blockbaba building blocks, 3+ years, 6+ years",Toys,Blockbaba,1049,3.7,29,3+ years; 6+ years,True
+BZ-MOB-1286,"Aarav smartphone, 256 GB, 8 GB RAM",Mobiles,Aarav,18639,3.6,32,256 GB; 8 GB RAM,True
+BZ-FOO-1287,"Trailfox running shoes, UK 9, mesh",Footwear,Trailfox,409,4.8,23,UK 9; mesh,True
+BZ-KUR-1288,"Indigo Thread kurta set, XL, silk blend",Kurtas and sarees,Indigo Thread,1129,4.0,40,XL; silk blend,True
+BZ-BEA-1289,"Neem Leaf sunscreen, 100 ml, paraben-free",Beauty,Neem Leaf,139,4.2,23,100 ml; paraben-free,True
+BZ-FOO-1290,"Stride running shoes, UK 7, UK 8",Footwear,Stride,909,4.8,49,UK 7; UK 8,True
+BZ-BEA-1291,"Neem Leaf hair oil, paraben-free, 50 ml",Beauty,Neem Leaf,819,4.7,39,paraben-free; 50 ml,True
+BZ-HOM-1292,"Jharokha wall hanging, cotton, set of 4",Home decor,Jharokha,669,4.1,27,cotton; set of 4,True
+BZ-BEA-1293,"Velvet Dew hair oil, paraben-free, 100 ml",Beauty,Velvet Dew,399,4.0,84,paraben-free; 100 ml,False
+BZ-HOM-1294,"Diya House cushion cover, brass, cotton",Home decor,Diya House,389,4.2,30,brass; cotton,True
+BZ-BEA-1295,"Kesar Glow sunscreen, 50 ml, 100 ml",Beauty,Kesar Glow,149,3.9,37,50 ml; 100 ml,True
+BZ-MOB-1296,"Aarav smartphone, 128 GB, 6 GB RAM",Mobiles,Aarav,18769,3.5,50,128 GB; 6 GB RAM,False
+BZ-KIT-1297,"Masala Box pressure cooker, 3 L, 5 L",Kitchen,Masala Box,2059,3.8,50,3 L; 5 L,True
+BZ-FOO-1298,"Trailfox sneakers, UK 8, mesh",Footwear,Trailfox,1009,3.4,170,UK 8; mesh,True
+BZ-FOO-1299,"Pada running shoes, mesh, UK 6",Footwear,Pada,1159,3.9,64,mesh; UK 6,True

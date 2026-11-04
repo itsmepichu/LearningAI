@@ -1,0 +1,56 @@
+{
+ "c18-1": {
+  "mcq": [
+   {
+    "id": "c18-1-m01",
+    "q": "A rollback restored the code but not the prompt and index. The missing practice is…",
+    "options": [
+     "Feature flags",
+     "A release manifest that versions all behaviour-affecting artefacts",
+     "More tests",
+     "Faster CI"
+    ],
+    "answer": 1,
+    "why": "Behaviour depends on code, prompts, models, indexes and config together.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c18-4": {
+  "mcq": [
+   {
+    "id": "c18-4-m01",
+    "q": "Shadow deployments must never…",
+    "options": [
+     "Read data",
+     "Call write tools",
+     "Use real traffic",
+     "Log traces"
+    ],
+    "answer": 1,
+    "why": "Shadowing a write creates real duplicate actions.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c18-3": {
+  "mcq": [
+   {
+    "id": "c18-3-m01",
+    "q": "A candidate improves average accuracy but fails one cross-tenant case. Decision?",
+    "options": [
+     "Ship",
+     "Block release",
+     "Ship to half the tenants",
+     "Ignore one case"
+    ],
+    "answer": 1,
+    "why": "Critical invariants block regardless of average improvements.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

@@ -19,4 +19,4 @@ actions:
   propose_credit_over_50: {tier: financial, approval: role:support_lead, timeout: 24h, on_timeout: escalate}
   send_email:     {tier: external, approval: none,  template_only: true}
 escalation: {queue: tier2-support, include: [summary, trace_url, proposed_actions]}</code></pre></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor asks approval for an exact email draft; any edit after approval creates a new version that needs approving again.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating one approval as permission for related actions the agent decides on later.</div></div>
+<div data-slot="practice"></div>

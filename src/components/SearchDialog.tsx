@@ -3,15 +3,32 @@ import { useNavigate } from 'react-router'
 import { AnimatePresence, motion } from 'motion/react'
 import { Search } from 'lucide-react'
 import type MiniSearch from 'minisearch'
-import { getChapter } from '../data/course'
+import { getChapter, getTopic } from '../data/course'
+import { fill, getProject, loadPractice, practiceChapterIds, projects } from '../data/projects'
 
-interface Doc { id: string; ch: string; tn: string; title: string; text: string }
+interface Doc { id: string; ch: string; tn: string; title: string; text: string; topic: string; project?: string }
 interface Index { ms: MiniSearch<Doc>; byId: Map<string, Doc> }
 
 let indexPromise: Promise<Index> | null = null
 function loadIndex(): Promise<Index> {
-  indexPromise ??= Promise.all([import('minisearch'), import('../content/search.json')]).then(([m, data]) => {
-    const docs = (data.default ?? data) as Doc[]
+  indexPromise ??= Promise.all([
+    import('minisearch'),
+    import('../content/search.json'),
+    Promise.all(practiceChapterIds().map((c) => loadPractice(c).then((d) => [c, d] as const))),
+  ]).then(([m, data, practice]) => {
+    const docs = ((data.default ?? data) as Doc[]).map((d) => ({ ...d, topic: d.id }))
+    const strip = (h: string) => h.replace(/<[^>]+>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim()
+    for (const [ch, byTopic] of practice) {
+      for (const [topic, notes] of Object.entries(byTopic)) {
+        const t = getTopic(topic)
+        if (!t || topic === '_lab') continue
+        for (const p of projects) {
+          const n = (notes as Record<string, { practice: string; failure: string; tryIt?: string }>)[p.id]
+          if (!n) continue
+          docs.push({ id: `${topic}~${p.id}`, ch, topic, tn: t.tn, title: t.title, project: p.id, text: strip(fill([n.practice, n.failure, n.tryIt ?? ''].join(' '), p)) })
+        }
+      }
+    }
     const ms = new m.default<Doc>({
       fields: ['tn', 'title', 'text'],
       storeFields: ['id'],
@@ -73,7 +90,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
 
   const go = (d: Doc) => {
     onClose()
-    navigate(`/${d.ch}/${d.id}`)
+    navigate(`/${d.ch}/${d.topic}${d.project ? `?project=${d.project}` : ''}`)
   }
 
   const onKey = (e: React.KeyboardEvent) => {
@@ -134,7 +151,10 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                   <span className="srch-tn">{r.d.tn}</span>
                   <span className="srch-body">
                     <b dangerouslySetInnerHTML={{ __html: r.titleHtml }} />
-                    <small>{getChapter(r.d.ch)?.title}</small>
+                    <small>
+                      {r.d.project && <span className="srch-proj">In practice · {getProject(r.d.project)?.label}</span>}
+                      {getChapter(r.d.ch)?.title}
+                    </small>
                     <span className="srch-snip" dangerouslySetInnerHTML={{ __html: r.html }} />
                   </span>
                 </button>

@@ -33,7 +33,7 @@ q = "What are the top onboarding complaints?"
 print(asyncio.run(single_agent(q))); print(asyncio.run(parallel_workflow(q)))
 # Score both against a hand-written answer key of themes; repeat 3x; compare tokens and time.</code></pre>
 <p>On CPU, parallel calls queue behind each other in one Ollama instance (set <code>OLLAMA_NUM_PARALLEL</code> to allow concurrency; memory use rises), so wall-clock gains are smaller than with a hosted API. The quality and token comparison is still valid.</p></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor compared one answerer, two workers plus a synthesiser, and a fixed hybrid pipeline on 120 paired tasks; the fixed pipeline matched quality at half the cost and shipped.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Comparing a well-resourced agent team with a deliberately weak single-agent baseline.</div></div>
+<div data-slot="practice"></div>
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for multi-agent systems</h3>
 <div class="cols3">

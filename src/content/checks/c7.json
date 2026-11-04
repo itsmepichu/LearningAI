@@ -1,0 +1,51 @@
+{
+ "c7-7": {
+  "mcq": [
+   {
+    "id": "c7-7-m01",
+    "q": "The model proposes refund(order_id, amount). What decides the amount?",
+    "options": [
+     "The model",
+     "Deterministic code from the order record and policy",
+     "The user's message",
+     "The prompt"
+    ],
+    "answer": 1,
+    "why": "The model proposes; code computes amounts and enforces limits.",
+    "kind": "concept"
+   },
+   {
+    "id": "c7-7-m02",
+    "q": "Where should a tenant ID for a tool call come from?",
+    "options": [
+     "The model's arguments",
+     "The authenticated session",
+     "The retrieved document",
+     "The system prompt"
+    ],
+    "answer": 1,
+    "why": "Identity and tenant come from trusted context, never from model output.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ },
+ "c7-6": {
+  "mcq": [
+   {
+    "id": "c7-6-m01",
+    "q": "Which errors are worth retrying?",
+    "options": [
+     "400 Bad Request",
+     "429 and 5xx with backoff and jitter",
+     "Schema validation failures",
+     "All errors immediately"
+    ],
+    "answer": 1,
+    "why": "Rate limits and transient server errors can succeed later; a 400 is your bug.",
+    "kind": "concept"
+   }
+  ],
+  "interview": []
+ }
+}

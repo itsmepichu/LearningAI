@@ -1,5 +1,6 @@
 import manifest from '../content/manifest.json'
 import idmap from '../content/idmap.json'
+import checkSummary from '../content/checks/summary.json'
 
 export type Tag = 'cpu' | 'real' | 'sim' | 'gpu'
 export interface Topic {
@@ -11,7 +12,6 @@ export interface Topic {
   interactive: number
   words: number
 }
-export interface QuizQ { q: string; options: string[]; answer: number; why: string }
 export interface Chapter {
   id: string
   num: string
@@ -24,7 +24,6 @@ export interface Chapter {
   hasIntro: boolean
   hasOutro: boolean
   hasLab: boolean
-  quiz: QuizQ[]
 }
 export interface Part { id: string; label: string; title: string; chapters: string[] }
 
@@ -57,8 +56,16 @@ export const totals = {
   topics: courseTopics.length,
   figures: allTopics.reduce((a, t) => a + t.figures, 0),
   interactive: allTopics.reduce((a, t) => a + t.interactive, 0),
-  questions: chapters.reduce((a, c) => a + c.quiz.length, 0),
+  mcq: checkSummary.totals.mcq,
+  interview: checkSummary.totals.interview,
 }
+
+export interface SectionCount { mcq: number; interview: number }
+const summaryChapters = checkSummary.chapters as Record<string, SectionCount & { sections: Record<string, SectionCount> }>
+export const chapterCheckCount = (chapterId: string): SectionCount => summaryChapters[chapterId] ?? { mcq: 0, interview: 0 }
+export const sectionCheckCount = (chapterId: string, topicId: string): SectionCount =>
+  summaryChapters[chapterId]?.sections[topicId] ?? { mcq: 0, interview: 0 }
+export const chaptersWithChecks = () => chapters.filter((c) => summaryChapters[c.id])
 
 /** Lazy loaders for every HTML fragment, keyed by "<chapter>/<file>". */
 const loaders = import.meta.glob('../content/pages/**/*.html', { query: '?raw', import: 'default' }) as Record<

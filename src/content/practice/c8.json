@@ -1,0 +1,50 @@
+{
+ "c8-1": {
+  "harbor": {
+   "practice": "Harbor&#x27;s acceptance criteria: every policy claim cites an authorised passage; 0 cross-tenant leaks in 60 probes; p95 first token ≤ 1.5 s; ≤ $0.01 per resolved question.",
+   "failure": "Building the evaluation set from easy questions only, which scores well and blocks nothing."
+  }
+ },
+ "c8-2": {
+  "harbor": {
+   "practice": "Harbor checks citation IDs in code, has policy experts grade 50 answers a week, and uses a model judge to triage which of the remaining answers humans should look at.",
+   "failure": "Asking a language model to judge things code can check exactly, such as totals, IDs and formats."
+  }
+ },
+ "c8-3": {
+  "harbor": {
+   "practice": "Harbor&#x27;s judge is re-calibrated against 200 human-graded answers whenever its prompt or model changes, and results report κ with a confidence interval.",
+   "failure": "Quoting &quot;90% agreement with humans&quot; without the class balance, criterion and uncertainty."
+  }
+ },
+ "c8-4": {
+  "harbor": {
+   "practice": "Harbor&#x27;s scorecard tracks correctness, groundedness, completeness (exceptions included), justified abstention, p95 latency and cost per accepted answer side by side.",
+   "failure": "Equating groundedness with truth: an answer can faithfully repeat an outdated source."
+  }
+ },
+ "c8-5": {
+  "harbor": {
+   "practice": "When Harbor misses a question, engineers rerun it with the gold passage supplied. If it then succeeds, the fault is retrieval; if not, generation.",
+   "failure": "Assuming high retrieval recall means the answer used the retrieved text correctly."
+  }
+ },
+ "c8-6": {
+  "harbor": {
+   "practice": "Harbor&#x27;s suite tags every case with its origin (incident, red team, language, synthetic); a single cross-tenant leak case blocks release regardless of averages.",
+   "failure": "Concluding an injection defence works because one attack phrasing failed."
+  }
+ },
+ "c8-7": {
+  "harbor": {
+   "practice": "Harbor&#x27;s A/B test measures &quot;resolved without a repeat contact within 7 days&quot;, with guardrails on latency and complaints, and a pre-registered sample size.",
+   "failure": "Reading higher engagement as success; it can mean users are struggling."
+  }
+ },
+ "c8-8": {
+  "harbor": {
+   "practice": "A Harbor ticket agent passes a case only if exactly one ticket exists in the right tenant with the right fields, no forbidden data was read, and the user got the real ticket ID.",
+   "failure": "Requiring one golden tool sequence and rejecting a different valid, cheaper path."
+  }
+ }
+}

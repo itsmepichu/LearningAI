@@ -11,7 +11,7 @@
 <div class="kpis" id="hcK"></div><svg id="hcSvg" viewBox="0 0 640 200"></svg></div></div>
 <figcaption><b>Break-even calculator.</b> GPUs needed = tokens/month ÷ (throughput × utilisation × seconds per month), rounded up, minimum 2 for redundancy. The throughput input must come from your own benchmark at your SLO (14.7), with your prompt/output length mix; vendor peak numbers overstate it.</figcaption></figure>
 <div class="box example"><h5>Example: reading the default numbers</h5><p>20B tokens/month at $0.60/M via API = $12,000/month. Self-hosted at 2,500 tokens/s per GPU and 45% average utilisation, one GPU delivers ≈ 2.96B tokens/month, so 7 GPUs ≈ $12,800 plus $15,000 ops ≈ $27,800. The API is cheaper here; self-hosting wins only at several times the volume, higher utilisation, or with a much cheaper model.</p></div>
-<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s cost review compares $ per resolved question, not $ per token, for hosted and self-hosted options at the same quality bar.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Calling a cheap token cheap when the task needs many calls or human fixes.</div></div>
+<div data-slot="practice"></div>
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for inference serving</h3>
 <div class="cols3">

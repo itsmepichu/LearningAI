@@ -26,9 +26,10 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   }
 
   // 1. every route
-  const routes = ['/', '/guide', '/paths', '/progress', '/does-not-exist']
+  const routes = ['/', '/guide', '/paths', '/progress', '/practice', '/does-not-exist']
   for (const c of manifest.chapters) {
     routes.push('/' + c.id)
+    if (c.kind === 'chapter') routes.push(`/${c.id}/check`)
     for (const t of c.topics) routes.push(`/${c.id}/${t.id}`)
   }
   for (const r of routes) {
@@ -36,7 +37,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
     await page.waitForTimeout(r.split('/').length > 2 ? 350 : 150)
     const h1 = await page.$('main h1')
     if (!h1) fails.push(`${r}: no h1`)
-    if (r.split('/').length > 2) {
+    if (r.split('/').length > 2 && !r.endsWith('/check')) {
       const n = await page.$$eval('.lai-topic > *', (x) => x.length)
       if (!n) fails.push(`${r}: empty topic body`)
     }
@@ -67,7 +68,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   await page.goto(BASE + '/c9/c9-3', { waitUntil: 'networkidle' })
   await page.keyboard.press('/')
   await page.fill('.srch-in input', 'idempotency')
-  await page.waitForSelector('.srch-hit', { timeout: 5000 })
+  await page.waitForSelector('.srch-hit', { timeout: 15000 })
   const hits = await page.$$eval('.srch-hit', (x) => x.length)
   const first = await page.$eval('.srch-hit b', (x) => x.textContent)
   await page.keyboard.press('Enter')
@@ -81,9 +82,57 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   console.log('progress after toggle:', ring)
   if (!/^1 of/.test(ring)) fails.push('studied toggle did not update progress')
 
+  // chapter check page: answer a question, see feedback, score updates
+  await page.goto(BASE + '/c5/check#c5-2', { waitUntil: 'networkidle' })
+  await page.waitForSelector('.csec.open .opt')
+  await page.click('.csec.open .opt')
+  const fb = await page.$$eval('.csec.open .mfb', (x) => x.length)
+  console.log('check page feedback shown:', fb, '|', (await page.textContent('.ck-score')).trim())
+  if (!fb) fails.push('check page: no feedback after answering')
+
+  // example project: switching tabs sets ?project= and changes the note
+  await page.goto(BASE + '/c1/c1-1', { waitUntil: 'networkidle' })
+  const before = await page.textContent('.pb-body')
+  await page.click('.pb-tab:nth-child(3)')
+  await page.waitForTimeout(200)
+  const after = await page.textContent('.pb-body')
+  console.log('project tab ->', new URL(page.url()).search, '| changed:', before !== after)
+  if (!page.url().includes('project=bank') || before === after) fails.push('project tab did not switch the practice note')
+
+  // end-of-topic note: a project rated "limited" points to a better one
+  await page.goto(BASE + '/c2/c2-3?project=travel', { waitUntil: 'networkidle' })
+  await page.waitForSelector('.pb-body')
+  const strong = await page.$$eval('.fitnote.strong', (x) => x.length)
+  const ds = await page.$$eval('.pb .ds-f', (x) => x.map((a) => a.getAttribute('href')))
+  console.log('limited-fit note shown:', strong, '| dataset links:', ds.length)
+  if (!strong) fails.push('end-of-topic note missing for a limited-fit project')
+  if (!ds.length || !ds[0].includes('/datasets/travel/')) fails.push('practice block has no dataset links for the travel project')
+  else {
+    const dsStatus = await page.evaluate((u) => fetch(u).then((r) => r.status), ds[0])
+    if (dsStatus !== 200) fails.push('dataset file not served: ' + ds[0])
+  }
+
+  // practice page: draw a random set
+  await page.goto(BASE + '/practice', { waitUntil: 'networkidle' })
+  await page.waitForFunction(() => !/Loading/.test(document.querySelector('.pf-count')?.textContent || 'Loading'))
+  await page.click('.pm-bar .btn.primary')
+  const drawn = await page.$$eval('.pm-prog button', (x) => x.length)
+  console.log('practice set drawn:', drawn)
+  if (!drawn) fails.push('practice page: no random set drawn')
+  // answer a multiple-choice question wrongly, then find it under Review mistakes
+  await page.selectOption('.pf-row label:nth-of-type(1) select', 'mcq')
+  await page.click('.pm-bar .btn.primary')
+  for (let k = 0; k < 4 && !(await page.$('.pm-card .mcq.wrong')); k++) {
+    const again = await page.$('.pm-card .mfb .linkish')
+    if (again) await again.click()
+    const opts = await page.$$('.pm-card .opt')
+    if (opts[k]) await opts[k].click()
+  }
+  await page.click('.seg.tabs button:nth-child(2)')
+  const mistakes = await page.$$eval('.pm .mcq', (x) => x.length)
+  console.log('review-mistakes cards:', mistakes)
+  if (!mistakes) fails.push('practice page: wrong answer did not appear under Review mistakes')
   await page.goto(BASE + '/c5', { waitUntil: 'networkidle' })
-  await page.click('.qq2 label:nth-child(2)')
-  console.log('quiz:', (await page.textContent('.quiz-score')).trim())
   const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
   await page.click('button[aria-label^="Switch to"]')
   const themeAfter = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))

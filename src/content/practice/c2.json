@@ -1,0 +1,194 @@
+{
+ "c2-1": {
+  "harbor": {
+   "practice": "Harbor normalises every policy embedding to length 1 at index time, so the vector store can rank by dot product, which then equals cosine similarity.",
+   "failure": "Computing cosine on a zero vector from a failed embedding call: it is undefined. Detect empty or failed embeddings explicitly instead of letting NaN scores reach ranking.",
+   "fit": "good",
+   "fitNote": "normalised policy embeddings ranked by dot product",
+   "tryIt": "In the figure, give a and b the same angle and change only the length of a: cosine stays at 1 while the dot product grows. That is why Harbor normalises before ranking by dot product. Then run the laptop lab on three policy titles from <code>policies.json</code>."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "“similar products” is cosine similarity you can see",
+   "practice": "{company}'s “similar products” row embeds each listing's title and attributes and shows the nearest neighbours by cosine similarity, so a maroon cotton kurta sits next to a red cotton kurta set. Vectors are normalised so that ranking depends only on direction.",
+   "failure": "Comparing vectors from two different embedding models, for example an old index and a new one. The numbers look comparable, but the two spaces are unrelated (10.7).",
+   "tryIt": "Embed six product titles from <code>products.csv</code> (two each from three categories) with the laptop lab's sentence-transformers model, compute the cosine matrix, and check whether same-category pairs score higher than cross-category ones."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "similar-case search over dispute descriptions",
+   "practice": "{company} embeds dispute descriptions so investigators can find similar past cases. “I don't recognise a payment” and “unknown transaction on my card” should be close, and so should the same complaint in Hindi, if the embedding model is multilingual.",
+   "failure": "Using the cosine similarity between customers' embeddings as a risk decision. Similarity is not a calibrated fraud or credit score.",
+   "tryIt": "Embed the English and Hindi “unrecognised payment” dispute texts from <code>disputes.csv</code> with a multilingual model (for example <code>paraphrase-multilingual-MiniLM-L12-v2</code>) and with an English-only one (<code>all-MiniLM-L6-v2</code>). Compare the cosine similarity each gives the pair."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "matching multilingual requests to intents",
+   "practice": "{assistant} embeds traveller requests and matches them to intents such as cancel, change date or add baggage. “Kal ki flight cancel karni hai” and “I need to cancel tomorrow's flight” should land near the same intent.",
+   "failure": "Always picking the nearest intent, even when every similarity is low. Set a minimum cosine and ask a clarifying question below it.",
+   "tryIt": "Embed the messages in <code>messages.json</code> with a multilingual model and compute the cosine similarity between each Hindi, Tamil or Hinglish message and its English counterpart. Note the weakest pair and why it might be weak."
+  }
+ },
+ "c2-2": {
+  "harbor": {
+   "practice": "Harbor&#x27;s &quot;possible data-leak&quot; detector flags 1 in 2,000 answers with 95% recall and 1% false positives. Bayes says most alerts will be false, so alerts route to a review queue rather than blocking answers automatically.",
+   "failure": "Reporting a precise-looking confidence interval from a biased sample: it can be precisely wrong about real traffic.",
+   "fit": "good",
+   "fitNote": "a rare-event detector whose alerts are mostly false",
+   "tryIt": "Set the Bayes figure to Harbor's leak detector (base rate 0.05%, recall 95%, false positives 1%) as closely as the sliders allow, read P(real leak | flagged), then work out how many alerts a day 50,000 answers would produce."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "fake-review flags and festival-sale rates",
+   "practice": "{company} flags reviews that may be fake. If 3% of reviews are fake and the detector catches 90% with 5% false positives, only about 36% of flagged reviews are actually fake (illustrative numbers). Flagged reviews are therefore hidden for human review, not deleted.",
+   "failure": "Claiming “the new ranking lifted conversion” from one festival-sale day. Sale days have a different base rate, so compare like with like and report an interval.",
+   "tryIt": "In the Bayes figure, set base rate 3%, recall 90% and false positives 5%, and confirm precision is near 36%. Then put the festival-sale return count from <code>orders.csv</code> (<code>festive_sale = 1</code>) into the confidence-interval calculator."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "fraud base rates make Bayes' theorem concrete",
+   "practice": "Fraud is about 1.4% of transactions in {company}'s dataset. A model with 90% recall and 2% false positives flags about 3.2% of all transactions, and only about 39% of those are fraud. That ratio decides how many analysts the fraud queue needs.",
+   "failure": "Approving a fraud model on recall alone. At a low base rate, recall says nothing about how many genuine customers will have their cards blocked.",
+   "tryIt": "Compute the fraud base rate from <code>transactions.csv</code>, set it with recall 90% and false positives 2% in the Bayes figure, and read the precision. Then recompute the base rate for November and December only and see how precision moves."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "comparing models on a few hundred bookings",
+   "practice": "{company} tests a new cancellation model on 400 bookings: 84% accurate against 81% for the old one. Their 95% intervals overlap widely, so the team runs a paired comparison on the same bookings before switching (8.7).",
+   "failure": "Estimating monsoon cancellation rates from winter bookings. A precise interval from the wrong population is still wrong.",
+   "tryIt": "In <code>bookings.csv</code>, count cancellations for July and August travel dates and for all other months, then put each into the confidence-interval calculator. Do the intervals overlap?"
+  }
+ },
+ "c2-3": {
+  "harbor": {
+   "practice": "When Harbor&#x27;s reranker is fine-tuned (13.5), the team plots loss for three learning rates on a 2,000-pair sample before committing GPU time to the full run.",
+   "failure": "Reading a falling training loss as proof of learning: compare validation loss, which is what generalisation looks like.",
+   "fit": "good",
+   "fitNote": "checking learning rates before a fine-tuning run",
+   "tryIt": "In the 3D figure, choose the “η 0.9” preset and watch SGD zig-zag across the steep direction. A jagged loss curve that never settles in Harbor's reranker log means the same thing: the learning rate is too high."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a return-risk model trained by gradient descent",
+   "practice": "{company}'s return-risk model is trained by gradient descent on order features. When the team doubled the learning rate to finish sooner, validation loss jumped between epochs; going back, with a short warm-up (4.2), fixed it.",
+   "failure": "Choosing the learning rate from training loss alone. Pick it on validation loss.",
+   "tryIt": "On <code>orders.csv</code>, fit scikit-learn's <code>SGDClassifier(loss=\"log_loss\", learning_rate=\"constant\")</code> with <code>eta0</code> set to 0.001, 0.01 and 1.0, calling <code>partial_fit</code> one epoch at a time, and plot the training loss per epoch for each. Use <code>delivery_days</code>, <code>city_tier</code> and <code>festive_sale</code> as features."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "unscaled rupee amounts show why the loss surface's shape matters",
+   "practice": "{company}'s fraud model mixes one feature with huge values (amounts in rupees) with others between 0 and 10. Without scaling, gradient descent zig-zags along the steep amount direction, like SGD in the 3D figure at a high learning rate. Standardising the features fixed it.",
+   "failure": "Feeding raw rupee amounts next to 0/1 flags into a gradient-descent model. The badly scaled loss surface makes training slow or unstable.",
+   "tryIt": "Train <code>SGDClassifier</code> on <code>transactions.csv</code> using raw <code>amount_inr</code> and <code>is_foreign</code>, then again after <code>StandardScaler</code>. Compare how many epochs each needs to reach the same loss."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company} trains its cancellation model with the same loop as any other: compute the loss on a batch of bookings, take the gradient, step. Checking the loss curve for a few learning rates before a full retraining is a five-minute habit that avoids a wasted run.",
+   "failure": "Retraining on the full year with a learning rate chosen on a small sample, without looking at the loss curve.",
+   "tryIt": "Run the 3D figure's presets and note which optimizer you would trust for a first run. Then repeat the SGD exercise on <code>bookings.csv</code> (<code>lead_days</code>, <code>refundable</code> predicting <code>cancelled</code>)."
+  }
+ },
+ "c2-4": {
+  "harbor": {
+   "practice": "Harbor&#x27;s reranker training log starts at loss ≈ ln(2) = 0.69 for a binary relevant/irrelevant head, exactly the uniform-guess value. A start far from that number signals a label or setup bug.",
+   "failure": "Equating lower token loss with task success: a model can improve perplexity and still fail critical extraction or permission cases.",
+   "fit": "good",
+   "fitNote": "reading the first value in a training log",
+   "tryIt": "In the calculator, set q(yes) to 50%: the loss is ln 2 ≈ 0.69, the uniform-guess value Harbor's binary reranker starts from."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "expected starting loss for a category classifier",
+   "practice": "{company}'s product-category classifier has seven categories in the dataset, so an untrained model should start near ln 7 ≈ 1.95 nats. A first-epoch loss far below that is a sign that a label has leaked into a feature.",
+   "failure": "Comparing perplexity between two language models with different tokenizers. Per-token loss depends on what a token is, so the numbers are not comparable.",
+   "tryIt": "Count the categories in <code>products.csv</code> and compute ln(K). In the calculator, make q uniform over its three outcomes and confirm ln 3 ≈ 1.10, so you know what “knows nothing” looks like."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "log loss punishes overconfident fraud scores",
+   "practice": "{company} scores fraud as probabilities, and cross-entropy (log loss) is how the model is trained and compared. A model that gives 0.1% to a transaction that turns out to be fraud pays −ln 0.001 ≈ 6.9 nats, which is why overconfident models are punished heavily.",
+   "failure": "Choosing a fraud model by log loss alone. Log loss rewards good probabilities, but the operational decision depends on precision and recall at the chosen threshold (3.5).",
+   "tryIt": "In the calculator, set p to 100% “yes” and q(yes) to 1%, 10% and 50%, noting each loss. Then compute the log loss of the base-rate model on <code>transactions.csv</code>: predict the overall fraud rate for every row."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "seasonal destination shifts make KL divergence measurable",
+   "practice": "{company} watches KL divergence between this month's destination distribution and last month's. A sharp jump, as at the start of the monsoon, triggers a check of the demand-forecast models.",
+   "failure": "Computing KL divergence when the reference distribution gives a destination zero probability. KL becomes infinite; smooth both distributions first.",
+   "tryIt": "From <code>bookings.csv</code>, build the destination distribution for June and for July bookings, add one to every count, and compute KL(July ‖ June) in NumPy."
+  }
+ },
+ "c2-5": {
+  "harbor": {
+   "practice": "Harbor&#x27;s evaluation notebooks are throwaway; the cleaning and scoring code lives in a versioned package that the CI pipeline runs with pinned dependencies and seeds.",
+   "failure": "Fitting normalisation on the full dataset before splitting, or trusting a notebook that only works because of hidden cell order.",
+   "fit": "good",
+   "fitNote": "versioned scoring code and pinned datasets",
+   "tryIt": "Load <code>tickets.csv</code> with pandas, record its SHA-256 hash and the pandas version at the top of the notebook, and compute the share of security tickets with one vectorised expression instead of a loop."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "joining orders to listings at scale",
+   "practice": "{company}'s analysts load a day of orders into pandas, join them to listings and chart return rate by category. The notebook behind the festival-sale report records its data snapshot by hash, so the numbers can be rebuilt after the sale.",
+   "failure": "Computing average order value with a Python loop over millions of rows. A vectorised groupby is typically hundreds of times faster.",
+   "tryIt": "Load <code>orders.csv</code> and <code>products.csv</code>, merge on <code>sku</code>, and compute return rate by category and payment method with one <code>groupby</code>. Time it against an equivalent Python loop."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "model-risk reviews need exact reproduction",
+   "practice": "At {company}, every model-validation notebook records the data snapshot hash, library versions and random seed, because model-risk reviewers must be able to reproduce each number months later.",
+   "failure": "Fitting a scaler or computing averages on all twelve months before splitting by time. The model then “sees” statistics from the future.",
+   "tryIt": "Load <code>transactions.csv</code>, set a seed, sample 1,000 rows and compute the fraud rate. Rerun to confirm you get the same number, then change only the seed and record how much it moves."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "dates that must be parsed exactly",
+   "practice": "{company}'s analysts compare months of bookings in pandas: lead time by product, cancellations by month, fares by route. Dates are parsed once, with an explicit format, because a misread date silently moves a monsoon booking into the wrong month.",
+   "failure": "Letting pandas guess date formats. Day-first and month-first dates mix without any error.",
+   "tryIt": "Load <code>bookings.csv</code> with <code>parse_dates</code> for <code>booked_on</code> and <code>travel_date</code>, recompute <code>lead_days</code> and check it matches the column, then chart cancellations by travel month."
+  }
+ },
+ "c2-6": {
+  "harbor": {
+   "practice": "Harbor&#x27;s developers prototype on laptops with a 3B model in 4-bit (≈ 2 GB). Production serving runs an 8B model in FP8 on datacentre GPUs, and capacity numbers come only from benchmarks on those GPUs.",
+   "failure": "Assuming an &quot;8 GB model file&quot; runs in 8 GB of RAM: the KV cache, runtime overhead and the operating system need room too.",
+   "fit": "good",
+   "fitNote": "prototype on laptops, size production on GPUs",
+   "tryIt": "In the laptop-fit figure, choose 3B at Q4_K_M with your RAM, then 8B, and note the context length at which each stops fitting."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "festival-peak capacity, not laptop fit",
+   "practice": "{company} serves {assistant} to millions of shoppers, so the question is not “does it fit on a laptop?” but “how many GPUs at festival peak?”. Developers still prototype with a 3B model in 4-bit on laptops, and production is sized from GPU benchmarks.",
+   "failure": "Estimating festival-peak GPU needs from laptop tokens per second. The bottlenecks are different (14.1).",
+   "tryIt": "Use the laptop-fit figure to find the largest model your laptop runs with a 4,000-token context, then work out how many 250-token replies per second that speed could serve."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "self-hosted models sized for long case files",
+   "practice": "{company} keeps customer data on its own infrastructure, so it self-hosts an 8B model for case summaries. Memory sizing, weights plus the KV cache for 4,000-token case files, decides how many cases one GPU can summarise at once.",
+   "failure": "Switching to 4-bit quantisation without re-running the evaluation on amounts, dates and account references, the details a summary must not get wrong.",
+   "tryIt": "In the laptop-fit figure, set an 8B model at Q8_0 and then Q4_K_M with a 4,000-token context, noting memory and the speed ceiling. Decide which you would test first for summarising cases from <code>disputes.csv</code>."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{assistant} spends most of its time waiting on airline and hotel systems, not the model, so hardware choices matter less than tool latency. Planning replies run on a hosted model.",
+   "failure": "Buying faster GPUs to speed up a booking flow whose time is spent waiting on supplier APIs.",
+   "tryIt": "In the laptop-fit figure, check whether a 3B model fits for offline itinerary drafts. Then time one supplier-style API call in your own code to see where the latency goes."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use Harbor data in the notebook: embed three policy titles from <code>policies.json</code> for the vector exercises, and simulate pass/fail outcomes at an 85% answer pass rate for the confidence intervals. Record the dataset's hash next to the package versions.</p>"
+  },
+  "store": {
+   "scenario": "<p>Use {company} data: three product titles from <code>products.csv</code> for the vectors, and simulate 100 and 1,000 orders at the dataset's 14% return rate for the confidence intervals. Add one cell that recomputes the real return rate from <code>orders.csv</code> and checks it falls inside your 1,000-sample interval.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use {company} data: simulate 100 and 1,000 transactions at the 1.4% fraud rate and note how often the 100-sample run sees no fraud at all. Then compute the real rate from <code>transactions.csv</code> and show where it sits in each interval.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use {company} data: simulate 100 and 1,000 bookings at the 14% cancellation rate, then compute the real monsoon and non-monsoon rates from <code>bookings.csv</code> and compare their intervals.</p>"
+  }
+ }
+}

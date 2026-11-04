@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { Link, useLocation, useParams } from 'react-router'
 import { motion } from 'motion/react'
-import { ArrowRight, Check, Clock, FlaskConical, MousePointerClick } from 'lucide-react'
-import { getChapter, minutes, partOf } from '../data/course'
+import { ArrowRight, Check, Clock, FlaskConical, ListChecks, MousePointerClick } from 'lucide-react'
+import { chapterCheckCount, getChapter, minutes, partOf } from '../data/course'
+import { LabVariant, useChapterPractice } from '../components/Practice'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
-import { Quiz } from '../components/Quiz'
 import { ProgressRing } from '../components/Icons'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
@@ -25,6 +25,7 @@ export function ChapterPage() {
   const lab = usePage(chapterId, '_lab', !!ch?.hasLab)
   const studied = useProgress((s) => s.studied)
   const setMany = useProgress((s) => s.setMany)
+  const practice = useChapterPractice(chapterId)
   useDocumentTitle(ch ? `${ch.num} ${ch.title}` : 'Not found')
 
   const ready = (!ch?.hasLab || lab !== null) && (!ch?.hasOutro || outro !== null)
@@ -63,7 +64,8 @@ export function ChapterPage() {
           </div>
           <span><Clock size={15} /> about {Math.round(mins / 5) * 5} min</span>
           {inter > 0 && <span><MousePointerClick size={15} /> {inter} interactive figures</span>}
-          {ch.hasLab && <a href="#lab" onClick={(e) => { e.preventDefault(); document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth' }) }}><FlaskConical size={15} /> Lab and self-check</a>}
+          {ch.hasLab && <a href="#lab" onClick={(e) => { e.preventDefault(); document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth' }) }}><FlaskConical size={15} /> Lab</a>}
+          {ch.kind === 'chapter' && <Link to={`/${ch.id}/check`}><ListChecks size={15} /> Chapter check</Link>}
           {firstOpen && (
             <Link className="btn primary" to={`/${ch.id}/${firstOpen.id}`}>
               {n === 0 ? 'Start chapter' : all ? 'Review chapter' : 'Continue'} <ArrowRight size={15} />
@@ -110,9 +112,10 @@ export function ChapterPage() {
       {lab && (
         <div id="lab" className="c-lab">
           <HtmlContent html={lab} className="lai-lab" legacy={false} />
+          <LabVariant practice={practice} />
         </div>
       )}
-      {ch.quiz.length > 0 && <Quiz chapterId={ch.id} num={ch.num} questions={ch.quiz} />}
+      {ch.kind === 'chapter' && <ChapterCheckCard chapterId={ch.id} num={ch.num} />}
 
       {ids.length > 0 && (
         <div className="chdone2">
@@ -123,5 +126,22 @@ export function ChapterPage() {
         </div>
       )}
     </div>
+  )
+}
+
+function ChapterCheckCard({ chapterId, num }: { chapterId: string; num: string }) {
+  const n = chapterCheckCount(chapterId)
+  return (
+    <Link to={`/${chapterId}/check`} className="checkcard" id="quiz">
+      <span className="checkcard-ic"><ListChecks size={26} /></span>
+      <span className="checkcard-b">
+        <span className="eyebrow-sm">End of chapter {num}</span>
+        <b>Chapter {num} check</b>
+        <small>
+          {n.mcq} choose-the-answer · {n.interview} interview questions, grouped by section. Practice or check mode.
+        </small>
+      </span>
+      <ArrowRight size={20} />
+    </Link>
   )
 }
