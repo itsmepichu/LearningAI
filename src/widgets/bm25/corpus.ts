@@ -1,5 +1,5 @@
 import type { Project, ProjectId } from '../../data/projects'
-import { loadCsv, loadJson } from '../kit'
+import type { DataReader } from '../kit'
 import type { Bm25Doc } from './engine'
 
 export interface CorpusDoc extends Bm25Doc {
@@ -28,17 +28,17 @@ const fromPolicies = (rows: Policy[]): CorpusDoc[] =>
   rows.filter((d) => d.current !== false).map((d) => ({ id: d.id, title: d.title, body: d.text, text: `${d.title} ${d.text}` }))
 
 /** Each project's searchable documents, from its dataset. Harbor's older revisions are left out on purpose. */
-export async function loadCorpus(p: Project): Promise<Corpus> {
+export async function loadCorpus(p: Project, read: DataReader): Promise<Corpus> {
   if (p.id === 'store') {
-    const rows = await loadCsv(p, 'products.csv')
+    const rows = await read.csv('products.csv')
     return {
       file: 'products.csv',
       noun: 'product listings',
       docs: rows.map((r) => ({ id: r.sku, title: r.title, body: `${r.category} · ${r.brand}`, text: `${r.sku} ${r.title} ${r.category} ${r.brand}` })),
     }
   }
-  if (p.id === 'travel') return { file: 'fare_rules.json', noun: 'fare rules', docs: fromPolicies(await loadJson<Policy[]>(p, 'fare_rules.json')) }
-  return { file: 'policies.json', noun: p.id === 'bank' ? 'policies' : 'current policies', docs: fromPolicies(await loadJson<Policy[]>(p, 'policies.json')) }
+  if (p.id === 'travel') return { file: 'fare_rules.json', noun: 'fare rules', docs: fromPolicies(await read.json<Policy[]>('fare_rules.json')) }
+  return { file: 'policies.json', noun: p.id === 'bank' ? 'policies' : 'current policies', docs: fromPolicies(await read.json<Policy[]>('policies.json')) }
 }
 
 /** Queries chosen by running them over the dataset: each one shows something specific about keyword search. */

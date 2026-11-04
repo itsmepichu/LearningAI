@@ -10,7 +10,7 @@ function Highlighted({ text, terms }: { text: string; terms: string[] }) {
   const set = new Set(terms)
   return (
     <>
-      {text.split(/([\p{L}\p{N}-]+)/u).map((part, i) => {
+      {text.split(/([\p{L}\p{M}\p{N}-]+)/u).map((part, i) => {
         const t = tokenize(part)[0]
         return t && set.has(t) ? <b key={i}>{part}</b> : part
       })}

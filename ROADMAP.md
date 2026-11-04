@@ -228,7 +228,8 @@ The course-wide place to drill questions, linked from the sidebar and the home p
 
 - Port the 30 most important v3 widgets to typed React components, and delete their blocks from `src/legacy/widgets.js`. Start with those that show example data, which load the selected project's dataset.
 - Shared widget kit: slider with live value, step-through player, KPI row, theme-aware canvas, chart primitives. **Done:** `src/widgets/kit/`, plus a dataset loader and a source line for project-aware figures.
-- Storybook entry and a unit test for each rebuilt widget. **Not started; tooling not chosen.** The repo has neither Storybook nor a unit test runner. Widget logic is already in pure modules (`bm25/engine.ts`, `chunking/chunk.ts`, `retrieval-metrics/metrics.ts`, `saga/events.ts`, `kit/csv.ts`), so tests can start there once a runner is chosen. Until then, `tests/e2e.cjs` covers each rebuilt widget.
+- A unit test for each rebuilt widget. **Done for batch 1**, with Node's built-in runner (`npm run test:unit`, no new dependency). Each `<name>.test.ts` checks the widget's logic, and checks its scenarios against the real generated datasets, so regenerating the data cannot silently break a figure. `tests/e2e.cjs` covers each widget's behaviour in the browser.
+- Storybook entries: **decided against.** The original plan asked for one per widget, but each widget already runs on its topic page and in e2e, so Storybook would add a dependency and a second place to maintain for little gain.
 
 Batch order (83 v3 widget blocks remain, plus the 4 shared passes that stay: helpers, static bars, flow steppers and the enhancement pass):
 

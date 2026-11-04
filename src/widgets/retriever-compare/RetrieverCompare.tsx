@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { BarList, DataGate, DataSource, SERIES, Slider, Widget, fmt, pct, useProjectData } from '../kit'
-import { buildIndex, search } from '../bm25/engine'
+import { rankIds } from '../bm25/engine'
 import { loadCorpus } from '../bm25/corpus'
 import { rankMetrics } from '../retrieval-metrics/metrics'
 import { COMPARE } from './scenarios'
@@ -13,10 +13,7 @@ export default function RetrieverCompare() {
   const lexical = useMemo(() => {
     if (!state.data) return []
     const scenario = COMPARE[state.project.id]
-    return search(buildIndex(state.data.docs), scenario.query)
-      .filter((h) => h.score > 0)
-      .slice(0, LIST)
-      .map((h) => state.data!.docs[h.index].id)
+    return rankIds(state.data.docs, scenario.query, LIST)
   }, [state.data, state.project.id])
   return (
     <Widget name="retriever-compare">

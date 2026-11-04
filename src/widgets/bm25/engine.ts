@@ -21,11 +21,11 @@ export const K1 = 1.2
 export const B = 0.75
 const STOP = new Set('to your the then and or is are a an of in on at can be if that when you my me i it this for with'.split(' '))
 
-/** Lower-case, keep letters, digits and hyphens in any script, drop stop words, strip a plural "s". */
+/** Lower-case, keep letters, their combining marks, digits and hyphens in any script, drop stop words, strip a plural "s". */
 export function tokenize(s: string): string[] {
   return s
     .toLowerCase()
-    .replace(/[^\p{L}\p{N}\- ]/gu, ' ')
+    .replace(/[^\p{L}\p{M}\p{N}\- ]/gu, ' ')
     .split(/\s+/)
     .filter((w) => w && !STOP.has(w))
     .map((w) => w.replace(/s$/, ''))
@@ -81,4 +81,12 @@ export function postings(ix: Bm25Index, query: string): Posting[] {
       return tf ? [{ index, tf }] : []
     }),
   }))
+}
+
+/** Ids of the documents that match the query, best first. A document with no query term is not retrieved. */
+export function rankIds(docs: Bm25Doc[], query: string, limit: number): string[] {
+  return search(buildIndex(docs), query)
+    .filter((h) => h.score > 0)
+    .slice(0, limit)
+    .map((h) => docs[h.index].id)
 }

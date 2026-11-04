@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { datasetUrl, type Project } from '../../data/projects'
-import { parseCsv } from './csv'
+import { parseCsv, readCsvHead } from './csv'
 import { useProject } from './hooks'
 
 /** A failed load is forgotten, so Try again really tries again. */
@@ -24,40 +24,27 @@ async function fetchOk(url: string): Promise<Response> {
   return res
 }
 
-/** A JSON dataset file of this project. */
-export function loadJson<T>(project: Project, file: string): Promise<T> {
-  const url = datasetUrl(project, file)
-  return once(url, () => fetchOk(url).then((r) => r.json() as Promise<T>))
+/** How a widget's loader reads the selected project's dataset files. Tests pass one that reads from disk. */
+export interface DataReader {
+  json<T>(file: string): Promise<T>
+  /** A CSV file, or only its first `rows` rows, which avoids downloading all of a large file. */
+  csv(file: string, rows?: number): Promise<Record<string, string>[]>
 }
 
-/** Reads only as much of the response as `rows` needs, so one example row does not download a 600 KB file. */
-async function readHead(res: Response, rows: number): Promise<string> {
-  if (!res.body) return res.text()
-  const reader = res.body.getReader()
-  const decoder = new TextDecoder()
-  let text = ''
-  let lines = 0
-  try {
-    for (;;) {
-      const { done, value } = await reader.read()
-      if (done) return text + decoder.decode()
-      const part = decoder.decode(value, { stream: true })
-      text += part
-      lines += part.split('\n').length - 1
-      if (lines > rows) return text.slice(0, text.lastIndexOf('\n') + 1)
-    }
-  } finally {
-    reader.cancel().catch(() => undefined)
+function readerFor(project: Project): DataReader {
+  return {
+    json<T>(file: string) {
+      const url = datasetUrl(project, file)
+      return once(url, () => fetchOk(url).then((r) => r.json() as Promise<T>))
+    },
+    csv(file, rows) {
+      const url = datasetUrl(project, file)
+      return once(rows ? `${url}#head${rows}` : url, async () => {
+        const res = await fetchOk(url)
+        return rows ? readCsvHead(res, rows) : parseCsv(await res.text())
+      })
+    },
   }
-}
-
-/** A CSV dataset file of this project, or its first `rows` rows. */
-export function loadCsv(project: Project, file: string, rows?: number): Promise<Record<string, string>[]> {
-  const url = datasetUrl(project, file)
-  return once(rows ? `${url}#head${rows}` : url, async () => {
-    const res = await fetchOk(url)
-    return parseCsv(rows ? await readHead(res, rows) : await res.text())
-  })
 }
 
 export interface ProjectData<T> {
@@ -72,13 +59,13 @@ export interface ProjectData<T> {
  * Loads a widget's example data for the selected project, and again when the reader switches project.
  * `load` must be stable: define it at module level.
  */
-export function useProjectData<T>(load: (p: Project) => Promise<T>): ProjectData<T> {
+export function useProjectData<T>(load: (p: Project, read: DataReader) => Promise<T>): ProjectData<T> {
   const project = useProject()
   const [attempt, setAttempt] = useState(0)
   const [state, setState] = useState<{ id: string; data?: T; error?: boolean } | null>(null)
   useEffect(() => {
     let live = true
-    load(project).then(
+    load(project, readerFor(project)).then(
       (data) => live && setState({ id: project.id, data }),
       (e) => {
         console.warn('widget data did not load', e)

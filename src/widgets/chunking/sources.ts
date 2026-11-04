@@ -1,5 +1,5 @@
 import type { Project } from '../../data/projects'
-import { loadCsv, loadJson } from '../kit'
+import type { DataReader } from '../kit'
 import type { Section } from './chunk'
 
 export interface ChunkSource {
@@ -30,9 +30,9 @@ const REVIEW_SKU = 'BZ-KIT-1097'
 const LANGUAGE: Record<string, string> = { en: 'English', hi: 'Hindi', ta: 'Tamil', hinglish: 'Hinglish' }
 
 /** One short document from each project's dataset, picked so that fixed-size windows cut across real rules. */
-export async function loadChunkSource(p: Project): Promise<ChunkSource> {
+export async function loadChunkSource(p: Project, read: DataReader): Promise<ChunkSource> {
   if (p.id === 'store') {
-    const [products, reviews] = await Promise.all([loadCsv(p, 'products.csv'), loadJson<Review[]>(p, 'reviews.json')])
+    const [products, reviews] = await Promise.all([read.csv('products.csv'), read.json<Review[]>('reviews.json')])
     const item = products.find((r) => r.sku === REVIEW_SKU)!
     const byLanguage = new Map<string, string[]>()
     for (const r of reviews) {
@@ -49,10 +49,10 @@ export async function loadChunkSource(p: Project): Promise<ChunkSource> {
     }
   }
   if (p.id === 'travel') {
-    const rows = await loadJson<Doc[]>(p, 'fare_rules.json')
+    const rows = await read.json<Doc[]>('fare_rules.json')
     return { title: `${p.company} flight rules`, files: ['fare_rules.json'], sections: pick(rows, ['SR-001', 'SR-002', 'SR-003', 'SR-007']) }
   }
-  const rows = await loadJson<Doc[]>(p, 'policies.json')
+  const rows = await read.json<Doc[]>('policies.json')
   return p.id === 'bank'
     ? { title: `${p.company} UPI and dispute policies`, files: ['policies.json'], sections: pick(rows, ['NB-001', 'NB-002', 'NB-005', 'NB-006']) }
     : { title: `${p.company} staff handbook`, files: ['policies.json'], sections: pick(rows, ['HP-001', 'HP-002', 'HP-003', 'HP-004']) }

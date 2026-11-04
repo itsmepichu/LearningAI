@@ -1,5 +1,5 @@
 import type { Project, ProjectId } from '../../data/projects'
-import { loadCsv } from '../kit'
+import type { DataReader } from '../kit'
 import type { SagaStep } from './events'
 
 export interface SagaScenario {
@@ -54,8 +54,8 @@ export const SAGAS: Record<ProjectId, SagaScenario> = {
 }
 
 /** The first record in the project's dataset gives the saga a real reference for its idempotency keys. */
-export async function loadSagaRef(p: Project): Promise<{ file: string; ref: string }> {
+export async function loadSagaRef(p: Project, read: DataReader): Promise<{ file: string; ref: string }> {
   const { file, column } = SOURCE[p.id]
-  const [row] = await loadCsv(p, file, 1)
+  const [row] = await read.csv(file, 1)
   return { file, ref: row[column] }
 }
