@@ -1,8 +1,8 @@
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
-import { ArrowRight, BookOpen, Compass, Dumbbell, FlaskConical, MousePointerClick, Route as RouteIcon } from 'lucide-react'
+import { ArrowRight, BookOpen, Compass, Dumbbell, FlaskConical, MousePointerClick } from 'lucide-react'
 import { ProjectPicker } from '../components/ProjectPicker'
-import { chapters, courseTopics, getChapter, getTopic, parts, paths, totals } from '../data/course'
+import { chapters, courseTopics, getChapter, getTopic, parts, totals } from '../data/course'
 import { ProgressRing } from '../components/Icons'
 import { useDocumentTitle, useNextTopic } from '../components/common'
 import { useProgress } from '../store/progress'
@@ -27,7 +27,8 @@ export function Home() {
           </h1>
           <p>
             An interactive course for software engineers: from what a token is, through how models are trained and served, to building,
-            evaluating, securing and operating AI systems that retrieve across millions of documents and serve millions of users.
+            evaluating, securing and operating AI systems that retrieve across millions of documents and serve millions of users. Every chapter,
+            section and topic is required to become an expert AI/ML engineer.
           </p>
           <div className="hero-cta">
             {lastTopic ? (
@@ -84,7 +85,7 @@ export function Home() {
         <div className="sec-title">
           <Compass size={18} />
           <h2>The course map</h2>
-          <p>Four parts plus field resources. Evaluation starts in chapter 8 and every later chapter adds to it.</p>
+          <p>Four parts plus field resources, all of it required. Work through them in order, because each chapter builds on the ones before it. Evaluation starts in chapter 8 and every later chapter adds to it.</p>
         </div>
         <div className="part-grid">
           {parts.map((p, pi) => (
@@ -105,7 +106,7 @@ export function Home() {
                       <small>
                         {c.topics.length} topics{inter ? ` · ${inter} interactive` : ''}
                       </small>
-                      {c.kind === 'chapter' && (
+                      {c.kind !== 'appendix' && (
                         <span className="mini-bar" aria-label={`${n} of ${c.topics.length} studied`}>
                           <i style={{ width: `${(n / c.topics.length) * 100}%` }} />
                         </span>
@@ -116,35 +117,6 @@ export function Home() {
               })}
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      <section className="home-sec">
-        <div className="sec-title">
-          <RouteIcon size={18} />
-          <h2>Pick a learning path</h2>
-          <p>Each path is an ordered subset of chapters for a role. You can switch paths at any time; progress is shared.</p>
-        </div>
-        <div className="path-grid">
-          {paths.map((p) => {
-            const ids = p.chapters.flatMap((c) => getChapter(c)!.topics.map((t) => t.id))
-            const n = ids.filter((i) => studied[i]).length
-            return (
-              <Link key={p.id} to={`/paths#${p.id}`} className="path-card">
-                <span className="path-who">{p.who}</span>
-                <b>{p.title}</b>
-                <p>{p.blurb}</p>
-                <span className="path-chs">
-                  {p.chapters.map((c) => (
-                    <i key={c}>{getChapter(c)!.num}</i>
-                  ))}
-                </span>
-                <span className="mini-bar">
-                  <i style={{ width: `${(n / ids.length) * 100}%` }} />
-                </span>
-              </Link>
-            )
-          })}
         </div>
       </section>
 

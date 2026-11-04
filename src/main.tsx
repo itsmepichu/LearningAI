@@ -20,7 +20,7 @@ import { Layout } from './components/Layout'
 import { Home } from './pages/Home'
 import { ChapterPage } from './pages/Chapter'
 import { TopicPage } from './pages/Topic'
-import { Guide, Paths, ProgressPage } from './pages/Misc'
+import { Guide, ProgressPage } from './pages/Misc'
 import { ChapterCheckPage } from './pages/ChapterCheck'
 import { PracticePage } from './pages/PracticePage'
 import { NotFound } from './pages/NotFound'
@@ -36,7 +36,6 @@ createRoot(document.getElementById('root')!).render(
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="guide" element={<Guide />} />
-            <Route path="paths" element={<Paths />} />
             <Route path="progress" element={<ProgressPage />} />
             <Route path="practice" element={<PracticePage />} />
             <Route path=":chapterId/check" element={<ChapterCheckPage />} />

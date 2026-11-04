@@ -113,7 +113,7 @@ svg.lucide,.ring{display:inline-block;margin:0;flex:none}
 .hero-proj{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:16px;font-size:.86rem}
 .hp-links{display:flex;flex-wrap:wrap;gap:8px 18px}
 .hm-check{min-height:24px;display:inline-flex;gap:5px;align-items:center;font-family:var(--f-mono);font-size:var(--fs-2xs);font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none;white-space:nowrap}
-.hm-check:hover{color:var(--accent)}
+a.hm-check:hover{color:var(--accent)}
 .srch-proj{display:inline-block;margin-right:8px;font-family:var(--f-mono);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:.05em;color:var(--sim)}
 
 /* ---------- check page ---------- */

@@ -1,4 +1,4 @@
-/* UX report for the eight review pages at desktop and phone width: text under 12 px, targets under 24 px and
+/* UX report for the seven review pages at desktop and phone width: text under 12 px, targets under 24 px and
    sideways scroll. Figures, widgets and code are skipped. It only reports: nothing here fails yet.
    Usage, against a served build: node tests/ux-scan.cjs [baseUrl] [--shots=name]
    --shots also saves screenshots of each page in both themes to tests/out/ux/<name>, for before-and-after review. */
@@ -12,7 +12,7 @@ const shots = args.find((a) => a.startsWith('--shots='))?.split('=')[1]
 const OUT = shots && path.join(__dirname, 'out', 'ux', shots)
 if (OUT) fs.mkdirSync(OUT, { recursive: true })
 
-const PAGES = [['home', '/'], ['guide', '/guide'], ['chapter', '/c9'], ['topic', '/c9/c9-3'], ['check', '/c5/check'], ['practice', '/practice'], ['progress', '/progress'], ['paths', '/paths']]
+const PAGES = [['home', '/'], ['guide', '/guide'], ['chapter', '/c9'], ['topic', '/c9/c9-3'], ['check', '/c5/check'], ['practice', '/practice'], ['progress', '/progress']]
 const SIZES = [['desktop', 1440, 900], ['phone', 390, 844]]
 
 const scan = () => {

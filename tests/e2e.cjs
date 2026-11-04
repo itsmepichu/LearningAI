@@ -42,7 +42,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   }
 
   // 1. every route
-  const routes = ['/', '/guide', '/paths', '/progress', '/practice', '/does-not-exist']
+  const routes = ['/', '/guide', '/progress', '/practice', '/does-not-exist']
   for (const c of manifest.chapters) {
     routes.push('/' + c.id)
     if (c.kind === 'chapter') routes.push(`/${c.id}/check`)
@@ -98,6 +98,15 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   const ring = await page.getAttribute('.top-prog', 'title')
   console.log('progress after toggle:', ring)
   if (!/^1 of/.test(ring)) fails.push('studied toggle did not update progress')
+  // progress counts the chapters and the capstone, not the appendices
+  const required = manifest.chapters.filter((c) => c.kind !== 'appendix')
+  const requiredTopics = required.reduce((n, c) => n + c.topics.length, 0)
+  if (!ring.includes(`of ${requiredTopics} topics`)) fails.push(`progress total should be ${requiredTopics}: "${ring}"`)
+  const capstoneTopic = manifest.chapters.find((c) => c.kind === 'capstone').topics[0].id
+  await page.goto(`${BASE}/capstone/${capstoneTopic}`, { waitUntil: 'networkidle' })
+  await page.click('.studied-toggle')
+  if (!/^2 of/.test(await page.getAttribute('.top-prog', 'title'))) fails.push('a capstone topic did not count towards progress')
+  await page.click('.studied-toggle')
 
   // chapter check page: answer a question, see feedback, score updates
   await page.goto(BASE + '/c5/check#c5-2', { waitUntil: 'networkidle' })
@@ -414,7 +423,12 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   }))
   if (hm.lefts !== 1) fails.push(`progress page: heatmap rows start at ${hm.lefts} different positions`)
   if (hm.minCell < 24) fails.push(`progress page: heatmap cell height ${hm.minCell}px`)
-  // practice page filter: All and None, with a count; learning paths are still available
+  const hmRows = await r.$$eval('.hm-row', (x) => x.map((e) => ({ href: e.querySelector('.hm-ch').getAttribute('href'), check: e.querySelector('a.hm-check')?.getAttribute('href') })))
+  const hmCap = hmRows.find((x) => x.href.endsWith('/capstone'))
+  if (!hmCap) fails.push('progress page: no capstone row')
+  else if (hmCap.check) fails.push('progress page: capstone row links to a check page that does not exist')
+  if (hmRows.some((x) => /\/app-/.test(x.href))) fails.push('progress page: an appendix has a row')
+  // practice page filter: All and None, with a count
   await r.goto(BASE + '/practice', { waitUntil: 'networkidle' })
   const chipCount = () => r.$$eval('.pf-chips .lchip.on', (x) => x.length)
   const allChips = await chipCount()
@@ -423,8 +437,6 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   if (!(await r.isDisabled('.pm-bar .btn.primary'))) fails.push('practice page: a set can be drawn with no chapters selected')
   await r.click('.pf-row .linkish:text-is("All")')
   if ((await chipCount()) !== allChips) fails.push('practice page: All did not select every chapter')
-  await r.selectOption('.pf-row select[aria-label="Learning path"]', { index: 1 })
-  if ((await chipCount()) >= allChips) fails.push('practice page: picking a learning path did not narrow the chapters')
   if (await r.$('.pm-foot')) fails.push('practice page: stale coverage sentence is back')
   // check page: hidden interview questions are explained, and the link shows them
   await r.goto(BASE + '/c5/check', { waitUntil: 'networkidle' })
@@ -435,11 +447,11 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
   // search placeholder comes from the data
   await r.keyboard.press('/')
   const ph = await r.getAttribute('.srch-in input', 'placeholder')
-  if (!ph.includes(String(manifest.chapters.filter((c) => c.kind === 'chapter').reduce((n, c) => n + c.topics.length, 0)))) fails.push(`search placeholder count looks wrong: "${ph}"`)
+  if (!ph.includes(String(manifest.chapters.filter((c) => c.kind !== 'appendix').reduce((n, c) => n + c.topics.length, 0)))) fails.push(`search placeholder count looks wrong: "${ph}"`)
   await r.close()
   if (errs.length) fails.push('readability checks: ' + errs.join(' | '))
 
-  // 9. accessibility: no serious or critical axe violations on the eight review pages, in both themes
+  // 9. accessibility: no serious or critical axe violations on the seven review pages, in both themes
   const axeProblems = await runAxe(b, BASE)
   console.log('axe serious or critical violations:', axeProblems.length)
   fails.push(...axeProblems.map((p) => 'axe: ' + p))

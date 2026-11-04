@@ -1,8 +1,8 @@
 # LearningAI
 
-An Interactive AI Learning Path For My DD: the **Enterprise AI Field Manual**, rebuilt as a front-end-only React app.
+An Interactive AI Course For My DD: the **Enterprise AI Field Manual**, rebuilt as a front-end-only React app.
 
-18 chapters take a software engineer from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale. Every chapter has the same structure:
+18 required chapters take a software engineer from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale. Every chapter has the same structure:
 
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams
@@ -77,9 +77,9 @@ src/
     idmap.json             every content element id -> route (for in-content links)
     search.json            plain text per topic, lazy-loaded by search
     pages/<chapter>/*.html topic bodies, chapter intro/outro, labs
-  data/course.ts           typed access to the manifest, routes, learning paths
+  data/course.ts           typed access to the manifest and routes
   components/              layout, sidebar, search, quiz, HtmlContent renderer
-  pages/                   home, chapter, topic, chapter check, practice, guide, paths, progress
+  pages/                   home, chapter, topic, chapter check, practice, guide, progress
   widgets/                 React widgets; registry.ts maps data-widget names to components
   legacy/                  v3 vanilla widgets and the runtime that mounts and cleans them up
   styles/                  content.css (design system and figures), app.css (app shell)

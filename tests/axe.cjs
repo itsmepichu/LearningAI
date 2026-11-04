@@ -1,9 +1,9 @@
-/* Accessibility check with axe: the eight review pages in both themes. Fails on serious or critical violations.
+/* Accessibility check with axe: the seven review pages in both themes. Fails on serious or critical violations.
    Part of tests/e2e.cjs. To run it alone, against a served build: node tests/axe.cjs [baseUrl] */
 const { chromium } = require('playwright')
 const { AxeBuilder } = require('@axe-core/playwright')
 
-const PAGES = ['/', '/guide', '/c9', '/c9/c9-3', '/c5/check', '/practice', '/progress', '/paths']
+const PAGES = ['/', '/guide', '/c9', '/c9/c9-3', '/c5/check', '/practice', '/progress']
 
 async function runAxe(browser, base) {
   const problems = []

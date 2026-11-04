@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { ArrowLeft, ArrowRight, Dumbbell, Filter, MessagesSquare, RotateCcw, Shuffle, Target } from 'lucide-react'
-import { chapterCheckCount, chaptersWithChecks, getTopic, paths } from '../data/course'
+import { chapterCheckCount, chaptersWithChecks, getTopic } from '../data/course'
 import { LEVEL_LABEL, isCorrect, loadChecks, type ChapterChecks, type InterviewQ, type Level, type Mcq } from '../data/checks'
 import { McqCard, InterviewCard } from '../components/Checks'
 import { ProjectFramingNote, useActiveProject } from '../components/Practice'
@@ -37,7 +37,6 @@ export function PracticePage() {
   const available = chaptersWithChecks()
   const fromUrl = (params.get('chapters') || '').split(',').filter((c) => available.some((a) => a.id === c))
   const [chapters, setChapters] = useState<string[]>(fromUrl.length ? fromUrl : available.map((c) => c.id))
-  const [pathId, setPathId] = useState('')
   const [kind, setKind] = useState<'all' | 'mcq' | 'interview'>('all')
   const [level, setLevel] = useState<'all' | Level>('all')
   const [framing, setFraming] = useState<'mine' | 'all'>('mine')
@@ -115,13 +114,7 @@ export function PracticePage() {
   }, [pool.length, chapters, kind, level, framing, project, status])
   const [drillPos, setDrillPos] = useState(0)
 
-  const pickPath = (id: string) => {
-    setPathId(id)
-    const p = paths.find((x) => x.id === id)
-    setChapters(p ? p.chapters.filter((c) => available.some((a) => a.id === c)) : available.map((c) => c.id))
-  }
   const toggleCh = (id: string) => {
-    setPathId('')
     setChapters((cs) => (cs.includes(id) ? cs.filter((c) => c !== id) : [...cs, id]))
   }
 
@@ -140,15 +133,9 @@ export function PracticePage() {
       <section className="pf" aria-label="Filters">
         <div className="pf-row">
           <span className="pf-l"><Filter size={14} /> Chapters</span>
-          <button type="button" className="linkish" onClick={() => pickPath('')}>All</button>
-          <button type="button" className="linkish" onClick={() => { setPathId(''); setChapters([]) }}>None</button>
+          <button type="button" className="linkish" onClick={() => setChapters(available.map((c) => c.id))}>All</button>
+          <button type="button" className="linkish" onClick={() => setChapters([])}>None</button>
           <span className="muted small">{chapters.length} of {available.length} chapters</span>
-          <select value={pathId} onChange={(e) => pickPath(e.target.value)} aria-label="Learning path">
-            <option value="">Any learning path</option>
-            {paths.map((p) => (
-              <option key={p.id} value={p.id}>Path: {p.title}</option>
-            ))}
-          </select>
           <div className="pf-chips">
             {available.map((c) => {
               const n = chapterCheckCount(c.id)

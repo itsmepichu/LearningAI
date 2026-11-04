@@ -374,7 +374,7 @@ export function useRovingTabs(count: number, index: number, onSelect: (i: number
   - Literal sizes of 12 px and above were not moved onto the scale, so the ad hoc sizes in C8 are only partly addressed.
 - **Zero rings (C3):** the ring draws thin as well as dashed at zero, because a dash on the thick home ring looked like a row of spikes. The call to action goes to the reader's last topic if they have one, and otherwise to 1.1.
 - **Progress page (C5):** `.hm-check` was already in its own grid cell, so only the column width changed. The counts and topic links also get a 24 px minimum height.
-- **Practice filter (C6):** the select stays, renamed "Any learning path". The review read it as a repeat of the chips, but it picks chapters by learning path, and removing it would have lost that feature.
+- **Practice filter (C6):** the select stays, renamed "Any learning path". The review read it as a repeat of the chips, but it picks chapters by learning path, and removing it would have lost that feature. (Superseded: learning paths and this select were later removed, because every chapter is now required.)
 - **Interview count pill:** fixed here too. `.pill.iv` was picking up the `.iv` card's padding and left border.
 
 **Checked:** typecheck, build, screenshots of the eight pages at both sizes and themes, and a script for the new behaviour. Outside figures and code, the scan now finds no text under 12 px on any of the eight pages at either size (home at 1440 px was 116 of 210 text elements) and no sideways scroll.

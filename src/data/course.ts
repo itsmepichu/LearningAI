@@ -39,7 +39,9 @@ export const allTopics: TopicRef[] = chapters.flatMap((chapter) => chapter.topic
 allTopics.forEach((t, i) => (t.index = i))
 const topicById = new Map(allTopics.map((t) => [t.id, t]))
 export const getTopic = (id?: string) => (id ? topicById.get(id) : undefined)
-export const courseTopics = allTopics.filter((t) => t.chapter.kind === 'chapter')
+/** What progress counts: the chapters and the capstone, not the appendices. */
+export const progressChapters = chapters.filter((c) => c.kind !== 'appendix')
+export const courseTopics = allTopics.filter((t) => t.chapter.kind !== 'appendix')
 
 export const topicPath = (t: { id: string; chapter: Chapter } | TopicRef) => `/${t.chapter.id}/${t.id}`
 export const chapterPath = (c: Chapter) => `/${c.id}`
@@ -77,11 +79,3 @@ export function loadPage(chapterId: string, file: string): Promise<string> {
   return fn ? fn() : Promise.resolve('')
 }
 
-/** Suggested routes through the course, at chapter level. */
-export const paths = [
-  { id: 'foundations', title: 'Foundations first', who: 'New to ML', chapters: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'], blurb: 'Tokens, vectors, gradients, networks and transformers before any application work.' },
-  { id: 'rag', title: 'RAG engineer', who: 'Search and knowledge', chapters: ['c5', 'c7', 'c8', 'c9', 'c10', 'c16', 'c17'], blurb: 'Retrieval, evaluation and permissions from one index to millions of documents.' },
-  { id: 'agents', title: 'Agent engineer', who: 'Tools and workflows', chapters: ['c7', 'c8', 'c11', 'c12', 'c16', 'c17'], blurb: 'Tool calling, durable state, multi-agent patterns and the security they need.' },
-  { id: 'platform', title: 'Platform and serving', who: 'Infra and SRE', chapters: ['c5', 'c6', 'c14', 'c15', 'c17', 'c18'], blurb: 'GPU memory, batching, capacity, reliability, observability and release gates.' },
-  { id: 'governance', title: 'Security and governance', who: 'Risk and compliance', chapters: ['c1', 'c8', 'c16', 'c17', 'c18'], blurb: 'Threats, isolation, audit, evaluation evidence and controlled rollout.' },
-]

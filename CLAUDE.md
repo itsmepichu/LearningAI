@@ -11,6 +11,8 @@
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
+- The course is one required sequence: every chapter, section and topic is a must-learn for an expert AI/ML engineer. Do not add learning paths, role-based tracks or wording that makes a topic optional.
+- Progress totals count the chapters and the capstone (`courseTopics` in `src/data/course.ts`), not the appendices.
 - Keep the course's standards:
   - Label simulations as simulations, and give illustrative numbers as illustrative.
   - Link to official documentation.
