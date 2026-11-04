@@ -2,7 +2,7 @@
 
 A review of the LearningAI app's page structure, components and UI/UX, with the code changes it suggests.
 
-**Status:** all four phases are implemented (see the notes at the start of each). The full e2e suite, including the axe check, passes on the finished work. Two issues found along the way are still open, listed at the start of phase A.
+**Status:** all four phases are implemented (see the notes at the start of each). The full e2e suite, including the axe check, passes on the four phases. It has not been rerun since the two small CSS fixes listed at the start of phase A.
 
 - **Reviewed:** branch `phase-3-rollout` at commit d229907, built and served with `vite preview`.
 - **Method:** the ui-ux-pro-max design skill (UX guideline and React stack searches) and the design-critique framework.
@@ -129,10 +129,10 @@ Four phases, ordered by impact. Each item names the files to change, gives the s
   - `role="listbox"` is set only while there are results, because the hint text is not a valid listbox child.
   - The dialog marks the Escape it handles, so one press closes the dialog and not the drawer behind it.
 
-**Found while implementing, still open:**
+**Found while implementing, since fixed:**
 
-- **`--accent-2` in light mode:** link hover text is 4.05:1 on paper and white text on a hovered primary button is 4.35:1. Both are below AA.
-- **Search input ring:** the global `input:focus` rule draws a ring around the input inside the search panel, which already has its own frame.
+- **`--accent-2` in light mode:** link hover text was 4.05:1 on paper and white text on a hovered primary button was 4.35:1, both below AA. The token is now `#095C6B`: 7.10:1 and 7.62:1.
+- **Search input ring:** the global `input:focus` rule drew a ring around the input inside the search panel. The panel's divider line now shows focus instead.
 - **Playwright (fixed in phase D):** `tests/e2e.cjs` needed it, but it was not listed in `package.json`.
 
 **A1. Make the mobile drawer a real modal drawer (K1, K2).** In `src/components/Layout.tsx`:

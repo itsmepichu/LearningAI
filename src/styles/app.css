@@ -246,6 +246,8 @@ kbd{font-family:var(--f-mono);border:1px solid var(--rule-2);border-bottom-width
 .srch-pnl{width:min(720px,100%);background:var(--surface);border:1px solid var(--rule);border-radius:18px;box-shadow:var(--sh-3);overflow:hidden}
 .srch-in{display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--rule);color:var(--muted)}
 .srch-in input{flex:1;min-width:0;border:0;padding:17px 0;font:500 1.05rem var(--f-body);background:transparent;color:var(--ink);outline:none}
+.srch-in input:focus{box-shadow:none}
+.srch-in:focus-within{border-bottom-color:var(--accent)}
 .srch-res{max-height:min(62vh,560px);overflow:auto;padding:6px}
 .srch-hit{display:flex;gap:12px;width:100%;text-align:left;border:0;background:none;font:inherit;color:var(--ink);padding:10px 12px;border-radius:10px;cursor:pointer}
 .srch-hit.sel{background:var(--sunk)}

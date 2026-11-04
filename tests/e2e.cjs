@@ -278,7 +278,7 @@ const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl
     const rgb = (name) => { const h = root.getPropertyValue(name).trim().slice(1); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255) }
     const lum = (c) => { const [r, g, b] = c.map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)); return 0.2126 * r + 0.7152 * g + 0.0722 * b }
     const out = []
-    for (const fg of ['--ink', '--muted', '--accent', '--sim', '--ok', '--signal', '--bad']) {
+    for (const fg of ['--ink', '--muted', '--accent', '--accent-2', '--sim', '--ok', '--signal', '--bad']) {
       for (const bg of ['--paper', '--sunk']) {
         const [a, c] = [lum(rgb(fg)), lum(rgb(bg))]
         const ratio = (Math.max(a, c) + 0.05) / (Math.min(a, c) + 0.05)

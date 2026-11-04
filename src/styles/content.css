@@ -4,7 +4,7 @@
 /* Layout: Swiss technical manual. Sticky chapter rail left, one reading column (72ch), figures as raised panels. */
 :root{
   --paper:#F5F7FA; --surface:#FFFFFF; --sunk:#EDF1F6; --ink:#0F1B2A; --muted:#5B6B7D; --rule:#DCE3EC; --rule-2:#C9D3DF;
-  --accent:#0B7285; --accent-2:#0C8599; --accent-soft:#E0F2F5; --signal:#9C5000; --signal-soft:#FCEEDC;
+  --accent:#0B7285; --accent-2:#095C6B; --accent-soft:#E0F2F5; --signal:#9C5000; --signal-soft:#FCEEDC;
   --sim:#6741D9; --sim-soft:#EEE8FD; --ok:#1F7330; --ok-soft:#E3F4E6; --bad:#C92A2A; --bad-soft:#FCE6E6;
   --code-bg:#0E1726; --code-fg:#D6E2EE; --code-mut:#7E93AB;
   --sh-1:0 1px 2px rgba(15,27,42,.06),0 1px 1px rgba(15,27,42,.04);
