@@ -2,55 +2,282 @@
  "c10-1": {
   "harbor": {
    "practice": "Harbor&#x27;s 4.2M documents become ≈ 38M chunks; at 768 dims in int8 that is ≈ 29 GB of vectors per replica before graph links and metadata.",
-   "failure": "Treating raw vector bytes as total storage or RAM demand."
+   "failure": "Treating raw vector bytes as total storage or RAM demand.",
+   "fit": "good",
+   "fitNote": "4.2 million documents, about 38 million chunks",
+   "tryIt": "In the calculator, enter Harbor's 4.2 million documents and adjust pages and tokens until you get about 38 million chunks. Then read the RAM with int8 vectors, 2 replicas and graph links."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "listings plus reviews, re-embedded on every model change",
+   "practice": "{company} indexes about 2 million listings plus their reviews. Listings are short, one chunk each, but reviews multiply the count into tens of millions of vectors, so the embedding bill for a model change became a line in the migration plan.",
+   "failure": "Sizing from listings alone and forgetting reviews, Q&A and size charts.",
+   "tryIt": "In the calculator, set 2 million documents, 1 page of 300 tokens, 256-token chunks, 768 dimensions, int8 and 3 replicas. Then add 20 million reviews of about 80 tokens as separate documents and compare."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "retention, not today's volume, drives size",
+   "practice": "{company}'s policy corpus is small; its large collection is dispute case notes, retained for years, so growth and retention drive sizing more than today's size.",
+   "failure": "Sizing for today's case volume without the multi-year retention period.",
+   "tryIt": "Estimate the vectors for 400 cases a day kept for 7 years at 2 chunks each (about 2 million), then enter that into the calculator as documents."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "hotel content in several languages dominates",
+   "practice": "{company} indexes fare rules (small) and hotel content (hundreds of thousands of properties with descriptions and reviews in several languages); hotel content dominates storage.",
+   "failure": "Forgetting that each language version of a hotel description is a separate set of chunks.",
+   "tryIt": "In the calculator, model 300,000 hotels × 4 languages × 1 page of 400 tokens, and compare float32 with int8."
   }
  },
  "c10-2": {
   "harbor": {
    "practice": "A Harbor parser pod crashed after writing chunks but before acking; redelivery produced no duplicates because chunk IDs are deterministic and writes carry a version guard.",
-   "failure": "Watching worker latency while the queue&#x27;s oldest-message age grows: that is a freshness incident."
+   "failure": "Watching worker latency while the queue&#x27;s oldest-message age grows: that is a freshness incident.",
+   "fit": "good",
+   "fitNote": "deterministic chunk IDs made redelivery harmless",
+   "tryIt": "In the ingestion simulation, set arrivals above worker capacity with backpressure off, then on, and watch queue length and lag. Then write Harbor's chunk-ID formula (document ID + version + position)."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "price and stock changes arrive in bursts",
+   "practice": "Sellers update prices and stock in bursts, especially before a sale. {company}'s ingestion pulls from a queue with backpressure, writes with a version guard so an old price never overwrites a new one, and sends unparseable seller uploads to a dead-letter queue.",
+   "failure": "Acknowledging the queue message before the index write commits, so a crash loses the price update.",
+   "tryIt": "In the simulation, set a 5% poison rate and watch the dead-letter queue. Then write the compare-and-set rule for a price update: write only if the incoming version is newer than the stored one."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "notes that fail PII scrubbing are never indexed",
+   "practice": "{company}'s case-notes pipeline is idempotent (chunk IDs from case ID, note version and position), and every write carries a version guard. A dead-letter queue holds notes that fail PII scrubbing, for human review, instead of indexing them.",
+   "failure": "Indexing a note that failed PII scrubbing because the pipeline treats scrubbing errors as warnings.",
+   "tryIt": "Write the ingestion steps for rows of <code>disputes.csv</code> as queue messages, including a dead-letter path for any text your scrubber cannot process."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "supplier feeds arrive late and out of order",
+   "practice": "Supplier fare-rule feeds arrive late and out of order. {company} applies each with a version guard, so yesterday's rule never overwrites today's.",
+   "failure": "Applying supplier updates in arrival order instead of by version.",
+   "tryIt": "Write three out-of-order update events for one fare rule and show which writes the version guard accepts."
   }
  },
  "c10-3": {
   "harbor": {
    "practice": "Harbor&#x27;s travel policy table (rows = regions, columns = per-day limits) is stored as structured rows; flattening it had caused wrong per-diem answers.",
-   "failure": "Assuming a parse that produced lots of text was read correctly."
+   "failure": "Assuming a parse that produced lots of text was read correctly.",
+   "fit": "good",
+   "fitNote": "a flattened per-diem table gave wrong answers",
+   "tryIt": "Take a table-heavy PDF of your own, extract it with pdfplumber or Docling, and compare a flattened text line with row-as-sentence chunks; then ask a local model a per-cell question with each."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "size charts arrive as images and PDFs",
+   "practice": "Seller size charts arrive as images and PDFs. {company} OCRs them, extracts the table to rows, and stores row-as-sentence chunks such as “Size M: chest 40 in, length 28 in”.",
+   "failure": "Flattening a size chart into one line, so the assistant reports the wrong measurement for a size.",
+   "tryIt": "Write a size chart as a small table, flatten it to one line and to row-as-sentence chunks, and ask a local model “What is the chest size for L?” with each."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "scanned forms, statements and cheques",
+   "practice": "{company} receives scanned dispute forms, bank statements and cheques. OCR confidence is recorded per page, low-confidence pages go to human review, and statement tables are stored as structured rows.",
+   "failure": "Assuming a statement parse with lots of text is correct when columns of amounts were merged.",
+   "tryIt": "Create a two-column statement table (date, amount) in a document, export it to PDF, extract it with pdfplumber, and check whether every amount stays with its date."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "cancellation-charge tables by date range",
+   "practice": "Hotel policies arrive as PDFs with tables of cancellation charges by date range. {company} extracts each row as a sentence with the hotel ID, so “cancel 3 days before” finds the right charge.",
+   "failure": "Indexing a cancellation-charge table as flat text, so the date ranges and percentages come apart.",
+   "tryIt": "Write a three-row cancellation table, extract it as rows, and test a question about the middle date range."
   }
  },
  "c10-4": {
   "harbor": {
    "practice": "Harbor&#x27;s freshness SLO is &quot;99% of edits searchable within 10 minutes; deletions within 5&quot;, measured per change from source timestamp to index timestamp.",
-   "failure": "Deleting the source file and forgetting the vectors, caches and summaries derived from it."
+   "failure": "Deleting the source file and forgetting the vectors, caches and summaries derived from it.",
+   "fit": "best",
+   "fitNote": "deletions searchable-gone within 5 minutes, measured",
+   "tryIt": "Write the lineage record for one chunk of a policy in <code>policies.json</code>, then list what must be rebuilt if the parser version changes."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "removed listings and changed prices must vanish quickly",
+   "practice": "When a listing is removed or its price changes, {company} replaces its chunks atomically and purges cached answers that cite it. The freshness target is 99% of price changes searchable within 2 minutes.",
+   "failure": "Removing the listing but leaving its cached answers, so {assistant} keeps recommending a product that is no longer sold.",
+   "tryIt": "For a product in <code>products.csv</code>, write the events for a price change and for a deletion, and list every store (index, caches, summaries) each must update."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "deletion requests reach vectors and summaries too",
+   "practice": "When a customer exercises a deletion right, {company} removes their case notes from the index, caches and any derived summaries within the legal deadline, and keeps lineage to prove it.",
+   "failure": "Deleting the source notes but not the vectors and summaries derived from them.",
+   "tryIt": "Write a reconciliation job in pseudo-code that lists the case IDs in <code>disputes.csv</code>, compares them with an index's IDs, and reports what to delete."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "freshness measured per rule change",
+   "practice": "Fare rules change with supplier contracts. {company} tracks indexed_at − source_modified_at for every rule and alerts when the p99 exceeds 15 minutes.",
+   "failure": "Measuring freshness for edits but not for deletions of withdrawn fares.",
+   "tryIt": "Invent source and index timestamps for ten rule updates, compute each lag, and report the p90."
   }
  },
  "c10-5": {
   "harbor": {
    "practice": "Harbor&#x27;s three largest customers have dedicated shards; the other 1,197 share placement-by-hash shards, and a tenant is promoted when it passes 5M chunks or 50 QPS.",
-   "failure": "Adding replicas to fix an ingestion bottleneck; replicas help reads, not writes."
+   "failure": "Adding replicas to fix an ingestion bottleneck; replicas help reads, not writes.",
+   "fit": "best",
+   "fitNote": "dedicated shards for the largest customers",
+   "tryIt": "In the shard figure, set the largest tenant to 40% of traffic and compare the three placements. Then write Harbor's promotion rule (over 5M chunks or 50 QPS) as code."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "large sellers and sale-week read peaks",
+   "practice": "{company} partitions listings by category and hash, not by seller, because a few large sellers would otherwise overload their shards. Before sales, read replicas are added ahead of the traffic peak.",
+   "failure": "Adding replicas to speed up a backfill. Replicas help reads, not writes.",
+   "tryIt": "In the figure, raise the largest tenant to 70% and see which placement survives. Then decide how {company} should place its ten largest sellers."
+  },
+  "bank": {
+   "fit": "limited",
+   "practice": "{company} is a single tenant with a modest index; sharding matters only for its case-notes archive.",
+   "failure": "Designing multi-tenant sharding for a single-tenant system.",
+   "tryIt": "Use the figure to explain to a colleague why hash placement makes every query fan out to every shard."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company}'s hot spot is not a tenant but a season: monsoon and holiday weeks multiply queries for a few destinations.",
+   "failure": "Planning replicas from average traffic instead of peak-season destinations.",
+   "tryIt": "In the figure, treat the largest tenant as a peak-season destination at 50% of traffic and compare the placements."
   }
  },
  "c10-6": {
   "harbor": {
    "practice": "When an employee leaves Finance, Harbor&#x27;s deny list blocks Finance documents for them immediately, before the next ACL sync updates the index.",
-   "failure": "Filtering restricted documents after the model has already seen them."
+   "failure": "Filtering restricted documents after the model has already seen them.",
+   "fit": "best",
+   "fitNote": "a deny list blocks revoked access before the next sync",
+   "tryIt": "In the revocation figure, set a 30-minute sync with no deny list and count the red dots; then turn on the deny list and the scope-keyed cache and count again."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "sellers see only their own orders and payouts",
+   "practice": "{company}'s permission problem is sellers: a seller-dashboard assistant must see only that seller's orders, payouts and messages, enforced by a server-set seller ID filter on every query.",
+   "failure": "Taking the seller ID from the chat (“I am seller 1042”) instead of the authenticated session.",
+   "tryIt": "Write the retrieval filter for a seller-assistant query, plus three cross-seller probe questions that must return nothing."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "case-level isolation with immediate revocation",
+   "practice": "{company}'s staff assistant filters case notes by the agent's team and case assignment. When an agent is moved off a case, a deny list blocks it immediately, and cached answers are keyed by access scope.",
+   "failure": "Relying on the instruction “do not reveal other customers' data” instead of filtering before retrieval.",
+   "tryIt": "In the revocation figure, model an agent removed from a case at minute 5 and find the settings that give zero red dots."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "partner agencies see only their own bookings",
+   "practice": "Partner agencies use {assistant} too. Each agency sees only its own bookings, enforced by a server-set agency ID, with separate collections for the largest partners.",
+   "failure": "Caching a booking answer without the agency in the cache key, so another agency receives it.",
+   "tryIt": "Write the cache key for “show my upcoming bookings”, including user, agency and policy version, and explain each field."
   }
  },
  "c10-7": {
   "harbor": {
    "practice": "Harbor&#x27;s index manifest binds embedder v2 to index v2; rollback switches both the alias and the query encoder together.",
-   "failure": "Assuming equal vector dimensions make two embedding models compatible."
+   "failure": "Assuming equal vector dimensions make two embedding models compatible.",
+   "fit": "good",
+   "fitNote": "the manifest binds the embedder to the index",
+   "tryIt": "In the blue/green figure, try to cut over before the backfill, then follow the steps in order; note which guard stopped each premature step."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "re-embedding tens of millions of vectors needs a plan",
+   "practice": "Moving to a multilingual embedding model meant re-embedding {company}'s tens of millions of listing and review vectors. It ran blue/green with dual writes during the backfill, an offline benchmark per language and a 5% canary before the alias switch.",
+   "failure": "Switching the query encoder before the new index finished backfilling, so half the catalogue was invisible.",
+   "tryIt": "Run the figure in order, then write {company}'s migration checklist with a cost estimate from the 10.1 calculator."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a warm old index keeps rollback an alias change",
+   "practice": "{company} versions its policy index with a manifest (embedder, chunker, parser) and keeps the old index warm for two weeks after a switch, so a rollback is an alias change.",
+   "failure": "Retiring the old index on cut-over day, which leaves no rollback.",
+   "tryIt": "Write the manifest fields for {company}'s policy index and a three-step rollback runbook."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "a chunker change is a migration too",
+   "practice": "Changing the chunker for fare rules is also a migration: {company} built v4 from stored text, compared retrieval on its rule questions, then switched the alias.",
+   "failure": "Treating a chunker change as a small config tweak and editing the live index in place.",
+   "tryIt": "In the figure, roll back after the canary step and explain why the rollback window matters."
   }
  },
  "c10-8": {
   "harbor": {
    "practice": "Harbor&#x27;s benchmark replays 2,000 logged queries with real ACL filters while 5% of the corpus is updated, and reports p95 latency and Recall@10 together.",
-   "failure": "Benchmarking with repeated identical queries, which mostly measures the cache."
+   "failure": "Benchmarking with repeated identical queries, which mostly measures the cache.",
+   "fit": "good",
+   "fitNote": "logged queries replayed with real ACL filters during updates",
+   "tryIt": "Run the laptop ANN benchmark at 100,000 vectors, then 1 million if your RAM allows, and record recall against efSearch. List what it does not test: filters, writes, real embeddings."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "festival load with price updates streaming in",
+   "practice": "{company} benchmarks search by replaying logged shopper queries with stock and pincode filters while price updates stream in at festival rates, and reports p95 latency and Recall@10 together.",
+   "failure": "Benchmarking without filters. A pincode filter that leaves 2% of listings changes ANN behaviour completely.",
+   "tryIt": "Write the benchmark plan: query sample, filter selectivity, update rate, target QPS, metrics and three scale steps."
+  },
+  "bank": {
+   "fit": "limited",
+   "practice": "{company}'s corpus is small, so its benchmark focuses on latency under concurrent case-note writes and on labelled retrieval quality, not on ANN tuning.",
+   "failure": "Copying a vendor's million-vector benchmark that has nothing in common with a small, filtered, write-heavy workload.",
+   "tryIt": "Time exact search over embedded policy texts while a loop inserts 1,000 new vectors, and report the p95 latency."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "hotel search with destination and date filters at peak",
+   "practice": "Hotel search is benchmarked with real destination and date filters while replaying peak-season traffic.",
+   "failure": "Benchmarking with repeated identical queries, which mostly measures the cache.",
+   "tryIt": "Write a hotel-search query sample that varies destination, dates and language, and explain why repeated queries would mislead."
   }
  },
  "c10-9": {
   "harbor": {
    "practice": "Only 6% of Harbor queries were multi-hop; query decomposition fixed most of them, so a knowledge graph was deferred.",
-   "failure": "Adopting an advanced retrieval technique because of its name, without a failure analysis showing the gap."
+   "failure": "Adopting an advanced retrieval technique because of its name, without a failure analysis showing the gap.",
+   "fit": "good",
+   "fitNote": "a knowledge graph deferred after failure analysis",
+   "tryIt": "Classify 20 of your own policy questions as single-hop, multi-hop or document-level, and decide which advanced technique, if any, the counts justify."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "attribute-heavy queries test late interaction",
+   "practice": "{company} evaluated late interaction for queries with many exact attributes (“M, 100% cotton, round neck”). It helped only on that slice, so it runs as a reranker for attribute-heavy queries rather than for all search.",
+   "failure": "Adopting GraphRAG for product search because it is fashionable, without a failure analysis.",
+   "tryIt": "Watch the MaxSim animation, then compute MaxSim by hand for a 3-token query against two product titles, using similarities you assign."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "aggregate questions belong to SQL, not retrieval",
+   "practice": "Some {company} questions are aggregates (“which merchants had the most disputes this month?”). Those go to SQL over structured data, not to vector search or a knowledge graph.",
+   "failure": "Answering aggregate questions by retrieving a few chunks and letting the model count.",
+   "tryIt": "Answer “which merchant category has the most fraud?” from <code>transactions.csv</code> with pandas, then explain why retrieving a few chunks would get it wrong."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "agentic retrieval across fares, hotels and disruptions",
+   "practice": "{assistant} routes between sources (fare rules, hotel content, live disruptions) with a small agentic retriever, because one pipeline cannot serve such different sources.",
+   "failure": "Letting the agent call every source for every question, multiplying latency and cost.",
+   "tryIt": "Write routing rules for five traveller questions: which source each needs, and in what order."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Generate the 1,000 documents from templates based on <code>policies.json</code>, with tenants and <code>access_groups</code>. The revocation test removes a user from the leadership group and proves the salary-band and reorganisation documents never reach their context.</p>"
+  },
+  "store": {
+   "scenario": "<p>Generate 1,000 listings from <code>products.csv</code> templates. Inject a burst of price updates delivered out of order, a deleted listing whose cached answer must also disappear, and one seller with ten times the traffic of the others.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Generate 1,000 case notes from <code>disputes.csv</code>. Inject notes that fail PII scrubbing (they must reach the dead-letter queue, not the index), a deletion request for one customer, and an agent moved off a case (revocation).</p>"
+  },
+  "travel": {
+   "scenario": "<p>Generate fare-rule and hotel documents from <code>fare_rules.json</code> templates. Inject supplier updates that arrive out of order, a withdrawn fare that must disappear, and a chunker change that becomes a blue/green migration.</p>"
   }
  }
 }

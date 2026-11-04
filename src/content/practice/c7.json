@@ -2,43 +2,225 @@
  "c7-1": {
   "harbor": {
    "practice": "Harbor runs the same 150-case suite against three hosted models and one self-hosted 8B model each quarter and picks the cheapest one that meets the bar for each feature.",
-   "failure": "Choosing from a public leaderboard or an advertised context length instead of your own task evidence."
+   "failure": "Choosing from a public leaderboard or an advertised context length instead of your own task evidence.",
+   "fit": "best",
+   "fitNote": "a quarterly bake-off on its own 150 cases",
+   "tryIt": "Build Harbor's evaluation idea at small scale: take 50 tickets from <code>tickets.csv</code>, run two local models (for example llama3.2:1b and qwen2.5:1.5b) and a hosted one if you have a key, and record accuracy per category, median latency and cost."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a multilingual evaluation set decides the model mix",
+   "practice": "{company} chose {assistant}'s model with a 200-case set built from real shopper questions in four languages. The frontier model scored best, but a mid-size model met the bar at festival-peak prices, so it serves most traffic and the frontier model handles escalations.",
+   "failure": "Choosing a model on an English-only evaluation for a marketplace where many chats are in Hindi, Tamil or Hinglish.",
+   "tryIt": "Build a 40-case set from <code>chats.json</code> and product questions about <code>products.csv</code> (each with an expected answer), and compare two local models' accuracy by language and their latency."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "data control decides hosted versus self-hosted",
+   "practice": "{company} keeps customer data under its own control, so it self-hosts an open model for case summaries and uses a hosted model only for content with no personal data, such as drafting policy FAQs.",
+   "failure": "Sending case files to a hosted API without checking the contract's data retention, region and training-use terms.",
+   "tryIt": "Fill in the topic's comparison table for two features, case summaries and FAQ drafting, and decide hosted or self-hosted for each, giving the deciding row."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "extraction accuracy and latency decide the model per step",
+   "practice": "{company} compares models on 100 real requests: correct intent, correct dates and cities, and cost per completed booking. A fast, smaller model handles first-turn extraction; a stronger one handles multi-city trips.",
+   "failure": "Measuring answer quality only and ignoring latency, when travellers abandon a booking flow that hesitates.",
+   "tryIt": "Run two local models over the messages in <code>messages.json</code>, asking each to extract intent, date, origin and destination, and score exact-field accuracy and median latency."
   }
  },
  "c7-2": {
   "harbor": {
    "practice": "Harbor&#x27;s answer prompt is file answer@v12 in the repository; its changelog links each change to the evaluation case that motivated it.",
-   "failure": "Adding more and more instructions without re-running the regression suite; new rules often conflict with old ones."
+   "failure": "Adding more and more instructions without re-running the regression suite; new rules often conflict with old ones.",
+   "fit": "good",
+   "fitNote": "a versioned prompt with a changelog",
+   "tryIt": "Write Harbor's answer prompt as a versioned file (answer@v1) with a role, instructions, delimited context, two examples and an output format. Change one instruction, bump to v2, and log which version produced each test answer."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "few-shot examples that can bias recommendations",
+   "practice": "{assistant}'s prompt puts the returns policy and tone rules first, where they can be cached, then the listing and reviews in tagged blocks marked as data, then the shopper's question. Its few-shot examples include a Hinglish question so the model answers in the shopper's language.",
+   "failure": "Using few-shot examples that all mention the same brand. The model starts recommending that brand.",
+   "tryIt": "Write a product-question prompt with two varied examples, then swap in two examples about a single brand from <code>products.csv</code>, and see whether a local model's answers drift towards that brand."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "every customer message traceable to a prompt version",
+   "practice": "{company}'s prompts live in the repository with IDs such as dispute_update@v5. Compliance reviews each change, and every production message logs its prompt version, so a complaint can be traced to the exact instructions used.",
+   "failure": "Editing a production prompt in a dashboard without review or a version bump. Nobody can then say which wording a complaint came from.",
+   "tryIt": "Create dispute_update@v1 and @v2 that differ in one instruction, run both on five cases from <code>disputes.csv</code>, and record which outputs changed."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "structured itinerary extraction is driven by the prompt",
+   "practice": "{assistant}'s extraction prompt shows three diverse examples (English, Hinglish and a multi-city trip) and a JSON template, and puts the traveller's message last.",
+   "failure": "Few-shot examples that are all one-way flights. The model forces multi-city requests into one leg.",
+   "tryIt": "Write the extraction prompt for <code>messages.json</code> with three examples, then remove the multi-city example and test the Goa hotel request and a two-city request you write yourself."
   }
  },
  "c7-3": {
   "harbor": {
    "practice": "Harbor assembles context in priority order (instructions, tools, account facts, top reranked passages with dates and IDs, summary, last turns) and stops at 60% of the window.",
-   "failure": "Compressing context and losing the exception clause or effective date that the answer depends on."
+   "failure": "Compressing context and losing the exception clause or effective date that the answer depends on.",
+   "fit": "good",
+   "fitNote": "priority-ordered context that stops at 60% of the window",
+   "tryIt": "In the context assembler, set the budget to 6,000 with compression on, then shrink it to 3,000 and note which items are dropped first. Compare with Harbor's rule of stopping at 60% of the window."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "reviews are the first thing to trim",
+   "practice": "For a product question {assistant} assembles rules and tone (always), the listing (always), the top reranked reviews (dropped first when space runs short), a chat summary and the last few turns. Reviews are trimmed to the sentences that mention the attribute asked about.",
+   "failure": "Filling the context with 40 reviews. Answers get slower, and the assistant repeats one angry review as if it were fact.",
+   "tryIt": "Pick a product in <code>products.csv</code> and its reviews in <code>reviews.json</code>, build a context by hand within a 2,000-token budget, and decide what to drop first."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "clauses and dates that must never be summarised",
+   "practice": "{company}'s case-summary context holds the dispute record, the disputed transaction and its neighbours, and the relevant policy clauses with effective dates: nothing else from the customer's history.",
+   "failure": "Compressing a policy clause into a summary and losing the effective date or deadline the decision depends on.",
+   "tryIt": "For one case in <code>disputes.csv</code>, assemble its context: the case, its row in <code>transactions.csv</code> and the matching policy in <code>policies.json</code>. Count the tokens and mark which parts must never be summarised."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "trip facts kept structured, fare rules added per booking",
+   "practice": "{assistant} keeps the confirmed trip details as structured fields in every context, adds only the fare rules for the booking being discussed, and summarises earlier planning chat.",
+   "failure": "Dropping the fare rule from context to save tokens, then quoting a change fee from memory.",
+   "tryIt": "Use the assembler with a small budget and compression on. Then write the equivalent recipe for a hotel-change request: which items are always included, and which are dropped first?"
   }
  },
  "c7-4": {
   "harbor": {
    "practice": "Harbor&#x27;s create_ticket tool takes category and summary from the model but derives the customer ID from the authenticated session, never from model output.",
-   "failure": "Executing a tool just because its arguments passed JSON schema validation."
+   "failure": "Executing a tool just because its arguments passed JSON schema validation.",
+   "fit": "best",
+   "fitNote": "customer IDs come from the session, never from the model",
+   "tryIt": "Run the Ollama laptop lab with a create_ticket tool whose customer ID comes from the session, then try a prompt asking the model to file a ticket for another customer, and confirm your code ignores the model's ID."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "order tools checked against the logged-in shopper",
+   "practice": "{assistant} calls get_order and start_return. The order ID the model proposes is checked against the logged-in shopper's own orders before anything runs; a valid-looking ID for someone else's order is rejected.",
+   "failure": "Starting a return because the tool arguments were valid JSON, without checking that the order belongs to the shopper.",
+   "tryIt": "In the laptop lab, define get_order(order_id) over <code>orders.csv</code>, ask a local model about OD-2503112, and add a check that the order belongs to the current shopper before returning any data."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "constrained output plus semantic checks on amounts",
+   "practice": "{company} extracts dispute fields (transaction ID, amount, reason) with constrained JSON, then checks each against the ledger: the amount must match the transaction exactly. A valid JSON object with a wrong amount is rejected.",
+   "failure": "Trusting constrained decoding to make the extracted amount correct. It only guarantees the shape.",
+   "tryIt": "Ask a local model to extract txn_id, amount and reason as JSON from three texts in <code>disputes.csv</code>, then write a Pydantic model plus a check that compares the amount with <code>transactions.csv</code>."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "search, hold and confirm are tool calls",
+   "practice": "{assistant} calls search_flights, then hold_seat, then confirm. Arguments are validated against the schema and the traveller's request before each call, and the UI streams the reply while the booking JSON is validated as a whole.",
+   "failure": "Acting on a streamed, partial booking object before the complete JSON has been validated.",
+   "tryIt": "Define search_flights(origin, destination, date, adults) in the laptop lab over a small list of flights you write, and test “Book the cheapest flight from Bengaluru to Delhi next Friday morning for 2 adults”."
   }
  },
  "c7-5": {
   "harbor": {
    "practice": "Harbor stores the full transcript in Postgres, keeps a running summary plus extracted facts (account plan, region) in context, and lets users see and delete remembered preferences.",
-   "failure": "Using a conversation ID as authorisation to read that conversation&#x27;s state."
+   "failure": "Using a conversation ID as authorisation to read that conversation&#x27;s state.",
+   "fit": "good",
+   "fitNote": "a summary plus extracted facts, with user-visible memory",
+   "tryIt": "In the memory simulator, ask the question at turn 22 with a window of 6 turns and compare which facts each strategy keeps. That comparison is Harbor's case for a summary plus extracted facts."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "order IDs and sizes that shoppers should not have to repeat",
+   "practice": "{assistant} extracts durable facts from a chat, such as the order ID, size and preferred language, so shoppers do not repeat themselves. Remembered preferences are visible and deletable in account settings.",
+   "failure": "Saving a shopper's address or phone number from chat into long-term memory without consent or a way to delete it.",
+   "tryIt": "Script a 20-turn shopping chat in which the order ID and shoe size are given early. Apply a 6-turn window and a fact-extraction step, and check which approach answers correctly at turn 20."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "the transcript is the system of record; context is a working view",
+   "practice": "{company} stores every turn as the system of record for complaints and audit, and keeps only the case summary plus extracted facts (case ID, disputed amount, channel) in context.",
+   "failure": "Treating a conversation ID sent by the client as proof that the user may read that conversation's state.",
+   "tryIt": "Write a five-turn dispute chat, extract case_id, amount and channel, then summarise turns 1–3 and check whether the exact amount survives in the summary."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "trip details stated early must survive long planning chats",
+   "practice": "{assistant} keeps confirmed trip facts (dates, travellers, budget, fare family) as a structured record that every turn reads, because planning chats are long and a sliding window would forget the travel dates.",
+   "failure": "Summarising a planning chat and losing the number of travellers, then booking for one.",
+   "tryIt": "In the memory simulator, pick a late question and a small window. Then write the fact record a trip-planning chat should keep, noting which turn sets each field."
   }
  },
  "c7-6": {
   "harbor": {
    "practice": "Harbor retries a failed retrieval once within the remaining deadline; if generation capacity is exhausted it returns cited search excerpts instead of retrying indefinitely.",
-   "failure": "Retrying without a retry budget or admission control, which turns a slowdown into an outage."
+   "failure": "Retrying without a retry budget or admission control, which turns a slowdown into an outage.",
+   "fit": "good",
+   "fitNote": "one retry within the deadline, then a graceful fallback",
+   "tryIt": "Run the retry simulation without and then with jitter and count the peak retries per 250 ms. Then write Harbor's rule as code: one retry within the remaining deadline, then return cited search excerpts."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "festival peaks turn retries into storms",
+   "practice": "When the model provider throttled {company} at the start of the festival sale, synchronised client retries tripled the load. Jittered backoff with a retry budget, plus a fallback to a cheaper model for simple questions, kept {assistant} answering.",
+   "failure": "Raising client retry counts during an incident. That multiplies load on a provider that is already rate-limiting you.",
+   "tryIt": "Run the simulation without and with jitter and note the peaks. Then work out the extra load if 20% of 2,000 requests per second fail and each is retried up to 3 times (up to 1,200 more per second)."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "calls that move money are never retried blindly",
+   "practice": "{company} never retries a call that may have moved money. A timeout on initiate_refund is followed by a status query using the idempotency key before anything is retried (11.6).",
+   "failure": "Retrying a timed-out refund call blindly and refunding twice.",
+   "tryIt": "Write a call wrapper that retries only timeouts, 429 and 5xx responses with jittered backoff and a total deadline, and refuses to retry any function marked as having side effects."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "slow, rate-limited supplier APIs",
+   "practice": "{company}'s supplier APIs are slow and rate-limited. {assistant} sets a deadline per search, retries once with jitter, and shows cached results labelled with their age when a supplier is down.",
+   "failure": "Showing a cached fare as bookable without saying how old it is.",
+   "tryIt": "Simulate a supplier with a 30% failure rate in a short script and compare the success rate and total time of no retries, 3 immediate retries, and 2 jittered retries within a 3-second deadline."
   }
  },
  "c7-7": {
   "harbor": {
    "practice": "Harbor drafts the refund explanation, but code computes eligibility and amount from the order record and the refund API enforces the cap.",
-   "failure": "Reporting success because the model said &quot;done&quot; when the database write actually failed."
+   "failure": "Reporting success because the model said &quot;done&quot; when the database write actually failed.",
+   "fit": "best",
+   "fitNote": "the model explains refunds; code decides them",
+   "tryIt": "Write the refund flow as two functions: the model extracts order_id and reason; code computes eligibility and amount from the order record. Test it with a prompt that tries to talk the model into a bigger refund."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "return eligibility is a rule the model only explains",
+   "practice": "{assistant} reads “I want to return the shoes, they're too small” and proposes <code>intent: return, reason: size</code>. Code checks the return window, item category and payment method and computes the refund; the model only explains the result.",
+   "failure": "Letting the model decide whether an item is returnable because the policy is in its prompt.",
+   "tryIt": "Code a return-eligibility rule for <code>orders.csv</code> (window and category), then have a local model only extract intent and reason from three chats. Compare what each part decided."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "money decisions must be exact and auditable",
+   "practice": "{company}'s assistant can explain fees and draft a waiver request, but a rules engine decides waivers from the customer's history and the fee policy, and logs the decision with its inputs and rule version.",
+   "failure": "Prompting “waive the fee for loyal customers” and letting the model judge loyalty from the chat.",
+   "tryIt": "Write a fee-waiver rule in code (for example one waiver per 12 months, accounts older than two years) and a model step that only classifies the request. Run five persuasive requests designed to sway the model and check the rule's decisions."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "fees and fare rules computed in code",
+   "practice": "{assistant} turns “move my Goa hotel by two days” into <code>booking_id, new_dates</code>. Code applies the hotel's cancellation terms and computes the price difference; the model explains it.",
+   "failure": "Reporting a successful change because the model said “done” when the supplier call actually failed.",
+   "tryIt": "Implement the saver-fare change rule from <code>fare_rules.json</code> in code (fee plus fare difference, no changes within 4 hours) and test it on five requests the model has extracted."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use <code>policies.json</code> with its <code>access_groups</code>. Your 30 cases must include questions from a user outside the leadership group about the salary-band and reorganisation documents (the service must abstain), and questions answered only by an outdated revision (it must cite the current one).</p>"
+  },
+  "store": {
+   "scenario": "<p>Use <code>products.csv</code> and <code>reviews.json</code>; evidence IDs are SKUs and review IDs. Cases include an attribute missing from the listing (abstain), a review that contradicts the listing (the listing wins), one of the injected reviews (its instruction must be ignored), and Hinglish questions.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use <code>policies.json</code> and <code>disputes.csv</code>. Cases include deadline questions, a failed UPI debit, a request about another customer's case (refuse), and answers whose amounts must match <code>transactions.csv</code> exactly. Label every case with the cost of a wrong answer.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use <code>fare_rules.json</code> and <code>bookings.csv</code>. Cases include saver versus flex rules, a hotel change inside 48 hours, a booking that is not the caller's (refuse), and a rule that does not exist (abstain). Fees must be computed in code, not by the model.</p>"
   }
  }
 }

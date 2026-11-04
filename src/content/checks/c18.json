@@ -13,9 +13,296 @@
     "answer": 1,
     "why": "Behaviour depends on code, prompts, models, indexes and config together.",
     "kind": "concept"
+   },
+   {
+    "id": "c18-1-m02",
+    "q": "What is a release manifest?",
+    "options": [
+     "A marketing note",
+     "A list of servers",
+     "A changelog for code only",
+     "One identifier bundling the versions of everything that changes behaviour"
+    ],
+    "answer": 3,
+    "why": "Code, prompts, tools, model, embedder, index, config and evaluation suite.",
+    "kind": "concept",
+    "distractors": [
+     "No.",
+     "Not the meaning.",
+     "Too narrow.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-1-m03",
+    "q": "Only the prompt changes. Does the release ID change?",
+    "options": [
+     "Yes; any behaviour-affecting input produces a new release ID",
+     "Only for major prompts",
+     "No; code did not change",
+     "Only if tests fail"
+    ],
+    "answer": 0,
+    "why": "Prompts change behaviour.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Any change.",
+     "That is the mistake.",
+     "Not the rule."
+    ]
+   },
+   {
+    "id": "c18-1-m04",
+    "q": "Why should traces carry the release ID?",
+    "options": [
+     "So any output can be reproduced and any regression bisected",
+     "To save tokens",
+     "It is required by OTel",
+     "For billing"
+    ],
+    "answer": 0,
+    "why": "Links outputs to the exact system.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Not required.",
+     "Not the main reason."
+    ]
+   },
+   {
+    "id": "c18-1-m05",
+    "q": "Choose all the artefacts a manifest should version.",
+    "options": [
+     "Model and embedder revisions, and the index",
+     "Prompts and tool schemas",
+     "The office Wi-Fi password",
+     "The evaluation suite"
+    ],
+    "answer": [
+     0,
+     1,
+     3
+    ],
+    "why": "Everything that can change behaviour.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "Unrelated and secret.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-1-m06",
+    "q": "A rollback restored the code but left a new prompt and index live. What happens?",
+    "options": [
+     "Everything is restored",
+     "The prompt is ignored",
+     "An incompatible combination may keep failing",
+     "The index rolls back itself"
+    ],
+    "answer": 2,
+    "why": "Roll back the whole manifest.",
+    "kind": "scenario",
+    "distractors": [
+     "Only code was restored.",
+     "It is used.",
+     "",
+     "It does not."
+    ]
+   },
+   {
+    "id": "c18-1-m07",
+    "q": "Why version the evaluation suite in the manifest?",
+    "options": [
+     "Suites never change",
+     "Results are only comparable when you know which suite produced them",
+     "For licences",
+     "To make releases bigger"
+    ],
+    "answer": 1,
+    "why": "Suites grow over time (17.9).",
+    "kind": "concept",
+    "distractors": [
+     "They change.",
+     "",
+     "Unrelated.",
+     "Not the reason."
+    ]
+   },
+   {
+    "id": "c18-1-m08",
+    "q": "Should an ACL or permissions watermark be part of the manifest, as in Harbor's?",
+    "options": [
+     "Only for code",
+     "Only in staging",
+     "Never",
+     "Yes, if it affects which documents the system can use"
+    ],
+    "answer": 3,
+    "why": "Anything that changes behaviour belongs there.",
+    "kind": "concept",
+    "distractors": [
+     "Not only code.",
+     "Production too.",
+     "It affects answers.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-1-m09",
+    "q": "What makes a manifest useful for audits?",
+    "options": [
+     "It is deleted after release",
+     "It is immutable and kept with the traces for the retention period",
+     "It is editable",
+     "It lives in a chat message"
+    ],
+    "answer": 1,
+    "why": "Auditors need to reconstruct the system.",
+    "kind": "concept",
+    "distractors": [
+     "Must be kept.",
+     "",
+     "Must be immutable.",
+     "Not durable."
+    ]
+   },
+   {
+    "id": "c18-1-m10",
+    "q": "Two releases differ only in index version. What can bisecting show?",
+    "options": [
+     "The model's weights",
+     "Network latency",
+     "Whether the index change caused a regression",
+     "Nothing"
+    ],
+    "answer": 2,
+    "why": "Manifests let you isolate a single changed input.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "",
+     "It can."
+    ]
+   },
+   {
+    "id": "c18-1-m11",
+    "q": "Which is the best rollback unit?",
+    "options": [
+     "The previous release manifest as a whole",
+     "The prompt only",
+     "Whatever changed last",
+     "The code only"
+    ],
+    "answer": 0,
+    "why": "Restore a coherent, compatible system.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Leaves other parts.",
+     "May not be coherent.",
+     "Leaves other parts."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c18-1-i01",
+    "q": "What is a release manifest and what goes in it?",
+    "level": "fundamentals",
+    "covers": [
+     "code",
+     "prompts",
+     "tools",
+     "model",
+     "embedder and index",
+     "config",
+     "eval suite"
+    ]
+   },
+   {
+    "id": "c18-1-i02",
+    "q": "Why must traces record the release ID?",
+    "level": "fundamentals",
+    "covers": [
+     "reproduce outputs",
+     "bisect",
+     "audit"
+    ]
+   },
+   {
+    "id": "c18-1-i03",
+    "q": "Why is rolling back code alone often not enough for AI systems?",
+    "level": "fundamentals",
+    "covers": [
+     "prompts and indexes",
+     "compatibility",
+     "whole manifest"
+    ]
+   },
+   {
+    "id": "c18-1-i04",
+    "q": "A regression appeared and three things changed this week. How do you find the cause?",
+    "level": "applied",
+    "covers": [
+     "compare manifests",
+     "bisect one input at a time",
+     "evaluate each",
+     "traces by release"
+    ],
+    "followUp": "How would you speed this up next time?"
+   },
+   {
+    "id": "c18-1-i05",
+    "q": "How would you generate a release ID from a manifest?",
+    "level": "applied",
+    "covers": [
+     "hash of contents",
+     "immutable",
+     "stored with traces"
+    ]
+   },
+   {
+    "id": "c18-1-i06",
+    "q": "Which artefacts are most often forgotten in AI release versioning?",
+    "level": "applied",
+    "covers": [
+     "prompts",
+     "tool schemas",
+     "index",
+     "eval suite",
+     "ACL state"
+    ]
+   },
+   {
+    "id": "c18-1-i07",
+    "q": "Design how {company} can answer “which system drafted this letter?” years later.",
+    "level": "system-design",
+    "covers": [
+     "release ID in traces",
+     "manifest retention",
+     "lookup path",
+     "audit evidence"
+    ],
+    "followUp": "What would you do if a manifest field was missing?",
+    "project": "bank"
+   },
+   {
+    "id": "c18-1-i08",
+    "q": "Design a release-versioning system for an AI platform used by many teams.",
+    "level": "system-design",
+    "covers": [
+     "manifest schema",
+     "registry",
+     "trace integration",
+     "rollback tooling"
+    ]
+   }
+  ]
  },
  "c18-4": {
   "mcq": [
@@ -31,9 +318,272 @@
     "answer": 1,
     "why": "Shadowing a write creates real duplicate actions.",
     "kind": "concept"
+   },
+   {
+    "id": "c18-4-m02",
+    "q": "What is a shadow deployment?",
+    "options": [
+     "A backup region",
+     "A hidden feature",
+     "A canary at 50%",
+     "Copies of production requests go to the new version; its outputs are discarded and compared"
+    ],
+    "answer": 3,
+    "why": "No user risk.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Not the meaning.",
+     "Users see canary output.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-4-m03",
+    "q": "What share of traffic does a canary typically get?",
+    "options": [
+     "50%",
+     "100%",
+     "0%",
+     "1–5%"
+    ],
+    "answer": 3,
+    "why": "Compare with the baseline in the same window.",
+    "kind": "concept",
+    "distractors": [
+     "Too large for a canary.",
+     "That is full rollout.",
+     "That is shadow.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-4-m04",
+    "q": "Does rollback undo actions the bad version took?",
+    "options": [
+     "No; messages, refunds and tickets stay done, so plan reconciliation",
+     "Only refunds",
+     "Only messages",
+     "Yes, always"
+    ],
+    "answer": 0,
+    "why": "Compensation needs its own plan.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not automatic.",
+     "Not automatic.",
+     "Not true."
+    ]
+   },
+   {
+    "id": "c18-4-m05",
+    "q": "What must rollback be?",
+    "options": [
+     "One action, in minutes, with the previous version still deployed and compatible",
+     "A weekend project",
+     "A full rebuild",
+     "Optional"
+    ],
+    "answer": 0,
+    "why": "Practise it.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Too slow.",
+     "Too slow.",
+     "Required."
+    ]
+   },
+   {
+    "id": "c18-4-m06",
+    "q": "In the gate-driven rollout figure, what happens if “rollback rehearsed” is unticked?",
+    "options": [
+     "Promotion is refused",
+     "Nothing",
+     "Rollout continues",
+     "It goes to 100%"
+    ],
+    "answer": 0,
+    "why": "Every gate must be ticked to advance.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "It stops.",
+     "It stops.",
+     "It stops."
+    ]
+   },
+   {
+    "id": "c18-4-m07",
+    "q": "A controlled rollout by cohort usually starts with…",
+    "options": [
+     "Random external users only",
+     "Internal users, then low-risk tenants",
+     "The largest customers",
+     "All users"
+    ],
+    "answer": 1,
+    "why": "Exposure increases in steps.",
+    "kind": "concept",
+    "distractors": [
+     "Internal first.",
+     "",
+     "Highest risk.",
+     "No step."
+    ]
+   },
+   {
+    "id": "c18-4-m08",
+    "q": "What happens in automated canary analysis when a metric breaches its bound?",
+    "options": [
+     "Traffic doubles",
+     "An email is sent and nothing else",
+     "The baseline is changed",
+     "Traffic returns to 0% automatically and the release is marked failed"
+    ],
+    "answer": 3,
+    "why": "Automatic rollback.",
+    "kind": "concept",
+    "distractors": [
+     "The opposite.",
+     "Too slow.",
+     "Hides the breach.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-4-m09",
+    "q": "How should agents be shadowed?",
+    "options": [
+     "With real write tools",
+     "Not at all",
+     "Only with side-effect-free (mocked) tools",
+     "Only at night"
+    ],
+    "answer": 2,
+    "why": "Shadow traffic must never reach write tools.",
+    "kind": "concept",
+    "distractors": [
+     "Duplicates actions.",
+     "They can be shadowed safely.",
+     "",
+     "Time is irrelevant."
+    ]
+   },
+   {
+    "id": "c18-4-m10",
+    "q": "For an index change, what does safe rollback require?",
+    "options": [
+     "Nothing",
+     "Deleting the old index",
+     "Keeping the old index warm (10.7)",
+     "Rebuilding the old index on rollback"
+    ],
+    "answer": 2,
+    "why": "Rebuilding takes hours.",
+    "kind": "concept",
+    "distractors": [
+     "It needs preparation.",
+     "Then no rollback.",
+     "",
+     "Too slow."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c18-4-i01",
+    "q": "Compare shadow, canary and controlled rollout.",
+    "level": "fundamentals",
+    "covers": [
+     "copy traffic",
+     "small share",
+     "steps and cohorts",
+     "risk"
+    ]
+   },
+   {
+    "id": "c18-4-i02",
+    "q": "What makes rollback safe for AI systems?",
+    "level": "fundamentals",
+    "covers": [
+     "previous version deployed",
+     "compatible",
+     "one action",
+     "rehearsed"
+    ]
+   },
+   {
+    "id": "c18-4-i03",
+    "q": "Why must shadow traffic never reach write tools?",
+    "level": "fundamentals",
+    "covers": [
+     "duplicate side effects",
+     "stub tools"
+    ]
+   },
+   {
+    "id": "c18-4-i04",
+    "q": "A canary looked healthy but users complained after 100%. What could the canary have missed?",
+    "level": "applied",
+    "covers": [
+     "cohort not representative",
+     "metrics not sensitive",
+     "short window",
+     "rare segments"
+    ],
+    "followUp": "How would you change the analysis?"
+   },
+   {
+    "id": "c18-4-i05",
+    "q": "How do you handle actions a bad release already took?",
+    "level": "applied",
+    "covers": [
+     "identify affected",
+     "reconcile or compensate",
+     "communicate",
+     "audit"
+    ]
+   },
+   {
+    "id": "c18-4-i06",
+    "q": "Write a rollout policy for a new prompt.",
+    "level": "applied",
+    "covers": [
+     "shadow",
+     "canary steps",
+     "metrics and bounds",
+     "automatic rollback"
+    ]
+   },
+   {
+    "id": "c18-4-i07",
+    "q": "Design {company}'s rollout for a new assistant prompt with refund tools.",
+    "level": "system-design",
+    "covers": [
+     "shadow with stubs",
+     "staff cohort",
+     "seller cohort",
+     "metrics",
+     "rollback"
+    ],
+    "followUp": "What would stop the rollout?",
+    "project": "store"
+   },
+   {
+    "id": "c18-4-i08",
+    "q": "Design automated canary analysis for an AI service.",
+    "level": "system-design",
+    "covers": [
+     "metrics",
+     "baseline comparison",
+     "statistics",
+     "automatic rollback",
+     "reporting"
+    ]
+   }
+  ]
  },
  "c18-3": {
   "mcq": [
@@ -49,8 +599,1449 @@
     "answer": 1,
     "why": "Critical invariants block regardless of average improvements.",
     "kind": "concept"
+   },
+   {
+    "id": "c18-3-m02",
+    "q": "What is a release gate?",
+    "options": [
+     "A feature flag",
+     "A firewall",
+     "An automated check that blocks promotion when a threshold is not met",
+     "A manual approval email"
+    ],
+    "answer": 2,
+    "why": "Gates enforce acceptance and release criteria.",
+    "kind": "concept",
+    "distractors": [
+     "Different tool.",
+     "Unrelated.",
+     "",
+     "Not automated."
+    ]
+   },
+   {
+    "id": "c18-3-m03",
+    "q": "Choose all four gates in the chapter.",
+    "options": [
+     "Quality",
+     "Design review of colours",
+     "Safety / security",
+     "Performance and cost"
+    ],
+    "answer": [
+     0,
+     2,
+     3
+    ],
+    "why": "Quality, safety/security, performance and cost.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not a gate.",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c18-3-m04",
+    "q": "Why are all four gates needed?",
+    "options": [
+     "Different changes fail different gates",
+     "Regulations require exactly four",
+     "One is enough",
+     "To slow releases"
+    ],
+    "answer": 0,
+    "why": "e.g. a cheaper model fails quality; a new tool fails security.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not a rule.",
+     "Each catches different failures.",
+     "Not the aim."
+    ]
+   },
+   {
+    "id": "c18-3-m05",
+    "q": "A quality threshold says “overall ≥ baseline − 0.5 points (within CI); no language drops > 2 points”. A candidate is +1 overall but −3 in one language. Does it pass?",
+    "options": [
+     "No; the language gate fails",
+     "Yes; within CI",
+     "Yes; overall improved",
+     "Cannot tell"
+    ],
+    "answer": 0,
+    "why": "Per-segment gates block hidden regressions.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Language drop exceeds 2.",
+     "The language rule fails.",
+     "The numbers decide."
+    ]
+   },
+   {
+    "id": "c18-3-m06",
+    "q": "Cost gate: cost per successful task ≤ +10% unless approved. Current $0.050; candidate $0.057. What happens?",
+    "options": [
+     "Blocked: any rise fails",
+     "Blocked unless approved: +14%",
+     "Passes: +7%",
+     "Passes: under $0.06"
+    ],
+    "answer": 1,
+    "why": "0.057 / 0.050 = 1.14.",
+    "kind": "calculation",
+    "distractors": [
+     "Up to +10% passes.",
+     "",
+     "Wrong arithmetic.",
+     "The gate is relative."
+    ]
+   },
+   {
+    "id": "c18-3-m07",
+    "q": "Is a green CI badge proof that every production failure is covered?",
+    "options": [
+     "Only for security",
+     "No; gates cover only the cases in the suites",
+     "Yes",
+     "Only for quality"
+    ],
+    "answer": 1,
+    "why": "Keep adding production failures (17.9).",
+    "kind": "concept",
+    "distractors": [
+     "Any gate.",
+     "",
+     "Overclaims.",
+     "Any gate."
+    ]
+   },
+   {
+    "id": "c18-3-m08",
+    "q": "Which threshold belongs to the safety/security gate?",
+    "options": [
+     "Cost ≤ +10%",
+     "Overall quality ≥ baseline",
+     "0 cross-tenant leaks",
+     "p95 TTFT ≤ 1.5 s"
+    ],
+    "answer": 2,
+    "why": "Plus injection success ≤ baseline and no critical CVEs.",
+    "kind": "concept",
+    "distractors": [
+     "Cost.",
+     "Quality.",
+     "",
+     "Performance."
+    ]
+   },
+   {
+    "id": "c18-3-m09",
+    "q": "What does the laptop lab's gate.py do?",
+    "options": [
+     "Deploys to production",
+     "Computes pass rates overall and on critical cases and exits non-zero below thresholds",
+     "Writes release notes",
+     "Trains a model"
+    ],
+    "answer": 1,
+    "why": "A non-zero exit fails the CI job.",
+    "kind": "concept",
+    "distractors": [
+     "No.",
+     "",
+     "No.",
+     "No."
+    ]
+   },
+   {
+    "id": "c18-3-m10",
+    "q": "Why should judge-based quality metrics include confidence intervals?",
+    "options": [
+     "Judges are always wrong",
+     "To slow the gate",
+     "To look scientific",
+     "Small differences may be noise"
+    ],
+    "answer": 3,
+    "why": "Compare within CI.",
+    "kind": "concept",
+    "distractors": [
+     "Not true.",
+     "Not the reason.",
+     "Not the reason.",
+     ""
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c18-3-i01",
+    "q": "What gates would you put before an AI release?",
+    "level": "fundamentals",
+    "covers": [
+     "quality",
+     "safety/security",
+     "performance",
+     "cost",
+     "thresholds"
+    ]
+   },
+   {
+    "id": "c18-3-i02",
+    "q": "Why do per-segment and critical-case thresholds matter?",
+    "level": "fundamentals",
+    "covers": [
+     "averages hide drops",
+     "languages",
+     "critical cases block"
+    ]
+   },
+   {
+    "id": "c18-3-i03",
+    "q": "What can gates not prove?",
+    "level": "fundamentals",
+    "covers": [
+     "coverage limited to suites",
+     "new failures",
+     "production differences"
+    ]
+   },
+   {
+    "id": "c18-3-i04",
+    "q": "A candidate improves average quality but fails one cross-tenant case. What do you decide and why?",
+    "level": "applied",
+    "covers": [
+     "block",
+     "critical case",
+     "fix and re-run"
+    ],
+    "followUp": "What if leadership wants to ship anyway?"
+   },
+   {
+    "id": "c18-3-i05",
+    "q": "How would you set the cost gate threshold?",
+    "level": "applied",
+    "covers": [
+     "cost per success",
+     "relative change",
+     "approval path"
+    ]
+   },
+   {
+    "id": "c18-3-i06",
+    "q": "Your gates take two hours. How do you speed them up without losing safety?",
+    "level": "applied",
+    "covers": [
+     "parallel suites",
+     "critical set first",
+     "cache results for unchanged parts",
+     "full run before prod"
+    ]
+   },
+   {
+    "id": "c18-3-i07",
+    "q": "Design {company}'s gates, including who can approve an exception.",
+    "level": "system-design",
+    "covers": [
+     "four gates",
+     "critical cases",
+     "security blockers",
+     "named approver",
+     "audit"
+    ],
+    "followUp": "What exceptions would you never allow?",
+    "project": "bank"
+   },
+   {
+    "id": "c18-3-i08",
+    "q": "Design a gate framework that many teams can configure.",
+    "level": "system-design",
+    "covers": [
+     "standard gates",
+     "team thresholds",
+     "reporting",
+     "exceptions with audit"
+    ]
+   }
+  ]
+ },
+ "c18-2": {
+  "mcq": [
+   {
+    "id": "c18-2-m01",
+    "q": "What does “build once, promote the same artefact” prevent?",
+    "options": [
+     "Rollbacks",
+     "Shipping something you never tested",
+     "Fast deploys",
+     "Using staging"
+    ],
+    "answer": 1,
+    "why": "Rebuilding per environment means you never tested what you shipped.",
+    "kind": "concept",
+    "distractors": [
+     "It enables them.",
+     "",
+     "It enables them.",
+     "It uses staging."
+    ]
+   },
+   {
+    "id": "c18-2-m02",
+    "q": "What should differ between staging and production?",
+    "options": [
+     "The prompts",
+     "The model",
+     "Only configuration such as credentials and capacity",
+     "The image"
+    ],
+    "answer": 2,
+    "why": "Same artefacts, different config.",
+    "kind": "concept",
+    "distractors": [
+     "Must be the same.",
+     "Must be the same.",
+     "",
+     "Must be the same."
+    ]
+   },
+   {
+    "id": "c18-2-m03",
+    "q": "What is GitOps?",
+    "options": [
+     "A CI vendor",
+     "Using Git for code only",
+     "Desired state lives in a repository, and a controller syncs clusters to it",
+     "Manual console changes"
+    ],
+    "answer": 2,
+    "why": "Gives an audit trail and rollback by revert.",
+    "kind": "concept",
+    "distractors": [
+     "Not a vendor.",
+     "Too narrow.",
+     "",
+     "The opposite."
+    ]
+   },
+   {
+    "id": "c18-2-m04",
+    "q": "A container downloads “latest” model weights at start-up. What is the problem?",
+    "options": [
+     "Downloads are slow",
+     "It saves storage",
+     "Nothing",
+     "The release is not reproducible; staging and production may run different models"
+    ],
+    "answer": 3,
+    "why": "Pin model revisions.",
+    "kind": "scenario",
+    "distractors": [
+     "Not the main issue.",
+     "Not the issue.",
+     "It is a problem.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-2-m05",
+    "q": "Choose all the infrastructure the chapter says should be defined in code.",
+    "options": [
+     "Dashboards and alerts",
+     "Queues, gateways and IAM",
+     "GPU node pools and vector databases",
+     "Engineers' calendars"
+    ],
+    "answer": [
+     0,
+     1,
+     2
+    ],
+    "why": "Reviewed and applied by pipelines.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c18-2-m06",
+    "q": "Which pins a base image most precisely?",
+    "options": [
+     "Its size",
+     "Its tag",
+     "Its name",
+     "Its digest"
+    ],
+    "answer": 3,
+    "why": "Tags can move.",
+    "kind": "concept",
+    "distractors": [
+     "Not an identifier.",
+     "Can be reassigned.",
+     "Not unique.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-2-m07",
+    "q": "Why should staging mirror production's shape?",
+    "options": [
+     "It does not matter",
+     "So tests are meaningful: same engine, index type and realistic data",
+     "To cost the same",
+     "For marketing"
+    ],
+    "answer": 1,
+    "why": "Different shapes give misleading results.",
+    "kind": "concept",
+    "distractors": [
+     "It matters.",
+     "",
+     "Not the reason.",
+     "No."
+    ]
+   },
+   {
+    "id": "c18-2-m08",
+    "q": "Which tools are named for infrastructure as code?",
+    "options": [
+     "Jaeger and Loki",
+     "OpenTofu/Terraform, Pulumi, and Kubernetes manifests with Helm/Kustomize",
+     "k6 and Locust",
+     "garak and PyRIT"
+    ],
+    "answer": 1,
+    "why": "Observability, red teaming and load testing are other chapters.",
+    "kind": "concept",
+    "distractors": [
+     "Observability.",
+     "",
+     "Load testing.",
+     "Red teaming."
+    ]
+   },
+   {
+    "id": "c18-2-m09",
+    "q": "A hotfix is applied directly in production, and the next GitOps sync removes it. What should have happened?",
+    "options": [
+     "Nothing",
+     "The fix should go through the repository, so the desired state includes it",
+     "Apply it twice",
+     "Disable GitOps"
+    ],
+    "answer": 1,
+    "why": "The repository is the source of truth.",
+    "kind": "scenario",
+    "distractors": [
+     "The fix was lost.",
+     "",
+     "Still removed.",
+     "Loses the audit trail."
+    ]
+   },
+   {
+    "id": "c18-2-m10",
+    "q": "Which stage runs full gates (evaluation, security, load, cost)?",
+    "options": [
+     "Dev",
+     "The developer laptop only",
+     "None",
+     "Staging"
+    ],
+    "answer": 3,
+    "why": "Dev runs smoke tests; staging runs full gates.",
+    "kind": "concept",
+    "distractors": [
+     "Smoke tests only.",
+     "Not enough.",
+     "Gates are required.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c18-2-i01",
+    "q": "What makes a build reproducible for an AI service?",
+    "level": "fundamentals",
+    "covers": [
+     "lockfiles",
+     "digests",
+     "pinned engines and models",
+     "deterministic builds"
+    ]
+   },
+   {
+    "id": "c18-2-i02",
+    "q": "Explain environment promotion with the same artefact.",
+    "level": "fundamentals",
+    "covers": [
+     "build once",
+     "dev, staging, prod",
+     "config differs only"
+    ]
+   },
+   {
+    "id": "c18-2-i03",
+    "q": "What is GitOps and why use it?",
+    "level": "fundamentals",
+    "covers": [
+     "desired state in repo",
+     "controller syncs",
+     "audit trail",
+     "rollback by revert"
+    ]
+   },
+   {
+    "id": "c18-2-i04",
+    "q": "Staging passed, production failed. What would you compare?",
+    "level": "applied",
+    "covers": [
+     "artefact digests",
+     "model revisions",
+     "config",
+     "data and shape differences"
+    ],
+    "followUp": "How would you prevent it?"
+   },
+   {
+    "id": "c18-2-i05",
+    "q": "How would you put GPU pools and vector databases under IaC?",
+    "level": "applied",
+    "covers": [
+     "modules",
+     "reviews",
+     "pipelines",
+     "drift detection"
+    ]
+   },
+   {
+    "id": "c18-2-i06",
+    "q": "A team keeps clicking changes in the console. How do you move them to IaC?",
+    "level": "applied",
+    "covers": [
+     "import state",
+     "review process",
+     "lock consoles",
+     "drift alerts"
+    ]
+   },
+   {
+    "id": "c18-2-i07",
+    "q": "Design {company}'s promotion pipeline for a prompt change.",
+    "level": "system-design",
+    "covers": [
+     "build once",
+     "smoke",
+     "gates",
+     "canary",
+     "record"
+    ],
+    "followUp": "Who approves each step?",
+    "project": "store"
+   },
+   {
+    "id": "c18-2-i08",
+    "q": "Design the delivery platform for AI services across a company.",
+    "level": "system-design",
+    "covers": [
+     "IaC",
+     "GitOps",
+     "artefact registry",
+     "gates",
+     "rollouts"
+    ]
+   }
+  ]
+ },
+ "c18-5": {
+  "mcq": [
+   {
+    "id": "c18-5-m01",
+    "q": "Why treat a model upgrade as a release?",
+    "options": [
+     "Providers require it",
+     "It is faster",
+     "Behaviour changes affect prompts, formats, cost and refusals",
+     "Models never change"
+    ],
+    "answer": 2,
+    "why": "Run the full suite.",
+    "kind": "concept",
+    "distractors": [
+     "Not the reason.",
+     "Not the reason.",
+     "",
+     "They change often."
+    ]
+   },
+   {
+    "id": "c18-5-m02",
+    "q": "In the compatibility report, current prompts on the new model lose 1.8 points with 9 critical regressions. What is the action?",
+    "options": [
+     "Lower the gate",
+     "Drop the model forever",
+     "Ship",
+     "Re-tune the prompt"
+    ],
+    "answer": 3,
+    "why": "The re-tuned prompt then gained 2.4 points with 0 critical regressions.",
+    "kind": "concept",
+    "distractors": [
+     "Defeats the gate.",
+     "Re-tuning fixed it.",
+     "Critical regressions block.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-5-m03",
+    "q": "Median output tokens rose 38%. What does it affect?",
+    "options": [
+     "Nothing",
+     "Cost and latency",
+     "Only tokenisation",
+     "Only quality"
+    ],
+    "answer": 1,
+    "why": "Add length guidance and re-check the cost gate.",
+    "kind": "concept",
+    "distractors": [
+     "It matters.",
+     "",
+     "Not only.",
+     "Not only."
+    ]
+   },
+   {
+    "id": "c18-5-m04",
+    "q": "Output tokens are 70% of cost per task and rise 38%. About how much does cost per task rise?",
+    "options": [
+     "About 70%",
+     "About 38%",
+     "About 10%",
+     "About 27%"
+    ],
+    "answer": 3,
+    "why": "0.7 × 0.38 ≈ 0.27.",
+    "kind": "calculation",
+    "distractors": [
+     "Not the calculation.",
+     "That assumes all cost is output.",
+     "Too low.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-5-m05",
+    "q": "Choose all the checks the chapter lists for a model upgrade.",
+    "options": [
+     "The provider's logo",
+     "Tokenizer differences and supported parameters",
+     "Structured-output adherence and tool-call format",
+     "Refusal behaviour and verbosity"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Run with current and re-tuned prompts.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c18-5-m06",
+    "q": "A team calls a “latest” alias and the provider moves it. What protects them?",
+    "options": [
+     "Nothing",
+     "Pinning dated snapshot versions plus scheduled re-evaluation",
+     "A different SDK",
+     "A larger timeout"
+    ],
+    "answer": 1,
+    "why": "Aliases can change silently.",
+    "kind": "scenario",
+    "distractors": [
+     "Pinning helps.",
+     "",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c18-5-m07",
+    "q": "Embedding model change: how must queries and documents switch?",
+    "options": [
+     "Atomically, with blue/green indexes",
+     "Documents first, queries next month",
+     "It does not matter",
+     "Queries first, documents later"
+    ],
+    "answer": 0,
+    "why": "Mixed embedding spaces do not match (10.7).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Mismatched spaces.",
+     "It matters.",
+     "Mismatched spaces."
+    ]
+   },
+   {
+    "id": "c18-5-m08",
+    "q": "A fine-tuned model's base gets a new version. What is needed?",
+    "options": [
+     "Only re-tokenising",
+     "Nothing",
+     "Only a smoke test",
+     "Re-run fine-tuning and all of 13.6's checks"
+    ],
+    "answer": 3,
+    "why": "Adapters depend on the exact base.",
+    "kind": "concept",
+    "distractors": [
+     "Not enough.",
+     "Behaviour changes.",
+     "Not enough.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-5-m09",
+    "q": "Over-refusal on the should-answer set rose from 1.2% to 3.1%. What should you do?",
+    "options": [
+     "Ignore it",
+     "Investigate the categories and adjust the system prompt",
+     "Raise temperature",
+     "Ship; refusals are safe"
+    ],
+    "answer": 1,
+    "why": "Over-refusal blocks legitimate users.",
+    "kind": "concept",
+    "distractors": [
+     "It is a regression.",
+     "",
+     "Unrelated.",
+     "Over-refusal is a failure."
+    ]
+   },
+   {
+    "id": "c18-5-m10",
+    "q": "JSON schema adherence without constrained decoding fell from 99.8% to 99.1% on the new model. What is the report's action?",
+    "options": [
+     "Enable constrained decoding",
+     "Raise temperature",
+     "Drop JSON output",
+     "Ship as is"
+    ],
+    "answer": 0,
+    "why": "Constrained decoding enforces the schema (7.4).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Makes it worse.",
+     "Downstream code needs it.",
+     "Parsers would fail on 0.9%."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c18-5-i01",
+    "q": "How do you upgrade to a new model version safely?",
+    "level": "fundamentals",
+    "covers": [
+     "inventory",
+     "compatibility suite",
+     "re-tune prompts",
+     "gates",
+     "rollout"
+    ]
+   },
+   {
+    "id": "c18-5-i02",
+    "q": "What can change between model versions besides quality?",
+    "level": "fundamentals",
+    "covers": [
+     "format adherence",
+     "tool calls",
+     "refusals",
+     "verbosity",
+     "tokenizer",
+     "parameters"
+    ]
+   },
+   {
+    "id": "c18-5-i03",
+    "q": "How do you track provider deprecations?",
+    "level": "fundamentals",
+    "covers": [
+     "inventory",
+     "retirement calendar",
+     "owners",
+     "lead time"
+    ]
+   },
+   {
+    "id": "c18-5-i04",
+    "q": "A provider moved an alias and your parser started failing. What do you change?",
+    "level": "applied",
+    "covers": [
+     "pin snapshots",
+     "constrained decoding",
+     "scheduled re-evaluation",
+     "alerts on version change"
+    ],
+    "followUp": "How would you detect it faster?"
+   },
+   {
+    "id": "c18-5-i05",
+    "q": "How do you keep prompts portable across models?",
+    "level": "applied",
+    "covers": [
+     "model-specific variants",
+     "version together",
+     "re-tune budget",
+     "suite per model"
+    ]
+   },
+   {
+    "id": "c18-5-i06",
+    "q": "Plan an embedding-model migration end to end.",
+    "level": "applied",
+    "covers": [
+     "re-embed",
+     "blue/green",
+     "atomic switch",
+     "rollback"
+    ]
+   },
+   {
+    "id": "c18-5-i07",
+    "q": "Plan {company}'s next model upgrade across languages and supplier tools.",
+    "level": "system-design",
+    "covers": [
+     "per-language suite",
+     "tool-call tests",
+     "prompt variants",
+     "canary",
+     "rollback"
+    ],
+    "followUp": "What would delay the upgrade?",
+    "project": "travel"
+   },
+   {
+    "id": "c18-5-i08",
+    "q": "Design a model-lifecycle process for a company using several providers.",
+    "level": "system-design",
+    "covers": [
+     "inventory",
+     "deprecation tracking",
+     "compatibility testing",
+     "rollout",
+     "ownership"
+    ]
+   }
+  ]
+ },
+ "c18-6": {
+  "mcq": [
+   {
+    "id": "c18-6-m01",
+    "q": "Why is the diff between an AI draft and the sent version valuable?",
+    "options": [
+     "It is free storage",
+     "It gives an automatic quality metric and, after review, training data",
+     "It shows the user's typing speed",
+     "It measures latency"
+    ],
+    "answer": 1,
+    "why": "Edit fraction tracks quality per prompt version.",
+    "kind": "concept",
+    "distractors": [
+     "Not the reason.",
+     "",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c18-6-m02",
+    "q": "A draft of 200 characters has 50 characters changed before sending. What is the edit fraction?",
+    "options": [
+     "50%",
+     "75%",
+     "25%",
+     "4%"
+    ],
+    "answer": 2,
+    "why": "50 / 200 = 0.25.",
+    "kind": "calculation",
+    "distractors": [
+     "Not the ratio.",
+     "That is the unchanged share.",
+     "",
+     "Inverted."
+    ]
+   },
+   {
+    "id": "c18-6-m03",
+    "q": "How should new labels be split?",
+    "options": [
+     "All into training",
+     "Into held-out evaluation and training pools, never mixed",
+     "Randomly reused in both",
+     "All into evaluation"
+    ],
+    "answer": 1,
+    "why": "Mixing makes evaluation measure memory.",
+    "kind": "concept",
+    "distractors": [
+     "Loses evaluation.",
+     "",
+     "Leakage.",
+     "Loses training data."
+    ]
+   },
+   {
+    "id": "c18-6-m04",
+    "q": "Choose all the retraining triggers the chapter lists.",
+    "options": [
+     "A team member's birthday",
+     "Quality SLO breach for N days",
+     "Drift beyond threshold",
+     "Enough new labelled data or a new base model"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Also a policy change. Triggers open a work item; gates still apply.",
+    "kind": "concept",
+    "distractors": [
+     "Not a trigger.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c18-6-m05",
+    "q": "Why re-run the full suite weekly even without changes?",
+    "options": [
+     "To use spare GPUs",
+     "Because tests expire",
+     "It is not needed",
+     "Providers, documents and user behaviour change underneath you"
+    ],
+    "answer": 3,
+    "why": "Scheduled re-evaluation catches silent changes.",
+    "kind": "concept",
+    "distractors": [
+     "Not the reason.",
+     "Not the reason.",
+     "It is needed.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-6-m06",
+    "q": "How often should the evaluation set itself be refreshed?",
+    "options": [
+     "Daily",
+     "Only after incidents",
+     "Quarterly, with new production samples",
+     "Never"
+    ],
+    "answer": 2,
+    "why": "So it does not go stale.",
+    "kind": "concept",
+    "distractors": [
+     "Too unstable.",
+     "Too rare.",
+     "",
+     "It goes stale."
+    ]
+   },
+   {
+    "id": "c18-6-m07",
+    "q": "Why not feed user corrections straight into training?",
+    "options": [
+     "Training cannot use text",
+     "They are always correct",
+     "They are too small",
+     "Some are wrong, malicious or out of scope"
+    ],
+    "answer": 3,
+    "why": "Review them first.",
+    "kind": "concept",
+    "distractors": [
+     "Not true.",
+     "Not true.",
+     "Not the reason.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-6-m08",
+    "q": "A recurring failure on a new document type appears. What comes first?",
+    "options": [
+     "Fix the parser and add a regression case; add training data only if a gap remains",
+     "Ignore it",
+     "Retrain immediately",
+     "Switch models"
+    ],
+    "answer": 0,
+    "why": "Fix root causes in the cheapest place.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "It recurs.",
+     "Premature.",
+     "Premature."
+    ]
+   },
+   {
+    "id": "c18-6-m09",
+    "q": "For DPO pairs from draft edits, which is “rejected”?",
+    "options": [
+     "The sent version",
+     "Neither",
+     "Both",
+     "The AI draft"
+    ],
+    "answer": 3,
+    "why": "The sent version is preferred, after review.",
+    "kind": "concept",
+    "distractors": [
+     "That is preferred.",
+     "Not a pair.",
+     "Not a pair.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-6-m10",
+    "q": "What should a met retraining trigger do?",
+    "options": [
+     "Retrain and deploy automatically",
+     "Open a work item; retraining still goes through all gates",
+     "Delete the old model",
+     "Nothing"
+    ],
+    "answer": 1,
+    "why": "Triggers start work, not releases.",
+    "kind": "concept",
+    "distractors": [
+     "Skips gates.",
+     "",
+     "Rollback needs it.",
+     "The trigger exists to act."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c18-6-i01",
+    "q": "What kinds of feedback should an AI product collect?",
+    "level": "fundamentals",
+    "covers": [
+     "explicit",
+     "implicit",
+     "outcomes",
+     "linked to traces"
+    ]
+   },
+   {
+    "id": "c18-6-i02",
+    "q": "How do you decide when to retrain or re-tune?",
+    "level": "fundamentals",
+    "covers": [
+     "defined triggers",
+     "work item",
+     "gates still apply"
+    ]
+   },
+   {
+    "id": "c18-6-i03",
+    "q": "Why keep evaluation and training labels separate?",
+    "level": "fundamentals",
+    "covers": [
+     "leakage",
+     "memorisation",
+     "honest measurement"
+    ]
+   },
+   {
+    "id": "c18-6-i04",
+    "q": "How would you use support agents' edits to AI drafts?",
+    "level": "applied",
+    "covers": [
+     "edit fraction metric",
+     "review",
+     "training and DPO pairs",
+     "evaluation first"
+    ],
+    "followUp": "What could go wrong?"
+   },
+   {
+    "id": "c18-6-i05",
+    "q": "Your evaluation set is a year old. What do you do?",
+    "level": "applied",
+    "covers": [
+     "refresh with production samples",
+     "keep old cases",
+     "version the suite"
+    ]
+   },
+   {
+    "id": "c18-6-i06",
+    "q": "A new labelled batch arrives. Walk through what happens to it.",
+    "level": "applied",
+    "covers": [
+     "split",
+     "QC",
+     "evaluation pool",
+     "training pool",
+     "trigger check"
+    ]
+   },
+   {
+    "id": "c18-6-i07",
+    "q": "Design {company}'s loop from agent edits to better drafts.",
+    "level": "system-design",
+    "covers": [
+     "log pairs",
+     "edit metric",
+     "review",
+     "eval cases",
+     "training triggers"
+    ],
+    "followUp": "How would you stop bad edits from training the model?",
+    "project": "store"
+   },
+   {
+    "id": "c18-6-i08",
+    "q": "Design a continuous-improvement system for an assistant with delayed outcomes.",
+    "level": "system-design",
+    "covers": [
+     "feedback capture",
+     "annotation",
+     "triggers",
+     "scheduled evaluation",
+     "release path"
+    ]
+   }
+  ]
+ },
+ "c18-7": {
+  "mcq": [
+   {
+    "id": "c18-7-m01",
+    "q": "Who should be accountable for an AI system?",
+    "options": [
+     "Everyone",
+     "Nobody in particular",
+     "A named owning team, with owners for each component",
+     "The model provider"
+    ],
+    "answer": 2,
+    "why": "Quality, cost, incidents and compliance need owners.",
+    "kind": "concept",
+    "distractors": [
+     "Nobody, in practice.",
+     "Unsafe.",
+     "",
+     "Not their system."
+    ]
+   },
+   {
+    "id": "c18-7-m02",
+    "q": "In RACI, what does A mean?",
+    "options": [
+     "Assisted",
+     "Approved",
+     "Accountable",
+     "Assigned"
+    ],
+    "answer": 2,
+    "why": "R = responsible, C = consulted, I = informed.",
+    "kind": "concept",
+    "distractors": [
+     "Not the term.",
+     "Not the term.",
+     "",
+     "Not the term."
+    ]
+   },
+   {
+    "id": "c18-7-m03",
+    "q": "Choose all the items an operational readiness review should verify.",
+    "options": [
+     "A successful demo only",
+     "SLOs, dashboards and alerts live",
+     "Capacity plan from measured numbers and DR tested",
+     "Runbooks written and tested, on-call staffed"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Plus security review and cost budgets.",
+    "kind": "concept",
+    "distractors": [
+     "A demo is not readiness.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c18-7-m04",
+    "q": "What do release notes per manifest include?",
+    "options": [
+     "Only the version number",
+     "Nothing",
+     "Marketing copy",
+     "What changed, evaluation results vs previous, known limits, rollout plan and rollback"
+    ],
+    "answer": 3,
+    "why": "Readers can judge the release.",
+    "kind": "concept",
+    "distractors": [
+     "Not enough.",
+     "Required.",
+     "Not the purpose.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-7-m05",
+    "q": "What makes a good service handover?",
+    "options": [
+     "Architecture and trace walkthrough, access, runbook drills, shadow on-call and joint ownership",
+     "A demo",
+     "An email",
+     "An architecture diagram"
+    ],
+    "answer": 0,
+    "why": "The original team steps back only after joint ownership.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not enough.",
+     "Not enough.",
+     "Not enough."
+    ]
+   },
+   {
+    "id": "c18-7-m06",
+    "q": "A system card describes…",
+    "options": [
+     "The office layout",
+     "Prices",
+     "Only the model's weights",
+     "Intended use, risks and controls of the whole system"
+    ],
+    "answer": 3,
+    "why": "Used for governance (16.8).",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "That is part of a model card.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-7-m07",
+    "q": "In the example RACI, who is accountable for threat model and data protection?",
+    "options": [
+     "Platform / SRE",
+     "Security and compliance",
+     "Product owner",
+     "AI engineering"
+    ],
+    "answer": 1,
+    "why": "AI engineering is responsible; security and compliance is accountable.",
+    "kind": "concept",
+    "distractors": [
+     "Consulted.",
+     "",
+     "Informed.",
+     "Responsible."
+    ]
+   },
+   {
+    "id": "c18-7-m08",
+    "q": "A project team hands over a demo and a diagram and leaves. What is missing?",
+    "options": [
+     "More slides",
+     "A bigger model",
+     "Nothing",
+     "Runbooks, access, drills and a joint-ownership period"
+    ],
+    "answer": 3,
+    "why": "Demos and diagrams are not a handover.",
+    "kind": "scenario",
+    "distractors": [
+     "Not the gap.",
+     "Unrelated.",
+     "Much is missing.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-7-m09",
+    "q": "Who owns shared platforms such as the gateway and observability?",
+    "options": [
+     "The model provider",
+     "Nobody",
+     "Each product team separately",
+     "Platform owners with clear interfaces"
+    ],
+    "answer": 3,
+    "why": "Shared platforms need their own owners.",
+    "kind": "concept",
+    "distractors": [
+     "Not theirs.",
+     "Unsafe.",
+     "Duplicates ownership.",
+     ""
+    ]
+   },
+   {
+    "id": "c18-7-m10",
+    "q": "Before launch, the capacity plan should cite…",
+    "options": [
+     "Measured numbers with test conditions (15.10)",
+     "Vendor peak numbers",
+     "Last year's guess",
+     "Nothing"
+    ],
+    "answer": 0,
+    "why": "Readiness relies on measured capacity.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Overstated.",
+     "Not evidence.",
+     "Required."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c18-7-i01",
+    "q": "What does ownership mean for an AI system?",
+    "level": "fundamentals",
+    "covers": [
+     "named team",
+     "component owners",
+     "accountability for quality, cost, incidents, compliance"
+    ]
+   },
+   {
+    "id": "c18-7-i02",
+    "q": "What goes into an operational readiness review?",
+    "level": "fundamentals",
+    "covers": [
+     "SLOs",
+     "dashboards and alerts",
+     "runbooks",
+     "on-call",
+     "capacity",
+     "DR",
+     "security",
+     "budgets"
+    ]
+   },
+   {
+    "id": "c18-7-i03",
+    "q": "What makes a service handover succeed?",
+    "level": "fundamentals",
+    "covers": [
+     "walkthrough",
+     "access",
+     "drills",
+     "shadow on-call",
+     "joint period"
+    ]
+   },
+   {
+    "id": "c18-7-i04",
+    "q": "A launch review finds no tested runbooks. What do you do?",
+    "level": "applied",
+    "covers": [
+     "block or delay",
+     "write and drill",
+     "assign owners",
+     "re-review"
+    ],
+    "followUp": "What if the date is fixed?"
+   },
+   {
+    "id": "c18-7-i05",
+    "q": "How would you write release notes for an AI release?",
+    "level": "applied",
+    "covers": [
+     "changes",
+     "eval results",
+     "limits",
+     "rollout and rollback"
+    ]
+   },
+   {
+    "id": "c18-7-i06",
+    "q": "How do you assign RACI for prompt, model and index changes?",
+    "level": "applied",
+    "covers": [
+     "AI engineering accountable",
+     "product consulted",
+     "platform informed",
+     "clear approvals"
+    ]
+   },
+   {
+    "id": "c18-7-i07",
+    "q": "Plan the handover of {company}'s dispute assistant to the operations team.",
+    "level": "system-design",
+    "covers": [
+     "handover pack",
+     "drills",
+     "access",
+     "joint on-call",
+     "acceptance criteria"
+    ],
+    "followUp": "When would you let the project team step back?",
+    "project": "bank"
+   },
+   {
+    "id": "c18-7-i08",
+    "q": "Design a readiness and handover process for all AI launches in a company.",
+    "level": "system-design",
+    "covers": [
+     "checklist",
+     "review board",
+     "evidence",
+     "handover steps",
+     "follow-up"
+    ]
+   }
+  ]
  }
 }

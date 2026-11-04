@@ -2,37 +2,191 @@
  "c4-1": {
   "harbor": {
    "practice": "Harbor&#x27;s small guardrail classifier is a 2-layer MLP over sentence embeddings; its training loss is CrossEntropyLoss on raw logits.",
-   "failure": "Applying softmax before a loss that expects logits."
+   "failure": "Applying softmax before a loss that expects logits.",
+   "fit": "good",
+   "fitNote": "a small classifier head trained on raw logits",
+   "tryIt": "In the playground, choose two moons and train with “linear (no activation)”, then with ReLU. Harbor's guardrail MLP needs its hidden non-linearity for the same reason: its classes are not separable by a straight line in embedding space."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "multi-attribute product tagging needs the right output layer",
+   "practice": "{company}'s product-tagging model puts a small MLP on top of image and title embeddings to predict attributes such as sleeve length and pattern. Each attribute is its own output, trained with a loss on raw logits.",
+   "failure": "Using one softmax across attributes that are not mutually exclusive. A kurta can be both cotton and printed, so use one sigmoid output per attribute with binary cross-entropy.",
+   "tryIt": "In the playground, choose the spiral and find the smallest number of hidden units that separates it. Then train a 2-layer PyTorch MLP on <code>orders.csv</code> (<code>price_inr</code>, <code>delivery_days</code>, <code>city_tier</code>, <code>festive_sale</code>) to predict <code>returned</code>, and compare it with the logistic regression from 3.2."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "fraud patterns that a straight line cannot separate",
+   "practice": "{company} compared logistic regression with a small MLP on behaviour features. The MLP captured interactions such as “foreign, late at night and well above the customer's usual amount” that a single linear boundary misses: the topic's spiral example in real data.",
+   "failure": "Shipping the MLP without checking calibration. A network trained with cross-entropy can still be over-confident, and investigators read its scores as probabilities (3.5).",
+   "tryIt": "In the playground, choose XOR quadrants (an interaction pattern) and train with linear, then tanh. Then fit an MLP on <code>transactions.csv</code> (<code>amount_vs_customer_avg</code>, <code>is_foreign</code>, <code>hour</code>, <code>txns_last_24h</code>) and compare its PR AUC with logistic regression."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "lead time matters differently for refundable fares",
+   "practice": "{company}'s cancellation model has interactions: long lead time matters a lot for non-refundable fares and little for refundable ones. A small network learns that on its own, where logistic regression needs a hand-made product feature.",
+   "failure": "Adding layers to a model whose real problem is a missing feature, such as disruption days (3.6). Depth does not create information the inputs lack.",
+   "tryIt": "Work through the backpropagation stepper by hand once. Then train an MLP on <code>bookings.csv</code> (<code>lead_days</code>, <code>refundable</code>, <code>passengers</code>) and compare it with a logistic regression that includes a <code>lead_days × refundable</code> feature."
   }
  },
  "c4-2": {
   "harbor": {
    "practice": "Harbor&#x27;s reranker fine-tune uses AdamW, 5% warm-up, cosine decay and gradient accumulation to reach an effective batch of 64 on a single GPU.",
-   "failure": "Changing the batch size without retuning the learning rate, then blaming the data when training becomes unstable."
+   "failure": "Changing the batch size without retuning the learning rate, then blaming the data when training becomes unstable.",
+   "fit": "good",
+   "fitNote": "a reranker fine-tune with warm-up, cosine decay and accumulation",
+   "tryIt": "In the schedule figure, set peak LR 2, warm-up 5% and cosine decay to match Harbor's reranker run, then switch to constant and note what the end of training loses."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "weekly retraining whose batch size changed with the hardware",
+   "practice": "{company} retrains its return model every week on fresh orders. When the team moved to a GPU, the batch size went up and the learning rate had to rise with it, with a short warm-up, to keep the same quality per epoch.",
+   "failure": "Comparing weekly retrains that ran for different numbers of epochs. An extra epoch can look like a data improvement.",
+   "tryIt": "Train the 4.1 MLP on <code>orders.csv</code> with batch sizes 32 and 512 at the same learning rate, then at a higher learning rate for 512, and compare validation loss per epoch."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a small labelled set where the stopping epoch matters",
+   "practice": "{company}'s dispute-reason classifier fine-tunes a small encoder with AdamW, warm-up and cosine decay. With only a few hundred labelled cases, the team stops at the epoch where validation loss turns up.",
+   "failure": "Training many epochs on a small labelled set and reporting the last epoch's score. Choose the epoch by validation loss.",
+   "tryIt": "In the schedule figure, try warm-up 0% and 10% with cosine decay and explain why warm-up helps Adam early on. Then fine-tune on the reasons in <code>disputes.csv</code> and plot validation loss per epoch to pick the stopping point."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company} trains with the same AdamW-and-schedule defaults as everyone else. The travel-specific question is how often to retrain before peak seasons, not which optimiser to use.",
+   "failure": "Tuning optimiser settings to fix a seasonal error that is really a data problem.",
+   "tryIt": "In the schedule figure, compare linear and step decay with cosine. Then retrain the bookings model on January to May only and on the whole year from <code>bookings.csv</code>, and compare monsoon-month errors."
   }
  },
  "c4-3": {
   "harbor": {
    "practice": "A Harbor training run produced NaN at step 3,100. The cause was one 40,000-token corrupted document; length filtering plus gradient clipping fixed it, not a lower learning rate alone.",
-   "failure": "Using clipping to hide a data or loss bug: it treats the symptom, not the cause."
+   "failure": "Using clipping to hide a data or loss bug: it treats the symptom, not the cause.",
+   "fit": "good",
+   "fitNote": "a NaN traced to one corrupted document",
+   "tryIt": "Read the loss-spike example and list which of its checks would have found Harbor's 40,000-token document fastest. Then run the 4.6 laptop loop with clipping off and a learning rate ten times higher, and watch for a spike."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "BatchNorm statistics with tiny fine-tuning batches",
+   "practice": "{company}'s image-tagging model uses BatchNorm in its CNN backbone. Fine-tuning with batches of 4 made the batch statistics noisy and validation accuracy swung between epochs; freezing those layers' running statistics fixed it.",
+   "failure": "Evaluating with the model still in training mode: dropout stays on, so the same product gets different tags on every call.",
+   "tryIt": "Run the 4.6 laptop loop twice, once evaluating in training mode and once after model.eval(), and compare how much validation accuracy varies between repeated evaluations."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a NaN caused by one impossible amount",
+   "practice": "{company} retrains its fraud model monthly. One run went NaN because a batch contained an amount wrongly entered in the billions of rupees. Capping impossible values during cleaning (3.3), plus gradient clipping, stopped it.",
+   "failure": "Treating gradient clipping as the fix for a NaN without finding the bad record. The corrupted value is still in the data.",
+   "tryIt": "Add one row with <code>amount_inr = 1e12</code> to <code>transactions.csv</code>, train the 4.1 MLP without feature scaling or clipping and watch the loss. Then add scaling and clipping and compare."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company}'s models are small enough that default initialisation and normalisation just work. Its stability problems come from bad data, such as fares entered in paise instead of rupees.",
+   "failure": "Changing the architecture to fix a spike caused by a unit error in the data.",
+   "tryIt": "Multiply <code>fare_inr</code> by 100 for 1% of rows in <code>bookings.csv</code>, train an MLP on fare and lead time, and compare the loss curve with and without normalising the inputs."
   }
  },
  "c4-4": {
   "harbor": {
    "practice": "Harbor&#x27;s general embedding model placed &quot;PTO&quot; far from &quot;annual leave&quot;. A domain-tuned embedding (13.5) fixed the internal acronyms that a general model had never seen.",
-   "failure": "Using an LLM&#x27;s internal hidden states as search embeddings without evaluating them; general hidden vectors are not automatically good retrieval vectors."
+   "failure": "Using an LLM&#x27;s internal hidden states as search embeddings without evaluating them; general hidden vectors are not automatically good retrieval vectors.",
+   "fit": "best",
+   "fitNote": "internal acronyms show where general embeddings fail",
+   "tryIt": "Run the laptop lab on every policy title in <code>policies.json</code>, then add the query “PTO carry-over” and see which policy is nearest. Write down which internal terms a general model misplaces."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "Hinglish and product jargon test embedding models",
+   "practice": "{company} embeds product titles and shopper queries into one space for search. Shoppers type “kurta for wedding”, “sherwani” or “ethnic wear for men”; a model trained contrastively on {company}'s own query–click pairs placed these together far better than a general one.",
+   "failure": "Training contrastive embeddings with random negatives only. They are too easy, so the model never learns to tell a cotton kurta from a cotton kurta set; add hard negatives.",
+   "tryIt": "Embed the product titles in <code>products.csv</code> and three shopper queries of your own, one in Hinglish, then list each query's top three titles. Note where a general model confuses categories."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "the same complaint in English, Hindi and Hinglish",
+   "practice": "{company} embeds dispute descriptions to find similar past cases and to route new ones. English, Hindi and Hinglish descriptions of the same failed UPI debit should land together, which needs a multilingual embedding model.",
+   "failure": "Treating embeddings as anonymous. They are derived from the text, so personal data in the input stays personal data: redact identifiers before embedding and apply the same retention rules.",
+   "tryIt": "Embed the texts in <code>disputes.csv</code> with a multilingual model, cluster them with k-means (k = 5) and compare the clusters with the <code>reason</code> column."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "intent matching across languages and fare rules",
+   "practice": "{assistant} matches traveller requests to intents and to fare rules by embedding both. “Date change”, “reschedule” and “kal ke bajaye parso” (day after tomorrow instead of tomorrow) should land near each other.",
+   "failure": "Using token embeddings from inside an LLM as intent vectors. They represent single tokens, not whole requests.",
+   "tryIt": "Embed the messages in <code>messages.json</code> and the rule titles in <code>fare_rules.json</code>, then check whether each message's nearest rule is the one you would pick."
   }
  },
  "c4-5": {
   "harbor": {
    "practice": "Harbor&#x27;s document pipeline still uses a CNN-based layout detector to find tables in scanned PDFs before any transformer sees the text.",
-   "failure": "Assuming an LSTM (or any model) remembers arbitrarily long inputs reliably."
+   "failure": "Assuming an LSTM (or any model) remembers arbitrarily long inputs reliably.",
+   "fit": "good",
+   "fitNote": "a CNN layout detector in the document pipeline",
+   "tryIt": "Run an open-source layout or OCR tool (for example Docling, 10.3) on a scanned PDF of your own and note which parts a CNN-based detector finds, such as tables and headings, before any language model sees the text."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "product photos are the classic CNN input",
+   "practice": "{company} tags product photos with a CNN-based image model: colour, pattern, sleeve length. Weight sharing makes it cheap enough to run on every listing as sellers upload photos.",
+   "failure": "Trusting tags on photos unlike the training data, such as a product shot on a patterned bedsheet: the model may tag the background's pattern.",
+   "tryIt": "Run torchvision's pretrained ResNet-18 on five product photos of your own (CPU is fine) and print its top three labels for each. Then photograph one item on a busy background and compare."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "cheque and KYC images read by OCR before any LLM",
+   "practice": "{company} reads cheque images and scanned KYC documents with CNN-based OCR and layout models before any LLM sees the text. A small LSTM still watches ATM telemetry for hardware anomalies because it is cheap and fast.",
+   "failure": "Assuming OCR text is exact. A misread digit in an amount or account number must be caught by validation rules (amount in words versus figures, check digits), not by the LLM downstream.",
+   "tryIt": "Write a sample cheque by hand using invented details only, photograph it and run an OCR tool such as Tesseract or EasyOCR. Count how many characters in the amount and date it misreads."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company} mostly handles text and structured fare data. Its one image task, reading passport and boarding-pass scans, uses an off-the-shelf OCR model rather than anything trained in-house.",
+   "failure": "Reading a passport's machine-readable zone with a general LLM when a dedicated OCR model plus the MRZ check digits does it exactly.",
+   "tryIt": "Take the specimen passport image from ICAO's public MRZ documentation, run OCR on the machine-readable zone and verify its check digits in code."
   }
  },
  "c4-6": {
   "harbor": {
    "practice": "Every Harbor training script first overfits 8 examples to near-zero loss, then saves and reloads a checkpoint and compares predictions, before the real run starts.",
-   "failure": "Saving a checkpoint and never reloading it: a file that cannot be restored is not a checkpoint."
+   "failure": "Saving a checkpoint and never reloading it: a file that cannot be restored is not a checkpoint.",
+   "fit": "good",
+   "fitNote": "an overfit-and-reload check before every run",
+   "tryIt": "Run the laptop training loop, then break it the three ways in the checklist one at a time (no zero_grad, eval mode forgotten, softmax before CrossEntropyLoss) and record each loss curve."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a weekly retraining job that resumes from checkpoints",
+   "practice": "{company}'s weekly retraining job is a standard PyTorch loop. Before each run it overfits 8 orders, checks the first loss against ln 2 for the binary return head, and reloads last week's checkpoint to confirm it predicts the same as before.",
+   "failure": "Resuming from a checkpoint that saved only the model weights. The optimiser state and the learning-rate schedule restart, and the loss jumps.",
+   "tryIt": "Write the training loop for the <code>orders.csv</code> return MLP: save model, optimiser and scheduler state at epoch 2, stop the process, resume, and confirm the loss curve continues smoothly."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "model-risk review needs exactly reproducible runs",
+   "practice": "{company}'s model-risk team requires a reproducible training run: fixed seeds, a deterministic data order, the exact checkpoint used in production and a reload test that compares predictions on a held-out file.",
+   "failure": "Approving a model from a checkpoint nobody has reloaded in a clean environment.",
+   "tryIt": "Train the fraud MLP from 4.1 twice with the same seed and compare the first 100 predictions on <code>transactions.csv</code>. Then change only the DataLoader's shuffle seed and measure the difference."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company}'s data scientists use the same loop. The travel-specific part is the data loader, which must build batches only from bookings whose travel date has passed (3.4).",
+   "failure": "A DataLoader that shuffles across the time split and quietly mixes future bookings into training.",
+   "tryIt": "Write a PyTorch Dataset over <code>bookings.csv</code> that refuses rows whose <code>travel_date</code> is after a cut-off date, and assert that in a unit test."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Replace the digits data with Harbor tickets: embed the text of 1,000 tickets from <code>tickets.csv</code> with sentence-transformers, train a 2-layer MLP on the vectors to predict <code>category</code>, and check the first loss against ln 6 ≈ 1.79 (six categories) before overfitting 8 tickets and running the reload test.</p>"
+  },
+  "store": {
+   "scenario": "<p>Use <code>orders.csv</code>: train an MLP on <code>price_inr</code>, <code>delivery_days</code>, <code>city_tier</code> and <code>festive_sale</code> (scaled) to predict <code>returned</code>. The first loss should be near ln 2 ≈ 0.69. Leave out <code>refund_amount_inr</code>, then run the overfit and reload checks.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use <code>transactions.csv</code> with scaled features. Expect a first loss near ln 2 ≈ 0.69, overfit 8 rows that include 2 frauds, then train with class weights, save, reload in a fresh process and compare predictions exactly. Leave out <code>chargeback_filed</code>.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use <code>bookings.csv</code>: predict <code>cancelled</code> from <code>lead_days</code>, <code>refundable</code> and <code>passengers</code>, excluding <code>cancellation_fee_inr</code>. Check the first loss near ln 2 ≈ 0.69, overfit 8 rows, then run the save and reload check.</p>"
   }
  }
 }

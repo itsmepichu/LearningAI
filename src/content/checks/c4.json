@@ -13,9 +13,273 @@
     "answer": 1,
     "why": "Compositions of linear maps are linear; non-linearity lets networks model curved boundaries.",
     "kind": "concept"
+   },
+   {
+    "id": "c4-1-m02",
+    "q": "A ReLU neuron has weights w = [2, −1], bias b = 0.5 and input x = [1, 3]. What does it output?",
+    "options": [
+     "0",
+     "0.5",
+     "−0.5",
+     "5.5"
+    ],
+    "answer": 0,
+    "why": "z = 2·1 + (−1)·3 + 0.5 = −0.5, and ReLU(−0.5) = 0.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That drops the −3 term's sign.",
+     "That is z before the activation; ReLU sets negatives to 0.",
+     "That adds all the products as positives."
+    ]
+   },
+   {
+    "id": "c4-1-m03",
+    "q": "ReLU's gradient is 0 for negative inputs. What practical problem can that cause?",
+    "options": [
+     "Neurons whose inputs are always negative stop learning (dead ReLUs)",
+     "Training uses more memory",
+     "The network becomes linear",
+     "Gradients explode"
+    ],
+    "answer": 0,
+    "why": "No gradient flows through a neuron that never activates, so its weights never update.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Memory use is unaffected.",
+     "ReLU is still non-linear.",
+     "Zero gradients are the opposite of exploding."
+    ]
+   },
+   {
+    "id": "c4-1-m04",
+    "q": "Which loss is standard for classification and language modelling?",
+    "options": [
+     "Hinge loss only",
+     "Mean squared error",
+     "Cross-entropy",
+     "Mean absolute error"
+    ],
+    "answer": 2,
+    "why": "Cross-entropy rewards probability on the right class or token; MSE is the usual choice for regression.",
+    "kind": "concept",
+    "distractors": [
+     "Hinge loss is used by SVMs, not language models.",
+     "MSE is for regression.",
+     "",
+     "MAE is also a regression loss."
+    ]
+   },
+   {
+    "id": "c4-1-m05",
+    "q": "You apply softmax to the outputs and then pass them to PyTorch's CrossEntropyLoss. What happens?",
+    "options": [
+     "Nothing changes",
+     "The model trains faster",
+     "PyTorch raises an error",
+     "Training runs, but gradients shrink and the model learns slowly"
+    ],
+    "answer": 3,
+    "why": "CrossEntropyLoss expects raw logits and applies log-softmax itself; a second softmax squashes the signal.",
+    "kind": "scenario",
+    "distractors": [
+     "The double softmax changes the gradients.",
+     "It learns more slowly.",
+     "It runs without error, which is why the bug is common.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-1-m06",
+    "q": "In the worked example, ŷ = w₂·h with h = 0.5, target y = 2 and prediction ŷ = 1. With L = (ŷ − y)², what is ∂L/∂w₂?",
+    "options": [
+     "−2",
+     "−1",
+     "−4",
+     "0.5"
+    ],
+    "answer": 1,
+    "why": "∂L/∂ŷ = 2(ŷ − y) = −2, and ∂L/∂w₂ = ∂L/∂ŷ · h = −2 × 0.5 = −1.",
+    "kind": "calculation",
+    "distractors": [
+     "That is ∂L/∂ŷ, before multiplying by h.",
+     "",
+     "That is ∂L/∂h = ∂L/∂ŷ · w₂.",
+     "That is h itself."
+    ]
+   },
+   {
+    "id": "c4-1-m07",
+    "q": "How is one layer of many neurons computed?",
+    "options": [
+     "With a sorting step",
+     "With a lookup table",
+     "As one matrix multiplication (plus a bias and an activation)",
+     "One neuron at a time in a Python loop"
+    ],
+    "answer": 2,
+    "why": "Stacking each neuron's weights as rows of a matrix computes the whole layer at once.",
+    "kind": "concept",
+    "distractors": [
+     "No sorting is involved.",
+     "Layers compute, not look up.",
+     "",
+     "That is far slower and not how frameworks work."
+    ]
+   },
+   {
+    "id": "c4-1-m08",
+    "q": "Why is backpropagation efficient?",
+    "options": [
+     "It needs no forward pass",
+     "It reuses intermediate results stored during the forward pass",
+     "It only updates the last layer",
+     "It skips most of the weights"
+    ],
+    "answer": 1,
+    "why": "Each layer's stored values let the chain rule run backward once instead of recomputing each path.",
+    "kind": "concept",
+    "distractors": [
+     "The forward pass supplies the stored values.",
+     "",
+     "All layers are updated.",
+     "It computes gradients for every weight."
+    ]
+   },
+   {
+    "id": "c4-1-m09",
+    "q": "GELU and SiLU are…",
+    "options": [
+     "Optimisers",
+     "Normalisation layers",
+     "Loss functions",
+     "Smooth variants of ReLU used in transformers"
+    ],
+    "answer": 3,
+    "why": "They behave like ReLU for large inputs but are smooth around zero.",
+    "kind": "concept",
+    "distractors": [
+     "They are not optimisers.",
+     "Normalisation is LayerNorm or RMSNorm.",
+     "They are activations, not losses.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-1-m10",
+    "q": "Why are sigmoid and tanh less common in the hidden layers of deep networks?",
+    "options": [
+     "They are not differentiable",
+     "They saturate, so gradients become very small for large inputs",
+     "They output only integers",
+     "They are too slow to compute"
+    ],
+    "answer": 1,
+    "why": "In their flat regions the derivative is near zero, which slows or stops learning in deep stacks.",
+    "kind": "concept",
+    "distractors": [
+     "Both are differentiable.",
+     "",
+     "Both output real numbers.",
+     "Speed is not the main issue."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c4-1-i01",
+    "q": "Walk through a forward and backward pass for a two-layer network.",
+    "level": "fundamentals",
+    "covers": [
+     "Weighted sums and activations, storing intermediates",
+     "Loss at the output",
+     "Chain rule backward through each layer",
+     "Gradient for every weight, then an update"
+    ]
+   },
+   {
+    "id": "c4-1-i02",
+    "q": "Why do neural networks need non-linear activations?",
+    "level": "fundamentals",
+    "covers": [
+     "Stacked linear layers collapse into one linear map",
+     "Only straight decision boundaries without them",
+     "Activations let networks bend boundaries",
+     "Example: separating a spiral or circles"
+    ]
+   },
+   {
+    "id": "c4-1-i03",
+    "q": "What is the difference between logits, probabilities and the loss?",
+    "level": "fundamentals",
+    "covers": [
+     "Logits: raw scores",
+     "Softmax or sigmoid turns them into probabilities",
+     "Loss compares probabilities with the target",
+     "Losses often take logits for numerical stability"
+    ]
+   },
+   {
+    "id": "c4-1-i04",
+    "q": "Your classifier trains but learns very slowly, and you find softmax applied before CrossEntropyLoss. Explain what is happening.",
+    "level": "applied",
+    "covers": [
+     "The loss already applies log-softmax",
+     "Double softmax compresses the outputs",
+     "Gradients shrink",
+     "Remove the extra softmax and recheck the first loss"
+    ]
+   },
+   {
+    "id": "c4-1-i05",
+    "q": "When would you choose an MLP over gradient-boosted trees for tabular data?",
+    "level": "applied",
+    "covers": [
+     "Trees usually win on plain tabular data",
+     "MLPs help with embeddings or mixed inputs",
+     "Need for end-to-end training with other networks",
+     "Compare fairly on the same split and metric"
+    ]
+   },
+   {
+    "id": "c4-1-i06",
+    "q": "{company} needs to tag each product with several attributes that can all be true at once. How do you set up the output layer and loss?",
+    "level": "applied",
+    "covers": [
+     "One sigmoid output per attribute",
+     "Binary cross-entropy, not one softmax",
+     "A threshold per attribute",
+     "Imbalance handled per attribute",
+     "Evaluate each attribute separately"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c4-1-i07",
+    "q": "Design a small guardrail classifier on top of sentence embeddings for an assistant.",
+    "level": "system-design",
+    "covers": [
+     "Embedding model choice",
+     "A small MLP head and labelled examples",
+     "Thresholds from precision and recall needs",
+     "Calibration",
+     "Latency budget and monitoring"
+    ],
+    "followUp": "How would you keep it accurate as the assistant's traffic changes?"
+   },
+   {
+    "id": "c4-1-i08",
+    "q": "Explain the cost of backpropagation compared with the forward pass, and why it matters for training budgets.",
+    "level": "system-design",
+    "covers": [
+     "Backward is roughly twice the forward compute",
+     "Activations must be stored, which costs memory",
+     "Training compute ≈ 6 × parameters × tokens (6.3)",
+     "Activation checkpointing trades compute for memory"
+    ]
+   }
+  ]
  },
  "c4-6": {
   "mcq": [
@@ -31,9 +295,278 @@
     "answer": 1,
     "why": "no_grad stops gradient recording only; eval() switches dropout and normalisation to inference mode.",
     "kind": "concept"
+   },
+   {
+    "id": "c4-6-m02",
+    "q": "What does loss.backward() do in PyTorch?",
+    "options": [
+     "Resets the gradients",
+     "Updates the weights",
+     "Computes the loss",
+     "Runs backpropagation and fills each parameter's .grad"
+    ],
+    "answer": 3,
+    "why": "Autograd walks the recorded graph backward; the optimiser's step() then updates the weights.",
+    "kind": "concept",
+    "distractors": [
+     "opt.zero_grad() resets them.",
+     "opt.step() updates weights.",
+     "The loss is computed before backward().",
+     ""
+    ]
+   },
+   {
+    "id": "c4-6-m03",
+    "q": "You forget to call opt.zero_grad() each step. What happens?",
+    "options": [
+     "PyTorch raises an error",
+     "Training is faster",
+     "Gradients accumulate across steps, so updates are wrong",
+     "Nothing changes"
+    ],
+    "answer": 2,
+    "why": "PyTorch adds new gradients to existing ones by default.",
+    "kind": "scenario",
+    "distractors": [
+     "No error is raised.",
+     "It trains incorrectly, not faster.",
+     "",
+     "Updates grow and become wrong."
+    ]
+   },
+   {
+    "id": "c4-6-m04",
+    "q": "What does requires_grad=True on a tensor mean?",
+    "options": [
+     "Operations on it are recorded so gradients can be computed",
+     "It is a label",
+     "It must be on a GPU",
+     "It cannot change"
+    ],
+    "answer": 0,
+    "why": "Autograd records a computation graph for tensors that need gradients.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Labels normally do not need gradients.",
+     "It works on CPU too.",
+     "Parameters with gradients are updated."
+    ]
+   },
+   {
+    "id": "c4-6-m05",
+    "q": "Why overfit one small batch before a real run?",
+    "options": [
+     "It makes the final model better",
+     "If the model cannot drive loss near zero on 8 examples, there is a bug",
+     "It saves memory",
+     "It replaces validation"
+    ],
+    "answer": 1,
+    "why": "Wrong labels, a wrong loss or frozen weights show up immediately.",
+    "kind": "concept",
+    "distractors": [
+     "It is a test, not a training technique.",
+     "",
+     "Memory is not the point.",
+     "Validation is still needed."
+    ]
+   },
+   {
+    "id": "c4-6-m06",
+    "q": "Your code runs but results are wrong, and tensor shapes were never printed. What is a likely cause?",
+    "options": [
+     "The seed was fixed",
+     "The GPU is too slow",
+     "Silent broadcasting combined tensors of unexpected shapes",
+     "Too few epochs"
+    ],
+    "answer": 2,
+    "why": "Broadcasting makes mismatched shapes run without error; print shapes at each step.",
+    "kind": "scenario",
+    "distractors": [
+     "A fixed seed is good practice.",
+     "Speed does not change results.",
+     "",
+     "Too few epochs gives undertrained, not wrong, results."
+    ]
+   },
+   {
+    "id": "c4-6-m07",
+    "q": "What must a checkpoint contain to resume training exactly?",
+    "options": [
+     "Only the loss value",
+     "Only the model weights",
+     "Model and optimiser state (and the scheduler's)",
+     "Only the training data"
+    ],
+    "answer": 2,
+    "why": "Without optimiser and schedule state, the resumed run behaves like a restart.",
+    "kind": "concept",
+    "distractors": [
+     "A loss value cannot restore anything.",
+     "Optimiser moments and the schedule restart without them.",
+     "",
+     "The data is stored separately."
+    ]
+   },
+   {
+    "id": "c4-6-m08",
+    "q": "Gradient norms are exactly zero for some layers. What does that suggest?",
+    "options": [
+     "A disconnected graph or dead ReLUs",
+     "Too much data",
+     "A large learning rate",
+     "Perfect training"
+    ],
+    "answer": 0,
+    "why": "No gradient means no learning for those layers.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Data volume is unrelated.",
+     "A large rate gives large, not zero, gradients.",
+     "Zero gradients mean nothing is learning there."
+    ]
+   },
+   {
+    "id": "c4-6-m09",
+    "q": "What is torch.autograd.set_detect_anomaly(True) for?",
+    "options": [
+     "Saving checkpoints",
+     "Speeding up training",
+     "Finding the operation that produced a NaN, briefly, because it is slow",
+     "Choosing the learning rate"
+    ],
+    "answer": 2,
+    "why": "It adds checks to every operation, so enable it only while debugging.",
+    "kind": "concept",
+    "distractors": [
+     "Checkpointing is separate.",
+     "It slows training.",
+     "",
+     "It does not tune anything."
+    ]
+   },
+   {
+    "id": "c4-6-m10",
+    "q": "Where does gradient clipping go in the training loop?",
+    "options": [
+     "Before opt.zero_grad()",
+     "Before the forward pass",
+     "After loss.backward() and before opt.step()",
+     "After opt.step()"
+    ],
+    "answer": 2,
+    "why": "Gradients must exist before they can be clipped, and clipping must happen before they are applied.",
+    "kind": "concept",
+    "distractors": [
+     "Gradients from this step do not exist yet.",
+     "No gradients exist yet.",
+     "",
+     "Too late: the weights have changed."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c4-6-i01",
+    "q": "Explain how autograd works in PyTorch.",
+    "level": "fundamentals",
+    "covers": [
+     "Operations on tensors that need gradients are recorded",
+     "loss.backward() walks the graph",
+     "Gradients accumulate in .grad",
+     "No need to write backward passes"
+    ]
+   },
+   {
+    "id": "c4-6-i02",
+    "q": "Walk through a minimal training loop and what each line does.",
+    "level": "fundamentals",
+    "covers": [
+     "Load batch",
+     "Forward and loss",
+     "Zero gradients, backward",
+     "Clip and step, schedule",
+     "Periodic evaluation and checkpoint"
+    ]
+   },
+   {
+    "id": "c4-6-i03",
+    "q": "What must a checkpoint contain to resume training exactly?",
+    "level": "fundamentals",
+    "covers": [
+     "Model state",
+     "Optimiser state",
+     "Scheduler state and step count",
+     "Random states, if exact reproduction matters",
+     "A reload test"
+    ]
+   },
+   {
+    "id": "c4-6-i04",
+    "q": "Your model cannot overfit eight examples. What do you check?",
+    "level": "applied",
+    "covers": [
+     "Labels match inputs",
+     "The loss and output layer",
+     "Weights actually updating",
+     "Learning rate",
+     "Data augmentation or dropout left on"
+    ],
+    "followUp": "What is the first line of code you would add?"
+   },
+   {
+    "id": "c4-6-i05",
+    "q": "Validation numbers are noisy between runs. Which PyTorch mistakes could cause that?",
+    "level": "applied",
+    "covers": [
+     "Forgetting model.eval()",
+     "Dropout or BatchNorm in training mode",
+     "No fixed seed",
+     "Different data order",
+     "Non-deterministic kernels"
+    ]
+   },
+   {
+    "id": "c4-6-i06",
+    "q": "{company}'s weekly retrain resumed from a checkpoint and the loss jumped. Why, and how do you fix it?",
+    "level": "applied",
+    "covers": [
+     "Optimiser or scheduler state not saved",
+     "The learning rate restarted from warm-up",
+     "Data loader position or data changed",
+     "Save full state and test resume"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c4-6-i07",
+    "q": "Design a training-script template your team must use for every model.",
+    "level": "system-design",
+    "covers": [
+     "Overfit-one-batch test",
+     "Initial-loss check",
+     "Shape logging and seeds",
+     "Save and reload test",
+     "Gradient-norm and loss logging",
+     "Correct train and eval modes"
+    ]
+   },
+   {
+    "id": "c4-6-i08",
+    "q": "How would you debug a NaN that appears only after hours of training?",
+    "level": "system-design",
+    "covers": [
+     "Resume from the nearest checkpoint to reproduce",
+     "Anomaly detection briefly",
+     "Inspect the batch and its data",
+     "Gradient norms per layer",
+     "Precision and learning-rate schedule"
+    ]
+   }
+  ]
  },
  "c4-3": {
   "mcq": [
@@ -49,8 +582,1142 @@
     "answer": 1,
     "why": "ln(10) ≈ 2.30 is the loss of uniform predictions, the normal starting point.",
     "kind": "concept"
+   },
+   {
+    "id": "c4-3-m02",
+    "q": "What goes wrong if every weight starts at zero?",
+    "options": [
+     "Every neuron in a layer computes the same thing and they never learn different features",
+     "Training is faster",
+     "The loss starts at zero",
+     "Gradients explode"
+    ],
+    "answer": 0,
+    "why": "Identical weights get identical gradients, so the symmetry is never broken.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "It does not train usefully at all.",
+     "The loss is not zero.",
+     "Gradients do not explode; they are identical."
+    ]
+   },
+   {
+    "id": "c4-3-m03",
+    "q": "Xavier (Glorot) and He (Kaiming) initialisation scale the weights' variance to…",
+    "options": [
+     "The number of epochs",
+     "The learning rate",
+     "The batch size",
+     "The layer's width"
+    ],
+    "answer": 3,
+    "why": "Scaling by fan-in or fan-out keeps activations from growing or shrinking through the layers.",
+    "kind": "concept",
+    "distractors": [
+     "Epochs are unrelated.",
+     "The learning rate is separate.",
+     "Batch size does not enter the formula.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-3-m04",
+    "q": "When do gradients vanish in early layers?",
+    "options": [
+     "When the factors multiplied during backprop are mostly below 1",
+     "When the learning rate is high",
+     "When the dataset is large",
+     "When the model is shallow"
+    ],
+    "answer": 0,
+    "why": "Many small factors multiply to almost nothing, so early layers barely learn.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "A high rate causes overshooting, not vanishing.",
+     "Data size is not the cause.",
+     "Shallow networks suffer less."
+    ]
+   },
+   {
+    "id": "c4-3-m05",
+    "q": "Why do transformers use LayerNorm rather than BatchNorm?",
+    "options": [
+     "BatchNorm cannot be computed on GPUs",
+     "LayerNorm normalises within each example, so it does not depend on batch size",
+     "LayerNorm has no parameters",
+     "BatchNorm only works for text"
+    ],
+    "answer": 1,
+    "why": "BatchNorm uses statistics across the batch, which is awkward for variable-length sequences and small batches.",
+    "kind": "concept",
+    "distractors": [
+     "BatchNorm runs fine on GPUs.",
+     "",
+     "LayerNorm has learnable scale and shift.",
+     "BatchNorm is common in CNNs for images."
+    ]
+   },
+   {
+    "id": "c4-3-m06",
+    "q": "What is RMSNorm?",
+    "options": [
+     "A loss function",
+     "A cheaper variant of LayerNorm used by many current LLMs",
+     "A dropout method",
+     "A learning-rate schedule"
+    ],
+    "answer": 1,
+    "why": "It rescales by the root mean square without subtracting the mean.",
+    "kind": "concept",
+    "distractors": [
+     "It is a normalisation layer.",
+     "",
+     "Dropout is a different regulariser.",
+     "Schedules change the learning rate."
+    ]
+   },
+   {
+    "id": "c4-3-m07",
+    "q": "What happens to dropout at inference time?",
+    "options": [
+     "It doubles",
+     "It stays the same as in training",
+     "It replaces normalisation",
+     "It is turned off"
+    ],
+    "answer": 3,
+    "why": "Dropout only regularises training; model.eval() disables it so predictions are deterministic.",
+    "kind": "concept",
+    "distractors": [
+     "Nothing doubles.",
+     "Leaving it on makes predictions random.",
+     "It is unrelated to normalisation.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-3-m08",
+    "q": "The gradient norm is 5.0 and the clipping limit is 1.0. By what factor is the gradient scaled?",
+    "options": [
+     "1",
+     "5",
+     "0.5",
+     "0.2"
+    ],
+    "answer": 3,
+    "why": "Clipping rescales the gradient to the limit: 1.0 ÷ 5.0 = 0.2.",
+    "kind": "calculation",
+    "distractors": [
+     "That would leave it unchanged.",
+     "That would enlarge it.",
+     "That would clip to 2.5.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-3-m09",
+    "q": "Training loss falls to 2.1, jumps to 7.8 at step 14,200 and then becomes NaN. Which response matches the topic's advice?",
+    "options": [
+     "Restart from scratch with a bigger model",
+     "Clip gradients, lower the peak learning rate, use BF16, inspect the offending batch and resume from a checkpoint",
+     "Ignore it; spikes are normal",
+     "Delete the validation set"
+    ],
+    "answer": 1,
+    "why": "Likely causes are a too-high rate, a corrupted batch or FP16 overflow; fix the cause and resume.",
+    "kind": "scenario",
+    "distractors": [
+     "A bigger model does not fix the cause.",
+     "",
+     "A spike to NaN needs action.",
+     "Validation is unrelated."
+    ]
+   },
+   {
+    "id": "c4-3-m10",
+    "q": "A NaN is traced to one 40,000-token corrupted document. What is the best fix?",
+    "options": [
+     "Filter or length-check the data, and add gradient clipping as a guard",
+     "Train for fewer steps",
+     "Only lower the learning rate",
+     "Remove normalisation layers"
+    ],
+    "answer": 0,
+    "why": "The data caused it; clipping alone treats the symptom.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Fewer steps does not remove the record.",
+     "A lower rate may delay the failure, not remove the bad record.",
+     "That would make training less stable."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c4-3-i01",
+    "q": "What are vanishing and exploding gradients, and how do modern networks avoid them?",
+    "level": "fundamentals",
+    "covers": [
+     "Products of many factors in backprop",
+     "Below 1 vanish, above 1 explode",
+     "Residual connections",
+     "Normalisation and careful initialisation",
+     "Clipping as a guard"
+    ]
+   },
+   {
+    "id": "c4-3-i02",
+    "q": "Explain BatchNorm versus LayerNorm and when each is used.",
+    "level": "fundamentals",
+    "covers": [
+     "Across the batch versus across features in one example",
+     "BatchNorm common in CNNs",
+     "LayerNorm in transformers",
+     "Batch-size dependence and inference behaviour"
+    ]
+   },
+   {
+    "id": "c4-3-i03",
+    "q": "What does dropout do, and why is it off at inference?",
+    "level": "fundamentals",
+    "covers": [
+     "Randomly zeroes activations during training",
+     "Prevents reliance on single paths",
+     "Off at inference for deterministic outputs",
+     "model.eval() controls it"
+    ]
+   },
+   {
+    "id": "c4-3-i04",
+    "q": "Your loss spikes and goes NaN mid-training. Walk through your response.",
+    "level": "applied",
+    "covers": [
+     "Stop and keep the last good checkpoint",
+     "Find the step and batch",
+     "Check data, learning rate and precision",
+     "Fix the cause, add clipping",
+     "Resume and watch"
+    ],
+    "followUp": "What would you log so the next spike is faster to diagnose?"
+   },
+   {
+    "id": "c4-3-i05",
+    "q": "When is gradient clipping the right fix, and when does it hide a bug?",
+    "level": "applied",
+    "covers": [
+     "Right: occasional large gradients in healthy training",
+     "Hiding: corrupted data or a wrong loss",
+     "Watch how often it activates",
+     "Investigate when it fires constantly"
+    ]
+   },
+   {
+    "id": "c4-3-i06",
+    "q": "{company}'s image model swings in validation accuracy when fine-tuned with batches of 4. What is going on, and what would you do?",
+    "level": "applied",
+    "covers": [
+     "BatchNorm statistics are noisy with tiny batches",
+     "Freeze the running statistics or BatchNorm layers",
+     "Use a normalisation that does not depend on batch size",
+     "Increase the effective batch where possible"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c4-3-i07",
+    "q": "Design safeguards in a training pipeline so one bad record cannot ruin a long run.",
+    "level": "system-design",
+    "covers": [
+     "Data validation: lengths, value ranges, encodings",
+     "Gradient clipping and NaN detection",
+     "Frequent checkpoints and automatic resume",
+     "Skip-and-log for failing batches",
+     "Alerts on loss spikes"
+    ]
+   },
+   {
+    "id": "c4-3-i08",
+    "q": "{company} must explain to auditors why a monthly fraud-model run failed and was rerun. What would you record?",
+    "level": "system-design",
+    "covers": [
+     "Data snapshot and code versions",
+     "The failing step and batch",
+     "Root cause and fix",
+     "Seeds and configuration of both runs",
+     "Comparison of the rerun's results"
+    ],
+    "project": "bank"
+   }
+  ]
+ },
+ "c4-2": {
+  "mcq": [
+   {
+    "id": "c4-2-m01",
+    "q": "One epoch is…",
+    "options": [
+     "One mini-batch",
+     "One full pass over the training data",
+     "One validation run",
+     "One weight update"
+    ],
+    "answer": 1,
+    "why": "A step is one update from one batch; an epoch covers every example once.",
+    "kind": "concept",
+    "distractors": [
+     "That is a batch.",
+     "",
+     "Validation is separate.",
+     "That is a step."
+    ]
+   },
+   {
+    "id": "c4-2-m02",
+    "q": "With 10,000 training examples and a batch size of 32, how many steps are in one epoch?",
+    "options": [
+     "320,000",
+     "10,000",
+     "313",
+     "32"
+    ],
+    "answer": 2,
+    "why": "10,000 ÷ 32 = 312.5, so 313 steps including the last partial batch.",
+    "kind": "calculation",
+    "distractors": [
+     "That multiplies instead of dividing.",
+     "That would be a batch size of 1.",
+     "",
+     "That is the batch size."
+    ]
+   },
+   {
+    "id": "c4-2-m03",
+    "q": "A run uses batch size 4 with 8 gradient-accumulation steps. What is the effective batch size?",
+    "options": [
+     "4",
+     "8",
+     "12",
+     "32"
+    ],
+    "answer": 3,
+    "why": "Gradients from 8 batches of 4 are summed before one update: an effective batch of 32.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the per-step batch.",
+     "That is the accumulation count.",
+     "That adds instead of multiplying.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-2-m04",
+    "q": "How does AdamW differ from Adam?",
+    "options": [
+     "It decouples weight decay from the gradient update",
+     "It uses no learning rate",
+     "It removes momentum",
+     "It stores no optimiser state"
+    ],
+    "answer": 0,
+    "why": "Applying weight decay directly to the weights, separate from the adaptive step, works better in practice.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "It still has a learning rate.",
+     "It keeps the first-moment average.",
+     "It stores the same two moments as Adam."
+    ]
+   },
+   {
+    "id": "c4-2-m05",
+    "q": "Why use a learning-rate warm-up at the start of training?",
+    "options": [
+     "To skip the first batches",
+     "Adam's running statistics are unreliable early, so large updates can destabilise training",
+     "Because the loss is zero at first",
+     "To make training finish faster"
+    ],
+    "answer": 1,
+    "why": "Starting near zero and ramping up avoids huge early steps.",
+    "kind": "concept",
+    "distractors": [
+     "No batches are skipped.",
+     "",
+     "The initial loss is high, not zero.",
+     "Warm-up adds a little time; it buys stability."
+    ]
+   },
+   {
+    "id": "c4-2-m06",
+    "q": "What does momentum add to SGD?",
+    "options": [
+     "A running average of gradients, so steps speed up in consistent directions",
+     "Gradient clipping",
+     "A per-parameter step size",
+     "Weight decay"
+    ],
+    "answer": 0,
+    "why": "Velocity accumulates along steady slopes and damps oscillations across them.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Clipping is separate.",
+     "Per-parameter scaling is what Adam adds.",
+     "Weight decay is separate."
+    ]
+   },
+   {
+    "id": "c4-2-m07",
+    "q": "Validation loss starts rising in epoch 3 while training loss keeps falling. What should you do?",
+    "options": [
+     "Raise the learning rate",
+     "Train for more epochs",
+     "Stop at, or keep the checkpoint from, epoch 2 (early stopping)",
+     "Ignore validation loss"
+    ],
+    "answer": 2,
+    "why": "The model has begun to overfit; the epoch-2 checkpoint generalises better.",
+    "kind": "scenario",
+    "distractors": [
+     "A higher rate will not cure overfitting.",
+     "More epochs will overfit further.",
+     "",
+     "Validation loss is the generalisation signal."
+    ]
+   },
+   {
+    "id": "c4-2-m08",
+    "q": "How many extra numbers per parameter does Adam store?",
+    "options": [
+     "None",
+     "Four",
+     "One",
+     "Two (the first and second moment averages)"
+    ],
+    "answer": 3,
+    "why": "That extra state is why optimiser memory matters for large models (6.6).",
+    "kind": "calculation",
+    "distractors": [
+     "Adam keeps running averages.",
+     "It keeps two.",
+     "It keeps both moments.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-2-m09",
+    "q": "When you move to much larger batches, what usually has to change?",
+    "options": [
+     "Removing the optimiser",
+     "Nothing",
+     "A larger learning rate, usually with warm-up",
+     "A smaller dataset"
+    ],
+    "answer": 2,
+    "why": "Smoother gradients from large batches allow, and often need, a larger step to keep progress per epoch.",
+    "kind": "concept",
+    "distractors": [
+     "You still need an optimiser.",
+     "Without retuning, training can be slow or unstable.",
+     "",
+     "Data size is unrelated."
+    ]
+   },
+   {
+    "id": "c4-2-m10",
+    "q": "Memory allows a batch of only 4, but you want the effect of 64. What do you do?",
+    "options": [
+     "Lower the learning rate only",
+     "Accumulate gradients over 16 small batches before each update",
+     "Duplicate each example 16 times",
+     "Use a batch of 4 and train 16 times longer"
+    ],
+    "answer": 1,
+    "why": "Gradient accumulation sums gradients from several small batches, simulating the larger batch.",
+    "kind": "scenario",
+    "distractors": [
+     "That does not reproduce a batch of 64.",
+     "",
+     "Duplicates add no new information.",
+     "Longer training is not the same as a larger batch."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c4-2-i01",
+    "q": "Explain batches, steps and epochs.",
+    "level": "fundamentals",
+    "covers": [
+     "Batch: examples per gradient estimate",
+     "Step: one update",
+     "Epoch: one pass over the data",
+     "How they relate to time and cost"
+    ]
+   },
+   {
+    "id": "c4-2-i02",
+    "q": "How does Adam work, and why is it the default for transformers?",
+    "level": "fundamentals",
+    "covers": [
+     "Running averages of gradients and squared gradients",
+     "Per-parameter adaptive steps",
+     "Robust across layers with different scales",
+     "Memory cost of two extra values per parameter"
+    ]
+   },
+   {
+    "id": "c4-2-i03",
+    "q": "Why use a learning-rate warm-up and decay?",
+    "level": "fundamentals",
+    "covers": [
+     "Warm-up avoids unstable early steps",
+     "Decay lets the model settle",
+     "Typical: linear warm-up then cosine",
+     "Shown in loss curves"
+    ]
+   },
+   {
+    "id": "c4-2-i04",
+    "q": "You doubled the batch size and training became unstable. What do you change?",
+    "level": "applied",
+    "covers": [
+     "Retune the learning rate",
+     "Add or lengthen warm-up",
+     "Check gradient norms",
+     "Compare per-epoch, not per-step, progress"
+    ],
+    "followUp": "How would you check whether the new batch size is actually helping?"
+   },
+   {
+    "id": "c4-2-i05",
+    "q": "How do you choose the number of epochs for a fine-tuning run?",
+    "level": "applied",
+    "covers": [
+     "Watch validation loss",
+     "Early stopping with patience",
+     "Keep the best checkpoint",
+     "Small data needs few epochs"
+    ]
+   },
+   {
+    "id": "c4-2-i06",
+    "q": "{company} has only a few hundred labelled dispute cases. How do you set up optimisation to avoid overfitting?",
+    "level": "applied",
+    "covers": [
+     "Low learning rate and few epochs",
+     "Early stopping on validation loss",
+     "Weight decay",
+     "Freezing most layers or using LoRA",
+     "Cross-validation for the estimate"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c4-2-i07",
+    "q": "Design the training configuration for fine-tuning on one GPU with limited memory.",
+    "level": "system-design",
+    "covers": [
+     "Gradient accumulation for the effective batch",
+     "BF16 mixed precision",
+     "LoRA or QLoRA",
+     "Gradient checkpointing",
+     "Warm-up, decay and regular checkpoints"
+    ]
+   },
+   {
+    "id": "c4-2-i08",
+    "q": "How would you run a learning-rate sweep cheaply, and decide from it?",
+    "level": "system-design",
+    "covers": [
+     "Short runs at log-spaced rates",
+     "Compare validation loss after a fixed number of steps",
+     "Pick a value below where training diverges",
+     "Confirm with one longer run"
+    ]
+   }
+  ]
+ },
+ "c4-4": {
+  "mcq": [
+   {
+    "id": "c4-4-m01",
+    "q": "What does representation learning mean?",
+    "options": [
+     "Embeddings are chosen at random",
+     "The network learns useful internal vectors as a by-product of its training task",
+     "The model stores raw text",
+     "Engineers write the features by hand"
+    ],
+    "answer": 1,
+    "why": "To predict the next word well, a model must encode meaning, syntax and facts in its vectors.",
+    "kind": "concept",
+    "distractors": [
+     "Learned vectors are not random.",
+     "",
+     "Models do not store the raw text.",
+     "Hand-written features are classical ML."
+    ]
+   },
+   {
+    "id": "c4-4-m02",
+    "q": "Which word2vec relationship does the topic describe?",
+    "options": [
+     "vec(“Paris”) + vec(“Rome”) = vec(“Europe”)",
+     "vec(“Rome”) − vec(“Italy”) = 0",
+     "vec(“Paris”) = vec(“France”)",
+     "vec(“Paris”) − vec(“France”) + vec(“Italy”) ≈ vec(“Rome”)"
+    ],
+    "answer": 3,
+    "why": "Vector arithmetic can capture relations such as capital-of.",
+    "kind": "concept",
+    "distractors": [
+     "That is not the documented analogy.",
+     "That would make Rome and Italy identical.",
+     "Paris and France are related but not equal.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-4-m03",
+    "q": "Contrastive learning trains embeddings by…",
+    "options": [
+     "Minimising mean squared error on labels",
+     "Clustering with k-means",
+     "Predicting the next token only",
+     "Pulling matching pairs together and pushing non-matching pairs apart"
+    ],
+    "answer": 3,
+    "why": "Query–passage pairs are the positives; other passages are the negatives.",
+    "kind": "concept",
+    "distractors": [
+     "That is regression.",
+     "k-means does not train an encoder.",
+     "Next-token prediction is language-model pretraining.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-4-m04",
+    "q": "What are in-batch negatives?",
+    "options": [
+     "Examples with a negative label",
+     "Passages with negative sentiment",
+     "Duplicates removed from the batch",
+     "The other passages in the same training batch, used as negatives"
+    ],
+    "answer": 3,
+    "why": "Each query's positive passage is a negative for every other query, so negatives come free.",
+    "kind": "concept",
+    "distractors": [
+     "There are no labels beyond the pairing.",
+     "Sentiment is unrelated.",
+     "Nothing is removed.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-4-m05",
+    "q": "Why do hard negatives help most?",
+    "options": [
+     "They are easy to label",
+     "They are similar but wrong, so the model learns fine distinctions",
+     "They are random",
+     "They make training faster"
+    ],
+    "answer": 1,
+    "why": "Random negatives are too easy; near-misses teach the boundaries that matter.",
+    "kind": "concept",
+    "distractors": [
+     "Ease of labelling is not the reason.",
+     "",
+     "Random ones are the easy kind.",
+     "They usually make training harder, not faster."
+    ]
+   },
+   {
+    "id": "c4-4-m06",
+    "q": "How does the InfoNCE loss treat training?",
+    "options": [
+     "As classification: softmax over similarities, cross-entropy with the positive as the right class",
+     "As clustering",
+     "As regression on distances",
+     "As reinforcement learning"
+    ],
+    "answer": 0,
+    "why": "The positive passage should get the highest similarity among all candidates.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "No clustering step is involved.",
+     "It is a classification-style loss.",
+     "There is no reward signal."
+    ]
+   },
+   {
+    "id": "c4-4-m07",
+    "q": "What is the difference between token embeddings and sentence embeddings?",
+    "options": [
+     "Token embeddings are used for RAG search",
+     "Token embeddings are an LLM's input lookup table; sentence embeddings come from a separate model and go in a vector database",
+     "Sentence embeddings are inside every LLM's first layer",
+     "They are the same thing"
+    ],
+    "answer": 1,
+    "why": "They are easy to confuse; RAG uses sentence or passage embeddings (chapter 9).",
+    "kind": "concept",
+    "distractors": [
+     "RAG stores passage embeddings, not token rows.",
+     "",
+     "That describes token embeddings.",
+     "They are produced and used differently."
+    ]
+   },
+   {
+    "id": "c4-4-m08",
+    "q": "A general embedding model places “PTO” far from “annual leave”. What does the topic suggest?",
+    "options": [
+     "Remove acronyms from the documents",
+     "Use a larger LLM for answers",
+     "Switch to keyword search only",
+     "Evaluate on your own terms, and domain-tune the embedding model if needed (13.5)"
+    ],
+    "answer": 3,
+    "why": "General models may never have seen internal acronyms; domain tuning teaches them.",
+    "kind": "scenario",
+    "distractors": [
+     "Editing documents does not fix queries.",
+     "The answer model is not the retrieval problem.",
+     "Keyword search helps exact terms but does not fix the semantic gap.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-4-m09",
+    "q": "You use an LLM's internal hidden states as search embeddings without evaluating them. What is the risk?",
+    "options": [
+     "They are too small",
+     "They cannot be stored",
+     "General hidden vectors are not automatically good retrieval vectors",
+     "They are always better than embedding models"
+    ],
+    "answer": 2,
+    "why": "Embedding models are trained specifically for similarity; measure before you rely on anything else.",
+    "kind": "scenario",
+    "distractors": [
+     "Size is not the issue.",
+     "They can be stored.",
+     "",
+     "There is no such guarantee."
+    ]
+   },
+   {
+    "id": "c4-4-m10",
+    "q": "Which tasks exploit embedding similarity? Choose all that apply.",
+    "options": [
+     "Clustering",
+     "Exact arithmetic on amounts",
+     "Deduplication",
+     "Retrieval"
+    ],
+    "answer": [
+     0,
+     2,
+     3
+    ],
+    "why": "Nearby vectors mean similar text, which powers search, grouping, duplicate detection and routing.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Arithmetic needs exact computation, not similarity.",
+     "",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c4-4-i01",
+    "q": "What is an embedding, and how is a text embedding model trained?",
+    "level": "fundamentals",
+    "covers": [
+     "A vector where similar meanings are close",
+     "Contrastive training on matching pairs",
+     "In-batch and hard negatives",
+     "InfoNCE-style loss"
+    ]
+   },
+   {
+    "id": "c4-4-i02",
+    "q": "Explain the difference between token embeddings inside an LLM and sentence embeddings for RAG.",
+    "level": "fundamentals",
+    "covers": [
+     "Token embeddings: one row per vocabulary entry",
+     "Sentence embeddings: one vector per text, from a separate model",
+     "Which one goes in a vector database",
+     "Why confusing them causes bugs"
+    ]
+   },
+   {
+    "id": "c4-4-i03",
+    "q": "What is contrastive learning, and why do hard negatives matter?",
+    "level": "fundamentals",
+    "covers": [
+     "Pull positives together, push negatives apart",
+     "Easy negatives teach little",
+     "Hard negatives teach fine distinctions",
+     "Mining them from search results"
+    ]
+   },
+   {
+    "id": "c4-4-i04",
+    "q": "Your search misses internal acronyms. How do you diagnose and fix it?",
+    "level": "applied",
+    "covers": [
+     "Build queries with acronyms and check nearest results",
+     "Compare a general and a domain model",
+     "Add keyword or hybrid search (9.5)",
+     "Fine-tune embeddings on domain pairs (13.5)"
+    ],
+    "followUp": "How would you get training pairs without labelling by hand?"
+   },
+   {
+    "id": "c4-4-i05",
+    "q": "How would you evaluate whether one embedding model is better than another for your corpus?",
+    "level": "applied",
+    "covers": [
+     "Labelled query–passage pairs",
+     "Recall@k and MRR",
+     "Results by slice, such as language or document type",
+     "Cost, latency and dimension"
+    ]
+   },
+   {
+    "id": "c4-4-i06",
+    "q": "{assistant} confuses “change date” and “cancel” requests in Hinglish. How do you improve the intent embeddings?",
+    "level": "applied",
+    "covers": [
+     "Use a multilingual model",
+     "Labelled pairs including Hinglish",
+     "Contrastive fine-tuning with these hard negatives",
+     "A minimum similarity and a clarifying question"
+    ],
+    "project": "travel"
+   },
+   {
+    "id": "c4-4-i07",
+    "q": "Design an embedding fine-tuning pipeline from search logs.",
+    "level": "system-design",
+    "covers": [
+     "Pairs from queries and clicked results",
+     "Hard negatives from seen-but-skipped results",
+     "Deduplication and a held-out evaluation set",
+     "Versioned models and a re-indexing plan (10.7)"
+    ]
+   },
+   {
+    "id": "c4-4-i08",
+    "q": "What governance applies to stored embeddings of customer text?",
+    "level": "system-design",
+    "covers": [
+     "Derived from personal data, so treated like it",
+     "Redact identifiers before embedding",
+     "Retention and deletion that follow the source",
+     "Access control on the vector store",
+     "Re-embedding when the model changes"
+    ]
+   }
+  ]
+ },
+ "c4-5": {
+  "mcq": [
+   {
+    "id": "c4-5-m01",
+    "q": "How does a CNN process an image?",
+    "options": [
+     "It sorts the pixels",
+     "It slides small learned filters across the image to detect local patterns",
+     "It attends from every pixel to every other pixel",
+     "It reads pixels one at a time with a hidden state"
+    ],
+    "answer": 1,
+    "why": "Filters detect edges, then textures, parts and objects in deeper layers.",
+    "kind": "concept",
+    "distractors": [
+     "Nothing is sorted.",
+     "",
+     "That describes attention.",
+     "That describes an RNN."
+    ]
+   },
+   {
+    "id": "c4-5-m02",
+    "q": "Why are CNNs efficient?",
+    "options": [
+     "They only look at one pixel",
+     "They have no weights",
+     "The same filter weights are shared across every position",
+     "They skip training"
+    ],
+    "answer": 2,
+    "why": "Weight sharing means far fewer parameters than a fully connected layer over the image.",
+    "kind": "concept",
+    "distractors": [
+     "Filters cover small regions.",
+     "Filters are learned weights.",
+     "",
+     "They are trained."
+    ]
+   },
+   {
+    "id": "c4-5-m03",
+    "q": "A 3×3 filter slides over a 6×6 image with stride 1 and no padding. What is the output size?",
+    "options": [
+     "3×3",
+     "2×2",
+     "6×6",
+     "4×4"
+    ],
+    "answer": 3,
+    "why": "Output width = 6 − 3 + 1 = 4 in each direction.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the filter size.",
+     "That would need a larger filter or stride.",
+     "That needs padding.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-5-m04",
+    "q": "In an RNN, which weights are applied at each time step?",
+    "options": [
+     "No weights",
+     "The same weights at every step",
+     "New weights for each step",
+     "Only the output weights"
+    ],
+    "answer": 1,
+    "why": "hₜ = f(W·xₜ + U·hₜ₋₁) reuses W and U along the sequence.",
+    "kind": "concept",
+    "distractors": [
+     "RNNs have learned weights.",
+     "",
+     "Weights are shared across time.",
+     "The recurrent weights are used every step."
+    ]
+   },
+   {
+    "id": "c4-5-m05",
+    "q": "Why does information from early tokens fade in an RNN?",
+    "options": [
+     "It must survive many multiplications through the hidden state",
+     "Early tokens are never read",
+     "The vocabulary is too small",
+     "RNNs delete old tokens"
+    ],
+    "answer": 0,
+    "why": "Repeated multiplication shrinks the signal over long spans.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Every token is read.",
+     "Vocabulary size is unrelated.",
+     "Nothing is deleted explicitly."
+    ]
+   },
+   {
+    "id": "c4-5-m06",
+    "q": "Which gates does an LSTM use?",
+    "options": [
+     "Mean and variance",
+     "Query, key and value",
+     "Encoder and decoder",
+     "Forget, input and output"
+    ],
+    "answer": 3,
+    "why": "Gates learn what to keep, write and expose from the cell state.",
+    "kind": "concept",
+    "distractors": [
+     "Those are normalisation statistics.",
+     "Those are attention's projections.",
+     "Those are seq2seq components.",
+     ""
+    ]
+   },
+   {
+    "id": "c4-5-m07",
+    "q": "What was the bottleneck in RNN sequence-to-sequence models?",
+    "options": [
+     "They could not be trained",
+     "The whole input had to fit into one fixed vector",
+     "Outputs were limited to one word",
+     "The decoder had no weights"
+    ],
+    "answer": 1,
+    "why": "A single vector must carry everything about a long input.",
+    "kind": "concept",
+    "distractors": [
+     "They were trainable.",
+     "",
+     "Seq2seq produces sequences.",
+     "The decoder is a trained network."
+    ]
+   },
+   {
+    "id": "c4-5-m08",
+    "q": "How did attention fix the seq2seq bottleneck?",
+    "options": [
+     "By removing the encoder",
+     "By training on shorter inputs",
+     "The decoder weights every encoder position directly when generating each output",
+     "By using a bigger fixed vector"
+    ],
+    "answer": 2,
+    "why": "Generating “student” can focus on “étudiant”, whatever the input length.",
+    "kind": "concept",
+    "distractors": [
+     "The encoder is still needed.",
+     "Short inputs avoid, not fix, the problem.",
+     "",
+     "A bigger vector only delays the problem."
+    ]
+   },
+   {
+    "id": "c4-5-m09",
+    "q": "Why can an RNN not be parallelised across time during training?",
+    "options": [
+     "Sequences must be sorted",
+     "RNNs have too few parameters",
+     "Each step needs the previous step's hidden state",
+     "GPUs cannot run RNNs"
+    ],
+    "answer": 2,
+    "why": "The strict left-to-right dependency forces sequential computation.",
+    "kind": "concept",
+    "distractors": [
+     "Sorting is unrelated.",
+     "Parameter count is not the issue.",
+     "",
+     "GPUs run RNNs, just less efficiently."
+    ]
+   },
+   {
+    "id": "c4-5-m10",
+    "q": "Where do CNN-based models still commonly appear in document pipelines?",
+    "options": [
+     "Layout detection and OCR before any LLM sees the text",
+     "Storing vectors",
+     "Choosing the next token",
+     "Rate limiting"
+    ],
+    "answer": 0,
+    "why": "Detecting tables and reading scanned text are vision tasks (10.3).",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Vector stores do not use CNNs.",
+     "Token choice is the language model's decoding step.",
+     "Rate limiting is infrastructure."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c4-5-i01",
+    "q": "Explain how a CNN processes an image.",
+    "level": "fundamentals",
+    "covers": [
+     "Small filters slide across the image",
+     "Weight sharing",
+     "Hierarchy: edges to objects",
+     "Pooling or strides reduce resolution"
+    ]
+   },
+   {
+    "id": "c4-5-i02",
+    "q": "Why did LSTMs improve on plain RNNs, and what limits remained?",
+    "level": "fundamentals",
+    "covers": [
+     "Cell state and gates preserve information longer",
+     "Still sequential, so slow to train",
+     "Still forget over very long spans",
+     "GRU as a simpler variant"
+    ]
+   },
+   {
+    "id": "c4-5-i03",
+    "q": "What was the seq2seq bottleneck, and how did attention fix it?",
+    "level": "fundamentals",
+    "covers": [
+     "One fixed vector for the whole input",
+     "Attention lets the decoder look at every encoder state",
+     "Weights depend on the current output",
+     "Led directly to transformers"
+    ]
+   },
+   {
+    "id": "c4-5-i04",
+    "q": "Where would you still use a CNN or LSTM today instead of a transformer?",
+    "level": "applied",
+    "covers": [
+     "Vision and OCR components",
+     "Small, fast time-series models",
+     "Edge devices with tight budgets",
+     "When a measured comparison favours them"
+    ]
+   },
+   {
+    "id": "c4-5-i05",
+    "q": "{company} extracts amounts from cheque images. Design the pipeline and its checks.",
+    "level": "applied",
+    "covers": [
+     "Layout detection and OCR",
+     "Field extraction for amount, date, payee",
+     "Rules: amount in words matches figures, date validity",
+     "Human review below a confidence threshold",
+     "Audit trail of each extraction"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c4-5-i06",
+    "q": "OCR output feeds an LLM, and answers contain wrong numbers. How do you locate the fault?",
+    "level": "applied",
+    "covers": [
+     "Compare OCR text with the source image",
+     "Check the LLM's input versus its output",
+     "Measure OCR character error on numbers",
+     "Add validation between the stages"
+    ]
+   },
+   {
+    "id": "c4-5-i07",
+    "q": "Design an image-tagging service for product photos uploaded by sellers at {company}.",
+    "level": "system-design",
+    "covers": [
+     "Pretrained vision backbone, fine-tuned",
+     "Multi-label outputs with per-attribute thresholds",
+     "Handling busy backgrounds and new categories",
+     "Human review for low confidence",
+     "Latency, cost and drift monitoring"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c4-5-i08",
+    "q": "Compare the compute pattern of an RNN and a transformer when training on long sequences.",
+    "level": "system-design",
+    "covers": [
+     "RNN: sequential over time, little parallelism",
+     "Transformer: parallel across positions",
+     "Attention cost grows with the square of length",
+     "Memory and throughput trade-offs"
+    ]
+   }
+  ]
  }
 }

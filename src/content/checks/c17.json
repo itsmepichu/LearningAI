@@ -13,9 +13,273 @@
     "answer": 2,
     "why": "Labels must be low-cardinality; IDs and prompts belong in traces or logs.",
     "kind": "concept"
+   },
+   {
+    "id": "c17-1-m02",
+    "q": "Which describes a trace?",
+    "options": [
+     "The path of one request as a tree of timed spans linked by a trace ID",
+     "A single log line",
+     "A numeric time series",
+     "A dashboard"
+    ],
+    "answer": 0,
+    "why": "Traces propagate across services, queues and agents.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That is a log.",
+     "That is a metric.",
+     "Dashboards display data."
+    ]
+   },
+   {
+    "id": "c17-1-m03",
+    "q": "Metrics are cheap to store and alert on, but lack…",
+    "options": [
+     "Aggregation",
+     "Per-request detail",
+     "Timestamps",
+     "Numbers"
+    ],
+    "answer": 1,
+    "why": "Use traces and logs for detail.",
+    "kind": "concept",
+    "distractors": [
+     "They are aggregated.",
+     "",
+     "They have timestamps.",
+     "They are numbers."
+    ]
+   },
+   {
+    "id": "c17-1-m04",
+    "q": "How does trace context cross a queue?",
+    "options": [
+     "Put it in the message metadata so async work joins the same trace",
+     "It crosses automatically",
+     "Through DNS",
+     "It cannot"
+    ],
+    "answer": 0,
+    "why": "The W3C traceparent header covers HTTP; queues need explicit metadata.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not for queues.",
+     "Unrelated.",
+     "It can."
+    ]
+   },
+   {
+    "id": "c17-1-m05",
+    "q": "What does the OpenTelemetry Collector do?",
+    "options": [
+     "Trains models",
+     "Receives telemetry, processes it (sample, redact, enrich) and exports it to backends",
+     "Stores dashboards",
+     "Replaces the backend"
+    ],
+    "answer": 1,
+    "why": "It is a pipeline between services and backends.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Not its role.",
+     "It exports to them."
+    ]
+   },
+   {
+    "id": "c17-1-m06",
+    "q": "Why must telemetry export use bounded queues and a drop policy?",
+    "options": [
+     "So a slow telemetry backend never blocks requests or exhausts memory",
+     "Because OTLP requires it",
+     "To speed up the backend",
+     "To lose all data"
+    ],
+    "answer": 0,
+    "why": "Count what gets dropped.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not the reason.",
+     "Not the reason.",
+     "Drops are counted and rare."
+    ]
+   },
+   {
+    "id": "c17-1-m07",
+    "q": "What does a correlation ID do?",
+    "options": [
+     "Links logs, spans, database rows and tickets for one request or task",
+     "Encrypts data",
+     "Counts tokens",
+     "Routes requests"
+    ],
+    "answer": 0,
+    "why": "The trace ID usually serves this role.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-1-m08",
+    "q": "Using user IDs or prompts as metric labels causes…",
+    "options": [
+     "Better dashboards",
+     "Exploding cardinality and cost",
+     "Nothing",
+     "Faster queries"
+    ],
+    "answer": 1,
+    "why": "Each unique label value creates a new series.",
+    "kind": "scenario",
+    "distractors": [
+     "Not usable.",
+     "",
+     "It does cause harm.",
+     "Slower."
+    ]
+   },
+   {
+    "id": "c17-1-m09",
+    "q": "Which format do OTel exporters use to send data to backends?",
+    "options": [
+     "GraphQL",
+     "OTLP",
+     "CSV over FTP",
+     "SMTP"
+    ],
+    "answer": 1,
+    "why": "Standard format lets you switch backends.",
+    "kind": "concept",
+    "distractors": [
+     "Not the protocol.",
+     "",
+     "Not the protocol.",
+     "Mail."
+    ]
+   },
+   {
+    "id": "c17-1-m10",
+    "q": "Which logs are easiest to query?",
+    "options": [
+     "Screenshots",
+     "Unstructured stack traces only",
+     "Free-text lines",
+     "Structured JSON with consistent fields"
+    ],
+    "answer": 3,
+    "why": "Consistent fields let you filter and join.",
+    "kind": "concept",
+    "distractors": [
+     "Not queryable.",
+     "Hard to aggregate.",
+     "Hard to query.",
+     ""
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c17-1-i01",
+    "q": "Explain logs, metrics and traces and when you use each.",
+    "level": "fundamentals",
+    "covers": [
+     "events",
+     "time series",
+     "request paths",
+     "correlation"
+    ]
+   },
+   {
+    "id": "c17-1-i02",
+    "q": "What is OpenTelemetry and what does the Collector add?",
+    "level": "fundamentals",
+    "covers": [
+     "standard SDKs",
+     "OTLP",
+     "Collector pipeline",
+     "vendor neutrality"
+    ]
+   },
+   {
+    "id": "c17-1-i03",
+    "q": "How do you propagate trace context across async boundaries?",
+    "level": "fundamentals",
+    "covers": [
+     "traceparent",
+     "queue metadata",
+     "workflow engines"
+    ]
+   },
+   {
+    "id": "c17-1-i04",
+    "q": "Your metrics bill tripled after a release. What likely happened?",
+    "level": "applied",
+    "covers": [
+     "high-cardinality labels",
+     "find the label",
+     "move to traces",
+     "label policy"
+    ],
+    "followUp": "How would you prevent it?"
+   },
+   {
+    "id": "c17-1-i05",
+    "q": "The tracing backend went down and the API slowed. Why, and how do you fix it?",
+    "level": "applied",
+    "covers": [
+     "blocking exporter",
+     "bounded queue",
+     "timeouts",
+     "drop policy and counters"
+    ]
+   },
+   {
+    "id": "c17-1-i06",
+    "q": "What fields would you put in a structured log for a model call?",
+    "level": "applied",
+    "covers": [
+     "trace ID",
+     "versions",
+     "token counts",
+     "outcome",
+     "no secrets or raw prompts by default"
+    ]
+   },
+   {
+    "id": "c17-1-i07",
+    "q": "Design observability for {company}'s return flow across chat, queue and payments.",
+    "level": "system-design",
+    "covers": [
+     "one trace",
+     "queue metadata",
+     "metrics per stage",
+     "logs with correlation"
+    ],
+    "followUp": "What would you alert on?",
+    "project": "store"
+   },
+   {
+    "id": "c17-1-i08",
+    "q": "Design an observability pipeline for an AI platform with many services.",
+    "level": "system-design",
+    "covers": [
+     "SDKs",
+     "Collector",
+     "sampling and redaction",
+     "backends",
+     "dashboards"
+    ]
+   }
+  ]
  },
  "c17-8": {
   "mcq": [
@@ -31,9 +295,280 @@
     "answer": 1,
     "why": "1.5% ÷ 0.1% = 15× (above the 14.4× paging threshold).",
     "kind": "concept"
+   },
+   {
+    "id": "c17-8-m02",
+    "q": "What should alerts fire on?",
+    "options": [
+     "Symptoms users feel (SLO burn), not every cause",
+     "Every log line",
+     "Only weekly",
+     "Every CPU spike"
+    ],
+    "answer": 0,
+    "why": "Each alert links to a runbook.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Noise.",
+     "Too slow.",
+     "Noise."
+    ]
+   },
+   {
+    "id": "c17-8-m03",
+    "q": "At a burn rate of 14.4, how long does a 30-day error budget last?",
+    "options": [
+     "About 1 hour",
+     "About 14 days",
+     "About 30 days",
+     "About 2 days"
+    ],
+    "answer": 3,
+    "why": "30 / 14.4 ≈ 2.1 days.",
+    "kind": "calculation",
+    "distractors": [
+     "Too short.",
+     "Not the ratio.",
+     "That is burn rate 1.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-8-m04",
+    "q": "Error rate 0.5% against a 99.5% SLO. What is the burn rate?",
+    "options": [
+     "0.5×",
+     "5×",
+     "1×",
+     "10×"
+    ],
+    "answer": 2,
+    "why": "0.5% / 0.5% = 1, so the budget lasts exactly the window.",
+    "kind": "calculation",
+    "distractors": [
+     "Not the ratio.",
+     "Not the ratio.",
+     "",
+     "Not the ratio."
+    ]
+   },
+   {
+    "id": "c17-8-m05",
+    "q": "Why use multiple burn-rate windows?",
+    "options": [
+     "A slow leak never trips the fast rule but drains the budget",
+     "To create more pages",
+     "To slow alerts down",
+     "Because one window is not allowed"
+    ],
+    "answer": 0,
+    "why": "Fast page, slow page and ticket rules.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not the aim.",
+     "Not the aim.",
+     "Not a rule."
+    ]
+   },
+   {
+    "id": "c17-8-m06",
+    "q": "Choose all the things a runbook should include.",
+    "options": [
+     "The on-call engineer's password",
+     "What the alert means and how to confirm it",
+     "Escalation contacts and how to verify recovery",
+     "First mitigations: flags, rollbacks, degradation, failover"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Runbooks make alerts actionable.",
+    "kind": "concept",
+    "distractors": [
+     "Never.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c17-8-m07",
+    "q": "Where should an incident investigation start?",
+    "options": [
+     "From affected traces linked from metrics, compared with healthy ones, plus recent changes",
+     "From the oldest logs",
+     "From the model's own explanation",
+     "From a full restart"
+    ],
+    "answer": 0,
+    "why": "Check deploys, prompt, model and index versions and provider status.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unfocused.",
+     "Not evidence.",
+     "Destroys evidence."
+    ]
+   },
+   {
+    "id": "c17-8-m08",
+    "q": "What makes a postmortem blameless?",
+    "options": [
+     "It skips root causes",
+     "It focuses on systems and causes, not on punishing people",
+     "It has no author",
+     "It is never shared"
+    ],
+    "answer": 1,
+    "why": "Action items have owners, including new evaluation cases and alerts.",
+    "kind": "concept",
+    "distractors": [
+     "Root causes are central.",
+     "",
+     "Not the meaning.",
+     "Not the meaning."
+    ]
+   },
+   {
+    "id": "c17-8-m09",
+    "q": "What should dashboards annotate?",
+    "options": [
+     "Nothing",
+     "Every request",
+     "Lunch breaks",
+     "Deploys, model changes and config changes"
+    ],
+    "answer": 3,
+    "why": "Annotations turn charts into investigations.",
+    "kind": "concept",
+    "distractors": [
+     "Loses context.",
+     "Too much.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-8-m10",
+    "q": "An alert has no owner and no mitigation. What is it?",
+    "options": [
+     "A runbook",
+     "Noise, not reliability",
+     "A good alert",
+     "An SLO"
+    ],
+    "answer": 1,
+    "why": "Every alert needs both.",
+    "kind": "concept",
+    "distractors": [
+     "Not a runbook.",
+     "",
+     "Not actionable.",
+     "Not an SLO."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c17-8-i01",
+    "q": "What makes an alert actionable?",
+    "level": "fundamentals",
+    "covers": [
+     "user-facing symptom",
+     "owner",
+     "runbook",
+     "mitigation"
+    ]
+   },
+   {
+    "id": "c17-8-i02",
+    "q": "Explain burn-rate alerting with multiple windows.",
+    "level": "fundamentals",
+    "covers": [
+     "burn rate formula",
+     "fast page",
+     "slow page",
+     "ticket"
+    ]
+   },
+   {
+    "id": "c17-8-i03",
+    "q": "What goes in a runbook for an AI alert?",
+    "level": "fundamentals",
+    "covers": [
+     "meaning",
+     "confirmation",
+     "mitigations",
+     "escalation",
+     "recovery check"
+    ]
+   },
+   {
+    "id": "c17-8-i04",
+    "q": "On-call ignores pages because most are noise. How do you fix alerting?",
+    "level": "applied",
+    "covers": [
+     "symptom-based",
+     "burn rate",
+     "remove cause alerts",
+     "review each page"
+    ],
+    "followUp": "How would you measure improvement?"
+   },
+   {
+    "id": "c17-8-i05",
+    "q": "Walk through investigating a sudden rise in unsupported answers.",
+    "level": "applied",
+    "covers": [
+     "traces",
+     "recent changes",
+     "versions",
+     "rollback"
+    ]
+   },
+   {
+    "id": "c17-8-i06",
+    "q": "How would you write a postmortem for an AI incident?",
+    "level": "applied",
+    "covers": [
+     "timeline",
+     "impact",
+     "causes",
+     "what went well",
+     "actions incl. eval cases"
+    ]
+   },
+   {
+    "id": "c17-8-i07",
+    "q": "Design {company}'s on-call alerts and runbooks for sale day.",
+    "level": "system-design",
+    "covers": [
+     "SLO burn alerts",
+     "runbooks",
+     "degradation",
+     "rollback",
+     "owners"
+    ],
+    "followUp": "What would you rehearse before the sale?",
+    "project": "store"
+   },
+   {
+    "id": "c17-8-i08",
+    "q": "Design the incident process for an AI platform team.",
+    "level": "system-design",
+    "covers": [
+     "alerts",
+     "roles",
+     "runbooks",
+     "postmortems",
+     "follow-up tracking"
+    ]
+   }
+  ]
  },
  "c17-4": {
   "mcq": [
@@ -49,8 +584,2303 @@
     "answer": 1,
     "why": "Transport health cannot see answer quality.",
     "kind": "concept"
+   },
+   {
+    "id": "c17-4-m02",
+    "q": "Which is an implicit success signal?",
+    "options": [
+     "The user did not rephrase or open a ticket afterwards",
+     "A thumbs-up",
+     "A 5-star rating",
+     "A survey"
+    ],
+    "answer": 0,
+    "why": "Implicit signals come from behaviour.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Explicit.",
+     "Explicit.",
+     "Explicit."
+    ]
+   },
+   {
+    "id": "c17-4-m03",
+    "q": "Why is “rephrase within 60 seconds” useful?",
+    "options": [
+     "It is a security signal",
+     "It correlates with unhelpful answers and is available immediately",
+     "It measures cost",
+     "It measures latency"
+    ],
+    "answer": 1,
+    "why": "It needs only logs and an embedding similarity check.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-4-m04",
+    "q": "Escalations to humans suddenly fall. What could it mean?",
+    "options": [
+     "Quality must be better",
+     "Users stopped using it",
+     "Nothing",
+     "The assistant may have become overconfident"
+    ],
+    "answer": 3,
+    "why": "Both too high and suddenly too low are signals.",
+    "kind": "scenario",
+    "distractors": [
+     "Not necessarily.",
+     "Possible, but check.",
+     "It is a signal.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-4-m05",
+    "q": "Choose all the retrieval-failure signals the chapter lists.",
+    "options": [
+     "Low top-score queries",
+     "Zero-result queries",
+     "Abstention rate and citation-validation failures",
+     "GPU temperature"
+    ],
+    "answer": [
+     0,
+     1,
+     2
+    ],
+    "why": "Retrieval failures often precede quality complaints.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "",
+     "Not a retrieval signal."
+    ]
+   },
+   {
+    "id": "c17-4-m06",
+    "q": "A model-provider update on day 9 shows up as…",
+    "options": [
+     "More traffic",
+     "Nothing",
+     "Lower cost",
+     "Rising schema failures and falling groundedness"
+    ],
+    "answer": 3,
+    "why": "The dashboard caught it before users complained.",
+    "kind": "concept",
+    "distractors": [
+     "Not shown.",
+     "It shows.",
+     "Not shown.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-4-m07",
+    "q": "How should groundedness be monitored in production?",
+    "options": [
+     "By counting tokens",
+     "Once at launch",
+     "Judges on a continuous sample, tracked by feature, tenant and language",
+     "Only by user complaints"
+    ],
+    "answer": 2,
+    "why": "Sampled evaluation (8.2).",
+    "kind": "concept",
+    "distractors": [
+     "Not quality.",
+     "Quality drifts.",
+     "",
+     "Too late."
+    ]
+   },
+   {
+    "id": "c17-4-m08",
+    "q": "Is the agent saying “complete” a verified task-success label?",
+    "options": [
+     "Yes",
+     "Only for short tasks",
+     "No; use outcome events or verification",
+     "Only with a judge"
+    ],
+    "answer": 2,
+    "why": "Self-reports are not evidence.",
+    "kind": "concept",
+    "distractors": [
+     "Not verified.",
+     "Never by itself.",
+     "",
+     "Still needs outcomes."
+    ]
+   },
+   {
+    "id": "c17-4-m09",
+    "q": "Which are agent-specific signals?",
+    "options": [
+     "CPU usage",
+     "Disk I/O",
+     "DNS errors",
+     "Steps per task, loop-detector triggers and budget exhaustion rate"
+    ],
+    "answer": 3,
+    "why": "They show runaway behaviour.",
+    "kind": "concept",
+    "distractors": [
+     "Operational.",
+     "Operational.",
+     "Operational.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-4-m10",
+    "q": "Which signals belong under safety?",
+    "options": [
+     "Guardrail block rate, injection-classifier hits and user reports",
+     "Latency",
+     "Queue age",
+     "Token cost"
+    ],
+    "answer": 0,
+    "why": "Track them alongside quality.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Operational.",
+     "Operational.",
+     "Cost."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c17-4-i01",
+    "q": "Which AI-specific signals would you monitor beyond operational health?",
+    "level": "fundamentals",
+    "covers": [
+     "task success",
+     "groundedness samples",
+     "retrieval failures",
+     "tool errors",
+     "agent loops",
+     "escalation",
+     "safety"
+    ]
+   },
+   {
+    "id": "c17-4-i02",
+    "q": "What are explicit and implicit feedback signals?",
+    "level": "fundamentals",
+    "covers": [
+     "ratings",
+     "behaviour",
+     "outcome events"
+    ]
+   },
+   {
+    "id": "c17-4-i03",
+    "q": "Why can HTTP success hide quality problems?",
+    "level": "fundamentals",
+    "covers": [
+     "answers can be wrong but 200 OK",
+     "quality sampling",
+     "per-language checks"
+    ]
+   },
+   {
+    "id": "c17-4-i04",
+    "q": "Your escalation rate fell by half overnight. What do you check?",
+    "level": "applied",
+    "covers": [
+     "overconfidence",
+     "prompt or model change",
+     "rephrase rate",
+     "outcome events"
+    ],
+    "followUp": "When would it be good news?"
+   },
+   {
+    "id": "c17-4-i05",
+    "q": "How would you build a rephrase signal?",
+    "level": "applied",
+    "covers": [
+     "conversation logs",
+     "embedding similarity",
+     "time window",
+     "validate against outcomes"
+    ]
+   },
+   {
+    "id": "c17-4-i06",
+    "q": "Design per-tool error monitoring for an agent.",
+    "level": "applied",
+    "covers": [
+     "invalid args",
+     "permission denials",
+     "timeouts",
+     "per tool and version"
+    ]
+   },
+   {
+    "id": "c17-4-i07",
+    "q": "Design {company}'s AI quality dashboard for {assistant}.",
+    "level": "system-design",
+    "covers": [
+     "rephrase",
+     "escalation",
+     "outcomes",
+     "groundedness sample",
+     "thresholds"
+    ],
+    "followUp": "Which signal would you trust most, and why?",
+    "project": "store"
+   },
+   {
+    "id": "c17-4-i08",
+    "q": "Design a quality-monitoring system that samples and judges production answers.",
+    "level": "system-design",
+    "covers": [
+     "sampling strategy",
+     "judges",
+     "slices",
+     "alerts",
+     "calibration"
+    ]
+   }
+  ]
+ },
+ "c17-2": {
+  "mcq": [
+   {
+    "id": "c17-2-m01",
+    "q": "Choose all the things an AI trace should let you answer for one request.",
+    "options": [
+     "Which tools ran with what arguments and results",
+     "Which prompt version and model were used",
+     "The user's home address",
+     "What was retrieved (IDs and scores)"
+    ],
+    "answer": [
+     0,
+     1,
+     3
+    ],
+    "why": "Also timings, tokens and cost, and what the user did next.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "Not needed and sensitive.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-2-m02",
+    "q": "BM25 and vector search run in parallel. Which is on the critical path?",
+    "options": [
+     "The faster one",
+     "Neither",
+     "Both",
+     "The slower of the two"
+    ],
+    "answer": 3,
+    "why": "Only the slower parallel branch delays the request.",
+    "kind": "concept",
+    "distractors": [
+     "The faster one waits for nothing.",
+     "One of them is.",
+     "Only one sets the time.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-2-m03",
+    "q": "Critical path: rewrite 400, max(BM25 40, vector 60), rerank 800, model 850, tool 240, model 2,900 ms, run in sequence. What is the total?",
+    "options": [
+     "5,250 ms",
+     "5,290 ms",
+     "5,190 ms",
+     "2,900 ms"
+    ],
+    "answer": 0,
+    "why": "400 + 60 + 800 + 850 + 240 + 2,900 = 5,250.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Adds both parallel branches.",
+     "Uses the faster branch.",
+     "Only the largest span."
+    ]
+   },
+   {
+    "id": "c17-2-m04",
+    "q": "Speeding up a span that is not on the critical path…",
+    "options": [
+     "Always helps",
+     "Removes the trace",
+     "Changes nothing in end-to-end time",
+     "Doubles latency"
+    ],
+    "answer": 2,
+    "why": "Speed up the longest span on the critical path.",
+    "kind": "concept",
+    "distractors": [
+     "Not off the critical path.",
+     "Unrelated.",
+     "",
+     "Not true."
+    ]
+   },
+   {
+    "id": "c17-2-m05",
+    "q": "Users say the assistant is slow on Mondays. What did the traces show in the chapter's example?",
+    "options": [
+     "A bigger model",
+     "A slow tokenizer",
+     "Network outages",
+     "Rerank waiting for a GPU shared with the Monday ingestion backfill"
+    ],
+    "answer": 3,
+    "why": "That led to separating the reranker pool (15.3).",
+    "kind": "concept",
+    "distractors": [
+     "Not the cause.",
+     "Not the cause.",
+     "Not the cause.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-2-m06",
+    "q": "A worker starts a new unrelated trace. What breaks?",
+    "options": [
+     "The causal chain: you cannot connect its work to the original request",
+     "Metrics",
+     "The model",
+     "Nothing"
+    ],
+    "answer": 0,
+    "why": "Propagate context, or link child traces to the parent task.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Metrics are separate.",
+     "Unrelated.",
+     "Investigations fail."
+    ]
+   },
+   {
+    "id": "c17-2-m07",
+    "q": "How do multi-agent runs appear in tracing?",
+    "options": [
+     "Child traces linked to the parent task",
+     "One flat span",
+     "Separate unrelated traces",
+     "No traces"
+    ],
+    "answer": 0,
+    "why": "Links keep the run navigable.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Loses structure.",
+     "Loses the chain.",
+     "They should be traced."
+    ]
+   },
+   {
+    "id": "c17-2-m08",
+    "q": "Which tools offer LLM-specific trace UIs and accept OpenTelemetry data?",
+    "options": [
+     "k6",
+     "Arize Phoenix and Langfuse",
+     "Excel",
+     "garak"
+    ],
+    "answer": 1,
+    "why": "They show prompts, responses, token costs and evaluations.",
+    "kind": "concept",
+    "distractors": [
+     "Load testing.",
+     "",
+     "Not a tracing tool.",
+     "Red teaming."
+    ]
+   },
+   {
+    "id": "c17-2-m09",
+    "q": "A tool times out once after 2 s and then succeeds in 240 ms. How much does the retry add?",
+    "options": [
+     "240 ms",
+     "Nothing",
+     "4 s",
+     "About 2 s"
+    ],
+    "answer": 3,
+    "why": "The timeout is spent before the successful retry.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the retry's own time.",
+     "It adds the timeout.",
+     "Only one timeout.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-2-m10",
+    "q": "In the critical-path figure, which change cuts end-to-end time most with the default values?",
+    "options": [
+     "Reducing the tool call by 20 ms",
+     "Reducing BM25 (40 ms)",
+     "Reducing model call 2 (2,900 ms)",
+     "Reducing vector search by 20 ms"
+    ],
+    "answer": 2,
+    "why": "The longest span on the critical path offers the biggest saving.",
+    "kind": "scenario",
+    "distractors": [
+     "Saves at most 20 ms.",
+     "BM25 is not on the critical path.",
+     "",
+     "Saves at most 20 ms."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-2-i01",
+    "q": "What should a trace for one RAG request contain?",
+    "level": "fundamentals",
+    "covers": [
+     "query",
+     "retrieval IDs and scores",
+     "prompt version",
+     "model response",
+     "tools",
+     "timings and cost"
+    ]
+   },
+   {
+    "id": "c17-2-i02",
+    "q": "What is the critical path and why does it matter?",
+    "level": "fundamentals",
+    "covers": [
+     "longest dependent chain",
+     "parallel branches",
+     "optimise the right span"
+    ]
+   },
+   {
+    "id": "c17-2-i03",
+    "q": "How do you trace agents and multi-agent runs?",
+    "level": "fundamentals",
+    "covers": [
+     "nested spans",
+     "child traces linked",
+     "tool spans",
+     "propagation"
+    ]
+   },
+   {
+    "id": "c17-2-i04",
+    "q": "Latency is up but metrics don't show why. How do traces help?",
+    "level": "applied",
+    "covers": [
+     "find slow spans",
+     "compare traces",
+     "shared resources",
+     "critical path"
+    ],
+    "followUp": "What would you add to dashboards afterwards?"
+   },
+   {
+    "id": "c17-2-i05",
+    "q": "How would you trace an asynchronous callback that arrives minutes later?",
+    "level": "applied",
+    "covers": [
+     "store trace context",
+     "link or continue",
+     "span for callback",
+     "timeouts"
+    ]
+   },
+   {
+    "id": "c17-2-i06",
+    "q": "Which span attributes would you record for a model call?",
+    "level": "applied",
+    "covers": [
+     "model and version",
+     "prompt version",
+     "tokens",
+     "finish reason",
+     "content only if allowed"
+    ]
+   },
+   {
+    "id": "c17-2-i07",
+    "q": "Design tracing for {company}'s rebooking flow with supplier callbacks.",
+    "level": "system-design",
+    "covers": [
+     "spans per step",
+     "supplier attributes",
+     "async context",
+     "retry visibility"
+    ],
+    "followUp": "How would you find a slow supplier quickly?",
+    "project": "travel"
+   },
+   {
+    "id": "c17-2-i08",
+    "q": "Design end-to-end tracing for a RAG system with agents and queues.",
+    "level": "system-design",
+    "covers": [
+     "instrumentation",
+     "propagation",
+     "attributes",
+     "sampling",
+     "UI"
+    ]
+   }
+  ]
+ },
+ "c17-3": {
+  "mcq": [
+   {
+    "id": "c17-3-m01",
+    "q": "What are the four golden signals?",
+    "options": [
+     "Tokens, cost, quality, users",
+     "Logs, metrics, traces, alerts",
+     "Latency, traffic, errors and saturation",
+     "CPU, RAM, disk, network"
+    ],
+    "answer": 2,
+    "why": "For AI services, measure them per stage and per model.",
+    "kind": "concept",
+    "distractors": [
+     "Partly AI signals.",
+     "Telemetry types.",
+     "",
+     "Resource metrics, not the signals."
+    ]
+   },
+   {
+    "id": "c17-3-m02",
+    "q": "Why report latency percentiles rather than the mean?",
+    "options": [
+     "The mean is always higher",
+     "LLM latency is skewed; the mean hides the slow tail users complain about",
+     "The mean is hard to compute",
+     "Percentiles are cheaper"
+    ],
+    "answer": 1,
+    "why": "Report p50, p95 and p99.",
+    "kind": "concept",
+    "distractors": [
+     "Not always.",
+     "",
+     "It is easy; that is not the issue.",
+     "Not the reason."
+    ]
+   },
+   {
+    "id": "c17-3-m03",
+    "q": "Which queue signal is the better alert?",
+    "options": [
+     "Queue length",
+     "Message size",
+     "Age of the oldest item",
+     "Number of workers"
+    ],
+    "answer": 2,
+    "why": "Age directly measures delay.",
+    "kind": "concept",
+    "distractors": [
+     "Length can be high but fast.",
+     "Unrelated.",
+     "",
+     "Not a delay signal."
+    ]
+   },
+   {
+    "id": "c17-3-m04",
+    "q": "A rise in schema-validation failures is often the first sign of…",
+    "options": [
+     "A model change",
+     "More users",
+     "A network outage",
+     "A database backup"
+    ],
+    "answer": 0,
+    "why": "Track errors by type.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Shows as traffic.",
+     "That shows as timeouts.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-3-m05",
+    "q": "Choose all the saturation signals the chapter lists.",
+    "options": [
+     "Running and waiting sequences",
+     "User satisfaction",
+     "GPU KV-cache usage",
+     "Provider rate-limit headroom"
+    ],
+    "answer": [
+     0,
+     2,
+     3
+    ],
+    "why": "Also connection pools and index node memory.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "A quality signal.",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c17-3-m06",
+    "q": "p50 is flat but p99 climbs from 6 s to 19 s while waiting sequences rise on one replica. What did the chapter find?",
+    "options": [
+     "A provider outage",
+     "A bug in the tokenizer",
+     "Normal behaviour",
+     "A long-context tenant sending 100k-token prompts that occupy KV cache"
+    ],
+    "answer": 3,
+    "why": "Per-tenant admission limits and a long-context pool fixed it.",
+    "kind": "scenario",
+    "distractors": [
+     "Errors would rise.",
+     "Not the cause.",
+     "Not normal.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-3-m07",
+    "q": "Requests hang instead of failing. What does a low error rate tell you?",
+    "options": [
+     "Traffic is low",
+     "The model is fast",
+     "Everything is fine",
+     "Little; hanging requests may not count as errors"
+    ],
+    "answer": 3,
+    "why": "Watch latency and queue age too.",
+    "kind": "concept",
+    "distractors": [
+     "Not implied.",
+     "Not implied.",
+     "Misleading.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-3-m08",
+    "q": "Which latencies should be tracked separately for streaming LLM calls?",
+    "options": [
+     "Only queue time",
+     "Only total time",
+     "TTFT, ITL and total time",
+     "Only TTFT"
+    ],
+    "answer": 2,
+    "why": "They have different causes (14.2).",
+    "kind": "concept",
+    "distractors": [
+     "Misses generation.",
+     "Hides the cause.",
+     "",
+     "Misses decode."
+    ]
+   },
+   {
+    "id": "c17-3-m09",
+    "q": "In the percentile figure, as the tail gets heavier, what changes most?",
+    "options": [
+     "The median",
+     "Nothing",
+     "p99",
+     "The number of requests"
+    ],
+    "answer": 2,
+    "why": "The median barely moves.",
+    "kind": "concept",
+    "distractors": [
+     "It barely changes.",
+     "p99 moves a lot.",
+     "",
+     "Fixed at 5,000."
+    ]
+   },
+   {
+    "id": "c17-3-m10",
+    "q": "Which describes availability as an SLI?",
+    "options": [
+     "Number of replicas",
+     "Average latency",
+     "Uptime of one server",
+     "Successful requests ÷ valid requests, against the SLO"
+    ],
+    "answer": 3,
+    "why": "Measured from requests, not machines (15.2).",
+    "kind": "concept",
+    "distractors": [
+     "Capacity, not availability.",
+     "Latency.",
+     "Too narrow.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-3-i01",
+    "q": "What operational signals would you monitor for an LLM service?",
+    "level": "fundamentals",
+    "covers": [
+     "latency percentiles",
+     "errors by type",
+     "saturation",
+     "queue age",
+     "availability"
+    ]
+   },
+   {
+    "id": "c17-3-i02",
+    "q": "Why are percentiles better than averages for LLM latency?",
+    "level": "fundamentals",
+    "covers": [
+     "skewed distributions",
+     "tail users",
+     "p50 p95 p99"
+    ]
+   },
+   {
+    "id": "c17-3-i03",
+    "q": "Why alert on queue age rather than length?",
+    "level": "fundamentals",
+    "covers": [
+     "measures delay",
+     "length can mislead"
+    ]
+   },
+   {
+    "id": "c17-3-i04",
+    "q": "p99 latency doubled but p50 is flat. How do you investigate?",
+    "level": "applied",
+    "covers": [
+     "saturation per replica",
+     "tenant breakdown",
+     "long prompts",
+     "traces of slow requests"
+    ],
+    "followUp": "What fix would you try?"
+   },
+   {
+    "id": "c17-3-i05",
+    "q": "Which error types would you count separately and why?",
+    "level": "applied",
+    "covers": [
+     "timeouts",
+     "429s",
+     "5xx",
+     "schema failures",
+     "tool errors",
+     "filter blocks"
+    ]
+   },
+   {
+    "id": "c17-3-i06",
+    "q": "How would you detect hanging requests?",
+    "level": "applied",
+    "covers": [
+     "timeouts",
+     "in-flight age",
+     "latency percentiles",
+     "client-side metrics"
+    ]
+   },
+   {
+    "id": "c17-3-i07",
+    "q": "Design {company}'s sale-day operational dashboard.",
+    "level": "system-design",
+    "covers": [
+     "golden signals per stage",
+     "queue age",
+     "saturation",
+     "SLO view"
+    ],
+    "followUp": "Which panel would on-call look at first?",
+    "project": "store"
+   },
+   {
+    "id": "c17-3-i08",
+    "q": "Design operational monitoring for a model-serving cluster.",
+    "level": "system-design",
+    "covers": [
+     "KV usage",
+     "waiting sequences",
+     "TTFT/ITL percentiles",
+     "errors",
+     "per-replica views"
+    ]
+   }
+  ]
+ },
+ "c17-5": {
+  "mcq": [
+   {
+    "id": "c17-5-m01",
+    "q": "Where should token counts come from?",
+    "options": [
+     "The prompt template",
+     "The provider response, not estimates",
+     "Character counts divided by 4",
+     "Monthly invoices only"
+    ],
+    "answer": 1,
+    "why": "Record input, cached input, output and reasoning tokens per call.",
+    "kind": "concept",
+    "distractors": [
+     "Templates are not usage.",
+     "",
+     "Estimates drift.",
+     "Too coarse."
+    ]
+   },
+   {
+    "id": "c17-5-m02",
+    "q": "Choose all the tags each call should carry for cost attribution.",
+    "options": [
+     "The full prompt text as a label",
+     "Prompt version",
+     "Tenant",
+     "Feature and environment"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Also a hashed user ID.",
+    "kind": "concept",
+    "distractors": [
+     "High cardinality and sensitive.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c17-5-m03",
+    "q": "Which non-token costs should be included?",
+    "options": [
+     "Office rent",
+     "None",
+     "Laptop costs",
+     "Embeddings, vector DB, GPU-hours and tool APIs"
+    ],
+    "answer": 3,
+    "why": "Allocate them by usage.",
+    "kind": "concept",
+    "distractors": [
+     "Not attributable.",
+     "They are real costs.",
+     "Not attributable.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-5-m04",
+    "q": "In the spend figure, grouping by token type shows output and uncached input dominate. What does that suggest?",
+    "options": [
+     "Work on prompt caching and output length",
+     "Buy more GPUs",
+     "Nothing",
+     "Remove tenants"
+    ],
+    "answer": 0,
+    "why": "Each grouping suggests different actions.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not suggested.",
+     "It suggests actions.",
+     "Not suggested."
+    ]
+   },
+   {
+    "id": "c17-5-m05",
+    "q": "One tenant is 31% of spend. What is it useful for?",
+    "options": [
+     "Choosing fonts",
+     "Nothing",
+     "Model training",
+     "Billing, abuse detection and capacity forecasts"
+    ],
+    "answer": 3,
+    "why": "Tenant usage vs quota and contract.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "It matters.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-5-m06",
+    "q": "GPU utilisation is 95% but cost per successful task is poor. What is the lesson?",
+    "options": [
+     "All is well",
+     "Utilisation is not economics; measure cost per success",
+     "Buy more GPUs",
+     "Lower utilisation"
+    ],
+    "answer": 1,
+    "why": "Busy GPUs can still produce failed tasks.",
+    "kind": "scenario",
+    "distractors": [
+     "It is not.",
+     "",
+     "Not the fix.",
+     "Not the point."
+    ]
+   },
+   {
+    "id": "c17-5-m07",
+    "q": "A task makes four model calls and two retries. What should cost reports show?",
+    "options": [
+     "Only the first call",
+     "Only successful calls",
+     "The full attributed cost of all calls and the outcome",
+     "Only the last call"
+    ],
+    "answer": 2,
+    "why": "Retries and extra calls are real cost.",
+    "kind": "concept",
+    "distractors": [
+     "Undercounts.",
+     "Undercounts.",
+     "",
+     "Undercounts."
+    ]
+   },
+   {
+    "id": "c17-5-m08",
+    "q": "Why record the price version with each usage record?",
+    "options": [
+     "For tokenisation",
+     "For latency",
+     "Prices change; you need the price that applied to compute cost correctly",
+     "For security"
+    ],
+    "answer": 2,
+    "why": "Historic costs need historic prices.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-5-m09",
+    "q": "Which self-hosted metric shows real cost efficiency?",
+    "options": [
+     "Model size",
+     "Number of GPUs",
+     "Cost per million tokens actually served",
+     "GPU temperature"
+    ],
+    "answer": 2,
+    "why": "Include idle hours.",
+    "kind": "concept",
+    "distractors": [
+     "Not efficiency.",
+     "Not efficiency.",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-5-m10",
+    "q": "Which token types should a usage record separate?",
+    "options": [
+     "Only total tokens",
+     "Only output tokens",
+     "Input, cached input, output and reasoning tokens",
+     "Characters and words"
+    ],
+    "answer": 2,
+    "why": "They have different prices.",
+    "kind": "concept",
+    "distractors": [
+     "Hides price differences.",
+     "Misses input cost.",
+     "",
+     "Not billing units."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-5-i01",
+    "q": "How do you attribute AI costs to tenants and features?",
+    "level": "fundamentals",
+    "covers": [
+     "tags per call",
+     "token types from responses",
+     "non-token costs",
+     "grouping"
+    ]
+   },
+   {
+    "id": "c17-5-i02",
+    "q": "What should a usage record contain?",
+    "level": "fundamentals",
+    "covers": [
+     "tokens by type",
+     "model and price version",
+     "tenant and feature",
+     "prompt version"
+    ]
+   },
+   {
+    "id": "c17-5-i03",
+    "q": "Why is GPU utilisation not a cost metric?",
+    "level": "fundamentals",
+    "covers": [
+     "busy is not useful",
+     "cost per success",
+     "idle hours"
+    ]
+   },
+   {
+    "id": "c17-5-i04",
+    "q": "AI spend jumped 40% with flat traffic. Investigate.",
+    "level": "applied",
+    "covers": [
+     "group by feature and tenant",
+     "calls per task",
+     "retries",
+     "cache hit rate"
+    ],
+    "followUp": "What controls would you add?"
+   },
+   {
+    "id": "c17-5-i05",
+    "q": "How would you allocate shared vector DB costs?",
+    "level": "applied",
+    "covers": [
+     "by usage",
+     "queries and storage",
+     "per tenant"
+    ]
+   },
+   {
+    "id": "c17-5-i06",
+    "q": "How would you report AI costs to finance?",
+    "level": "applied",
+    "covers": [
+     "cost per successful task",
+     "trends",
+     "tenants",
+     "forecasts"
+    ]
+   },
+   {
+    "id": "c17-5-i07",
+    "q": "Design {company}'s cost-per-conversation reporting.",
+    "level": "system-design",
+    "covers": [
+     "usage records",
+     "attribution",
+     "outcomes",
+     "dashboard groupings"
+    ],
+    "followUp": "Which number goes to leadership?",
+    "project": "store"
+   },
+   {
+    "id": "c17-5-i08",
+    "q": "Design a cost-attribution system for a platform serving many teams.",
+    "level": "system-design",
+    "covers": [
+     "metering at gateway",
+     "tags",
+     "allocation of shared costs",
+     "budgets and alerts"
+    ]
+   }
+  ]
+ },
+ "c17-6": {
+  "mcq": [
+   {
+    "id": "c17-6-m01",
+    "q": "What is the weakness of head sampling?",
+    "options": [
+     "It is expensive",
+     "It keeps everything",
+     "It decides at the start, so it misses rare failures",
+     "It needs a GPU"
+    ],
+    "answer": 2,
+    "why": "Tail sampling decides after the trace completes.",
+    "kind": "concept",
+    "distractors": [
+     "It is cheap.",
+     "It drops most.",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-6-m02",
+    "q": "Choose all the traces tail sampling should always keep.",
+    "options": [
+     "Every successful fast trace",
+     "Slow traces",
+     "Low quality scores and flagged safety events",
+     "Errors"
+    ],
+    "answer": [
+     1,
+     2,
+     3
+    ],
+    "why": "Plus a random baseline of the rest.",
+    "kind": "concept",
+    "distractors": [
+     "Only a baseline of those.",
+     "",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c17-6-m03",
+    "q": "Should metrics be sampled?",
+    "options": [
+     "Only on weekends",
+     "No; keep metrics unsampled",
+     "Yes, at 5%",
+     "Only for errors"
+    ],
+    "answer": 1,
+    "why": "Metrics are cheap aggregates.",
+    "kind": "concept",
+    "distractors": [
+     "Not a rule.",
+     "",
+     "Distorts counts.",
+     "Distorts rates."
+    ]
+   },
+   {
+    "id": "c17-6-m04",
+    "q": "Always keep 3% (errors, slow, flagged) plus a 5% random sample of the rest. What share of traces is kept?",
+    "options": [
+     "About 7.85%",
+     "5%",
+     "3%",
+     "8%"
+    ],
+    "answer": 0,
+    "why": "3% + 5% × 97% = 7.85%.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Misses the always-kept share.",
+     "Misses the baseline.",
+     "Double-counts the always-kept share."
+    ]
+   },
+   {
+    "id": "c17-6-m05",
+    "q": "What should never be logged?",
+    "options": [
+     "Secrets and auth tokens",
+     "Token counts",
+     "Trace IDs",
+     "Model versions"
+    ],
+    "answer": 0,
+    "why": "Prompts and outputs need per-field decisions; secrets are never logged.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Needed.",
+     "Needed.",
+     "Needed."
+    ]
+   },
+   {
+    "id": "c17-6-m06",
+    "q": "Why alert on dropped-span and queue-full counters?",
+    "options": [
+     "They are required by law",
+     "To speed up exports",
+     "A silent pipeline looks exactly like a healthy, quiet system",
+     "To reduce cost"
+    ],
+    "answer": 2,
+    "why": "Missing telemetry must be visible.",
+    "kind": "concept",
+    "distractors": [
+     "Not the reason.",
+     "Not the reason.",
+     "",
+     "Not the reason."
+    ]
+   },
+   {
+    "id": "c17-6-m07",
+    "q": "Which is a sensible retention example from the chapter?",
+    "options": [
+     "Full content forever",
+     "Metrics 13 months, sampled traces 30 days, full content 7 days in a restricted store",
+     "Nothing kept",
+     "Everything forever"
+    ],
+    "answer": 1,
+    "why": "Audit logs follow legal requirements.",
+    "kind": "concept",
+    "distractors": [
+     "Liability.",
+     "",
+     "Breaks investigations.",
+     "Liability and cost."
+    ]
+   },
+   {
+    "id": "c17-6-m08",
+    "q": "Do deletion requests apply to telemetry?",
+    "options": [
+     "Only metrics",
+     "No",
+     "Only audit logs",
+     "Yes; they must reach telemetry too"
+    ],
+    "answer": 3,
+    "why": "Traces can contain personal data.",
+    "kind": "concept",
+    "distractors": [
+     "Metrics rarely hold personal data.",
+     "They do.",
+     "Audit logs follow their own rules.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-6-m09",
+    "q": "Options for a prompt field in telemetry include…",
+    "options": [
+     "Recorded as a metric label",
+     "Always recorded in full",
+     "Emailed to on-call",
+     "Not recorded, hashed, redacted, or recorded in a restricted store with shorter retention"
+    ],
+    "answer": 3,
+    "why": "Choose per field.",
+    "kind": "concept",
+    "distractors": [
+     "Cardinality and privacy.",
+     "Risky.",
+     "Unsafe.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-6-m10",
+    "q": "LLM traces with content can be tens of KB each. What is the main consequence?",
+    "options": [
+     "Nothing",
+     "Storage and ingest must be budgeted, and content stripped or sampled",
+     "Metrics stop working",
+     "Traces become faster"
+    ],
+    "answer": 1,
+    "why": "Telemetry costs are real.",
+    "kind": "concept",
+    "distractors": [
+     "Costs grow quickly.",
+     "",
+     "Unrelated.",
+     "Not true."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-6-i01",
+    "q": "Compare head and tail sampling.",
+    "level": "fundamentals",
+    "covers": [
+     "decide at start vs end",
+     "rare failures",
+     "cost",
+     "Collector"
+    ]
+   },
+   {
+    "id": "c17-6-i02",
+    "q": "How do you handle prompts and outputs in telemetry?",
+    "level": "fundamentals",
+    "covers": [
+     "per-field choices",
+     "redaction",
+     "restricted store",
+     "retention"
+    ]
+   },
+   {
+    "id": "c17-6-i03",
+    "q": "What can go wrong with telemetry pipelines themselves?",
+    "level": "fundamentals",
+    "covers": [
+     "drops",
+     "silent failures",
+     "cost",
+     "blocking"
+    ]
+   },
+   {
+    "id": "c17-6-i04",
+    "q": "Estimate telemetry storage for a service and cut it by half without losing failures.",
+    "level": "applied",
+    "covers": [
+     "volume calculation",
+     "tail sampling",
+     "strip content",
+     "baseline rate"
+    ],
+    "followUp": "What would you never drop?"
+   },
+   {
+    "id": "c17-6-i05",
+    "q": "Your traces contain customer emails. What do you do?",
+    "level": "applied",
+    "covers": [
+     "purge",
+     "Collector redaction",
+     "tests",
+     "retention"
+    ]
+   },
+   {
+    "id": "c17-6-i06",
+    "q": "How would you detect missing telemetry?",
+    "level": "applied",
+    "covers": [
+     "dropped-span counters",
+     "expected-volume alerts",
+     "heartbeat spans"
+    ]
+   },
+   {
+    "id": "c17-6-i07",
+    "q": "Design {company}'s telemetry policy for regulated customer data.",
+    "level": "system-design",
+    "covers": [
+     "field rules",
+     "restricted store",
+     "retention",
+     "access control",
+     "alerts on drops"
+    ],
+    "followUp": "How would you handle a regulator's request for a trace?",
+    "project": "bank"
+   },
+   {
+    "id": "c17-6-i08",
+    "q": "Design sampling and retention for a high-traffic assistant.",
+    "level": "system-design",
+    "covers": [
+     "tail sampling rules",
+     "baseline",
+     "content handling",
+     "cost budget"
+    ]
+   }
+  ]
+ },
+ "c17-7": {
+  "mcq": [
+   {
+    "id": "c17-7-m01",
+    "q": "How do you detect quality drift?",
+    "options": [
+     "Waiting for complaints",
+     "Continuous sampled evaluation plus input-distribution monitoring",
+     "Checking CPU usage",
+     "Retraining weekly regardless"
+    ],
+    "answer": 1,
+    "why": "Topics, languages, query lengths and retrieval score distributions.",
+    "kind": "concept",
+    "distractors": [
+     "Too late.",
+     "",
+     "Unrelated.",
+     "Not detection."
+    ]
+   },
+   {
+    "id": "c17-7-m02",
+    "q": "Why record the response's model version in every trace?",
+    "options": [
+     "It is required by HTTP",
+     "For billing only",
+     "To save tokens",
+     "Providers update models behind aliases; you need to see when it changed"
+    ],
+    "answer": 3,
+    "why": "Pin snapshots where offered and annotate dashboards on change.",
+    "kind": "concept",
+    "distractors": [
+     "Not required.",
+     "Not only.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-7-m03",
+    "q": "How do you use delayed outcomes such as audits 45 days later?",
+    "options": [
+     "Join them back to the original trace by ID",
+     "Replace all fast signals",
+     "Use them only for billing",
+     "Ignore them"
+    ],
+    "answer": 0,
+    "why": "Then report accuracy per prompt and model version.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Fast signals are still useful.",
+     "Not only.",
+     "They matter most."
+    ]
+   },
+   {
+    "id": "c17-7-m04",
+    "q": "In the claims-triage example, what did the delayed audit reveal?",
+    "options": [
+     "Prompt v14 had 3× the overturn rate of v13",
+     "The model was perfect",
+     "Latency rose",
+     "Costs fell"
+    ],
+    "answer": 0,
+    "why": "Faster signals had not shown it.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not true.",
+     "Not reported.",
+     "Not reported."
+    ]
+   },
+   {
+    "id": "c17-7-m05",
+    "q": "What should you check about proxy signals?",
+    "options": [
+     "That they are cheap",
+     "That they track the real outcomes",
+     "That they are fast",
+     "Nothing"
+    ],
+    "answer": 1,
+    "why": "Validate proxies against delayed outcomes.",
+    "kind": "concept",
+    "distractors": [
+     "Cost is not validity.",
+     "",
+     "Speed is not validity.",
+     "They need validation."
+    ]
+   },
+   {
+    "id": "c17-7-m06",
+    "q": "In the 60-day figure, what caused gradual drift?",
+    "options": [
+     "A new product line whose documents were never ingested",
+     "A prompt change",
+     "The provider update",
+     "The index migration"
+    ],
+    "answer": 0,
+    "why": "Gradual drift points to data gaps.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That was the fix.",
+     "That was a sharp drop.",
+     "No effect."
+    ]
+   },
+   {
+    "id": "c17-7-m07",
+    "q": "Negative ratings rose after the traffic mix changed. What should you check first?",
+    "options": [
+     "Retrain the model",
+     "Remove ratings",
+     "Roll back the provider",
+     "Whether the mix of questions changed, before blaming the model"
+    ],
+    "answer": 3,
+    "why": "Input-distribution monitors separate mix shifts from regressions.",
+    "kind": "scenario",
+    "distractors": [
+     "Premature.",
+     "Hides the signal.",
+     "Premature.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-7-m08",
+    "q": "Which freshness signal suits time-sensitive domains?",
+    "options": [
+     "GPU usage",
+     "Answers citing documents older than a set age",
+     "Login rate",
+     "Token counts"
+    ],
+    "answer": 1,
+    "why": "Plus ingestion lag and index staleness against the SLO.",
+    "kind": "concept",
+    "distractors": [
+     "Not freshness.",
+     "",
+     "Not freshness.",
+     "Not freshness."
+    ]
+   },
+   {
+    "id": "c17-7-m09",
+    "q": "What should happen on any model change?",
+    "options": [
+     "Re-run regression suites (18.5)",
+     "Nothing",
+     "Lower the SLO",
+     "Delete old traces"
+    ],
+    "answer": 0,
+    "why": "Changes can break prompts and formats.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Risky.",
+     "Hides problems.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-7-m10",
+    "q": "In the 60-day figure, what did the index migration do to groundedness?",
+    "options": [
+     "Gradual drift",
+     "A sharp drop",
+     "No visible effect",
+     "A sharp rise"
+    ],
+    "answer": 2,
+    "why": "Annotations show which events mattered.",
+    "kind": "concept",
+    "distractors": [
+     "That was the missing product line.",
+     "That was the provider update.",
+     "",
+     "Not shown."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-7-i01",
+    "q": "What causes quality drift and how do you detect it?",
+    "level": "fundamentals",
+    "covers": [
+     "user and content changes",
+     "sampled evaluation",
+     "input distribution monitors"
+    ]
+   },
+   {
+    "id": "c17-7-i02",
+    "q": "How do you handle provider model updates behind aliases?",
+    "level": "fundamentals",
+    "covers": [
+     "pin snapshots",
+     "record response model",
+     "annotate",
+     "regression suites"
+    ]
+   },
+   {
+    "id": "c17-7-i03",
+    "q": "How do you use delayed feedback?",
+    "level": "fundamentals",
+    "covers": [
+     "join by trace ID",
+     "proxies meanwhile",
+     "validate proxies"
+    ]
+   },
+   {
+    "id": "c17-7-i04",
+    "q": "Ratings fell 10% this month. How do you tell drift, a model change and a mix change apart?",
+    "level": "applied",
+    "covers": [
+     "annotations",
+     "model version",
+     "input distributions",
+     "slices"
+    ],
+    "followUp": "What would you do for each?"
+   },
+   {
+    "id": "c17-7-i05",
+    "q": "Design a freshness monitor for a RAG system.",
+    "level": "applied",
+    "covers": [
+     "ingestion lag",
+     "index staleness",
+     "old-citation rate",
+     "SLO"
+    ]
+   },
+   {
+    "id": "c17-7-i06",
+    "q": "How long should you wait before judging a prompt change with delayed outcomes?",
+    "level": "applied",
+    "covers": [
+     "outcome delay distribution",
+     "proxy signals",
+     "staged rollout"
+    ]
+   },
+   {
+    "id": "c17-7-i07",
+    "q": "Design how {company} links dispute outcomes back to assistant drafts.",
+    "level": "system-design",
+    "covers": [
+     "trace IDs on outcomes",
+     "reporting by version",
+     "delay distribution",
+     "proxy validation"
+    ],
+    "followUp": "What would make you roll back a prompt?",
+    "project": "bank"
+   },
+   {
+    "id": "c17-7-i08",
+    "q": "Design drift monitoring for a multilingual assistant.",
+    "level": "system-design",
+    "covers": [
+     "per-language samples",
+     "input distributions",
+     "annotations",
+     "alerts"
+    ]
+   }
+  ]
+ },
+ "c17-9": {
+  "mcq": [
+   {
+    "id": "c17-9-m01",
+    "q": "Why are production failures the most valuable evaluation data?",
+    "options": [
+     "They are synthetic",
+     "They are always easy",
+     "They are real and they were missed",
+     "They are cheap"
+    ],
+    "answer": 2,
+    "why": "Make the path from bad trace to test short.",
+    "kind": "concept",
+    "distractors": [
+     "They are real.",
+     "Not true.",
+     "",
+     "Not the reason."
+    ]
+   },
+   {
+    "id": "c17-9-m02",
+    "q": "Choose all the steps in the improvement flywheel.",
+    "options": [
+     "Label the root cause and stage",
+     "Triage flagged traces",
+     "Delete the failing trace",
+     "Create an evaluation case and gate releases on it"
+    ],
+    "answer": [
+     0,
+     1,
+     3
+    ],
+    "why": "Then fix the cause, deploy and monitor.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "Keep it as evidence.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-9-m03",
+    "q": "What should be fixed after a failure?",
+    "options": [
+     "Nothing",
+     "Only the example",
+     "The test",
+     "The root cause, not just the single example"
+    ],
+    "answer": 3,
+    "why": "e.g. improve parsing for that document type.",
+    "kind": "concept",
+    "distractors": [
+     "The loop needs fixes.",
+     "Others will fail.",
+     "The test is correct.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-9-m04",
+    "q": "What must happen before production text becomes an evaluation case?",
+    "options": [
+     "Publish it",
+     "Nothing",
+     "Redact personal data and get approval if content is sensitive",
+     "Translate it"
+    ],
+    "answer": 2,
+    "why": "Raw customer conversations must not enter shared sets without review.",
+    "kind": "concept",
+    "distractors": [
+     "Never.",
+     "Risky.",
+     "",
+     "Not required."
+    ]
+   },
+   {
+    "id": "c17-9-m05",
+    "q": "What does the release gate run?",
+    "options": [
+     "Only old cases",
+     "A random sample",
+     "Only new cases",
+     "The suite including the new cases and all old ones"
+    ],
+    "answer": 3,
+    "why": "See 8.6 and 18.3.",
+    "kind": "concept",
+    "distractors": [
+     "Misses the new failure.",
+     "Not reliable.",
+     "Misses regressions.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-9-m06",
+    "q": "After deploying the fix, what should you check?",
+    "options": [
+     "That the failure signal falls for that category",
+     "That traffic rose",
+     "Nothing",
+     "That costs rose"
+    ],
+    "answer": 0,
+    "why": "Close the loop.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "The loop repeats.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c17-9-m07",
+    "q": "Why add paraphrases to a new evaluation case?",
+    "options": [
+     "For translation",
+     "To confuse the model",
+     "To make the suite longer",
+     "So the fix generalises beyond one exact wording"
+    ],
+    "answer": 3,
+    "why": "One wording can be overfitted.",
+    "kind": "concept",
+    "distractors": [
+     "Not the goal.",
+     "Not the goal.",
+     "Not the goal.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-9-m08",
+    "q": "What tags should an evaluation case from production carry?",
+    "options": [
+     "Links to the trace and the issue",
+     "The engineer's salary",
+     "The user's name",
+     "None"
+    ],
+    "answer": 0,
+    "why": "Traceability to the original failure.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Personal data.",
+     "Traceability matters."
+    ]
+   },
+   {
+    "id": "c17-9-m09",
+    "q": "Over months, what does the flywheel turn the evaluation suite into?",
+    "options": [
+     "A precise description of what users actually need",
+     "A marketing document",
+     "A training set by default",
+     "A random collection"
+    ],
+    "answer": 0,
+    "why": "Real failures shape it.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "No.",
+     "Not by default.",
+     "It is curated."
+    ]
+   },
+   {
+    "id": "c17-9-m10",
+    "q": "Who should classify a failure's stage (retrieval, generation, tool, data)?",
+    "options": [
+     "The model that failed",
+     "The user",
+     "Reviewers in the triage queue, noting the correct behaviour",
+     "Nobody; skip it"
+    ],
+    "answer": 2,
+    "why": "The stage guides the fix (8.5).",
+    "kind": "concept",
+    "distractors": [
+     "Not reliable.",
+     "Users do not know internals.",
+     "",
+     "The fix needs it."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-9-i01",
+    "q": "How do you turn production failures into evaluation cases?",
+    "level": "fundamentals",
+    "covers": [
+     "signals",
+     "triage",
+     "label stage",
+     "case with context",
+     "gate"
+    ]
+   },
+   {
+    "id": "c17-9-i02",
+    "q": "Why fix root causes rather than examples?",
+    "level": "fundamentals",
+    "covers": [
+     "generalisation",
+     "classes of failure",
+     "avoid overfitting"
+    ]
+   },
+   {
+    "id": "c17-9-i03",
+    "q": "What privacy steps apply before reusing production data in evaluation?",
+    "level": "fundamentals",
+    "covers": [
+     "redaction",
+     "approval",
+     "access control"
+    ]
+   },
+   {
+    "id": "c17-9-i04",
+    "q": "Your suite passes but users report the same failure again. What went wrong?",
+    "level": "applied",
+    "covers": [
+     "case too narrow",
+     "no paraphrases",
+     "root cause not fixed",
+     "signal not monitored"
+    ],
+    "followUp": "How would you prevent recurrence?"
+   },
+   {
+    "id": "c17-9-i05",
+    "q": "How do you decide which flagged traces to review each week?",
+    "level": "applied",
+    "covers": [
+     "sample across tenants and features",
+     "severity",
+     "new failure types"
+    ]
+   },
+   {
+    "id": "c17-9-i06",
+    "q": "How would you label failure stages consistently across reviewers?",
+    "level": "applied",
+    "covers": [
+     "guideline",
+     "stage taxonomy",
+     "agreement checks"
+    ]
+   },
+   {
+    "id": "c17-9-i07",
+    "q": "Design {company}'s weekly flywheel from flagged chats to release gates.",
+    "level": "system-design",
+    "covers": [
+     "sampling",
+     "labelling",
+     "redaction",
+     "case creation",
+     "gate and monitor"
+    ],
+    "followUp": "Who owns each step?",
+    "project": "store"
+   },
+   {
+    "id": "c17-9-i08",
+    "q": "Design tooling that makes trace-to-test conversion fast.",
+    "level": "system-design",
+    "covers": [
+     "one-click export",
+     "redaction",
+     "case template",
+     "suite integration"
+    ]
+   }
+  ]
+ },
+ "c17-10": {
+  "mcq": [
+   {
+    "id": "c17-10-m01",
+    "q": "What are semantic conventions?",
+    "options": [
+     "A database schema",
+     "Agreed names and meanings for telemetry attributes",
+     "A prompt template",
+     "A licence"
+    ],
+    "answer": 1,
+    "why": "They let tools from different vendors understand your data.",
+    "kind": "concept",
+    "distractors": [
+     "Not the meaning.",
+     "",
+     "Not the meaning.",
+     "Not the meaning."
+    ]
+   },
+   {
+    "id": "c17-10-m02",
+    "q": "What is the status of the GenAI semantic conventions as of the chapter (checked November 2026)?",
+    "options": [
+     "Withdrawn",
+     "Development (not stable)",
+     "Stable",
+     "Deprecated"
+    ],
+    "answer": 1,
+    "why": "Names and structure can change in breaking ways.",
+    "kind": "concept",
+    "distractors": [
+     "Not withdrawn.",
+     "",
+     "Not stable.",
+     "Not deprecated."
+    ]
+   },
+   {
+    "id": "c17-10-m03",
+    "q": "Which attribute superseded the older gen_ai.system?",
+    "options": [
+     "gen_ai.request.model",
+     "gen_ai.usage.input_tokens",
+     "gen_ai.provider.name",
+     "gen_ai.operation.name"
+    ],
+    "answer": 2,
+    "why": "An example of renames under Development status.",
+    "kind": "concept",
+    "distractors": [
+     "Different attribute.",
+     "Different attribute.",
+     "",
+     "Different attribute."
+    ]
+   },
+   {
+    "id": "c17-10-m04",
+    "q": "Which attributes are opt-in because they are sensitive?",
+    "options": [
+     "gen_ai.usage.output_tokens",
+     "gen_ai.request.model",
+     "gen_ai.response.id",
+     "gen_ai.input.messages and gen_ai.output.messages"
+    ],
+    "answer": 3,
+    "why": "Content attributes are off by default.",
+    "kind": "concept",
+    "distractors": [
+     "Not content.",
+     "Not content.",
+     "Not content.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-10-m05",
+    "q": "Choose all the steps the chapter recommends before adopting GenAI conventions.",
+    "options": [
+     "Pin instrumentation versions",
+     "Assume names never change",
+     "Read the status badge per attribute",
+     "Map old and new names in the Collector"
+    ],
+    "answer": [
+     0,
+     2,
+     3
+    ],
+    "why": "Also abstract telemetry in one helper and re-check on each upgrade.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "They can change.",
+     "",
+     ""
+    ]
+   },
+   {
+    "id": "c17-10-m06",
+    "q": "Some instrumentation libraries gate the newest behaviour behind which environment variable?",
+    "options": [
+     "OTLP_STABLE",
+     "GENAI_ENABLE",
+     "OTEL_SEMCONV_STABILITY_OPT_IN",
+     "OTEL_DEBUG"
+    ],
+    "answer": 2,
+    "why": "Check each library's README for supported values.",
+    "kind": "concept",
+    "distractors": [
+     "Not real.",
+     "Not real.",
+     "",
+     "Not the variable named."
+    ]
+   },
+   {
+    "id": "c17-10-m07",
+    "q": "Where are the GenAI conventions now maintained, per the chapter?",
+    "options": [
+     "Nowhere",
+     "In the OTLP spec",
+     "A dedicated repository, open-telemetry/semantic-conventions-genai",
+     "Only on a vendor's site"
+    ],
+    "answer": 2,
+    "why": "The old pages point there.",
+    "kind": "concept",
+    "distractors": [
+     "They are maintained.",
+     "Not there.",
+     "",
+     "Not vendor-owned."
+    ]
+   },
+   {
+    "id": "c17-10-m08",
+    "q": "Is OpenTelemetry's maturity a reason to assume the GenAI conventions are stable?",
+    "options": [
+     "Only for metrics",
+     "Yes",
+     "Only for traces",
+     "No; each convention area has its own status"
+    ],
+    "answer": 3,
+    "why": "Check the badge, not the project's reputation.",
+    "kind": "concept",
+    "distractors": [
+     "Status is per area.",
+     "That is the mistake.",
+     "Status is per area.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-10-m09",
+    "q": "Which span name follows the draft convention for a tool call?",
+    "options": [
+     "invoke {tool}",
+     "run {tool}",
+     "tool_call",
+     "execute_tool {tool}"
+    ],
+    "answer": 3,
+    "why": "Others: chat {model}, embeddings {model}, invoke_agent {agent}.",
+    "kind": "concept",
+    "distractors": [
+     "Not the draft name.",
+     "Not the draft name.",
+     "Not the draft name.",
+     ""
+    ]
+   },
+   {
+    "id": "c17-10-m10",
+    "q": "Which metric is in the draft GenAI conventions for token use?",
+    "options": [
+     "gen_ai.client.token.usage",
+     "tokens_per_request",
+     "llm.tokens.total",
+     "openai.usage"
+    ],
+    "answer": 0,
+    "why": "Others include gen_ai.client.operation.duration and gen_ai.server.time_to_first_token.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not the draft name.",
+     "Not the draft name.",
+     "Vendor-specific, not the convention."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c17-10-i01",
+    "q": "What are the OpenTelemetry GenAI semantic conventions?",
+    "level": "fundamentals",
+    "covers": [
+     "attribute names",
+     "spans, metrics, events",
+     "model, agent, tool calls"
+    ]
+   },
+   {
+    "id": "c17-10-i02",
+    "q": "What does Development status mean for adopters?",
+    "level": "fundamentals",
+    "covers": [
+     "breaking changes possible",
+     "check status",
+     "pin versions"
+    ]
+   },
+   {
+    "id": "c17-10-i03",
+    "q": "Which GenAI attributes would you record by default and which not?",
+    "level": "fundamentals",
+    "covers": [
+     "model, tokens, finish reasons",
+     "content opt-in off"
+    ]
+   },
+   {
+    "id": "c17-10-i04",
+    "q": "An instrumentation upgrade broke your token dashboards. What happened and how do you prevent it?",
+    "level": "applied",
+    "covers": [
+     "renamed attribute",
+     "Collector mapping",
+     "pinning",
+     "dashboard tests"
+    ],
+    "followUp": "How would you roll out the next upgrade?"
+   },
+   {
+    "id": "c17-10-i05",
+    "q": "How would you abstract telemetry so convention changes are cheap?",
+    "level": "applied",
+    "covers": [
+     "one helper",
+     "mapping layer",
+     "tests"
+    ]
+   },
+   {
+    "id": "c17-10-i06",
+    "q": "How do you check whether an attribute is safe to depend on?",
+    "level": "applied",
+    "covers": [
+     "status badge",
+     "changelog",
+     "library README"
+    ]
+   },
+   {
+    "id": "c17-10-i07",
+    "q": "Plan {company}'s adoption of the GenAI conventions for its rebooking agent.",
+    "level": "system-design",
+    "covers": [
+     "span names",
+     "attributes",
+     "pinning",
+     "Collector mapping",
+     "re-check cadence"
+    ],
+    "followUp": "What would you do if a name changes next month?",
+    "project": "travel"
+   },
+   {
+    "id": "c17-10-i08",
+    "q": "Design a telemetry schema policy for a company adopting draft conventions.",
+    "level": "system-design",
+    "covers": [
+     "approved attributes",
+     "versioning",
+     "mapping",
+     "review on upgrade"
+    ]
+   }
+  ]
  }
 }

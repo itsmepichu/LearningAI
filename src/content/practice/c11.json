@@ -2,49 +2,255 @@
  "c11-1": {
   "harbor": {
    "practice": "Harbor&#x27;s refund flow is a fixed workflow; only the &quot;investigate an unusual billing dispute&quot; path lets the model choose among read-only tools.",
-   "failure": "Calling a fixed chain of prompts an agent and expecting it to become more capable."
+   "failure": "Calling a fixed chain of prompts an agent and expecting it to become more capable.",
+   "fit": "good",
+   "fitNote": "one agent path among fixed workflows",
+   "tryIt": "Take 20 rows of <code>tickets.csv</code> and mark each one: does it follow a path you could write as fixed steps, or does the next step depend on what you find? Count how many need an agent at all."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "the refund example is a store problem",
+   "practice": "Most of {company}'s return requests follow one path: look up the order, check the return window, approve, reply. A classifier sends the rest (split shipments, several orders, a disputed delivery) to a bounded agent with read-only tools, and any refund it proposes waits for a person.",
+   "failure": "Putting every return request through the agent because a few need investigation, which multiplies cost and makes the common case harder to test.",
+   "tryIt": "In <code>orders.csv</code>, count returned orders, then write the fixed workflow for a single-item return and list two cases from <code>chats.json</code> that would need the agent path."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "most disputes follow a fixed reason-code path",
+   "practice": "{company}'s dispute intake is a router: each reason code (failed UPI debit, amount differs, unrecognised transaction) has a fixed workflow. Only cases that cross several transactions get a read-only investigation agent, and a person decides the outcome.",
+   "failure": "Letting an agent decide the dispute outcome because it can read the transactions.",
+   "tryIt": "Group <code>disputes.csv</code> by <code>reason</code> and decide which reason codes a fixed workflow can handle end to end and which need investigation across transactions."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "disruptions are where the path varies",
+   "practice": "Seat changes and simple cancellations at {company} are fixed workflows. Rebooking after a disruption varies by case (connections, fare rules, who is travelling), so that path is a bounded agent that proposes options for the traveller or an agent to confirm.",
+   "failure": "Building an open-ended travel agent for requests that a form and a fixed workflow already handle.",
+   "tryIt": "Take 10 messages from <code>messages.json</code> and mark which ones a fixed workflow covers (a simple cancellation) and which need the agent to look at connections and fare rules first (a late train affecting a hotel check-in, as in MS-003)."
   }
  },
  "c11-2": {
   "harbor": {
    "practice": "Harbor&#x27;s agent rewrites a failed search once, then abstains; it stops at 12 steps, $0.40 or 10 minutes, whichever comes first.",
-   "failure": "Trusting a model-written plan to be executable, authorised or complete."
+   "failure": "Trusting a model-written plan to be executable, authorised or complete.",
+   "fit": "good",
+   "fitNote": "12 steps, $0.40 or 10 minutes",
+   "tryIt": "In the agent loop figure, step through the trace with the step limit at 10, then at 3, and see where the run stops. Then turn on the tool failure and watch loop detection and escalation."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a missing-delivery investigation",
+   "practice": "{company}'s delivery investigation agent reads the order, the courier scan history and earlier chats, one tool call at a time. It stops at a final answer, 8 steps, a token budget, or the second identical call, and then hands the case to a person with its notes.",
+   "failure": "Relying on the model to say it is finished, so a confused run keeps calling the courier API until the request times out.",
+   "tryIt": "In the agent loop figure, inject the tool failure and step through to the escalation. Then write the same trace for chat CH-001 in <code>chats.json</code>: each tool call, its observation and when the run should stop."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "double-charge investigations",
+   "practice": "The figure's task (why was a customer charged twice) is a common {company} dispute. Its investigation agent may look up transactions and policies, but cannot move money; it stops at a step limit or on repeating a call, and escalates with what it found.",
+   "failure": "Letting the loop retry a failing core-banking lookup without limit, which looks like a stuck case to the customer and a load spike to the core system.",
+   "tryIt": "Step through the figure with the step limit at 4 and the failure on. Then pick a duplicate-charge case in <code>disputes.csv</code> and write the tool calls an agent would make, with the step where it should give up."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "explicit plans help long rebooking tasks",
+   "practice": "{assistant}'s rebooking agent writes an explicit plan first (check fare rule, search alternatives, hold a seat, ask the traveller), so a support agent can read where a long run stands. It stops at a step limit, a deadline or a repeated search.",
+   "failure": "Treating the model's plan as approved: the plan says to cancel and rebook, but nothing checked that the fare rule allows it.",
+   "tryIt": "Step through the figure with the step limit at 6. Then write a plan for a booking in <code>bookings.csv</code> whose travel date falls on a disruption day in <code>disruptions.csv</code>, and mark which steps read data and which change the booking."
   }
  },
  "c11-3": {
   "harbor": {
    "practice": "Harbor exposes lookup_policy(query, region) instead of raw SQL, and its create_ticket credential can create tickets and nothing else.",
-   "failure": "Treating a tool description as a permission check."
+   "failure": "Treating a tool description as a permission check.",
+   "fit": "good",
+   "fitNote": "narrow tools, narrow credentials",
+   "tryIt": "Write a JSON Schema for <code>lookup_policy(query, region)</code> with an enum for region and <code>additionalProperties: false</code>, then list three bad argument sets and the error message the model should get for each."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "the refund schema in the figure",
+   "practice": "{company}'s refund tool takes an order ID and a reason code, not an amount: code computes the amount from the order total and the reason. Each call runs with the customer's own permissions, so the assistant cannot refund someone else's order.",
+   "failure": "Running the assistant's tools with a service account that can see every customer's orders.",
+   "tryIt": "Write a schema for <code>create_return(order_id, reason)</code> where <code>order_id</code> must match the <code>OD-</code> format in <code>orders.csv</code> and <code>reason</code> is an enum. Then write the code that computes the refund from the order row."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "propose and commit are separate tools",
+   "practice": "{company}'s agent tools are read-only plus one <code>propose_provisional_credit</code> tool. Proposing writes a pending record; only a separate commit service, called after a person approves, can move money, and it checks the case against the same authorisation rules the staff UI uses.",
+   "failure": "Giving one tool both propose and commit rights, so a prompt-injected case note can trigger a credit.",
+   "tryIt": "Write the schema for <code>propose_provisional_credit(case_id, reason)</code>. The amount should come from the disputed transaction in <code>transactions.csv</code>, not from the model. Then list the checks the commit service runs."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "booking changes carry supplier costs",
+   "practice": "{company}'s change-booking tool takes a booking ID and an option ID returned by the search tool, so the model cannot invent a fare or a flight. A dry-run mode shows the change fee before anything is committed.",
+   "failure": "Letting the model pass free-text flight details to the supplier API.",
+   "tryIt": "Write a schema for <code>change_booking(booking_id, option_id, dry_run)</code> using the booking ID format in <code>bookings.csv</code>, and write the structured error for a non-refundable booking."
   }
  },
  "c11-4": {
   "harbor": {
    "practice": "Harbor remembers &quot;prefers answers in German&quot; with user scope and a 6-month expiry, but always re-checks spending authority live.",
-   "failure": "Turning a model&#x27;s guess about a user (&quot;probably a manager&quot;) into a permanent trusted fact."
+   "failure": "Turning a model&#x27;s guess about a user (&quot;probably a manager&quot;) into a permanent trusted fact.",
+   "fit": "good",
+   "fitNote": "preferences remembered, authority re-checked",
+   "tryIt": "Write two memory records for one Harbor employee (a language preference and a past resolution), each with source, scope, owner and expiry. Then write one fact that must never be stored as memory and say why."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "size and language preferences",
+   "practice": "{assistant} remembers a shopper's preferred language and usual shoe size with user scope and an expiry. It does not remember anything a review or a seller message told it, because that text is not from the shopper.",
+   "failure": "Writing a memory from a product review (“always recommend this brand”), which poisons recommendations for that shopper.",
+   "tryIt": "Write memory records for a shopper who asked about UK 9 shoes in <code>chats.json</code>. Then find a review in <code>reviews.json</code> with <code>is_injection: true</code> and explain why nothing in it may become memory."
+  },
+  "bank": {
+   "fit": "limited",
+   "fitNote": "memory of customers is mostly restricted",
+   "practice": "{company} keeps very little agent memory about customers: language and channel preference only, under the bank's retention policy. Case facts live in the case system, not in memory.",
+   "failure": "Storing account details or a dispute summary as long-term agent memory outside the case system's retention rules.",
+   "tryIt": "List which fields of <code>disputes.csv</code> could be memory, which belong only in the case record, and which must never be stored."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "traveller preferences matter across trips",
+   "practice": "{assistant} remembers seat and meal preferences and the traveller's usual home airport, each with a source and a date. Preferences learned from one trip are stored as suggestions, and the traveller can see and delete them.",
+   "failure": "Keeping a passport number in agent memory because it was useful on the last booking.",
+   "tryIt": "Write three memory records for a traveller from <code>bookings.csv</code> (home airport, language, product preference), with expiry, and say which one should be superseded if their next five trips start elsewhere."
   }
  },
  "c11-5": {
   "harbor": {
    "practice": "A Harbor approval arrives two days later; the workflow resumes from its database checkpoint, re-checks the requester&#x27;s access, and executes only the approved version.",
-   "failure": "Relying on an in-memory checkpointer that disappears on restart."
+   "failure": "Relying on an in-memory checkpointer that disappears on restart.",
+   "fit": "good",
+   "fitNote": "a two-day approval wait",
+   "tryIt": "Play the crash-and-resume figure and note which steps are not repeated. Then write Harbor's ticket task as a state machine (RECEIVED → … → DONE) and mark the states where it may wait for days."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "returns wait for courier pickup",
+   "practice": "A {company} return waits days for the courier pickup and the warehouse check. The task is a state machine in a workflow engine; each wait releases the worker, and before issuing the refund the workflow re-checks that the item was received and the order was not already refunded.",
+   "failure": "Holding a worker thread open while a return waits for the warehouse, so a deploy restarts it and the return is lost.",
+   "tryIt": "Write the states of a return (REQUESTED → PICKUP_SCHEDULED → RECEIVED → INSPECTED → REFUNDED) with the allowed transitions, and mark what is re-checked after each wait. Use a returned order from <code>orders.csv</code>."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "disputes run for weeks",
+   "practice": "A {company} dispute stays open for days or weeks (see <code>days_to_resolve</code>). The workflow engine records every step; when a merchant response arrives, it resumes from the checkpoint, re-checks the case is still open, and does not repeat completed lookups.",
+   "failure": "Re-running the whole investigation from the start on resume, which re-sends the merchant request.",
+   "tryIt": "Compute the median and the longest <code>days_to_resolve</code> in <code>disputes.csv</code>, then write the dispute states and the timeout after which a waiting state escalates."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "fare holds and supplier callbacks",
+   "practice": "{company} holds a seat while the traveller decides, and the supplier confirms asynchronously. The rebooking workflow waits on a timer and a supplier callback; on resume it re-checks the fare and the hold before charging.",
+   "failure": "Charging the traveller after the hold expired because the resumed run used the price saved before the wait.",
+   "tryIt": "Write the rebooking states with a hold timer (for example 30 minutes) and the checks to repeat on resume. Play the crash figure and say which of your steps would be replayed from the record."
   }
  },
  "c11-6": {
   "harbor": {
    "practice": "Harbor&#x27;s ticket service committed a ticket and the response was lost; the retry with the same idempotency key returned the existing ticket ID.",
-   "failure": "Assuming a checkpoint written after a tool call prevents duplicates if the process crashes in between."
+   "failure": "Assuming a checkpoint written after a tool call prevents duplicates if the process crashes in between.",
+   "fit": "good",
+   "fitNote": "a lost ticket-create response",
+   "tryIt": "In the ticket-store figure, step through with the idempotency key off, then on, and count tickets at the end. Then write Harbor's key formula from task ID, step and arguments."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "refunds and coupons must happen once",
+   "practice": "{company}'s refund call carries a key built from the return ID and the step, so a retry after a timeout returns the first refund instead of paying twice. The refund and its “refund issued” event are written together through an outbox.",
+   "failure": "Generating a new random key on each retry, which makes every retry look like a new refund.",
+   "tryIt": "In the ticket-store figure, turn the key off and step through to the duplicate. Then pick a returned order in <code>orders.csv</code> and write the idempotency key and the check that runs before a refund."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "a duplicate credit is real money",
+   "practice": "Every {company} provisional credit carries a key derived from the case ID and step. A resumed run first asks the ledger whether a credit for this case exists, and the credit plus its notification are written in one transaction with an outbox row.",
+   "failure": "Notifying the customer from the agent after the credit call, so a crash in between sends the message twice or not at all.",
+   "tryIt": "Run the ticket-store figure with the key on and off. Then write the key for a provisional credit on a case in <code>disputes.csv</code> and the outbox row written with it."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "the saga example is a trip booking",
+   "practice": "A {company} package booking is a saga: reserve flight, reserve hotel, charge card, send confirmation. If the charge fails, the hotel and flight holds are released in reverse order. The confirmation, which cannot be undone, goes last.",
+   "failure": "Sending the confirmation before charging the card, so a failed payment leaves a traveller with an itinerary that does not exist.",
+   "tryIt": "In the saga figure, set the failure at step 3 and run it, then turn on the duplicate retry of step 1. Then write the compensations for a package booking in <code>bookings.csv</code>."
   }
  },
  "c11-7": {
   "harbor": {
    "practice": "Harbor asks approval for an exact email draft; any edit after approval creates a new version that needs approving again.",
-   "failure": "Treating one approval as permission for related actions the agent decides on later."
+   "failure": "Treating one approval as permission for related actions the agent decides on later.",
+   "fit": "good",
+   "fitNote": "approval of an exact email version",
+   "tryIt": "In the guardrails figure, set a credit of $40, then $80, and see which one pauses for approval. Then lower the task budget until the run stops and escalates before completion."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "small refunds automatic, large ones approved",
+   "practice": "{company} auto-approves refunds under a small amount when the order matches policy, and sends larger ones, repeat claims and seller payouts to a person. Each shopper has a daily refund budget enforced in the runtime.",
+   "failure": "Writing the refund limit into the prompt, where a persuasive chat can talk the assistant past it.",
+   "tryIt": "In the figure, set the budget to $0.10 and run it to see the escalation. Then choose an auto-approve limit from the <code>refund_amount_inr</code> values in <code>orders.csv</code> and count how many refunds would need a person."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "regulated actions need named approvers",
+   "practice": "At {company}, reading is automatic, drafting a customer letter is automatic with audit, and any credit, reversal or account change needs a named approver who sees the exact amount, the evidence and the policy. Rejections and edits are kept as feedback.",
+   "failure": "Letting one approval of a provisional credit also cover the final credit decided weeks later.",
+   "tryIt": "In the figure, move the credit across the approval threshold and watch the run pause. Then write the risk tier for each action in a dispute from <code>disputes.csv</code> (look up, draft letter, provisional credit, close case)."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "change fees and refunds",
+   "practice": "{assistant} can search and hold automatically; paying a change fee, cancelling or refunding needs the traveller's confirmation of the exact itinerary and price, and refunds above a threshold need staff approval.",
+   "failure": "Asking the traveller to approve “rebook me”, then charging a different itinerary the agent found later.",
+   "tryIt": "In the figure, set the credit to $120 and the budget to $0.20 and run it. Then write which <code>bookings.csv</code> actions are automatic, which need the traveller's confirmation, and which need staff."
   }
  },
  "c11-8": {
   "harbor": {
    "practice": "Harbor connects to a read-only policy MCP server and a separate ticket server; reading a policy resource gives the ticket server no extra rights.",
-   "failure": "Assuming an MCP server is vetted or safe to hold powerful credentials because it implements the protocol."
+   "failure": "Assuming an MCP server is vetted or safe to hold powerful credentials because it implements the protocol.",
+   "fit": "good",
+   "fitNote": "separate read-only and ticket servers",
+   "tryIt": "Follow the laptop lab to build the order-status MCP server, list its tools in the Inspector, then add a second tool and check its schema in the Inspector before any host uses it."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "seller tools from third parties",
+   "practice": "{company} uses a third-party courier-tracking MCP server. It is pinned to a reviewed version, runs with a token that only reads tracking, and its tool descriptions were read for hidden instructions before it was allowed.",
+   "failure": "Installing a community MCP server for “order management” and giving it the store admin token.",
+   "tryIt": "Build the laptop-lab server with one tool that reads an order from <code>orders.csv</code>. In the Inspector, call it, then write a poisoned tool description and note what a host would see."
+  },
+  "bank": {
+   "fit": "limited",
+   "fitNote": "few third-party servers are allowed",
+   "practice": "{company} runs only internal MCP servers in its own network, each with an audience-bound token. Third-party servers are not allowed near customer data.",
+   "failure": "Passing the user's bank token from the MCP server through to another internal API.",
+   "tryIt": "Build the laptop-lab server with a read-only resource that serves one policy from <code>policies.json</code>, and write which token audience it should accept."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "many supplier systems behind one protocol",
+   "practice": "{company} wraps each supplier (airline, rail, hotel) as its own MCP server, so the assistant host connects to all of them the same way. Each server holds only its supplier's credentials, and booking tools need the traveller's consent in the host.",
+   "failure": "One shared server holding every supplier's credentials, so a bug in hotel search exposes airline booking.",
+   "tryIt": "Build the laptop-lab server with a resource for one fare rule from <code>fare_rules.json</code> and a read-only search tool, then list both in the Inspector."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Use a return from <code>orders.csv</code>: look up order → check window → draft reply → approve → create refund. Inject a timeout after the refund call succeeds and retry with the same key. The pass condition is exactly one refund per return after every crash.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use a case from <code>disputes.csv</code>: look up transaction → check policy in <code>policies.json</code> → propose provisional credit → approve → commit. Kill the process after each state, and prove exactly one credit and one customer notification exist after every retry.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use a package booking from <code>bookings.csv</code> on a disruption day in <code>disruptions.csv</code> as a saga: hold new flight → hold hotel → charge change fee → confirm. Fail each step in turn and show the completed holds are released in reverse order, and that no booking is charged twice.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Use a Harbor support request from <code>tickets.csv</code>: search policies in <code>policies.json</code> → draft → approve → create ticket. Inject a timeout after a successful create and retry with the same key; the pass condition is exactly one ticket with the correct reported ID.</p>"
   }
  }
 }

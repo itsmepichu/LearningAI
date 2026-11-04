@@ -2,43 +2,221 @@
  "c6-1": {
   "harbor": {
    "practice": "Harbor uses retrieval for changing policy facts, a small SFT for the mandated answer format, and has not done continued pretraining because evaluation never showed a domain-language gap.",
-   "failure": "Using fine-tuning as a substitute for a permission-aware database of changing facts."
+   "failure": "Using fine-tuning as a substitute for a permission-aware database of changing facts.",
+   "fit": "good",
+   "fitNote": "retrieval for facts, a small SFT for format",
+   "tryIt": "Step through the pipeline figure and mark which stage each Harbor choice touches: retrieval for policy facts (no training), a small SFT for the answer format, and why continued pretraining was skipped."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "prices and stock change daily, so they stay out of the weights",
+   "practice": "{company} considered continued pretraining on millions of listings to teach Indian product vocabulary. Evaluation showed the instruct model already handled most of it; a small SFT for {assistant}'s reply format plus retrieval over listings covered the rest at a fraction of the cost.",
+   "failure": "Fine-tuning prices or stock levels into the model. They change daily, so they belong in retrieval and tools.",
+   "tryIt": "Ask a base and an instruct model of the same size (for example SmolLM2-135M and SmolLM2-135M-Instruct, on CPU) to “Write a product description for a cotton kurta” and compare what each does."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "format and refusals are tuning jobs; account facts are not",
+   "practice": "{company}'s assistant must follow a strict reply format and refuse to give investment advice. That is SFT and preference tuning on top of an instruct model; account facts come from systems of record at question time.",
+   "failure": "Fine-tuning on past customer conversations without removing personal data. The model can memorise and repeat it.",
+   "tryIt": "Write ten (instruction, ideal reply) pairs for dispute updates based on cases in <code>disputes.csv</code>, then five (chosen, rejected) pairs where the rejected reply promises a refund before the investigation ends."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "booking formats are tuned; fares stay in tools",
+   "practice": "{company} keeps fares and rules in tools and retrieval, and uses SFT only to teach {assistant} its booking-confirmation format and when to ask a clarifying question.",
+   "failure": "Training the model on last year's fare rules. It will state outdated change fees with confidence.",
+   "tryIt": "Compare a base and an instruct small model on “Confirm the booking change: Goa hotel moved by two days” and note which one follows the instruction."
   }
  },
  "c6-2": {
   "harbor": {
    "practice": "For any Harbor fine-tune, the dataset manifest records source, licence decision, content hash, language and filter outcome, and evaluation document families are excluded before training sequences are built.",
-   "failure": "Assuming publicly reachable text is licensed for any training or redistribution purpose."
+   "failure": "Assuming publicly reachable text is licensed for any training or redistribution purpose.",
+   "fit": "best",
+   "fitNote": "policy revisions are near-duplicates by design",
+   "tryIt": "Run MinHash near-duplicate detection (for example with the datasketch library) on <code>policies.json</code> and check that each policy is grouped with its older revisions."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "sellers copy descriptions across many listings",
+   "practice": "{company} fine-tuned on seller descriptions and reviews. Many sellers copy the same description across hundreds of listings, so near-duplicate removal shrank the set by about a third and stopped the model memorising one seller's wording.",
+   "failure": "Training on scraped competitor listings or reviews without checking their terms of use and licences.",
+   "tryIt": "Shingle the titles in <code>products.csv</code> into word 3-grams, compute the Jaccard similarity of every pair, and list the near-duplicates above 0.6."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "PII scrubbing and evaluation-overlap checks before any fine-tune",
+   "practice": "{company}'s training data for the dispute assistant passes PII scrubbing (account numbers, names, phone numbers) and a licence and consent check before any fine-tune, and evaluation cases are removed from training by n-gram overlap.",
+   "failure": "Assuming internal data is free to train on. Customer consent and data-protection rules still apply.",
+   "tryIt": "Write a regex scrubber for account-like numbers and phone numbers, run it on the texts in <code>disputes.csv</code> and count what it catches. Then check 13-gram overlap between a training split and an evaluation split."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company} trains little of its own. Its corpus work is mostly deduplicating fare-rule documents from several suppliers before indexing them (10.4).",
+   "failure": "Indexing the same rule from three suppliers as three sources. Answers cite whichever comes first, even if it is outdated.",
+   "tryIt": "Copy two rules in <code>fare_rules.json</code> with small wording changes and check that MinHash similarity flags them."
   }
  },
  "c6-3": {
   "harbor": {
    "practice": "Harbor&#x27;s team used C = 6ND to show that pretraining even a 1B model on their 20B-token corpus would cost far more than adapting an existing open model, which ended the discussion.",
-   "failure": "Repeating a small corpus to reach a big token count and expecting the diversity of a larger corpus."
+   "failure": "Repeating a small corpus to reach a big token count and expecting the diversity of a larger corpus.",
+   "fit": "good",
+   "fitNote": "C = 6ND ended a pretraining discussion",
+   "tryIt": "In the calculator, enter 1B parameters at 20 tokens per parameter (Harbor's 20B-token corpus) and read the GPU-hours. Then explain why the team still preferred adapting an existing open model: quality, not only cost."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "pricing a home-grown model before building it",
+   "practice": "{company} asked whether to pretrain its own 3B model. C = 6ND at about 1,000 tokens per parameter gives roughly 37,000 GPU-hours for the final run alone, before any experiments, against a few GPU-hours to adapt an open model with LoRA.",
+   "failure": "Budgeting compute for the final run only. Experiments, failed runs and evaluation add substantially to it.",
+   "tryIt": "In the calculator, enter 3B parameters, 1,000 tokens per parameter, 40% MFU and 64 GPUs and read the days. Then halve the MFU and see what happens."
+  },
+  "bank": {
+   "fit": "limited",
+   "practice": "{company} will not pretrain. Scaling relationships matter to it only when choosing which size of model to self-host: a smaller model trained for longer is cheaper to serve for millions of case summaries.",
+   "failure": "Choosing the largest model on a benchmark without pricing its serving cost per case.",
+   "tryIt": "Use the calculator to compare an 8B model at 2,000 tokens per parameter with a 70B model at 20, and note which is cheaper to train and which is cheaper to serve."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "a language mix for a small intent model",
+   "practice": "{company}'s mixture question is small but real: how much Hindi, Tamil and Hinglish to include when training its intent model, so that no language is under-served.",
+   "failure": "Training the intent model on the natural traffic mix only, so Tamil (about 7% of bookings) gets too few examples to learn from.",
+   "tryIt": "Count bookings by <code>language</code> in <code>bookings.csv</code> and choose a training mix for an intent classifier. Then describe how you would test whether the Tamil share is enough."
   }
  },
  "c6-4": {
   "harbor": {
    "practice": "Before each Harbor SFT run, an engineer renders one example with the model&#x27;s chat template and checks that only the assistant tokens carry labels.",
-   "failure": "Launching a run with a mismatched chat template or wrong loss mask; training will run and still optimise the wrong tokens."
+   "failure": "Launching a run with a mismatched chat template or wrong loss mask; training will run and still optimise the wrong tokens.",
+   "fit": "good",
+   "fitNote": "rendering the template and checking labels before SFT",
+   "tryIt": "Render one Harbor-style conversation with a model's tokenizer.apply_chat_template and print which tokens would get label −100. Compare with the figure."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "tool calls and results inside shopping conversations",
+   "practice": "{company}'s SFT set for {assistant} has a system prompt, a shopper turn, a tool call to the order API, the tool result and the reply. The assistant turns, including the tool-call text, carry labels; the tool result is masked.",
+   "failure": "Training on synthetic conversations generated by a model whose licence forbids using its output to train other models.",
+   "tryIt": "Write one SFT record in JSON for the Hinglish chat “Refund kab milega? UPI se pay kiya tha.” from <code>chats.json</code>, with a tool call and its result, then mark which tokens should be masked."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "refusals as training examples, rendered with the right template",
+   "practice": "{company}'s SFT records include refusals: the assistant declines to give investment advice and points to the right channel. Every record is rendered with the target model's chat template before training.",
+   "failure": "Fine-tuning with one model family's template and serving with another's. Quality drops silently.",
+   "tryIt": "Render the same dispute conversation with two different models' chat templates and diff the token sequences."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "multi-step tool calls are the training data",
+   "practice": "{assistant}'s training conversations are multi-step: search flights, hold a seat, confirm, with tool calls and results in between. The loss covers the assistant's tool-call arguments, which is where most errors happen.",
+   "failure": "Masking the tool-call turns along with the tool results. The model then never learns to write correct arguments.",
+   "tryIt": "Turn one request from <code>messages.json</code> into a multi-turn record with two tool calls, and label each span as trained or masked."
   }
  },
  "c6-5": {
   "harbor": {
    "practice": "Harbor&#x27;s extraction reward checks schema validity and exact field values, so an empty but valid JSON object scores zero instead of full marks.",
-   "failure": "Treating reward score, human preference, correctness and policy compliance as the same measurement."
+   "failure": "Treating reward score, human preference, correctness and policy compliance as the same measurement.",
+   "fit": "good",
+   "fitNote": "a reward that cannot be satisfied by empty output",
+   "tryIt": "Write a reward function for Harbor's extraction task that scores an empty but valid JSON object as zero, then try to game it with three outputs a model might learn to produce."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "policy-compliant replies versus shopper-pleasing ones",
+   "practice": "{company} builds DPO pairs from support cases: the chosen reply follows the returns policy and offers an exchange; the rejected one promises an immediate refund the policy does not allow.",
+   "failure": "Rewarding shopper thumbs-up alone. The model learns to promise refunds and discounts that make shoppers happy and cost money.",
+   "tryIt": "Write ten DPO pairs from situations you can find in <code>orders.csv</code> (a late delivery, a return outside the window) and check each chosen reply against the returns rule."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "policy-compliant refusals make clear preference pairs",
+   "practice": "{company}'s preference data teaches caution: the chosen reply explains the dispute process and timeline; the rejected one confirms a refund before investigation or gives investment advice.",
+   "failure": "Rewarding length or politeness without checking policy compliance. A reward model can favour long, apologetic replies that still break the rules.",
+   "tryIt": "Write five (chosen, rejected) pairs for cases in <code>disputes.csv</code>, then write a verifier that rejects any reply promising a refund before the case outcome is known."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "verifiable rewards for complete, correct bookings",
+   "practice": "{company} trains its booking agent with verifiable rewards in a sandbox: an episode scores 1 only if the final booking matches the request (dates, travellers, fare rule) and nothing extra was booked.",
+   "failure": "A reward that only checks that a booking exists. The agent learns to book anything, quickly.",
+   "tryIt": "Write a verifier for “cheapest flight Bengaluru to Delhi next Friday morning, 2 adults” that checks a booked option against a small inventory you define, including one trap option that is cheaper but in the evening."
   }
  },
  "c6-6": {
   "harbor": {
    "practice": "Harbor&#x27;s one larger fine-tune ran on 8 GPUs with FSDP; the team measured 5.6× speed-up, not 8×, because of communication overhead.",
-   "failure": "Expecting N GPUs to give N times the throughput."
+   "failure": "Expecting N GPUs to give N times the throughput.",
+   "fit": "good",
+   "fitNote": "an 8-GPU FSDP run that scaled 5.6×, not 8×",
+   "tryIt": "In the ZeRO calculator, set 8B parameters on 8 GPUs of 80 GB and step through stages 1 to 3. Then explain why Harbor's run scaled 5.6×, not 8×."
+  },
+  "store": {
+   "fit": "limited",
+   "practice": "{company} does not train large language models. Its largest job, an image-tagging fine-tune, fits on one node with plain data parallelism.",
+   "failure": "Adding nodes to a small job and getting slower runs because communication dominates.",
+   "tryIt": "In the pipeline figure, set 4 stages and 2, 8 and 32 micro-batches, and read the idle fraction each time."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a full fine-tune that does not fit, so QLoRA",
+   "practice": "{company} wanted to fully fine-tune a 70B model for case summaries on its own 8 × 80 GB node. The sharding numbers showed about 1.1 TB of training state, so it fine-tuned with QLoRA instead (13.3).",
+   "failure": "Requesting GPUs from a parameter count without applying the 16-bytes-per-parameter rule.",
+   "tryIt": "In the ZeRO calculator, enter 70B on 8 GPUs of 80 GB and confirm it does not fit even at stage 3. Then find the GPU count at which stage 3 fits, before activations."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{company} runs no multi-GPU training. The topic matters to it only when reading vendors' claims about how their hosted models were trained.",
+   "failure": "Treating a vendor's training-cluster size as evidence of quality on your own tasks.",
+   "tryIt": "Step through the data-parallel figure and write one sentence on why all four copies stay identical after the update."
   }
  },
  "c6-7": {
   "harbor": {
    "practice": "New Harbor engineers train the browser bigram model and the NumPy lab (Appendix A) in their first week, so later discussions about loss, validation and checkpoints share one picture.",
-   "failure": "Reading plausible samples from a tiny memorised corpus as evidence of generalisation."
+   "failure": "Reading plausible samples from a tiny memorised corpus as evidence of generalisation.",
+   "fit": "good",
+   "fitNote": "a shared picture of loss, validation and checkpoints",
+   "tryIt": "Replace the bigram figure's corpus with a few paragraphs from <code>policies.json</code>, train 200 steps and sample. Compare the loss with the dashed uniform-guess line."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "repetitive product titles show memorisation",
+   "practice": "{company}'s new data scientists train the bigram model on product titles. It quickly learns brand names and sizes, a vivid demonstration of memorisation on a small, repetitive corpus.",
+   "failure": "Reading fluent-looking titles from a tiny model as evidence that it understands products.",
+   "tryIt": "Paste 30 titles from <code>products.csv</code> into the bigram figure's corpus, train, sample at temperatures 0.5 and 1.5, and note how often a sample is an exact copy of a training title."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a full lifecycle model-risk reviewers can follow",
+   "practice": "{company} uses the Appendix A lab to show model-risk reviewers a full lifecycle on a toy problem: splits, a baseline, checkpoint selection and a reload check.",
+   "failure": "Treating a toy model's validation result as evidence about production.",
+   "tryIt": "Run the Appendix A script on the policy texts in <code>policies.json</code> and report its test loss against the unigram baseline."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "different scripts change the vocabulary and the baseline",
+   "practice": "{company} trains the bigram model on Hindi and Tamil messages to show how a character-level model handles other scripts: the vocabulary grows, so the uniform-guess line rises.",
+   "failure": "Comparing losses across corpora with different vocabularies. The uniform baseline differs.",
+   "tryIt": "Paste the Hindi messages from <code>messages.json</code> into the bigram corpus box and train, then compare the dashed ln(vocabulary) line with the English corpus."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use the text of <code>policies.json</code> as the corpus. In the manifest, record the source as “synthetic, generated by scripts/make_datasets.py”, the licence as the repository's MIT licence, and exclude outdated revisions (<code>current: false</code>) from the test split so the test text is not a near-copy of training text.</p>"
+  },
+  "store": {
+   "scenario": "<p>Build the corpus from titles in <code>products.csv</code> and the English reviews in <code>reviews.json</code>. Note how quickly the model memorises repeated brand names, and record in the manifest that titles are templated, so held-out loss overstates generalisation.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use the policy texts in <code>policies.json</code> plus the English dispute texts in <code>disputes.csv</code>. Run a PII scrub before building the corpus and record its result in the manifest, as {company} would for real data.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use <code>fare_rules.json</code> plus the messages in <code>messages.json</code>. Train once on English only and once with Hindi and Tamil included, and compare the vocabulary size and the uniform-guess loss.</p>"
   }
  }
 }

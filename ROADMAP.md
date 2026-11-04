@@ -213,7 +213,9 @@ The course-wide place to drill questions, linked from the sidebar and the home p
   - Every option has an explanation, and right answers are spread across positions (the content checker warns when they cluster).
 - **Update every place listed in the change checklist below**, and extend the end-to-end test. Done; see the checklist.
 
-### Phase 3 — Roll out projects and checks to every chapter
+### Phase 3 — Roll out projects and checks to every chapter ✅
+
+*Done in five batches (A: chapters 4–6, B: 7–9, C: 10–12, D: 13–15, E: 16–18 and the capstone). Delivered: 357 notes for the online store, bank and travel projects (119 topics), Try it steps and fit ratings for Harbor, lab scenarios for all four projects in every chapter lab, per-project capstone milestones, and 1,173 choose-the-answer plus 936 interview questions for chapters 4–18 (course totals 1,353 and 1,080).*
 
 - In practice, Failure to avoid and Try it notes for Online store, Bank and Travel on every remaining topic: chapters 4–18 and the capstone, about 400 notes in all.
 - A topic-fit rating for every topic.

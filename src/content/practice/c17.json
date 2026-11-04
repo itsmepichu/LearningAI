@@ -2,61 +2,315 @@
  "c17-1": {
   "harbor": {
    "practice": "A Harbor trace shows 300 ms retrieval and 4 s generation; the metric shows how often that happens; the log line records the validation failure and versions.",
-   "failure": "Using metric labels for request IDs or prompts, which explodes cardinality and cost."
+   "failure": "Using metric labels for request IDs or prompts, which explodes cardinality and cost.",
+   "fit": "good",
+   "fitNote": "trace, metric and log for one slow answer",
+   "tryIt": "Write one log line, one metric and one trace span for a Harbor answer that took 4 s, and mark which fields may be metric labels (model name yes; user ID, prompt and trace ID no)."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "trace context through order queues",
+   "practice": "A {company} return request crosses the chat service, a refund queue and the payments worker. The trace context travels in the queue message metadata, so the whole return is one trace.",
+   "failure": "Starting a new trace in the refund worker, so nobody can connect a slow refund to the chat that requested it.",
+   "tryIt": "Run the Jaeger laptop lab, then add a queue between two steps and pass the traceparent in the message metadata. Check that both spans appear in one trace."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "correlation IDs across case systems",
+   "practice": "Every {company} case action carries a correlation ID in logs, spans, database rows and the case record, so an auditor can find everything one action touched.",
+   "failure": "A telemetry exporter without a bounded queue, which slowed staff requests when the backend was down.",
+   "tryIt": "Write the structured log fields for a provisional-credit proposal: correlation ID, case ID (hashed if needed), versions, outcome. Mark which fields must not be metric labels."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "supplier calls in one trace",
+   "practice": "{company}'s rebooking trace includes spans for each supplier call, with the supplier as an attribute, so one slow airline shows up immediately.",
+   "failure": "Using booking IDs as metric labels, which created millions of series.",
+   "tryIt": "Sketch the spans for a rebooking request (rewrite, fare-rule retrieval, model, supplier search, hold) and list the attributes on each."
   }
  },
  "c17-2": {
   "harbor": {
    "practice": "A slow Harbor answer turned out to be a ticket tool retrying twice after generation finished; only the end-to-end trace showed it.",
-   "failure": "Starting a new unrelated trace in each worker, which breaks the causal chain."
+   "failure": "Starting a new unrelated trace in each worker, which breaks the causal chain.",
+   "fit": "good",
+   "fitNote": "a hidden ticket-tool retry",
+   "tryIt": "In the critical-path figure, keep the defaults and note the total, then turn on the tool retry. Then lower rerank to 200 ms and check how much the total drops."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "search and rerank in shopper chats",
+   "practice": "{company}'s traces show product search, rerank and the model call for each chat. During a sale, traces showed rerank waiting for a GPU shared with catalogue tagging.",
+   "failure": "Speeding up BM25, which runs in parallel with vector search and is not on the critical path.",
+   "tryIt": "In the figure, set BM25 to 300 ms and vector search to 60 ms and see whether the total changes. Then find the slider that cuts the total most per 100 ms saved."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "every step of a case summary",
+   "practice": "A {company} case-summary trace records retrieved policy IDs, prompt version, token counts and the validation result, but not the case text, which stays in the case system.",
+   "failure": "Recording full case text in every span, which copies customer data into the tracing backend.",
+   "tryIt": "In the figure, set model call 2 to 5,000 ms and the tool to 1,000 ms, and work out which change would help a case summary most."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "async supplier callbacks join the trace",
+   "practice": "{company}'s supplier confirmations arrive by callback minutes later. The callback handler reads the trace context saved with the hold, so the confirmation joins the original rebooking trace.",
+   "failure": "Missing the 2-second supplier timeout and retry because the trace ended when the first response was sent.",
+   "tryIt": "In the figure, turn on the tool retry and note how much of the total it takes. Then write where {company} stores the trace context so a supplier callback can join the trace."
   }
  },
  "c17-3": {
   "harbor": {
    "practice": "Harbor&#x27;s average latency stayed flat while p99 and oldest-job age rose: a noisy tenant&#x27;s long tasks, found from those two signals.",
-   "failure": "Trusting a low error rate when requests are hanging instead of failing."
+   "failure": "Trusting a low error rate when requests are hanging instead of failing.",
+   "fit": "good",
+   "fitNote": "p99 and oldest-job age found a noisy tenant",
+   "tryIt": "In the percentile figure, move tail heaviness from 0 to 100 and note how p50, p99 and the mean change. Then write which two signals found Harbor's noisy tenant."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "sale-day tail latency",
+   "practice": "On sale day {company} watches p99 first-token time, waiting sequences and the age of the oldest queued chat. The mean barely moved during the worst ten minutes.",
+   "failure": "Reporting average latency to leadership while the slowest 1% of shoppers waited 20 seconds.",
+   "tryIt": "In the figure, set tail heaviness to 70 and compare the mean with p99. Then write the four golden signals for {assistant} with one alert threshold each."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "queue age for case work",
+   "practice": "{company} alerts on the age of the oldest case in each queue rather than queue length, because staff care how long a customer has waited.",
+   "failure": "Trusting a low error rate while requests hang until they time out.",
+   "tryIt": "Write the error types {company} should count separately (timeouts, rate limits, schema failures, tool errors, filter blocks), and say which one would first show a model change."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "saturation during disruptions",
+   "practice": "During a disruption, {company} watches provider rate-limit headroom and the waiting-sequence gauge, which rise before latency does.",
+   "failure": "Alerting on queue length, which is always high during a disruption, instead of the age of the oldest request.",
+   "tryIt": "In the figure, set tail heaviness to 90 and note p95 and p99. Then write a saturation alert for {company}'s supplier rate limits."
   }
  },
  "c17-4": {
   "harbor": {
    "practice": "After an index migration, Harbor&#x27;s HTTP success stayed at 99.98% but grounded-answer acceptance fell for German; the quality monitor caught it.",
-   "failure": "Treating the model saying &quot;complete&quot; as a verified task-success label."
+   "failure": "Treating the model saying &quot;complete&quot; as a verified task-success label.",
+   "fit": "good",
+   "fitNote": "a quality monitor caught a German regression",
+   "tryIt": "Read the quality dashboard and find the day of the provider update. Then write which Harbor signal would show it first and its alert threshold."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "rephrases and escalations per chat",
+   "practice": "{company} tracks rephrase-within-60-seconds, escalation to a human agent, and whether a return was completed after the chat. A drop in escalations with a rise in rephrases means the assistant became overconfident.",
+   "failure": "Celebrating fewer escalations without checking whether shoppers stopped getting help.",
+   "tryIt": "Find pairs of messages in <code>chats.json</code> that ask nearly the same thing, and write how you would detect a rephrase with an embedding similarity threshold. Then name two outcome events for {company}."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "sampled groundedness and escalations",
+   "practice": "{company} runs a judge on a daily sample of staff-assistant answers by language and reason code, and tracks how often staff edit or reject drafted letters.",
+   "failure": "Treating the agent saying “case resolved” as a success label.",
+   "tryIt": "Write AI signals for {company} with thresholds: groundedness sample, letter edit rate, escalation rate, citation failures, guardrail blocks."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "tool errors by supplier",
+   "practice": "{company} tracks tool errors per supplier and loop-detector triggers per rebooking task. A supplier API change shows up as invalid-argument errors on one tool.",
+   "failure": "Reporting one combined tool-error rate, which hides a single supplier failing.",
+   "tryIt": "Write the per-tool error signals {company} needs and the threshold that pages someone."
   }
  },
  "c17-5": {
   "harbor": {
    "practice": "A Harbor task with four model calls and two retries shows its full attributed cost and outcome, not just the last call&#x27;s tokens.",
-   "failure": "Reading 95% GPU utilisation as good economics while cost per successful task is poor."
+   "failure": "Reading 95% GPU utilisation as good economics while cost per successful task is poor.",
+   "fit": "good",
+   "fitNote": "full cost of a task, not the last call",
+   "tryIt": "In the spend figure, switch between feature, tenant and token type, and write one action each view suggests. Then add up a Harbor task with four model calls and two retries."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "cost per conversation",
+   "practice": "{company} reports cost per resolved chat by feature, seller and token type. Grouping by token type showed uncached input dominated, which led to moving the stable prompt first.",
+   "failure": "Estimating tokens from text length instead of reading them from the provider response.",
+   "tryIt": "Write a usage record for one {assistant} chat (tenant, feature, prompt version, input, cached input, output tokens, price version), then compute cost per resolved chat for 1,000 chats at a resolution rate you choose."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "GPU cost per case",
+   "practice": "{company} self-hosts, so it reports cost per million tokens actually served and GPU idle hours, alongside cost per resolved case.",
+   "failure": "Reading 95% GPU utilisation as good economics while cost per resolved case rises.",
+   "tryIt": "Compute {company}'s cost per resolved case from a monthly GPU bill, tokens served and cases resolved that you choose, and say which number to watch weekly."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "cost by tenant and season",
+   "practice": "{company} attributes cost per corporate client and per feature, and compares monsoon months with others.",
+   "failure": "Leaving supplier API fees out of the cost of a rebooking.",
+   "tryIt": "In the spend figure, group by tenant and find the largest share. Then list the non-token costs {company} should add to a rebooking."
   }
  },
  "c17-6": {
   "harbor": {
    "practice": "Harbor keeps all error and slow traces, a 5% random sample of the rest, strips document bodies, and alerts on dropped spans.",
-   "failure": "Logging every prompt forever: a security liability and a cost problem."
+   "failure": "Logging every prompt forever: a security liability and a cost problem.",
+   "fit": "good",
+   "fitNote": "all errors, 5% of the rest, no document bodies",
+   "tryIt": "In the telemetry calculator, set 300 requests/s, 40 KB traces, 5% baseline and 3% always kept, and note the storage cost. Then strip content to bring traces to 8 KB and compare."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "high traffic makes sampling necessary",
+   "practice": "At sale-day traffic {company} keeps every error, slow and flagged trace plus a 2% sample of the rest, and records chat content only in a restricted 7-day store.",
+   "failure": "Head sampling at 1%, which missed most of the rare checkout failures.",
+   "tryIt": "In the calculator, set 2,000 requests/s and 30 KB traces, then compare 5% and 1% baselines. Write which traces must always be kept."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "customer data in telemetry",
+   "practice": "{company}'s Collector drops message content by default, hashes account IDs, and sends content only for flagged traces to a restricted store with 7-day retention. Dropped-span counters are alerted on.",
+   "failure": "A silent telemetry pipeline that looked like a quiet, healthy system for two days.",
+   "tryIt": "Write {company}'s telemetry rules per field: not recorded, hashed, redacted or restricted, with retention for each. Then set the calculator to 200 requests/s and 20 KB traces."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "passport data must never reach traces",
+   "practice": "{company} redacts passport and payment fields in the Collector and tests the rule with synthetic messages before each release.",
+   "failure": "Recording supplier responses in traces, including traveller passport numbers.",
+   "tryIt": "Write a Collector redaction rule for traveller fields and the synthetic test that proves it works."
   }
  },
  "c17-7": {
   "harbor": {
    "practice": "Harbor&#x27;s answer quality fell after a policy source changed its table layout; the parser-quality dashboard pointed to ingestion, not the model.",
-   "failure": "Reading a rise in negative ratings as a model regression when the traffic mix changed."
+   "failure": "Reading a rise in negative ratings as a model regression when the traffic mix changed.",
+   "fit": "good",
+   "fitNote": "a layout change in a policy source",
+   "tryIt": "Read the 60-day groundedness figure and write what each annotated event did. Then write the annotation Harbor would add for a policy source changing its table layout."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "the festival changes the traffic mix",
+   "practice": "{company}'s return questions change in the festival sale (10 October to 10 November in the sample data), so a dip in ratings is checked against the traffic mix before anyone blames the model.",
+   "failure": "Reading a rise in negative ratings as a model regression when the mix of questions changed.",
+   "tryIt": "In <code>orders.csv</code>, compare the return rate inside and outside the festival period. Then write the input-distribution monitors that would show the shift."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "dispute outcomes arrive weeks later",
+   "practice": "{company}'s dispute outcomes arrive days or weeks after the assistant's draft. Each outcome is written with the original trace ID, so reports show accuracy per prompt and model version.",
+   "failure": "Judging a prompt change on fast proxy signals only, before any outcomes arrive.",
+   "tryIt": "Use <code>days_to_resolve</code> in <code>disputes.csv</code> to work out how long you must wait before 90% of outcomes are known, and write the join from outcome back to trace."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "provider model updates behind aliases",
+   "practice": "{company} pins model snapshots where the provider allows, records the response model version in every trace, and annotates dashboards when it changes.",
+   "failure": "Calling a model alias that changed silently, then losing a week finding why rebooking answers changed.",
+   "tryIt": "Write the steps {company} runs when the response model version in traces changes: annotation, regression suite, comparison by version."
   }
  },
  "c17-8": {
   "harbor": {
    "practice": "Harbor&#x27;s &quot;unsupported answers rising&quot; alert links to affected versions, recent deploys, sample traces and a tested rollback, so on-call can act without guessing.",
-   "failure": "Alerts without an owner or a mitigation: noise, not reliability."
+   "failure": "Alerts without an owner or a mitigation: noise, not reliability.",
+   "fit": "good",
+   "fitNote": "alerts that link to a tested rollback",
+   "tryIt": "In the burn-rate calculator, set 99.9% and 1.5% errors and read the burn rate. Then run each scenario in the multi-window figure and note which alert fires first."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "sale-day on-call",
+   "practice": "{company}'s on-call page fires on fast SLO burn, and each page links to a runbook with the degradation levels and the rollback for the last prompt change.",
+   "failure": "Paging on every CPU spike during the sale, so on-call ignores the page that mattered.",
+   "tryIt": "In the multi-window figure, run “sharp incident” and “slow leak” at 99.9%, and write a runbook excerpt for the page that fires."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "postmortems with action owners",
+   "practice": "{company}'s postmortems are blameless and every action item has an owner and date, including a new evaluation case and alert.",
+   "failure": "Alerts without an owner or a mitigation.",
+   "tryIt": "Write a postmortem outline for a day when wrong policy answers reached customers: timeline, impact, causes, what went well, actions with owners."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "burn-rate alerts during disruptions",
+   "practice": "{company} uses multi-window burn-rate alerts, so a short disruption surge pages quickly and a slow supplier problem raises a ticket instead.",
+   "failure": "Only a fast-burn alert, so a five-day slow leak used the whole budget unnoticed.",
+   "tryIt": "In the multi-window figure, compare “flapping” and “slow leak” at 99.5%, and decide which should page and which should raise a ticket."
   }
  },
  "c17-9": {
   "harbor": {
    "practice": "A Harbor duplicate-ticket incident became a timeout-after-commit test; the release gate now checks exactly one ticket and the correct reported ID.",
-   "failure": "Copying raw customer conversations into a shared evaluation or training set without review and redaction."
+   "failure": "Copying raw customer conversations into a shared evaluation or training set without review and redaction.",
+   "fit": "good",
+   "fitNote": "a duplicate-ticket incident became a test",
+   "tryIt": "Step through the flywheel figure with Harbor's duplicate-ticket incident, and write the evaluation case: input, context, expected properties and tags."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "many failures, quick feedback",
+   "practice": "{company} reviews flagged chats every week, labels the failing stage, and turns them into redacted evaluation cases with paraphrases. The release suite grew from 200 to 1,400 cases in a year. (Illustrative.)",
+   "failure": "Fixing the one failing chat instead of the cause, such as a parser for a listing format.",
+   "tryIt": "Take three chats from <code>chats.json</code> that a model answers badly, label the failure stage for each, and write each as an evaluation case with one paraphrase."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "redaction and approval before reuse",
+   "practice": "{company} turns staff-flagged answers into evaluation cases only after redaction and an approval, and never puts raw customer text into a shared dataset.",
+   "failure": "Copying raw customer conversations into a shared evaluation set.",
+   "tryIt": "Turn one <code>disputes.csv</code> row into an evaluation case with redacted text, the expected properties and a tag linking to a made-up trace ID."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "disruption failures become tests",
+   "practice": "After each disruption, {company} samples failed rebooking chats, labels the stage, and adds cases before the next season.",
+   "failure": "Adding cases only for English messages.",
+   "tryIt": "Write evaluation cases for two <code>messages.json</code> messages in different languages, each with the expected properties."
   }
  },
  "c17-10": {
   "harbor": {
    "practice": "Harbor records which instrumentation version and convention revision emitted each trace, and tests dashboards against old and new attribute names before upgrading.",
-   "failure": "Assuming the GenAI conventions are stable because OpenTelemetry itself is mature."
+   "failure": "Assuming the GenAI conventions are stable because OpenTelemetry itself is mature.",
+   "fit": "good",
+   "fitNote": "records the convention revision per trace",
+   "tryIt": "Open the GenAI semantic conventions repository and check the status badge of three attributes from the table. Then write a Collector rule that maps an old attribute name to a new one."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "dashboards survive renames",
+   "practice": "{company} wraps all GenAI telemetry in one helper and tests dashboards against old and new attribute names before upgrading instrumentation.",
+   "failure": "Upgrading an instrumentation library and losing a month of token-usage charts to a renamed attribute.",
+   "tryIt": "List the GenAI attributes {company} uses for cost per chat, check their current status, and pin the instrumentation version."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "content attributes stay off",
+   "practice": "{company} keeps the opt-in content attributes (input and output messages, system instructions) off in production.",
+   "failure": "Turning on content capture to debug one issue and forgetting to turn it off.",
+   "tryIt": "Write which GenAI attributes {company} records and which opt-in content attributes stay off, and why."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "agent and tool spans",
+   "practice": "{company} uses the draft agent and tool span names for its rebooking agent, pinned to one convention revision and mapped in the Collector.",
+   "failure": "Assuming the GenAI conventions are stable because OpenTelemetry is mature.",
+   "tryIt": "Write the span names for {company}'s rebooking agent using the draft conventions, and note which could change."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Trace a shopper chat: product search, rerank, model, an order-lookup tool, a refund queue and validation. Inject a slow reranker and a duplicated refund retry, and make the dashboard show cost per chat beside both causes.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Trace a case summary with policy retrieval, model, a transaction-lookup tool and a letter-drafting queue. Redact case text before export, inject a slow retriever and a duplicated tool retry, and turn the failure into a redacted evaluation case.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Trace a rebooking: fare-rule retrieval, model, supplier search, hold and an asynchronous supplier callback that joins the trace. Inject a slow supplier and a duplicated hold retry, and show both on one dashboard.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Trace a Harbor answer with policy retrieval, rerank, model, ticket tool and a queue. Inject a slow retriever and a duplicated ticket retry, build the dashboard, and turn the duplicate-ticket failure into an evaluation case.</p>"
   }
  }
 }

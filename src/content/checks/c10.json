@@ -13,9 +13,274 @@
     "answer": 1,
     "why": "Different models produce incompatible vector spaces even at equal dimensions.",
     "kind": "concept"
+   },
+   {
+    "id": "c10-7-m02",
+    "q": "Why can you not compare a query embedded with model B against documents embedded with model A?",
+    "options": [
+     "They use different databases",
+     "They have different lengths only",
+     "Model B is always better",
+     "They live in different vector spaces"
+    ],
+    "answer": 3,
+    "why": "Scores can look normal while results are random.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Even equal dimensions do not make them compatible.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-7-m03",
+    "q": "Why should queries reach an index through an alias such as kb-search?",
+    "options": [
+     "So switching indexes is an atomic alias change, not a code change",
+     "Aliases reduce storage",
+     "Aliases are faster",
+     "Aliases encrypt data"
+    ],
+    "answer": 0,
+    "why": "Rollback is then switching the alias back.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-7-m04",
+    "q": "How is the new index backfilled when only the embedding model changes?",
+    "options": [
+     "By asking users to search",
+     "By copying old vectors",
+     "From stored chunk text, without re-parsing, at a throttled rate",
+     "By re-crawling every source"
+    ],
+    "answer": 2,
+    "why": "Re-parsing is needed only if the chunker or parser changed.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Old vectors are incompatible.",
+     "",
+     "Unnecessary if text is stored."
+    ]
+   },
+   {
+    "id": "c10-7-m05",
+    "q": "What does dual-writing during a migration do?",
+    "options": [
+     "Doubles query traffic",
+     "Writes twice to the same index",
+     "Deletes the old index",
+     "Sends every new change to both old and new indexes so the new one does not fall behind"
+    ],
+    "answer": 3,
+    "why": "The backfill and live changes both reach v4.",
+    "kind": "concept",
+    "distractors": [
+     "It affects writes, not queries.",
+     "Not the purpose.",
+     "Not yet.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-7-m06",
+    "q": "What must happen before cutting over to the new index?",
+    "options": [
+     "Deleting the old index",
+     "Nothing",
+     "Changing the prompt",
+     "Offline evaluation showing it meets the gates"
+    ],
+    "answer": 3,
+    "why": "Then shadow or canary reads.",
+    "kind": "concept",
+    "distractors": [
+     "That removes rollback.",
+     "Untested cut-overs risk regressions.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-7-m07",
+    "q": "At cut-over, what must switch at the same moment as the alias?",
+    "options": [
+     "The database vendor",
+     "The query-side embedding model",
+     "The answer model",
+     "The chunk size"
+    ],
+    "answer": 1,
+    "why": "Otherwise queries are embedded for the wrong space.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Unrelated to compatibility.",
+     "Already decided."
+    ]
+   },
+   {
+    "id": "c10-7-m08",
+    "q": "Why keep the old index warm after cut-over?",
+    "options": [
+     "To save storage",
+     "So rollback is just switching the alias back during the rollback window",
+     "To train the new model",
+     "For extra speed"
+    ],
+    "answer": 1,
+    "why": "For example, two weeks.",
+    "kind": "concept",
+    "distractors": [
+     "It costs storage.",
+     "",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-7-m09",
+    "q": "What is the peak extra cost of a blue/green index migration?",
+    "options": [
+     "Half the storage",
+     "About double storage during the overlap",
+     "Ten times the compute",
+     "No extra cost"
+    ],
+    "answer": 1,
+    "why": "Budget for it in capacity plans.",
+    "kind": "concept",
+    "distractors": [
+     "It increases.",
+     "",
+     "Not typical.",
+     "Two indexes coexist."
+    ]
+   },
+   {
+    "id": "c10-7-m10",
+    "q": "What should an index manifest record?",
+    "options": [
+     "The users",
+     "Only the vector count",
+     "Only the index name",
+     "Embedding model and version, dimensions, normalisation, chunker, parser and ANN parameters"
+    ],
+    "answer": 3,
+    "why": "A query service can refuse an index whose embedder differs from its own.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Too little.",
+     "Too little.",
+     ""
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c10-7-i01",
+    "q": "Why is changing the embedding model a migration, not a config change?",
+    "level": "fundamentals",
+    "covers": [
+     "Different vector spaces",
+     "Full re-embedding",
+     "Cost and time",
+     "Rollback needs"
+    ]
+   },
+   {
+    "id": "c10-7-i02",
+    "q": "Walk through a blue/green index migration.",
+    "level": "fundamentals",
+    "covers": [
+     "Alias to v3",
+     "Build and backfill v4",
+     "Dual-write",
+     "Evaluate, then canary",
+     "Switch alias with the query encoder; keep v3 warm"
+    ]
+   },
+   {
+    "id": "c10-7-i03",
+    "q": "What is an index manifest, and what does it prevent?",
+    "level": "fundamentals",
+    "covers": [
+     "Records model, chunker, parser and ANN settings",
+     "Query service checks compatibility",
+     "Prevents silent random results"
+    ]
+   },
+   {
+    "id": "c10-7-i04",
+    "q": "You switched embedding models and recall dropped. How do you roll back safely?",
+    "level": "applied",
+    "covers": [
+     "Switch the alias back",
+     "Switch the query encoder back",
+     "Check dual-writes kept v3 current",
+     "Investigate offline"
+    ],
+    "followUp": "What would you change in the process so this is caught before cut-over?"
+   },
+   {
+    "id": "c10-7-i05",
+    "q": "Estimate the cost and duration of re-embedding 65 million chunks.",
+    "level": "applied",
+    "covers": [
+     "Tokens to embed",
+     "API price or GPU throughput",
+     "Throttling to protect production",
+     "Double storage during overlap"
+    ]
+   },
+   {
+    "id": "c10-7-i06",
+    "q": "{company} is moving to a multilingual embedding model. Plan the migration.",
+    "level": "applied",
+    "covers": [
+     "Blue/green with dual writes",
+     "Per-language offline benchmark",
+     "Canary",
+     "Alias and encoder switch together",
+     "Rollback window"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c10-7-i07",
+    "q": "Design a migration framework your team can reuse for any index change.",
+    "level": "system-design",
+    "covers": [
+     "Manifests",
+     "Alias-based routing",
+     "Automated gates",
+     "Canary tooling",
+     "Rollback and retirement steps"
+    ]
+   },
+   {
+    "id": "c10-7-i08",
+    "q": "How would you migrate when the chunker changes too?",
+    "level": "system-design",
+    "covers": [
+     "Re-parse or re-chunk from stored text",
+     "New chunk IDs and lineage",
+     "Citation mapping",
+     "Evaluate retrieval and answers",
+     "Same blue/green steps"
+    ]
+   }
+  ]
  },
  "c10-4": {
   "mcq": [
@@ -31,9 +296,277 @@
     "answer": 1,
     "why": "Write only if the incoming version is newer than the stored one.",
     "kind": "concept"
+   },
+   {
+    "id": "c10-4-m02",
+    "q": "How are incremental updates usually detected?",
+    "options": [
+     "Change feeds, webhooks, delta APIs, database CDC or periodic hash diffs",
+     "Random sampling",
+     "User complaints",
+     "Re-indexing everything daily"
+    ],
+    "answer": 0,
+    "why": "Only what changed is processed.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unreliable.",
+     "Too late.",
+     "Wasteful at scale."
+    ]
+   },
+   {
+    "id": "c10-4-m03",
+    "q": "How should a changed document's chunks be replaced?",
+    "options": [
+     "Append new chunks and keep the old",
+     "Delete everything, then rebuild slowly",
+     "Atomically: the new version appears and the old disappears in one step",
+     "Edit chunks in place one by one"
+    ],
+    "answer": 2,
+    "why": "Queries should never see both versions, or neither.",
+    "kind": "concept",
+    "distractors": [
+     "Old content stays searchable.",
+     "Leaves a gap.",
+     "",
+     "Inconsistent mid-update."
+    ]
+   },
+   {
+    "id": "c10-4-m04",
+    "q": "A source document is deleted. What must also be removed?",
+    "options": [
+     "Its chunks, cached answers and any derived summaries",
+     "Only the cache",
+     "Only the source file",
+     "Nothing"
+    ],
+    "answer": 0,
+    "why": "Deletion speed can be a legal requirement (16.5).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "The index still has it.",
+     "Derived copies remain otherwise.",
+     "Old content would stay searchable."
+    ]
+   },
+   {
+    "id": "c10-4-m05",
+    "q": "Many connectors miss deletes. What catches them?",
+    "options": [
+     "More replicas",
+     "Periodic reconciliation: list all IDs at the source and diff with the index",
+     "Waiting for user reports",
+     "Bigger queues"
+    ],
+    "answer": 1,
+    "why": "Reconciliation repairs what missed events left stale.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Too slow and unreliable.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-4-m06",
+    "q": "When deduplicating copies of a file across sites, what must you remember?",
+    "options": [
+     "Only the first location",
+     "Nothing",
+     "Only the largest copy",
+     "All locations, because each copy may have different permissions"
+    ],
+    "answer": 3,
+    "why": "Keep one canonical chunk set, with the permission sets of every copy.",
+    "kind": "concept",
+    "distractors": [
+     "Permissions could be lost.",
+     "Permissions matter.",
+     "Size is irrelevant.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-4-m07",
+    "q": "Which fields belong in a chunk's lineage?",
+    "options": [
+     "Only the text",
+     "Only the user who searched",
+     "Only the vector",
+     "Source system, document ID, version, parser version, chunker config, embedding model version, timestamps"
+    ],
+    "answer": 3,
+    "why": "Lineage answers “why did the assistant say this?” and “what must be rebuilt?”.",
+    "kind": "concept",
+    "distractors": [
+     "Too little.",
+     "Unrelated.",
+     "Too little.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-4-m08",
+    "q": "How is a freshness guarantee measured?",
+    "options": [
+     "By indexed_at − source_modified_at for each change",
+     "By query latency",
+     "By index size",
+     "By the number of documents"
+    ],
+    "answer": 0,
+    "why": "For example, 99% of edits searchable within 10 minutes.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-4-m09",
+    "q": "Unchanged chunks of an edited document have the same content hash. What can you do?",
+    "options": [
+     "Delete them",
+     "Re-embed them anyway",
+     "Move them to another index",
+     "Reuse their existing vectors to save embedding cost"
+    ],
+    "answer": 3,
+    "why": "Only changed chunks need new vectors.",
+    "kind": "scenario",
+    "distractors": [
+     "They are still valid.",
+     "Wasteful.",
+     "Unnecessary.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-4-m10",
+    "q": "Five changes had lags of 2, 3, 4, 5 and 30 minutes. The target is 99% within 10 minutes. Is it met?",
+    "options": [
+     "It cannot be measured",
+     "No: only 80% were within 10 minutes",
+     "Yes, the average is 8.8 minutes",
+     "Yes"
+    ],
+    "answer": 1,
+    "why": "Freshness is a percentile target, not an average.",
+    "kind": "calculation",
+    "distractors": [
+     "It was measured here.",
+     "",
+     "The average hides the miss.",
+     "One of five missed the target."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c10-4-i01",
+    "q": "How do you keep a RAG index fresh as documents change?",
+    "level": "fundamentals",
+    "covers": [
+     "Change feeds and reconciliation",
+     "Atomic replacement",
+     "Version guards",
+     "Cache invalidation",
+     "Freshness SLOs"
+    ]
+   },
+   {
+    "id": "c10-4-i02",
+    "q": "What must happen when a document is deleted?",
+    "level": "fundamentals",
+    "covers": [
+     "Remove chunks",
+     "Purge caches",
+     "Remove derived summaries",
+     "Reconcile missed deletes",
+     "Meet legal deadlines"
+    ]
+   },
+   {
+    "id": "c10-4-i03",
+    "q": "What is lineage, and what questions does it answer?",
+    "level": "fundamentals",
+    "covers": [
+     "Source, versions, parser, chunker, embedder",
+     "Why was this said",
+     "What must be rebuilt",
+     "Audit evidence"
+    ]
+   },
+   {
+    "id": "c10-4-i04",
+    "q": "A user says the assistant quoted a policy that was deleted last week. Investigate.",
+    "level": "applied",
+    "covers": [
+     "Check the index for the document",
+     "Check caches and summaries",
+     "Check the delete event",
+     "Check reconciliation",
+     "Fix and add a test"
+    ],
+    "followUp": "What alert would have caught it?"
+   },
+   {
+    "id": "c10-4-i05",
+    "q": "Design a freshness SLO and how you would measure it.",
+    "level": "applied",
+    "covers": [
+     "Per-change lag",
+     "Percentile targets for edits and deletes",
+     "Dashboards",
+     "Alerts on breaches"
+    ]
+   },
+   {
+    "id": "c10-4-i06",
+    "q": "{company} removes listings and changes prices constantly. Design freshness for {assistant}.",
+    "level": "applied",
+    "covers": [
+     "Change events from the catalogue",
+     "Atomic chunk replacement",
+     "Cache purge for affected answers",
+     "Freshness SLO for price changes",
+     "Reconciliation"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c10-4-i07",
+    "q": "Design deletion handling that meets a legal deadline across index, caches and summaries.",
+    "level": "system-design",
+    "covers": [
+     "Deletion events with deadlines",
+     "Propagation to every derived store",
+     "Reconciliation",
+     "Proof via lineage",
+     "Monitoring"
+    ]
+   },
+   {
+    "id": "c10-4-i08",
+    "q": "How would you use lineage to recover from a parser bug?",
+    "level": "system-design",
+    "covers": [
+     "Find chunks with the bad parser version",
+     "Re-parse affected documents",
+     "Re-embed changed chunks",
+     "Atomic swap",
+     "Verify with retrieval tests"
+    ]
+   }
+  ]
  },
  "c10-5": {
   "mcq": [
@@ -49,8 +582,2021 @@
     "answer": 1,
     "why": "Isolate and scale the hot tenant's own capacity.",
     "kind": "concept"
+   },
+   {
+    "id": "c10-5-m02",
+    "q": "What is the difference between a shard and a replica?",
+    "options": [
+     "A shard is a subset of the index; a replica is a copy of a shard on another node",
+     "A replica is a subset; a shard is a copy",
+     "A shard is a cache",
+     "They are the same"
+    ],
+    "answer": 0,
+    "why": "Shards scale data and writes; replicas scale reads and availability.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That reverses them.",
+     "Unrelated.",
+     "They differ."
+    ]
+   },
+   {
+    "id": "c10-5-m03",
+    "q": "What is scatter-gather?",
+    "options": [
+     "Copying data to replicas",
+     "Deleting old shards",
+     "Caching results",
+     "Queries fan out to the relevant shards and results are merged"
+    ],
+    "answer": 3,
+    "why": "Hash placement makes every query touch every shard.",
+    "kind": "concept",
+    "distractors": [
+     "That is replication.",
+     "Unrelated.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-5-m04",
+    "q": "What is the trade-off of placing documents by tenant?",
+    "options": [
+     "It needs no metadata",
+     "Every query hits every shard",
+     "No isolation",
+     "Queries touch few shards and isolation is good, but shard sizes can be very uneven"
+    ],
+    "answer": 3,
+    "why": "Hash placement spreads load evenly but fans out every query.",
+    "kind": "concept",
+    "distractors": [
+     "It needs tenant metadata.",
+     "That is hash placement.",
+     "Tenant placement isolates well.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-5-m05",
+    "q": "What is a hot tenant?",
+    "options": [
+     "A tenant using a cache",
+     "One tenant with far more data or traffic, overloading its shard",
+     "A deleted tenant",
+     "A tenant with no data"
+    ],
+    "answer": 1,
+    "why": "A noisy neighbour (15.5).",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Unrelated.",
+     "Opposite."
+    ]
+   },
+   {
+    "id": "c10-5-m06",
+    "q": "How much memory headroom does the topic suggest for index rebuilds?",
+    "options": [
+     "None",
+     "Typically 30–50%",
+     "5%",
+     "200%"
+    ],
+    "answer": 1,
+    "why": "Rebuilds and growth need space.",
+    "kind": "concept",
+    "distractors": [
+     "Rebuilds would fail.",
+     "",
+     "Too little.",
+     "Excessive."
+    ]
+   },
+   {
+    "id": "c10-5-m07",
+    "q": "Ingestion is the bottleneck. A team adds replicas. What happens?",
+    "options": [
+     "Little: replicas help reads, not writes",
+     "Ingestion speeds up a lot",
+     "It reduces storage",
+     "Latency for writes halves"
+    ],
+    "answer": 0,
+    "why": "Writes go to every replica, so replicas can even add write work.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Replicas do not add write capacity.",
+     "It increases storage.",
+     "Not for writes."
+    ]
+   },
+   {
+    "id": "c10-5-m08",
+    "q": "When should a shard be split?",
+    "options": [
+     "Never",
+     "When it is empty",
+     "Before it exceeds what a node can rebuild quickly after a failure",
+     "Only after an outage"
+    ],
+    "answer": 2,
+    "why": "Long rebuilds extend the time at reduced redundancy.",
+    "kind": "concept",
+    "distractors": [
+     "Shards grow.",
+     "Unrelated.",
+     "",
+     "Too late."
+    ]
+   },
+   {
+    "id": "c10-5-m09",
+    "q": "A platform has 12,000 tenants and gives the 50 largest dedicated collections. How many share the common shards?",
+    "options": [
+     "11,950",
+     "50",
+     "12,050",
+     "12,000"
+    ],
+    "answer": 0,
+    "why": "12,000 − 50 = 11,950.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the dedicated group.",
+     "That adds instead of subtracting.",
+     "That ignores the dedicated ones."
+    ]
+   },
+   {
+    "id": "c10-5-m10",
+    "q": "In the mixed strategy, when is a tenant promoted to dedicated shards?",
+    "options": [
+     "When it complains",
+     "When it passes about 5M chunks or 50 QPS",
+     "When it signs up",
+     "Never"
+    ],
+    "answer": 1,
+    "why": "Thresholds based on size and traffic.",
+    "kind": "concept",
+    "distractors": [
+     "Not a criterion.",
+     "",
+     "Small tenants share.",
+     "Large ones need their own."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c10-5-i01",
+    "q": "Explain shards, replicas and partitioning strategies.",
+    "level": "fundamentals",
+    "covers": [
+     "Shards scale data and writes",
+     "Replicas scale reads and availability",
+     "By tenant versus by hash",
+     "Hybrid strategies"
+    ]
+   },
+   {
+    "id": "c10-5-i02",
+    "q": "What is a hot tenant, and how do you handle one?",
+    "level": "fundamentals",
+    "covers": [
+     "Skewed data or traffic",
+     "Dedicated shards and replicas",
+     "Rate limits",
+     "Promotion thresholds"
+    ]
+   },
+   {
+    "id": "c10-5-i03",
+    "q": "What goes into capacity planning for a vector index?",
+    "level": "fundamentals",
+    "covers": [
+     "Memory with replicas and headroom",
+     "Query throughput per replica",
+     "Write throughput",
+     "Growth",
+     "Rebuild time"
+    ]
+   },
+   {
+    "id": "c10-5-i04",
+    "q": "One tenant suddenly has 70% of traffic on a shared shard. What do you do now, and later?",
+    "level": "applied",
+    "covers": [
+     "Short term: rate limit or add replicas",
+     "Move to dedicated shards",
+     "Promotion rules",
+     "Monitor per-tenant load"
+    ],
+    "followUp": "How would you move the tenant without downtime?"
+   },
+   {
+    "id": "c10-5-i05",
+    "q": "Hash placement or tenant placement for 12,000 tenants? Argue it.",
+    "level": "applied",
+    "covers": [
+     "Query fan-out cost",
+     "Isolation",
+     "Uneven sizes",
+     "Hybrid with dedicated large tenants"
+    ]
+   },
+   {
+    "id": "c10-5-i06",
+    "q": "{company}'s largest sellers dominate traffic before sales. Design shard placement and replicas.",
+    "level": "applied",
+    "covers": [
+     "Avoid placement by seller alone",
+     "Dedicated capacity for the largest",
+     "Replicas added before peaks",
+     "Load tests"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c10-5-i07",
+    "q": "Design an index topology for a multi-tenant SaaS assistant.",
+    "level": "system-design",
+    "covers": [
+     "Shared shards for small tenants",
+     "Dedicated collections for large ones",
+     "Replicas sized to traffic",
+     "Promotion thresholds",
+     "Isolation guarantees"
+    ]
+   },
+   {
+    "id": "c10-5-i08",
+    "q": "How would you plan re-sharding for a growing index?",
+    "level": "system-design",
+    "covers": [
+     "Triggers by size and rebuild time",
+     "Online re-sharding approach",
+     "Dual-write during the move",
+     "Validation",
+     "Rollback"
+    ]
+   }
+  ]
+ },
+ "c10-1": {
+  "mcq": [
+   {
+    "id": "c10-1-m01",
+    "q": "10 million documents × 6 pages × 500 tokens per page is how many tokens?",
+    "options": [
+     "3 billion",
+     "30 billion",
+     "300 billion",
+     "30 million"
+    ],
+    "answer": 1,
+    "why": "10⁷ × 6 × 500 = 3 × 10¹⁰.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too few.",
+     "",
+     "Ten times too many.",
+     "Three orders of magnitude too few."
+    ]
+   },
+   {
+    "id": "c10-1-m02",
+    "q": "30 billion tokens in 512-token chunks with 10% overlap gives about how many chunks?",
+    "options": [
+     "About 65 million",
+     "About 650 million",
+     "About 59 million",
+     "About 6.5 million"
+    ],
+    "answer": 0,
+    "why": "Each chunk adds about 461 new tokens: 3 × 10¹⁰ ÷ 461 ≈ 65 million.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too many.",
+     "That ignores the overlap.",
+     "Ten times too few."
+    ]
+   },
+   {
+    "id": "c10-1-m03",
+    "q": "65 million 768-dimension float32 vectors take about how much space?",
+    "options": [
+     "About 50 GB",
+     "About 20 GB",
+     "About 2 TB",
+     "About 200 GB"
+    ],
+    "answer": 3,
+    "why": "6.5 × 10⁷ × 768 × 4 bytes ≈ 200 GB.",
+    "kind": "calculation",
+    "distractors": [
+     "That is int8.",
+     "Ten times too small.",
+     "Ten times too large.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-1-m04",
+    "q": "The same vectors in int8 take about how much?",
+    "options": [
+     "About 100 GB",
+     "About 6 GB",
+     "About 200 GB",
+     "About 50 GB"
+    ],
+    "answer": 3,
+    "why": "int8 is a quarter of float32.",
+    "kind": "calculation",
+    "distractors": [
+     "That is float16.",
+     "That is roughly binary.",
+     "That is float32.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-1-m05",
+    "q": "HNSW links at about 128 bytes per vector add how much for 65 million vectors?",
+    "options": [
+     "About 8 GB",
+     "About 128 GB",
+     "About 0.8 GB",
+     "About 80 GB"
+    ],
+    "answer": 0,
+    "why": "6.5 × 10⁷ × 128 bytes ≈ 8.3 GB.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That confuses bytes per vector with GB.",
+     "Ten times too small.",
+     "Ten times too large."
+    ]
+   },
+   {
+    "id": "c10-1-m06",
+    "q": "int8 vectors (50 GB) plus links (8 GB), with 2 replicas, need about how much RAM across the cluster?",
+    "options": [
+     "About 58 GB",
+     "About 400 GB",
+     "About 16 GB",
+     "About 116 GB"
+    ],
+    "answer": 3,
+    "why": "(50 + 8) × 2 = 116 GB, before metadata and rebuild headroom.",
+    "kind": "calculation",
+    "distractors": [
+     "That counts one replica.",
+     "That uses float32 with replicas.",
+     "Far too small.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-1-m07",
+    "q": "Embedding about 33 billion chunk tokens once at an illustrative $0.02 per million tokens costs about…",
+    "options": [
+     "$670",
+     "$6,700",
+     "$67",
+     "$67,000"
+    ],
+    "answer": 0,
+    "why": "3.3 × 10⁴ million tokens × $0.02 ≈ $660–670, repeated on every embedding-model change.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too high.",
+     "Ten times too low.",
+     "A thousand times too high."
+    ]
+   },
+   {
+    "id": "c10-1-m08",
+    "q": "Why measure sizing assumptions on a sample of your real corpus?",
+    "options": [
+     "Samples are free",
+     "Each assumption changes the result several-fold",
+     "Calculators are always exact",
+     "Vendors require it"
+    ],
+    "answer": 1,
+    "why": "Pages, tokens, chunk size, overlap, dimensions, precision and replicas all multiply.",
+    "kind": "concept",
+    "distractors": [
+     "Not the reason.",
+     "",
+     "They project, not measure.",
+     "Not a requirement."
+    ]
+   },
+   {
+    "id": "c10-1-m09",
+    "q": "A plan counts only raw vector bytes as the RAM requirement. What is missing?",
+    "options": [
+     "The answer model",
+     "The tokenizer",
+     "Graph links, metadata, replicas and rebuild headroom",
+     "Nothing"
+    ],
+    "answer": 2,
+    "why": "Total memory is several times the raw vectors.",
+    "kind": "scenario",
+    "distractors": [
+     "Separate from the index.",
+     "Unrelated.",
+     "",
+     "It underestimates RAM."
+    ]
+   },
+   {
+    "id": "c10-1-m10",
+    "q": "What repeats the full embedding cost?",
+    "options": [
+     "Adding a replica",
+     "Changing the answer prompt",
+     "Changing the embedding model",
+     "Adding a user"
+    ],
+    "answer": 2,
+    "why": "Every vector must be recomputed (10.7).",
+    "kind": "concept",
+    "distractors": [
+     "Replicas copy vectors, not recompute them.",
+     "Unrelated.",
+     "",
+     "No re-embedding needed."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c10-1-i01",
+    "q": "Walk through sizing a RAG corpus from documents to RAM.",
+    "level": "fundamentals",
+    "covers": [
+     "Documents × pages × tokens",
+     "Chunks with overlap",
+     "Vectors × dimensions × precision",
+     "Graph links and metadata",
+     "Replicas and headroom"
+    ]
+   },
+   {
+    "id": "c10-1-i02",
+    "q": "Which sizing assumptions matter most, and how do you check them?",
+    "level": "fundamentals",
+    "covers": [
+     "Pages and tokens per document",
+     "Chunk size and overlap",
+     "Dimensions and precision",
+     "Measure on a sample"
+    ]
+   },
+   {
+    "id": "c10-1-i03",
+    "q": "Why does an embedding-model change matter for cost?",
+    "level": "fundamentals",
+    "covers": [
+     "Full re-embedding",
+     "Double storage during migration",
+     "Compute or API cost",
+     "Plan it as a migration"
+    ]
+   },
+   {
+    "id": "c10-1-i04",
+    "q": "Estimate the RAM for 10 million documents at 768 dimensions with int8 and 2 replicas.",
+    "level": "applied",
+    "covers": [
+     "About 30B tokens",
+     "About 65M chunks",
+     "About 50 GB int8 plus 8 GB links",
+     "About 116 GB with 2 replicas",
+     "Plus headroom"
+    ],
+    "followUp": "How does the answer change at 1,536 dimensions?"
+   },
+   {
+    "id": "c10-1-i05",
+    "q": "Your vector database runs out of memory despite the plan. What did the plan probably miss?",
+    "level": "applied",
+    "covers": [
+     "Graph overhead",
+     "Metadata",
+     "Replicas",
+     "Rebuild headroom",
+     "Growth"
+    ]
+   },
+   {
+    "id": "c10-1-i06",
+    "q": "Size {company}'s index for listings plus reviews, and plan for a future embedding change.",
+    "level": "applied",
+    "covers": [
+     "Listings and reviews as separate collections",
+     "Vectors, links, replicas",
+     "Embedding cost per migration",
+     "Growth before sales"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c10-1-i07",
+    "q": "Design a capacity plan for a corpus that grows 30% a year.",
+    "level": "system-design",
+    "covers": [
+     "Current sizing",
+     "Growth projection",
+     "Re-shard triggers",
+     "Headroom",
+     "Review cadence"
+    ]
+   },
+   {
+    "id": "c10-1-i08",
+    "q": "{company} retains case notes for years. How does retention change your sizing and design?",
+    "level": "system-design",
+    "covers": [
+     "Growth by retention period",
+     "Tiered or archived indexes",
+     "Deletion on request",
+     "Cost per year of retention"
+    ],
+    "project": "bank"
+   }
+  ]
+ },
+ "c10-2": {
+  "mcq": [
+   {
+    "id": "c10-2-m01",
+    "q": "What does a durable queue between ingestion stages provide?",
+    "options": [
+     "Faster embeddings",
+     "Decoupling, so each stage can scale and fail independently",
+     "Smaller vectors",
+     "Better answers"
+    ],
+    "answer": 1,
+    "why": "Producers and consumers no longer need to run at the same speed.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Unrelated.",
+     "Indirectly at most."
+    ]
+   },
+   {
+    "id": "c10-2-m02",
+    "q": "What is a checkpoint in ingestion?",
+    "options": [
+     "A model checkpoint",
+     "A cache",
+     "A permission check",
+     "A durable record of progress, so a crashed job resumes instead of restarting"
+    ],
+    "answer": 3,
+    "why": "For example, a connector's last sync cursor.",
+    "kind": "concept",
+    "distractors": [
+     "Different meaning.",
+     "Unrelated.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-2-m03",
+    "q": "What is backpressure?",
+    "options": [
+     "Adding more queues",
+     "Retrying faster",
+     "Deleting old messages",
+     "Slowing upstream stages when downstream is slower, instead of overflowing"
+    ],
+    "answer": 3,
+    "why": "Bounded queues and consumer-paced pulling implement it.",
+    "kind": "concept",
+    "distractors": [
+     "More queues do not slow producers.",
+     "That makes overload worse.",
+     "Data loss is not backpressure.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-2-m04",
+    "q": "What is a dead-letter queue for?",
+    "options": [
+     "All successful items",
+     "Cached answers",
+     "Deleted documents",
+     "Items that exceeded retry limits, so they do not block the pipeline"
+    ],
+    "answer": 3,
+    "why": "Monitor and replay it.",
+    "kind": "concept",
+    "distractors": [
+     "Successes go to the index.",
+     "Unrelated.",
+     "Deletions are separate events.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-2-m05",
+    "q": "Why derive chunk IDs from document ID + version + position?",
+    "options": [
+     "To make IDs short",
+     "So reprocessing the same item gives the same result (idempotent upserts)",
+     "To hide documents",
+     "To sort alphabetically"
+    ],
+    "answer": 1,
+    "why": "At-least-once delivery then produces no duplicates.",
+    "kind": "concept",
+    "distractors": [
+     "Not the goal.",
+     "",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-2-m06",
+    "q": "An old version's job finishes after a newer one. What prevents it from overwriting fresh content?",
+    "options": [
+     "A version guard: write only if the incoming version is newer (compare-and-set)",
+     "A larger queue",
+     "Faster workers",
+     "More retries"
+    ],
+    "answer": 0,
+    "why": "Queues redeliver and reorder.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Size does not fix order.",
+     "Ordering is still not guaranteed.",
+     "Retries add redeliveries."
+    ]
+   },
+   {
+    "id": "c10-2-m07",
+    "q": "When should a worker acknowledge a message?",
+    "options": [
+     "Before parsing",
+     "As soon as it is received",
+     "Never",
+     "After its result is durably committed, or after a recoverable outbox record exists"
+    ],
+    "answer": 3,
+    "why": "Early acknowledgement loses work on a crash.",
+    "kind": "concept",
+    "distractors": [
+     "Same problem.",
+     "A crash would lose the work.",
+     "The queue would redeliver forever.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-2-m08",
+    "q": "4 workers process 20 documents per second each, and 100 documents arrive per second. How fast does the queue grow?",
+    "options": [
+     "100 per second",
+     "20 per second (72,000 per hour)",
+     "80 per second",
+     "It shrinks"
+    ],
+    "answer": 1,
+    "why": "Capacity is 80/s, so 20/s accumulate.",
+    "kind": "calculation",
+    "distractors": [
+     "That ignores the workers.",
+     "",
+     "That is capacity.",
+     "Arrivals exceed capacity."
+    ]
+   },
+   {
+    "id": "c10-2-m09",
+    "q": "Worker latency looks fine, but the oldest message in the queue keeps getting older. What is happening?",
+    "options": [
+     "The queue is empty",
+     "A freshness incident: work is backing up",
+     "Everything is healthy",
+     "Workers are idle"
+    ],
+    "answer": 1,
+    "why": "Watch queue age, not just worker speed.",
+    "kind": "scenario",
+    "distractors": [
+     "It is filling.",
+     "",
+     "Users are seeing stale content.",
+     "They may be saturated."
+    ]
+   },
+   {
+    "id": "c10-2-m10",
+    "q": "A parser crashed after writing chunks but before acknowledging. What happens on redelivery if chunk IDs are deterministic?",
+    "options": [
+     "The writes are repeated as upserts, so no duplicates appear",
+     "The queue stops",
+     "Duplicates appear",
+     "The document is lost"
+    ],
+    "answer": 0,
+    "why": "Idempotency makes at-least-once delivery safe.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Redelivery continues normally.",
+     "Deterministic IDs prevent duplicates.",
+     "It is redelivered."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c10-2-i01",
+    "q": "Design an ingestion pipeline for millions of documents.",
+    "level": "fundamentals",
+    "covers": [
+     "Connectors with checkpoints",
+     "Durable queues between stages",
+     "Parse and embed worker pools",
+     "Idempotent upserts with version guards",
+     "Dead-letter queues"
+    ]
+   },
+   {
+    "id": "c10-2-i02",
+    "q": "What is backpressure, and why does ingestion need it?",
+    "level": "fundamentals",
+    "covers": [
+     "Downstream slower than upstream",
+     "Bounded queues",
+     "Consumer-paced pulling",
+     "Prevents overflow and dropped work"
+    ]
+   },
+   {
+    "id": "c10-2-i03",
+    "q": "Why must index writes be idempotent and version-guarded?",
+    "level": "fundamentals",
+    "covers": [
+     "At-least-once delivery",
+     "Redelivery and reordering",
+     "Deterministic chunk IDs",
+     "Compare-and-set on version"
+    ]
+   },
+   {
+    "id": "c10-2-i04",
+    "q": "Your queue's oldest message is two hours old. Walk through your response.",
+    "level": "applied",
+    "covers": [
+     "Freshness incident",
+     "Check throughput versus arrivals",
+     "Scale workers or apply backpressure",
+     "Check for poison messages",
+     "Communicate the lag"
+    ],
+    "followUp": "What would you alert on so this is caught earlier?"
+   },
+   {
+    "id": "c10-2-i05",
+    "q": "How do you handle poison documents that crash the parser?",
+    "level": "applied",
+    "covers": [
+     "Retry with backoff",
+     "Dead-letter after N attempts",
+     "Monitor and replay",
+     "Fix the parser and reprocess"
+    ]
+   },
+   {
+    "id": "c10-2-i06",
+    "q": "{company}'s sellers push price updates in bursts. Design ingestion so an old price never wins.",
+    "level": "applied",
+    "covers": [
+     "Version on every update",
+     "Compare-and-set writes",
+     "Acknowledge after commit",
+     "Backpressure during bursts",
+     "Cache purge on change"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c10-2-i07",
+    "q": "Design checkpointing and replay for a connector that syncs from a source system.",
+    "level": "system-design",
+    "covers": [
+     "Durable cursor",
+     "Resume after crash",
+     "Periodic full reconciliation",
+     "Replay from the dead-letter queue",
+     "Idempotent writes"
+    ]
+   },
+   {
+    "id": "c10-2-i08",
+    "q": "{company}'s pipeline must never index text that failed PII scrubbing. Design the controls.",
+    "level": "system-design",
+    "covers": [
+     "Scrubbing as a blocking step",
+     "Failures to a dead-letter queue",
+     "Human review",
+     "Audit logs",
+     "Tests with planted PII"
+    ],
+    "project": "bank"
+   }
+  ]
+ },
+ "c10-3": {
+  "mcq": [
+   {
+    "id": "c10-3-m01",
+    "q": "Why are PDFs hard to extract text from?",
+    "options": [
+     "They contain no text",
+     "They are always encrypted",
+     "They are images only",
+     "They describe pages: text can be positioned glyphs with no reading order, columns and headers mixed in"
+    ],
+    "answer": 3,
+    "why": "Layout analysis is needed to recover reading order.",
+    "kind": "concept",
+    "distractors": [
+     "Born-digital PDFs contain text.",
+     "Most are not.",
+     "Only scanned ones.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-3-m02",
+    "q": "What does a scanned document need that a born-digital PDF does not?",
+    "options": [
+     "A larger embedding model",
+     "Translation",
+     "No processing",
+     "OCR (image to text)"
+    ],
+    "answer": 3,
+    "why": "Scanned pages are images with no text layer.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "It needs OCR.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-3-m03",
+    "q": "Why record OCR confidence per page?",
+    "options": [
+     "So low-confidence pages can go to review or a better model",
+     "To speed up OCR",
+     "To reduce storage",
+     "To translate pages"
+    ],
+    "answer": 0,
+    "why": "Poor scans produce unreliable text.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Unrelated.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-3-m04",
+    "q": "How should tables be stored for retrieval?",
+    "options": [
+     "Dropped",
+     "Stored as images only",
+     "Extracted as rows and columns, then as Markdown or row-as-sentence chunks, with the original kept for display",
+     "Flattened into one text line"
+    ],
+    "answer": 2,
+    "why": "Flattening loses which number belongs to which column.",
+    "kind": "concept",
+    "distractors": [
+     "Tables carry key facts.",
+     "Text cannot be searched then.",
+     "",
+     "That loses structure."
+    ]
+   },
+   {
+    "id": "c10-3-m05",
+    "q": "How should images and diagrams be indexed?",
+    "options": [
+     "Caption with a vision-language model, OCR any text in them, index those and link back to the image",
+     "Embed the file name only",
+     "Convert them to tables",
+     "Ignore them"
+    ],
+    "answer": 0,
+    "why": "Multimodal embeddings can also index images directly.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Too little information.",
+     "Not generally possible.",
+     "They can contain answers."
+    ]
+   },
+   {
+    "id": "c10-3-m06",
+    "q": "Why preserve headings, list numbering and page numbers as metadata?",
+    "options": [
+     "They are required by PDF",
+     "They reduce cost",
+     "They improve chunking, filtering and citations",
+     "They speed up the model"
+    ],
+    "answer": 2,
+    "why": "For example, “Policy 4.2, page 17”.",
+    "kind": "concept",
+    "distractors": [
+     "Not a requirement.",
+     "Not the reason.",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-3-m07",
+    "q": "Per-diem answers are wrong because a region-by-limit table was flattened to text. What fixes it?",
+    "options": [
+     "Lower the temperature",
+     "Store the table as structured rows",
+     "Increase chunk overlap",
+     "Use a bigger answer model"
+    ],
+    "answer": 1,
+    "why": "Row-as-sentence chunks keep each value with its row and column.",
+    "kind": "scenario",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Overlap does not restore columns.",
+     "The model never sees the structure."
+    ]
+   },
+   {
+    "id": "c10-3-m08",
+    "q": "A parse produced a lot of text. Can you assume it was read correctly?",
+    "options": [
+     "Only if it is long",
+     "Yes",
+     "Only if it has headings",
+     "No: run a quality gate for garbled text, near-empty pages and low OCR confidence"
+    ],
+    "answer": 3,
+    "why": "Volume is not correctness.",
+    "kind": "scenario",
+    "distractors": [
+     "Length is not quality.",
+     "Garbled text is still text.",
+     "Headings can still be wrong.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-3-m09",
+    "q": "Which are signals a parse quality gate should check? Choose all that apply.",
+    "options": [
+     "A high rate of non-dictionary words",
+     "Low OCR confidence",
+     "The file's author name",
+     "Almost no extracted text"
+    ],
+    "answer": [
+     0,
+     1,
+     3
+    ],
+    "why": "Flag or reject such outputs for review.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "",
+     "Authorship says nothing about parse quality.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-3-m10",
+    "q": "Why route scanned pages to a separate OCR pool?",
+    "options": [
+     "To delete them",
+     "Scanned pages need no parsing",
+     "OCR has different, heavier compute needs, often GPU, with its own capacity",
+     "OCR is faster"
+    ],
+    "answer": 2,
+    "why": "Separate pools keep heavy work from blocking normal parsing.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "They need OCR.",
+     "",
+     "It is usually slower."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c10-3-i01",
+    "q": "Why are PDFs hard to parse, and what tools help?",
+    "level": "fundamentals",
+    "covers": [
+     "Page-description format",
+     "Reading order and columns",
+     "Layout analysis tools such as PyMuPDF, pdfplumber, Docling",
+     "OCR for scans"
+    ]
+   },
+   {
+    "id": "c10-3-i02",
+    "q": "How should tables be indexed for RAG?",
+    "level": "fundamentals",
+    "covers": [
+     "Extract structure",
+     "Markdown or row-as-sentence",
+     "Keep the original",
+     "Test per-cell questions"
+    ]
+   },
+   {
+    "id": "c10-3-i03",
+    "q": "What does a document parsing pipeline look like?",
+    "level": "fundamentals",
+    "covers": [
+     "Type detection",
+     "Routing by type",
+     "Layout analysis and OCR",
+     "Tables and figures",
+     "Quality gate"
+    ]
+   },
+   {
+    "id": "c10-3-i04",
+    "q": "Answers about prices from a pricing table are often wrong. How do you investigate?",
+    "level": "applied",
+    "covers": [
+     "Inspect the parsed table",
+     "Check row and column alignment",
+     "Re-chunk as rows",
+     "Test per-cell questions"
+    ],
+    "followUp": "What test would you add so the fix stays fixed?"
+   },
+   {
+    "id": "c10-3-i05",
+    "q": "How would you handle a corpus where 30% of documents are scanned?",
+    "level": "applied",
+    "covers": [
+     "OCR pool with capacity",
+     "Confidence per page",
+     "Human review for low confidence",
+     "Quality gate",
+     "Monitor scanned-document slices"
+    ]
+   },
+   {
+    "id": "c10-3-i06",
+    "q": "{company} receives scanned statements and forms. Design the parsing and review flow.",
+    "level": "applied",
+    "covers": [
+     "Detect scans",
+     "OCR with confidence",
+     "Structured tables for amounts",
+     "Review queue for low confidence",
+     "Lineage of parser versions"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c10-3-i07",
+    "q": "Design a parsing service that can be improved without breaking answers.",
+    "level": "system-design",
+    "covers": [
+     "Versioned parsers",
+     "Lineage per chunk",
+     "Re-parse affected documents",
+     "Benchmarks before switching",
+     "Quality metrics"
+    ]
+   },
+   {
+    "id": "c10-3-i08",
+    "q": "How would you index diagrams and images so their content is searchable?",
+    "level": "system-design",
+    "covers": [
+     "Vision-language captions",
+     "OCR of embedded text",
+     "Links back to the image",
+     "Multimodal embeddings",
+     "Evaluate with image-based questions"
+    ]
+   }
+  ]
+ },
+ "c10-6": {
+  "mcq": [
+   {
+    "id": "c10-6-m01",
+    "q": "Where must access control be enforced in a RAG system?",
+    "options": [
+     "In retrieval, before content reaches the prompt",
+     "In the system prompt",
+     "After the answer is generated",
+     "In the user interface only"
+    ],
+    "answer": 0,
+    "why": "The model sees whatever is retrieved.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Instructions are not access control.",
+     "Too late: the model has seen it.",
+     "Too late."
+    ]
+   },
+   {
+    "id": "c10-6-m02",
+    "q": "What is early binding?",
+    "options": [
+     "Giving every user every document",
+     "Checking each result with the source API after retrieval",
+     "Asking the model",
+     "Storing each chunk's allowed principals as metadata and filtering by the user's groups inside the search"
+    ],
+    "answer": 3,
+    "why": "Fast, but correctness depends on keeping ACLs in sync.",
+    "kind": "concept",
+    "distractors": [
+     "Not access control.",
+     "That is late binding.",
+     "Not access control.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-6-m03",
+    "q": "What is late binding?",
+    "options": [
+     "Checking each candidate against the source system's permission API after retrieval",
+     "Caching results",
+     "Filtering at index time",
+     "Deleting documents"
+    ],
+    "answer": 0,
+    "why": "Always current, but slower; over-fetch to keep enough results.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "That is early binding.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-6-m04",
+    "q": "What is common practice for permissions?",
+    "options": [
+     "Late binding only",
+     "Trust the prompt",
+     "No checks",
+     "Early binding for filtering, a late check for high-sensitivity sources, short sync intervals and immediate updates on change events"
+    ],
+    "answer": 3,
+    "why": "Combine speed with currency.",
+    "kind": "concept",
+    "distractors": [
+     "Too slow for everything.",
+     "Not access control.",
+     "Unsafe.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-6-m05",
+    "q": "Where should the tenant ID for a query come from?",
+    "options": [
+     "The model's output",
+     "The server, from the authenticated session, as a mandatory filter",
+     "The prompt",
+     "The user's message"
+    ],
+    "answer": 1,
+    "why": "Never from the prompt or model output (16.4).",
+    "kind": "concept",
+    "distractors": [
+     "Model output is not authorisation.",
+     "",
+     "Prompts can be manipulated.",
+     "Users can type anything."
+    ]
+   },
+   {
+    "id": "c10-6-m06",
+    "q": "An ACL for a document is unknown. What should retrieval do?",
+    "options": [
+     "Treat it as deny",
+     "Ask the user",
+     "Treat it as allow",
+     "Ask the model"
+    ],
+    "answer": 0,
+    "why": "Fail closed.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Users cannot grant themselves access.",
+     "That fails open.",
+     "Not access control."
+    ]
+   },
+   {
+    "id": "c10-6-m07",
+    "q": "Why keep an urgent deny list?",
+    "options": [
+     "To cache answers",
+     "To store passwords",
+     "To speed up search",
+     "Index ACL sync always lags; the deny list blocks revoked users, groups or documents immediately"
+    ],
+    "answer": 3,
+    "why": "It is checked against the authoritative source on every query.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-6-m08",
+    "q": "What must cache keys include so a revocation also invalidates cached answers?",
+    "options": [
+     "Nothing",
+     "The user's access scope and the policy version",
+     "Only the question text",
+     "Only the timestamp"
+    ],
+    "answer": 1,
+    "why": "Otherwise a cached answer keeps serving revoked content.",
+    "kind": "concept",
+    "distractors": [
+     "Unsafe.",
+     "",
+     "Users with different access would share answers.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-6-m09",
+    "q": "The system prompt says “don't reveal restricted documents”. Is that access control?",
+    "options": [
+     "Yes",
+     "No: the model can be manipulated and has already seen the content",
+     "Only for small models",
+     "Yes, if the prompt is long"
+    ],
+    "answer": 1,
+    "why": "Enforce access before generation.",
+    "kind": "scenario",
+    "distractors": [
+     "Instructions are not enforcement.",
+     "",
+     "Unrelated.",
+     "Length does not help."
+    ]
+   },
+   {
+    "id": "c10-6-m10",
+    "q": "A user loses access at minute 5; ACLs sync every 30 minutes; there is no deny list or late check. When does access really end?",
+    "options": [
+     "At the next sync, up to 30 minutes later",
+     "Immediately",
+     "Never",
+     "After one hour"
+    ],
+    "answer": 0,
+    "why": "The deny list or a late check closes that window.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Not without a deny list or late check.",
+     "The sync will catch it.",
+     "Sooner, at the sync."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c10-6-i01",
+    "q": "Explain early and late binding for permission-aware retrieval.",
+    "level": "fundamentals",
+    "covers": [
+     "Early: ACL metadata filtered in search",
+     "Late: source API check after retrieval",
+     "Trade-offs",
+     "Combining them"
+    ]
+   },
+   {
+    "id": "c10-6-i02",
+    "q": "How do you guarantee tenant isolation in retrieval?",
+    "level": "fundamentals",
+    "covers": [
+     "Server-set tenant filter",
+     "Structural separation for sensitive tenants",
+     "Cross-tenant probes",
+     "Cache keys include tenant"
+    ]
+   },
+   {
+    "id": "c10-6-i03",
+    "q": "Why is a prompt instruction not access control?",
+    "level": "fundamentals",
+    "covers": [
+     "Model has already seen the content",
+     "Manipulation and injection",
+     "Enforce before retrieval",
+     "Test it"
+    ]
+   },
+   {
+    "id": "c10-6-i04",
+    "q": "A user who left Finance can still get Finance answers for 30 minutes. Fix it.",
+    "level": "applied",
+    "covers": [
+     "Deny list checked every query",
+     "Late-binding check for sensitive sources",
+     "Event-driven ACL updates",
+     "Cache keys with access scope"
+    ],
+    "followUp": "How would you test that the fix works?"
+   },
+   {
+    "id": "c10-6-i05",
+    "q": "Design cache keys for a permission-aware assistant.",
+    "level": "applied",
+    "covers": [
+     "Question or normalised query",
+     "User's access scope",
+     "Tenant",
+     "Policy and index version",
+     "TTL"
+    ]
+   },
+   {
+    "id": "c10-6-i06",
+    "q": "{company}'s staff assistant must show only cases assigned to the agent. Design enforcement and revocation.",
+    "level": "applied",
+    "covers": [
+     "Filter by team and assignment in search",
+     "Deny list on reassignment",
+     "Late check for sensitive notes",
+     "Audit logs",
+     "Probe tests"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c10-6-i07",
+    "q": "Design ACL synchronisation from an identity provider for nested groups.",
+    "level": "system-design",
+    "covers": [
+     "Group expansion",
+     "Event-driven updates",
+     "Periodic full sync",
+     "Unknown means deny",
+     "Monitoring sync lag"
+    ]
+   },
+   {
+    "id": "c10-6-i08",
+    "q": "How would you test permission-aware retrieval continuously?",
+    "level": "system-design",
+    "covers": [
+     "Probe cases per tenant and role",
+     "Revocation scenarios",
+     "Cache tests",
+     "Release-blocking failures",
+     "Production canaries"
+    ]
+   }
+  ]
+ },
+ "c10-8": {
+  "mcq": [
+   {
+    "id": "c10-8-m01",
+    "q": "Why are vendor benchmarks a poor guide to production?",
+    "options": [
+     "They test answers, not retrieval",
+     "They use too much data",
+     "They use clean public data, single tenants, no filters and no writes",
+     "They are always wrong"
+    ],
+    "answer": 2,
+    "why": "Your benchmark must reproduce your conditions.",
+    "kind": "concept",
+    "distractors": [
+     "They test retrieval.",
+     "Not the issue.",
+     "",
+     "They answer a different question."
+    ]
+   },
+   {
+    "id": "c10-8-m02",
+    "q": "How do selective permission filters affect ANN search?",
+    "options": [
+     "They have no effect",
+     "They always speed it up",
+     "They remove the need for ANN",
+     "They can change latency and recall a lot compared with no filter"
+    ],
+    "answer": 3,
+    "why": "A user who sees 2% of the corpus behaves very differently.",
+    "kind": "concept",
+    "distractors": [
+     "They matter a lot.",
+     "Not always.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-8-m03",
+    "q": "Why run the benchmark while updates stream in?",
+    "options": [
+     "Heavy writes can hurt latency and recall in HNSW graphs and segment merges",
+     "To make it faster",
+     "It is not needed",
+     "To test the cache"
+    ],
+    "answer": 0,
+    "why": "Production indexes receive writes continuously.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not the purpose.",
+     "Writes change behaviour.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c10-8-m04",
+    "q": "Which measures should a retrieval benchmark report together?",
+    "options": [
+     "Only recall",
+     "Recall versus exact search, Recall@k versus labels, latency percentiles at target QPS, resources and cost",
+     "Only cost",
+     "Only average latency"
+    ],
+    "answer": 1,
+    "why": "Trade-offs are only visible together.",
+    "kind": "concept",
+    "distractors": [
+     "Too narrow.",
+     "",
+     "Too narrow.",
+     "Too narrow."
+    ]
+   },
+   {
+    "id": "c10-8-m05",
+    "q": "Why benchmark at 10%, 30% and 100% of the target corpus?",
+    "options": [
+     "To save money only",
+     "Because 100% is impossible",
+     "It is a vendor requirement",
+     "To see the trend instead of extrapolating from a tiny sample"
+    ],
+    "answer": 3,
+    "why": "Behaviour changes with scale.",
+    "kind": "concept",
+    "distractors": [
+     "Not the main reason.",
+     "It is possible.",
+     "Not a requirement.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-8-m06",
+    "q": "A benchmark repeats the same queries many times. What does it mostly measure?",
+    "options": [
+     "The cache",
+     "Recall",
+     "Write throughput",
+     "Real retrieval latency"
+    ],
+    "answer": 0,
+    "why": "Use varied queries sampled from logs.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Unrelated.",
+     "Cached results are faster than real ones."
+    ]
+   },
+   {
+    "id": "c10-8-m07",
+    "q": "In the topic's example, reaching 0.95 recall costs about 10 ms clean but about 25 ms with selective filters. What should you plan with?",
+    "options": [
+     "Neither",
+     "The average of both",
+     "The clean number",
+     "The filtered number"
+    ],
+    "answer": 3,
+    "why": "Only the realistic condition predicts production.",
+    "kind": "scenario",
+    "distractors": [
+     "Use the realistic one.",
+     "Still optimistic.",
+     "It underestimates latency.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-8-m08",
+    "q": "The laptop ANN lab uses random vectors. How does that affect recall?",
+    "options": [
+     "Recall cannot be measured",
+     "Recall is optimistic",
+     "Recall is pessimistic, because random vectors have no cluster structure",
+     "No effect"
+    ],
+    "answer": 2,
+    "why": "It still teaches the efSearch curve and memory behaviour.",
+    "kind": "scenario",
+    "distractors": [
+     "It can be measured.",
+     "Real embeddings are usually easier.",
+     "",
+     "It matters."
+    ]
+   },
+   {
+    "id": "c10-8-m09",
+    "q": "Which cost figure should a retrieval benchmark report?",
+    "options": [
+     "Cost per vector stored only",
+     "The vendor's list price",
+     "Nothing",
+     "Cost per million queries"
+    ],
+    "answer": 3,
+    "why": "It converts infrastructure into a comparable unit.",
+    "kind": "concept",
+    "distractors": [
+     "Storage is one part.",
+     "Not your cost.",
+     "Cost matters.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-8-m10",
+    "q": "A team benchmarks on a 1% sample and extrapolates linearly to 100%. What is the risk?",
+    "options": [
+     "The sample is too large",
+     "Behaviour such as memory and latency may not scale linearly",
+     "Recall improves at scale",
+     "None"
+    ],
+    "answer": 1,
+    "why": "Measure at several scale steps.",
+    "kind": "scenario",
+    "distractors": [
+     "Too small, if anything.",
+     "",
+     "Often the opposite.",
+     "Non-linear effects appear."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c10-8-i01",
+    "q": "What makes a retrieval benchmark realistic?",
+    "level": "fundamentals",
+    "covers": [
+     "Logged queries with labels",
+     "Real filters",
+     "Concurrent updates",
+     "Target QPS",
+     "Scale steps"
+    ]
+   },
+   {
+    "id": "c10-8-i02",
+    "q": "Which metrics should a retrieval benchmark report?",
+    "level": "fundamentals",
+    "covers": [
+     "ANN recall",
+     "Recall@k against labels",
+     "Latency percentiles",
+     "Resources and cost per million queries"
+    ]
+   },
+   {
+    "id": "c10-8-i03",
+    "q": "Why do selective filters matter for ANN performance?",
+    "level": "fundamentals",
+    "covers": [
+     "Few eligible vectors",
+     "Graph traversal behaviour",
+     "Pre- versus post-filtering",
+     "Measure with real filters"
+    ]
+   },
+   {
+    "id": "c10-8-i04",
+    "q": "Design a benchmark before choosing a vector database.",
+    "level": "applied",
+    "covers": [
+     "Your data and queries",
+     "Your filters and writes",
+     "Target QPS and latency",
+     "Recall against labels",
+     "Cost"
+    ],
+    "followUp": "What result would disqualify a candidate?"
+   },
+   {
+    "id": "c10-8-i05",
+    "q": "Your benchmark looked great, but production latency is three times worse. What did it miss?",
+    "level": "applied",
+    "covers": [
+     "Filters",
+     "Concurrent writes",
+     "Cache effects",
+     "Scale",
+     "Network"
+    ]
+   },
+   {
+    "id": "c10-8-i06",
+    "q": "Design {company}'s search benchmark for festival conditions.",
+    "level": "applied",
+    "covers": [
+     "Logged shopper queries",
+     "Stock and pincode filters",
+     "Price updates streaming",
+     "Peak QPS",
+     "p95 latency with Recall@10"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c10-8-i07",
+    "q": "How would you run continuous retrieval benchmarks as part of releases?",
+    "level": "system-design",
+    "covers": [
+     "Fixed labelled query set",
+     "Production-like filters",
+     "Automated runs",
+     "Gates on recall and latency",
+     "Trend tracking"
+    ]
+   },
+   {
+    "id": "c10-8-i08",
+    "q": "Explain to a vendor why their benchmark numbers do not apply to you.",
+    "level": "system-design",
+    "covers": [
+     "Different data and query mix",
+     "Filters and writes",
+     "Multi-tenancy",
+     "Show your own results"
+    ]
+   }
+  ]
+ },
+ "c10-9": {
+  "mcq": [
+   {
+    "id": "c10-9-m01",
+    "q": "When should you adopt an advanced retrieval technique?",
+    "options": [
+     "Never",
+     "Whenever it is new",
+     "Always, for completeness",
+     "When evaluation shows the failure pattern is common and the technique fixes it better than simpler fixes"
+    ],
+    "answer": 3,
+    "why": "Simpler fixes first: parsing, hybrid search, reranking, query rewriting.",
+    "kind": "concept",
+    "distractors": [
+     "They help specific patterns.",
+     "Novelty is not evidence.",
+     "They add cost and complexity.",
+     ""
+    ]
+   },
+   {
+    "id": "c10-9-m02",
+    "q": "What does hierarchical search do?",
+    "options": [
+     "Indexes summaries at document and section level as well as chunks, searching coarse first",
+     "Builds a knowledge graph",
+     "Uses one vector per token",
+     "Routes between tools"
+    ],
+    "answer": 0,
+    "why": "It helps big-picture questions over very large corpora.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That is GraphRAG.",
+     "That is late interaction.",
+     "That is agentic retrieval."
+    ]
+   },
+   {
+    "id": "c10-9-m03",
+    "q": "How does late interaction (ColBERT) score a document?",
+    "options": [
+     "A cross-encoder",
+     "One vector per token; sum over query tokens of the maximum similarity to any document token (MaxSim)",
+     "One vector per document",
+     "BM25 over tokens"
+    ],
+    "answer": 1,
+    "why": "Fine-grained matching that a single vector blurs.",
+    "kind": "concept",
+    "distractors": [
+     "Different architecture.",
+     "",
+     "That is single-vector dense retrieval.",
+     "Not BM25."
+    ]
+   },
+   {
+    "id": "c10-9-m04",
+    "q": "A 2-token query: token 1's best document-token similarity is 0.9, token 2's is 0.6. What is the MaxSim score?",
+    "options": [
+     "0.9",
+     "0.75",
+     "1.5",
+     "0.54"
+    ],
+    "answer": 2,
+    "why": "0.9 + 0.6 = 1.5.",
+    "kind": "calculation",
+    "distractors": [
+     "That uses token 1 only.",
+     "That is the average.",
+     "",
+     "That is the product."
+    ]
+   },
+   {
+    "id": "c10-9-m05",
+    "q": "What is the main cost of late interaction?",
+    "options": [
+     "It removes reranking",
+     "It needs no storage",
+     "10–100× more vectors per chunk and specialised indexes",
+     "No cost"
+    ],
+    "answer": 2,
+    "why": "Compression and indexes such as PLAID reduce it.",
+    "kind": "concept",
+    "distractors": [
+     "Not necessarily.",
+     "It needs much more.",
+     "",
+     "It is costly."
+    ]
+   },
+   {
+    "id": "c10-9-m06",
+    "q": "Which questions do knowledge graphs (GraphRAG) help with most?",
+    "options": [
+     "Image search",
+     "Multi-hop relationship questions and corpus-wide themes",
+     "Single-fact questions",
+     "Exact keyword lookups"
+    ],
+    "answer": 1,
+    "why": "Extraction is expensive and must be kept fresh.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "",
+     "Simple retrieval suffices.",
+     "BM25 does that."
+    ]
+   },
+   {
+    "id": "c10-9-m07",
+    "q": "What does agentic retrieval do?",
+    "options": [
+     "An agent chooses indexes or tools, rewrites queries, judges results and iterates",
+     "Caches answers",
+     "Embeds documents faster",
+     "Removes the need for indexes"
+    ],
+    "answer": 0,
+    "why": "More LLM calls per question, higher latency and variance.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Unrelated.",
+     "It uses indexes."
+    ]
+   },
+   {
+    "id": "c10-9-m08",
+    "q": "Only 6% of queries were multi-hop, and query decomposition fixed most of them. What should the team do about a knowledge graph?",
+    "options": [
+     "Defer it",
+     "Replace all retrieval with it",
+     "Build it immediately",
+     "Remove decomposition"
+    ],
+    "answer": 0,
+    "why": "The evidence does not justify the cost.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Far too drastic.",
+     "Not justified by the evidence.",
+     "It is working."
+    ]
+   },
+   {
+    "id": "c10-9-m09",
+    "q": "A user asks “Which merchant category had the most fraud this month?”. What is the right tool?",
+    "options": [
+     "A SQL or dataframe query over structured data",
+     "HyDE",
+     "A knowledge graph",
+     "Vector search over chunks"
+    ],
+    "answer": 0,
+    "why": "Aggregates need exact computation, not a few retrieved chunks.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Overkill for an aggregate.",
+     "Chunks cannot give exact counts."
+    ]
+   },
+   {
+    "id": "c10-9-m10",
+    "q": "A team adopts GraphRAG because it is popular. What is missing?",
+    "options": [
+     "Nothing",
+     "More documents",
+     "A failure analysis showing the gap it would fix",
+     "A bigger GPU"
+    ],
+    "answer": 2,
+    "why": "Adopt by evidence, not by name.",
+    "kind": "scenario",
+    "distractors": [
+     "Evidence is missing.",
+     "Unrelated.",
+     "",
+     "Unrelated."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c10-9-i01",
+    "q": "When is an advanced retrieval technique worth its cost?",
+    "level": "fundamentals",
+    "covers": [
+     "Common failure pattern",
+     "Simpler fixes tried",
+     "Measured improvement",
+     "Cost and maintenance"
+    ]
+   },
+   {
+    "id": "c10-9-i02",
+    "q": "Explain late interaction and when it helps.",
+    "level": "fundamentals",
+    "covers": [
+     "Per-token vectors",
+     "MaxSim",
+     "Fine-grained matching",
+     "Storage cost"
+    ]
+   },
+   {
+    "id": "c10-9-i03",
+    "q": "What are knowledge graphs and agentic retrieval good for, and what do they cost?",
+    "level": "fundamentals",
+    "covers": [
+     "Multi-hop and relationships",
+     "Heterogeneous sources",
+     "Extraction or LLM-call costs",
+     "Freshness and variance"
+    ]
+   },
+   {
+    "id": "c10-9-i04",
+    "q": "Your team wants to add GraphRAG. What evidence do you ask for?",
+    "level": "applied",
+    "covers": [
+     "Share of relationship questions",
+     "Current failure analysis",
+     "Simpler fixes tried",
+     "Benchmark result",
+     "Maintenance plan"
+    ],
+    "followUp": "What result would make you say no?"
+   },
+   {
+    "id": "c10-9-i05",
+    "q": "Users ask aggregate questions of a RAG assistant. How do you handle them?",
+    "level": "applied",
+    "covers": [
+     "Detect aggregate intent",
+     "Route to SQL or analytics tools",
+     "Return exact results with sources",
+     "Never estimate from chunks"
+    ]
+   },
+   {
+    "id": "c10-9-i06",
+    "q": "{assistant} must answer from fare rules, hotel content and live disruptions. Design the retrieval routing.",
+    "level": "applied",
+    "covers": [
+     "Route by question type",
+     "Call only needed sources",
+     "Order of calls",
+     "Limits on calls",
+     "Evaluate routing accuracy"
+    ],
+    "project": "travel"
+   },
+   {
+    "id": "c10-9-i07",
+    "q": "Design an evaluation that decides between reranking and late interaction.",
+    "level": "system-design",
+    "covers": [
+     "Failure slice with precise matches",
+     "Both on the same benchmark",
+     "Latency and storage",
+     "Pick by measured gain per cost"
+    ]
+   },
+   {
+    "id": "c10-9-i08",
+    "q": "How would you keep a knowledge graph fresh if you built one?",
+    "level": "system-design",
+    "covers": [
+     "Incremental extraction on change",
+     "Lineage per entity and relation",
+     "Validation",
+     "Cost of re-extraction",
+     "Fallback to text retrieval"
+    ]
+   }
+  ]
  }
 }

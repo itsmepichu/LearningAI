@@ -2,61 +2,315 @@
  "c15-1": {
   "harbor": {
    "practice": "Harbor: 8,000 employees + 1,200 customer tenants; 21,000 daily users × 6 requests, 14% in the peak hour, burst 2 → about 10 RPS at peak, about 60 in flight at 6 s each.",
-   "failure": "Multiplying by a peak factor twice, or putting p99 latency into Little&#x27;s law."
+   "failure": "Multiplying by a peak factor twice, or putting p99 latency into Little&#x27;s law.",
+   "fit": "limited",
+   "fitNote": "about 10 RPS at peak; small numbers",
+   "tryIt": "In the capacity calculator, enter 0.3 million registered at 7% active (Harbor's 21,000 daily users), 6 requests, 14% peak hour, burst 2 and 6 s per request. Check you get about 10 RPS and about 60 in flight."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "a holiday sale multiplies the peak",
+   "practice": "{company} plans for its holiday sale, not an average day: 20 million registered, 10% using the assistant, 4 requests each, 15% in the peak hour and a burst factor of 3 give about 1,000 RPS at the opening minute. (Illustrative.)",
+   "failure": "Planning from a normal week's peak and meeting the sale with a third of the capacity.",
+   "tryIt": "In the capacity calculator, enter 20 million registered, 10% active, 4 requests, 15% peak hour, burst 3 and 5 s per request. Check you get about 1,000 RPS and 5,000 in flight. Then try burst 1.5 and compare."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "month-end and salary days",
+   "practice": "{company}'s busiest days are salary credits and month-end statements, when balance and dispute questions jump. The plan uses those days' peak hour, measured from last year's logs. (Illustrative.)",
+   "failure": "Using average daily traffic and missing the month-end peak.",
+   "tryIt": "In the calculator, enter 12 million registered, 3% active, 2 requests, 12% peak hour and burst 2, and compute the in-flight requests at 8 s each. Then double the active share for month-end."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "disruptions cause sudden spikes",
+   "practice": "When a storm cancels flights, many {company} travellers message at once. The plan uses a high burst factor for disruption days, and the queue simulation shows how waits grow as utilisation nears 100%. (Illustrative.)",
+   "failure": "Sizing for normal days and treating disruption spikes as rare.",
+   "tryIt": "Find the day with most cancelled flights in <code>disruptions.csv</code>. In the queue simulation, set 4 servers and 0.5 s service, then raise the arrival rate from 6 to 8 per second and watch p95 wait."
   }
  },
  "c15-2": {
   "harbor": {
    "practice": "Harbor&#x27;s SLOs: 99.9% availability, p95 first token ≤ 1.5 s, sampled groundedness ≥ 95%, ≤ $0.01 per resolved question, each with a written measurement boundary.",
-   "failure": "Treating a sampled judge score as a complete measurement of all production answers."
+   "failure": "Treating a sampled judge score as a complete measurement of all production answers.",
+   "fit": "good",
+   "fitNote": "four SLOs with written boundaries",
+   "tryIt": "In the error-budget calculator, pick 99.9% and 2 million requests a month, then 99.99%, and note how many failures each allows. Then write Harbor's four SLIs with what each measures and what it leaves out."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "quality and cost SLOs beside availability",
+   "practice": "{company} sets an availability SLO for {assistant} and a quality SLO from a daily judged sample of answers about orders and returns, so a silent retrieval bug shows up the same day.",
+   "failure": "Having only availability SLOs, so wrong return-policy answers go unnoticed for days.",
+   "tryIt": "In the calculator, set 99.9% and 140 million requests a month and note the budget. Then write one SLO each for availability, latency, quality and cost for {assistant}."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "customers and regulators notice failures",
+   "practice": "{company}'s SLA to business customers is looser than its internal SLO, and the error budget is reviewed weekly. Quality is measured on a judged sample of answers, with a written note that the sample is not every answer.",
+   "failure": "Promising customers the same number as the internal SLO, leaving no room before a contract breach.",
+   "tryIt": "In the calculator, compare 99.9% and 99.95% at 30 million requests a month. Then write an internal SLO and a looser SLA for {assistant}, and say why they differ."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "freshness of disruption information",
+   "practice": "{company} has a freshness SLO for disruption information: a cancellation must be visible to {assistant} within 5 minutes, because an answer from older data sends travellers to the airport.",
+   "failure": "Measuring freshness as an average, so a few hour-old updates hide behind fast ones.",
+   "tryIt": "Write a freshness SLI and SLO (p99 lag) for disruption updates, and an availability SLO. In the calculator, see how fast a one-hour outage uses a 99.9% monthly budget."
   }
  },
  "c15-3": {
   "harbor": {
    "practice": "Harbor&#x27;s OCR backfill runs in its own pool and cannot take interactive inference slots; the assistant answers from the last consistent index while lag is visible.",
-   "failure": "Splitting services but leaving them on one shared unbounded queue or saturated database."
+   "failure": "Splitting services but leaving them on one shared unbounded queue or saturated database.",
+   "fit": "good",
+   "fitNote": "OCR backfill in its own pool",
+   "tryIt": "Write Harbor's four workloads (ingestion, retrieval, generation, agents) with their latency need and scaling unit, and say which ones may share a pool."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "catalogue refresh during a sale",
+   "practice": "Before a sale, sellers update millions of listings while shoppers search. {company} runs bulk embedding on a separate batch pool, so query embeddings keep low latency and the backfill simply takes longer.",
+   "failure": "One embedding pool for both, so a listing backfill raises search latency at the start of the sale.",
+   "tryIt": "Estimate how long re-embedding <code>products.csv</code> scaled to 2 million listings takes at a batch rate you choose, and write which pool serves query embeddings meanwhile."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "agent investigations kept off chat capacity",
+   "practice": "{company}'s dispute investigation agents draw from their own model quota, so long runs never take slots from customer chat at month-end.",
+   "failure": "Separate services that still share one database connection pool, which the batch job exhausts.",
+   "tryIt": "List {company}'s workloads with their latency needs and say which ones need their own quota or pool."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "rebooking agents during disruptions",
+   "practice": "During a disruption, {company}'s rebooking agents run long and call suppliers often. They have their own worker pool and model quota, so chat stays responsive.",
+   "failure": "Letting rebooking agents hold every model slot during a storm.",
+   "tryIt": "Write {company}'s workload table (ingestion of supplier content, retrieval, chat, rebooking agents) with latency need and scaling unit."
   }
  },
  "c15-4": {
   "harbor": {
    "practice": "Harbor&#x27;s hour-long imports return a job receipt; the query API reads only published index versions, never half-written chunks.",
-   "failure": "A semantic cache keyed without permissions or source version."
+   "failure": "A semantic cache keyed without permissions or source version.",
+   "fit": "good",
+   "fitNote": "job receipts and published index versions",
+   "tryIt": "Step through the cache-layer figure and write Harbor's exact-cache key. Then list two Harbor questions that may use a semantic cache and two that must not."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "semantic caches and personal questions",
+   "practice": "{company} uses a semantic cache only for public FAQ answers (return windows, delivery times), with tenant and scope in the key. Anything about a specific order skips the cache.",
+   "failure": "A semantic cache that answers “cancel my friend's order” with the answer for “cancel my order”.",
+   "tryIt": "Take 20 chats from <code>chats.json</code> and mark which could use a semantic cache. For two similar-looking chats that need different answers, explain why."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "no response caching across customers",
+   "practice": "{company} caches retrieval results for policy questions, but never caches responses that include account or case data, and every cache key includes the customer's permission scope.",
+   "failure": "Caching a balance answer by question text, so the next customer sees it.",
+   "tryIt": "Write the cache key for a policy answer and say which question types may never be cached at all."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "long tasks return a task ID",
+   "practice": "A {company} rebooking search can take over 30 seconds across suppliers, so the API returns a task ID, shows progress and notifies the traveller when options are ready.",
+   "failure": "Holding the HTTP request open during supplier searches, so mobile clients time out.",
+   "tryIt": "Write the asynchronous flow for a rebooking request (task ID, status endpoint, notification), and decide which <code>fare_rules.json</code> answers could be cached and with what TTL."
   }
  },
  "c15-5": {
   "harbor": {
    "practice": "Harbor&#x27;s gateway gives each tenant token-per-minute and concurrency quotas, weighted by estimated context size.",
-   "failure": "Automatic fallback to a model that does not support the same tools or schema behaviour."
+   "failure": "Automatic fallback to a model that does not support the same tools or schema behaviour.",
+   "fit": "good",
+   "fitNote": "quotas weighted by context size",
+   "tryIt": "In the noisy-neighbour figure, set tenant A's burst to 10× with a shared FIFO queue, then switch to per-tenant quotas and fair queuing, and compare the other tenants' waits."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "large sellers' integrations are tenants",
+   "practice": "Large sellers call {company}'s listing-writer API from their own scripts. The gateway gives each seller a token and spend quota, so one seller's bulk job cannot slow every other seller.",
+   "failure": "One seller's script looping on the API and raising latency for everyone.",
+   "tryIt": "In the figure, set tenant A's burst to 20× with FIFO, then with fair queuing. Then write the quota (requests and tokens per minute) you would give a large and a small seller."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "routing by data residency",
+   "practice": "{company}'s gateway routes by data class: customer data goes only to in-house models, public policy questions may use a hosted model, and every route is logged.",
+   "failure": "Falling back to a hosted model that customer data must not reach.",
+   "tryIt": "Write gateway routing rules for {company}: which request types go to which backend, and which fallbacks are forbidden."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "corporate clients and consumer traffic",
+   "practice": "{company}'s corporate clients have their own quotas and a higher tier in fair queuing, so a consumer spike during a disruption does not slow travel desks.",
+   "failure": "Falling back to a model that does not support the same tool schema, so rebooking calls fail.",
+   "tryIt": "In the figure, run tenant A's burst at 10× with each scheduling mode. Then write which tenants {company} has and their weights."
   }
  },
  "c15-6": {
   "harbor": {
    "practice": "When the model pool saturates, Harbor serves authorised policy excerpts with a status line and pauses optional agent investigations.",
-   "failure": "Unbounded queues, which trade visible rejections for long delays and cascading failure."
+   "failure": "Unbounded queues, which trade visible rejections for long delays and cascading failure.",
+   "fit": "good",
+   "fitNote": "policy excerpts when the model pool saturates",
+   "tryIt": "In the circuit-breaker figure, toggle the provider outage and watch the breaker open and traffic go to the fallback. Then write Harbor's degradation ladder from L0 to L4."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "shed free features, keep checkout help",
+   "practice": "When {company}'s sale traffic exceeds capacity, it sheds suggestions and listing rewrites first, keeps order and payment help, and rejects early any request that would miss its deadline.",
+   "failure": "Queuing every request during the sale, so many shoppers wait past their deadline and get nothing.",
+   "tryIt": "In the load-shedding figure, set load to 2× capacity and a 10 s deadline, and compare no shedding, shedding by predicted wait, and priority. Then write {company}'s ladder."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "degrade to search and status",
+   "practice": "If {company}'s model pool is unhealthy, the assistant falls back to policy search results and a clear status message; it never guesses balances or case outcomes with a weaker model.",
+   "failure": "Degrading to a smaller model for case summaries without evaluating it on case work.",
+   "tryIt": "Write {company}'s degradation ladder and mark which levels are allowed for customer answers and which only for staff."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "disruption surges",
+   "practice": "During a disruption, {company} drops to a mid-size model with fewer retrieved rules, pauses marketing content, and shows a status banner. The circuit breaker sends traffic to the fallback provider without waiting for timeouts.",
+   "failure": "Retrying a failing provider for every request, which piles up threads and slows every traveller.",
+   "tryIt": "In the load-shedding figure, set load to 2.5× and a 5 s deadline and compare the three policies. Toggle the outage in the breaker figure and count failed requests."
   }
  },
  "c15-7": {
   "harbor": {
    "practice": "Harbor fails read-only search over to a second region, but queued write actions have one designated execution owner to avoid duplicates.",
-   "failure": "Assuming active-active APIs give consistent business actions across regions."
+   "failure": "Assuming active-active APIs give consistent business actions across regions.",
+   "fit": "good",
+   "fitNote": "one owner for queued writes",
+   "tryIt": "Write RPO and RTO for Harbor's conversation store, index and ticket queue, and say which can be rebuilt and how long that takes."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "provider outage on sale day",
+   "practice": "{company} runs a quarterly game day: block the primary model provider for 10% of traffic and check the fallback keeps schema and tool behaviour.",
+   "failure": "A fallback that has never served real traffic, discovered on sale day.",
+   "tryIt": "Plan a game-day test for {company}: what is blocked, the traffic share, what you measure, and what would stop the test."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "residency and recovery objectives",
+   "practice": "{company}'s customer data stays in national regions, so failover goes only to an in-country standby. Each store has a written RPO and RTO, and restores are tested every quarter.",
+   "failure": "Treating a database replica as a backup, so an accidental delete is copied to it within seconds.",
+   "tryIt": "Write RPO and RTO for {company}'s case store, vector index and audit log, and the restore test you would run for each."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "regional endpoints and fallbacks",
+   "practice": "{company} serves from two regions active-active for read-only search; bookings have one execution owner so a failover does not create duplicate bookings.",
+   "failure": "Replaying queued booking changes in both regions after failback.",
+   "tryIt": "Write the failover and failback steps for {company}'s booking queue, including how queued writes are replayed exactly once."
   }
  },
  "c15-8": {
   "harbor": {
    "practice": "Harbor&#x27;s load test replays logged prompt lengths with an open-loop arrival rate and a mocked model, then benchmarks the real inference pool separately; the two reports are labelled differently.",
-   "failure": "Testing with empty prompts and one-token answers."
+   "failure": "Testing with empty prompts and one-token answers.",
+   "fit": "limited",
+   "fitNote": "low traffic makes load tests short",
+   "tryIt": "Run the k6 laptop lab with an arrival rate of 10 per second and Harbor-like prompt lengths, and read the p95 and p99 lines."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "realistic sale-day traffic",
+   "practice": "{company}'s sale load test replays logged chat lengths and tenant mix at an open-loop arrival rate against a mocked model, then benchmarks the real model pool separately. Each report says which it is.",
+   "failure": "A closed-loop test that slows down with the service and reports good latency.",
+   "tryIt": "Measure prompt lengths of <code>chats.json</code> messages (or use the figure's log-normal), then run the k6 lab with a ramping arrival rate. Compare p95 with fixed-length prompts."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "soak tests for steady staff traffic",
+   "practice": "{company} runs an 8-hour soak test before each release to catch memory growth and cache bloat, plus a failure test that injects core-system latency.",
+   "failure": "Testing only for an hour and missing a slow memory leak.",
+   "tryIt": "Write a soak test and a failure test for {company}: duration, load, injected fault, and the pass thresholds."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "spike tests for disruptions",
+   "practice": "{company} runs spike tests that jump from 20% to 150% of capacity in a minute, like a storm, and checks that autoscaling, queues and shedding hold.",
+   "failure": "Ramping slowly in tests when real disruptions arrive in a minute.",
+   "tryIt": "Change the k6 lab to a spike scenario (20% to 150% in one minute) against the mock, and record when requests start failing."
   }
  },
  "c15-9": {
   "harbor": {
    "practice": "If Harbor spends $10 on 100 tasks and 50 succeed, the figure reported is $0.20 per successful task, plus the support cost of fixing the 50 failures.",
-   "failure": "Optimising price per call while completion rate falls."
+   "failure": "Optimising price per call while completion rate falls.",
+   "fit": "good",
+   "fitNote": "$0.20 per successful task",
+   "tryIt": "In the cost-per-success calculator, keep the defaults and compare A and B. Then set the human cost to $0 and see which option is cheaper."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "escalations to human agents dominate",
+   "practice": "{company} found a cheaper model resolved fewer return chats, and each unresolved chat went to a paid human agent. Counting those escalations, the more expensive model was cheaper per resolved chat. (Illustrative.)",
+   "failure": "Celebrating a lower cost per call while the resolution rate fell.",
+   "tryIt": "In the calculator, set A to $0.003 at 60% and B to $0.009 at 88% with a $3 human cost, and compare cost per success. Then find the human cost at which A becomes cheaper."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "budgets per tenant and feature",
+   "practice": "{company} enforces a daily spend limit per business customer in the gateway and alerts at 50, 80 and 100%. At the limit, customers on a basic plan are moved to a smaller model.",
+   "failure": "One integration summarising every page view and nobody noticing until the monthly bill.",
+   "tryIt": "Write {company}'s budget rules per request, task, tenant and feature, and what happens at 100% for each."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "seasonal forecasts",
+   "practice": "{company}'s capacity forecast adds known events: holiday booking periods and the monsoon season, using last year's peaks and this year's growth.",
+   "failure": "Forecasting from the last month only and missing the seasonal peak.",
+   "tryIt": "Count bookings per month in <code>bookings.csv</code> and pick the peak month, then forecast next year's peak with a growth rate you state."
   }
  },
  "c15-10": {
   "harbor": {
    "practice": "Harbor&#x27;s launch review states: &quot;measured 60 RPS on staging with p95 1.8 s for this workload; projected 100 RPS with two more replicas, not yet validated&quot;.",
-   "failure": "Describing a simulation or extrapolation as a system that served millions of users."
+   "failure": "Describing a simulation or extrapolation as a system that served millions of users.",
+   "fit": "limited",
+   "fitNote": "small scale, but the labelling habit applies",
+   "tryIt": "Rewrite Harbor's launch-review sentence as three labelled lines: measured, projected and actual, each with its conditions."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "sale capacity claims",
+   "practice": "{company}'s sale readiness review lists measured numbers (load test date, traffic mix), projected capacity (with assumptions) and last sale's actual peak in separate rows.",
+   "failure": "Quoting a vendor benchmark as sale capacity.",
+   "tryIt": "Write three rows for {company}'s sale review: a measured number with test conditions, a projection with assumptions, and an actual peak. Mark which one you would trust for planning."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "capacity statements to auditors",
+   "practice": "{company} reports capacity to its risk committee with each number labelled measured, projected or actual, and with the date and conditions of every test.",
+   "failure": "Telling the committee the system “handles 10 million customers” when that is a projection.",
+   "tryIt": "Rewrite the statement “handles 10 million customers” as a measured line, a projected line and an actual line for {company}."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "disruption-day actuals",
+   "practice": "After each major disruption, {company} compares the actual peak with the projection and re-measures if the traffic mix changed.",
+   "failure": "Keeping an old load-test number after the prompt mix changed.",
+   "tryIt": "Write a launch-review table for {company} with measured, projected and actual rows, and the rule that triggers a new load test."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Plan for a holiday sale: state DAU, requests per shopper, peak factor and token lengths from <code>chats.json</code>. Load-test the mock with seller tenant skew and a provider failure, and keep measured, projected and last-sale figures in separate tables.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Plan for month-end: state customer and staff traffic separately, with SLOs per workload. Load-test the mock with a core-system latency fault, and label every figure as measured, projected or actual.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Plan for a disruption day using <code>disruptions.csv</code>: state the burst factor, rebooking task duration and supplier fan-out. Run a spike test against the mock with one supplier failing, and label projections separately from measurements.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Plan for Harbor's 21,000 daily users and 1,200 tenants: state the assumptions, compute peak RPS and in-flight requests, and load-test the mock with tenant skew and a provider failure. Label measured and projected figures separately.</p>"
   }
  }
 }

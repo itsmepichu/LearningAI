@@ -2,49 +2,255 @@
  "c12-1": {
   "harbor": {
    "practice": "Harbor&#x27;s quarterly complaint report uses one worker per source (tickets, sales notes, reviews) because each needs different tools and permissions.",
-   "failure": "Taking agreement between several agents as validation when they all read the same wrong source."
+   "failure": "Taking agreement between several agents as validation when they all read the same wrong source.",
+   "fit": "good",
+   "fitNote": "three sources with different permissions",
+   "tryIt": "In the quality-versus-cost figure, compare the token bars for the three designs. Then write Harbor's complaint report as a parallel workflow in code (one call per source, then a compare call) and decide whether a coordinator agent adds anything."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "complaints across reviews, chats and orders",
+   "practice": "{company}'s monthly “why are returns rising” report reads reviews, chats and order data. Each source needs different tools and access, so one worker per source returns a short summary with evidence IDs, and a synthesis step compares them.",
+   "failure": "Running a coordinator agent for a report whose steps never change, when a parallel workflow in code gives the same result for less.",
+   "tryIt": "Write the decomposition for a returns report as code: one call over <code>reviews.json</code>, one over <code>chats.json</code>, one over returned rows in <code>orders.csv</code>, then one compare call. Say which step, if any, needs a model to decide what to do next."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "separate tools and permissions per team",
+   "practice": "{company}'s dispute investigation spans card, UPI and merchant systems owned by different teams. Separate workers hold each team's read-only tools, so no single prompt carries every system's tools and permissions.",
+   "failure": "Adding a second agent to “verify” a dispute when it reads the same transaction record as the first and cannot disagree.",
+   "tryIt": "Group <code>disputes.csv</code> by <code>reason</code> and list which systems each reason needs (transactions, policies, merchant). Decide which reasons need more than one worker and which a single agent handles."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "separate suppliers, tools and rules",
+   "practice": "Planning a multi-city trip at {company} needs flight, rail and hotel searches with different supplier tools and fare rules. One worker per product searches in parallel and returns options with rule IDs; the coordinator builds itineraries from them.",
+   "failure": "Giving one agent every supplier's tools, so it picks rail tools for a flight change.",
+   "tryIt": "Count bookings by <code>product</code> in <code>bookings.csv</code>. Then write which products a trip planner needs workers for and the tools each worker gets."
   }
  },
  "c12-2": {
   "harbor": {
    "practice": "Harbor&#x27;s coordinator is plain code: it routes to two read-only regional workers and one synthesiser, and a deterministic validator checks citations.",
-   "failure": "Leaving completion ownership unclear, so each agent assumes another one will finish or act."
+   "failure": "Leaving completion ownership unclear, so each agent assumes another one will finish or act.",
+   "fit": "good",
+   "fitNote": "a code coordinator with read-only workers",
+   "tryIt": "In the patterns figure, select each pattern and watch the message flow. Then name the pattern Harbor's report uses and the one pattern from the table it would add for a billing dispute."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "routing by request type",
+   "practice": "{assistant} routes each chat to one specialist: order tracking, returns, or product questions, with an “other” path to a person. Returns hand off to a refund specialist with a structured summary, not the whole chat.",
+   "failure": "Having no “other” path, so a complaint about a seller is routed to product questions and answered from listings.",
+   "tryIt": "In the patterns figure, select routing and handoff. Then label 10 chats in <code>chats.json</code> with the specialist each should go to, including at least one that needs the “other” path."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "handoff to the disputes desk",
+   "practice": "When {assistant} finds a disputed charge, it hands off to the disputes agent with the customer ID, the transaction, what was found and what the customer was told. The disputes agent receives only disputes tools.",
+   "failure": "Handing off the full transcript, including the customer's other account details, to an agent that does not need them.",
+   "tryIt": "Select the handoff pattern in the figure. Then write the structured handoff summary for one case in <code>disputes.csv</code>: fields only, no free-text transcript."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "journeys cross departments",
+   "practice": "A traveller's chat at {company} can move from booking to a change, then to a refund. Each move is a handoff with a structured summary; a supervisor stops ping-pong after two handoffs and sends the case to a person.",
+   "failure": "Two agents handing a traveller back and forth because each thinks the other owns the change fee.",
+   "tryIt": "Select the handoff and supervisor patterns in the figure. Then take MS-003 in <code>messages.json</code> and write which agents handle it, in order, and the summary passed at each handoff."
   }
  },
  "c12-3": {
   "harbor": {
    "practice": "Harbor&#x27;s India and UK policy workers run in parallel; the comparison waits for both or explicitly marks one region as missing.",
-   "failure": "Delegating an unclear objective, which produces several unclear objectives."
+   "failure": "Delegating an unclear objective, which produces several unclear objectives.",
+   "fit": "good",
+   "fitNote": "two regional workers in parallel",
+   "tryIt": "In the plan-and-synthesis figure, run the six subtasks sequentially, then with limits 3 and 6, and note the wall-clock time. Then write a task brief for Harbor's UK policy worker with objective, tools, budget and output schema."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "one worker per category",
+   "practice": "{company}'s catalogue-quality review splits by category: each worker checks one category's listings against its attribute rules and returns flagged SKUs with reasons. A concurrency limit protects the catalogue API before sales.",
+   "failure": "Delegating “check the catalogue” with no scope, so two workers check the same categories and none checks Beauty.",
+   "tryIt": "Run the figure with limit 3 and limit 6. Then split <code>products.csv</code> by <code>category</code> and write a task brief for one category worker with its output schema."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "lookups across systems run in parallel",
+   "practice": "{company}'s investigation runs the card, UPI and merchant lookups in parallel, each with a budget and deadline. The synthesis keeps the transaction IDs from every worker so the case file is traceable.",
+   "failure": "Workers returning raw transaction dumps, which fill the coordinator's context and push the policy text out.",
+   "tryIt": "Run the figure sequentially and with limit 3. Then write a task brief for a worker that summarises one customer's rows in <code>transactions.csv</code>, with the fields it must return."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "parallel supplier searches",
+   "practice": "{company}'s trip planner searches flights, rail and hotels in parallel, with a concurrency limit per supplier. Synthesis waits until a deadline and then builds itineraries from the results it has, marking any product it could not search.",
+   "failure": "Waiting for the slowest hotel supplier before showing any flight options.",
+   "tryIt": "Run the figure with limit 6 and note that synthesis waits for the slowest worker. Then write the deadline you would give each supplier worker for a 20-second search page."
   }
  },
  "c12-4": {
   "harbor": {
-   "practice": "Harbor workers return {task, status, claims, evidence_ids, coverage, warnings}; nothing a worker sends can change the coordinator&#x27;s approved action.",
-   "failure": "Using a shared chat transcript as a concurrency-control or authorisation mechanism."
+   "practice": "Harbor workers return <code>task, status, claims, evidence_ids, coverage, warnings</code>; nothing a worker sends can change the coordinator's approved action.",
+   "failure": "Using a shared chat transcript as a concurrency-control or authorisation mechanism.",
+   "fit": "good",
+   "fitNote": "typed results; no worker can change an approval",
+   "tryIt": "Write the versioned result contract for one Harbor worker, then write three invalid results (missing evidence IDs, unknown status, coverage over 100%) and the validation error for each."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a small shared task board",
+   "practice": "{company}'s workers share only a structured task record (assignments, status) and send results as typed messages with evidence IDs, so a worker that read an injected review cannot write into another worker's context.",
+   "failure": "A shared free-text scratchpad where text from a malicious review reaches every worker.",
+   "tryIt": "Write the result contract for a review-summary worker, with <code>evidence_ids</code> pointing to IDs in <code>reviews.json</code>. Add a field that marks reviews flagged as injection."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "isolation keeps customer data least-privilege",
+   "practice": "{company}'s workers are isolated: each sees only the data for its own lookup, and results are versioned, validated messages with status, confidence and transaction IDs. No worker can read another's raw data.",
+   "failure": "A blackboard where every worker can read the full customer profile because one worker needed it.",
+   "tryIt": "Write the result contract for a transaction-lookup worker, using fields from <code>transactions.csv</code>, and mark which fields the coordinator may see and which stay with the worker."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "supplier agents from other companies",
+   "practice": "Some of {company}'s suppliers expose their own booking agents. {company} talks to them through an agent protocol with typed, versioned task messages, and treats their replies as untrusted data.",
+   "failure": "Accepting a supplier agent's free-text “booking confirmed” without a booking reference in the contract.",
+   "tryIt": "Write a versioned result contract for a hotel-search worker (status, options with IDs, coverage, warnings), and the rule the coordinator applies to status: partial."
   }
  },
  "c12-5": {
   "harbor": {
    "practice": "If Harbor&#x27;s UK worker times out, the answer covers India with a clear note that UK evidence is missing; the late UK result cannot alter a finalised answer.",
-   "failure": "Assuming promise-style parallel code gives durable scheduling or cancels side effects."
+   "failure": "Assuming promise-style parallel code gives durable scheduling or cancels side effects.",
+   "fit": "good",
+   "fitNote": "a missing region is stated, not hidden",
+   "tryIt": "In the task DAG figure, set worker B to time out, then run it with “proceed with partial results” and with “fail whole run”. Then write the deadline each Harbor worker gets from a 90-second request."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "festival traffic makes workers slow",
+   "practice": "Before a sale, {company}'s report workers slow down under load. The report proceeds with what returned, marks the missing sources, and cancelling the report stops every running worker's API calls.",
+   "failure": "Cancelling the report in the UI while its workers keep calling the order API.",
+   "tryIt": "In the figure, choose “user cancels mid-run” and watch which tasks stop. Then write the cancel signal each worker must check between tool calls."
+  },
+  "bank": {
+   "fit": "limited",
+   "fitNote": "partial results rarely acceptable in a case decision",
+   "practice": "{company} does not decide a dispute on partial results: if a worker times out, the case waits or goes to a person, rather than proceeding.",
+   "failure": "Closing a case with “no merchant response found” when the merchant worker actually timed out.",
+   "tryIt": "Run the figure with worker B timing out and “fail whole run”, and write the message the case handler sees."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "slow and failing suppliers",
+   "practice": "{company}'s trip planner is a DAG: search flights, rail and hotels in parallel, then build itineraries, then check fare rules. A supplier that times out is retried once, then the planner proceeds with the other products and says which one is missing.",
+   "failure": "Retrying a timed-out hotel supplier without a deadline, so the traveller's page never loads.",
+   "tryIt": "Run the figure with “worker C errors (retry once)” and then with B timing out. Then draw {company}'s planner DAG and give each node a timeout and a partial-failure rule."
   }
  },
  "c12-6": {
   "harbor": {
    "practice": "When Harbor workers return a 2024 policy and a 2026 amendment, an authority-and-effective-date rule decides, not the more articulate answer.",
-   "failure": "Passing one agent&#x27;s claim to another without its evidence and uncertainty, so the error is amplified."
+   "failure": "Passing one agent&#x27;s claim to another without its evidence and uncertainty, so the error is amplified.",
+   "fit": "good",
+   "fitNote": "authority and effective date settle conflicts",
+   "tryIt": "In the error-compounding figure, set 95% per step and 6 steps, then raise the verifier to 50% and 90%, and note the end-to-end reliability each time."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "listing and reviews disagree",
+   "practice": "A {company} listing says “pure silk”; several reviews say it is not. The synthesis shows both with evidence instead of picking the more confident worker, and sends the listing to the catalogue team.",
+   "failure": "Averaging a seller claim and review complaints into “mostly silk”.",
+   "tryIt": "Find a product in <code>products.csv</code> and its reviews in <code>reviews.json</code>, and write how the synthesis should show a conflict between the listing and the reviews. Then set the figure to 10 steps at 95% and add a 50% verifier."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "errors in a case file compound",
+   "practice": "One wrong transaction ID from a {company} worker would flow into the case summary and the customer letter. Each claim must carry its transaction ID, and a verifier checks the IDs exist before synthesis.",
+   "failure": "A critic agent that keeps asking for a “perfect” case summary, spending more than the case is worth.",
+   "tryIt": "In the figure, compute 6 steps at 95% with no verifier, then with 90%. Then pick a case in <code>disputes.csv</code> and list which claims a verifier can check against <code>transactions.csv</code>."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "cached fares conflict with live ones",
+   "practice": "{company}'s flight worker may return a cached fare while the live check returns a higher one. The rule prefers the live, timestamped source and tells the traveller the price changed, instead of showing the lower number.",
+   "failure": "Showing the cheaper cached fare because the worker that returned it sounded more certain.",
+   "tryIt": "Write the conflict rule for two fares on one route (source, timestamp, authority). Then set the figure to 8 steps at 97% and see what a 50% verifier adds. Use a route from <code>bookings.csv</code>."
   }
  },
  "c12-7": {
   "harbor": {
    "practice": "Harbor&#x27;s research worker can request a ticket draft but cannot ask the execution worker to refund money unless the original user is authorised for that action.",
-   "failure": "Trusting a peer message that says &quot;the supervisor approved this&quot;."
+   "failure": "Trusting a peer message that says &quot;the supervisor approved this&quot;.",
+   "fit": "good",
+   "fitNote": "a worker cannot request more than the user has",
+   "tryIt": "Step through the delegation-chain figure and write, for each hop, the token's audience and scopes. Then write what the finance API returns when a Harbor intern asks for salary data."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "seller and shopper rights differ",
+   "practice": "{company}'s refund worker acts on a token for the shopper, narrowed to that order. A seller-support agent cannot ask it to refund an order the seller does not own, because the refund API checks the original user.",
+   "failure": "A reporting agent with a service account that can read every seller's payouts, used by a seller to see competitors' sales.",
+   "tryIt": "Write the delegation chain for a refund on one order in <code>orders.csv</code>: the token at each hop, its audience and its scope."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "on-behalf-of tokens are mandatory",
+   "practice": "Every {company} agent hop exchanges the token for a narrower one (RFC 8693), and every agent has its own workload identity. The ledger API authorises using both the staff member's rights and the agent's allowed scopes, and the audit trail records the whole chain.",
+   "failure": "Passing a staff user ID as a plain string, which any agent could forge.",
+   "tryIt": "Step through the figure, then write the chain for a staff member viewing a case in <code>disputes.csv</code>: scopes at each hop, and what the API refuses if the agent asks for a credit."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "travel desks and travellers",
+   "practice": "A corporate travel manager can book for their team at {company}, but a traveller cannot see the manager's other bookings. Agents pass on-behalf-of tokens, so the booking API checks who asked.",
+   "failure": "An agent using a shared supplier account to look up any traveller's booking by name.",
+   "tryIt": "Write the delegation chain for a travel manager changing a team member's booking in <code>bookings.csv</code>, and the refusal when a traveller asks for a colleague's booking."
   }
  },
  "c12-8": {
   "harbor": {
    "practice": "Harbor compared one answerer, two workers plus a synthesiser, and a fixed hybrid pipeline on 120 paired tasks; the fixed pipeline matched quality at half the cost and shipped.",
-   "failure": "Comparing a well-resourced agent team with a deliberately weak single-agent baseline."
+   "failure": "Comparing a well-resourced agent team with a deliberately weak single-agent baseline.",
+   "fit": "good",
+   "fitNote": "the fixed pipeline shipped",
+   "tryIt": "Read the comparison table and work out the cost of the multi-agent design's 3 extra points of success. Then write Harbor's ablation: remove the synthesiser, merge the two workers, and say what result would justify keeping each."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "ablations on a report generator",
+   "practice": "{company} compared a single agent, a parallel workflow and a coordinator with a critic on 100 returns reports. The parallel workflow shipped; the critic is kept only for reports sent to leadership. (Illustrative.)",
+   "failure": "Comparing designs on different report sets, so the team agent looked better on easier months.",
+   "tryIt": "In the table, compute cost per extra successful task when moving from the parallel workflow to the team design (100 tasks each). Then plan the same three-way comparison for 20 returns reports."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "reliability over repeated runs matters most",
+   "practice": "{company} judged its investigation designs on pass^3 (all three runs right), because a case summary that is right only some of the time is not usable. (Illustrative.)",
+   "failure": "Picking the design with the best single-run success when its repeated-run reliability is lower.",
+   "tryIt": "In the table, compare task success and pass^3 for the parallel workflow and the team design, and say which a bank should prefer and why."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "many suppliers make it a real comparison",
+   "practice": "{company} ran 150 trip-planning tasks through one agent, a parallel workflow and a coordinator with supplier workers. The coordinator helped only on multi-city trips, so it is used only for those. (Illustrative.)",
+   "failure": "Shipping the coordinator for every request because it won on the hardest trips.",
+   "tryIt": "Write 20 trip-planning tasks from <code>bookings.csv</code> routes (single-city and multi-city), and the metrics from the table you would compare for each design."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Write 20 returns questions that need reviews, chats and order rows. Run one agent and two workers (reviews; orders and chats) plus a synthesiser with the same budget. Inject a worker timeout and a conflict between a listing in <code>products.csv</code> and its reviews.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Write 20 dispute investigations that need <code>transactions.csv</code>, <code>disputes.csv</code> and <code>policies.json</code>. Compare one agent with two isolated workers plus a synthesiser. Inject a timeout and a conflicting transaction ID; the design must escalate rather than decide on partial evidence.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Write 20 trip-planning tasks, half multi-city, using routes from <code>bookings.csv</code> and rules from <code>fare_rules.json</code>. Compare one agent with flight and hotel workers plus a synthesiser. Inject a supplier timeout and a cached-versus-live fare conflict.</p>"
+  },
+  "harbor": {
+   "scenario": "<p>Write 20 Harbor questions that need policies from two regions. Compare one answerer with India and UK workers plus a synthesiser on the same budget; inject a UK timeout and a conflict between a 2024 policy and a 2026 amendment.</p>"
   }
  }
 }

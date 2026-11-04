@@ -6,7 +6,8 @@
   - `figure.fig`, `.box.example|pit|lab`, `.terms`, `.tools`, `.flow` steppers
   - evidence tags: `.tag cpu|real|sim|gpu`
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
-- Current state (phase 2): chapters 1–3 have notes for all four projects, lab scenarios and full section checks. Chapters 4–18 and the capstone have Harbor notes only and the 3 migrated questions per chapter; phase 3 fills them in.
+- Current state (phase 3 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
+- Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
 - Keep the course's standards:

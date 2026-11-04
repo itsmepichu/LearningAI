@@ -2,49 +2,255 @@
  "c8-1": {
   "harbor": {
    "practice": "Harbor&#x27;s acceptance criteria: every policy claim cites an authorised passage; 0 cross-tenant leaks in 60 probes; p95 first token ≤ 1.5 s; ≤ $0.01 per resolved question.",
-   "failure": "Building the evaluation set from easy questions only, which scores well and blocks nothing."
+   "failure": "Building the evaluation set from easy questions only, which scores well and blocks nothing.",
+   "fit": "good",
+   "fitNote": "acceptance criteria with a must-pass leak set",
+   "tryIt": "Write Harbor-style acceptance criteria for ticket routing on <code>tickets.csv</code>: an overall accuracy bar, a must-pass set (every security ticket), a latency bar and a cost bar. Then draw a 60-case stratified sample that covers all three languages."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "strata for languages, sale weeks and injected reviews",
+   "practice": "{company}'s evaluation set for {assistant} is stratified: common English questions; Hindi, Tamil and Hinglish; festival-sale questions; questions that must be refused because the listing lacks the information; and injected reviews. Results are reported per stratum.",
+   "failure": "Sampling the set at random from an ordinary week. It then contains almost no festival-sale or Tamil questions.",
+   "tryIt": "Write a 40-case stratified plan from <code>chats.json</code>, <code>reviews.json</code> and <code>products.csv</code>, with counts per stratum and the weight each stratum gets when you report an overall score."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "regulated answers need explicit must-pass sets",
+   "practice": "{company}'s acceptance criteria for dispute replies include zero wrong deadlines and zero refund promises in a 50-case critical set, correct abstention when no policy covers the case, and parity across languages. The baseline is the operations team's current letters.",
+   "failure": "Shipping on an average score when one wrong deadline in a customer letter is a compliance breach.",
+   "tryIt": "Draft acceptance criteria for dispute updates (overall, critical set, abstention, latency, cost) and pick 10 critical cases from <code>disputes.csv</code> covering every reason and language."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "field-level criteria for booking extraction",
+   "practice": "{company}'s extraction set has field-level criteria: dates and cities exact, traveller count exact, and 100% abstention when a message gives no date. The baseline is the old booking form's completion rate.",
+   "failure": "Scoring extraction all-or-nothing per message, which hides that dates are right while traveller counts are wrong.",
+   "tryIt": "Write field-level acceptance criteria for <code>messages.json</code>, label each message's expected fields, and add three cases with no date that must abstain."
   }
  },
  "c8-2": {
   "harbor": {
    "practice": "Harbor checks citation IDs in code, has policy experts grade 50 answers a week, and uses a model judge to triage which of the remaining answers humans should look at.",
-   "failure": "Asking a language model to judge things code can check exactly, such as totals, IDs and formats."
+   "failure": "Asking a language model to judge things code can check exactly, such as totals, IDs and formats.",
+   "fit": "good",
+   "fitNote": "code checks citations; experts and judges handle the rest",
+   "tryIt": "Write three code checks for Harbor answers (citation IDs exist and are authorised, required disclaimer present, no policy number that is not in the sources) and one judge rubric for groundedness. Decide which cases each runs on."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "prices are checked by code, tone by a judge",
+   "practice": "{company} checks product answers in code (the cited SKU exists, a quoted price equals the listing price), uses a model judge for tone and helpfulness, and has category experts review a weekly sample of fashion questions.",
+   "failure": "Using a judge to check whether a quoted price matches the listing. Code checks it exactly.",
+   "tryIt": "Write a code check that finds any ₹ price in an answer and compares it with <code>products.csv</code> for the cited SKU. Run it on five answers you write, two of them with wrong prices."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "amounts and deadlines are code-checkable",
+   "practice": "{company} checks every customer letter in code for the right case ID, amount and deadline, has compliance staff grade a sample against a rubric, and uses a model judge only to triage which letters people read first.",
+   "failure": "Letting an uncalibrated model judge approve letters as “compliant”.",
+   "tryIt": "Write deterministic checks for a dispute letter (case ID format, amount equal to <code>transactions.csv</code>, the 30-day deadline mentioned) and run them on three letters you draft, one deliberately wrong."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "booking JSON is validated in code",
+   "practice": "{company} validates booking JSON in code (dates in the future, valid airports, passenger count matches the request) and uses a judge only for how helpful the itinerary text is.",
+   "failure": "Asking a judge whether an itinerary's dates are consistent. Code can compare them exactly.",
+   "tryIt": "Write code checks for extraction output on <code>messages.json</code> (the date parses, origin and destination are known codes, adults is at least 1) and count how many outputs from a local model fail each check."
   }
  },
  "c8-3": {
   "harbor": {
    "practice": "Harbor&#x27;s judge is re-calibrated against 200 human-graded answers whenever its prompt or model changes, and results report κ with a confidence interval.",
-   "failure": "Quoting &quot;90% agreement with humans&quot; without the class balance, criterion and uncertainty."
+   "failure": "Quoting &quot;90% agreement with humans&quot; without the class balance, criterion and uncertainty.",
+   "fit": "good",
+   "fitNote": "a judge re-calibrated on 200 human-graded answers",
+   "tryIt": "Enter counts in the agreement calculator (for example 160 good/good, 10 judge-good/human-bad, 15 judge-bad/human-good, 15 bad/bad), read κ and the share of bad answers the judge catches, then run the bootstrap figure."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "verbosity bias towards long product comparisons",
+   "practice": "{company}'s helpfulness judge was re-calibrated after a model upgrade: κ against 200 human labels fell from 0.71 to 0.52, mostly from verbosity bias towards long product comparisons, so the rubric now controls for length.",
+   "failure": "Comparing helpfulness scores from before and after a judge change as if they measured the same thing.",
+   "tryIt": "In the calculator, enter counts where the judge says “good” to almost everything and watch κ fall while raw agreement stays high. Then plan a bootstrap comparison of two prompts on 40 cases grouped by shopper conversation."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "a judge must catch bad letters, not just agree",
+   "practice": "{company} measures its letter judge by how many non-compliant letters it catches (recall on “bad”), not by raw agreement, because almost every letter is fine. The judge model and prompt are frozen as part of the evaluation version.",
+   "failure": "Quoting 95% judge agreement when 95% of letters are compliant. A judge that always says “good” gets the same number.",
+   "tryIt": "In the calculator, find counts that give 95% raw agreement but κ below 0.3, and explain which letters that judge would miss."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "turns of one trip are not independent",
+   "practice": "{company} runs each extraction case five times and bootstraps over whole conversations, because several turns about one trip are not independent.",
+   "failure": "Bootstrapping over individual turns of the same conversation, which makes the interval look narrower than it is.",
+   "tryIt": "Group your extraction cases by trip and compare a row-level bootstrap of the accuracy interval with a cluster bootstrap that resamples whole trips."
   }
  },
  "c8-4": {
   "harbor": {
    "practice": "Harbor&#x27;s scorecard tracks correctness, groundedness, completeness (exceptions included), justified abstention, p95 latency and cost per accepted answer side by side.",
-   "failure": "Equating groundedness with truth: an answer can faithfully repeat an outdated source."
+   "failure": "Equating groundedness with truth: an answer can faithfully repeat an outdated source.",
+   "fit": "good",
+   "fitNote": "a scorecard with justified abstention and cost per answer",
+   "tryIt": "Fill in the scorecard for one Harbor change (more chunks versus a reranker) from your own 20-case run, including the should-answer refusal rate."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "latency and cost per conversation decide the variant",
+   "practice": "{company} compares {assistant} variants on a scorecard: accuracy, groundedness in listings and reviews, correct refusals, p95 latency and cost per resolved chat. At festival volumes a variant two points less complete but five times cheaper often wins.",
+   "failure": "Raising groundedness by making the assistant refuse anything not stated word for word. It then refuses size questions phrased differently from the listing.",
+   "tryIt": "Build a 20-question scorecard for two prompt variants over <code>products.csv</code>, tracking should-answer refusals separately from correct refusals."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "refusal behaviour weighs heavily",
+   "practice": "{company}'s scorecard weights correctness and refusal behaviour heavily: answering outside policy is worse than refusing inside it, but both are tracked.",
+   "failure": "Equating groundedness with truth. A letter can faithfully quote an outdated fee schedule.",
+   "tryIt": "For five questions answered by <code>policies.json</code>, write the expected answer, then grade a local model on accuracy, groundedness, completeness and correct refusal separately."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "slow but correct itineraries lose bookings",
+   "practice": "{assistant}'s scorecard puts latency next to correctness: a correct itinerary that takes 15 seconds loses bookings.",
+   "failure": "Pushing itinerary completeness so far that replies become long and slow.",
+   "tryIt": "Time a local model on five trip-planning requests at two output limits, and fill in correctness and latency for each."
   }
  },
  "c8-5": {
   "harbor": {
    "practice": "When Harbor misses a question, engineers rerun it with the gold passage supplied. If it then succeeds, the fault is retrieval; if not, generation.",
-   "failure": "Assuming high retrieval recall means the answer used the retrieved text correctly."
+   "failure": "Assuming high retrieval recall means the answer used the retrieved text correctly.",
+   "fit": "best",
+   "fitNote": "oracle-context reruns separate retrieval from generation",
+   "tryIt": "For five questions Harbor gets wrong, rerun each with the gold passage pasted in (oracle context) and classify every failure as retrieval or generation."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "missing size charts looked like a model problem",
+   "practice": "When {assistant} answered shoe-size questions wrongly, oracle-context runs showed the model was right once the size chart was in context: retrieval was not returning size charts. Indexing them fixed it with no model change.",
+   "failure": "Upgrading the model to fix answers when the right document never reached it.",
+   "tryIt": "Write five size questions about items in <code>products.csv</code> and answer them with a local model given (a) a retrieved listing and (b) the exact listing, then compare."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "clause retrieval, letter quality and routing measured separately",
+   "practice": "{company} evaluates retrieval (did the right policy clause come back?), the letter (is it correct given that clause?) and the workflow (did the case reach the right queue?) separately.",
+   "failure": "Assuming high retrieval recall means the letter used the clause correctly.",
+   "tryIt": "For three dispute reasons in <code>disputes.csv</code>, check whether a keyword search over <code>policies.json</code> returns the right policy first, then judge the answer separately."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "the booking agent needs task-level evaluation",
+   "practice": "{company} evaluates {assistant} at three levels: retrieval of the right fare rule, correctness of its explanation, and whether the booking in the sandbox ended in the right state.",
+   "failure": "Scoring the agent on its final message (“your booking is changed”) instead of the booking's actual state.",
+   "tryIt": "Pick three change requests, define the expected end state in a small dictionary-based sandbox, and score a scripted agent run on the state, not its words."
   }
  },
  "c8-6": {
   "harbor": {
    "practice": "Harbor&#x27;s suite tags every case with its origin (incident, red team, language, synthetic); a single cross-tenant leak case blocks release regardless of averages.",
-   "failure": "Concluding an injection defence works because one attack phrasing failed."
+   "failure": "Concluding an injection defence works because one attack phrasing failed.",
+   "fit": "good",
+   "fitNote": "every case tagged with its origin",
+   "tryIt": "Turn one incident into regression cases: write the original, five paraphrases and two other-language variants, and tag each with its origin."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "injected reviews and Hinglish are built-in adversarial and multilingual cases",
+   "practice": "{company}'s regression suite includes all six injected reviews from the dataset, Hinglish and Tamil questions, price formats (₹1,299.00 versus 1299), and cases from past incidents. A single injected-review regression blocks release.",
+   "failure": "Treating one failed injection phrasing as proof that the defence works.",
+   "tryIt": "Add the six <code>is_injection</code> reviews from <code>reviews.json</code> to a suite with three paraphrases each, and record how many a local model obeys."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "Indian number and date formats as test cases",
+   "practice": "{company} tests date and amount formats explicitly (03/04 means 3 April in India; lakh and crore notation) in every supported language. Evaluation cases live in an access-controlled store separate from any training data.",
+   "failure": "Letting evaluation letters leak into few-shot examples, so the suite measures memory.",
+   "tryIt": "Write four cases that differ only in number format (₹1,50,000, ₹150,000 and 1.5 lakh) and check that a local model extracts the same amount from each."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "relative dates in several languages",
+   "practice": "{company}'s suite covers relative dates (“kal”, “parso”, “next Friday”), all four languages, and past incidents such as a late-December booking made for the wrong year.",
+   "failure": "Testing dates only in English and only as absolute dates.",
+   "tryIt": "Write ten date cases mixing Hindi, Hinglish and English relative dates, fix a reference date, and score a local model's extraction."
   }
  },
  "c8-7": {
   "harbor": {
    "practice": "Harbor&#x27;s A/B test measures &quot;resolved without a repeat contact within 7 days&quot;, with guardrails on latency and complaints, and a pre-registered sample size.",
-   "failure": "Reading higher engagement as success; it can mean users are struggling."
+   "failure": "Reading higher engagement as success; it can mean users are struggling.",
+   "fit": "good",
+   "fitNote": "a pre-registered A/B test on repeat contacts",
+   "tryIt": "In the sample-size calculator, set a 40% baseline self-resolution rate and a 2-point lift and read the users needed; then try a 5-point lift."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "millions of shoppers make A/B tests feasible",
+   "practice": "{company} has enough traffic to A/B test {assistant} changes in days. The primary metric is orders resolved without contacting support within 7 days; guardrails are latency, refund rate and complaints. Tests do not start in a sale week, when behaviour differs.",
+   "failure": "Stopping a test on day 2 because the result looks good.",
+   "tryIt": "In the calculator, set a 30% baseline, a 1-point lift and 200,000 eligible shoppers per day and read the duration; then try a 0.5-point lift."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "online tests only on low-risk features",
+   "practice": "{company} runs online tests only on low-risk features (FAQ answers, not decisions), with compliance-approved guardrails and a pre-registered sample size, after offline gates and a shadow period.",
+   "failure": "A/B testing a change to dispute decisions on real customers. Decisions are validated offline and approved, not experimented on.",
+   "tryIt": "Write a staged plan for a new FAQ prompt: offline gates, shadow, a 5% canary with guardrails, then an A/B metric with a sample size from the calculator."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "business outcomes arrive after the travel date",
+   "practice": "{company}'s business metric is completed bookings with no change within 24 hours. Model metrics are leading indicators, and the business review waits for travel dates to pass before counting cancellations.",
+   "failure": "Declaring success before delayed outcomes, such as cancellations close to travel, arrive.",
+   "tryIt": "In the calculator, set a 12% baseline rate of changes after booking and a 1-point reduction, and estimate how long the test must run with 20,000 eligible bookings per day."
   }
  },
  "c8-8": {
   "harbor": {
    "practice": "A Harbor ticket agent passes a case only if exactly one ticket exists in the right tenant with the right fields, no forbidden data was read, and the user got the real ticket ID.",
-   "failure": "Requiring one golden tool sequence and rejecting a different valid, cheaper path."
+   "failure": "Requiring one golden tool sequence and rejecting a different valid, cheaper path.",
+   "fit": "good",
+   "fitNote": "exactly one ticket in the right tenant",
+   "tryIt": "In the pass@k figure, set p = 0.95 and k = 5 and read pass^5. Then find the per-run success Harbor's ticket agent needs for pass^5 of at least 90% (about 0.979)."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "a returns agent checked on sandbox state",
+   "practice": "{company} evaluates its returns agent in a sandbox: exactly one return for the right order, a refund equal to the rule's output, no other orders touched, and the shopper given the real return ID.",
+   "failure": "Accepting a run where the agent said “return created” but the sandbox shows none.",
+   "tryIt": "Build a dictionary-based sandbox from three orders in <code>orders.csv</code>, write the state check for one return, and run a scripted agent that sometimes creates two returns."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "exactly one refund is the invariant",
+   "practice": "{company}'s refund agent passes a case only if exactly one refund exists for the right amount and account, no forbidden data was read, and the customer was told the real reference. Each case runs five times, and release needs pass^5.",
+   "failure": "Requiring one exact tool sequence, which rejects valid paths that read the account and the transaction in a different order.",
+   "tryIt": "In the pass@k figure, compare p = 0.9 and p = 0.99 at k = 5 and k = 20, and explain what a daily refund workflow needs."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "multi-step bookings must end in the right state",
+   "practice": "{company} seeds a sandbox with inventory for each case and checks the end state: the right flight held and confirmed, no extra holds left behind, fees charged as the rule says.",
+   "failure": "Not checking for leftover seat holds from abandoned attempts, which block inventory in production.",
+   "tryIt": "Write end-state assertions for “cheapest flight Bengaluru to Delhi next Friday morning, 2 adults”, including one that no other holds exist."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Build the 60 cases from <code>tickets.csv</code> and <code>policies.json</code>: user scope from <code>access_groups</code>, severity from priority, and evidence version from the policy's <code>current</code> flag. Include every security ticket in the critical set and report results by language.</p>"
+  },
+  "store": {
+   "scenario": "<p>Build the 60 cases from <code>chats.json</code>, <code>products.csv</code> and <code>reviews.json</code>, including the six injected reviews as critical cases and Hindi, Tamil and Hinglish questions. Compare the two prompt versions with a paired test and report by language.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Build the 60 cases from <code>disputes.csv</code> and <code>policies.json</code>. Mark deadline and amount cases as critical, add cases about another customer's dispute that must be refused, and report parity across English, Hindi, Tamil and Hinglish.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Build the 60 cases from <code>messages.json</code> plus requests you write, scored field by field (intent, dates, cities, travellers). Include relative dates, no-date messages that must abstain, and multi-city trips; run each case five times.</p>"
   }
  }
 }
