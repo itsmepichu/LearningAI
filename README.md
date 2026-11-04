@@ -6,8 +6,13 @@ An Interactive AI Learning Path For My DD: the **Enterprise AI Field Manual**, r
 
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams
-- a Harbor running example and a "failure to avoid" note
+- an "In practice" note and a "Failure to avoid" note for the running example
 - a lab and a self-check quiz
+
+Two changes are planned next (see [ROADMAP.md](ROADMAP.md), phases 2–3):
+
+- **Choose your example project.** Harbor (an internal company assistant) stays as one of four projects, alongside an online store, a bank and a travel-booking agent. The project you pick decides which practical notes, datasets, lab variants and experiments you see. When another project suits a topic better, a short note at the end of the topic says so.
+- **Chapter check pages.** Questions move off the chapter page onto a separate check page per chapter, grouped by section. Each section has choose-the-answer questions and likely interview questions.
 
 Interactive figures run in the browser. Each one carries an evidence label:
 
