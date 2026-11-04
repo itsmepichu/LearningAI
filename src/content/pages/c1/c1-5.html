@@ -1,0 +1,26 @@
+<p>LLMs are strong at language transformation (summarise, rewrite, translate, extract), at pattern-following from a few examples, at writing and explaining code, and at broad general knowledge. Their weaknesses follow directly from "predict the likely next token from frozen weights":</p>
+<ul>
+<li><b>Hallucination</b>: fluent, confident output that is false. The model produces what is <em>plausible</em>; when it lacks the fact, a plausible-sounding fabrication is still the likely continuation. Invented citations, API methods and policy clauses are typical.</li>
+<li><b>Outdated knowledge</b>: weights reflect data up to a <dfn>training cutoff</dfn>. The model does not know about your product release last week, or your internal documents at all, unless you put them in the context (that is RAG, chapter 9).</li>
+<li><b>Bias</b>: training data reflects the world's skews. Models can associate professions with genders, rate dialects as less formal, or default to US conventions. In hiring, lending or moderation this becomes a legal and ethical problem.</li>
+<li><b>Unreliable confidence</b>: tone does not track correctness. "I'm certain" carries no information. Even token probabilities are only loosely related to factual accuracy after instruction tuning. Do not use the model's self-reported confidence as a control signal without measuring it (3.5, 8.3).</li>
+<li><b>Other practical limits</b>: arithmetic and exact counting errors (tokens are not characters), sensitivity to prompt wording, non-determinism, and vulnerability to instructions hidden in input text (prompt injection, chapter 16).</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 230" role="img" aria-label="Ungrounded versus grounded answer paths">
+<g class="sm">
+<rect x="10" y="20" width="120" height="44" rx="4" class="nd"/><text x="70" y="40" text-anchor="middle">"What is our</text><text x="70" y="55" text-anchor="middle">refund window?"</text>
+<rect x="180" y="20" width="170" height="44" rx="4" class="ndb"/><text x="265" y="40" text-anchor="middle">Weights only</text><text x="265" y="55" text-anchor="middle" class="xs">generic e-commerce patterns</text>
+<rect x="400" y="20" width="160" height="44" rx="4" class="ndb"/><text x="480" y="40" text-anchor="middle">"30 days with receipt."</text><text x="480" y="55" text-anchor="middle" class="xs">fluent, possibly wrong</text>
+<path d="M130 42H180M350 42H400" class="lnb"/>
+<text x="580" y="38" class="bad">✕ unverifiable</text><text x="580" y="54" class="xs mut">no source to check</text>
+<rect x="10" y="140" width="120" height="44" rx="4" class="nd"/><text x="70" y="160" text-anchor="middle">"What is our</text><text x="70" y="175" text-anchor="middle">refund window?"</text>
+<rect x="160" y="112" width="140" height="40" rx="4" class="nda"/><text x="230" y="137" text-anchor="middle">Retrieve policy doc</text>
+<rect x="160" y="170" width="140" height="40" rx="4" class="nds"/><text x="230" y="195" text-anchor="middle">Rule: cite or abstain</text>
+<rect x="340" y="140" width="110" height="44" rx="4" class="nd"/><text x="395" y="160" text-anchor="middle">Model reads</text><text x="395" y="175" text-anchor="middle">context</text>
+<rect x="480" y="140" width="140" height="44" rx="4" class="ndg"/><text x="550" y="160" text-anchor="middle">"14 days [policy §3]"</text><text x="550" y="175" text-anchor="middle" class="xs">checkable</text>
+<path d="M130 162H160M300 132 L340 155 M300 190 L340 170 M450 162H480" class="lna"/>
+<text x="640" y="158" class="okc">✓ grounded</text><text x="640" y="174" class="xs mut">citation verifiable</text></g>
+</svg></div><figcaption><b>Design around the limitation.</b> You cannot remove hallucination from the model, but you can supply the facts (retrieval), constrain behaviour (cite or say "I don't know"), and verify outputs (evaluation).</figcaption></figure>
+<div class="box example"><h5>Example: a real failure pattern</h5><p>An internal assistant is asked "Which config flag enables audit logging in our gateway?" It answers <code>--enable-audit-log=true</code>. That flag does not exist; the real one is <code>audit.sink</code> in a YAML file. The model generated the most typical shape of such a flag. Mitigation: retrieve the gateway's documentation, require answers to quote the doc, and add this question to the evaluation set.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s test set includes a policy that never existed, a policy revised last week and a question asked in Tamil. The team grades whether each claim is supported, whether the cited version is current, and per-language failure rates, not just fluency.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Accepting a citation as proof: the cited passage must actually support the specific claim, and the model&#x27;s &quot;I&#x27;m 90% sure&quot; means nothing until measured.</div></div>

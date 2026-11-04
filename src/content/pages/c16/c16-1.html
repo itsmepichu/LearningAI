@@ -1,0 +1,32 @@
+<p><dfn>Threat modelling</dfn> asks, for each component and data flow: what can go wrong, who could cause it, and what controls prevent, detect or limit it. Draw the data-flow diagram, mark <b>trust boundaries</b> (where data crosses from less to more trusted zones), and walk each flow. Frameworks like STRIDE (spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege) structure the walk; the <a href="https://genai.owasp.org/">OWASP Top 10 for LLM Applications</a> and <a href="https://atlas.mitre.org/">MITRE ATLAS</a> list AI-specific threats.</p>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 780 320" role="img" aria-label="Threat model data-flow diagram">
+<g class="sm">
+<rect x="10" y="130" width="100" height="50" rx="4" class="nd"/><text x="60" y="151" text-anchor="middle">User</text><text x="60" y="167" text-anchor="middle" class="xs">untrusted input</text>
+<rect x="150" y="130" width="120" height="50" rx="4" class="nda"/><text x="210" y="151" text-anchor="middle">App / gateway</text><text x="210" y="167" text-anchor="middle" class="xs">authN, authZ, policy</text>
+<rect x="320" y="130" width="120" height="50" rx="4" class="ndv"/><text x="380" y="151" text-anchor="middle">LLM</text><text x="380" y="167" text-anchor="middle" class="xs">follows any text</text>
+<rect x="320" y="30" width="120" height="50" rx="4" class="nds"/><text x="380" y="51" text-anchor="middle">Retrieved docs</text><text x="380" y="67" text-anchor="middle" class="xs">may be poisoned</text>
+<rect x="320" y="240" width="120" height="50" rx="4" class="nds"/><text x="380" y="261" text-anchor="middle">Tools / MCP</text><text x="380" y="277" text-anchor="middle" class="xs">side effects</text>
+<rect x="510" y="30" width="120" height="50" rx="4" class="nd"/><text x="570" y="51" text-anchor="middle">Document sources</text><text x="570" y="67" text-anchor="middle" class="xs">editable by many</text>
+<rect x="510" y="240" width="120" height="50" rx="4" class="nd"/><text x="570" y="261" text-anchor="middle">Internal APIs</text><text x="570" y="277" text-anchor="middle" class="xs">data, payments</text>
+<rect x="510" y="130" width="120" height="50" rx="4" class="nd"/><text x="570" y="151" text-anchor="middle">Model provider /</text><text x="570" y="167" text-anchor="middle" class="xs">weights, libraries</text>
+<rect x="670" y="130" width="100" height="50" rx="4" class="nd"/><text x="720" y="151" text-anchor="middle">Logs &amp; traces</text><text x="720" y="167" text-anchor="middle" class="xs">sensitive copies</text>
+<path d="M110 155H150M270 155H320M380 80V130M380 180V240M440 55H510M440 265H510M440 155H510M630 155H670" class="ln"/>
+<path d="M130 20 V300 M295 20 V300 M480 20 V300" class="lnb dash"/>
+<g class="xs bad"><text x="122" y="314">boundary 1</text><text x="285" y="314">boundary 2</text><text x="470" y="314">boundary 3</text></g>
+<circle cx="130" cy="155" r="9" class="fb"/><text x="130" y="159" text-anchor="middle" class="xs" style="fill:var(--paper)">1</text>
+<circle cx="380" cy="105" r="9" class="fb"/><text x="380" y="109" text-anchor="middle" class="xs" style="fill:var(--paper)">2</text>
+<circle cx="380" cy="210" r="9" class="fb"/><text x="380" y="214" text-anchor="middle" class="xs" style="fill:var(--paper)">3</text>
+<circle cx="480" cy="155" r="9" class="fb"/><text x="480" y="159" text-anchor="middle" class="xs" style="fill:var(--paper)">4</text>
+<circle cx="650" cy="155" r="9" class="fb"/><text x="650" y="159" text-anchor="middle" class="xs" style="fill:var(--paper)">5</text></g>
+</svg></div><figcaption><b>Data-flow diagram with trust boundaries.</b> Numbered hotspots: (1) direct injection and jailbreaks; (2) indirect injection via documents; (3) unsafe tool execution and exfiltration; (4) compromised model, weights or dependencies; (5) sensitive data in logs.</figcaption></figure>
+<div class="tw"><table>
+<tr><th>Asset / flow</th><th>Threat</th><th>Primary controls</th></tr>
+<tr><td>User prompt</td><td>Jailbreak, direct injection, abuse</td><td>Input classifiers, rate limits, policy model, output checks</td></tr>
+<tr><td>Retrieved documents</td><td>Indirect injection, poisoned facts</td><td>Source trust levels, content scanning, data/instruction separation, capability limits</td></tr>
+<tr><td>Tools</td><td>Unauthorised or destructive actions, exfiltration</td><td>Least-privilege scopes, approvals, egress allowlists, sandboxing (16.3)</td></tr>
+<tr><td>Model / weights</td><td>Backdoors, malicious serialisation, licence violation</td><td>Trusted sources, safetensors, scanning, signing, evaluation (16.6)</td></tr>
+<tr><td>Logs, caches, memory</td><td>Cross-tenant leakage, over-retention</td><td>Isolation, redaction, retention limits (16.4–16.5)</td></tr>
+</table></div>
+<div class="box example"><h5>Example: one finding from a review</h5><p>The assistant can read a user's email (private data), reads arbitrary inbound emails (untrusted content), and can render Markdown images (a channel to an external URL). Together these allow an attacker's email to instruct the model to embed private data in an image URL that the client fetches. This combination of private data + untrusted content + an exfiltration channel is sometimes called the "lethal trifecta"; remove at least one leg (here: block external image URLs in rendered output).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s threat model traces a malicious wiki page → model context → email tool, and places controls at each boundary.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Protecting only the user prompt and missing attacks that arrive through documents and tool results.</div></div>

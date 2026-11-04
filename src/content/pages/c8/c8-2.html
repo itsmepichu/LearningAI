@@ -1,0 +1,20 @@
+<ul>
+<li><b>Deterministic checks</b> (code): exact match, JSON validity, schema conformance, regex, "contains required citation", numeric tolerance, unit tests for generated code, SQL execution results, banned phrases. Cheap, fast, reproducible. Use them wherever possible.</li>
+<li><b>Human evaluation</b>: experts grade outputs against a rubric. The gold standard for nuanced quality (tone, helpfulness, correctness in specialist domains), but slow, expensive and itself variable. Use for calibration and for high-stakes decisions.</li>
+<li><b>Model-based judges</b> (LLM-as-judge): a model grades outputs using a rubric, either pointwise ("score 1–5 for groundedness") or pairwise ("which answer is better?"). Scales cheaply, but has biases (8.3) and must be validated against humans before you trust it.</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 700 250" role="img" aria-label="Evaluation pyramid">
+<path d="M350 15 L470 85 H230 Z" class="nds"/><text x="350" y="70" text-anchor="middle" class="sm">Human experts</text>
+<path d="M230 90 H470 L560 155 H140 Z" class="ndv"/><text x="350" y="128" text-anchor="middle" class="sm">Model judges (calibrated)</text>
+<path d="M140 160 H560 L650 230 H50 Z" class="ndg"/><text x="350" y="200" text-anchor="middle" class="sm">Deterministic checks</text>
+<g class="xs mut"><text x="480" y="50">tens–hundreds of cases · days · $$$</text><text x="575" y="122">thousands · minutes · $</text><text x="600" y="190">every case, every commit · seconds</text></g>
+</svg></div><figcaption><b>Layer the methods.</b> Run code checks on everything, judges on large sets, humans on samples, and use human labels to keep judges honest.</figcaption></figure>
+<div class="box example"><h5>Example: a judge rubric for groundedness</h5>
+<pre><code>You are grading whether an ANSWER is supported by the SOURCES.
+For each factual claim in the ANSWER, decide: SUPPORTED (stated or directly implied by a source),
+NOT_SUPPORTED (absent from sources), or CONTRADICTED.
+Return JSON: {"claims":[{"text":..., "verdict":..., "source_id":...}], "grounded": true|false}
+"grounded" is true only if every claim is SUPPORTED. Ignore style. Do not use outside knowledge.</code></pre>
+<p>Claim-level verdicts make the judge's reasoning inspectable and give a finer score (fraction supported) than a single 1–5 rating.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor checks citation IDs in code, has policy experts grade 50 answers a week, and uses a model judge to triage which of the remaining answers humans should look at.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Asking a language model to judge things code can check exactly, such as totals, IDs and formats.</div></div>

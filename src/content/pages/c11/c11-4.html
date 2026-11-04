@@ -1,0 +1,24 @@
+<ul>
+<li><b>Short-term (working) state</b>: the current task's messages, tool results, plan and scratch notes. Lives in the context window and in the agent's checkpointed state (11.5). Compact it as it grows (7.5).</li>
+<li><b>Persistent memory</b>: facts worth keeping across tasks: user preferences, prior resolutions, learned environment facts ("the staging DB is called stg-eu-2"). Stored as records with source, timestamp, owner and scope.</li>
+<li><b>Memory retrieval</b>: fetch relevant memories by semantic search plus filters (same user/tenant), recency and importance scores, then inject the top few into context.</li>
+<li><b>Expiration and hygiene</b>: memories go stale or wrong. Give them TTLs, update or supersede instead of piling up contradictions, let users view and delete them, and never store secrets or sensitive data without a policy (16.5). Memory written from untrusted content can be poisoned; record provenance.</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 230" role="img" aria-label="Agent memory tiers">
+<g class="sm">
+<rect x="10" y="20" width="230" height="190" rx="6" class="fas"/><text x="125" y="44" text-anchor="middle" class="lg acc">Working context</text>
+<text x="24" y="70" class="xs">• goal, plan, recent steps</text><text x="24" y="88" class="xs">• tool results (trimmed)</text><text x="24" y="106" class="xs">• injected memories</text><text x="24" y="140" class="xs mut">lifetime: one model call</text><text x="24" y="158" class="xs mut">size: context window</text>
+<rect x="265" y="20" width="230" height="190" rx="6" class="fss"/><text x="380" y="44" text-anchor="middle" class="lg sig">Task state</text>
+<text x="279" y="70" class="xs">• full message history</text><text x="279" y="88" class="xs">• step results, pending actions</text><text x="279" y="106" class="xs">• checkpoint per step</text><text x="279" y="140" class="xs mut">lifetime: the task (min–days)</text><text x="279" y="158" class="xs mut">store: durable DB / workflow engine</text>
+<rect x="520" y="20" width="230" height="190" rx="6" class="fvs"/><text x="635" y="44" text-anchor="middle" class="lg simc">Long-term memory</text>
+<text x="534" y="70" class="xs">• user/tenant facts &amp; preferences</text><text x="534" y="88" class="xs">• past resolutions, lessons</text><text x="534" y="106" class="xs">• provenance + TTL per record</text><text x="534" y="140" class="xs mut">lifetime: weeks–months, expiring</text><text x="534" y="158" class="xs mut">store: DB + vector index, scoped</text>
+<path d="M495 120H520M240 120H265" class="lna"/><path d="M520 180 C 380 230 240 210 200 180" class="lns dash"/><text x="380" y="224" text-anchor="middle" class="xs">retrieve relevant memories into context</text></g>
+</svg></div><figcaption><b>Three tiers of agent memory</b>, with different lifetimes, stores and governance.</figcaption></figure>
+<div class="box example"><h5>Example: a memory record</h5>
+<pre><code>{"id": "mem_7c1", "tenant": "acme", "user": "u_42", "scope": "user",
+ "text": "Prefers summaries in German; reports go to finance-emea@ list.",
+ "source": {"type": "conversation", "trace_id": "4bf9…", "turn": 12},
+ "created": "2026-10-02", "expires": "2027-04-02", "confidence": "user_stated",
+ "supersedes": "mem_51a"}</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor remembers &quot;prefers answers in German&quot; with user scope and a 6-month expiry, but always re-checks spending authority live.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Turning a model&#x27;s guess about a user (&quot;probably a manager&quot;) into a permanent trusted fact.</div></div>

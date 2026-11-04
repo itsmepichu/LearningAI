@@ -1,0 +1,18 @@
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">1 · Corpus<small>500–5,000 public docs</small></div><div class="nd">2 · Eval set<small>100 Q&amp;A + labels</small></div><div class="nd">3 · Baseline RAG<small>BM25 + small LLM</small></div><div class="nd">4 · Hybrid + rerank</div><div class="nd">5 · Agent tools<small>+ MCP server</small></div><div class="nd">6 · Observability<small>OTel + Phoenix/Langfuse</small></div><div class="nd">7 · Gateway &amp; load test</div><div class="nd">8 · Security tests</div><div class="nd">9 · CI gates &amp; release</div></div>
+<ol class="steps">
+<li data-n="0"><b>Corpus</b> (ch 9–10): pick a public documentation set (an open-source project's docs, public-sector policies). Parse with PyMuPDF/Docling, chunk with headers, record lineage. Add a few scanned PDFs to exercise OCR.</li>
+<li data-n="1"><b>Evaluation set</b> (ch 8): write 100 questions with answer keys and relevant-chunk labels, including 15 unanswerable and 10 adversarial (injection inside a document). This is your yardstick for everything after.</li>
+<li data-n="2"><b>Baseline RAG</b> (ch 7, 9): BM25 + Ollama small model + citation prompt. Measure Recall@5, answer accuracy, groundedness, abstention, latency, tokens.</li>
+<li data-n="3"><b>Improve retrieval</b> (ch 9, 13): dense embeddings + RRF + cross-encoder reranker; optionally fine-tune the embedder on synthetic queries. Compare every metric with the baseline using paired tests.</li>
+<li data-n="4"><b>Agent</b> (ch 11–12): expose search and a "file a doc-bug ticket" tool via your own MCP server; add step limits, idempotency keys and an approval step. Evaluate trajectories and final state over 5 runs per task (pass^5).</li>
+<li data-n="5"><b>Observability</b> (ch 17): trace every request with GenAI attributes into Phoenix or Langfuse; build a dashboard for latency percentiles, tokens, abstention and judge scores; turn three failing traces into new eval cases.</li>
+<li data-n="6"><b>Scale behaviour</b> (ch 14–15): put LiteLLM proxy in front with per-key budgets and a fallback model; load-test with k6 using a heavy-tailed prompt mix; observe queueing and shedding. Benchmark FAISS HNSW at 1M synthetic vectors.</li>
+<li data-n="7"><b>Security</b> (ch 16): run garak and your adversarial cases; add a second synthetic tenant and an isolation test; add PII redaction before logging.</li>
+<li data-n="8"><b>Delivery</b> (ch 18): a release manifest file, a promptfoo gate in CI, and a written readiness checklist. Ship a prompt change through the whole path and roll it back once.</li>
+</ol></div>
+<figcaption><b>Nine stages, one system.</b> Everything except the optional GPU experiments runs on a 16 GB laptop; expect the agent and evaluation runs to be slow on CPU, so start with 20-question subsets and run the full suite overnight.</figcaption></figure>
+<div class="box"><h5>What to do next with external compute <span class="tag gpu">Needs external compute</span></h5><ul>
+<li>Serve an 8B model with vLLM on one rented GPU; reproduce the throughput–latency curve (14.7) and the prefix-caching effect (14.3) with real numbers.</li>
+<li>QLoRA fine-tune a 1–8B model on your capstone's extraction or answer-format task in a Colab/Kaggle GPU notebook; run the 13.6 scorecard before and after.</li>
+<li>Run nanochat or a TRL GRPO example on a short rented multi-GPU session to see distributed training and RL fine-tuning end to end.</li></ul></div>

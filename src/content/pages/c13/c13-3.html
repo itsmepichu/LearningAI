@@ -1,0 +1,52 @@
+<div class="terms">
+<div><b>Full fine-tuning</b>: update all weights. Maximum flexibility; needs ~16 bytes/parameter of training memory (6.6) and produces a full model copy per variant.</div>
+<div><b>PEFT</b> (parameter-efficient fine-tuning): freeze the base model and train a small number of new parameters.</div>
+<div><b>LoRA</b> (low-rank adaptation): for a frozen weight matrix W (d_out × d_in), learn two small matrices B (d_out × r) and A (r × d_in) with rank r ≪ d (e.g. 8–64). The layer computes W·x + (α/r)·B·A·x. Trainable parameters per matrix: r·(d_in + d_out). After training, B·A can be merged into W (no inference overhead) or kept as a swappable adapter.</div>
+<div><b>QLoRA</b>: store the frozen base model in 4-bit (NF4) to cut memory, train LoRA adapters in higher precision on top. Makes fine-tuning large models possible on a single GPU, at some speed cost.</div>
+</div>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 720 230" role="img" aria-label="LoRA adds a low-rank update beside a frozen weight matrix">
+<g class="sm">
+<rect x="20" y="95" width="60" height="40" rx="4" class="nd"/><text x="50" y="120" text-anchor="middle">x</text>
+<rect x="150" y="20" width="160" height="110" rx="4" class="fsunk"/><text x="230" y="70" text-anchor="middle" class="lg">W (frozen)</text><text x="230" y="90" text-anchor="middle" class="xs">4096 × 4096 = 16.8M</text>
+<rect x="150" y="150" width="70" height="60" rx="4" class="nds"/><text x="185" y="178" text-anchor="middle">A</text><text x="185" y="194" text-anchor="middle" class="xs">r × 4096</text>
+<rect x="240" y="150" width="70" height="60" rx="4" class="nds"/><text x="275" y="178" text-anchor="middle">B</text><text x="275" y="194" text-anchor="middle" class="xs">4096 × r</text>
+<path d="M80 115 C 115 115 115 75 150 75 M80 115 C 115 115 115 180 150 180 M220 180H240" class="ln"/>
+<circle cx="380" cy="115" r="18" class="nda"/><text x="380" y="120" text-anchor="middle" class="lg">+</text>
+<path d="M310 75 C 345 75 350 105 362 110 M310 180 C 345 180 350 125 362 120" class="ln"/>
+<rect x="440" y="95" width="90" height="40" rx="4" class="nd"/><text x="485" y="120" text-anchor="middle">h</text><path d="M398 115H440" class="ln"/>
+<text x="560" y="60" class="sm">h = W·x + (α/r)·B·A·x</text>
+<text x="560" y="90" class="xs">r = 16: A+B = 131k params</text><text x="560" y="106" class="xs">= 0.8% of W</text>
+<text x="560" y="136" class="xs sig">only A and B receive gradients</text><text x="560" y="152" class="xs mut">B starts at zero, so training</text><text x="560" y="166" class="xs mut">begins from the base model exactly</text></g>
+</svg></div><figcaption><b>LoRA on one weight matrix.</b> Optimiser state is needed only for A and B, which is where most of the memory saving comes from.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="loR">Rank r <select id="loR"><option>4</option><option>8</option><option selected>16</option><option>32</option><option>64</option></select></label>
+<label for="loT">Target modules <select id="loT"><option value="qv">q, v (attention)</option><option value="attn">q, k, v, o</option><option value="all" selected>all linear (attn + MLP)</option></select></label></div>
+<div class="kpis" id="loK"></div></div></div>
+<figcaption><b>LoRA parameter calculator</b> for a Llama-3-8B-shaped model (d = 4096, 32 layers, 8 KV heads, MLP width 14,336). Computed exactly as Σ r·(d_in + d_out) over targeted matrices.</figcaption></figure>
+<figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">Approximate GPU memory to fine-tune an 8B model (excluding long-sequence activations)</p>
+<div class="bars" data-unit=" GB"><div data-v="130" data-c="b">Full fine-tune, mixed-precision Adam</div><div data-v="22" data-c="s">LoRA, BF16 base</div><div data-v="10" data-c="g">QLoRA, 4-bit base</div></div></div>
+<figcaption><b>Why PEFT dominates enterprise fine-tuning</b> (rough figures; activations add more with longer sequences and larger batches). QLoRA on an 8B model fits a single 16–24 GB GPU. <span class="tag gpu">Needs external compute</span> for anything beyond tiny models.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
+<label for="lsIn">d_in <select id="lsIn"><option>1024</option><option>2048</option><option selected>4096</option><option>8192</option><option>14336</option></select></label>
+<label for="lsOut">d_out <select id="lsOut"><option>1024</option><option>2048</option><option selected>4096</option><option>8192</option><option>14336</option></select></label>
+<label for="lsR">Rank r <input type="range" id="lsR" min="1" max="256" value="16"><span id="lsRO"></span></label></div>
+<svg id="lsSvg" viewBox="0 0 640 300"></svg><div class="kpis" id="lsK"></div></div></div>
+<figcaption><b>LoRA drawn to scale.</b> The grey rectangle is the frozen weight matrix W (d_out × d_in); the amber strips are the trainable B (d_out × r) and A (r × d_in), drawn with the same pixels-per-dimension (a minimum width keeps tiny ranks visible). At rank 16 the adapter is a sliver of W; even rank 256 stays far smaller.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: LoRA SFT on a 135M model <span class="tag cpu">Laptop · CPU · ~5–15 min</span></h5>
+<pre><code># pip install trl peft datasets transformers
+from datasets import Dataset
+from peft import LoraConfig
+from trl import SFTConfig, SFTTrainer
+rows = [("Invoice #4471 from Acme GmbH, total EUR 1,240.50", '{"vendor":"Acme GmbH","total":1240.50,"currency":"EUR"}'),
+        ("Bill 88-12, Northwind Ltd, amount due GBP 99.00",   '{"vendor":"Northwind Ltd","total":99.00,"currency":"GBP"}')] * 60
+data = Dataset.from_list([{"prompt": [{"role": "user", "content": f"Extract JSON: {x}"}],
+                           "completion": [{"role": "assistant", "content": y}]} for x, y in rows])
+trainer = SFTTrainer(
+    model="HuggingFaceTB/SmolLM2-135M-Instruct", train_dataset=data,
+    args=SFTConfig(output_dir="lora-out", num_train_epochs=2, per_device_train_batch_size=8,
+                   learning_rate=2e-4, logging_steps=5, use_cpu=True, report_to="none"),
+    peft_config=LoraConfig(r=8, lora_alpha=16, target_modules=["q_proj", "v_proj"], task_type="CAUSAL_LM"))
+trainer.train(); trainer.save_model("lora-out")      # saves only the adapter (a few MB)</code></pre>
+<p>The prompt/completion format makes TRL compute loss only on the completion (6.4). The toy data is tiny and repetitive, so the point is the mechanics: watch loss fall, then test on <em>new</em> invoice formats to see overfitting. For a real 1–8B model use a GPU notebook (Colab, Kaggle) with QLoRA via <a href="https://docs.unsloth.ai/">Unsloth</a> or plain TRL + bitsandbytes <span class="tag gpu">Needs external compute</span>.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s format adapter is LoRA rank 16 on attention and MLP layers of an 8B model: about 42M trainable parameters, an 84 MB adapter file.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming few trainable parameters means low compute; the frozen base still runs forward and backward.</div></div>

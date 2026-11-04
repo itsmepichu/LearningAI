@@ -1,0 +1,40 @@
+<p>Attention by itself treats its input as a set: shuffling tokens shuffles outputs identically. Word order must be injected as <dfn>positional information</dfn>.</p>
+<ul>
+<li><b>Absolute positional embeddings</b> (original transformer, BERT, GPT-2): add a learned or sinusoidal vector for position 1, 2, 3… to each token embedding.</li>
+<li><b>RoPE (rotary position embedding)</b>, used by most current LLMs: rotate each query and key vector by an angle proportional to its position. The dot product between a query at position m and a key at position n then depends on m − n, i.e. relative distance. RoPE scaling methods are part of how context windows are extended after training.</li>
+<li><b>ALiBi</b> and similar methods add a distance-based penalty directly to attention scores.</li>
+</ul>
+<p>A transformer <b>block</b> (layer) has two sub-layers, each wrapped in a <dfn>residual connection</dfn> (output = input + sublayer(input)) and normalisation. Residuals give gradients a direct path through all layers, which is what lets models stack 30–100+ blocks. Modern LLMs use <dfn>pre-norm</dfn>: normalise before each sub-layer (RMSNorm is common).</p>
+<p>The <dfn>feed-forward network (FFN / MLP)</dfn> is applied to each position independently: expand the vector (often ~3.5–4× wider), apply a non-linearity (commonly SwiGLU), project back. About two-thirds of a dense model's parameters sit in FFNs, and they are thought to store much of the model's factual associations.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">x (residual stream)</div><div class="nd">RMSNorm</div><div class="nd">Multi-head attention<small>+ RoPE on Q, K</small></div><div class="nd">Add: x + attn</div><div class="nd">RMSNorm</div><div class="nd">FFN<small>expand → SwiGLU → project</small></div><div class="nd">Add: x + ffn</div><div class="nd">Next block</div></div>
+<ol class="steps"><li data-n="0">The <b>residual stream</b>: one vector per token that each block reads from and writes back into.</li><li data-n="1">Normalise so values have a stable scale.</li><li data-n="2">Attention mixes information <em>between</em> positions. Rotary position encoding is applied to queries and keys here.</li><li data-n="3">Add the result to the stream instead of replacing it.</li><li data-n="4">Normalise again.</li><li data-n="5">FFN transforms each position <em>independently</em>: where much of the "knowledge" lives.</li><li data-n="6">Add back to the stream.</li><li data-n="7">Repeat for all L layers (e.g. 32 for an 8B model, 80 for a 70B model). A final norm and the output projection (the "LM head") produce logits.</li></ol></div>
+<figcaption><b>One pre-norm decoder block.</b> A whole LLM is: embedding lookup → L identical blocks → final norm → LM head.</figcaption></figure>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 640 210" role="img" aria-label="RoPE rotates query and key vectors by position">
+<g transform="translate(110,110)"><circle r="80" class="ln dash"/><line x1="-90" y1="0" x2="90" y2="0" class="grid"/><line x1="0" y1="-90" x2="0" y2="90" class="grid"/>
+<line x1="0" y1="0" x2="70" y2="-38" class="lna"/><text x="74" y="-40" class="xs acc">q @ pos 2</text>
+<line x1="0" y1="0" x2="25" y2="-76" class="lns"/><text x="28" y="-80" class="xs sig">k @ pos 5</text>
+<path d="M40 -22 A 46 46 0 0 0 14 -44" class="ln"/><text x="38" y="-48" class="xs">Δ = 3 steps</text></g>
+<g transform="translate(420,110)"><circle r="80" class="ln dash"/><line x1="-90" y1="0" x2="90" y2="0" class="grid"/><line x1="0" y1="-90" x2="0" y2="90" class="grid"/>
+<line x1="0" y1="0" x2="25" y2="-76" class="lna"/><text x="28" y="-80" class="xs acc">q @ pos 102</text>
+<line x1="0" y1="0" x2="-55" y2="-58" class="lns"/><text x="-120" y="-62" class="xs sig">k @ pos 105</text>
+<path d="M14 -44 A 46 46 0 0 0 -31 -33" class="ln"/><text x="-30" y="-15" class="xs">Δ = 3 steps</text></g>
+<text x="320" y="200" text-anchor="middle" class="sm mut">Both pairs are rotated by different absolute amounts, but the angle between q and k is the same, so their dot product depends only on relative distance.</text>
+</svg></div><figcaption><b>Rotary position embedding, one 2-D slice.</b> Real RoPE rotates many 2-D slices of each vector at different frequencies.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
+<label for="tsP">Preset <select id="tsP"><option value="l8" selected>Llama-3-8B-like</option><option value="l3">3B-like</option><option value="l70">70B-like</option><option value="g2">GPT-2 small</option></select></label>
+<label for="tsD">d_model <input type="number" id="tsD" value="4096" min="64" step="64" style="width:90px"></label>
+<label for="tsH">heads <input type="number" id="tsH" value="32" min="1" style="width:70px"></label>
+<label for="tsKv">KV heads <input type="number" id="tsKv" value="8" min="1" style="width:70px"></label>
+<label for="tsL">layers <input type="number" id="tsL" value="32" min="1" style="width:70px"></label>
+<label for="tsF">FFN width <input type="number" id="tsF" value="14336" min="64" step="64" style="width:90px"></label>
+<label for="tsV">vocab <input type="number" id="tsV" value="128256" min="100" style="width:100px"></label>
+<label for="tsFt">FFN type <select id="tsFt"><option value="3">SwiGLU (3 matrices)</option><option value="2">GELU (2 matrices)</option></select></label>
+<label for="tsTie"><input type="checkbox" id="tsTie"> tied input/output embeddings</label>
+<label for="tsS">sequence <input type="number" id="tsS" value="2048" min="1" style="width:80px"></label>
+<label for="tsB">batch <input type="number" id="tsB" value="1" min="1" style="width:60px"></label></div>
+<div class="tw"><table id="tsTbl"></table></div><div class="kpis" id="tsKp"></div></div></div>
+<figcaption><b>Transformer shape and parameter tracer.</b> Exact arithmetic for one pre-norm block with grouped-query attention, ignoring biases (most current LLMs have none) and small norm weights. Choose a preset or edit any field. The 8B preset reproduces the ≈ 8.0B count worked out in the example below; GPT-2 small (with learned position embeddings, 1,024 positions) gives ≈ 124M.</figcaption></figure>
+<div class="box example"><h5>Example: counting an 8B model's parameters</h5><p>Llama-3-8B-style shape: d = 4096, 32 layers, FFN width 14,336, vocabulary 128,256, grouped-query attention with 8 KV heads. Per layer: attention ≈ 4096×4096 (Q) + 2×4096×1024 (K,V) + 4096×4096 (O) ≈ 42M; FFN (SwiGLU has 3 matrices) ≈ 3×4096×14,336 ≈ 176M. 32 layers × 218M ≈ 7.0B, plus input and output embeddings 2×128,256×4096 ≈ 1.05B → ≈ 8.0B.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s provider advertises a 1M-token context; the team measured accuracy dropping on facts placed mid-context beyond about 60k tokens, so retrieval stays the default.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Taking a configured context length as evidence that the model was trained or evaluated to use it well.</div></div>

@@ -1,0 +1,25 @@
+<ul>
+<li><b>Tensor parallelism (TP)</b>: split each layer's matrices across GPUs in one node (e.g. TP = 4 or 8 over NVLink). Needed when weights + KV do not fit one GPU; also reduces per-token latency. Communication every layer.</li>
+<li><b>Pipeline parallelism (PP)</b>: split layers across GPUs or nodes; used for very large models across nodes.</li>
+<li><b>Expert parallelism (EP)</b>: place MoE experts on different GPUs; tokens are routed over the network to their experts (all-to-all communication).</li>
+<li><b>Data parallelism / replicas</b>: run several independent copies behind a load balancer; the main way to scale throughput. Prefix-aware routing sends requests with the same prefix to the same replica to hit its cache.</li>
+<li><b>Disaggregated serving</b>: run prefill and decode on separate GPU pools (compute-heavy vs bandwidth-heavy), transferring the KV cache between them. Lets each pool be sized and tuned independently; used in large-scale deployments (e.g. NVIDIA Dynamo, llm-d, and SGLang/vLLM disaggregation features).</li>
+<li><b>Redundancy counts units, not GPUs</b>: a model split across 4 GPUs with tensor parallelism is one serving unit, and losing any one GPU stops that unit. Plan redundancy as N+1 complete units.</li></ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 260" role="img" aria-label="Multi-GPU serving topology">
+<g class="sm">
+<rect x="10" y="100" width="110" height="50" rx="4" class="nd"/><text x="65" y="122" text-anchor="middle">Gateway /</text><text x="65" y="138" text-anchor="middle">router</text>
+<rect x="160" y="20" width="270" height="100" rx="6" class="fas"/><text x="295" y="40" text-anchor="middle">Replica 1 · TP=4 (one node, NVLink)</text>
+<rect x="175" y="52" width="55" height="50" rx="3" class="nda"/><rect x="238" y="52" width="55" height="50" rx="3" class="nda"/><rect x="301" y="52" width="55" height="50" rx="3" class="nda"/><rect x="364" y="52" width="55" height="50" rx="3" class="nda"/>
+<text x="202" y="82" text-anchor="middle" class="xs">¼ W</text><text x="265" y="82" text-anchor="middle" class="xs">¼ W</text><text x="328" y="82" text-anchor="middle" class="xs">¼ W</text><text x="391" y="82" text-anchor="middle" class="xs">¼ W</text>
+<rect x="160" y="135" width="270" height="100" rx="6" class="fas"/><text x="295" y="155" text-anchor="middle">Replica 2 · TP=4</text>
+<rect x="175" y="167" width="55" height="50" rx="3" class="nda"/><rect x="238" y="167" width="55" height="50" rx="3" class="nda"/><rect x="301" y="167" width="55" height="50" rx="3" class="nda"/><rect x="364" y="167" width="55" height="50" rx="3" class="nda"/>
+<path d="M120 115 L160 70 M120 135 L160 185" class="lna flowing"/>
+<rect x="470" y="20" width="280" height="215" rx="6" class="fvs"/><text x="610" y="40" text-anchor="middle">Disaggregated alternative</text>
+<rect x="490" y="55" width="110" height="70" rx="4" class="ndv"/><text x="545" y="85" text-anchor="middle">Prefill pool</text><text x="545" y="102" text-anchor="middle" class="xs">compute-bound</text>
+<rect x="620" y="55" width="110" height="70" rx="4" class="ndv"/><text x="675" y="85" text-anchor="middle">Decode pool</text><text x="675" y="102" text-anchor="middle" class="xs">bandwidth-bound</text>
+<path d="M600 90H620" class="lns flowing"/><text x="610" y="145" text-anchor="middle" class="xs sig">KV cache transfer (fast interconnect)</text>
+<text x="490" y="180" class="xs">• size each pool to its own bottleneck</text><text x="490" y="196" class="xs">• long prefills no longer stall decoding</text><text x="490" y="212" class="xs">• adds KV transfer cost and complexity</text></g>
+</svg></div><figcaption><b>Two serving topologies.</b> Left: replicas of a tensor-parallel model behind a prefix-aware router. Right: separate prefill and decode pools.</figcaption></figure>
+<div class="box example"><h5>Example: sizing a 70B deployment</h5><p>70B in FP8 ≈ 70 GB of weights. On 80 GB GPUs, TP = 2 leaves ~70 GB for KV across the pair (≈ 210k tokens at 320 KiB/token in BF16); TP = 4 leaves ~215 GB and lowers latency per token. For 600 concurrent 4k-token conversations (≈ 2.4M tokens of KV ≈ 790 GB), you need roughly 4 replicas of TP = 4, before headroom.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor runs its 70B model as two TP=4 units; losing one GPU takes one unit out while the other keeps serving.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Counting each GPU in a tensor-parallel group as an independent server.</div></div>

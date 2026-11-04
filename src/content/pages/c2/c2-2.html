@@ -1,0 +1,22 @@
+<div class="terms">
+<div><b>Probability distribution</b>: how likely each possible outcome is; the probabilities sum to 1. An LLM's output at each step is a distribution over its vocabulary.</div>
+<div><b>Conditional probability</b> P(A | B): probability of A given that B is true. Language modelling is P(next token | previous tokens).</div>
+<div><b>Bayes' theorem</b>: P(A | B) = P(B | A)·P(A) / P(B). It flips a conditional around and forces you to account for the <b>base rate</b> P(A).</div>
+<div><b>Sampling</b>: drawing outcomes at random according to a distribution. Generation samples tokens; evaluation samples test cases from all possible inputs.</div>
+<div><b>Confidence interval (CI)</b>: a range that, under the method's assumptions, would contain the true value in (say) 95% of repeated experiments. It expresses how much your measurement could be off because you only tested a sample.</div>
+</div>
+<p>Two places this bites engineers. First, <b>base rates</b>: a fraud model with 95% recall and a 2% false positive rate sounds excellent, but if only 0.5% of transactions are fraudulent, most flagged transactions are still legitimate. Second, <b>small evaluation sets</b>: "our new prompt scores 86% vs 82%" on 100 test cases is within noise. The 95% CI for 86/100 is roughly 78%–91%.</p>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="bPrior">Base rate (fraud) <input type="range" id="bPrior" min="1" max="200" value="10"><span id="bPriorO"></span></label>
+<label for="bSens">Recall (true positive rate) <input type="range" id="bSens" min="50" max="100" value="95"><span id="bSensO"></span></label>
+<label for="bFpr">False positive rate <input type="range" id="bFpr" min="0" max="200" value="20"><span id="bFprO"></span></label></div>
+<div id="bayesGrid" style="display:grid;grid-template-columns:repeat(50,1fr);gap:1px;max-width:600px"></div>
+<div class="out" id="bayesOut"></div></div></div>
+<figcaption><b>Bayes as counting.</b> 1,000 transactions, one square each. Red = fraud caught, outlined red = fraud missed, amber = legitimate but flagged. P(fraud | flagged) is red ÷ (red + amber). Lower the base rate and watch precision collapse even though the model did not change.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="ciN">Test cases <input type="range" id="ciN" min="20" max="5000" value="100" step="10"><span id="ciNO"></span></label>
+<label for="ciP">Observed pass rate <input type="range" id="ciP" min="1" max="99" value="86"><span id="ciPO"></span></label></div>
+<svg id="ciSvg" viewBox="0 0 600 90"></svg><div class="out" id="ciOut"></div></div></div>
+<figcaption><b>Wilson 95% confidence interval</b> for a pass rate. Halving the interval width needs about four times as many test cases. Use this before claiming one prompt or model is better than another.</figcaption></figure>
+<div class="box example"><h5>Example: is the new model better?</h5><p>Model A passes 412/500 cases (82.4%), model B 431/500 (86.2%). Their 95% intervals are about 78.8–85.5% and 82.9–88.9%, which overlap. Because both models ran on the <em>same</em> cases, a paired test (count cases where only A passed vs only B passed, then a sign/McNemar test) is more powerful and is the right next step (8.3).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s &quot;possible data-leak&quot; detector flags 1 in 2,000 answers with 95% recall and 1% false positives. Bayes says most alerts will be false, so alerts route to a review queue rather than blocking answers automatically.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Reporting a precise-looking confidence interval from a biased sample: it can be precisely wrong about real traffic.</div></div>

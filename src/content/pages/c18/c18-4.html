@@ -1,0 +1,25 @@
+<ul>
+<li><b>Shadow deployment</b>: send a copy of production requests to the new version, discard its outputs (users see the old version), and compare: output differences, judge scores, latency, cost, errors. No user risk; for agents, shadow only with side-effect-free (mocked) tools.</li>
+<li><b>Canary</b>: route a small share of real traffic (1–5%) to the new version, compare its metrics with the baseline on the same time window, and promote automatically if healthy.</li>
+<li><b>Controlled rollout</b>: increase exposure in steps (5% → 25% → 50% → 100%), optionally by tenant cohort (internal users first, then low-risk tenants), with feature flags controlling which prompt/model/index version each cohort gets.</li>
+<li><b>Rollback</b>: one action, minutes not hours: flip the flag or alias back. Requires the previous version to still be deployed and compatible (for indexes, keep the old one warm: 10.7). Practice it.</li>
+<li><b>Rollback does not undo actions</b>: messages sent, refunds issued and tickets created by the bad version stay done. Plan reconciliation or compensation for them. Shadow traffic must never reach write tools: stub or disable side effects in shadow mode.</li></ul>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="ctl"><label for="cnBad" style="font-family:var(--f-display);font-size:.82rem">Candidate <select id="cnBad"><option value="good">healthy</option><option value="bad" selected>regresses quality at 25%</option></select></label><button class="btn primary" id="cnRun" type="button">Start rollout</button><span class="count" id="cnOut"></span></div>
+<canvas id="cnCan" width="640" height="220"></canvas></div></div>
+<figcaption><b>Automated canary analysis</b> (simulated). Traffic share steps up every few "minutes" if the candidate's sampled quality and error rate stay within bounds of the baseline. When a metric breaches its bound, traffic returns to 0% automatically and the release is marked failed.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="row2"><label for="mgQ"><input type="checkbox" id="mgQ" checked> Quality gate passed</label><label for="mgS"><input type="checkbox" id="mgS" checked> Security gate passed</label><label for="mgL"><input type="checkbox" id="mgL" checked> Latency + cost gate passed</label><label for="mgR"><input type="checkbox" id="mgR"> Rollback rehearsed</label><label for="mgX"><input type="checkbox" id="mgX"> inject a quality regression at the next stage</label></div>
+<div id="mgStages" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+<div class="ctl"><button class="btn primary" type="button" id="mgGo">Advance rollout</button><button class="btn" type="button" id="mgRe">Reset</button></div><div class="out" id="mgLog"></div></div></div>
+<figcaption><b>Gates drive the rollout.</b> The candidate advances shadow → 5% → 25% → 50% → 100% only while every gate is ticked; un-tick one and promotion is refused. Inject a regression and the next stage's canary analysis rolls traffic back to 0% automatically (which is only safe if rollback was rehearsed).</figcaption></figure>
+<div class="box example"><h5>Example: rollout policy</h5>
+<pre><code>rollout: kb-assistant r2026.11.3
+steps:   [{weight: 0, shadow: 24h}, {weight: 5, hold: 2h}, {weight: 25, hold: 4h}, {weight: 50, hold: 12h}, {weight: 100}]
+analysis (candidate vs baseline, same window):
+  error_rate:          max_delta: +0.3pp
+  p95_ttft_ms:         max_ratio: 1.15
+  groundedness_sample: min_delta: -1.5pp   (500 sampled traces, judge@v4)
+  thumbs_down_rate:    max_delta: +1.0pp
+on_failure: set weight 0, page owner, attach comparison report</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor shadows retrieval and generation but never ticket writes; a canary on 3 tenants rolls back automatically if unsupported answers rise.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Sending shadow traffic to a real write tool.</div></div>

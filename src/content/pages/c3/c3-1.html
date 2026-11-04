@@ -1,0 +1,31 @@
+<div class="terms">
+<div><b>Supervised learning</b>: learn from input–output pairs (<b>labels</b>). "Email → spam/not spam", "house features → price".</div>
+<div><b>Unsupervised learning</b>: find structure in inputs without labels: groups (clustering), compressed representations, anomalies.</div>
+<div><b>Self-supervised learning</b>: create labels from the data itself, e.g. hide the next word and predict it. LLM pretraining is self-supervised, which is why it can use trillions of tokens without human labelling.</div>
+<div><b>Reinforcement learning (RL)</b>: an <b>agent</b> takes <b>actions</b> in an <b>environment</b>, receives <b>rewards</b>, and learns a <b>policy</b> that maximises total reward. Used in RLHF and reasoning-model training (6.5).</div>
+</div>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 780 230" role="img" aria-label="Three learning paradigms">
+<g class="sm">
+<rect x="10" y="10" width="245" height="210" rx="6" class="fsunk"/><text x="132" y="34" text-anchor="middle" class="lg acc">Supervised</text>
+<rect x="30" y="52" width="80" height="30" rx="4" class="nd"/><text x="70" y="72" text-anchor="middle" class="xs">email text</text>
+<rect x="160" y="52" width="80" height="30" rx="4" class="nds"/><text x="200" y="72" text-anchor="middle" class="xs">label: spam</text>
+<path d="M110 67H160" class="ln"/>
+<rect x="60" y="110" width="140" height="40" rx="4" class="nda"/><text x="130" y="135" text-anchor="middle">Model</text>
+<path d="M70 82 L110 110 M200 82 L150 110" class="ln dash"/>
+<text x="132" y="180" text-anchor="middle" class="xs mut">minimise error vs. known answers</text><text x="132" y="196" text-anchor="middle" class="xs mut">e.g. classifier, regressor</text>
+<rect x="268" y="10" width="245" height="210" rx="6" class="fsunk"/><text x="390" y="34" text-anchor="middle" class="lg sig">Unsupervised</text>
+<circle cx="320" cy="80" r="5" class="fa"/><circle cx="332" cy="92" r="5" class="fa"/><circle cx="312" cy="98" r="5" class="fa"/><circle cx="340" cy="74" r="5" class="fa"/>
+<circle cx="440" cy="70" r="5" class="fs"/><circle cx="455" cy="85" r="5" class="fs"/><circle cx="432" cy="88" r="5" class="fs"/>
+<circle cx="380" cy="140" r="5" class="fv"/><circle cx="395" cy="150" r="5" class="fv"/><circle cx="370" cy="155" r="5" class="fv"/><circle cx="388" cy="132" r="5" class="fv"/>
+<ellipse cx="326" cy="86" rx="28" ry="22" class="ln dash"/><ellipse cx="443" cy="80" rx="24" ry="20" class="ln dash"/><ellipse cx="383" cy="145" rx="26" ry="20" class="ln dash"/>
+<text x="390" y="196" text-anchor="middle" class="xs mut">no labels: discover groups/structure</text>
+<rect x="526" y="10" width="245" height="210" rx="6" class="fsunk"/><text x="648" y="34" text-anchor="middle" class="lg simc">Reinforcement</text>
+<rect x="560" y="60" width="80" height="40" rx="4" class="ndv"/><text x="600" y="85" text-anchor="middle">Agent</text>
+<rect x="660" y="60" width="95" height="40" rx="4" class="nd"/><text x="707" y="85" text-anchor="middle">Environment</text>
+<path d="M640 70 H660" class="lna"/><text x="650" y="56" text-anchor="middle" class="xs">action</text>
+<path d="M707 100 C707 140 600 140 600 100" class="lns"/><text x="653" y="150" text-anchor="middle" class="xs">state + reward</text>
+<text x="648" y="196" text-anchor="middle" class="xs mut">learn by trial, maximise reward</text></g>
+</svg></div><figcaption><b>Three ways to learn.</b> The difference is the feedback signal: correct answers, no answers, or a score for actions taken.</figcaption></figure>
+<div class="box example"><h5>Example: one company, three paradigms</h5><p>An e-commerce site trains a <b>supervised</b> model to predict return probability from order data, uses <b>unsupervised</b> clustering to discover customer segments for marketing, and uses <b>RL-style</b> bandit algorithms to choose which recommendation layout to show, rewarded by clicks.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor uses supervised learning to route tickets, unsupervised clustering to discover new complaint themes, and never uses reinforcement learning against live customer accounts: any reward-driven tuning happens in a sandbox.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Calling a multi-step LLM agent &quot;reinforcement learning&quot;: nothing is learning from reward unless weights are actually updated from a reward signal.</div></div>

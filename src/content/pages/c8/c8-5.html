@@ -1,0 +1,18 @@
+<p>Measure each stage separately so you know <em>where</em> a failure comes from.</p>
+<ul><li><b>Retrieval evaluation</b>: given a query, did the retriever return the relevant chunks? Needs relevance labels per query; metrics Recall@k, MRR, nDCG (9.7). Independent of the LLM.</li>
+<li><b>Answer evaluation</b>: given the retrieved context, is the answer correct, grounded and complete? Evaluate with <em>fixed</em> context too ("oracle context") to separate generation errors from retrieval errors.</li>
+<li><b>Agent task evaluation</b>: did the agent achieve the goal in the environment, efficiently and safely? Measured on the trajectory and final state, not just the final message (8.8).</li></ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 720 230" role="img" aria-label="Diagnosis matrix for retrieval and answer quality">
+<g class="sm">
+<rect x="140" y="30" width="270" height="85" class="fgs"/><rect x="410" y="30" width="270" height="85" class="fss"/>
+<rect x="140" y="115" width="270" height="85" class="fss"/><rect x="410" y="115" width="270" height="85" class="fbs"/>
+<text x="275" y="22" text-anchor="middle">Answer good</text><text x="545" y="22" text-anchor="middle">Answer bad</text>
+<text x="130" y="77" text-anchor="end">Retrieval good</text><text x="130" y="162" text-anchor="end">Retrieval bad</text>
+<text x="275" y="68" text-anchor="middle" class="okc">Working</text><text x="275" y="86" text-anchor="middle" class="xs">keep as regression case</text>
+<text x="545" y="68" text-anchor="middle" class="sig">Generation problem</text><text x="545" y="86" text-anchor="middle" class="xs">prompt, model, context order, conflicting chunks</text>
+<text x="275" y="153" text-anchor="middle" class="sig">Lucky or parametric</text><text x="275" y="171" text-anchor="middle" class="xs">model knew it anyway; fragile; check groundedness</text>
+<text x="545" y="153" text-anchor="middle" class="bad">Retrieval problem</text><text x="545" y="171" text-anchor="middle" class="xs">chunking, embeddings, filters, query rewriting</text></g>
+</svg></div><figcaption><b>Diagnose before fixing.</b> Teams often switch to a bigger LLM when the real issue is that the right chunk never reached it.</figcaption></figure>
+<div class="box example"><h5>Example</h5><p>Illustrative numbers. An HR assistant answers 74% of questions correctly. Stage evaluation shows Recall@5 = 79%; with oracle context, answer accuracy is 93%. Most failures are retrieval. Adding hybrid search and a reranker raises Recall@5 to 92% and end-to-end accuracy to 86%, with no LLM change.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>When Harbor misses a question, engineers rerun it with the gold passage supplied. If it then succeeds, the fault is retrieval; if not, generation.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming high retrieval recall means the answer used the retrieved text correctly.</div></div>

@@ -1,0 +1,12 @@
+<div class="tw"><table>
+<tr><th>Family</th><th>Attention</th><th>Trained to</th><th>Good for</th><th>Examples</th></tr>
+<tr><td><b>Encoder-only</b></td><td>Bidirectional: every token sees every token</td><td>Fill in masked tokens</td><td>Understanding: classification, NER, <b>embeddings, rerankers</b></td><td>BERT, RoBERTa, ModernBERT, most embedding models</td></tr>
+<tr><td><b>Decoder-only</b></td><td>Causal: only earlier tokens</td><td>Predict the next token</td><td>Generation, chat, code, agents; everything via prompting</td><td>GPT family, Llama, Qwen, Mistral, Gemma, Claude</td></tr>
+<tr><td><b>Encoder–decoder</b></td><td>Encoder bidirectional; decoder causal + cross-attention to encoder</td><td>Map input sequence to output sequence</td><td>Translation, summarisation, speech recognition</td><td>T5, BART, Whisper</td></tr>
+</table></div>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 210" role="img" aria-label="Attention mask patterns for three architectures">
+<g id="maskViz"></g>
+</svg></div><figcaption><b>Who can attend to whom.</b> Filled cell = row token may attend to column token. Decoder-only won for general-purpose models because one simple objective scales on any text and every task can be phrased as continuation.</figcaption></figure>
+<div class="box example"><h5>Example: picking architectures in one RAG system</h5><p>A bi-encoder (encoder-only) embeds documents and queries for fast vector search; a cross-encoder reranker (encoder-only, reading query and passage together) re-scores the top 50; a decoder-only LLM writes the answer. Three transformers, three architectures, each matched to its job.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor uses an encoder (bi-encoder) for retrieval, an encoder cross-encoder for reranking, and a decoder-only model to write answers.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Mean-pooling a generic encoder&#x27;s outputs and assuming the result is a good sentence embedding.</div></div>

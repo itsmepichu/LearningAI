@@ -1,0 +1,33 @@
+<p>Vendor benchmarks use clean public datasets, single tenants, no filters and no writes. Your benchmark must reproduce your conditions:</p>
+<ul>
+<li><b>Realistic queries</b>: sampled from logs (or written by users), with relevance labels (9.7), in the real mix of lengths, languages and filters.</li>
+<li><b>Realistic filters</b>: permission filters that are selective (a user sees 2% of the corpus) behave very differently from no filter in many ANN engines.</li>
+<li><b>Concurrent updates</b>: run the query load while upserts and deletes stream in at production rates; HNSW graphs and segment merges can hurt latency and recall during heavy writes.</li>
+<li><b>Measure together</b>: recall vs exact search, end-to-end Recall@k vs labels, latency percentiles (p50/p95/p99) at target QPS, resource usage, and cost per million queries.</li>
+<li><b>Scale steps</b>: run at 10%, 30%, 100% of the target corpus to see the trend; do not extrapolate from a 1% sample alone.</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 640 280" role="img" data-chart aria-label="Recall vs latency curves under different conditions">
+<rect x="60" y="20" width="540" height="220" class="fsunk"/>
+<g class="xs mut"><text x="60" y="256">0</text><text x="330" y="256" text-anchor="middle">p95 latency (ms) →</text><text x="600" y="256" text-anchor="end">40</text><text x="52" y="24" text-anchor="end">1.0</text><text x="52" y="240" text-anchor="end">0.7</text></g>
+<path d="M75 170 C 120 80, 200 50, 590 34" class="lna"/><text x="470" y="30" class="xs acc">no filter, no writes</text>
+<path d="M90 210 C 150 130, 260 80, 590 60" class="lns"/><text x="440" y="82" class="xs sig">2% selective ACL filter</text>
+<path d="M110 228 C 190 170, 320 110, 590 88" class="lnb"/><text x="420" y="122" class="xs bad">filter + 500 upserts/s</text>
+<line x1="60" y1="73" x2="600" y2="73" class="ln dash"/><text x="66" y="68" class="xs">target recall 0.95</text>
+<circle cx="230" cy="63" r="5" class="fa"/><circle cx="430" cy="70" r="5" class="fs"/>
+</svg></div><figcaption><b>The same index under three conditions</b> (illustrative shape). Meeting 0.95 recall costs about 10 ms in the clean benchmark but ~25 ms with selective filters, and is not reached at all during heavy writes without tuning. Only the bottom curve predicts production.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: ANN benchmark at 1M vectors <span class="tag cpu">Laptop · CPU · 16 GB RAM</span></h5>
+<pre><code>import numpy as np, faiss, time
+d, n, nq = 384, 1_000_000, 1_000
+rng = np.random.default_rng(0)
+xb = rng.standard_normal((n, d), dtype=np.float32); faiss.normalize_L2(xb)       # ~1.5 GB
+xq = rng.standard_normal((nq, d), dtype=np.float32); faiss.normalize_L2(xq)
+flat = faiss.IndexFlatIP(d); flat.add(xb); _, gt = flat.search(xq, 10)        # exact ground truth
+hnsw = faiss.IndexHNSWFlat(d, 16, faiss.METRIC_INNER_PRODUCT); hnsw.hnsw.efConstruction = 80
+t = time.time(); hnsw.add(xb); print(f"build {time.time()-t:.0f}s")               # several minutes on CPU
+for ef in (16, 32, 64, 128, 256):
+    hnsw.hnsw.efSearch = ef; t = time.time(); _, I = hnsw.search(xq, 10); dt = (time.time()-t)/nq*1000
+    rec = np.mean([len(set(I[i]) &amp; set(gt[i]))/10 for i in range(nq)])
+    print(f"efSearch={ef:4}  recall@10={rec:.3f}  {dt:.2f} ms/query")</code></pre>
+<p><b>Limitation:</b> random vectors are harder for ANN than real embeddings (no cluster structure), so recall here is pessimistic, and the test has no filters, writes or network. It does teach the efSearch curve and memory behaviour. Real-quality benchmarks need your embedded corpus.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s benchmark replays 2,000 logged queries with real ACL filters while 5% of the corpus is updated, and reports p95 latency and Recall@10 together.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Benchmarking with repeated identical queries, which mostly measures the cache.</div></div>

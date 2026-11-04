@@ -1,0 +1,58 @@
+<div class="terms">
+<div><b>Token</b>: the unit of text a model reads and writes. Usually a word or a piece of a word ("unbeliev" + "ably"). In English prose, 1 token is roughly 4 characters or 0.75 words on average; other languages, code, numbers and identifiers differ widely, so always count with the model's own tokenizer rather than converting from words. Prices, speed and limits are all counted in tokens.</div>
+<div><b>Vocabulary</b>: the fixed list of tokens a model knows, typically 32,000–260,000 entries. Each has an integer ID.</div>
+<div><b>Parameter (weight)</b>: one learned number inside the model. An "8B model" has about 8 billion of them. Parameters store everything the model learned.</div>
+<div><b>Embedding</b>: a list of numbers (a vector) that represents a token or a piece of text. Similar meanings get nearby vectors. An embedding is not a compressed copy of the text: you cannot reliably decode the original document from it.</div>
+<div><b>Context window</b>: the maximum number of tokens (input plus output) the model can consider at once, for example 128,000. Anything outside it is invisible to the model.</div>
+<div><b>Training</b>: adjusting parameters so predictions improve. Expensive, done rarely. <b>Inference</b>: using fixed parameters to produce outputs. Cheap per call, done millions of times. Prompting and chatting change only the input, never the weights: a conversation does not retrain the model, and "memory" in chat products is application storage (7.5).</div>
+</div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Text<small>"Refund my order"</small></div><div class="nd">Tokens<small>Ref · und · ␣my · ␣order</small></div><div class="nd">Token IDs<small>[4032, 1263, 856, 2015]</small></div><div class="nd">Embeddings<small>4 × 4096 numbers</small></div><div class="nd">Transformer layers<small>billions of parameters</small></div><div class="nd">Logits → probabilities<small>one per vocab entry</small></div><div class="nd">Next token<small>"␣please"</small></div></div>
+<ol class="steps">
+<li data-n="0">Your application sends text. Everything that will influence the answer (system instructions, history, retrieved documents) must be in this text, because the model has no other input.</li>
+<li data-n="1">A <b>tokenizer</b> splits the text into tokens using rules learned before model training (chapter 5.1). The same text can be a different number of tokens for different models.</li>
+<li data-n="2">Each token is replaced by its integer ID in the vocabulary. This list of IDs, plus the room for the output, must fit in the context window.</li>
+<li data-n="3">Each ID selects a row from an <b>embedding table</b> (itself part of the parameters), giving one vector per token.</li>
+<li data-n="4">The vectors flow through dozens of transformer layers. Each layer mixes information between positions (attention) and transforms each position (feed-forward). This is where almost all parameters and computation live.</li>
+<li data-n="5">The final vector at the last position is turned into one score (<b>logit</b>) per vocabulary token, then into probabilities with softmax.</li>
+<li data-n="6">A decoding rule picks one token (chapter 5.6). It is appended to the input and the loop repeats until a stop condition. That loop is <b>inference</b>.</li>
+</ol></div><figcaption><b>One pass through a model.</b> Token IDs shown are illustrative. During <em>training</em> the same forward pass runs, then the error against the real next token is pushed backward to adjust the parameters.</figcaption></figure>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 190" role="img" aria-label="Training versus inference lanes">
+<rect x="10" y="15" width="740" height="75" rx="5" class="fss"/><rect x="10" y="102" width="740" height="75" rx="5" class="fas"/>
+<text x="24" y="38" class="lg sig">Training</text><text x="24" y="56" class="xs mut">weeks · thousands of GPUs</text><text x="24" y="70" class="xs mut">parameters change</text>
+<text x="24" y="125" class="lg acc">Inference</text><text x="24" y="143" class="xs mut">milliseconds–seconds per call</text><text x="24" y="157" class="xs mut">parameters frozen</text>
+<g class="sm">
+<rect x="200" y="32" width="110" height="40" rx="4" class="nd"/><text x="255" y="57" text-anchor="middle">Batch of text</text>
+<rect x="340" y="32" width="110" height="40" rx="4" class="nd"/><text x="395" y="57" text-anchor="middle">Forward pass</text>
+<rect x="480" y="32" width="110" height="40" rx="4" class="nd"/><text x="535" y="57" text-anchor="middle">Loss vs truth</text>
+<rect x="620" y="32" width="115" height="40" rx="4" class="nds"/><text x="677" y="57" text-anchor="middle">Update weights</text>
+<path d="M310 52H340M450 52H480M590 52H620" class="lns"/><path d="M677 32 C677 10 395 10 395 32" class="lns dash"/>
+<rect x="200" y="119" width="110" height="40" rx="4" class="nd"/><text x="255" y="144" text-anchor="middle">User prompt</text>
+<rect x="340" y="119" width="110" height="40" rx="4" class="nd"/><text x="395" y="144" text-anchor="middle">Forward pass</text>
+<rect x="480" y="119" width="110" height="40" rx="4" class="nd"/><text x="535" y="144" text-anchor="middle">Pick token</text>
+<rect x="620" y="119" width="115" height="40" rx="4" class="nda"/><text x="677" y="144" text-anchor="middle">Append &amp; repeat</text>
+<path d="M310 139H340M450 139H480M590 139H620" class="lna flowing"/><path d="M677 159 C677 182 395 182 395 159" class="lna dash"/></g>
+</svg></div><figcaption><b>Same forward pass, different purpose.</b> Training loops over data to change weights. Inference loops over output tokens with weights fixed. Most engineers only ever run inference, but understanding training explains model behaviour.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid">
+<label for="tcText" style="display:block">Paste any text to estimate its tokens</label>
+<textarea id="tcText">Hi team, please summarise the attached refund policy for EU customers and list the exceptions for annual plans. Reference: INV-2291, order A-1043.</textarea>
+<div class="ctl"><span class="count" id="tcEst" style="margin-left:0"></span><button class="btn" type="button" id="tcUse">Use as input tokens</button></div>
+<div class="row2">
+<label for="tcIn">Input tokens / request <input type="range" id="tcIn" min="100" max="20000" step="100" value="3000"><span id="tcInO"></span></label>
+<label for="tcOut">Output tokens / request <input type="range" id="tcOut" min="20" max="4000" step="10" value="350"><span id="tcOutO"></span></label>
+<label for="tcReq">Requests per day <input type="range" id="tcReq" min="2" max="6.5" step="0.05" value="4"><span id="tcReqO"></span></label>
+<label for="tcPin">Input price ($ / M tokens) <input type="range" id="tcPin" min="0.05" max="15" step="0.05" value="1"><span id="tcPinO"></span></label>
+<label for="tcPout">Output price ($ / M tokens) <input type="range" id="tcPout" min="0.1" max="60" step="0.1" value="4"><span id="tcPoutO"></span></label>
+<label for="tcDec">Decode speed (tokens/s) <input type="range" id="tcDec" min="5" max="200" value="60"><span id="tcDecO"></span></label>
+</div><div class="kpis" id="tcK"></div></div></div>
+<figcaption><b>Token, cost and latency estimator.</b> The text estimate is a rough heuristic (about 4 characters per token for English prose, fewer for code, digits and non-Latin scripts); always confirm with the model's real tokenizer. Latency assumes prefill at 10,000 tokens/s and the decode speed you set. Prices are illustrative inputs.</figcaption></figure>
+<div class="box example"><h5>Example: estimating cost before writing code</h5><p>A summariser receives 3,000-word documents (≈ 4,000 tokens) and writes 200-word summaries (≈ 270 tokens). At an illustrative price of $1 per million input tokens and $4 per million output tokens, one summary costs 4,000 × 1/10⁶ + 270 × 4/10⁶ ≈ <b>$0.005</b>. 100,000 documents a month ≈ $500. Output tokens are usually priced higher and generated much more slowly than input tokens are read, which is why output length dominates latency.</p></div>
+<div class="box lab"><h5>Laptop lab: see tokens <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained("gpt2")          # small download, no model weights
+for s in ["Refund my order", "Unbelievably", "Rückerstattung", "退款", "    def f(x):"]:
+    ids = tok.encode(s)
+    print(f"{s!r:22} {len(ids):2} tokens  {tok.convert_ids_to_tokens(ids)}")</code></pre>
+<p>Notice that non-English text and code whitespace take more tokens per character. Try a different tokenizer (for example <code>"Qwen/Qwen2.5-0.5B"</code>) and compare counts for the same strings.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A Harbor request carries a 900-token system prompt, about 2,500 tokens of policy passages, 600 tokens of history and an 800-token output reserve. The team budgets with the real tokenizer and has found the same German policy costs about 30% more tokens than its English version.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming a long chat is teaching the model, or that a word count is a token count. Neither the weights nor the token budget work that way.</div></div>

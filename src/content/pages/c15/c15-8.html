@@ -1,0 +1,29 @@
+<div class="tw"><table>
+<tr><th>Test</th><th>Question</th><th>Shape</th></tr>
+<tr><td><b>Load</b></td><td>Do we meet SLOs at expected peak?</td><td>Ramp to forecast peak, hold 30–60 min</td></tr>
+<tr><td><b>Stress</b></td><td>Where and how do we break? Does shedding work?</td><td>Ramp beyond peak until SLOs fail; observe degradation</td></tr>
+<tr><td><b>Soak</b></td><td>Leaks, cache growth, fragmentation, slow degradation?</td><td>Moderate load for 8–24 h</td></tr>
+<tr><td><b>Spike</b></td><td>Do autoscaling and queues absorb sudden bursts?</td><td>Jump from 20% to 150% in one minute</td></tr>
+<tr><td><b>Failure / chaos</b></td><td>Do breakers, retries and failover behave?</td><td>Inject provider errors, latency, node loss, region loss under load</td></tr>
+</table></div>
+<p><b>Realistic distributions</b> matter more for AI than for typical APIs. Prompt and output lengths are heavy-tailed (most short, a few very long); a test with fixed 500-token prompts underestimates KV-cache pressure and tail latency. Replay sampled production traces (lengths, tenants, features, cache-hit rates), use realistic arrival processes (bursty, not evenly spaced), and include agent sessions with many sequential calls. For hosted APIs, test against a mock that reproduces latency distributions and rate limits, so load tests do not cost a fortune or hit provider limits.</p>
+<p><b>Open vs closed loop.</b> A closed-loop tester (N virtual users, each waiting for its response before sending the next) slows down when the service slows down, so it under-reports latency: this is called <dfn>coordinated omission</dfn>. An open-loop tester sends requests at a set arrival rate regardless of responses (k6's <code>ramping-arrival-rate</code> executor in the lab below), which exposes queue build-up. Tests against a mocked model validate orchestration, queues and gateways only; real model-serving capacity needs its own benchmark (14.7).</p>
+<figure class="fig"><div class="stage"><svg id="ltHist" viewBox="0 0 640 200" role="img" aria-label="Heavy-tailed prompt length distribution"></svg></div>
+<figcaption><b>Prompt lengths: real vs naive test</b> (log-normal sample, generated in your browser). The naive test uses one fixed length at the median; the real distribution has a long tail where the expensive requests live: here the top 10% of requests account for close to 40% of all tokens.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: load-test a mock LLM endpoint with k6 <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>// mock: a tiny server that sleeps TTFT + n_tokens*ITL and streams (write one in FastAPI), or point at llama-server
+// loadtest.js  — run with:  k6 run loadtest.js
+import http from 'k6/http'; import { check } from 'k6';
+export const options = { scenarios: { ramp: { executor: 'ramping-arrival-rate', startRate: 2, timeUnit: '1s',
+  preAllocatedVUs: 200, stages: [{ target: 20, duration: '2m' }, { target: 20, duration: '5m' }, { target: 60, duration: '2m' }] } },
+  thresholds: { http_req_duration: ['p(95)&lt;8000'], http_req_failed: ['rate&lt;0.01'] } };
+const lens = [80, 120, 200, 400, 900, 3000];                     // crude heavy-tailed mix
+export default function () {
+  const n = lens[Math.floor(Math.random() ** 2 * lens.length)];
+  const r = http.post('http://localhost:8080/v1/chat/completions', JSON.stringify({
+    messages: [{ role: 'user', content: 'x '.repeat(n) + 'Summarise.' }], max_tokens: 64 }),
+    { headers: { 'Content-Type': 'application/json' }, timeout: '30s' });
+  check(r, { 'status 200': (x) => x.status === 200 });
+}</code></pre>
+<p><b>Limitation:</b> your laptop is both load generator and server, so absolute numbers mean little. The point is to practise realistic scenarios, thresholds and reading percentile output.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s load test replays logged prompt lengths with an open-loop arrival rate and a mocked model, then benchmarks the real inference pool separately; the two reports are labelled differently.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Testing with empty prompts and one-token answers.</div></div>

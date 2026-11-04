@@ -1,0 +1,17 @@
+<p>Capacity planning starts with a chain of multiplications. Each assumption (pages per document, tokens per page, chunk size, overlap, embedding dimensions, precision, replicas) changes the result several-fold, so measure them on a sample of your real corpus.</p>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2">
+<label for="czD">Documents (millions) <input type="range" id="czD" min="0.1" max="50" step="0.1" value="10"><span id="czDO"></span></label>
+<label for="czP">Avg pages / document <input type="range" id="czP" min="1" max="50" value="6"><span id="czPO"></span></label>
+<label for="czT">Tokens / page <input type="range" id="czT" min="200" max="900" step="50" value="500"><span id="czTO"></span></label>
+<label for="czC">Chunk size (tokens) <input type="range" id="czC" min="128" max="1024" step="32" value="512"><span id="czCO"></span></label>
+<label for="czO">Overlap % <input type="range" id="czO" min="0" max="30" value="10"><span id="czOO"></span></label>
+<label for="czDim">Embedding dims <select id="czDim"><option>384</option><option selected>768</option><option>1024</option><option>1536</option><option>3072</option></select></label>
+<label for="czB">Vector precision <select id="czB"><option value="4">float32</option><option value="2">float16</option><option value="1" selected>int8</option><option value="0.125">binary</option></select></label>
+<label for="czR">Replicas <input type="range" id="czR" min="1" max="4" value="2"><span id="czRO"></span></label>
+</div>
+<div class="kpis" id="czK"></div>
+<div class="bars" id="czBars"></div></div></div>
+<figcaption><b>Corpus sizing calculator.</b> Index overhead assumes HNSW with M = 16 (≈ 128 bytes per vector for links). Embedding cost uses an illustrative $0.02 per million tokens for a hosted embedding API; self-hosted GPU throughput assumes ~2,000 chunks/s per GPU for a base-size model. Raw text storage assumes ~4 bytes per token plus metadata.</figcaption></figure>
+<div class="box example"><h5>Example: the default numbers</h5><p>10M documents × 6 pages × 500 tokens = 30B tokens. With 512-token chunks and 10% overlap that is ≈ 65M chunks. At 768 dims in float32 that is 200 GB of vectors; int8 brings it to 50 GB, plus ≈ 8 GB of graph links, ×2 replicas ≈ 116 GB of RAM across the cluster. Embedding the ≈ 33B chunk tokens (overlap included) once costs ≈ $670 at the assumed API price, and every embedding-model change repeats that cost (10.7).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s 4.2M documents become ≈ 38M chunks; at 768 dims in int8 that is ≈ 29 GB of vectors per replica before graph links and metadata.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating raw vector bytes as total storage or RAM demand.</div></div>

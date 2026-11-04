@@ -1,0 +1,31 @@
+<p><b>Error analysis</b> means reading failures and grouping them. Pull 100 errors, tag each with a cause ("short text", "non-English", "label wrong", "new product"), and count. The biggest bucket tells you what to fix next. Also compute metrics per <dfn>slice</dfn> (segment of the data); an average can hide a group where the model fails badly.</p>
+<p><b>Hyperparameters</b> are settings chosen before training (learning rate, tree depth, regularisation strength). Tune them on the validation set only, using grid search, random search (usually better per trial), or Bayesian optimisation (Optuna). Use cross-validation when data is small. Touch the test set once.</p>
+<p><b>Distribution shift</b> is when production data differs from training data. <dfn>Covariate shift</dfn>: inputs change (new customer region). <dfn>Label/prior shift</dfn>: class balance changes (fraud spikes). <dfn>Concept drift</dfn>: the relationship itself changes (new fraud tactics). Detect it by monitoring input statistics and, when labels arrive, performance (17.7).</p>
+<figure class="fig"><div class="stage">
+<div class="cols2"><div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Accuracy by slice (illustrative)</p>
+<div class="bars" data-unit="%" data-max="100"><div data-v="94">English, long</div><div data-v="92">English, short</div><div data-v="81" data-c="s">Spanish</div><div data-v="63" data-c="b">Mixed-language</div><div data-v="58" data-c="b">New product line</div></div></div>
+<div><svg viewBox="0 0 300 180" role="img" aria-label="Training vs production input distribution">
+<path id="shiftA" class="lna"/><path id="shiftB" class="lns"/>
+<line x1="10" y1="160" x2="290" y2="160" class="grid"/>
+<text x="20" y="20" class="xs acc">training</text><text x="200" y="20" class="xs sig">production</text>
+<text x="150" y="176" text-anchor="middle" class="xs mut">message length (tokens)</text></svg></div></div>
+</div><figcaption><b>Two diagnostics.</b> Left: slices reveal where the model fails, which the overall 89% average hides. Right: covariate shift in input length after a product change; the model sees a range it was rarely trained on.</figcaption></figure>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Sample errors</div><div class="nd">Tag causes</div><div class="nd">Count buckets</div><div class="nd">Fix biggest<small>data, features, model</small></div><div class="nd">Re-evaluate<small>same test set + slices</small></div></div>
+<ol class="steps"><li data-n="0">Pull a random sample of failures from validation (not hand-picked ones).</li><li data-n="1">Write one cause per failure. Invent categories as you go, then merge.</li><li data-n="2">Rank buckets by count × business impact.</li><li data-n="3">The fix is often data (labels, coverage), not a bigger model.</li><li data-n="4">Check the fix did not break other slices. This loop is exactly how LLM prompts and RAG systems are improved too (8, 17.9).</li></ol></div>
+<figcaption><b>The error-analysis loop.</b></figcaption></figure>
+<div class="box example"><h5>Example</h5><p>A document classifier drops from 92% to 84% in March. Input monitoring shows the share of scanned PDFs rose from 5% to 30% after a new client onboarded; OCR text is noisy. Error analysis confirms 70% of new errors are scanned documents. Fix: improve OCR and add scanned samples to training, then add a "scanned" slice to the dashboard.</p></div>
+<div class="box lab"><h5>Laptop lab: tuning with Optuna <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># pip install optuna
+import optuna
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import HistGradientBoostingClassifier
+X, y = load_breast_cancer(return_X_y=True)
+def objective(t):
+    m = HistGradientBoostingClassifier(learning_rate=t.suggest_float("lr", 0.01, 0.5, log=True),
+                                       max_depth=t.suggest_int("depth", 2, 8), random_state=0)
+    return cross_val_score(m, X, y, cv=5, scoring="f1").mean()
+study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=0))
+study.optimize(objective, n_trials=30); print(study.best_params, round(study.best_value, 4))</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>When Harbor launched in-app chat, short chat messages dropped router accuracy by 9 points. Slicing errors by channel found it within a day, and 600 labelled chat examples fixed it.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating input drift as proof that accuracy fell; it is a reason to measure, not a verdict.</div></div>

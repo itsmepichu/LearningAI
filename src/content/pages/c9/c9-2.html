@@ -1,0 +1,21 @@
+<p>RAG has an <b>offline</b> path (prepare documents) and an <b>online</b> path (answer a question). Each stage has design choices that affect quality.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Ingest<small>connectors, crawl</small></div><div class="nd">Parse<small>PDF, HTML, DOCX</small></div><div class="nd">Clean<small>boilerplate, headers</small></div><div class="nd">Chunk<small>~200–800 tokens</small></div><div class="nd">Embed<small>vector per chunk</small></div><div class="nd">Index<small>vector + keyword + metadata</small></div><div class="nd">Retrieve<small>top-k for query</small></div><div class="nd">Generate<small>answer + citations</small></div></div>
+<ol class="steps">
+<li data-n="0"><b>Ingest</b>: pull documents from sources (SharePoint, Confluence, S3, databases, websites) with IDs, timestamps, owners and permissions.</li>
+<li data-n="1"><b>Parse</b>: extract text and structure (headings, tables, lists, page numbers). Parsing quality caps everything downstream (10.3).</li>
+<li data-n="2"><b>Clean</b>: remove navigation menus, repeated headers and footers, cookie banners; normalise whitespace and encodings.</li>
+<li data-n="3"><b>Chunk</b>: split into passages small enough to be specific but large enough to be self-contained. Respect structure (split on headings and paragraphs), add small overlaps, and prepend context such as the document title and section path.</li>
+<li data-n="4"><b>Embed</b>: run each chunk through an embedding model to get a vector. Record the model name and version; changing it requires re-embedding (10.7).</li>
+<li data-n="5"><b>Index</b>: store vectors in an ANN index, text in a keyword index, and metadata (source, date, ACL, language) for filtering.</li>
+<li data-n="6"><b>Retrieve</b> (online): embed the query, search, filter by permissions, fuse, rerank.</li>
+<li data-n="7"><b>Generate</b>: put the top chunks with IDs into a prompt instructing the model to answer only from them and cite chunk IDs, or to abstain.</li>
+</ol></div><figcaption><b>The RAG pipeline.</b> Stages 1–6 run offline (continuously at scale, chapter 10); 7–8 run per question in a few hundred milliseconds plus generation time.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="chSize">Chunk size (words) <input type="range" id="chSize" min="15" max="120" value="40"><span id="chSizeO"></span></label>
+<label for="chOv">Overlap (words) <input type="range" id="chOv" min="0" max="30" value="8"><span id="chOvO"></span></label>
+<label for="chMode">Strategy <select id="chMode"><option value="fixed">fixed-size</option><option value="para">paragraph-aware</option></select></label></div>
+<div id="chOut" style="display:grid;gap:6px"></div><div class="out" id="chStat"></div></div></div>
+<figcaption><b>Chunking, computed live</b> on a short policy document. Fixed-size chunks can cut a rule from its exception; paragraph-aware chunking keeps sections intact and prepends the section heading, so each chunk makes sense on its own. Overlap (highlighted) protects sentences that straddle a boundary at the cost of extra storage.</figcaption></figure>
+<div class="box example"><h5>Example: why context headers help</h5><p>A chunk reading "The limit is 5 days per year" is ambiguous. With a prepended header "Employee Handbook › Leave › Bereavement leave (2026)" it embeds and retrieves correctly for "how many bereavement days do I get?", and the model can cite it unambiguously.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor keeps each reimbursement limit and its exception in the same chunk, with a parent link to the full section and the policy&#x27;s effective date as metadata.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Trying to fix poor PDF parsing by switching to a stronger answer model.</div></div>

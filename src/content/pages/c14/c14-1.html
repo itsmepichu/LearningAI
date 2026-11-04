@@ -1,0 +1,21 @@
+<ul>
+<li><b>Weights</b>: parameters × bytes per parameter (2.6). Loaded once, shared by all requests.</li>
+<li><b>KV cache</b>: for every token in every active sequence, each layer stores its key and value vectors so they are not recomputed (5.5). Bytes per token = 2 (K and V) × layers × KV heads × head dimension × bytes per value. It grows with context length × number of concurrent sequences, and is usually what limits how many users one GPU can serve.</li>
+<li><b>Activations</b>: temporary tensors during a forward pass; modest at inference, larger during long prefills.</li>
+<li><b>Overhead</b>: CUDA context, framework buffers, CUDA graphs, fragmentation. Engines typically reserve a fraction (e.g. 90%) of GPU memory and use whatever remains after weights for KV cache.</li>
+</ul>
+<p><dfn>Grouped-query attention (GQA)</dfn> shares each KV head across several query heads (e.g. 32 query heads, 8 KV heads), cutting KV cache by 4× with little quality loss. That is why modern models list "KV heads" separately.</p>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2">
+<label for="gmM">Model <select id="gmM"><option value="3">3B (28 layers, 8 KV heads)</option><option value="8" selected>8B (32 layers, 8 KV heads)</option><option value="70">70B (80 layers, 8 KV heads)</option><option value="47">MoE 8×7B, 47B total (32 layers, 8 KV)</option></select></label>
+<label for="gmW">Weight precision <select id="gmW"><option value="2">BF16</option><option value="1" selected>FP8 / INT8</option><option value="0.56">4-bit</option></select></label>
+<label for="gmKv">KV-cache precision <select id="gmKv"><option value="2" selected>BF16</option><option value="1">FP8</option></select></label>
+<label for="gmC">Context per sequence <input type="range" id="gmC" min="1" max="128" value="8"><span id="gmCO"></span></label>
+<label for="gmN">Concurrent sequences <input type="range" id="gmN" min="1" max="256" value="32"><span id="gmNO"></span></label>
+<label for="gmG">GPUs <select id="gmG"><option value="24">1 × 24 GB</option><option value="48">1 × 48 GB</option><option value="80" selected>1 × 80 GB</option><option value="160">2 × 80 GB</option><option value="320">4 × 80 GB</option><option value="640">8 × 80 GB</option></select></label>
+</div>
+<div id="gmBar" style="display:flex;height:34px;border-radius:4px;overflow:hidden;border:1px solid var(--rule)"></div>
+<div class="kpis" id="gmK"></div></div></div>
+<figcaption><b>GPU memory estimator</b> (exact formulas; overhead assumed 8% of VRAM + 2 GB). Try: 8B at FP8 on one 80 GB GPU with 32 users at 8k context needs ~34 GB of KV cache and fits; push context to 128k tokens × 32 users and the KV cache alone needs ~540 GB. This is the arithmetic behind context-length pricing and concurrency limits.</figcaption></figure>
+<div class="box example"><h5>Example: one 80 GB GPU, 8B model in BF16</h5><p>Weights 16 GB; overhead ~8 GB; leaves ~56 GB for KV. At 128 KiB per token (BF16, GQA with 8 KV heads), that holds ~427,000 tokens: about 52 concurrent conversations of 8k tokens, or 3 of 128k. Switching the KV cache to FP8 doubles that.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s 8B FP8 model uses 8 GB of weights on an 80 GB GPU, leaving about 64 GB for KV cache: roughly 60 concurrent 8k-token conversations.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming the model&#x27;s maximum context is affordable at the target concurrency.</div></div>

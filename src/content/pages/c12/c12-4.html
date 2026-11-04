@@ -1,0 +1,28 @@
+<ul>
+<li><b>Shared state</b> (blackboard): agents read and write a common store (a task board, a document). Easy coordination; risk of conflicting writes, context pollution (everyone sees everything), and permission leakage.</li>
+<li><b>Isolated state</b>: each agent has private context and communicates only through messages. Cleaner boundaries and least-privilege data access; requires explicit, well-designed messages.</li>
+<li><b>Message contracts</b>: typed, versioned schemas for requests and results (like API contracts between microservices), validated on both ends, including status, errors, confidence and evidence.</li>
+<li><b>Interoperability</b>: for agents from different frameworks or organisations, open protocols are emerging. <a href="https://a2a-protocol.org/">Agent2Agent (A2A)</a> defines agent discovery (agent cards), task lifecycle and message exchange between agents; MCP (11.8) connects agents to tools and data. They are complementary.</li>
+</ul>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 760 220" role="img" aria-label="Shared blackboard vs isolated message passing">
+<g class="sm">
+<text x="180" y="20" text-anchor="middle" class="lg">Shared state</text>
+<rect x="110" y="80" width="140" height="60" rx="5" class="nds"/><text x="180" y="105" text-anchor="middle">Blackboard</text><text x="180" y="122" text-anchor="middle" class="xs">all findings, all agents</text>
+<circle cx="60" cy="50" r="24" class="ndv"/><text x="60" y="54" text-anchor="middle" class="xs">A</text><circle cx="300" cy="50" r="24" class="ndv"/><text x="300" y="54" text-anchor="middle" class="xs">B</text><circle cx="60" cy="175" r="24" class="ndv"/><text x="60" y="179" text-anchor="middle" class="xs">C</text><circle cx="300" cy="175" r="24" class="ndv"/><text x="300" y="179" text-anchor="middle" class="xs">D</text>
+<path d="M80 62 L112 85 M280 62 L248 85 M80 162 L112 135 M280 162 L248 135" class="lns flowing"/>
+<text x="180" y="212" text-anchor="middle" class="xs bad">simple · conflicts · everyone sees everything</text>
+<text x="560" y="20" text-anchor="middle" class="lg">Isolated + messages</text>
+<circle cx="560" cy="60" r="26" class="nda"/><text x="560" y="64" text-anchor="middle" class="xs">Coord.</text>
+<circle cx="440" cy="170" r="24" class="ndv"/><text x="440" y="174" text-anchor="middle" class="xs">A</text><circle cx="560" cy="175" r="24" class="ndv"/><text x="560" y="179" text-anchor="middle" class="xs">B</text><circle cx="680" cy="170" r="24" class="ndv"/><text x="680" y="174" text-anchor="middle" class="xs">C</text>
+<path d="M545 82 L452 150 M560 86 V151 M575 82 L668 150" class="lna flowing"/>
+<rect x="590" y="100" width="150" height="34" rx="3" class="fsunk"/><text x="598" y="114" class="mono xs">{task, schema, budget}</text><text x="598" y="128" class="mono xs">→ {result, evidence}</text>
+<text x="560" y="212" text-anchor="middle" class="xs okc">explicit contracts · least privilege</text></g>
+</svg></div><figcaption><b>Two state models.</b> Most robust designs isolate agents and keep a small, structured shared task record (status, assignments) rather than a shared free-text scratchpad.</figcaption></figure>
+<div class="box example"><h5>Example: a versioned result contract</h5>
+<pre><code>{"contract": "worker-result/v2", "task_id": "T-17.3", "status": "partial",
+ "result": {"themes": [{"theme": "SMS code never arrives", "count": 412, "evidence_ids": ["rv_88", "rv_91"]}]},
+ "coverage": {"searched": 9400, "of_estimated": 12000, "reason": "deadline reached"},
+ "confidence": "medium", "errors": [], "cost_usd": 0.13}</code></pre>
+<p>"status: partial" plus coverage lets the coordinator decide whether to accept, extend the budget, or flag incomplete coverage in the final report.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor workers return {task, status, claims, evidence_ids, coverage, warnings}; nothing a worker sends can change the coordinator&#x27;s approved action.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Using a shared chat transcript as a concurrency-control or authorisation mechanism.</div></div>

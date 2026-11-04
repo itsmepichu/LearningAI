@@ -1,0 +1,21 @@
+<ul>
+<li><b>Schemas</b>: each tool has a name, a description written for the model (what it does, when to use it, what it returns), and a strict JSON Schema for arguments (types, enums, formats, required fields, <code>additionalProperties: false</code>).</li>
+<li><b>Validation</b>: validate arguments in code before execution; return clear, structured errors the model can act on ("order_id must match A-\d{4}").</li>
+<li><b>Scoped permissions</b>: the agent acts <em>on behalf of</em> a user with that user's permissions, or with a narrowly scoped service identity. Prefer read-only tools; separate "propose" from "commit"; scope tokens to the tenant and the task; never give an agent a generic admin credential.</li>
+<li><b>Safe execution</b>: timeouts, rate limits, result-size limits, sandboxes for code execution (containers, gVisor/Firecracker microVMs, no network or an allowlist), dry-run modes, and allowlists of hosts/commands.</li>
+<li><b>Tool results are untrusted input</b>: a web page or email returned by a tool may contain instructions. Label them as data and keep high-impact actions behind approval (16.2).</li>
+</ul>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Model proposes call</div><div class="nd">Schema check</div><div class="nd">Authorisation<small>user × tool × resource</small></div><div class="nd">Policy &amp; risk tier<small>approval needed?</small></div><div class="nd">Idempotency key</div><div class="nd">Execute in sandbox<small>timeout, limits</small></div><div class="nd">Sanitise result<small>truncate, label as data</small></div><div class="nd">Audit log</div></div>
+<ol class="steps"><li data-n="0"><code>refund(order_id="A-1043", amount=12.0)</code></li><li data-n="1">Types, ranges and enums; reject unknown fields.</li><li data-n="2">Does this user (not the agent) have the right to refund this order in this tenant? Checked by the same authorisation service the UI uses.</li><li data-n="3">Amount ≤ $50 auto-approve; above → human approval (11.7).</li><li data-n="4">Attach a key derived from (task ID, action, arguments) so a retry cannot double-refund (11.6).</li><li data-n="5">Run with a timeout and minimal credentials.</li><li data-n="6">Return only needed fields, size-capped, wrapped as data.</li><li data-n="7">Record who, what, why (the stated reason supplied with the tool proposal, not the model's hidden reasoning), result, and trace ID (16.5).</li></ol></div>
+<figcaption><b>The guarded execution path</b> every tool call passes through. The model never holds credentials.</figcaption></figure>
+<div class="box example"><h5>Example: a tight schema</h5>
+<pre><code>{"name": "issue_credit",
+ "description": "Propose a goodwill credit on an order. Use only after get_order confirms a qualifying issue. Returns a proposal ID; credits over 50 USD wait for human approval.",
+ "parameters": {"type": "object", "additionalProperties": false,
+   "required": ["order_id", "reason_code"],
+   "properties": {
+     "order_id":    {"type": "string", "pattern": "^A-[0-9]{4}$"},
+     "reason_code": {"type": "string", "enum": ["late_delivery", "damaged", "missing_item"]}}}}</code></pre>
+<p>Note that the amount is <em>not</em> a parameter: code computes it from the reason code and order total, removing a whole class of model errors.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor exposes lookup_policy(query, region) instead of raw SQL, and its create_ticket credential can create tickets and nothing else.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating a tool description as a permission check.</div></div>

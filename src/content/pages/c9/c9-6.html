@@ -1,0 +1,22 @@
+<ul>
+<li><b>Query rewriting</b>: user queries are short, ambiguous or conversational ("what about for contractors?"). An LLM rewrites them into standalone search queries using conversation history, expands acronyms, or generates several variants (multi-query). <dfn>HyDE</dfn> generates a hypothetical answer and embeds that instead of the question.</li>
+<li><b>Decomposition</b>: split compound questions ("compare the parental leave policies in Germany and the UK") into sub-queries, retrieve for each, then synthesise.</li>
+<li><b>Multi-hop retrieval</b>: some answers require a chain: find entity A, then use a fact from A to search for B ("Who approves expenses for the team that owns the billing service?" → find owning team → find its approver). Implemented as an iterative loop, effectively a small agent (10.9, 11).</li>
+<li><b>Citations</b>: label chunks, require the model to cite labels per claim, then <em>verify</em> in code that each cited label exists and (with a judge or string overlap) that the cited chunk supports the sentence. Render citations as links to the source.</li>
+<li><b>Abstention</b>: when retrieval scores are low or the judge finds no support, say "I couldn't find this in the knowledge base" and offer a next step. A confident wrong answer is worse than an honest "not found".</li>
+</ul>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">"Who approves expenses for the billing service team?"</div><div class="nd">Hop 1 query<small>"owner of billing service"</small></div><div class="nd">Found: Team Ledger<small>service catalog chunk</small></div><div class="nd">Hop 2 query<small>"Team Ledger expense approver"</small></div><div class="nd">Found: Priya N., Eng Manager<small>org chart chunk</small></div><div class="nd">Answer + 2 citations<small>or abstain if a hop fails</small></div></div>
+<ol class="steps"><li data-n="0">The question cannot be answered from any single document.</li><li data-n="1">The model (or a planner prompt) generates the first sub-query.</li><li data-n="2">Retrieval returns the service catalog entry naming the owning team.</li><li data-n="3">A second query is formed using the new fact.</li><li data-n="4">Retrieval returns the approver from the org directory.</li><li data-n="5">The answer cites both sources. A hop limit (e.g. 3) and an abstain path prevent endless searching.</li></ol></div>
+<figcaption><b>Two-hop retrieval.</b> Each hop adds latency and a chance of error, so use it only when evaluation shows single-shot retrieval fails on such questions.</figcaption></figure>
+<div class="box example"><h5>Example: verifying citations in code</h5>
+<pre><code>import re
+def check_citations(answer: str, chunks: dict[str, str]) -> list[str]:
+    problems = []
+    for sent in re.split(r"(?&lt;=[.!?])\s+", answer):
+        ids = re.findall(r"\[(\d+)\]", sent)
+        if not ids and len(sent.split()) &gt; 6: problems.append(f"uncited: {sent[:60]}")
+        for i in ids:
+            if i not in chunks: problems.append(f"cites missing source [{i}]")
+    return problems          # non-empty → regenerate, or show answer with a warning, or abstain</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>&quot;Can my team claim this?&quot; makes Harbor resolve &quot;this&quot; from history, look up the user&#x27;s region and role, then retrieve both the base policy and the regional exception, or ask a clarifying question.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Citing a whole 80-page document when the answer depends on one clause.</div></div>

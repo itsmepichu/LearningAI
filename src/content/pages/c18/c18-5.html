@@ -1,0 +1,24 @@
+<p>Models change more often than most dependencies: new versions every few months, deprecations with fixed retirement dates, behaviour changes inside a version alias. Treat each as a release:</p>
+<ul>
+<li><b>Inventory and deprecation tracking</b>: which features use which model versions; provider retirement dates on a calendar with owners.</li>
+<li><b>Compatibility testing</b>: run the full suite with the new model and the <em>current</em> prompts, then with re-tuned prompts. Check structured-output adherence, tool-calling format, refusal behaviour, verbosity (output tokens change cost and latency), tokenizer differences (context budgets, 7.3), and supported parameters (some models ignore temperature or require different settings).</li>
+<li><b>Prompt portability</b>: prompts tuned for one model often underperform on another; budget time to re-tune, and keep model-specific prompt variants versioned together.</li>
+<li><b>Embedding migrations</b>: full re-embed with blue/green indexes (10.7); queries and documents must switch embedding models atomically.</li>
+<li><b>Fine-tuned models</b>: a new base model means re-running fine-tuning and all of 13.6.</li>
+</ul>
+<div class="tw"><table>
+<tr><th>Check (new model vs current)</th><th>Result</th><th>Action</th></tr>
+<tr><td>Regression suite (current prompts)</td><td>−1.8 pts, 9 critical regressions</td><td>Re-tune prompt</td></tr>
+<tr><td>Regression suite (re-tuned prompt v13-m2)</td><td>+2.4 pts, 0 critical regressions</td><td>Proceed</td></tr>
+<tr><td>JSON schema adherence (no constrained decoding)</td><td>99.1% vs 99.8%</td><td>Enable constrained decoding</td></tr>
+<tr><td>Median output tokens</td><td>+38%</td><td>Add length guidance; re-check cost gate</td></tr>
+<tr><td>Tool-call argument validity</td><td>99.6% vs 99.5%</td><td>OK</td></tr>
+<tr><td>Over-refusal on should-answer set</td><td>3.1% vs 1.2%</td><td>Investigate category; adjust system prompt</td></tr>
+</table></div>
+<p style="font-size:.86rem;color:var(--muted)">Illustrative compatibility report for a provider model upgrade.</p>
+<div class="box example"><h5>Example: an alias that moved</h5><p>A team called a provider's "latest" model alias. When the provider pointed it at a new version, median output length rose 38% and JSON adherence fell slightly, so cost rose and a parser started failing on 0.7% of requests. Pinning dated snapshot versions, plus the weekly scheduled re-evaluation (18.6), turns such changes into planned upgrades instead of surprises.</p></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Deprecation notice / new model</div><div class="nd">Run suite as-is</div><div class="nd">Re-tune prompts</div><div class="nd">Compatibility checks<small>format, tools, length, refusals</small></div><div class="nd">Shadow</div><div class="nd">Canary → 100%</div><div class="nd">Retire old route</div></div>
+<ol class="steps"><li data-n="0">Track it with an owner and a date well before retirement.</li><li data-n="1">Measure the raw difference first; it tells you how much work is needed.</li><li data-n="2">Adapt prompts and settings for the new model; version them separately.</li><li data-n="3">Check the properties code depends on, not just answer quality.</li><li data-n="4">Compare on real traffic without exposure.</li><li data-n="5">Progressive rollout with automatic analysis (18.4).</li><li data-n="6">Remove the old model from the gateway only after the rollback window.</li></ol></div>
+<figcaption><b>Model upgrade procedure.</b></figcaption></figure>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>A provider upgrade changed how Harbor&#x27;s tool calls stream; the parser had to pass compatibility tests before write-capable tasks moved over.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Assuming the same API method name means the same model behaviour.</div></div>

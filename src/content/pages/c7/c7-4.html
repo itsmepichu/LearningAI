@@ -1,0 +1,41 @@
+<div class="terms">
+<div><b>Structured output</b>: the model returns data in a declared format, usually JSON matching a <b>JSON Schema</b>. Many APIs and local engines support <b>constrained decoding</b>, which masks tokens that would break the schema, so the output always parses.</div>
+<div><b>Schema validation</b>: parse and check the output in code (e.g. Pydantic). Constrained decoding guarantees shape, not truth: a valid JSON with a wrong amount is still wrong, so add semantic checks.</div>
+<div><b>Tool calling</b> (function calling): you describe functions (name, description, parameter schema); the model may answer with a request to call one with arguments; <em>your code</em> executes it and returns the result as a tool message; the model continues.</div>
+<div><b>Streaming</b>: receive tokens as they are generated (usually Server-Sent Events) instead of waiting for the full response. Improves perceived latency; complicates validation and error handling.</div>
+</div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">App sends messages + tool schemas</div><div class="nd">Model returns tool_call<small>get_order(id="A-1043")</small></div><div class="nd">App validates args &amp; permissions</div><div class="nd">App executes tool<small>DB / API</small></div><div class="nd">App sends tool result</div><div class="nd">Model writes final answer</div><div class="nd">App validates &amp; returns</div></div>
+<ol class="steps"><li data-n="0">Request includes the conversation and the JSON schemas of tools the model may use.</li><li data-n="1">Instead of text, the model emits a structured tool call. It has not done anything; it has only asked.</li><li data-n="2">Your code checks the arguments against the schema and checks that this user may access order A-1043. Never trust model-supplied IDs for authorisation (16.3).</li><li data-n="3">Execute with timeouts.</li><li data-n="4">Return the result as a <code>tool</code> message (trim large results).</li><li data-n="5">The model uses the result to answer, or requests another tool (this loop becomes an agent in chapter 11).</li><li data-n="6">Validate the final output before showing or acting on it.</li></ol></div>
+<figcaption><b>The tool-calling handshake.</b> The model proposes; deterministic code disposes.</figcaption></figure>
+<figure class="fig"><div class="stage"><div id="streamViz" class="wid"></div></div>
+<figcaption><b>Streaming vs non-streaming (animated, illustrative timing).</b> Both finish at the same time; streaming shows the first words after the time-to-first-token. For JSON, stream to the UI but validate the complete object before acting on it.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: structured output, tool call and streaming with Ollama <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># pip install ollama pydantic ; ollama pull qwen2.5:1.5b
+from typing import Literal
+from pydantic import BaseModel, ValidationError
+import ollama
+
+class Ticket(BaseModel):
+    category: Literal["billing", "access", "delivery", "other"]
+    urgent: bool
+    summary: str
+
+msg = [{"role": "user", "content": "Since 9am nobody in my team can sign in. We have a launch today!"}]
+r = ollama.chat(model="qwen2.5:1.5b", messages=msg, format=Ticket.model_json_schema(), options={"temperature": 0})
+try:    print(Ticket.model_validate_json(r.message.content))
+except ValidationError as e: print("invalid output:", e)       # always handle this path
+
+def get_order_status(order_id: str) -> str:
+    """Look up the shipping status of an order by its ID."""
+    return {"A-1043": "shipped 2026-11-02"}.get(order_id, "not found")
+
+r = ollama.chat(model="qwen2.5:1.5b", tools=[get_order_status],
+                messages=[{"role": "user", "content": "Where is order A-1043?"}])
+for call in r.message.tool_calls or []:
+    print(call.function.name, call.function.arguments, "->", get_order_status(**call.function.arguments))
+
+for chunk in ollama.chat(model="qwen2.5:1.5b", messages=msg, stream=True):
+    print(chunk.message.content, end="", flush=True)</code></pre>
+<p>Small models make more tool-call mistakes (wrong arguments, calling when not needed). That is useful: you will see the failure modes your validation must handle.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s create_ticket tool takes category and summary from the model but derives the customer ID from the authenticated session, never from model output.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Executing a tool just because its arguments passed JSON schema validation.</div></div>

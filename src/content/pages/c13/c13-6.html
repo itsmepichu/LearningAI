@@ -1,0 +1,22 @@
+<ul>
+<li><b>Domain gains</b>: the held-out domain test set from 13.2, per segment, against the base model with your best prompt (the honest baseline), not against the base model with a weak prompt.</li>
+<li><b>General-capability regressions</b> (<dfn>catastrophic forgetting</dfn>): run a general benchmark suite (instruction following, reasoning, coding, multilingual) before and after. LoRA forgets less than full fine-tuning, but not nothing.</li>
+<li><b>Memorisation</b>: fine-tuned models can regurgitate training records, including personal data. Test with prefixes of training records ("Customer: Jane D…") and check for verbatim completions; plant <dfn>canary</dfn> strings in the training data and test whether they can be extracted. Minimise PII in training data in the first place.</li>
+<li><b>Safety regressions</b>: fine-tuning on even benign data can weaken a model's refusal behaviour. Re-run the safety and red-team suites (16.7) on every fine-tuned model.</li>
+</ul>
+<figure class="fig"><div class="stage">
+<div class="tw"><table>
+<tr><th>Suite</th><th>Base + best prompt</th><th>Fine-tuned</th><th>Gate</th><th>Result</th></tr>
+<tr><td>Domain extraction (field acc.)</td><td>88.1%</td><td>96.4%</td><td>≥ 94%</td><td style="color:var(--ok)">pass</td></tr>
+<tr><td>Absent-field fabrication</td><td>6.0%</td><td>2.1%</td><td>≤ 3%</td><td style="color:var(--ok)">pass</td></tr>
+<tr><td>General instruction following</td><td>81.0%</td><td>78.5%</td><td>drop ≤ 3 pts</td><td style="color:var(--ok)">pass</td></tr>
+<tr><td>Multilingual (DE/FR/ES)</td><td>84.2%</td><td>76.9%</td><td>drop ≤ 3 pts</td><td style="color:var(--bad);font-weight:600">fail</td></tr>
+<tr><td>Canary extraction (100 canaries)</td><td>–</td><td>0 extracted</td><td>0</td><td style="color:var(--ok)">pass</td></tr>
+<tr><td>Harmful-request refusal</td><td>98.0%</td><td>91.5%</td><td>≥ 97%</td><td style="color:var(--bad);font-weight:600">fail</td></tr>
+</table></div></div><figcaption><b>A release scorecard</b> (illustrative). Two gates fail; the fix is to add multilingual and safety examples to the training mix and retrain, not to ship and hope.</figcaption></figure>
+<div class="box example"><h5>Example: a memorisation probe</h5>
+<pre><code>CANARY = "ZK-CANARY-7f3a91 the vault code is 4417"      # inserted into 5 training records
+probe  = "ZK-CANARY-7f3a91 the vault code is"
+out = generate(fine_tuned_model, probe, max_new_tokens=5, temperature=0)
+assert "4417" not in out, "model memorised a training canary"</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s adapter improved field accuracy but began filling missing IDs with plausible values; that blocked release despite a higher average score.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Treating a few passed privacy probes as proof that no training data can be extracted.</div></div>

@@ -1,0 +1,25 @@
+<p>Python is the working language of AI because its libraries wrap fast C, C++ and CUDA code. The core habit is <dfn>vectorisation</dfn>: express computation as whole-array operations instead of Python loops. A NumPy dot product over a million numbers runs in about a millisecond; a Python loop takes hundreds of times longer.</p>
+<ul>
+<li><b>NumPy</b>: n-dimensional arrays (<code>ndarray</code>), broadcasting (combining arrays of different shapes by stretching size-1 axes), linear algebra, random numbers.</li>
+<li><b>pandas</b>: tables (<code>DataFrame</code>) with named columns for loading, cleaning, joining and grouping data. Use it for evaluation results and datasets.</li>
+<li><b>Matplotlib / seaborn / Plotly</b>: charts. Always plot loss curves, metric distributions and error breakdowns; numbers alone hide problems.</li>
+<li><b>Jupyter notebooks</b>: interactive cells for exploration. Move code into modules once it stabilises, because notebooks hide execution order.</li>
+</ul>
+<p><b>Reproducibility</b> means another person (or you next month) gets the same result from the same inputs. In AI that requires pinning more than code: random seeds, library versions, data snapshots, model versions, prompt versions and hardware notes. GPU kernels are not always bit-for-bit deterministic, so record tolerance as well.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Pin environment<small>lockfile</small></div><div class="nd">Snapshot data<small>hash / version</small></div><div class="nd">Fix seeds<small>numpy, torch, random</small></div><div class="nd">Config file<small>all hyperparameters</small></div><div class="nd">Run &amp; log<small>metrics + artefacts</small></div><div class="nd">Compare runs<small>tracked, not remembered</small></div></div>
+<ol class="steps"><li data-n="0">Lock exact package versions (<code>uv lock</code>, <code>pip freeze</code>, or a container image). A minor library update can change tokenisation or numerics.</li><li data-n="1">Store the dataset with a content hash or a version tool (DVC, Hugging Face dataset revisions). "data.csv" is not a version.</li><li data-n="2">Set seeds for every random source. Record that GPU results may still vary slightly.</li><li data-n="3">Put every setting in a config file that is committed, never only in a notebook cell.</li><li data-n="4">Log metrics, the config, the git commit and output artefacts to an experiment tracker (MLflow, 13.7).</li><li data-n="5">Compare runs side by side. A decision should cite run IDs, not memory.</li></ol></div>
+<figcaption><b>Reproducible experiment workflow.</b> The same discipline later becomes LLMOps versioning (18.1).</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: vectorisation and a reproducible run <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>import numpy as np, pandas as pd, time, json, hashlib
+rng = np.random.default_rng(seed=42)                 # explicit, seeded generator
+x = rng.standard_normal(1_000_000)
+t = time.perf_counter(); s = sum(v*v for v in x); loop = time.perf_counter() - t
+t = time.perf_counter(); s2 = x @ x;              vec  = time.perf_counter() - t
+print(f"loop {loop:.3f}s  vectorised {vec:.5f}s  speedup {loop/vec:.0f}x")
+
+df = pd.DataFrame({"case": range(5), "passed": [1,0,1,1,1], "latency_ms": [820,1400,760,990,1010]})
+print(df.describe())
+cfg = {"seed": 42, "model": "llama3.2:1b", "prompt_version": "v3"}
+print("config hash", hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()[:12])</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s evaluation notebooks are throwaway; the cleaning and scoring code lives in a versioned package that the CI pipeline runs with pinned dependencies and seeds.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Fitting normalisation on the full dataset before splitting, or trusting a notebook that only works because of hidden cell order.</div></div>

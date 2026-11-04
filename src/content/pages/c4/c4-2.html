@@ -1,0 +1,20 @@
+<div class="terms">
+<div><b>Batch</b>: the group of examples used for one gradient estimate. <b>Step</b> (iteration): one weight update. <b>Epoch</b>: one full pass over the training data.</div>
+<div><b>SGD</b>: plain stochastic gradient descent on mini-batches. <b>Momentum</b>: keep a running average of gradients so steps accelerate in consistent directions.</div>
+<div><b>Adam / AdamW</b>: adapts the step size per parameter using running averages of the gradient (first moment) and squared gradient (second moment). AdamW decouples weight decay. It is the default for transformers. It stores two extra numbers per parameter, which matters for memory (6.6).</div>
+<div><b>Schedule</b>: changing the learning rate over training. Standard for LLMs: linear <b>warm-up</b> from near zero for the first few hundred or thousand steps, then <b>cosine decay</b> to a small final value.</div>
+</div>
+<p>Batch size trades noise for cost. Small batches give noisy gradients (which can help escape poor regions) but use hardware poorly. Large batches give smoother gradients and better throughput but may need a larger learning rate and warm-up. When memory limits the batch, <dfn>gradient accumulation</dfn> sums gradients over several small batches before one update, simulating a larger batch.</p>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="lrPeak">Peak LR (×10⁻⁴) <input type="range" id="lrPeak" min="1" max="30" value="6"><span id="lrPeakO"></span></label>
+<label for="lrWarm">Warm-up % <input type="range" id="lrWarm" min="0" max="30" value="5"><span id="lrWarmO"></span></label>
+<label for="lrKind">Decay <select id="lrKind"><option>cosine</option><option>linear</option><option>constant</option><option>step</option></select></label></div>
+<svg id="lrSvg" viewBox="0 0 620 200"></svg></div></div>
+<figcaption><b>Learning-rate schedule</b> over 10,000 steps. Warm-up avoids huge early updates while Adam's statistics are still unreliable; decay lets the model settle into a minimum at the end.</figcaption></figure>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 720 120" role="img" aria-label="Epochs, batches and steps">
+<g id="epochViz"></g>
+<text x="10" y="112" class="xs mut">10,000 examples · batch 1,000 → 10 steps per epoch · 3 epochs = 30 updates. Highlighted batch = the one being processed.</text>
+</svg></div><figcaption><b>Steps, batches and epochs.</b> The highlight walks through batches; each completed batch is one optimiser step.</figcaption></figure>
+<div class="box example"><h5>Example: LoRA fine-tuning settings</h5><p>A typical small fine-tuning run: AdamW, peak learning rate 2×10⁻⁴, 3% warm-up, cosine decay, effective batch 32 (batch 4 × 8 accumulation steps), 2–3 epochs over 5,000 examples. If validation loss starts rising in epoch 3 while training loss keeps falling, stop at epoch 2 (early stopping).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s reranker fine-tune uses AdamW, 5% warm-up, cosine decay and gradient accumulation to reach an effective batch of 64 on a single GPU.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Changing the batch size without retuning the learning rate, then blaming the data when training becomes unstable.</div></div>

@@ -1,0 +1,30 @@
+<ul>
+<li><b>Experiment tracking</b>: every training run logs its config, code commit, dataset version, base model revision, hyperparameters, metrics curves, evaluation results and output artefacts (MLflow, Weights &amp; Biases, or similar).</li>
+<li><b>Versioning</b>: datasets (DVC, lakeFS, Hugging Face dataset revisions) and models (a model registry with immutable versions and stages such as staging/production). A model version should be traceable back to exactly the data and code that produced it.</li>
+<li><b>Reproducibility</b>: pinned environments (container image digest), seeds, deterministic data ordering; record hardware. Exact bitwise reproduction on GPUs is often impossible; aim for "same metrics within tolerance".</li>
+<li><b>Release criteria</b>: pre-agreed gates (13.6 scorecard), a <dfn>model card</dfn> (intended use, training data summary, evaluation results, limitations, licence), approval by an owner, and a rollback plan (18.4).</li>
+</ul>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Dataset v12<small>hash, datasheet</small></div><div class="nd">Training run #431<small>config, commit, seed</small></div><div class="nd">Candidate model<small>registry: staging</small></div><div class="nd">Eval suites<small>domain, general, safety</small></div><div class="nd">Model card + approval</div><div class="nd">Registry: production<small>canary → full</small></div></div>
+<ol class="steps"><li data-n="0">Immutable dataset version with its documentation.</li><li data-n="1">Run logged to the tracker with everything needed to rerun it.</li><li data-n="2">Artefact registered with links to run and dataset.</li><li data-n="3">Automated gates run; results attached to the model version.</li><li data-n="4">Model card generated from tracked metadata; owner signs off.</li><li data-n="5">Promotion triggers controlled rollout (chapter 18). Previous version stays available for rollback.</li></ol></div>
+<figcaption><b>Model lineage and release flow.</b></figcaption></figure>
+<div class="box lab"><h5>Laptop lab: track runs with MLflow <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># pip install mlflow ; then run `mlflow ui` and open http://127.0.0.1:5000
+import mlflow
+mlflow.set_experiment("invoice-extractor")
+with mlflow.start_run(run_name="lora-r8-lr2e-4"):
+    mlflow.log_params({"base": "SmolLM2-135M-Instruct", "r": 8, "lr": 2e-4, "dataset": "invoices@v12"})
+    # ... train ...
+    mlflow.log_metrics({"field_acc": 0.964, "fabrication_rate": 0.021, "general_if": 0.785})
+    mlflow.log_artifacts("lora-out", artifact_path="adapter")</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s adapter-r431 is registered with its exact base revision, tokenizer, dataset manifest, schema and evaluation suite; deploying it on another base revision requires re-testing.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Recording a model by name without an immutable revision.</div></div>
+<div class="tools">
+<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for model adaptation</h3>
+<div class="cols3">
+<div class="card"><h5><a href="https://huggingface.co/docs/peft">PEFT</a></h5><span class="meta">LoRA · adapters</span><p>LoRA and other adapter methods for any Transformers model; merge or hot-swap adapters.</p></div>
+<div class="card"><h5><a href="https://huggingface.co/docs/trl">TRL</a></h5><span class="meta">SFT · DPO · GRPO</span><p>Trainers for each post-training stage, integrated with PEFT and quantisation.</p></div>
+<div class="card"><h5><a href="https://docs.unsloth.ai/">Unsloth</a></h5><span class="meta">fast LoRA/QLoRA on one GPU</span><p>Optimised kernels and ready notebooks for Colab/Kaggle; good path for your first 1–8B fine-tune. <span class="tag gpu">GPU</span></p></div>
+<div class="card"><h5><a href="https://docs.axolotl.ai/">Axolotl</a> · <a href="https://github.com/pytorch/torchtune">torchtune</a></h5><span class="meta">config-driven fine-tuning</span><p>Axolotl: YAML-configured SFT/DPO/QLoRA recipes including multi-GPU. torchtune is no longer actively maintained (development wound down in 2025), so prefer Axolotl, TRL or Unsloth for new work. <span class="tag gpu">GPU</span></p></div>
+<div class="card"><h5><a href="https://docs.argilla.io/">Argilla</a> · <a href="https://labelstud.io/guide/">Label Studio</a></h5><span class="meta">annotation · review</span><p>Labelling and expert-review UIs with agreement tracking; run locally with Docker or pip.</p></div>
+<div class="card"><h5><a href="https://mlflow.org/docs/latest/">MLflow</a> · <a href="https://dvc.org/doc">DVC</a></h5><span class="meta">tracking · registry · data versioning</span><p>Experiment tracking and model registry; Git-like versioning for datasets and pipelines.</p></div>
+</div></div>

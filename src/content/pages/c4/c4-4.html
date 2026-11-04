@@ -1,0 +1,29 @@
+<p>A <dfn>representation</dfn> is the internal vector a network builds for an input. <dfn>Representation learning</dfn> means the network learns useful representations as a by-product of its training task. If a model must predict the next word, it is forced to encode meaning, syntax and facts in its vectors.</p>
+<p>An <b>embedding</b> is a representation designed to be used directly. Word embeddings (word2vec, 2013) showed that vector arithmetic can capture relations: vec("Paris") − vec("France") + vec("Italy") ≈ vec("Rome"). Today's <b>text embedding models</b> map whole sentences or passages to one vector, trained with <dfn>contrastive learning</dfn>: pull matching pairs (question, answering passage) together and push non-matching pairs apart.</p>
+<p>Two kinds of embedding are easy to confuse. <b>Token embeddings</b> are the input lookup table inside an LLM (one vector per vocabulary entry). <b>Sentence/document embeddings</b> come from a separate embedding model and are what you store in a vector database for RAG (chapter 9).</p>
+<figure class="fig"><div class="stage">
+<svg viewBox="0 0 700 300" role="img" aria-label="2D projection of embeddings with semantic clusters">
+<rect x="10" y="10" width="420" height="280" rx="5" class="fsunk"/>
+<g class="xs">
+<circle cx="80" cy="70" r="5" class="fa"/><text x="88" y="74">invoice</text><circle cx="100" cy="95" r="5" class="fa"/><text x="108" y="99">bill</text><circle cx="65" cy="110" r="5" class="fa"/><text x="73" y="114">payment due</text><circle cx="120" cy="60" r="5" class="fa"/><text x="128" y="64">refund</text>
+<circle cx="300" cy="70" r="5" class="fs"/><text x="308" y="74">password reset</text><circle cx="320" cy="100" r="5" class="fs"/><text x="328" y="104">login failed</text><circle cx="280" cy="105" r="5" class="fs"/><text x="200" y="120">2FA code</text>
+<circle cx="190" cy="230" r="5" class="fv"/><text x="198" y="234">shipping delay</text><circle cx="160" cy="250" r="5" class="fv"/><text x="90" y="268">package lost</text><circle cx="215" cy="255" r="5" class="fv"/><text x="223" y="259">tracking number</text>
+<circle cx="375" cy="230" r="5" class="fb"/><text x="320" y="214">giraffe</text></g>
+<g class="sm"><text x="460" y="40">Each dot = one text,</text><text x="460" y="58">projected from 384 dimensions</text><text x="460" y="76">to 2 for display.</text>
+<text x="460" y="116" class="acc">Billing cluster</text><text x="460" y="136" class="sig">Account access cluster</text><text x="460" y="156" class="simc">Delivery cluster</text><text x="460" y="176" class="bad">Unrelated outlier</text>
+<text x="460" y="216" class="xs mut">Distances in a 2-D projection are</text><text x="460" y="230" class="xs mut">approximate; similarity search uses</text><text x="460" y="244" class="xs mut">the full-dimensional vectors.</text></g>
+</svg></div><figcaption><b>Illustrative embedding space.</b> Texts with similar meaning land near each other regardless of wording ("bill" next to "invoice"). Retrieval, clustering, deduplication and routing all exploit this.</figcaption></figure>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Query<small>"reset my 2FA"</small></div><div class="nd">Positive passage<small>2FA reset guide</small></div><div class="nd">Negatives<small>other passages in batch</small></div><div class="nd">Encode all</div><div class="nd">Similarities</div><div class="nd">Contrastive loss<small>positive should win</small></div></div>
+<ol class="steps"><li data-n="0">Take a query from training pairs.</li><li data-n="1">Its matching passage is the positive.</li><li data-n="2">The other passages in the same batch serve as negatives ("in-batch negatives"); hard negatives (similar but wrong) help most.</li><li data-n="3">The same encoder turns each text into a vector.</li><li data-n="4">Compute cosine similarity of the query with every passage.</li><li data-n="5">Treat it as classification: softmax over similarities, cross-entropy with the positive as the correct class (InfoNCE loss). Training moves vectors so positives score highest.</li></ol></div>
+<figcaption><b>How embedding models are trained.</b> You will reuse this when adapting embeddings to your domain (13.5).</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: embed and cluster <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>from sentence_transformers import SentenceTransformer
+from sklearn.cluster import KMeans
+texts = ["invoice overdue", "my bill is wrong", "refund please", "can't log in", "reset password",
+         "2FA code not arriving", "package lost", "where is my parcel", "shipping delayed"]
+m = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")   # ~90 MB, fast on CPU
+E = m.encode(texts, normalize_embeddings=True)
+print(E.shape)                                     # (9, 384)
+for t, c in zip(texts, KMeans(3, n_init=10, random_state=0).fit_predict(E)): print(c, t)</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s general embedding model placed &quot;PTO&quot; far from &quot;annual leave&quot;. A domain-tuned embedding (13.5) fixed the internal acronyms that a general model had never seen.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Using an LLM&#x27;s internal hidden states as search embeddings without evaluating them; general hidden vectors are not automatically good retrieval vectors.</div></div>

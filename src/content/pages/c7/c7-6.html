@@ -1,0 +1,27 @@
+<ul>
+<li><b>Timeouts</b>: set a connect timeout and a total deadline per call; for streaming, also an idle timeout between tokens. LLM latency has a long tail; without timeouts, threads and connections pile up.</li>
+<li><b>Retries</b>: retry only retryable errors (timeouts, HTTP 429 rate-limited, 5xx, connection resets), with <dfn>exponential backoff and jitter</dfn> (wait base × 2<sup>attempt</sup>, randomised) to avoid synchronised retry storms. Respect <code>Retry-After</code> headers. Cap attempts and total time. Never blindly retry a call that triggered side effects (11.6).</li>
+<li><b>Rate limits</b>: providers limit requests per minute and tokens per minute. Track both client-side (a <dfn>token bucket</dfn>) so you queue rather than get rejected.</li>
+<li><b>Fallbacks</b>: on repeated failure, switch to a secondary model or provider, a cached answer, or a graceful message. Fallback models must be evaluated too, since output quality and format may differ.</li>
+<li><b>Token budgets</b>: cap input tokens (truncate context), output tokens (<code>max_tokens</code>), and per-user / per-tenant daily spend.</li>
+</ul>
+<figure class="fig sim"><div class="stage"><div class="wid">
+<div class="ctl"><label for="rtJit" style="font-family:var(--f-display);font-size:.82rem"><input type="checkbox" id="rtJit" checked> jitter</label><button class="btn primary" id="rtRun" type="button">Simulate 30 clients after an outage</button></div>
+<canvas id="rtCan" width="640" height="200"></canvas><div class="out" id="rtOut"></div></div></div>
+<figcaption><b>Why jitter matters.</b> 30 clients fail at t = 0 and retry with exponential backoff (1 s, 2 s, 4 s, 8 s). Without jitter their retries arrive in synchronised spikes that can knock a recovering service over again; with full jitter they spread out. Bars show retries per 250 ms.</figcaption></figure>
+<div class="box example"><h5>Example: a call wrapper</h5>
+<pre><code>import random, time
+RETRYABLE = {408, 429, 500, 502, 503, 504}
+def call_llm(req, primary, fallback, deadline_s=30, max_attempts=4):
+    start = time.monotonic()
+    for attempt in range(max_attempts):
+        remaining = deadline_s - (time.monotonic() - start)
+        if remaining &lt;= 0: break
+        try:
+            return primary.generate(req, timeout=min(remaining, 20))
+        except ProviderError as e:
+            if e.status not in RETRYABLE: raise                     # 400 = our bug; don't retry
+            wait = e.retry_after or random.uniform(0, 0.5 * 2 ** attempt)   # full jitter
+            time.sleep(min(wait, max(0, deadline_s - (time.monotonic() - start))))
+    return fallback.generate(req, timeout=10)                       # evaluated fallback path</code></pre></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor retries a failed retrieval once within the remaining deadline; if generation capacity is exhausted it returns cited search excerpts instead of retrying indefinitely.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Retrying without a retry budget or admission control, which turns a slowdown into an outage.</div></div>

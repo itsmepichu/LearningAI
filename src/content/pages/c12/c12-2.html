@@ -1,0 +1,15 @@
+<figure class="fig"><div class="stage">
+<div class="ctl" id="patBtns" style="margin-bottom:10px"></div>
+<svg id="patSvg" viewBox="0 0 720 260" role="img" aria-label="Multi-agent pattern diagram"></svg>
+<div class="out" id="patTxt"></div></div>
+<figcaption><b>Five patterns.</b> Select one to see its structure (animated message flow) and when to use it.</figcaption></figure>
+<div class="tw"><table>
+<tr><th>Pattern</th><th>Control</th><th>Use when</th><th>Main risk</th></tr>
+<tr><td><b>Coordinator–worker</b> (orchestrator)</td><td>Central agent decomposes, delegates, synthesises</td><td>Breadth-first tasks with separable parts</td><td>Coordinator bottleneck; cost</td></tr>
+<tr><td><b>Routing</b></td><td>Classifier/LLM sends request to one specialist</td><td>Distinct request types with distinct tools</td><td>Misrouting; needs an "other" path</td></tr>
+<tr><td><b>Handoff</b></td><td>Active agent transfers the conversation to another</td><td>Customer journeys crossing departments</td><td>Context lost in transfer; ping-pong</td></tr>
+<tr><td><b>Supervisor</b> (hierarchical)</td><td>Manager agent monitors, can override or reassign</td><td>Long tasks needing oversight and replanning</td><td>Deep hierarchies multiply cost and latency</td></tr>
+<tr><td><b>Evaluator–optimiser</b> (critic)</td><td>Producer drafts, evaluator critiques, loop</td><td>Clear quality criteria; drafting tasks</td><td>Endless loops; evaluator shares producer's blind spots if same model/context</td></tr>
+</table></div>
+<div class="box example"><h5>Example: handoff with context transfer</h5><p>A general support agent determines the issue is a disputed charge and hands off to the billing agent. The handoff passes a structured summary (customer ID, issue, evidence collected, what the customer was told) rather than the full transcript, and the billing agent receives only billing tools. The customer sees one continuous conversation.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s coordinator is plain code: it routes to two read-only regional workers and one synthesiser, and a deterministic validator checks citations.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Leaving completion ownership unclear, so each agent assumes another one will finish or act.</div></div>

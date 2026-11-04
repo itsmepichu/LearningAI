@@ -1,0 +1,27 @@
+<p>General embedding models often miss domain meaning: internal product codenames, part numbers, legal terms of art, abbreviations. Fine-tuning the retriever is often the highest-return adaptation in a RAG system, and it is much cheaper than fine-tuning an LLM.</p>
+<ul>
+<li><b>Training data</b>: (query, relevant passage) pairs from search logs (queries with clicked/used results), from FAQ structures, from human labelling, or generated synthetically by an LLM writing questions for each chunk (then filtered).</li>
+<li><b>Hard negatives</b>: passages that look relevant but are not, mined by retrieving top results with the current model and excluding true positives. They teach fine distinctions and matter more than more easy pairs.</li>
+<li><b>Loss</b>: contrastive with in-batch negatives (MultipleNegativesRankingLoss / InfoNCE, 4.4). Rerankers (cross-encoders) train as binary or listwise classifiers over (query, passage).</li>
+<li><b>Re-embedding</b>: a new embedding model means a full re-index with blue/green migration (10.7). A new reranker does not touch the index, which makes rerankers the easier first step.</li>
+</ul>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Chunks</div><div class="nd">Generate queries<small>LLM, 2 per chunk</small></div><div class="nd">Filter<small>does chunk answer it?</small></div><div class="nd">Mine hard negatives<small>top-20 from current model</small></div><div class="nd">Train<small>contrastive loss</small></div><div class="nd">Evaluate<small>Recall@10 on real queries</small></div></div>
+<ol class="steps"><li data-n="0">Start from the corpus you actually serve.</li><li data-n="1">An LLM writes realistic questions each chunk answers; vary style (keywords, full questions, typos).</li><li data-n="2">Use a judge or round-trip check to drop questions the chunk does not answer.</li><li data-n="3">Retrieve with the current model; top results that are not the source chunk (and judged not relevant) become hard negatives.</li><li data-n="4">Fine-tune with (query, positive, hard negative) triplets.</li><li data-n="5">Evaluate on <em>real</em> human queries with labels (9.7), not on the synthetic ones you trained on.</li></ol></div>
+<figcaption><b>Synthetic-data pipeline for retriever fine-tuning.</b></figcaption></figure>
+<figure class="fig"><div class="stage"><div class="bars" data-max="100" data-unit="%"><div data-v="71">Recall@10 · general embedding model</div><div data-v="80" data-c="s">+ fine-tuned reranker</div><div data-v="84">fine-tuned embeddings</div><div data-v="89" data-c="g">fine-tuned embeddings + reranker</div></div></div>
+<figcaption><b>Typical shape of gains</b> on a jargon-heavy internal corpus (illustrative). Measure on held-out real queries.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: fine-tune a small embedding model <span class="tag cpu">Laptop · CPU · minutes for ~1k pairs</span></h5>
+<pre><code>from datasets import Dataset
+from sentence_transformers import SentenceTransformer, SentenceTransformerTrainer, losses
+model = SentenceTransformer("BAAI/bge-small-en-v1.5")
+train = Dataset.from_dict({
+    "anchor":   ["how do I raise a PO in Coupa", "SKU-77 torque spec", "what is Project Falcon"],
+    "positive": ["Purchase orders are created in Coupa under Requisitions > New...",
+                 "SKU-77 mounting bolts: tighten to 45 Nm in a star pattern...",
+                 "Falcon is the internal codename for the 2027 billing platform rewrite..."]})
+SentenceTransformerTrainer(model=model, train_dataset=train,
+                           loss=losses.MultipleNegativesRankingLoss(model)).train()
+model.save_pretrained("bge-small-acme")</code></pre>
+<p>With a few hundred real pairs you can measure Recall@k before and after using your chapter 9 harness. Expect gains on jargon; watch for losses on general queries (13.6).</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor&#x27;s embedding fine-tune uses adjudicated query, positive and hard-negative triples, and is judged by Recall@20 on real queries and then by answer quality.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Mining hard negatives without checking them; some are valid answers, and the model learns to reject good evidence.</div></div>

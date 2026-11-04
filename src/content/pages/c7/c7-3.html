@@ -1,0 +1,17 @@
+<p><dfn>Context engineering</dfn> is deciding, for every model call, exactly which tokens go into the window. The model only knows what is in context, and the window is a budget shared by instructions, tools, history, retrieved documents and the output. Too little context and the model guesses; too much and it gets slower, costlier and more distracted by irrelevant material.</p>
+<ul>
+<li><b>Assemble</b> from sources: system prompt, tool definitions, user profile, conversation history, retrieved chunks, scratchpad/agent state.</li>
+<li><b>Prioritise</b>: rank pieces by necessity (instructions, current question) and relevance score; drop lowest first.</li>
+<li><b>Compress</b>: summarise old turns, trim documents to relevant passages, remove duplicate chunks, replace long tool outputs with extracted key fields.</li>
+<li><b>Order</b>: important material near the start or end; models attend less reliably to the middle of very long contexts.</li>
+<li><b>Reserve</b> output tokens: the budget must include max output length.</li>
+</ul>
+<figure class="fig live"><div class="stage"><div class="wid">
+<div class="row2"><label for="ceBud">Context window budget (tokens) <input type="range" id="ceBud" min="2000" max="16000" step="500" value="8000"><span id="ceBudO"></span></label>
+<label for="ceOut">Reserved for output <input type="range" id="ceOut" min="200" max="4000" step="100" value="1000"><span id="ceOutO"></span></label>
+<label for="ceComp" style="align-self:end"><input type="checkbox" id="ceComp"> Compress history and long docs</label></div>
+<div id="ceBar" style="display:flex;height:30px;border-radius:4px;overflow:hidden;border:1px solid var(--rule)"></div>
+<div class="tw"><table id="ceTbl"></table></div></div></div>
+<figcaption><b>A context assembler</b> using the same greedy algorithm many systems use: sort candidates by priority, include each if it fits, optionally compress lower-priority items (here, summaries at ~25% of original size). Shrink the budget and watch what gets dropped first.</figcaption></figure>
+<div class="box example"><h5>Example: a support assistant's context recipe</h5><p>System prompt (900 tokens, always) → tool schemas (600, always) → customer's plan and open incidents (200, always) → top 5 reranked help-centre chunks (≈ 2,500, drop from the bottom if needed) → summary of conversation so far (300) → last 4 turns verbatim (≈ 800) → current question. Output reserve 800 tokens. Total ≈ 6,100 of a 16k window: faster and cheaper than filling it.</p></div>
+<div class="ff"><div class="ip"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"/></svg>In practice · Harbor</b>Harbor assembles context in priority order (instructions, tools, account facts, top reranked passages with dates and IDs, summary, last turns) and stops at 60% of the window.</div><div class="fa2"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>Failure to avoid</b>Compressing context and losing the exception clause or effective date that the answer depends on.</div></div>
