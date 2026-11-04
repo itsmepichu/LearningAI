@@ -2,49 +2,252 @@
  "c14-1": {
   "harbor": {
    "practice": "Harbor&#x27;s 8B FP8 model uses 8 GB of weights on an 80 GB GPU, leaving about 64 GB for KV cache: roughly 60 concurrent 8k-token conversations.",
-   "failure": "Assuming the model&#x27;s maximum context is affordable at the target concurrency."
+   "failure": "Assuming the model&#x27;s maximum context is affordable at the target concurrency.",
+   "fit": "good",
+   "fitNote": "8 GB of weights, about 64 GB of KV cache",
+   "tryIt": "In the memory estimator, choose 8B, FP8 weights, BF16 KV cache and 1 × 80 GB, then set 8k context and raise concurrent sequences until it no longer fits. Note where Harbor's roughly 60 conversations sits."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "concurrency peaks in a sale",
+   "practice": "During a sale, {assistant} has many short shopper chats open at once. {company} sizes GPUs on concurrent sequences at a 4k-token context, not on the model's 128k maximum, and caps context per chat to stay within that plan. (Illustrative.)",
+   "failure": "Allowing every chat the model's full context, so a few long chats use up the KV cache and the rest queue.",
+   "tryIt": "In the estimator, choose 8B at FP8 on 1 × 80 GB with 4k context, and find the most concurrent sequences that fit. Then switch the KV cache to FP8 and compare. Count the tokens of a few chats in <code>chats.json</code> to check 4k is enough."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "long policy prompts for staff",
+   "practice": "{company}'s staff assistant sends long policy excerpts, so each conversation uses about 16k tokens of context. Fewer conversations fit per GPU than the shopper-style chats in other teams' plans.",
+   "failure": "Copying another team's concurrency figures without checking the context length they assumed.",
+   "tryIt": "In the estimator, choose 8B, FP8 weights, BF16 KV, 1 × 80 GB, and compare concurrent sequences that fit at 4k and at 16k context."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "itineraries make context grow during a chat",
+   "practice": "A {company} rebooking chat grows as fare rules, options and the traveller's replies are added. The plan sizes for the 95th-percentile context length, measured from real chats, not the average.",
+   "failure": "Sizing on the average context length, so long disruption chats run out of KV cache at peak.",
+   "tryIt": "In the estimator, compare the KV cache for 64 sequences at 8k and at 32k context on an 8B model, and say which GPU option each needs."
   }
  },
  "c14-2": {
   "harbor": {
    "practice": "Harbor&#x27;s long-document summaries (20k-token prompts) are prefill-heavy; its email drafts (short prompts, 800-token outputs) are decode-heavy, and they are monitored separately.",
-   "failure": "Dividing total tokens by total time, which hides whether the wait happened before or during generation."
+   "failure": "Dividing total tokens by total time, which hides whether the wait happened before or during generation.",
+   "fit": "good",
+   "fitNote": "prefill-heavy summaries, decode-heavy drafts",
+   "tryIt": "In the request timeline, set 20,000 prompt tokens and 200 output tokens, then 500 prompt tokens and 800 output tokens, and compare first-token time and total time."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "short chats are decode-heavy; listing rewrites too",
+   "practice": "{assistant}'s chats have short prompts and short answers, so first-token time is mostly queueing. Listing rewrites for sellers have longer outputs and are judged on total time, not first token.",
+   "failure": "Promising sellers chat-like speed for 800-token listing rewrites.",
+   "tryIt": "In the timeline, set 1,500 prompt tokens and 150 output tokens (a chat), then 1,500 and 800 (a listing rewrite), and compare total time. Then raise the queue wait to 1,000 ms and see which one users would notice."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "long case files make first-token time long",
+   "practice": "A {company} case summary sends the whole case file (often 15k tokens), so first-token time is dominated by prefill. The UI shows progress during that wait.",
+   "failure": "Reporting average tokens per second, which hides a 2-second wait before the first token.",
+   "tryIt": "In the timeline, set 15,000 prompt tokens and 300 output tokens, and compute TTFT and total time by hand from the figure's rates. Then quadruple the prompt and compare."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "fare rules make prompts long",
+   "practice": "{company}'s change requests include long fare-rule text in the prompt, so prefill dominates first-token time; the answers are short.",
+   "failure": "Shortening answers to speed up a request whose time is mostly prefill.",
+   "tryIt": "Count the tokens of the rules in <code>fare_rules.json</code> and of a few <code>messages.json</code> messages, then enter the total as prompt tokens in the timeline with 150 output tokens."
   }
  },
  "c14-3": {
   "harbor": {
    "practice": "Harbor&#x27;s 6,000-token system prompt and tool list hit the prefix cache on most requests, cutting median first-token time by about 70%.",
-   "failure": "Assuming prefix caching removes decode cost or is automatically safe across tenants."
+   "failure": "Assuming prefix caching removes decode cost or is automatically safe across tenants.",
+   "fit": "good",
+   "fitNote": "a 6,000-token shared prefix",
+   "tryIt": "In the prefix-cache calculator, set a 6,000-token prefix, 800 unique tokens and an 80% hit rate, then lower the hit rate to 20% and compare first-token time and cost."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "one long system prompt for millions of chats",
+   "practice": "Every {assistant} chat starts with the same system prompt and tool list. {company} puts that stable text first and dynamic text (cart, order) after it, so the prefix cache hits on most requests. (Illustrative.)",
+   "failure": "Putting the shopper's name and cart at the top of the prompt, which makes every prefix unique and the cache useless.",
+   "tryIt": "In the calculator, set a 5,000-token prefix and 600 unique tokens, then move the hit rate from 90% to 10% to see the effect of putting dynamic text first. Run the static and continuous batching figure and compare idle slots."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "share prefixes only within a trust boundary",
+   "practice": "{company} shares prefix-cache blocks only for the common system prompt and policies, never for customer-specific text, and keeps separate cache pools for staff and customer assistants.",
+   "failure": "Assuming prefix caching is automatically safe to share across customers.",
+   "tryIt": "In the paged KV figure, step through with prefix sharing on and off and count physical blocks. Then write which parts of a staff assistant prompt may be shared and which may not."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "fare rules as a shared prefix",
+   "practice": "{company} places common fare rules before the booking details, so many change requests for the same fare type share a cached prefix.",
+   "failure": "Reordering the fare rules per request, which breaks prefix reuse.",
+   "tryIt": "In the calculator, set a 3,000-token prefix (fare rules) and 400 unique tokens, and compare costs at a 70% and a 0% hit rate with a 90% cached-token discount."
   }
  },
  "c14-4": {
   "harbor": {
    "practice": "Harbor tested 4-bit weights on its extraction suite and rejected them: two missed decimal places per 1,000 invoices was too many; FP8 passed.",
-   "failure": "Assuming &quot;4-bit&quot; means exactly 0.5 bytes per parameter; scales and other tensors add more."
+   "failure": "Assuming &quot;4-bit&quot; means exactly 0.5 bytes per parameter; scales and other tensors add more.",
+   "fit": "good",
+   "fitNote": "4-bit failed the extraction suite; FP8 passed",
+   "tryIt": "In the speculative decoding figure, set k = 4 and acceptance 75%, run several rounds, and compare with acceptance 40%. Then compute expected tokens per target pass for both with the figure's formula."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "speed for short chats",
+   "practice": "{company} serves its chat model in FP8, which passed its product Q&A suite, and tested 4-bit only for an offline tagging job where small errors are reviewed later.",
+   "failure": "Choosing 4-bit for live chat from perplexity numbers alone, without running the Q&A suite.",
+   "tryIt": "Follow the llama.cpp lab and compare Q8_0 and Q4_K_M on 20 product questions you write from listings, counting wrong answers for each."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "amounts and dates must survive quantisation",
+   "practice": "{company} tested quantised models on amounts, dates and reason codes. 4-bit weights changed some amounts in summaries, so only 8-bit formats are allowed for case work.",
+   "failure": "Accepting a quantised model because its average score matched, without checking numeric fields.",
+   "tryIt": "In the llama.cpp lab, compare Q8_0 and Q4_K_M on 20 summaries of <code>disputes.csv</code> rows and count changed amounts or dates."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "non-English quality degrades first",
+   "practice": "Quantisation hurt {company}'s Tamil and Hindi answers more than English, so each language is tested separately before a format is accepted.",
+   "failure": "Testing a quantised model only in English and shipping it for all languages.",
+   "tryIt": "In the llama.cpp lab, compare Q8_0 and Q4_K_M on 10 English and 10 Hindi or Tamil messages from <code>messages.json</code>, and compare error counts per language."
   }
  },
  "c14-5": {
   "harbor": {
    "practice": "Harbor runs its 70B model as two TP=4 units; losing one GPU takes one unit out while the other keeps serving.",
-   "failure": "Counting each GPU in a tensor-parallel group as an independent server."
+   "failure": "Counting each GPU in a tensor-parallel group as an independent server.",
+   "fit": "good",
+   "fitNote": "two TP=4 units",
+   "tryIt": "Using the 70B sizing example, recompute how many TP=4 replicas are needed for 300 concurrent 4k conversations, and then add one unit for N+1 redundancy."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "replicas for a sale peak",
+   "practice": "{company} scales throughput with replicas of a TP=2 model behind a prefix-aware router, so chats with the same system prompt reach a replica whose cache already holds it.",
+   "failure": "Routing requests at random across replicas, so each replica recomputes the shared prefix.",
+   "tryIt": "For a 70B FP8 model at 320 KiB per token of KV, compute the KV needed for 1,000 concurrent 4k chats and the number of TP=4 replicas from the chapter's example (about 215 GB of KV each)."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "self-hosted in its own data centre",
+   "practice": "{company} self-hosts a 70B model as TP=4 units in its own data centre and plans N+1 complete units, so a failed GPU does not stop staff tools.",
+   "failure": "Counting 8 GPUs as 8 servers when they form two tensor-parallel units.",
+   "tryIt": "Work out how many GPUs {company} needs for 2 serving units of TP=4 plus one spare unit, and say how many units remain if one GPU fails."
+  },
+  "travel": {
+   "fit": "limited",
+   "fitNote": "uses hosted models; no multi-GPU serving of its own",
+   "practice": "{company} uses hosted models, so tensor and pipeline parallelism are the provider's concern; its own planning is about rate limits and fallbacks.",
+   "failure": "Planning multi-GPU serving for a workload the hosted provider already handles.",
+   "tryIt": "List the provider limits (requests and tokens per minute) {company} would need for its peak, instead of GPU counts."
   }
  },
  "c14-6": {
   "harbor": {
    "practice": "A Harbor replica reports ready only after a real 20-token validation answer succeeds.",
-   "failure": "Scaling to zero while promising fast first responses."
+   "failure": "Scaling to zero while promising fast first responses.",
+   "fit": "good",
+   "fitNote": "ready only after a real answer",
+   "tryIt": "In the autoscaling figure, set cold start to 6 minutes and 1 warm replica, scaling on GPU utilisation, then switch to queue depth and raise warm replicas to 3. Note which settings remove the red shading."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "sale traffic ramps fast and on schedule",
+   "practice": "{company} knows when a sale starts, so it pre-scales replicas an hour before and keeps a warm pool. Scaling is on queue depth and first-token time, and replicas are ready only after a validation answer.",
+   "failure": "Reactive scaling on GPU utilisation with a 10-minute cold start, which misses the first rush of a sale.",
+   "tryIt": "In the autoscaling figure, set cold start to 10 minutes, 1 warm replica and GPU utilisation, then switch to queue depth with 3 warm replicas, and compare the red areas."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "steady working-hours demand",
+   "practice": "{company}'s staff traffic follows working hours, so it scales up on a schedule before 9:00 and keeps a minimum warm pool overnight for customer chat.",
+   "failure": "Scaling to zero overnight while the customer assistant promises fast replies at any hour.",
+   "tryIt": "In the figure, set cold start to 4 minutes and try 1, 2 and 3 warm replicas with queue-depth scaling, and pick the smallest pool that avoids SLO violations."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "disruption spikes are not scheduled",
+   "practice": "Weather disruptions bring sudden spikes in {company}'s change requests. A larger warm pool in the monsoon season covers the gap while new replicas start.",
+   "failure": "Sizing the warm pool for normal days and relying on autoscaling during a disruption.",
+   "tryIt": "Look at <code>disruptions.csv</code> for the months with most cancelled flights, then in the figure raise the warm pool until a 6-minute cold start causes no SLO violations."
   }
  },
  "c14-7": {
   "harbor": {
    "practice": "Harbor caps 100k-token requests to a separate long-context pool so they cannot crowd out short chats.",
-   "failure": "Running production at the throughput maximum near saturation, where tail latency explodes."
+   "failure": "Running production at the throughput maximum near saturation, where tail latency explodes.",
+   "fit": "good",
+   "fitNote": "a separate long-context pool",
+   "tryIt": "In the throughput–latency figure, raise the max batch size until ITL crosses the 50 ms line, and note the throughput at the largest batch under it."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "chats first, batch jobs second",
+   "practice": "{company} runs live chat and overnight catalogue tagging on the same pool. Chat has priority and a bounded queue; tagging fills spare capacity and is paused when the chat queue grows.",
+   "failure": "Letting a large tagging job fill the batch during a sale, so shopper chats exceed the latency target.",
+   "tryIt": "In the figure, find the batch size where ITL crosses 50 ms, then pick a cap below it and write how many slots you reserve for chat."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "admission control for staff and customers",
+   "practice": "{company} caps concurrent sequences per replica and rejects customer requests whose expected wait exceeds the deadline, with a clear “try again” message, rather than letting latency grow for everyone.",
+   "failure": "Reading nvidia-smi's 100% GPU utilisation as proof the GPUs are fully used.",
+   "tryIt": "In the figure, choose an operating point for p95 ITL ≤ 50 ms and write the admission rule for requests that would wait more than 2 seconds."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "priorities during disruptions",
+   "practice": "During a disruption, {company} gives rebooking chats priority over marketing content generation, and sheds the content jobs first when queues grow.",
+   "failure": "Running every workload at the same priority, so content generation slows rebooking.",
+   "tryIt": "In the figure, compare throughput at batch 8 and at the largest batch under the SLO, and write which workload {company} should shed first."
   }
  },
  "c14-8": {
   "harbor": {
    "practice": "Harbor&#x27;s cost review compares $ per resolved question, not $ per token, for hosted and self-hosted options at the same quality bar.",
-   "failure": "Calling a cheap token cheap when the task needs many calls or human fixes."
+   "failure": "Calling a cheap token cheap when the task needs many calls or human fixes.",
+   "fit": "good",
+   "fitNote": "dollars per resolved question",
+   "tryIt": "In the break-even calculator, keep the defaults, then raise tokens per month until self-hosting is cheaper. Then set utilisation to 70% and find the new break-even."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "high steady volume for offline jobs",
+   "practice": "{company}'s catalogue tagging runs at high, steady volume, which keeps GPUs busy, so a small self-hosted model is cheaper there; live chat stays on a hosted API because its traffic is spiky. (Illustrative.)",
+   "failure": "Comparing hosting options at peak utilisation, when the average over a day is much lower.",
+   "tryIt": "In the calculator, set 100 billion tokens a month and 70% utilisation for tagging, then 20 billion at 30% for chat, and compare the result for each."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "data control can force self-hosting",
+   "practice": "{company}'s rules keep customer data in its own data centre for some uses, so self-hosting is required there whatever the token cost. The cost review then compares self-hosted designs, not self-hosting against an API.",
+   "failure": "Leaving engineers, on-call and redundancy out of the self-hosted cost.",
+   "tryIt": "In the calculator, set your own volume and include at least 2 GPUs and a realistic ops cost, then compute the cost per resolved case at 400 cases a day."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "hosted API wins at its volume",
+   "practice": "At {company}'s volume and seasonal traffic, the hosted API is cheaper than keeping GPUs warm all year. The team re-runs the comparison each year. (Illustrative.)",
+   "failure": "Self-hosting for the monsoon peak and paying for idle GPUs the rest of the year.",
+   "tryIt": "In the calculator, set 10 billion tokens and 25% utilisation, then 40 billion and 60%, and note when self-hosting wins."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Use prompts built from <code>chats.json</code> with a long shared system prompt. Measure first-token time with and without a repeated prefix, compare Q8_0 and Q4_K_M on 20 product questions, and record projected sale-day capacity in a separate table.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use case-summary prompts built from <code>disputes.csv</code> and <code>policies.json</code>. Measure first-token time as the prompt grows, compare Q8_0 and Q4_K_M on amounts and dates, and keep measured CPU numbers apart from projected GPU numbers.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Use prompts from <code>messages.json</code> with rules from <code>fare_rules.json</code>. Measure first-token time and decode speed, compare Q8_0 and Q4_K_M per language, and keep projected disruption-day capacity in a separate table.</p>"
   }
  }
 }

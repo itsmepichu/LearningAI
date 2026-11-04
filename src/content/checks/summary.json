@@ -1,7 +1,7 @@
 {
  "totals": {
-  "mcq": 870,
-  "interview": 680
+  "mcq": 1111,
+  "interview": 880
  },
  "chapters": {
   "c1": {
@@ -417,52 +417,120 @@
    }
   },
   "c13": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 70,
+   "interview": 56,
    "sections": {
     "c13-1": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c13-3": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c13-6": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c13-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c13-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c13-5": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c13-7": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
   "c14": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 80,
+   "interview": 64,
    "sections": {
     "c14-2": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c14-3": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c14-5": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c14-1": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c14-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c14-6": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c14-7": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c14-8": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
   "c15": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 100,
+   "interview": 80,
    "sections": {
     "c15-1": {
-     "mcq": 2,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c15-9": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-3": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-5": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-6": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-7": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-8": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c15-10": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },

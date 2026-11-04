@@ -2,43 +2,222 @@
  "c13-1": {
   "harbor": {
    "practice": "Harbor knew the right policy but formatted extractions inconsistently, so it got a small SFT; missing-policy failures were fixed in retrieval instead.",
-   "failure": "Training around an ingestion or authorisation bug that should be fixed in code."
+   "failure": "Training around an ingestion or authorisation bug that should be fixed in code.",
+   "fit": "good",
+   "fitNote": "a small SFT for format, retrieval for facts",
+   "tryIt": "Take Harbor's last 20 failed answers and put each against the symptom table: wrong facts, wrong format, cost, long prompt, vocabulary, or retrieval misses. Count which rung most failures point to."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "attribute extraction at catalogue volume",
+   "practice": "{company} extracts attributes (size, material, pack size) from millions of seller titles a month. A large hosted model does it well but costs too much at that volume, so the team distils it into a small fine-tuned model, after checking the teacher model's licence allows it.",
+   "failure": "Fine-tuning to fix missing product facts that should come from the catalogue at query time.",
+   "tryIt": "Take 20 titles from <code>products.csv</code> and compare the <code>attributes</code> column with what a local model extracts from the title with a good prompt. Then estimate monthly cost for 3 million titles at two per-call prices of your choice (illustrative)."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "most gaps are retrieval or rules, not training",
+   "practice": "Most of {company}'s assistant failures were outdated policy facts (fixed with retrieval) or rules best kept in code. Fine-tuning was used only for the dispute-reason classifier, where a small model replaced a long prompt.",
+   "failure": "Fine-tuning a model on policy text so it “knows” the rules, then having no way to update it when a policy changes.",
+   "tryIt": "Classify 20 rows of <code>disputes.csv</code> into <code>reason</code> with a prompt and with few-shot examples, and decide from the error count whether the next rung is needed."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "multilingual messages strain prompting",
+   "practice": "{company}'s intent extraction from messages in English, Hindi, Tamil and Hinglish worked with a strong prompt but needed 3,000 tokens of examples per call. A small fine-tune moved the examples into the model and cut the prompt.",
+   "failure": "Reaching for continued pretraining for Hinglish when a few hundred labelled examples were enough.",
+   "tryIt": "Extract intent and booking fields from 20 messages in <code>messages.json</code> with a short prompt, then with a long few-shot prompt, and count the prompt tokens each needs."
   }
  },
  "c13-2": {
   "harbor": {
    "practice": "Harbor&#x27;s extraction guideline says a missing effective date is null, never inferred; two annotators label a shared sample and resolve disagreements before scaling up.",
-   "failure": "Scaling annotation before the guideline produces agreement, which trains the model to be confidently inconsistent."
+   "failure": "Scaling annotation before the guideline produces agreement, which trains the model to be confidently inconsistent.",
+   "fit": "good",
+   "fitNote": "null, never inferred",
+   "tryIt": "Step through the dataset pipeline figure. Then write a one-page guideline for extracting effective dates from Harbor policies, with three edge cases, and label 20 policies with a colleague to measure agreement."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "attribute rules need a written guideline",
+   "practice": "{company}'s attribute guideline says what counts as “material” and “pack size”, and that a missing value is null, not guessed. Two annotators label a pilot of 100 titles; disagreements on bundles and combos changed the guideline twice before scaling up.",
+   "failure": "Annotators accepting model drafts unchanged, which copies the drafting model's mistakes into the training set.",
+   "tryIt": "Write a guideline for pack size and material, then label 30 titles from <code>products.csv</code> with a colleague and compute Cohen's kappa. Fix the rule behind your largest disagreement."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "labels drive regulated decisions",
+   "practice": "{company} labels dispute texts with reason codes. The guideline covers cases with two reasons and texts in Hindi, and the test set is split by customer so no customer's cases appear in both train and test.",
+   "failure": "Splitting by row, so near-identical complaints from one customer land in train and test and inflate the score.",
+   "tryIt": "Label 30 rows of <code>disputes.csv</code> for <code>reason</code> without looking at the column, compare with a colleague and with the given labels, and write the rule that resolves your top disagreement."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "annotators must read several languages",
+   "practice": "{company}'s guideline has worked examples in each language and for code-mixed Hinglish. Each language has its own reviewer, and agreement is measured per language because it was much lower for Tamil at first.",
+   "failure": "Measuring agreement only on English and assuming the other languages are labelled as well.",
+   "tryIt": "Label 20 messages from <code>messages.json</code> with intent and travel date, with a colleague, and compute agreement separately for English and the other languages."
   }
  },
  "c13-3": {
   "harbor": {
    "practice": "Harbor&#x27;s format adapter is LoRA rank 16 on attention and MLP layers of an 8B model: about 42M trainable parameters, an 84 MB adapter file.",
-   "failure": "Assuming few trainable parameters means low compute; the frozen base still runs forward and backward."
+   "failure": "Assuming few trainable parameters means low compute; the frozen base still runs forward and backward.",
+   "fit": "good",
+   "fitNote": "rank 16 on attention and MLP, about 42M parameters",
+   "tryIt": "In the LoRA calculator, set rank 16 and all linear modules and check you get about 42M parameters. Then switch to q, v only and rank 8 and compare."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "one small adapter per task",
+   "practice": "{company} keeps one base model and swaps small LoRA adapters per task (attribute extraction, review tagging), so a new task does not need a new full model copy.",
+   "failure": "Fine-tuning a full model copy for every category, and then paying to store and serve each one.",
+   "tryIt": "In the calculator, compare rank 8 with q, v and rank 16 with all linear modules, and work out the adapter size at 2 bytes per parameter. Then decide how many adapters fit in 1 GB."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "QLoRA on one in-house GPU",
+   "practice": "{company}'s data cannot leave its own data centre, so the classifier adapter is trained with QLoRA on a single in-house GPU rather than a hosted fine-tuning service.",
+   "failure": "Assuming QLoRA's small adapter means training is cheap: the frozen base model still runs forward and backward on every step.",
+   "tryIt": "In the memory figure, compare full fine-tuning, LoRA and QLoRA for an 8B model, and say which fits one 24 GB GPU. Then use the scale figure to compare a 4096 × 4096 matrix with its rank-16 adapter."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "adapters per language are possible but rarely needed",
+   "practice": "{company} tried a separate adapter per language and then one adapter trained on all languages; the single adapter was as good and simpler to serve.",
+   "failure": "Training rank 64 on every module by default, when rank 16 on attention scored the same.",
+   "tryIt": "In the calculator, compute the parameters for rank 16 on q, k, v, o and for rank 64 on all linear modules, and estimate the adapter file size of each."
   }
  },
  "c13-4": {
   "harbor": {
    "practice": "Harbor trained on 3,000 extraction records including 600 with absent fields, and tests on policy families it never saw in training.",
-   "failure": "Assuming a trained tool-call format authorises execution or guarantees the chosen action is right."
+   "failure": "Assuming a trained tool-call format authorises execution or guarantees the chosen action is right.",
+   "fit": "good",
+   "fitNote": "600 absent-field examples out of 3,000",
+   "tryIt": "Write five extraction records for Harbor policies, two of them with the effective date absent (null). Then test a local model on a policy with no date and see whether it invents one."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "extraction with many absent fields",
+   "practice": "{company}'s attribute extractor outputs JSON with nulls for missing fields. Early training data had few nulls, so the model invented materials for titles that never mentioned one; adding null examples fixed it.",
+   "failure": "Training mostly on complete titles, so the model learns to always fill every field.",
+   "tryIt": "Write 10 extraction records from <code>products.csv</code> titles (title → JSON of attributes), at least 4 with a null field, and test a local model on titles with no material."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "a small classifier beats an LLM here",
+   "practice": "{company}'s dispute-reason classifier is a fine-tuned small encoder, not an LLM: it is cheaper, faster and as accurate, and its per-class recall is reported for every reason code.",
+   "failure": "Reporting only overall accuracy while the rare reason codes are misclassified.",
+   "tryIt": "Train a TF-IDF and logistic regression baseline on <code>disputes.csv</code> text → <code>reason</code>, and report per-class precision and recall before considering an LLM."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "tool-use traces for rebooking",
+   "practice": "{company}'s tool-use training records are full traces: message → search tool call → results → hold call → reply, including “no tool needed” cases such as questions about baggage.",
+   "failure": "Training only on records that call tools, so the model calls search for every message.",
+   "tryIt": "Write three tool-use training records from <code>messages.json</code>: one that searches, one that checks a fare rule in <code>fare_rules.json</code>, and one that needs no tool."
   }
  },
  "c13-5": {
   "harbor": {
    "practice": "Harbor&#x27;s embedding fine-tune uses adjudicated query, positive and hard-negative triples, and is judged by Recall@20 on real queries and then by answer quality.",
-   "failure": "Mining hard negatives without checking them; some are valid answers, and the model learns to reject good evidence."
+   "failure": "Mining hard negatives without checking them; some are valid answers, and the model learns to reject good evidence.",
+   "fit": "good",
+   "fitNote": "adjudicated triples, judged by Recall@20",
+   "tryIt": "Step through the synthetic-data pipeline figure. Then generate two questions per Harbor policy with a local model, filter the ones the policy does not answer, and mine hard negatives with your chapter 9 retriever."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "shopper queries use their own words",
+   "practice": "Shoppers search {company} with sizes, brand nicknames and Hinglish (“kurta cotton XL”, “saree halka”). Search logs give query and clicked-product pairs; hard negatives are similar products the shopper did not choose.",
+   "failure": "Taking every non-clicked product as a negative, when many were relevant and just lower on the page.",
+   "tryIt": "Write 20 shopper-style queries for products in <code>products.csv</code>, pair each with its product, mine 3 hard negatives with a general embedding model, and check by hand that the negatives are really wrong."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "banking terms and codes",
+   "practice": "{company}'s staff search for UPI and card terms, reason codes and internal abbreviations that general embedding models miss. A fine-tuned reranker came first because it needed no re-index.",
+   "failure": "Re-embedding the whole policy corpus for a gain a reranker could have given.",
+   "tryIt": "Write 15 staff queries using abbreviations (UPI, MCC, chargeback) for policies in <code>policies.json</code>, measure Recall@3 with a general model, and list which queries fail."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "airport and station codes",
+   "practice": "Travellers type airport and station codes and city nicknames (BLR, “Bombay”). {company} fine-tuned its embeddings on query and fare-rule pairs that include those forms.",
+   "failure": "Evaluating on the synthetic questions used for training, which look nothing like real traveller messages.",
+   "tryIt": "Write queries using codes and nicknames for routes in <code>bookings.csv</code> and rules in <code>fare_rules.json</code>, and compare Recall@3 of a general embedding model on codes versus full names."
   }
  },
  "c13-6": {
   "harbor": {
    "practice": "Harbor&#x27;s adapter improved field accuracy but began filling missing IDs with plausible values; that blocked release despite a higher average score.",
-   "failure": "Treating a few passed privacy probes as proof that no training data can be extracted."
+   "failure": "Treating a few passed privacy probes as proof that no training data can be extracted.",
+   "fit": "good",
+   "fitNote": "invented IDs blocked a release",
+   "tryIt": "Read the release scorecard and list the two failing gates. Then write the gates you would set for Harbor's adapter, including an absent-field fabrication limit."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "general and multilingual regressions",
+   "practice": "{company}'s fine-tuned extractor improved attribute accuracy but its chat answers in Hindi got worse; the release was blocked until Hindi examples were added to the training mix.",
+   "failure": "Comparing the fine-tuned model with the base model and a weak prompt, which exaggerates the gain.",
+   "tryIt": "Write a scorecard like the figure's for an attribute extractor: domain gain, fabrication rate, general instruction following, Hindi and English chat, each with a gate."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "memorised customer data is a breach",
+   "practice": "{company} plants canary strings in its training data and probes the fine-tuned model with prefixes of real training records before release. Customer identifiers are removed from training text in the first place.",
+   "failure": "Fine-tuning on raw dispute notes that contain account numbers, then finding the model completes them.",
+   "tryIt": "Write 5 canary strings and 5 prefix probes for a model trained on <code>disputes.csv</code>-style text, and say what result blocks release."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "multilingual regressions",
+   "practice": "{company} gates each language separately. A fine-tune that helped English bookings dropped Tamil intent accuracy by 6 points, which failed the gate even though the average improved.",
+   "failure": "Gating on the average across languages, so one language's drop hides behind another's gain.",
+   "tryIt": "Write per-language gates for an intent model using the languages in <code>messages.json</code>, and decide whether a +4 point English gain with a −5 point Tamil drop ships."
   }
  },
  "c13-7": {
   "harbor": {
    "practice": "Harbor&#x27;s adapter-r431 is registered with its exact base revision, tokenizer, dataset manifest, schema and evaluation suite; deploying it on another base revision requires re-testing.",
-   "failure": "Recording a model by name without an immutable revision."
+   "failure": "Recording a model by name without an immutable revision.",
+   "fit": "good",
+   "fitNote": "adapter-r431 with its exact base revision",
+   "tryIt": "Follow the MLflow laptop lab, log two runs with different ranks, and register the better one. Then write Harbor's model card fields for adapter-r431."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "many adapters need a registry",
+   "practice": "{company} has adapters for several tasks and categories. Each is registered with its base model revision, dataset version and scorecard, and the serving config refers to registry versions, not file paths.",
+   "failure": "Loading an adapter by file name, so a retrained file silently replaces the tested one.",
+   "tryIt": "Log two training runs in MLflow with different datasets, then write which fields would let you trace a bad extraction back to the dataset version."
+  },
+  "bank": {
+   "fit": "best",
+   "fitNote": "model risk review needs full lineage",
+   "practice": "{company}'s model risk team must approve every model release. The registry links each version to its data, code, evaluation results and model card, and the previous version stays deployable for rollback.",
+   "failure": "Being unable to show the regulator which data trained the model in production.",
+   "tryIt": "Write a model card for a dispute-reason classifier: intended use, training data summary, per-class results, limitations, owner and rollback plan."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "reproducing a run months later",
+   "practice": "{company} pins the container image digest, seed and data order for each run. When a later run scored lower, the team reran the old one within tolerance and found a dataset change.",
+   "failure": "Expecting bitwise-identical results on GPUs and losing time chasing tiny metric differences.",
+   "tryIt": "In the MLflow lab, run the same config twice with the same seed and with different seeds, and write the tolerance you would accept between reruns."
+  }
+ },
+ "_lab": {
+  "store": {
+   "scenario": "<p>Task: extract pack size and material from titles in <code>products.csv</code>. Freeze a prompt-only baseline, label 200 titles with a written guideline (with null rules), keep brands separate between train and test, then train the adapter and compare.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Task: classify dispute texts in <code>disputes.csv</code> into reason codes. Compare a prompt, a TF-IDF baseline and a LoRA adapter, split by customer, and run canary probes before any release decision.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Task: extract intent and travel date from <code>messages.json</code>. Freeze a prompt baseline, label examples per language, train the adapter, and gate each language separately in the release decision.</p>"
   }
  }
 }
