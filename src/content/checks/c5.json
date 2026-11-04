@@ -13,9 +13,273 @@
     "answer": 1,
     "why": "It sets future scores to −∞ before softmax so each position sees only its prefix.",
     "kind": "concept"
+   },
+   {
+    "id": "c5-4-m02",
+    "q": "Encoder-only models such as BERT are trained to…",
+    "options": [
+     "Fill in masked tokens, with every token seeing every other",
+     "Translate between languages only",
+     "Predict the next token only",
+     "Generate speech"
+    ],
+    "answer": 0,
+    "why": "Bidirectional attention suits understanding tasks: classification, extraction, embeddings and rerankers.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "That is an encoder–decoder use.",
+     "That is decoder-only training.",
+     "Speech models are a separate family."
+    ]
+   },
+   {
+    "id": "c5-4-m03",
+    "q": "Decoder-only models use which attention pattern?",
+    "options": [
+     "Causal: each token sees only earlier tokens",
+     "None",
+     "Only cross-attention",
+     "Bidirectional"
+    ],
+    "answer": 0,
+    "why": "They are trained to predict the next token, which suits generation.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "They rely on attention.",
+     "Cross-attention needs an encoder.",
+     "That is encoder-only."
+    ]
+   },
+   {
+    "id": "c5-4-m04",
+    "q": "Which family suits translation, summarisation and speech recognition, for example T5, BART and Whisper?",
+    "options": [
+     "Convolutional only",
+     "Decoder-only only",
+     "Encoder–decoder",
+     "Encoder-only"
+    ],
+    "answer": 2,
+    "why": "The encoder reads the input bidirectionally; the decoder generates with cross-attention to it.",
+    "kind": "concept",
+    "distractors": [
+     "These are transformers.",
+     "Decoder-only models can do it, but these examples are encoder–decoder.",
+     "",
+     "Encoders alone do not generate sequences."
+    ]
+   },
+   {
+    "id": "c5-4-m05",
+    "q": "You need fast sentence embeddings for vector search. Which architecture fits?",
+    "options": [
+     "Encoder–decoder speech model",
+     "A CNN image model",
+     "Encoder-only (a bi-encoder)",
+     "Decoder-only chat model"
+    ],
+    "answer": 2,
+    "why": "Most embedding models are encoders trained contrastively (4.4).",
+    "kind": "scenario",
+    "distractors": [
+     "That is for speech.",
+     "That is for images.",
+     "",
+     "Chat models are slow and not trained for embeddings."
+    ]
+   },
+   {
+    "id": "c5-4-m06",
+    "q": "Why did decoder-only models win for general-purpose use?",
+    "options": [
+     "One simple objective scales on any text, and every task can be phrased as continuation",
+     "They are always smaller",
+     "They cannot be fine-tuned",
+     "They use no attention"
+    ],
+    "answer": 0,
+    "why": "Next-token prediction needs no labels and covers chat, code and agents.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "They are often very large.",
+     "They are fine-tuned routinely.",
+     "They are built on attention."
+    ]
+   },
+   {
+    "id": "c5-4-m07",
+    "q": "In a RAG system, which three architectures commonly appear?",
+    "options": [
+     "Three decoder-only models",
+     "A bi-encoder for retrieval, a cross-encoder reranker, and a decoder-only answer model",
+     "One encoder–decoder for everything",
+     "Only a CNN and an RNN"
+    ],
+    "answer": 1,
+    "why": "Each transformer is matched to its job.",
+    "kind": "scenario",
+    "distractors": [
+     "Decoders are a poor fit for fast retrieval and reranking.",
+     "",
+     "That is not how RAG stacks are built.",
+     "Those are not RAG components."
+    ]
+   },
+   {
+    "id": "c5-4-m08",
+    "q": "How does a cross-encoder reranker differ from a bi-encoder?",
+    "options": [
+     "It works only on images",
+     "It embeds each text separately",
+     "It generates answers",
+     "It reads the query and passage together, which is more accurate but slower"
+    ],
+    "answer": 3,
+    "why": "A bi-encoder can precompute document vectors; a cross-encoder must run once per query–passage pair.",
+    "kind": "concept",
+    "distractors": [
+     "It is a text model.",
+     "That is the bi-encoder.",
+     "Answer generation is the decoder's job.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-4-m09",
+    "q": "Whisper is an example of which architecture?",
+    "options": [
+     "Decoder-only",
+     "Mixture of experts only",
+     "Encoder–decoder",
+     "Encoder-only"
+    ],
+    "answer": 2,
+    "why": "An audio encoder feeds a text decoder through cross-attention.",
+    "kind": "concept",
+    "distractors": [
+     "It has an audio encoder.",
+     "That is a different design dimension.",
+     "",
+     "It generates text, so it has a decoder."
+    ]
+   },
+   {
+    "id": "c5-4-m10",
+    "q": "You mean-pool a generic encoder's outputs and use them as sentence embeddings without testing. What is the risk?",
+    "options": [
+     "The result may be a poor sentence embedding; use a trained embedding model or evaluate first",
+     "It cannot be computed",
+     "It is a decoder-only model",
+     "It is always optimal"
+    ],
+    "answer": 0,
+    "why": "Encoders not trained for similarity often give weak retrieval vectors.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "It can be computed.",
+     "It is still an encoder.",
+     "There is no such guarantee."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c5-4-i01",
+    "q": "Compare encoder-only, decoder-only and encoder–decoder transformers.",
+    "level": "fundamentals",
+    "covers": [
+     "Attention patterns",
+     "Training objectives",
+     "Typical uses",
+     "Examples of each"
+    ]
+   },
+   {
+    "id": "c5-4-i02",
+    "q": "What is the difference between a bi-encoder and a cross-encoder?",
+    "level": "fundamentals",
+    "covers": [
+     "Separate versus joint encoding",
+     "Precomputed vectors versus per-pair scoring",
+     "Speed versus accuracy",
+     "Retrieval then reranking"
+    ]
+   },
+   {
+    "id": "c5-4-i03",
+    "q": "Why do decoder-only models dominate general-purpose AI?",
+    "level": "fundamentals",
+    "covers": [
+     "Self-supervised next-token objective",
+     "Scales on any text",
+     "Every task as continuation",
+     "Instruction tuning on top"
+    ]
+   },
+   {
+    "id": "c5-4-i04",
+    "q": "Choose an architecture for each: classification, translation, chat, embeddings. Justify each choice.",
+    "level": "applied",
+    "covers": [
+     "Encoder for classification and embeddings",
+     "Encoder–decoder or decoder for translation",
+     "Decoder for chat",
+     "Cost and latency considerations"
+    ]
+   },
+   {
+    "id": "c5-4-i05",
+    "q": "{company} must classify dispute reasons into fixed labels. Would you use a fine-tuned encoder or a prompted LLM?",
+    "level": "applied",
+    "covers": [
+     "Fixed labels and labelled data favour an encoder",
+     "Cost, latency and calibration",
+     "LLM as a baseline or label bootstrapper",
+     "Compare on the same test set"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c5-4-i06",
+    "q": "Why can adding a reranker improve RAG answers?",
+    "level": "applied",
+    "covers": [
+     "Joint reading of query and passage",
+     "Better top-k ordering",
+     "Fewer, better passages in context",
+     "Latency cost of reranking"
+    ]
+   },
+   {
+    "id": "c5-4-i07",
+    "q": "Design a retrieve-rerank-generate stack with a latency budget.",
+    "level": "system-design",
+    "covers": [
+     "Bi-encoder or hybrid retrieval to top 50–100",
+     "Cross-encoder rerank to top 5–10",
+     "Decoder answer with citations",
+     "Budget per stage and caching",
+     "Measure each stage's effect"
+    ],
+    "followUp": "Where would you cut first if the budget halved?"
+   },
+   {
+    "id": "c5-4-i08",
+    "q": "{company}'s search uses an LLM to rank every candidate product and is too slow. What would you change?",
+    "level": "system-design",
+    "covers": [
+     "Retrieve with embeddings or keywords first",
+     "Rerank a small set with a cross-encoder",
+     "Keep the LLM for answers",
+     "Measure click-through and latency"
+    ],
+    "project": "store"
+   }
+  ]
  },
  "c5-2": {
   "mcq": [
@@ -31,9 +295,274 @@
     "answer": 1,
     "why": "Full attention compares every pair of tokens: cost grows with n².",
     "kind": "concept"
+   },
+   {
+    "id": "c5-2-m02",
+    "q": "In attention, what is the intuition behind query, key and value?",
+    "options": [
+     "They are three copies of the same vector",
+     "Query: the user's question; key: the password; value: the answer",
+     "Query and key are the input and output tokens",
+     "Query: what I am looking for; key: what I contain; value: what I pass on"
+    ],
+    "answer": 3,
+    "why": "Each is a learned projection of the token's representation.",
+    "kind": "concept",
+    "distractors": [
+     "They come from different learned matrices.",
+     "These are internal vectors, not the user's question.",
+     "All three are computed for every token.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-2-m03",
+    "q": "What is the attention formula?",
+    "options": [
+     "softmax(V) · QK",
+     "softmax(QKᵀ / √d) · V",
+     "Q · K · V",
+     "QKᵀ + V"
+    ],
+    "answer": 1,
+    "why": "Scores from query–key dot products are scaled, softmaxed, and used to average the values.",
+    "kind": "concept",
+    "distractors": [
+     "The softmax applies to the scores, not V.",
+     "",
+     "That omits the transpose, scaling and softmax.",
+     "There is no softmax or scaling there."
+    ]
+   },
+   {
+    "id": "c5-2-m04",
+    "q": "Why divide attention scores by √d?",
+    "options": [
+     "To make attention faster",
+     "To mask future tokens",
+     "To keep scores in a range where softmax does not saturate",
+     "To reduce memory"
+    ],
+    "answer": 2,
+    "why": "Dot products grow with dimension; scaling keeps the softmax from becoming nearly one-hot too early.",
+    "kind": "concept",
+    "distractors": [
+     "It does not change the speed.",
+     "Masking is a separate step.",
+     "",
+     "Memory is unchanged."
+    ]
+   },
+   {
+    "id": "c5-2-m05",
+    "q": "What is cross-attention?",
+    "options": [
+     "Attention without values",
+     "Attention between two heads",
+     "Queries come from one sequence (the decoder) and keys and values from another (the encoder output)",
+     "Attention to future tokens"
+    ],
+    "answer": 2,
+    "why": "It lets a decoder look at the input sequence, as in translation.",
+    "kind": "concept",
+    "distractors": [
+     "Values are always used.",
+     "Heads run in parallel; that is multi-head attention.",
+     "",
+     "Future tokens are masked in generation."
+    ]
+   },
+   {
+    "id": "c5-2-m06",
+    "q": "What does multi-head attention do?",
+    "options": [
+     "Attends only to the first token",
+     "Repeats the same attention several times",
+     "Replaces the feed-forward layer",
+     "Runs several attentions in parallel with different projections, then concatenates them"
+    ],
+    "answer": 3,
+    "why": "Different heads can learn different relations, such as syntax or coreference.",
+    "kind": "concept",
+    "distractors": [
+     "Heads attend over all allowed tokens.",
+     "Each head has its own projections.",
+     "The feed-forward layer is separate.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-2-m07",
+    "q": "For a sequence of 1,000 tokens, how many query–key scores does one head compute?",
+    "options": [
+     "500,500",
+     "2,000",
+     "1,000,000",
+     "1,000"
+    ],
+    "answer": 2,
+    "why": "Every query is compared with every key: 1,000 × 1,000. A causal mask hides about half, but they are still computed in a plain implementation.",
+    "kind": "calculation",
+    "distractors": [
+     "That counts only the unmasked lower triangle including the diagonal.",
+     "That adds instead of multiplying.",
+     "",
+     "That is one per token."
+    ]
+   },
+   {
+    "id": "c5-2-m08",
+    "q": "A model has 32 attention heads, each of dimension 128. What is its model dimension?",
+    "options": [
+     "32",
+     "160",
+     "128",
+     "4,096"
+    ],
+    "answer": 3,
+    "why": "32 × 128 = 4,096, the d_model of an 8B-class model.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the head count.",
+     "That adds the numbers.",
+     "That is one head's dimension.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-2-m09",
+    "q": "Engineers want to explain why an answer ignored a clause. What role should attention weights play?",
+    "options": [
+     "They prove which document is true",
+     "The full explanation",
+     "No role at all",
+     "One clue, alongside retrieval scores and the prompt, not a complete explanation"
+    ],
+    "answer": 3,
+    "why": "Attention shows where information flowed in one layer and head; many other computations shape the output.",
+    "kind": "scenario",
+    "distractors": [
+     "Attention says nothing about truth.",
+     "They are not a complete account of behaviour.",
+     "They can still be a useful clue.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-2-m10",
+    "q": "Each token's attention output is…",
+    "options": [
+     "The largest key",
+     "A probability over the vocabulary",
+     "A copy of its own embedding",
+     "A weighted average of the value vectors"
+    ],
+    "answer": 3,
+    "why": "The weights come from how well its query matches each key.",
+    "kind": "concept",
+    "distractors": [
+     "Keys are used for scoring, not as the output.",
+     "Vocabulary probabilities come from the LM head.",
+     "Information is gathered from other tokens.",
+     ""
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c5-2-i01",
+    "q": "Explain self-attention step by step.",
+    "level": "fundamentals",
+    "covers": [
+     "Project tokens to Q, K and V",
+     "Score every query against every key",
+     "Scale and softmax",
+     "Weighted sum of values",
+     "Mask for generation"
+    ]
+   },
+   {
+    "id": "c5-2-i02",
+    "q": "Why are attention scores scaled by √d?",
+    "level": "fundamentals",
+    "covers": [
+     "Dot products grow with dimension",
+     "Large scores saturate softmax",
+     "Saturation gives tiny gradients",
+     "Scaling keeps training stable"
+    ]
+   },
+   {
+    "id": "c5-2-i03",
+    "q": "What does multi-head attention add over a single head?",
+    "level": "fundamentals",
+    "covers": [
+     "Several relations learned in parallel",
+     "Different projections per head",
+     "Concatenate and mix with an output matrix",
+     "Same total size split across heads"
+    ]
+   },
+   {
+    "id": "c5-2-i04",
+    "q": "What does the n × n score matrix imply for long prompts?",
+    "level": "applied",
+    "covers": [
+     "Compute grows with the square of length",
+     "FlashAttention avoids storing the full matrix",
+     "The KV cache grows linearly",
+     "Prefer retrieval over stuffing (5.7)"
+    ]
+   },
+   {
+    "id": "c5-2-i05",
+    "q": "An answer ignores a key clause in the retrieved text. How would you investigate, and where do attention weights fit?",
+    "level": "applied",
+    "covers": [
+     "Check the clause was retrieved and in the prompt",
+     "Check its position and the prompt wording",
+     "Ablate: remove or move the clause and compare",
+     "Attention as one clue only"
+    ],
+    "followUp": "How would you turn the finding into a regression test?"
+   },
+   {
+    "id": "c5-2-i06",
+    "q": "{assistant} sometimes links the wrong date to the wrong city in a long request. How would you reason about it, and what would you change?",
+    "level": "applied",
+    "covers": [
+     "Attention can link distant words, but it is not guaranteed",
+     "Missing context such as today's date",
+     "Structured extraction with a schema",
+     "Confirm key fields with the traveller",
+     "Test long, mixed-language requests"
+    ],
+    "project": "travel"
+   },
+   {
+    "id": "c5-2-i07",
+    "q": "Explain to a team why doubling the context more than doubles prefill cost, and how you would reduce it.",
+    "level": "system-design",
+    "covers": [
+     "Attention compute is quadratic in length",
+     "Other costs grow linearly",
+     "Retrieve fewer, better passages",
+     "Prompt caching for shared prefixes",
+     "Measure latency against context size"
+    ]
+   },
+   {
+    "id": "c5-2-i08",
+    "q": "How would you test whether a model actually uses a retrieved passage?",
+    "level": "system-design",
+    "covers": [
+     "Ablation: answer with and without it",
+     "Move it to different positions",
+     "Require citations and check them",
+     "Attribution methods as supporting evidence"
+    ]
+   }
+  ]
  },
  "c5-7": {
   "mcq": [
@@ -49,8 +578,1440 @@
     "answer": 1,
     "why": "All experts must be resident, so weight memory follows total parameters.",
     "kind": "concept"
+   },
+   {
+    "id": "c5-7-m02",
+    "q": "In a dense model, which parameters are used for each token?",
+    "options": [
+     "All of them",
+     "Only the embeddings",
+     "Only the experts the router picks",
+     "Half of them at random"
+    ],
+    "answer": 0,
+    "why": "Dense models apply every weight to every token.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "All layers are used.",
+     "That describes mixture-of-experts.",
+     "Nothing is random."
+    ]
+   },
+   {
+    "id": "c5-7-m03",
+    "q": "How does a mixture-of-experts layer work?",
+    "options": [
+     "Every expert processes every token",
+     "Experts are separate models called in sequence",
+     "A router picks the top few expert FFNs for each token, and their outputs are combined",
+     "Experts replace attention"
+    ],
+    "answer": 2,
+    "why": "For example, 2 of 8 or 8 of 128 experts per token.",
+    "kind": "concept",
+    "distractors": [
+     "That would be a large dense model.",
+     "They are inside each layer, chosen per token.",
+     "",
+     "Experts replace the FFN, not attention."
+    ]
+   },
+   {
+    "id": "c5-7-m04",
+    "q": "Mixtral 8x7B has about 47B total and 13B active parameters. Its compute per token is roughly that of…",
+    "options": [
+     "A 7B dense model",
+     "A 47B dense model",
+     "A 13B dense model",
+     "A 56B dense model"
+    ],
+    "answer": 2,
+    "why": "Only the active experts run per token, so compute follows active parameters while memory follows the total.",
+    "kind": "calculation",
+    "distractors": [
+     "Each token uses two experts plus shared layers.",
+     "That is its memory footprint, not its compute.",
+     "",
+     "8 × 7 overstates it; experts share attention."
+    ]
+   },
+   {
+    "id": "c5-7-m05",
+    "q": "What extra serving concern does MoE bring?",
+    "options": [
+     "No KV cache",
+     "Balancing load across experts (expert parallelism)",
+     "A smaller vocabulary",
+     "No attention layers"
+    ],
+    "answer": 1,
+    "why": "Uneven routing can overload some experts and GPUs (14.5).",
+    "kind": "concept",
+    "distractors": [
+     "They still have a KV cache.",
+     "",
+     "Vocabulary is unrelated.",
+     "MoE models still use attention."
+    ]
+   },
+   {
+    "id": "c5-7-m06",
+    "q": "How does the KV cache grow with context length?",
+    "options": [
+     "It stays constant",
+     "Quadratically",
+     "Linearly",
+     "Exponentially"
+    ],
+    "answer": 2,
+    "why": "One set of keys and values per token, per layer.",
+    "kind": "concept",
+    "distractors": [
+     "It grows with every token.",
+     "Attention compute is quadratic; the cache is linear.",
+     "",
+     "Growth is linear."
+    ]
+   },
+   {
+    "id": "c5-7-m07",
+    "q": "For 32 layers, 8 KV heads of dimension 128 in BF16, how large is the KV cache per token?",
+    "options": [
+     "128 KiB",
+     "64 KiB",
+     "1 MiB",
+     "16 KiB"
+    ],
+    "answer": 0,
+    "why": "2 (K and V) × 32 × 8 × 128 × 2 bytes = 131,072 bytes = 128 KiB.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That forgets either K or V.",
+     "That is eight times too large.",
+     "That forgets the layer count's effect."
+    ]
+   },
+   {
+    "id": "c5-7-m08",
+    "q": "At 128 KiB per token, about how much KV cache does a 250,000-token prompt need?",
+    "options": [
+     "About 31 GiB",
+     "About 310 GiB",
+     "About 3 GiB",
+     "About 250 MB"
+    ],
+    "answer": 0,
+    "why": "250,000 × 128 KiB ≈ 32 million KiB ≈ 30.5 GiB (about 33 GB).",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too large.",
+     "Ten times too small.",
+     "Far too small."
+    ]
+   },
+   {
+    "id": "c5-7-m09",
+    "q": "What does FlashAttention change?",
+    "options": [
+     "It makes attention linear in compute",
+     "It reduces the vocabulary",
+     "It avoids storing the full n × n score matrix, though compute stays quadratic",
+     "It removes the KV cache"
+    ],
+    "answer": 2,
+    "why": "It is a memory- and bandwidth-efficient kernel for the same computation.",
+    "kind": "concept",
+    "distractors": [
+     "The arithmetic is still quadratic.",
+     "Vocabulary is unrelated.",
+     "",
+     "The cache is still needed."
+    ]
+   },
+   {
+    "id": "c5-7-m10",
+    "q": "Your documents fit in the context window. Why might stuffing them in still give worse answers?",
+    "options": [
+     "Long contexts are ignored entirely",
+     "The tokenizer drops long inputs",
+     "It always gives better answers",
+     "Models use information in the middle of long contexts less reliably"
+    ],
+    "answer": 3,
+    "why": "“Fits in the window” does not mean “used well”; measure on your task.",
+    "kind": "scenario",
+    "distractors": [
+     "They are used, unevenly.",
+     "Inputs within the limit are tokenised.",
+     "Not guaranteed.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-7-m11",
+    "q": "Retrieving the 5 most relevant chunks (about 3,000 tokens) instead of a 250,000-token manual is roughly how much cheaper in input tokens?",
+    "options": [
+     "About 800×",
+     "About 3×",
+     "About 80×",
+     "About 8×"
+    ],
+    "answer": 2,
+    "why": "250,000 ÷ 3,000 ≈ 83.",
+    "kind": "calculation",
+    "distractors": [
+     "An order of magnitude too high.",
+     "Far too low.",
+     "",
+     "An order of magnitude too low."
+    ]
    }
   ],
-  "interview": []
+  "interview": [
+   {
+    "id": "c5-7-i01",
+    "q": "Explain dense versus mixture-of-experts models and their trade-off.",
+    "level": "fundamentals",
+    "covers": [
+     "Dense uses all parameters per token",
+     "MoE routes tokens to a few experts",
+     "Compute follows active parameters",
+     "Memory follows total parameters"
+    ]
+   },
+   {
+    "id": "c5-7-i02",
+    "q": "Why does attention compute grow quadratically while the KV cache grows linearly?",
+    "level": "fundamentals",
+    "covers": [
+     "Every token compared with every other",
+     "One key and value per token per layer",
+     "Kernels avoid storing the n × n matrix",
+     "KV memory is often the serving limit"
+    ]
+   },
+   {
+    "id": "c5-7-i03",
+    "q": "What is the “lost in the middle” effect, and why does it matter?",
+    "level": "fundamentals",
+    "covers": [
+     "Mid-context information used less reliably",
+     "Long windows are not used uniformly",
+     "Measure by position on your task",
+     "Prefer retrieving fewer, better chunks"
+    ]
+   },
+   {
+    "id": "c5-7-i04",
+    "q": "Should you put a 400-page manual in every prompt or retrieve from it? Argue with numbers.",
+    "level": "applied",
+    "covers": [
+     "About 250k input tokens per request",
+     "Seconds of prefill and about 31 GiB of KV cache",
+     "Retrieval about 80× cheaper",
+     "Usually more accurate",
+     "Prompt caching helps cost, not quality"
+    ],
+    "followUp": "When would putting the whole document in context be the right call?"
+   },
+   {
+    "id": "c5-7-i05",
+    "q": "How do you size the hardware for an MoE deployment?",
+    "level": "applied",
+    "covers": [
+     "Memory for all experts",
+     "Compute per token from active parameters",
+     "Expert parallelism and load balance",
+     "KV cache for the expected context and concurrency"
+    ]
+   },
+   {
+    "id": "c5-7-i06",
+    "q": "At festival peak {company} expects 200 concurrent shoppers per GPU. How do context length choices affect that plan?",
+    "level": "applied",
+    "covers": [
+     "KV cache per request times concurrency",
+     "About 4 GiB per 32k-token request for an 8B-class model",
+     "Cap context and summarise history",
+     "Load-test with realistic lengths"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c5-7-i07",
+    "q": "Plan GPU memory for serving many concurrent long-context users.",
+    "level": "system-design",
+    "covers": [
+     "Weights at chosen precision",
+     "KV cache per token × context × concurrency",
+     "Paged KV cache and admission control (14.3)",
+     "Headroom and failure behaviour"
+    ]
+   },
+   {
+    "id": "c5-7-i08",
+    "q": "How would you evaluate whether a long-context model can replace your RAG pipeline?",
+    "level": "system-design",
+    "covers": [
+     "Task accuracy by position and length",
+     "Cost and latency per query",
+     "Freshness and permissions",
+     "Citations and auditability",
+     "Run both on the same evaluation set"
+    ]
+   }
+  ]
+ },
+ "c5-1": {
+  "mcq": [
+   {
+    "id": "c5-1-m01",
+    "q": "Why do LLMs use subword tokenisation?",
+    "options": [
+     "It works only for English",
+     "It makes every word one token",
+     "It removes the need for a vocabulary",
+     "It balances a fixed vocabulary against sequence length: common words stay whole, rare ones split"
+    ],
+    "answer": 3,
+    "why": "Whole words cannot cover typos and new names; single characters make sequences very long.",
+    "kind": "concept",
+    "distractors": [
+     "Subwords work for any language, unevenly.",
+     "Rare words split into several tokens.",
+     "There is still a fixed vocabulary.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-1-m02",
+    "q": "How does Byte-Pair Encoding build its vocabulary?",
+    "options": [
+     "Repeatedly merges the most frequent adjacent pair into a new token",
+     "Picks tokens at random",
+     "Assigns one token per dictionary word",
+     "Splits text at every vowel"
+    ],
+    "answer": 0,
+    "why": "Merges continue until the vocabulary reaches its target size; at tokenisation time they are applied in the same order.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Merges follow frequency.",
+     "That is word-level tokenisation.",
+     "Nothing splits at vowels."
+    ]
+   },
+   {
+    "id": "c5-1-m03",
+    "q": "In the corpus “hug hug pug pun bun”, which pair does BPE merge first?",
+    "options": [
+     "u + n",
+     "p + u",
+     "h + u",
+     "u + g"
+    ],
+    "answer": 3,
+    "why": "Count adjacent pairs: u-g appears 3 times (hug, hug, pug); h-u, p-u and u-n appear twice each.",
+    "kind": "calculation",
+    "distractors": [
+     "u-n appears twice.",
+     "p-u appears twice.",
+     "h-u appears twice.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-1-m04",
+    "q": "Why can byte-level BPE encode any text with no “unknown” token?",
+    "options": [
+     "It translates text to English first",
+     "It has an infinite vocabulary",
+     "It starts from the 256 byte values, so every character can be built from bytes",
+     "It skips characters it does not know"
+    ],
+    "answer": 2,
+    "why": "Emoji and unseen scripts fall back to byte sequences.",
+    "kind": "concept",
+    "distractors": [
+     "No translation happens.",
+     "The vocabulary is finite.",
+     "",
+     "Nothing is skipped."
+    ]
+   },
+   {
+    "id": "c5-1-m05",
+    "q": "Tokenizers are trained mostly on English-heavy data. What follows for other languages?",
+    "options": [
+     "They need fewer tokens",
+     "They cannot be processed",
+     "They often need more tokens for the same meaning: higher cost, slower replies and less room in context",
+     "Nothing changes"
+    ],
+    "answer": 2,
+    "why": "Some scripts can need several times more tokens on older tokenizers.",
+    "kind": "scenario",
+    "distractors": [
+     "Usually the opposite.",
+     "They are processed, at a higher token cost.",
+     "",
+     "Token count, cost and context use all change."
+    ]
+   },
+   {
+    "id": "c5-1-m06",
+    "q": "A support bot gives every conversation the same token budget. Why is that a fairness issue?",
+    "options": [
+     "It makes all answers identical",
+     "It removes the need for retrieval",
+     "Users of costlier languages get less history and retrieved context",
+     "English users pay more"
+    ],
+    "answer": 2,
+    "why": "The “token tax” means the same budget buys less content in some languages.",
+    "kind": "scenario",
+    "distractors": [
+     "Answers still differ.",
+     "Retrieval is still needed.",
+     "",
+     "English is usually the cheapest."
+    ]
+   },
+   {
+    "id": "c5-1-m07",
+    "q": "Why do models often fail to count the r's in “strawberry”?",
+    "options": [
+     "They see tokens such as “str · aw · berry”, not individual letters",
+     "The word is too long",
+     "They cannot count at all",
+     "The vocabulary lacks the letter r"
+    ],
+    "answer": 0,
+    "why": "Character-level tasks should be done in code, with the LLM calling a tool (7.4).",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Length is not the issue.",
+     "They count tokens and items reasonably; characters are the problem.",
+     "Letters are in the vocabulary; the word is not split that way."
+    ]
+   },
+   {
+    "id": "c5-1-m08",
+    "q": "What do newer models' larger vocabularies (100k–260k tokens) do to the multilingual gap?",
+    "options": [
+     "Make it larger",
+     "Eliminate it completely",
+     "Have no effect",
+     "Reduce it, but not eliminate it"
+    ],
+    "answer": 3,
+    "why": "Always measure token counts on your real languages before estimating cost.",
+    "kind": "concept",
+    "distractors": [
+     "Larger vocabularies usually reduce it.",
+     "Gaps remain between languages.",
+     "They do help.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-1-m09",
+    "q": "You estimate Tamil support costs from English token counts. What is likely to happen?",
+    "options": [
+     "You underestimate cost and overestimate how much fits in context",
+     "Costs come out exactly right",
+     "Tamil cannot be tokenised",
+     "You overestimate cost"
+    ],
+    "answer": 0,
+    "why": "Tamil text usually needs more tokens than English for the same meaning.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Counts differ by language.",
+     "It can be tokenised, at more tokens.",
+     "The error usually goes the other way."
+    ]
+   },
+   {
+    "id": "c5-1-m10",
+    "q": "How do WordPiece and Unigram (SentencePiece) tokenizers differ from BPE?",
+    "options": [
+     "They are used only for images",
+     "They do not use a vocabulary",
+     "They choose merges or pieces differently but have the same effect: a subword vocabulary",
+     "They tokenise whole sentences"
+    ],
+    "answer": 2,
+    "why": "All three produce subword vocabularies; the selection criterion differs.",
+    "kind": "concept",
+    "distractors": [
+     "They are text tokenizers.",
+     "They use vocabularies.",
+     "",
+     "They produce subwords."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c5-1-i01",
+    "q": "How does BPE tokenisation work?",
+    "level": "fundamentals",
+    "covers": [
+     "Start from characters or bytes",
+     "Count adjacent pairs and merge the most frequent",
+     "Repeat to a target vocabulary size",
+     "Apply the merges in order at tokenisation time"
+    ]
+   },
+   {
+    "id": "c5-1-i02",
+    "q": "Why do non-English languages often cost more tokens, and why does it matter?",
+    "level": "fundamentals",
+    "covers": [
+     "Tokenizer training data is English-heavy",
+     "More tokens for the same meaning",
+     "Higher cost and latency, less context",
+     "Fairness of fixed budgets"
+    ]
+   },
+   {
+    "id": "c5-1-i03",
+    "q": "Why do LLMs struggle to count letters or reverse strings?",
+    "level": "fundamentals",
+    "covers": [
+     "They see tokens, not characters",
+     "Spelling knowledge is indirect",
+     "Do character tasks in code",
+     "Let the model call a tool"
+    ]
+   },
+   {
+    "id": "c5-1-i04",
+    "q": "How would you estimate token costs for a multilingual assistant?",
+    "level": "applied",
+    "covers": [
+     "Sample real messages per language",
+     "Count with the model's own tokenizer",
+     "Input and output separately",
+     "Weight by the language mix and monitor it"
+    ],
+    "followUp": "What would you do if one language turned out three times more expensive?"
+   },
+   {
+    "id": "c5-1-i05",
+    "q": "Your chunker budgets by words and sometimes splits order IDs. What goes wrong, and how do you fix it?",
+    "level": "applied",
+    "covers": [
+     "Word counts misjudge token counts",
+     "Split IDs break exact matching and citations",
+     "Count with the real tokenizer",
+     "Never split inside identifiers or table rows"
+    ]
+   },
+   {
+    "id": "c5-1-i06",
+    "q": "{assistant} serves four languages with one fixed token budget per conversation. Is that fair, and what would you change?",
+    "level": "applied",
+    "covers": [
+     "Fixed budgets give costlier languages less context",
+     "Measure tokens per language",
+     "Budget by meaning or per language",
+     "Summarise history to save tokens",
+     "Track quality by language"
+    ],
+    "project": "travel"
+   },
+   {
+    "id": "c5-1-i07",
+    "q": "Design a token-budgeting service for a multilingual assistant.",
+    "level": "system-design",
+    "covers": [
+     "Count with each model's tokenizer at runtime",
+     "Reserves for system prompt and output",
+     "Priority rules for history and retrieved text",
+     "Per-language monitoring of cost and truncation",
+     "Alerts when budgets cut context often"
+    ]
+   },
+   {
+    "id": "c5-1-i08",
+    "q": "Design how {company}'s assistant handles transaction references and amounts so tokenisation can never corrupt them.",
+    "level": "system-design",
+    "covers": [
+     "Identifiers and amounts come from records, inserted by code",
+     "The model refers to placeholders, not raw values",
+     "Validation of every identifier in the output",
+     "Tests for digit-level errors"
+    ],
+    "project": "bank"
+   }
+  ]
+ },
+ "c5-3": {
+  "mcq": [
+   {
+    "id": "c5-3-m01",
+    "q": "Why does a transformer need positional information?",
+    "options": [
+     "Attention alone treats the input as a set, so shuffling tokens shuffles outputs the same way",
+     "To speed up training",
+     "To store the vocabulary",
+     "To normalise activations"
+    ],
+    "answer": 0,
+    "why": "Word order must be injected, for example with RoPE or position embeddings.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "It is about order, not speed.",
+     "The vocabulary is separate.",
+     "That is normalisation."
+    ]
+   },
+   {
+    "id": "c5-3-m02",
+    "q": "What does RoPE (rotary position embedding) do?",
+    "options": [
+     "Adds a learned vector to each token",
+     "Removes positions entirely",
+     "Sorts tokens by position",
+     "Rotates queries and keys by angles proportional to position, so their dot product depends on relative distance"
+    ],
+    "answer": 3,
+    "why": "The score between positions m and n depends on m − n.",
+    "kind": "concept",
+    "distractors": [
+     "That describes absolute position embeddings.",
+     "Positions are encoded, not removed.",
+     "No sorting happens.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-3-m03",
+    "q": "What does a residual connection compute?",
+    "options": [
+     "output = input × sublayer(input)",
+     "output = sublayer(input) only",
+     "output = input + sublayer(input)",
+     "output = input − sublayer(input)"
+    ],
+    "answer": 2,
+    "why": "Adding the input back gives gradients a direct path through many layers.",
+    "kind": "concept",
+    "distractors": [
+     "Residuals add, they do not multiply.",
+     "That has no residual path.",
+     "",
+     "They add the sublayer's output."
+    ]
+   },
+   {
+    "id": "c5-3-m04",
+    "q": "What does “pre-norm” mean in modern LLM blocks?",
+    "options": [
+     "Normalising the training data",
+     "Removing normalisation",
+     "Normalising only the output logits",
+     "Normalising before each sub-layer"
+    ],
+    "answer": 3,
+    "why": "RMSNorm before attention and before the FFN is common.",
+    "kind": "concept",
+    "distractors": [
+     "Data normalisation is a different step.",
+     "Normalisation is kept.",
+     "The final norm is only one of them.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-3-m05",
+    "q": "How is the feed-forward network applied in a transformer block?",
+    "options": [
+     "Only to the first token",
+     "Only during training",
+     "Across all positions, like attention",
+     "To each position independently: expand, non-linearity, project back"
+    ],
+    "answer": 3,
+    "why": "It typically widens the vector about 3.5–4× and often uses SwiGLU.",
+    "kind": "concept",
+    "distractors": [
+     "Every position is transformed.",
+     "It runs at inference too.",
+     "Mixing across positions is attention's job.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-3-m06",
+    "q": "Roughly what share of a dense model's parameters sit in its feed-forward layers?",
+    "options": [
+     "All of them",
+     "About 5%",
+     "About half of 1%",
+     "About two-thirds"
+    ],
+    "answer": 3,
+    "why": "FFNs are thought to store much of the model's factual associations.",
+    "kind": "concept",
+    "distractors": [
+     "Attention and embeddings hold the rest.",
+     "Far more than that.",
+     "Far more than that.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-3-m07",
+    "q": "A SwiGLU FFN has 3 matrices of 4,096 × 14,336. About how many parameters is that per layer?",
+    "options": [
+     "About 176 million",
+     "About 14 million",
+     "About 59 million",
+     "About 1.76 billion"
+    ],
+    "answer": 0,
+    "why": "3 × 4,096 × 14,336 ≈ 176M.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the FFN width.",
+     "That counts one matrix.",
+     "That is ten times too many."
+    ]
+   },
+   {
+    "id": "c5-3-m08",
+    "q": "In an 8B-class model with vocabulary 128,256 and d = 4,096, about how many parameters are the input and output embeddings together?",
+    "options": [
+     "About 52 million",
+     "About 1.05 billion",
+     "About 0.5 million",
+     "About 8 billion"
+    ],
+    "answer": 1,
+    "why": "2 × 128,256 × 4,096 ≈ 1.05B, on top of about 7.0B in the 32 layers.",
+    "kind": "calculation",
+    "distractors": [
+     "That uses only part of the vocabulary.",
+     "",
+     "That ignores the vocabulary size.",
+     "That is the whole model."
+    ]
+   },
+   {
+    "id": "c5-3-m09",
+    "q": "With grouped-query attention (d = 4,096, 8 KV heads of 128), Q and O are 4,096 × 4,096 and K and V are 4,096 × 1,024. About how many attention parameters are in one layer?",
+    "options": [
+     "About 16.8 million",
+     "About 67 million",
+     "About 8 million",
+     "About 42 million"
+    ],
+    "answer": 3,
+    "why": "2 × 16.8M (Q, O) + 2 × 4.2M (K, V) ≈ 42M.",
+    "kind": "calculation",
+    "distractors": [
+     "That counts only Q.",
+     "That treats K and V as full 4,096 × 4,096.",
+     "That counts only K and V.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-3-m10",
+    "q": "A provider advertises a 1M-token context, but accuracy falls for facts placed mid-context beyond about 60k tokens. What should you conclude?",
+    "options": [
+     "Long contexts never work",
+     "A configured length is not evidence the model was trained or evaluated to use it well",
+     "Use the full context anyway",
+     "The provider is lying"
+    ],
+    "answer": 1,
+    "why": "Measure use of the window on your own task before relying on it.",
+    "kind": "scenario",
+    "distractors": [
+     "They can work; measure on your task.",
+     "",
+     "Evidence shows it is not used well.",
+     "The window exists; quality across it varies."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c5-3-i01",
+    "q": "Describe the anatomy of one transformer block.",
+    "level": "fundamentals",
+    "covers": [
+     "Residual stream",
+     "Norm then attention, add back",
+     "Norm then FFN, add back",
+     "Repeated L times, then final norm and LM head"
+    ]
+   },
+   {
+    "id": "c5-3-i02",
+    "q": "Why do residual connections matter?",
+    "level": "fundamentals",
+    "covers": [
+     "Direct gradient path",
+     "Enable very deep stacks",
+     "Blocks write into a shared stream",
+     "Training stability"
+    ]
+   },
+   {
+    "id": "c5-3-i03",
+    "q": "Explain RoPE and why most current LLMs use it.",
+    "level": "fundamentals",
+    "covers": [
+     "Rotates Q and K by position",
+     "Scores depend on relative distance",
+     "Relative information without learned tables",
+     "Scaling methods help extend context"
+    ]
+   },
+   {
+    "id": "c5-3-i04",
+    "q": "Count the parameters of an 8B-class model from its shape.",
+    "level": "applied",
+    "covers": [
+     "Attention per layer with GQA",
+     "FFN per layer with SwiGLU",
+     "Times the layers",
+     "Plus input and output embeddings",
+     "Check against the published total"
+    ],
+    "followUp": "How does tying the input and output embeddings change the total?"
+   },
+   {
+    "id": "c5-3-i05",
+    "q": "A model card says 128k context. How do you decide how much of it to use?",
+    "level": "applied",
+    "covers": [
+     "Test recall at different positions and lengths",
+     "Measure task quality, not just fit",
+     "Cost and latency per extra token",
+     "Retrieval as the default"
+    ]
+   },
+   {
+    "id": "c5-3-i06",
+    "q": "{company}'s shopper chats grow long during comparisons. How would you manage the context?",
+    "level": "applied",
+    "covers": [
+     "Summaries plus recent turns",
+     "Retrieve relevant listings each turn",
+     "Measure accuracy at long lengths",
+     "Budgets per language"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c5-3-i07",
+    "q": "Estimate the memory and compute needed to serve a given model shape.",
+    "level": "system-design",
+    "covers": [
+     "Weights from parameter count and precision",
+     "KV cache per token from layers, KV heads and head dimension",
+     "Concurrency × context",
+     "FLOPs per token ≈ 2 × parameters"
+    ]
+   },
+   {
+    "id": "c5-3-i08",
+    "q": "A vendor extends a model's context window after training. What changes, and how would you validate it?",
+    "level": "system-design",
+    "covers": [
+     "RoPE scaling or similar plus long-context fine-tuning",
+     "Needle and multi-fact tests by position",
+     "Task evaluation at your real lengths",
+     "Latency and cost at long contexts"
+    ]
+   }
+  ]
+ },
+ "c5-5": {
+  "mcq": [
+   {
+    "id": "c5-5-m01",
+    "q": "What are logits?",
+    "options": [
+     "Raw, unbounded scores the LM head outputs, one per vocabulary token",
+     "Token IDs",
+     "Embedding vectors",
+     "Probabilities that sum to 1"
+    ],
+    "answer": 0,
+    "why": "Softmax turns them into probabilities.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "IDs are integers for tokens.",
+     "Embeddings are inputs.",
+     "That is after softmax."
+    ]
+   },
+   {
+    "id": "c5-5-m02",
+    "q": "Logits [2.0, 1.0, 0.1] go through softmax. What are the probabilities, roughly?",
+    "options": [
+     "2.0, 1.0, 0.1",
+     "0.33, 0.33, 0.33",
+     "0.66, 0.24, 0.10",
+     "0.67, 0.33, 0.00"
+    ],
+    "answer": 2,
+    "why": "e² = 7.39, e¹ = 2.72, e^0.1 = 1.11; total 11.22, giving 0.66, 0.24 and 0.10.",
+    "kind": "calculation",
+    "distractors": [
+     "Those are the logits themselves.",
+     "That ignores the logits.",
+     "",
+     "That divides logits by their sum instead of exponentiating."
+    ]
+   },
+   {
+    "id": "c5-5-m03",
+    "q": "With those probabilities, the true next token is the second one. What is the cross-entropy loss?",
+    "options": [
+     "About 0.24",
+     "About 0.41",
+     "About 1.42",
+     "About 2.30"
+    ],
+    "answer": 2,
+    "why": "−ln 0.24 ≈ 1.42.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the probability, not the loss.",
+     "That is −ln 0.66, the first token.",
+     "",
+     "That is −ln 0.1."
+    ]
+   },
+   {
+    "id": "c5-5-m04",
+    "q": "What happens if you add the same constant to every logit?",
+    "options": [
+     "The largest logit wins more",
+     "All probabilities increase",
+     "Nothing: softmax depends only on the differences",
+     "Probabilities stop summing to 1"
+    ],
+    "answer": 2,
+    "why": "The constant cancels in the ratio.",
+    "kind": "concept",
+    "distractors": [
+     "Relative sizes are unchanged.",
+     "They still sum to 1.",
+     "",
+     "Softmax always sums to 1."
+    ]
+   },
+   {
+    "id": "c5-5-m05",
+    "q": "Three logits are all equal to 1. What probability does each token get?",
+    "options": [
+     "One third each",
+     "1 each",
+     "Zero",
+     "e each"
+    ],
+    "answer": 0,
+    "why": "Equal logits give a uniform distribution.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Probabilities must sum to 1.",
+     "Each has equal positive probability.",
+     "That is the exponential before normalising."
+    ]
+   },
+   {
+    "id": "c5-5-m06",
+    "q": "Why is generation inherently sequential?",
+    "options": [
+     "Each output token becomes part of the input for the next step",
+     "GPUs cannot parallelise",
+     "The vocabulary is too large",
+     "The model forgets the prompt"
+    ],
+    "answer": 0,
+    "why": "Token 50 cannot be computed before token 49.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "GPUs parallelise within each step.",
+     "Vocabulary size is not the reason.",
+     "The prompt stays in context."
+    ]
+   },
+   {
+    "id": "c5-5-m07",
+    "q": "What is the difference between prefill and decode?",
+    "options": [
+     "Decode happens before prefill",
+     "Prefill processes the whole prompt in one parallel pass; decode produces one token per pass",
+     "Prefill writes the answer; decode reads the prompt",
+     "They are the same"
+    ],
+    "answer": 1,
+    "why": "Prefill is fast per token; decode is slow per token.",
+    "kind": "concept",
+    "distractors": [
+     "Prefill comes first.",
+     "",
+     "That reverses them.",
+     "They differ in parallelism and cost."
+    ]
+   },
+   {
+    "id": "c5-5-m08",
+    "q": "What does the KV cache store?",
+    "options": [
+     "The training data",
+     "The vocabulary",
+     "The final answers",
+     "Keys and values for earlier tokens, so they are not recomputed each step"
+    ],
+    "answer": 3,
+    "why": "Without it every decode step would recompute the whole prefix (14.1).",
+    "kind": "concept",
+    "distractors": [
+     "Training data is not stored.",
+     "The vocabulary is fixed.",
+     "Answers are not cached there.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-5-m09",
+    "q": "An assistant streams its answer: the first words appear after about 0.7 s and the full answer after 4 s. What does streaming improve?",
+    "options": [
+     "Perceived latency (time to first token), not total generation time",
+     "Token cost",
+     "Factual accuracy",
+     "Total generation time"
+    ],
+    "answer": 0,
+    "why": "Users see progress sooner; the same number of tokens is still generated.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Cost is the same.",
+     "Accuracy is unaffected.",
+     "Total time is unchanged."
+    ]
+   },
+   {
+    "id": "c5-5-m10",
+    "q": "A sentence's first token had probability 0.9. What does that say about the sentence's factual correctness?",
+    "options": [
+     "It is certainly wrong",
+     "It is certainly correct",
+     "Nothing reliable: a likely next token is not evidence the whole sentence is true",
+     "It is 90% likely to be correct"
+    ],
+    "answer": 2,
+    "why": "Probability measures likely continuation, not truth (1.3).",
+    "kind": "scenario",
+    "distractors": [
+     "Nothing implies it is wrong.",
+     "Likely text can be false.",
+     "",
+     "Token probability is not factual confidence."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c5-5-i01",
+    "q": "Explain logits, softmax and how the next token is chosen.",
+    "level": "fundamentals",
+    "covers": [
+     "Logits are raw scores",
+     "Softmax turns them into probabilities",
+     "A decoding rule picks a token (5.6)",
+     "Only differences between logits matter"
+    ]
+   },
+   {
+    "id": "c5-5-i02",
+    "q": "Why is autoregressive generation sequential, and what does that mean for latency?",
+    "level": "fundamentals",
+    "covers": [
+     "Each token depends on the previous ones",
+     "One forward pass per output token",
+     "Output length drives latency",
+     "Batching and speculative decoding help (14.x)"
+    ]
+   },
+   {
+    "id": "c5-5-i03",
+    "q": "What are prefill and decode, and what is the KV cache for?",
+    "level": "fundamentals",
+    "covers": [
+     "Parallel prompt processing",
+     "Token-by-token generation",
+     "Cache of past keys and values",
+     "Memory cost grows with context"
+    ]
+   },
+   {
+    "id": "c5-5-i04",
+    "q": "Users say the assistant is slow. How do you tell whether prefill or decode is the problem?",
+    "level": "applied",
+    "covers": [
+     "Measure time to first token versus time between tokens",
+     "Long prompts slow prefill",
+     "Long outputs slow decode",
+     "Fix with shorter prompts, caching or output limits"
+    ],
+    "followUp": "Which metric would you put on the dashboard?"
+   },
+   {
+    "id": "c5-5-i05",
+    "q": "Why does streaming improve perceived latency, and what does it not fix?",
+    "level": "applied",
+    "covers": [
+     "First words arrive sooner",
+     "Total time and cost unchanged",
+     "Partial output risks for decisions",
+     "Still needs output length control"
+    ]
+   },
+   {
+    "id": "c5-5-i06",
+    "q": "{company}'s assistant explains refund decisions. Why should the decision not be streamed as it is generated?",
+    "level": "applied",
+    "covers": [
+     "Amounts must be validated first",
+     "Partial output could mislead",
+     "Compute values in code, then phrase",
+     "Stream only the explanation around validated values"
+    ],
+    "project": "bank"
+   },
+   {
+    "id": "c5-5-i07",
+    "q": "Design a generation flow where numbers come from tools while the text streams.",
+    "level": "system-design",
+    "covers": [
+     "Call tools before or alongside generation",
+     "Placeholders filled by code",
+     "Hold lines with numbers until verified",
+     "Validation before display",
+     "Logging of tool results"
+    ]
+   },
+   {
+    "id": "c5-5-i08",
+    "q": "Estimate end-to-end latency from prompt size, output size and hardware.",
+    "level": "system-design",
+    "covers": [
+     "Prefill tokens per second for the prompt",
+     "Decode tokens per second for the output",
+     "Network and tool overheads",
+     "Queueing under load"
+    ]
+   }
+  ]
+ },
+ "c5-6": {
+  "mcq": [
+   {
+    "id": "c5-6-m01",
+    "q": "What does greedy decoding do?",
+    "options": [
+     "Takes the least probable token",
+     "Keeps the top 10 tokens",
+     "Samples uniformly from the vocabulary",
+     "Always takes the most probable token"
+    ],
+    "answer": 3,
+    "why": "It is deterministic in principle and can be repetitive.",
+    "kind": "concept",
+    "distractors": [
+     "That would produce nonsense.",
+     "That is top-k with sampling.",
+     "That ignores the model.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-6-m02",
+    "q": "What does a temperature below 1 do?",
+    "options": [
+     "Flattens the distribution",
+     "Doubles the vocabulary",
+     "Removes the end-of-sequence token",
+     "Sharpens the distribution, making output more predictable"
+    ],
+    "answer": 3,
+    "why": "Logits are divided by T before softmax; T < 1 exaggerates differences.",
+    "kind": "concept",
+    "distractors": [
+     "That is T > 1.",
+     "Vocabulary is unchanged.",
+     "Stop tokens are unaffected.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-6-m03",
+    "q": "Logits are [2, 0]. At temperature 2, what is the first token's probability?",
+    "options": [
+     "About 0.73",
+     "About 0.88",
+     "0.5",
+     "1.0"
+    ],
+    "answer": 0,
+    "why": "Divide by T: [1, 0]. softmax gives e/(e + 1) ≈ 0.73, lower than 0.88 at T = 1.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the T = 1 value.",
+     "That would need equal logits.",
+     "Sampling never gives certainty here."
+    ]
+   },
+   {
+    "id": "c5-6-m04",
+    "q": "What does top-k sampling do?",
+    "options": [
+     "Keeps tokens with probability above k",
+     "Repeats the output k times",
+     "Keeps only the k most probable tokens, renormalises and samples",
+     "Samples k tokens at once"
+    ],
+    "answer": 2,
+    "why": "It removes the long tail of unlikely tokens.",
+    "kind": "concept",
+    "distractors": [
+     "That describes min-p style filtering.",
+     "Nothing is repeated.",
+     "",
+     "One token is sampled per step."
+    ]
+   },
+   {
+    "id": "c5-6-m05",
+    "q": "What does top-p (nucleus) sampling do?",
+    "options": [
+     "Keeps tokens with probability above p",
+     "Keeps exactly p tokens",
+     "Makes the model p% accurate",
+     "Keeps the smallest set of tokens whose cumulative probability reaches p"
+    ],
+    "answer": 3,
+    "why": "The set adapts to how confident the model is.",
+    "kind": "concept",
+    "distractors": [
+     "It is cumulative, not a per-token threshold.",
+     "The number of tokens varies.",
+     "p is not an accuracy.",
+     ""
+    ]
+   },
+   {
+    "id": "c5-6-m06",
+    "q": "Probabilities are [0.5, 0.3, 0.15, 0.05]. With top-p = 0.8, which tokens are kept?",
+    "options": [
+     "Only the first",
+     "The first two",
+     "All four",
+     "The first three"
+    ],
+    "answer": 1,
+    "why": "0.5 + 0.3 = 0.8 reaches p, so the nucleus is the top two.",
+    "kind": "calculation",
+    "distractors": [
+     "0.5 alone does not reach 0.8.",
+     "",
+     "That would be top-p = 1.",
+     "The third is not needed to reach 0.8."
+    ]
+   },
+   {
+    "id": "c5-6-m07",
+    "q": "Why should you always set a maximum number of new tokens?",
+    "options": [
+     "It improves accuracy",
+     "It bounds cost and latency",
+     "It is required by every tokenizer",
+     "It makes output deterministic"
+    ],
+    "answer": 1,
+    "why": "Without it, a runaway generation can cost a lot and take a long time.",
+    "kind": "concept",
+    "distractors": [
+     "It does not improve correctness.",
+     "",
+     "Tokenizers do not require it.",
+     "It does not remove randomness."
+    ]
+   },
+   {
+    "id": "c5-6-m08",
+    "q": "With temperature 0 and a fixed seed, outputs still differ between runs. Which is a valid cause?",
+    "options": [
+     "Floating-point order on GPUs, batching, hardware or library differences, or a silent model update",
+     "Temperature 0 adds noise",
+     "Tokenizers change at random",
+     "The seed is ignored on Tuesdays"
+    ],
+    "answer": 0,
+    "why": "Tiny numeric differences can flip a near-tie, and the texts then diverge.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Temperature 0 is the least random setting.",
+     "Tokenizers are deterministic.",
+     "That is not a real cause."
+    ]
+   },
+   {
+    "id": "c5-6-m09",
+    "q": "How should tests for LLM output be written, given non-determinism?",
+    "options": [
+     "Run once and trust the result",
+     "Check properties, such as valid JSON or a required clause, and pin model versions",
+     "Skip testing generated text",
+     "Compare exact strings"
+    ],
+    "answer": 1,
+    "why": "Property checks survive harmless wording changes.",
+    "kind": "scenario",
+    "distractors": [
+     "One run hides variance.",
+     "",
+     "Generated text needs tests.",
+     "Exact strings fail on harmless variation."
+    ]
+   },
+   {
+    "id": "c5-6-m10",
+    "q": "Which settings suit extracting data into JSON?",
+    "options": [
+     "Temperature 1.2 and top-k 100",
+     "Temperature 0, a constrained schema and a token limit",
+     "Temperature 2 for variety",
+     "No stop condition"
+    ],
+    "answer": 1,
+    "why": "Extraction needs predictable, valid output.",
+    "kind": "scenario",
+    "distractors": [
+     "High randomness adds errors.",
+     "",
+     "Variety is the opposite of what extraction needs.",
+     "Always bound output."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c5-6-i01",
+    "q": "Explain temperature, top-k and top-p.",
+    "level": "fundamentals",
+    "covers": [
+     "Temperature rescales logits",
+     "Top-k keeps a fixed number",
+     "Top-p keeps a cumulative-probability set",
+     "Order of filters varies by engine"
+    ]
+   },
+   {
+    "id": "c5-6-i02",
+    "q": "Why is temperature 0 not a guarantee of identical outputs?",
+    "level": "fundamentals",
+    "covers": [
+     "Floating-point non-associativity",
+     "Batching changes kernels",
+     "Hardware and library versions",
+     "Silent model updates"
+    ]
+   },
+   {
+    "id": "c5-6-i03",
+    "q": "What stop conditions should every generation have?",
+    "level": "fundamentals",
+    "covers": [
+     "End-of-sequence token",
+     "Max new tokens",
+     "Stop strings where useful",
+     "Cost and latency bounds"
+    ]
+   },
+   {
+    "id": "c5-6-i04",
+    "q": "Pick decoding settings for extraction, reply drafting and brainstorming, and justify them.",
+    "level": "applied",
+    "covers": [
+     "Extraction: temperature 0 plus schema",
+     "Drafting: moderate temperature, top-p",
+     "Brainstorming: higher temperature, several samples",
+     "Always a token limit"
+    ]
+   },
+   {
+    "id": "c5-6-i05",
+    "q": "Your regression tests started failing after a provider update, though answers look fine. What happened, and what do you change?",
+    "level": "applied",
+    "covers": [
+     "Tests compared exact strings",
+     "Model version or batching changed wording",
+     "Switch to property checks",
+     "Pin versions and re-baseline"
+    ],
+    "followUp": "Which properties would you check for a customer reply?"
+   },
+   {
+    "id": "c5-6-i06",
+    "q": "{company} extracts attributes from seller descriptions and also writes product copy. Which settings for each, and why?",
+    "level": "applied",
+    "covers": [
+     "Extraction: temperature 0, schema, validation",
+     "Copy: moderate temperature with review",
+     "Max tokens on both",
+     "Evaluate extraction accuracy separately"
+    ],
+    "project": "store"
+   },
+   {
+    "id": "c5-6-i07",
+    "q": "Design an evaluation harness that is robust to non-determinism.",
+    "level": "system-design",
+    "covers": [
+     "Multiple samples per case",
+     "Property-based checks",
+     "Report variance, not one run",
+     "Pinned model versions and seeds where possible"
+    ]
+   },
+   {
+    "id": "c5-6-i08",
+    "q": "The same decoding settings behave differently on two providers. Why, and what do you do?",
+    "level": "system-design",
+    "covers": [
+     "Different filter order and renormalisation",
+     "Different tokenizers and model versions",
+     "Defaults such as penalties",
+     "Tune per provider and compare on your evaluation set"
+    ]
+   }
+  ]
  }
 }

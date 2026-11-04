@@ -215,6 +215,8 @@ The course-wide place to drill questions, linked from the sidebar and the home p
 
 ### Phase 3 — Roll out projects and checks to every chapter
 
+*Progress: batch A (chapters 4–6) done. Remaining: chapters 7–18 and the capstone.*
+
 - In practice, Failure to avoid and Try it notes for Online store, Bank and Travel on every remaining topic: chapters 4–18 and the capstone, about 400 notes in all.
 - A topic-fit rating for every topic.
 - Section checks for the remaining 117 sections (chapters 4–18): about 1,170–1,400 choose-the-answer and 940–1,170 interview questions, at 10–12 and 8–10 per section (the 45 migrated questions count towards this).

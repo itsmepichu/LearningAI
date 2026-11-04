@@ -1,7 +1,7 @@
 {
  "totals": {
-  "mcq": 225,
-  "interview": 144
+  "mcq": 417,
+  "interview": 304
  },
  "chapters": {
   "c1": {
@@ -95,56 +95,100 @@
    }
   },
   "c4": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 60,
+   "interview": 48,
    "sections": {
     "c4-1": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c4-6": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c4-3": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c4-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c4-4": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c4-5": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
   "c5": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 71,
+   "interview": 56,
    "sections": {
     "c5-4": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c5-2": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c5-7": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 11,
+     "interview": 8
+    },
+    "c5-1": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c5-3": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c5-5": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c5-6": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },
   "c6": {
-   "mcq": 3,
-   "interview": 0,
+   "mcq": 70,
+   "interview": 56,
    "sections": {
     "c6-1": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c6-3": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
     },
     "c6-4": {
-     "mcq": 1,
-     "interview": 0
+     "mcq": 10,
+     "interview": 8
+    },
+    "c6-2": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c6-5": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c6-6": {
+     "mcq": 10,
+     "interview": 8
+    },
+    "c6-7": {
+     "mcq": 10,
+     "interview": 8
     }
    }
   },

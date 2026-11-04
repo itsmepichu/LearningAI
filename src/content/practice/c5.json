@@ -2,43 +2,221 @@
  "c5-1": {
   "harbor": {
    "practice": "Harbor&#x27;s chunker counts tokens with the answer model&#x27;s own tokenizer and refuses to split inside a table row or an order ID such as A-104322.",
-   "failure": "Budgeting context in words; a word can be several tokens and tokens often include the leading space."
+   "failure": "Budgeting context in words; a word can be several tokens and tokens often include the leading space.",
+   "fit": "good",
+   "fitNote": "order IDs and German policies split into many tokens",
+   "tryIt": "Paste a few policy sentences that contain order IDs such as A-104322 into the BPE trainer, run 12 merges and see how the ID splits. Then count the same text with the laptop-lab tokenizer."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "Hindi, Tamil and Hinglish shoppers pay a token tax",
+   "practice": "{company}'s chats arrive in English, Hindi, Tamil and Hinglish. Measured with the answer model's own tokenizer, the same “where is my order” message usually costs more tokens in Devanagari or Tamil script than in English or Latin-script Hinglish, so one fixed per-conversation token budget gives Hindi and Tamil shoppers less history.",
+   "failure": "Setting one token budget for every language. Non-English shoppers silently get less context; budget from measured counts per language.",
+   "tryIt": "Paste the Hindi and Tamil messages from <code>chats.json</code> into the BPE trainer as training text and run merges: few merges form, because the script is rare in this tiny corpus. Then count the same messages with two real tokenizers (laptop lab) and record tokens per message."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "transaction references and rupee amounts split into pieces",
+   "practice": "{company}'s tokenizer splits UPI and transaction references into many pieces. That is harmless for understanding, but it means a reference shown to a customer must be copied by code from the source record, never retyped by the model.",
+   "failure": "Asking the model to repeat a long transaction reference from earlier in the conversation. Digit-level errors are likely; copy identifiers in code.",
+   "tryIt": "Tokenise five <code>txn_id</code> and <code>case_id</code> values from <code>transactions.csv</code> and <code>disputes.csv</code> with a real tokenizer, count the pieces per ID, and note how an amount such as ₹12,499.00 splits."
+  },
+  "travel": {
+   "fit": "best",
+   "fitNote": "four languages plus booking codes and airport codes",
+   "practice": "{assistant} serves English, Hindi, Tamil and Hinglish. The team budgets context per language from measured token counts, and keeps booking IDs and airport codes out of any free text the model must reproduce.",
+   "failure": "Letting the model rewrite booking references in its reply. Tokenisation splits them, and one wrong character sends the traveller to the wrong booking.",
+   "tryIt": "Tokenise every message in <code>messages.json</code> with two tokenizers and make a table of tokens per message by language. Estimate how many more tokens a ten-turn Tamil conversation needs than an English one."
   }
  },
  "c5-2": {
   "harbor": {
    "practice": "When a Harbor answer ignores a key clause, engineers inspect which retrieved passage was attended to as one clue, alongside retrieval scores and the prompt.",
-   "failure": "Treating attention weights as a complete explanation of why the model answered as it did."
+   "failure": "Treating attention weights as a complete explanation of why the model answered as it did.",
+   "fit": "good",
+   "fitNote": "checking which retrieved passage was attended to",
+   "tryIt": "In the attention figure, click the “restarted” row with head 2 and raise the score scale, noting how attention concentrates. Then explain why that alone would not tell Harbor's engineers why an answer ignored a clause."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "negation in listings is a common failure to investigate",
+   "practice": "When {assistant} said a kurta was machine washable from a listing that said “dry clean only, not machine washable”, the team checked retrieval and the prompt first, then looked at attention around “not” as one more clue. Negation spread over several tokens is a common failure.",
+   "failure": "Concluding from one attention map that the model “ignored” a word. Attention weights are a clue, not a full explanation.",
+   "tryIt": "In the attention figure, compare heads 1 to 3 on the same sentence and describe in words what each does. Then write three product-listing sentences with negation and check whether a local model reads them correctly."
+  },
+  "bank": {
+   "fit": "limited",
+   "practice": "{company}'s dispute summaries rarely depend on attention details; what matters is which text is in the context. The figure is still useful for explaining why a long case file costs more (5.7).",
+   "failure": "Offering attention maps as an audit explanation for a decision. Auditors need the decision logic and its inputs, not internal weights.",
+   "tryIt": "Toggle the causal mask in the figure and describe what a token can and cannot see. Then work out the number of query–key scores per head and layer for a 3,000-token case file (9 million)."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "In “Book the cheapest flight from Bengaluru to Delhi next Friday morning”, the date and the cities are far apart. Attention links them directly, which is why transformers handle such requests far better than older sequence models.",
+   "failure": "Expecting the model to resolve “next Friday” without today's date in the context. Attention cannot use information that is not there.",
+   "tryIt": "Ask a local model to extract the travel date from that request with and without today's date in the prompt, and compare."
   }
  },
  "c5-3": {
   "harbor": {
    "practice": "Harbor&#x27;s provider advertises a 1M-token context; the team measured accuracy dropping on facts placed mid-context beyond about 60k tokens, so retrieval stays the default.",
-   "failure": "Taking a configured context length as evidence that the model was trained or evaluated to use it well."
+   "failure": "Taking a configured context length as evidence that the model was trained or evaluated to use it well.",
+   "fit": "good",
+   "fitNote": "an advertised context window that was not used well",
+   "tryIt": "In the shape tracer, choose the 8B preset and change the sequence length from 4,000 to 128,000; note which quantities grow. Then explain why Harbor still tests recall of mid-context facts instead of trusting the configured window."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "long shopping chats and vocabulary size for Indian languages",
+   "practice": "{company} evaluated a model advertised with a 128k context for long product-comparison chats. Accuracy on facts placed in the middle of long conversations dropped well before that limit, so {assistant} keeps a summary plus the last few turns.",
+   "failure": "Comparing small models by total parameter count without noticing how much of it is the vocabulary embedding; the tracer shows the share.",
+   "tryIt": "In the shape tracer, choose the 3B-like preset, toggle tied input and output embeddings, and note how much of the total is vocabulary. Then raise the vocabulary to 256,000, as a model with wider Indian-language coverage might, and read the parameter cost."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "sizing a self-hosted model from its shape",
+   "practice": "{company} runs an 8B-class model for case summaries. The platform team sizes memory from the shape: most parameters sit in the feed-forward layers, while long case files grow the KV cache, not the weights.",
+   "failure": "Assuming a bigger context window removes the need to choose which case documents to include. Models use the middle of long contexts less reliably.",
+   "tryIt": "With the 8B preset, set batch to 8 and sequence to 4,000 tokens and read the sizes the tracer reports; then double the sequence length and note which numbers double."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{assistant}'s requests are short, so position methods and context extension rarely matter; trip history is summarised rather than kept in full.",
+   "failure": "Keeping a traveller's entire multi-day chat in context just because the window allows it.",
+   "tryIt": "In the RoPE figure, step the position and see that the score between a query and a key depends only on their distance. That relative property is what RoPE scaling methods adjust when a context window is extended after training."
   }
  },
  "c5-4": {
   "harbor": {
    "practice": "Harbor uses an encoder (bi-encoder) for retrieval, an encoder cross-encoder for reranking, and a decoder-only model to write answers.",
-   "failure": "Mean-pooling a generic encoder&#x27;s outputs and assuming the result is a good sentence embedding."
+   "failure": "Mean-pooling a generic encoder&#x27;s outputs and assuming the result is a good sentence embedding.",
+   "fit": "good",
+   "fitNote": "three architectures in one RAG system",
+   "tryIt": "On the attention-pattern figure, mark which pattern Harbor's bi-encoder, cross-encoder reranker and answer model each use, and why."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "search uses a bi-encoder, a reranker and a generator",
+   "practice": "{company}'s search uses a bi-encoder to embed listings and queries, a cross-encoder to rerank the top 50, and a decoder-only {assistant} to answer questions. Moving reranking from a decoder LLM back to a small cross-encoder cut search latency sharply with no loss in click-through.",
+   "failure": "Using a decoder-only chat model to score hundreds of candidate products one by one. An encoder reranker does it faster and cheaper.",
+   "tryIt": "Embed 50 titles from <code>products.csv</code> with a bi-encoder, take the top 10 for a query, then rerank them with a small cross-encoder (for example <code>cross-encoder/ms-marco-MiniLM-L-6-v2</code>) and compare the order."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "an encoder classifier for fixed dispute reasons",
+   "practice": "{company} classifies dispute reasons with a fine-tuned encoder, which is fast, cheap and easy to calibrate, and uses a decoder-only model only to draft the letter to the customer.",
+   "failure": "Choosing a decoder-only LLM for a fixed-label classification that a small encoder does better and cheaper.",
+   "tryIt": "Fine-tune a small encoder (for example DistilBERT or ModernBERT) on the <code>reason</code> column of <code>disputes.csv</code>, and compare its accuracy and latency with prompting a local decoder model for the same labels."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "speech requests through an encoder–decoder model",
+   "practice": "Calls to {company}'s phone line go through an encoder–decoder speech model (Whisper-style) before a decoder-only model handles the booking.",
+   "failure": "Feeding speech-recognition output straight into booking tools without confirming key fields (date, city) with the traveller.",
+   "tryIt": "Run Whisper (tiny or base, on CPU) on a recording of yourself making a booking request in English and in Hindi, and compare the dates and city names in each transcript."
   }
  },
  "c5-5": {
   "harbor": {
    "practice": "Harbor streams answers token by token; its UI shows the first words after about 0.7 s even though the full answer takes 4 s.",
-   "failure": "Reading a high next-token probability as evidence that the whole sentence is factually correct."
+   "failure": "Reading a high next-token probability as evidence that the whole sentence is factually correct.",
+   "fit": "good",
+   "fitNote": "streamed answers and first-token latency",
+   "tryIt": "Compute softmax by hand for logits [2.0, 1.0, 0.1], then run the laptop lab on “The refund policy for annual plans is” and print the top 10 next tokens."
+  },
+  "store": {
+   "fit": "good",
+   "fitNote": "streaming replies to impatient shoppers",
+   "practice": "{assistant} streams replies, so shoppers see the first words within a second while the rest is generated. Long product comparisons are capped, because every extra output token is another sequential decode step.",
+   "failure": "Generating a full comparison table when the shopper asked a yes-or-no question. Output length drives latency.",
+   "tryIt": "With the laptop-lab model, time the prefill of a 1,500-token listing-and-reviews prompt and the decode rate per token on your machine, then estimate how long a 250-token reply takes."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "amounts must come from code, not from likely tokens",
+   "practice": "{company}'s assistant does not stream decisions. Amounts and outcomes are computed by code and inserted; the model only phrases the explanation around them.",
+   "failure": "Streaming a refund decision token by token before it is validated: the customer may see a partial or wrong amount.",
+   "tryIt": "Print the top 10 next tokens for “Your refund of ₹” with the laptop-lab model and note how many different amounts look plausible to it. That is why amounts come from code."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "holding back prices until the inventory call returns",
+   "practice": "{assistant} streams itinerary text but holds back any price or seat line until the live inventory call returns, so the first visible words never contain a number the model guessed.",
+   "failure": "Letting the model start writing a fare while the price tool is still running.",
+   "tryIt": "In the laptop lab, compare the next-token probabilities for “Your flight to Delhi costs ₹” with and without a tool result containing the fare in the prompt."
   }
  },
  "c5-6": {
   "harbor": {
    "practice": "Harbor extraction calls use temperature 0 with constrained JSON; its reply drafts use temperature 0.6 and top-p 0.9; both are re-evaluated whenever the provider changes model version.",
-   "failure": "Interpreting top-p 0.9 as &quot;90% accurate&quot; or assuming temperature 0 guarantees identical outputs."
+   "failure": "Interpreting top-p 0.9 as &quot;90% accurate&quot; or assuming temperature 0 guarantees identical outputs.",
+   "fit": "good",
+   "fitNote": "different settings for extraction and drafting",
+   "tryIt": "Set temperature 0.6 and top-p 0.9 (Harbor's reply settings) and sample 20 times, then set temperature near 0 and sample again. Note what stays fixed and what varies."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "attribute extraction and product copy need different settings",
+   "practice": "{company} extracts attributes from seller descriptions at temperature 0 with a JSON schema, drafts product descriptions at around 0.7, and puts a hard max-token limit on every call.",
+   "failure": "Using a creative temperature for attribute extraction. A model that writes “100% cotton” for a blend creates returns.",
+   "tryIt": "Set the figure to temperature 1.3 with top-k 10 and sample 20 times, then 0.2 with top-p 0.9, and count how often unlikely words appear. Then extract attributes from five titles in <code>products.csv</code> with a local model at temperature 0 and at 1.0."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "property tests instead of exact-string tests",
+   "practice": "{company} runs every customer-facing generation at low temperature with stop sequences and a max-token cap, and tests properties (the right amount, the deadline present) rather than exact strings, because outputs can differ even at temperature 0.",
+   "failure": "Writing regression tests that compare exact strings. A provider update or a batching difference changes the wording and the tests fail for no real reason.",
+   "tryIt": "Generate the same dispute letter for a case from <code>disputes.csv</code> five times at temperature 0 with a local model and check whether the texts are identical. Then write a property test: it mentions the case ID and the 30-day limit."
+  },
+  "travel": {
+   "fit": "good",
+   "fitNote": "sampling ideas, but not the booking request",
+   "practice": "{assistant} suggests trip ideas at a higher temperature with several samples, but turns the option the traveller picks into a structured booking request at temperature 0 with a schema.",
+   "failure": "Sampling the booking request itself: two runs on the same message can pick different dates.",
+   "tryIt": "In the figure, compare top-p 0.5 and 0.95 at temperature 1 and note which tokens survive. Then sample three trip ideas for “3 days in Kerala in August” and extract one of them into JSON at temperature 0."
   }
  },
  "c5-7": {
   "harbor": {
    "practice": "Harbor considered an MoE model with 13B active parameters: compute was cheap, but all 47B parameters still had to fit in GPU memory, which decided the hardware.",
-   "failure": "Sizing an MoE deployment by its active parameters only."
+   "failure": "Sizing an MoE deployment by its active parameters only.",
+   "fit": "good",
+   "fitNote": "an MoE model sized by total, not active, parameters",
+   "tryIt": "In the cost figure, move the context from 4,000 to 128,000 tokens and read the KV cache for one request; compare it with the 47B-parameter MoE weights Harbor had to fit."
+  },
+  "store": {
+   "fit": "best",
+   "fitNote": "festival peaks make per-token compute and long contexts expensive",
+   "practice": "At festival peak {company} needs cheap compute per token, so an MoE model is attractive, but all of its experts must fit in GPU memory on every replica. The team also caps context, because a long chat history multiplies KV cache per shopper.",
+   "failure": "Putting a shopper's whole browsing history in the prompt because the window allows it. The KV cache runs out before compute does.",
+   "tryIt": "In the figure, set the context to 32,000 tokens and read the KV cache per request (about 4 GiB for the 8B-class model). Multiply by 200 concurrent shoppers and compare with one 80 GB GPU."
+  },
+  "bank": {
+   "fit": "good",
+   "fitNote": "retrieving case documents instead of attaching everything",
+   "practice": "{company} retrieves only the case documents a summary needs instead of attaching the customer's full history. That keeps prefill time and KV memory low and avoids sending personal data that is not needed.",
+   "failure": "Treating “the model supports 200k tokens” as a reason to skip retrieval. Cost, latency and mid-context accuracy all get worse.",
+   "tryIt": "Check the topic's example (a 250k-token manual needs about 31 GiB of KV cache for an 8B model), then set the figure to your typical case-file length and compare."
+  },
+  "travel": {
+   "fit": "limited",
+   "practice": "{assistant}'s prompts are short and its costs come from tool calls and output, so dense-versus-MoE and long-context costs matter less here than for the other projects.",
+   "failure": "Choosing a long-context model to hold every fare rule in the prompt instead of retrieving the rule that applies.",
+   "tryIt": "In the figure, compare 4,000- and 16,000-token context costs, then count the tokens of all rules in <code>fare_rules.json</code> to see how small the retrieval set really is."
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use a German policy paragraph, a Tamil ticket from <code>tickets.csv</code>, an order ID such as A-104322 and a code snippet for the tokenizer table. For generation, use prompts that begin a Harbor reply, such as “According to the parental leave policy,”.</p>"
+  },
+  "store": {
+   "scenario": "<p>Tokenise the English, Hindi, Tamil and Hinglish chats from <code>chats.json</code> and a SKU such as BZ-MOB-1000. For generation, use prompts such as “This kurta is made of” and note when higher temperatures invent materials.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Tokenise transaction IDs from <code>transactions.csv</code>, amounts written as ₹12,499.00 and a Hindi dispute text. For generation, use “Your dispute has been” and record how often the model invents an amount or a deadline at each temperature.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Tokenise every message in <code>messages.json</code>, a booking ID such as SN-300001 and airport codes. For generation, use “Your flight from Mumbai to Goa” and note when the model invents a time or fare.</p>"
   }
  }
 }

@@ -11,7 +11,7 @@ An Interactive AI Learning Path For My DD: the **Enterprise AI Field Manual**, r
 
 There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. There is no choice to make up front: you start with Harbor and can switch at any time. When another project suits a topic better, a short note at the end of the topic says so. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes and run interview drills.
 
-Status: chapters 1–3 are complete for all four projects with full section checks; later chapters have Harbor notes and a few questions each until phase 3 (see [ROADMAP.md](ROADMAP.md)).
+Status: chapters 1–6 are complete for all four projects with full section checks; later chapters have Harbor notes and a few questions each until phase 3 reaches them (see [ROADMAP.md](ROADMAP.md)).
 
 Interactive figures run in the browser. Each one carries an evidence label:
 
