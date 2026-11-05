@@ -11,7 +11,7 @@ const BASE = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '')
 const OUT = path.join(__dirname, 'out')
 fs.mkdirSync(OUT, { recursive: true })
 
-const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'pkKp', 'rvOut', 'bgmLog', 'lsK', 'pcK', 'qsK', 'lsdBars', 'cpWf', 'bwK', 'mgLog', 'gdOut', 'kmCan']
+const WIDGETS = ['lfK', 'nnK', 'tsTbl', 'dpViz', 'pkKp', 'rvOut', 'bgmLog', 'lsK', 'lsdBars', 'mgLog', 'kmCan']
 // React widgets from src/widgets, and the page each is embedded on
 const KIT_WIDGETS = [
   ['chunking', '/c9/c9-2'],
@@ -28,6 +28,26 @@ const KIT_WIDGETS = [
   ['cache-key', '/c16/c16-4'],
   ['isolation-grid', '/c16/c16-4'],
   ['pii-redact', '/c16/c16-5'],
+  ['agent-loop', '/c11/c11-2'],
+  ['token-estimator', '/c1/c1-4'],
+  ['class-imbalance', '/c3/c3-3'],
+  ['rrf', '/c9/c9-5'],
+  ['trace-waterfall', '/c17/c17-2'],
+  ['critical-path', '/c17/c17-2'],
+  ['cost-attribution', '/c17/c17-5'],
+  ['bpe', '/c5/c5-1'],
+  // These show no example data, so they look the same for every project.
+  ['attention', '/c5/c5-2', 'neutral'],
+  ['hnsw', '/c9/c9-4', 'neutral'],
+  ['gradient-descent', '/c2/c2-3', 'neutral'],
+  ['threshold-roc', '/c3/c3-5', 'neutral'],
+  ['reliability', '/c3/c3-5', 'neutral'],
+  ['batching', '/c14/c14-3', 'neutral'],
+  ['paged-kv', '/c14/c14-3', 'neutral'],
+  ['prefix-cache', '/c14/c14-3', 'neutral'],
+  ['throughput-latency', '/c14/c14-7', 'neutral'],
+  ['queue-sim', '/c15/c15-1', 'neutral'],
+  ['burn-rate', '/c17/c17-8', 'neutral'],
 ]
 const PROJECTS = require('../src/content/projects.json').projects
 
@@ -101,17 +121,19 @@ const PROJECTS = require('../src/content/projects.json').projects
 
   // 2b. React widgets: each loads every project's data and meets the 12 px and 24 px floors
   const kitSel = (name) => `[data-kit-widget="${name}"]`
-  for (const [name, route] of KIT_WIDGETS) {
-    for (const p of PROJECTS) {
+  for (const [name, route, neutral] of KIT_WIDGETS) {
+    for (const p of neutral ? PROJECTS.slice(0, 1) : PROJECTS) {
       const label = `${name} (${p.id})`
       await page.goto(`${BASE}${route}?project=${p.id}`, { waitUntil: 'networkidle' })
-      const ready = await page.waitForSelector(`${kitSel(name)} .wk-src`, { timeout: 15000 }).catch(() => null)
+      const ready = await page.waitForSelector(neutral ? kitSel(name) : `${kitSel(name)} .wk-src`, { timeout: 15000 }).catch(() => null)
       if (!ready) {
         fails.push(`${label}: its data did not load`)
         continue
       }
-      const source = await page.textContent(`${kitSel(name)} .wk-src-co`)
-      if (source !== p.company) fails.push(`${label}: shows data for "${source}"`)
+      if (!neutral) {
+        const source = await page.textContent(`${kitSel(name)} .wk-src-co`)
+        if (source !== p.company) fails.push(`${label}: shows data for "${source}"`)
+      }
       const problems = await page.$eval(kitSel(name), (root) => {
         const out = []
         for (const e of root.querySelectorAll('*')) {
@@ -135,7 +157,7 @@ const PROJECTS = require('../src/content/projects.json').projects
     const phone = await ctx.newPage()
     for (const route of [...new Set(KIT_WIDGETS.map((w) => w[1]))]) {
       await phone.goto(BASE + route, { waitUntil: 'networkidle' })
-      await phone.waitForSelector('[data-kit-widget] .wk-src')
+      await phone.waitForSelector('[data-kit-widget]')
       await phone.waitForTimeout(200)
       const over = await phone.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
       if (over > 1) fails.push(`${route} at 360 px: the page overflows by ${over}px`)
@@ -316,6 +338,166 @@ const PROJECTS = require('../src/content/projects.json').projects
   await page.fill(`${kitSel('pii-redact')} textarea`, 'Write to a@example.com or b@example.com')
   if (!(await piiOut()).includes('[EMAIL_2]')) fails.push('pii: editing the text should redact again')
   await check('pii')
+
+  // agent loop: the limit and the injected failure each end the run early
+  const events = (name) => page.$$eval(`${kitSel(name)} .wk-ev`, (x) => x.map((e) => e.textContent))
+  await page.goto(BASE + '/c11/c11-2', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('agent-loop')} .wk-ev`)
+  if (!(await events('agent-loop')).at(-1).startsWith('Step 6, Final answer')) fails.push('agent loop: the default run should reach its final answer')
+  await range('agent-loop', 0).fill('3')
+  if (!(await events('agent-loop')).at(-1).startsWith('Step limit')) fails.push('agent loop: a limit of 3 should stop the run')
+  await range('agent-loop', 0).fill('10')
+  await page.check(`${kitSel('agent-loop')} input[type=checkbox]`)
+  if (!(await events('agent-loop')).at(-1).startsWith('Step 5, Stopped')) fails.push('agent loop: a failing tool should end in escalation')
+  await check('agent loop')
+
+  // token estimator: real messages per language, feeding the cost figures
+  await page.goto(BASE + '/c1/c1-4?project=store', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('token-estimator')} .wk-chip`)
+  const tkCount = () => page.textContent(`${kitSel('token-estimator')} .wk-count-l`)
+  const tk0 = await tkCount()
+  await page.click(`${kitSel('token-estimator')} .wk-chip:has-text("Hindi")`)
+  if ((await tkCount()) === tk0 || !/[\u0900-\u097F]/.test(await page.inputValue(`${kitSel('token-estimator')} textarea`))) fails.push('token estimator: the Hindi chip should load a Hindi message')
+  const costBefore = await kpi('token-estimator', 'cost per day')
+  await page.click(`${kitSel('token-estimator')} .btn:has-text("Use as input tokens")`)
+  if ((await kpi('token-estimator', 'cost per day')) === costBefore) fails.push('token estimator: using the text as input should change the cost')
+  await check('token estimator')
+
+  // class imbalance: starts at the project's real rate, and weights raise recall
+  await page.goto(BASE + '/c3/c3-3?project=bank', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('class-imbalance')} canvas`)
+  if (!(await page.textContent(`${kitSel('class-imbalance')} select option:first-child`)).includes('1.4%')) fails.push('class imbalance: the bank’s fraud rate should be 1.4%')
+  const recall0 = parseFloat(await kpi('class-imbalance', '^recall'))
+  await page.check(`${kitSel('class-imbalance')} input[type=checkbox]`)
+  if (parseFloat(await kpi('class-imbalance', '^recall')) <= recall0) fails.push('class imbalance: class weights should raise recall')
+  await check('class imbalance')
+
+  // RRF: a document found by both rankings is marked, and k changes the scores
+  await page.goto(BASE + '/c9/c9-5', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('rrf')} .wk-cols`)
+  const fused = () => page.$$eval(`${kitSel('rrf')} .card:last-child li`, (x) => x.map((l) => l.textContent))
+  const f60 = await fused()
+  if (!f60[0].includes('both')) fails.push('rrf: a document both rankings found should lead')
+  await range('rrf', 0).fill('1')
+  if ((await fused()).join() === f60.join()) fails.push('rrf: k should change the scores')
+  await check('rrf')
+
+  // trace and critical path
+  await page.goto(BASE + '/c17/c17-2?project=travel', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('trace-waterfall')} button.wk-tb-r`)
+  await page.click(`${kitSel('trace-waterfall')} button.wk-tb-r:has-text("execute_tool")`)
+  if (!/booking_id = SN-\d+/.test(await page.textContent(`${kitSel('trace-waterfall')} .out`))) fails.push('trace waterfall: the tool span should show its booking')
+  if ((await kpi('critical-path', 'end to end')) !== '5.25 s') fails.push('critical path: the default total should be 5.25 s')
+  await range('critical-path', 1).fill('300')
+  if ((await kpi('critical-path', 'end to end')) !== '5.49 s' || (await kpi('critical-path', 'off the critical')) !== 'vector search') fails.push('critical path: a slower BM25 should join the path')
+  await page.check(`${kitSel('critical-path')} input[type=checkbox]`)
+  if ((await kpi('critical-path', 'end to end')) !== '7.49 s') fails.push('critical path: the retry should add 2 s')
+  await check('trace and critical path')
+
+  // cost attribution: three groupings of one month
+  await page.goto(BASE + '/c17/c17-5?project=store', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('cost-attribution')} .bars`)
+  await page.click(`${kitSel('cost-attribution')} .btn:has-text("By tenant")`)
+  if (!(await page.textContent(`${kitSel('cost-attribution')} .bars`)).includes('31.0%')) fails.push('cost attribution: one tenant should be 31% of spend')
+  await check('cost attribution')
+
+  // BPE: merges apply, and it can train on the project's text
+  await page.goto(BASE + '/c5/c5-1', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('bpe')} .wk-chip`)
+  const bpeBtn = (t) => `${kitSel('bpe')} .btn:has-text("${t}")`
+  await page.click(bpeBtn('Apply next merge'))
+  if (!/^Merge 1:/.test(await page.textContent(`${kitSel('bpe')} .wk-one-line`))) fails.push('bpe: the first merge should be described')
+  await page.click(bpeBtn('Run 12 merges'))
+  if (!(await page.$(`${kitSel('bpe')} .wk-tok.made`))) fails.push('bpe: merged tokens should be marked')
+  await page.click(`${kitSel('bpe')} .wk-chip:has-text("Tidewell")`)
+  if (!/^Initial state/.test(await page.textContent(`${kitSel('bpe')} .wk-one-line`))) fails.push('bpe: new text should restart training')
+  await check('bpe')
+
+  // attention: the mask and a selected row
+  await page.goto(BASE + '/c5/c5-2', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('attention')} table`)
+  const masked = () => page.$$eval(`${kitSel('attention')} .wk-c-na`, (x) => x.length)
+  if ((await masked()) !== 10) fails.push('attention: the causal mask should hide 10 cells')
+  await page.uncheck(`${kitSel('attention')} input[type=checkbox]`)
+  if ((await masked()) !== 0) fails.push('attention: without the mask no cell is hidden')
+  await page.click(`${kitSel('attention')} .wk-rowpick:has-text("server")`)
+  if (!(await page.textContent(`${kitSel('attention')} .out`)).startsWith('“server”')) fails.push('attention: selecting a row should describe it')
+  await check('attention')
+
+  // HNSW and gradient descent: canvases that paint and respond
+  const painted = (name) => page.$eval(`${kitSel(name)} canvas`, (c) => c.getContext('2d').getImageData(0, 0, c.width, c.height).data.some((v) => v !== 0))
+  await page.goto(BASE + '/c9/c9-4', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('hnsw')} canvas`)
+  await page.waitForTimeout(200)
+  if (!(await painted('hnsw'))) fails.push('hnsw: the canvas is blank')
+  if (!/distance computations/.test(await page.textContent(`${kitSel('hnsw')} .count`))) fails.push('hnsw: should report its distance computations')
+  await page.click(`${kitSel('hnsw')} .btn:has-text("Step")`)
+  if (!/^Step 0 of/.test(await page.textContent(`${kitSel('hnsw')} .count`))) fails.push('hnsw: Step after a finished search should start a new one')
+  await page.goto(BASE + '/c2/c2-3', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('gradient-descent')} canvas`)
+  await page.waitForTimeout(200)
+  if (!(await painted('gradient-descent'))) fails.push('gradient descent: the canvas is blank')
+  await page.click(`${kitSel('gradient-descent')} .btn:has-text("One step")`)
+  if (!/^Step 1:/.test(await page.textContent(`${kitSel('gradient-descent')} .count`))) fails.push('gradient descent: One step should advance')
+  await page.click(`${kitSel('gradient-descent')} .btn:has-text("Reset")`)
+  if (!/^Step 0:/.test(await page.textContent(`${kitSel('gradient-descent')} .count`))) fails.push('gradient descent: Reset should return to the start')
+  await check('hnsw and gradient descent')
+
+  // threshold and reliability
+  await page.goto(BASE + '/c3/c3-5', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('threshold-roc')} svg`)
+  const recall50 = parseFloat(await kpi('threshold-roc', '^recall'))
+  await range('threshold-roc', 0).fill('0.2')
+  if (parseFloat(await kpi('threshold-roc', '^recall')) <= recall50) fails.push('threshold: a lower threshold should raise recall')
+  if ((await page.$$(`${kitSel('threshold-roc')} svg`)).length !== 2) fails.push('threshold: there should be two curves')
+  if (!(await page.textContent(`${kitSel('reliability')} svg`)).includes('ECE')) fails.push('reliability: the diagram should state its ECE')
+  await check('threshold and reliability')
+
+  // inference serving on 14.3
+  await page.goto(BASE + '/c14/c14-3', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('batching')} canvas`)
+  const decodeSteps = () => kpi('batching', 'decode steps')
+  const continuous = +(await decodeSteps())
+  await page.selectOption(`${kitSel('batching')} select`, 'static')
+  if (+(await decodeSteps()) <= continuous) fails.push('batching: static should take more steps than continuous')
+  const blocks = () => page.$$eval(`${kitSel('paged-kv')} .wk-block:not(.free)`, (x) => x.length)
+  if ((await blocks()) !== 6) fails.push('paged KV: sharing should start with 6 blocks')
+  await page.uncheck(`${kitSel('paged-kv')} input[type=checkbox]`)
+  if ((await blocks()) !== 10) fails.push('paged KV: without sharing it should start with 10 blocks')
+  await page.click(`${kitSel('paged-kv')} .btn.primary`)
+  if (!(await page.textContent(`${kitSel('paged-kv')} .count`)).startsWith('Step 1')) fails.push('paged KV: the step should advance')
+  const ttft = await kpi('prefix-cache', 'average first token')
+  if (ttft !== '280 ms') fails.push(`prefix cache: the default average should be 280 ms, got ${ttft}`)
+  await range('prefix-cache', 2).fill('0.2')
+  if ((await kpi('prefix-cache', 'average first token')) !== '640 ms') fails.push('prefix cache: a 20% hit rate should give 640 ms')
+  await check('serving widgets')
+
+  // throughput vs latency
+  await page.goto(BASE + '/c14/c14-7', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('throughput-latency')} svg`)
+  if ((await kpi('throughput-latency', 'largest batch')) !== '184') fails.push('throughput: the largest batch under 50 ms should be 184')
+  await range('throughput-latency', 0).fill('200')
+  const itlOver = await page.$(`${kitSel('throughput-latency')} .kpi.bad`)
+  if (!itlOver) fails.push('throughput: batch 200 should break the latency target')
+  await check('throughput')
+
+  // queue simulation
+  await page.goto(BASE + '/c15/c15-1', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('queue-sim')} canvas`)
+  const wait0 = await kpi('queue-sim', 'mean wait')
+  await page.click(`${kitSel('queue-sim')} .btn.primary`)
+  if ((await kpi('queue-sim', 'mean wait')) === wait0) fails.push('queue: running again should give a new run')
+  await range('queue-sim', 0).fill('12')
+  if (!(await kpi('queue-sim', '^state')).startsWith('unstable')) fails.push('queue: 150% utilisation should be unstable')
+  await check('queue')
+
+  // burn rate: a slow leak never pages fast
+  await page.goto(BASE + '/c17/c17-8', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('burn-rate')} canvas`)
+  if ((await kpi('burn-rate', 'first fast page')) === 'none') fails.push('burn rate: a sharp incident should page')
+  await page.selectOption(`${kitSel('burn-rate')} select >> nth=0`, 'leak')
+  if ((await kpi('burn-rate', 'first fast page')) !== 'none') fails.push('burn rate: a slow leak should not trip the fast rule')
+  await check('burn rate')
 
   // reduced motion: end states appear at once, and Play jumps to the end
   {

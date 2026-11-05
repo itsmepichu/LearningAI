@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { parseCsv, readCsvHead } from './csv.ts'
-import { fmt, pct } from './format.ts'
+import { compact, fmt, pct, usd } from './format.ts'
+import { exponential, gauss, mulberry } from './random.ts'
 
 /** A response delivered in the given chunks, which records how many of them were read. */
 function streamed(chunks: Uint8Array[]) {
@@ -54,6 +55,30 @@ test('readCsvHead survives a row or a multi-byte character split across chunks',
 test('readCsvHead returns what there is when the file is shorter than asked', async () => {
   const { res } = streamed([bytes('a,b\n1,2')])
   assert.deepEqual(await readCsvHead(res, 5), [{ a: '1', b: '2' }])
+})
+
+test('money and large numbers read at the right scale', () => {
+  assert.equal(usd(0.0044), '$0.0044')
+  assert.equal(usd(44), '$44.00')
+  assert.equal(usd(1320), '$1,320')
+  assert.equal(usd(2500000), '$2.50M')
+  assert.equal(compact(398), '398')
+  assert.equal(compact(10000), '10.0k')
+  assert.equal(compact(501187), '501.2k')
+  assert.equal(compact(3000000), '3.0M')
+})
+
+test('seeded random numbers repeat, stay in range and have the right means', () => {
+  const a = mulberry(5)
+  const b = mulberry(5)
+  const draws = Array.from({ length: 2000 }, () => a())
+  assert.deepEqual(draws, Array.from({ length: 2000 }, () => b()))
+  assert.ok(draws.every((v) => v >= 0 && v < 1))
+  const r = mulberry(6)
+  const normal = Array.from({ length: 4000 }, () => gauss(r))
+  assert.ok(Math.abs(normal.reduce((s, v) => s + v, 0) / normal.length) < 0.1)
+  const exp = Array.from({ length: 4000 }, () => exponential(r, 2))
+  assert.ok(Math.abs(exp.reduce((s, v) => s + v, 0) / exp.length - 2) < 0.2)
 })
 
 test('number formatting', () => {
