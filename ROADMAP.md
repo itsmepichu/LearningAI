@@ -261,7 +261,7 @@ Figures that changed from v3, with their notes updated to match:
 
 - **Pyodide** labs: run the Appendix A NumPy lab and chapter exercises in a Web Worker, with graded checks against your project's dataset.
 - **Transformers.js**:
-  - a real tokenizer comparison (5.1), using the Travel project's 9 languages
+  - a real tokenizer comparison (5.1), using the Travel project's 4 languages (English, Hindi, Tamil, Hinglish)
   - real sentence embeddings and vector search over your project's documents (9.3–9.5)
   - a small classifier (for example the Bank project's dispute reasons)
 - Shown before every download: its size, a progress bar, and caching after the first load.

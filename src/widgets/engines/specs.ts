@@ -36,3 +36,19 @@ export const EMBEDDINGS: DownloadSpec = {
   docs: TRANSFORMERS_DOCS,
   load: { op: 'loadEmbedder', args: { model: EMBEDDING_MODEL } },
 }
+
+export const TOKENIZER_MODELS = [
+  { id: 'Xenova/gpt2', name: 'GPT-2', algorithm: 'byte-level BPE, trained on English web text', bytes: 2_107_653 },
+  { id: 'Xenova/bert-base-multilingual-cased', name: 'BERT multilingual', algorithm: 'WordPiece, trained across 100 or so languages', bytes: 2_919_362 },
+  { id: 'Xenova/xlm-roberta-base', name: 'XLM-R', algorithm: 'Unigram (SentencePiece), trained across 100 or so languages', bytes: 17_082_660 },
+]
+
+export const TOKENIZERS: DownloadSpec = {
+  id: 'tokenizers',
+  version: `${TRANSFORMERS_VERSION}-gpt2-bert-xlmr`,
+  what: 'three real tokenizers',
+  files: [LIBRARY, ...TOKENIZER_MODELS.map((m) => ({ label: `${m.name} vocabulary`, bytes: m.bytes, host: HF }))],
+  needs: ['worker'],
+  docs: TRANSFORMERS_DOCS,
+  load: { op: 'loadTokenizers', args: { models: TOKENIZER_MODELS.map((m) => m.id) } },
+}

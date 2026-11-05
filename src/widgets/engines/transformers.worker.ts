@@ -4,6 +4,7 @@
  * worker only starts after the reader opts in, so no reader pays for it before then and it never enters a page bundle.
  */
 import { serve } from '../kit/download.ts'
+import { trainSoftmax } from '../text-classifier/softmax.ts'
 import { RUNTIME_BYTES, TRANSFORMERS_URL } from './specs.ts'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -41,6 +42,7 @@ const modelProgress = (emit: Emit) => (p: any) => {
 }
 
 let embedder: any = null
+let tokenizers: any[] = []
 
 serve(self as unknown as Parameters<typeof serve>[0], {
   async loadEmbedder({ model }: { model: string }, emit) {
@@ -60,5 +62,34 @@ serve(self as unknown as Parameters<typeof serve>[0], {
       emit({ done: out.length, total: texts.length })
     }
     return out
+  },
+
+  /** Training is arithmetic, not inference, but 400 rows of 384 numbers should not run on the page's thread either. */
+  trainSoftmax({ x, y }: { x: number[][]; y: string[] }) {
+    return trainSoftmax(x, y)
+  },
+
+  async loadTokenizers({ models }: { models: string[] }, emit) {
+    const tf = await loadLibrary()
+    tokenizers = await Promise.all(
+      models.map((model) =>
+        tf.AutoTokenizer.from_pretrained(model, {
+          // Each tokenizer has a file with the same name, so the model tells them apart in the running total.
+          progress_callback: (p: any) => {
+            if (p.status === 'progress' && p.file) emit({ file: `${model}/${p.file}`, loaded: p.loaded, total: p.total })
+          },
+        }),
+      ),
+    )
+    return { models }
+  },
+
+  /** For each tokenizer, for each text: what each token decodes to. No special tokens, so counts are the text's own. */
+  tokenize({ texts }: { texts: string[] }) {
+    return tokenizers.map((t) =>
+      texts.map((text) => ({
+        pieces: (t.encode(text, { add_special_tokens: false }) as number[]).map((id) => t.decode([id], { skip_special_tokens: false }) as string),
+      })),
+    )
   },
 })

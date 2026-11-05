@@ -332,6 +332,40 @@ def travel():
         if R.random() < 0.35:
             dis.append({"date": d.isoformat(), "region": "Delhi", "type": "fog", "flights_cancelled": R.randint(10, 90)})
     files.append(write_csv("travel", "disruptions.csv", dis, list(dis[0].keys())))
+
+    # Labelled requests for text classification. They use their own random stream, so the files above do not change.
+    Q = random.Random(20261105)
+    places = ["Mumbai", "Delhi", "Goa", "Kochi", "Chennai", "Bengaluru", "Kolkata", "Singapore"]
+    templates = {
+        "en": {"cancel": ["I need to cancel my {p} booking to {c}.", "Please cancel my trip to {c}.", "We can no longer travel to {c}, cancel the {p}."],
+               "change_date": ["Can I move my {p} to {c} by {n} days?", "Please change the date of my {c} {p}.", "I want to travel to {c} {n} days later instead."],
+               "refund_status": ["Where is my refund for the {c} {p}?", "It has been {n} days and my {c} refund has not come.", "When will I get my money back for the {p} to {c}?"],
+               "disruption": ["My {p} to {c} is running {n} hours late.", "The {c} {p} was cancelled because of the weather. What now?", "Heavy rain in {c}. Is my {p} still on?"],
+               "new_booking": ["Book the cheapest {p} to {c} for {n} adults.", "I want a {p} to {c} next Friday.", "Show me {p} options to {c} for {n} people."]},
+        "hi": {"cancel": ["मुझे {c} की {p} रद्द करनी है।", "कृपया मेरी {c} यात्रा रद्द कर दीजिए।"],
+               "change_date": ["क्या मैं {c} की {p} की तारीख बदल सकता हूँ?", "मेरी {c} यात्रा {n} दिन आगे कर दीजिए।"],
+               "refund_status": ["{c} की {p} का रिफंड कब मिलेगा?", "{n} दिन हो गए, मेरा रिफंड नहीं आया।"],
+               "disruption": ["{c} की {p} {n} घंटे देर से है।", "बारिश के कारण {c} की {p} रद्द हो गई, अब क्या करूँ?"],
+               "new_booking": ["{c} के लिए सबसे सस्ती {p} बुक कर दीजिए।", "{n} लोगों के लिए {c} की {p} दिखाइए।"]},
+        "ta": {"cancel": ["{c} பயணத்தை ரத்து செய்ய வேண்டும்.", "என் {c} முன்பதிவை ரத்து செய்யுங்கள்."],
+               "change_date": ["{c} பயண தேதியை மாற்ற முடியுமா?", "என் {c} பயணத்தை {n} நாள் தள்ளி வையுங்கள்."],
+               "refund_status": ["{c} பயணத்தின் பணம் எப்போது திரும்ப கிடைக்கும்?", "{n} நாள் ஆகியும் பணம் வரவில்லை."],
+               "disruption": ["{c} விமானம் {n} மணி நேரம் தாமதமாக உள்ளது.", "மழையால் {c} விமானம் ரத்து ஆனது, இப்போது என்ன செய்வது?"],
+               "new_booking": ["{c} செல்ல மலிவான டிக்கெட் பதிவு செய்யுங்கள்.", "{n} பேருக்கு {c} பயணம் பதிவு செய்ய வேண்டும்."]},
+        "hinglish": {"cancel": ["{c} wali {p} cancel karni hai.", "Meri {c} trip cancel kar do please."],
+                     "change_date": ["{c} wala {p} {n} din aage kar do.", "{c} ki date change ho sakti hai kya?"],
+                     "refund_status": ["{c} ka refund kab milega?", "{n} din ho gaye, refund abhi tak nahi aaya."],
+                     "disruption": ["{c} ki {p} {n} ghante late hai.", "Baarish ki wajah se {c} ki {p} cancel ho gayi, ab kya karein?"],
+                     "new_booking": ["{c} ke liye sabse sasti {p} book kar do.", "{n} logon ke liye {c} ki {p} dikhao."]},
+    }
+    products = {"en": ["flight", "hotel", "train"], "hi": ["फ्लाइट", "ट्रेन"], "ta": ["விமானம்"], "hinglish": ["flight", "train"]}
+    requests = []
+    for i in range(300):
+        lang = Q.choices(["en", "hi", "ta", "hinglish"], [64, 20, 7, 9])[0]
+        intent = Q.choices(["cancel", "change_date", "refund_status", "disruption", "new_booking"], [24, 18, 22, 14, 22])[0]
+        text = Q.choice(templates[lang][intent]).format(p=Q.choice(products[lang]), c=Q.choice(places), n=Q.randint(2, 5))
+        requests.append({"request_id": f"RQ-{i + 1:04d}", "language": lang, "text": text, "intent": intent})
+    files.append(write_csv("travel", "requests.csv", requests, list(requests[0].keys())))
     return files
 
 

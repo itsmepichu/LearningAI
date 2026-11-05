@@ -72,7 +72,12 @@
     { "file": "bookings.csv", "what": "9,000 bookings across 2025 with product, route, lead time, fare, passengers, refundability and outcome.", "notes": "cancelled is the target (about 14%). Monsoon travel (July and August) raises cancellations and changes: a shift. cancellation_fee_inr is only known after cancelling, so it leaks the answer." },
     { "file": "fare_rules.json", "what": "Change and cancellation rules for flights, hotels, rail and packages.", "notes": "Fictional rules for a fictional company." },
     { "file": "messages.json", "what": "Traveller messages in English, Hindi, Tamil and Hinglish.", "notes": "Use them for token counts and intent extraction." },
-    { "file": "disruptions.csv", "what": "Monsoon and fog disruption days with flights cancelled.", "notes": "Use them to explain traffic spikes and change requests." }
+    { "file": "disruptions.csv", "what": "Monsoon and fog disruption days with flights cancelled.", "notes": "Use them to explain traffic spikes and change requests." },
+    {
+     "file": "requests.csv",
+     "what": "300 labelled traveller requests in English, Hindi, Tamil and Hinglish, with their intent.",
+     "notes": "Use intent as a classification target. The text comes from a few templates, so a classifier scores far higher here than it would on real messages."
+    }
    ]
   }
  ]

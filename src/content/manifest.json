@@ -243,8 +243,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 449
     },
     {
@@ -384,8 +384,8 @@
      "tn": "5.1",
      "title": "Tokenisation: subwords, BPE, vocabulary and multilingual implications",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 413
     },
     {

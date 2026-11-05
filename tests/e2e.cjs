@@ -38,6 +38,8 @@ const KIT_WIDGETS = [
   ['critical-path', '/c17/c17-2'],
   ['cost-attribution', '/c17/c17-5'],
   ['bpe', '/c5/c5-1'],
+  ['tokenizer-compare', '/c5/c5-1'],
+  ['text-classifier', '/c3/c3-2'],
   // These show no example data, so they look the same for every project.
   ['attention', '/c5/c5-2', 'neutral'],
   ['hnsw', '/c9/c9-4', 'neutral'],
