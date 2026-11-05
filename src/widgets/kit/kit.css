@@ -190,6 +190,16 @@ button.wk-tb-r[aria-pressed=true]{border-color:var(--accent);background:var(--ac
 .wk-output pre{margin:0;background:none;padding:0;font-size:var(--fs-2xs);color:var(--ink);white-space:pre}
 .wk-output-e{color:var(--bad)}
 
+/* Step-by-step guides */
+.wk-guide{display:grid;gap:14px;margin:0;padding-left:1.6em;font-size:var(--fs-sm);line-height:1.55}
+.wk-guide li{display:grid;gap:6px;min-width:0;margin:0}
+.wk-guide li::marker{font-weight:600}
+.wk-guide p{margin:0}
+.wk-guide b{font-weight:600}
+.wk-guide .ctl{margin-top:0}
+.wk-output code{font-family:var(--f-mono);font-size:var(--fs-2xs);background:none;padding:0}
+a.btn{display:inline-flex;align-items:center;text-decoration:none}
+
 /* Opt-in downloads */
 .wk-gate{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--rule-2);border-radius:var(--r-2);background:var(--sunk);font-size:var(--fs-sm);line-height:1.5;color:var(--ink);min-width:0}
 .wk-gate.bad{border-color:var(--bad)}

@@ -4,10 +4,6 @@ import { Gate, formatBytes, hostsOf, totalBytes, type DownloadSpec, type GateEnv
 const browserEnv = (): GateEnv => ({
   worker: typeof Worker !== 'undefined',
   wasm: typeof WebAssembly !== 'undefined',
-  gpu: async () => {
-    const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu
-    return !!gpu && !!(await gpu.requestAdapter())
-  },
 })
 
 function seenStore() {
@@ -34,7 +30,7 @@ export function gateFor(spec: DownloadSpec, open: () => WorkerLike): Gate {
 export function useGate(gate: Gate): GateState {
   const state = useSyncExternalStore(gate.subscribe, gate.getState)
   useEffect(() => {
-    void gate.check()
+    gate.check()
   }, [gate])
   return state
 }

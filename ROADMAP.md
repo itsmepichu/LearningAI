@@ -257,15 +257,26 @@ Figures that changed from v3, with their notes updated to match:
 - The queue simulation's run button draws a new run; the v3 one reused its seed, so it changed nothing.
 - BPE and the BM25 tokenizer keep combining marks, so Hindi and Tamil words stay whole.
 
-### Phase 5 — Real computation in the browser (opt-in downloads)
+### Phase 5 — Real computation in the browser (opt-in downloads) ✅
 
-- **Pyodide** labs: run the Appendix A NumPy lab and chapter exercises in a Web Worker, with graded checks against your project's dataset.
-- **Transformers.js**:
-  - a real tokenizer comparison (5.1), using the Travel project's 4 languages (English, Hindi, Tamil, Hinglish)
-  - real sentence embeddings and vector search over your project's documents (9.3–9.5)
-  - a small classifier (for example the Bank project's dispute reasons)
-- Shown before every download: its size, a progress bar, and caching after the first load.
-- Optional WebGPU model chat (WebLLM), with a clear "not supported here" fallback.
+*Delivered: a shared download gate, real embeddings and vector search, a real tokenizer comparison, a small classifier, Python labs, and a Google Colab guide for GPU work. Nothing downloads until a reader opts in, and no GPU code runs in this project.*
+
+- **Download gate** (`src/widgets/kit/download.ts`, `DownloadGate.tsx`): the size before anything starts, a progress bar, cancel, failure with retry, a remembered cached state and a clear "not supported here" state, for a worker that holds a heavy runtime.
+- **Transformers.js**, in a worker:
+  - a real tokenizer comparison (5.1) of GPT-2, BERT multilingual and XLM-R over each project's messages, using the Travel project's 4 languages (English, Hindi, Tamil, Hinglish): about 22 MB
+  - real sentence embeddings with all-MiniLM-L6-v2 and vector search over each project's documents: about 29 MB. 9.3 searches beside BM25, 9.4 measures int8 and binary quantisation against an exact scan, and the RRF (9.5) and retriever comparison (9.7) figures keep their illustration until the reader opts in, with each column saying which it shows
+  - a small classifier (3.2) that trains a softmax layer on those embeddings, using each project's labelled text, such as the Bank project's dispute reasons, beside a majority baseline. Travel had no labelled text, so the generator gained `requests.csv`, on its own random stream, leaving the other files unchanged
+- **Pyodide** labs, in a worker, about 9 MB: the Appendix A script (which reproduces the appendix's reported losses on the manual's own text) and exercises on 2.1, 2.5 and 3.5, with graded checks over each project's dataset. Graders recompute their answers, and Stop or a 60 second limit ends a runaway program without freezing the page.
+- **GPU work goes to Google Colab.** 5.6 has a step-by-step guide, from a new notebook and turning on a GPU to giving it back, with code using the selected project's question and document, as cells to copy or a notebook to download.
+
+Decisions that carry forward:
+- **No GPU integrations in this project**, by the owner's decision. A WebGPU model chat was built and dropped in favour of the Colab guide. Testing it had also shown that SmolLM2-360M's 4-bit weights return invalid numbers on an AMD GCN 5 GPU, while Qwen3-0.6B answers correctly.
+- Runtimes and models load at run time from pinned CDN URLs inside workers, so they add nothing to `npm install` or the page bundles. Each new widget does add its one line to the registry, which is in the main bundle.
+- The stated sizes were measured from the hosts' response headers, and are what crosses the network. A new runtime or model version needs them measured again.
+- e2e replaces `Worker` with a stub and fails if the main run reaches a model host or starts a worker, so tests never download anything.
+- A test runs every lab's solution on a local Python when NumPy is present, and CI installs it.
+
+Checked by hand, once, with real downloads: embeddings, tokenizers, the classifier and all four labs, in Chromium on Windows. The Colab guide's cells ran on a CPU with a tiny random model, which proves the calls work on a current `transformers`. **They have not been run in Colab itself or on a GPU**, so run the guide once before relying on its timings and wording.
 
 ### Phase 6 — 3D and scroll-driven walkthroughs
 

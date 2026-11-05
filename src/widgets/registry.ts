@@ -32,6 +32,7 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'cost-attribution': lazy(() => import('./cost-attribution/CostAttribution')),
   'py-lab': lazy(() => import('./py-lab/PyLab')),
   bpe: lazy(() => import('./bpe/Bpe')),
+  'colab-guide': lazy(() => import('./colab-guide/ColabGuide')),
   'tokenizer-compare': lazy(() => import('./tokenizer-compare/TokenizerCompare')),
   'text-classifier': lazy(() => import('./text-classifier/TextClassifier')),
   attention: lazy(() => import('./attention/Attention')),

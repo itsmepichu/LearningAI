@@ -12,7 +12,7 @@
   - evidence tags: `.tag cpu|real|sim|gpu`
 - `HtmlContent` rebuilds heading levels into a valid outline when it renders a fragment, and marks a changed heading with `as-hN`, where N is its level in the file. When you style a content heading, style `hN` and `.as-hN` alike.
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
-- Current state (phase 4 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
+- Current state (phase 5 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
@@ -68,6 +68,11 @@
   - respect reduced motion
   - meet the 24 px target minimum and the 12 px text floor (`--fs-2xs`)
   - use the colour tokens for text, which pass AA contrast, and not dim text with opacity
+- Heavy computation is opt-in, through the download gate in the kit (`gateFor`, `useGate`, `DownloadGate`). List each download and its measured size in `src/widgets/engines/specs.ts`, and pin its version.
+  - Load runtimes and models in a Web Worker (`src/widgets/engines/`), from a pinned URL. Nothing may download or start before the reader opts in.
+  - Say what each real result does and does not prove, and keep labels accurate about whether a figure is showing real results or an illustration.
+  - Tests and e2e never download a model. Test the logic with small fixtures. e2e stubs `Worker` and tells each engine apart by the worker's name.
+- No GPU integrations: no WebGPU or other GPU compute in this project. GPU work goes in a step-by-step Google Colab guide, as `colab-guide` does on 5.6.
 - 3D (three.js / @react-three/fiber):
   - Mount only near the viewport.
   - Use `frameloop="demand"` unless animating.

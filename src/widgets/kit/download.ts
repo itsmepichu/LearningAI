@@ -2,7 +2,7 @@
  * The opt-in download gate, without React: what a download costs, what the browser must support, and the state of
  * one worker that holds a heavy runtime. Nothing here starts a download by itself; only `start()` does.
  */
-export type Need = 'worker' | 'wasm' | 'webgpu'
+export type Need = 'worker' | 'wasm'
 
 export interface DownloadFile {
   /** What this file is, in words. */
@@ -42,22 +42,18 @@ export function formatBytes(bytes: number): string {
 export interface GateEnv {
   worker: boolean
   wasm: boolean
-  /** False when WebGPU is missing, or the device has no adapter it will use. */
-  gpu: () => Promise<boolean>
 }
 
 const NEED_WORDS: Record<Need, string> = {
   worker: 'Web Workers, which keep this work off the main thread',
   wasm: 'WebAssembly, which runs the runtime',
-  webgpu: 'WebGPU with a usable graphics adapter, which runs the model on your GPU',
 }
 
 /** Why this browser cannot run the spec, in a sentence, or null when it can. */
-export async function unsupportedReason(needs: Need[], env: GateEnv): Promise<string | null> {
+export function unsupportedReason(needs: Need[], env: GateEnv): string | null {
   const missing: Need[] = []
   if (needs.includes('worker') && !env.worker) missing.push('worker')
   if (needs.includes('wasm') && !env.wasm) missing.push('wasm')
-  if (needs.includes('webgpu') && !(await env.gpu().catch(() => false))) missing.push('webgpu')
   return missing.length ? `This browser does not offer ${missing.map((m) => NEED_WORDS[m]).join(', or ')}.` : null
 }
 
@@ -188,10 +184,10 @@ export class Gate {
   }
 
   /** Reads what the browser supports. It downloads nothing. */
-  async check(): Promise<void> {
+  check(): void {
     if (this.checked) return
     this.checked = true
-    const reason = await unsupportedReason(this.spec.needs, this.env)
+    const reason = unsupportedReason(this.spec.needs, this.env)
     this.set(reason ? { status: 'unsupported', reason } : { status: 'idle', seen: this.wasSeen() })
   }
 

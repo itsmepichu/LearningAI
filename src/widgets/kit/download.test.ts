@@ -15,7 +15,7 @@ const SPEC: DownloadSpec = {
   load: { op: 'load' },
 }
 
-const env = (over: Partial<GateEnv> = {}): GateEnv => ({ worker: true, wasm: true, gpu: async () => true, ...over })
+const env = (over: Partial<GateEnv> = {}): GateEnv => ({ worker: true, wasm: true, ...over })
 
 class FakeWorker implements WorkerLike {
   sent: { id: number; op: string; args?: unknown }[] = []
@@ -58,12 +58,11 @@ test('sizes add up and read plainly', () => {
   assert.equal(formatBytes(1_400_000_000), '1.4 GB')
 })
 
-test('the unsupported reason names what is missing, and only then', async () => {
-  assert.equal(await unsupportedReason(['worker', 'wasm'], env()), null)
-  assert.match((await unsupportedReason(['worker'], env({ worker: false })))!, /Web Workers/)
-  assert.match((await unsupportedReason(['webgpu'], env({ gpu: async () => false })))!, /WebGPU/)
-  assert.match((await unsupportedReason(['webgpu'], env({ gpu: () => Promise.reject(new Error('no')) })))!, /WebGPU/)
-  assert.equal(await unsupportedReason(['wasm'], env({ gpu: async () => false })), null, 'WebGPU only counts when needed')
+test('the unsupported reason names what is missing, and only then', () => {
+  assert.equal(unsupportedReason(['worker', 'wasm'], env()), null)
+  assert.match(unsupportedReason(['worker'], env({ worker: false }))!, /Web Workers/)
+  assert.match(unsupportedReason(['wasm'], env({ wasm: false }))!, /WebAssembly/)
+  assert.equal(unsupportedReason(['worker'], env({ wasm: false })), null, 'only what the spec needs counts')
 })
 
 test('progress across files never runs backwards or passes 100', () => {
