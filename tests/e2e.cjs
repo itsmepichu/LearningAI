@@ -611,7 +611,19 @@ const PROJECTS = require('../src/content/projects.json').projects
   await r.close()
   if (errs.length) fails.push('readability checks: ' + errs.join(' | '))
 
-  // 9. accessibility: no serious or critical axe violations on the review pages and in the React widgets, in both themes
+  // 9. keyboard: v3 regions that scroll sideways take a tab stop, those that fit do not, at desktop and phone widths
+  for (const width of [1280, 375]) {
+    const k = await b.newPage({ viewport: { width, height: 900 } })
+    for (const route of ['/c7/c7-4', '/c11/c11-6']) {
+      await k.goto(BASE + route, { waitUntil: 'networkidle' })
+      await k.waitForTimeout(400)
+      const wrong = await k.evaluate(() => [...document.querySelectorAll('pre, .flow .track, .tw')].filter((el) => !el.closest('[data-kit-widget]') && (el.scrollWidth > el.clientWidth) !== el.hasAttribute('tabindex')).map((el) => el.className || el.tagName))
+      if (wrong.length) fails.push(`keyboard ${route} at ${width}: tab stop does not match overflow on ${wrong.join(', ')}`)
+    }
+    await k.close()
+  }
+
+  // 10. accessibility: no serious or critical axe violations on the review pages and the topic pages with a React widget, in both themes
   const axeProblems = await runAxe(b, BASE)
   console.log('axe serious or critical violations:', axeProblems.length)
   fails.push(...axeProblems.map((p) => 'axe: ' + p))

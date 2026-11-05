@@ -1,11 +1,10 @@
-/* Accessibility check with axe: the review pages, and the React widgets on other pages, in both themes. Fails on serious or critical violations.
+/* Accessibility check with axe: the review pages and the topic pages with a React widget, as whole pages, in both themes. Fails on serious or critical violations.
    Part of tests/e2e.cjs. To run it alone, against a served build: node tests/axe.cjs [baseUrl] */
 const { chromium } = require('playwright')
 const { AxeBuilder } = require('@axe-core/playwright')
 
 const PAGES = ['/', '/guide', '/c9', '/c9/c9-3', '/c5/check', '/practice', '/progress']
-// Other pages with a React widget from src/widgets/kit: only the widgets are checked here, because these pages
-// still hold v3 elements with known findings (flow stepper buttons and track, code blocks, some tables).
+// Topic pages with a React widget from src/widgets/kit beside v3 flow steppers, code blocks and tables.
 const WIDGET_PAGES = ['/c9/c9-2', '/c9/c9-7', '/c7/c7-4', '/c11/c11-6']
 
 async function runAxe(browser, base) {
@@ -25,7 +24,6 @@ async function runAxe(browser, base) {
       })
       await page.waitForTimeout(700)
       const builder = new AxeBuilder({ page })
-      if (WIDGET_PAGES.includes(url)) builder.include('[data-kit-widget]')
       const { violations } = await builder.analyze()
       for (const v of violations) {
         if (v.impact !== 'serious' && v.impact !== 'critical') continue
