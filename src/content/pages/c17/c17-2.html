@@ -1,18 +1,8 @@
 <p>For AI systems, a trace should let you answer, for any single request: what did the user ask, what was retrieved (IDs and scores), what exactly was sent to the model (prompt version, and the content if policy allows), what came back, which tools ran with what arguments and results, how long each step took, how many tokens and dollars it cost, and what the user did next. Agent runs produce traces with dozens of nested spans; multi-agent runs link child traces to the parent task.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div id="trWf"></div><div class="out" id="trAttr">Click a span to see its attributes.</div></div></div>
-<figcaption><b>A trace waterfall</b> for one RAG request with an agentic tool call (example data). Bars are positioned to scale on the time axis. Notice the reranker span dominates retrieval time and the model call has a long TTFT; click spans to inspect GenAI attributes.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
-<label for="cpRw">Query rewrite (ms) <input type="range" id="cpRw" min="0" max="1500" step="50" value="400"><span id="cpRwO"></span></label>
-<label for="cpBm">BM25 (ms) <input type="range" id="cpBm" min="10" max="800" step="10" value="40"><span id="cpBmO"></span></label>
-<label for="cpVe">Vector search (ms) <input type="range" id="cpVe" min="10" max="800" step="10" value="60"><span id="cpVeO"></span></label>
-<label for="cpRr">Rerank (ms) <input type="range" id="cpRr" min="0" max="2000" step="50" value="800"><span id="cpRrO"></span></label>
-<label for="cpM1">Model call 1 (ms) <input type="range" id="cpM1" min="100" max="4000" step="50" value="850"><span id="cpM1O"></span></label>
-<label for="cpTo">Tool call (ms) <input type="range" id="cpTo" min="20" max="2000" step="10" value="240"><span id="cpToO"></span></label>
-<label for="cpM2">Model call 2 (ms) <input type="range" id="cpM2" min="100" max="6000" step="50" value="2900"><span id="cpM2O"></span></label>
-<label for="cpRt"><input type="checkbox" id="cpRt"> tool times out once (2 s) and retries</label></div>
-<div id="cpWf"></div><div class="kpis" id="cpKp"></div></div></div>
-<figcaption><b>Critical path, recomputed live.</b> BM25 and vector search run in parallel, so only the slower one is on the critical path (outlined). Speeding up a span that is not on the critical path changes nothing; speeding up the longest one helps most. Toggle the tool retry to see how one hidden timeout dominates the request.</figcaption></figure>
+<figure class="fig"><div class="stage"><div data-widget="trace-waterfall"></div></div>
+<figcaption><b>A trace waterfall</b> for one RAG request with an agentic tool call (example data, illustrative timings). Bars are positioned to scale on the time axis. Notice the reranker span dominates retrieval time and the model call has a long TTFT; select spans to inspect GenAI attributes.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div data-widget="critical-path"></div></div>
+<figcaption><b>Critical path, recomputed live</b> from timings you set; the defaults are illustrative. BM25 and vector search run in parallel, so only the slower one is on the critical path. Speeding up a span that is not on the critical path changes nothing; speeding up the longest one helps most. Toggle the tool retry to see how one hidden timeout dominates the request.</figcaption></figure>
 <div class="box example"><h5>Example: what the trace revealed</h5><p>Users report "the assistant is slow on Mondays". Traces show p95 end-to-end time of 9 s, of which 5 s is <code>retrieval.rerank</code> waiting for a GPU shared with the Monday ingestion backfill. Metrics alone showed "latency up"; the trace showed where and why, and led to separating the reranker pool (15.3).</p></div>
 <div class="box lab"><h5>Laptop lab: trace a local RAG call into Jaeger <span class="tag cpu">Laptop · CPU · Docker</span></h5>
 <pre><code>docker run --rm -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/jaeger:latest     # UI: http://localhost:16686

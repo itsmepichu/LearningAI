@@ -6,10 +6,7 @@
 <li><b>Retention and deletion</b>: define retention per data type (prompts, outputs, traces, memories, eval datasets, fine-tuning sets). Deletion requests must reach every copy: source mirror, chunks, vectors, caches, memories, logs, evaluation and training datasets, and derived models (which may require retraining or per-tenant adapters).</li>
 <li><b>Auditability</b>: immutable logs of who accessed what, what the model was given, what actions it took and on whose behalf, which model/prompt versions were used, and approvals, retained per policy and queryable for investigations and regulators.</li>
 <li><b>Derived data is still sensitive</b>: embeddings can leak information about their source text, and summaries, memories and caches can repeat personal data verbatim. Classify, encrypt, retain and delete them under the same rules as the source.</li></ul>
-<figure class="fig live"><div class="stage"><div class="wid">
-<label for="piiIn" style="display:block">Text sent to the model</label>
-<textarea id="piiIn">Hi, I'm Dana Whitfield (dana.whitfield@example.com, +1 415 555 0134). Please refund card 4111 1111 1111 1111; my IBAN is DE89 3704 0044 0532 0130 00.</textarea>
-<div class="out" id="piiOut"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="pii-redact"></div></div>
 <figcaption><b>Pattern-based redaction, running live</b> (emails, phone numbers, card numbers with a Luhn check, IBAN-like strings). Names are not caught by patterns; they need an NER model such as Microsoft Presidio's. Pattern redaction is a baseline, not a guarantee.</figcaption></figure>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Deletion request<small>user / tenant offboarding</small></div><div class="nd">Resolve all copies<small>lineage (10.4)</small></div><div class="nd">Source mirror + chunks + vectors</div><div class="nd">Caches + memories</div><div class="nd">Logs / traces<small>per retention</small></div><div class="nd">Eval &amp; training sets</div><div class="nd">Verify + record<small>audit evidence</small></div></div>

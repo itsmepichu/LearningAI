@@ -1528,7 +1528,7 @@
      "title": "Token consumption, cost attribution, GPU utilisation and tenant-level usage",
      "tags": [],
      "figures": 1,
-     "interactive": 0,
+     "interactive": 1,
      "words": 194
     },
     {

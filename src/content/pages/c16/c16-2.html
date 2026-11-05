@@ -6,12 +6,8 @@
 <li><b>Unsafe tool execution</b>: the model calls powerful tools with attacker-chosen arguments (deleting records, sending money, running shell commands).</li>
 </ul>
 <p>There is <b>no complete defence</b> at the model level today: classifiers and careful prompting reduce success rates but do not eliminate them. Defence is architectural: limit what a manipulated model <em>can</em> do (capabilities, permissions, approvals, egress), so a successful injection has little impact.</p>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<div class="out" id="piDoc" style="white-space:pre-wrap"></div>
-<div class="row2" id="piDef"></div>
-<div class="ctl"><button class="btn primary" id="piRun" type="button">Ask: "Summarise my latest email"</button></div>
-<div id="piRes" style="display:grid;gap:6px"></div></div></div>
-<figcaption><b>Indirect injection, with and without defences</b> (scripted; illustrates outcomes, does not run a model). The email contains a hidden instruction to send the user's recent invoices to an external address. Toggle defences to see which layer stops the attack. Note that "tell the model to ignore instructions in emails" alone reduces but does not reliably stop it.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div data-widget="injection"></div></div>
+<figcaption><b>Indirect injection, with and without defences</b> (scripted; illustrates outcomes, does not run a model). The content your example project's assistant reads holds a hidden instruction to send private data to an external address. Toggle defences to see which layer stops the attack. Note that telling the model to treat the content as data reduces the risk but does not reliably stop it.</figcaption></figure>
 <div class="box example"><h5>Example: layered controls for an email assistant</h5><ul>
 <li>Untrusted email bodies are passed as data in delimited blocks, never in the system message.</li>
 <li>The model's tools while processing untrusted content are read-only; <code>send_email</code> requires a user click showing recipient and content.</li>

@@ -50,6 +50,13 @@
 ## Widgets
 - New widgets are React components in `src/widgets/<name>/`. Register each one in `src/widgets/registry.ts`, lazily so each gets its own code chunk.
 - Embed a widget in content with `<div data-widget="name" data-props='{"k":1}'></div>`.
+- Build on the shared kit, `src/widgets/kit/`: `Widget` (the outer element), `Slider`, `KpiRow`, `StepPlayer`, `EventList`, `ScrollRegion`, `ThemeCanvas`, `LineChart`, `BarList`, `StackBar`, `TimeBars`, `Legend`, and `useProjectData` with `DataGate` and `DataSource` for the selected project's dataset.
+- Keep logic that can run without a browser in a plain `.ts` module beside the component. File names are case-insensitive on Windows, so do not name it after the component (`saga/events.ts`, not `saga/saga.ts` next to `Saga.tsx`).
+- A widget's data loader takes `(project, read)` and uses `read.json` and `read.csv`, so a test can give it the real dataset from disk. Import only types from `../kit` in these modules, and only React components may import its values.
+- Give each new widget a `<name>.test.ts` beside it, using `node:test`: test its logic, and check its scenarios against the datasets with `kit/testing.ts`. Tests, and any value import between these plain modules, use the `.ts` extension, because Node runs them directly. Do not add a test runner or Storybook.
+- Add each new widget to `KIT_WIDGETS` in `tests/e2e.cjs` with a check of what it does, and its page to `WIDGET_PAGES` in `tests/axe.cjs`. Mark it `neutral` there if it shows no example data.
+- A simulated widget uses the seeded generators in `kit/random.ts`, so the same seed gives the same result and a test can assert on it.
+- Never plot two scales on one axis. Use two charts, as the throughput and burn-rate widgets do.
 - Each widget should:
   - read colours from the CSS tokens (`--accent`, `--sim`, `--signal`, `--ok`, `--bad`, `--ink`, `--muted`, `--surface`, `--sunk`, `--rule`)
   - redraw when `useTheme().version` changes
@@ -67,6 +74,7 @@
 ## Checks before committing
 ```bash
 npm run typecheck
+npm run test:unit
 npm run build
 ```
 

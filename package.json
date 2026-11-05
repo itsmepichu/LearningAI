@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "check:content": "node scripts/content-summary.mjs",
     "datasets": "python3 scripts/make_datasets.py",
+    "test:unit": "node --test \"src/widgets/**/*.test.ts\"",
     "test:e2e": "node tests/e2e.cjs"
   },
   "dependencies": {

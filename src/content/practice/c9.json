@@ -65,7 +65,7 @@
    "failure": "Assuming a vector database chooses a good embedding model for you; it only stores and searches vectors.",
    "fit": "good",
    "fitNote": "error codes for BM25, paraphrases for dense search",
-   "tryIt": "Type “E-4012” and then “can't log in” into the BM25 figure and explain each result. Then run bm25s over <code>policies.json</code> with “PTO carry over”."
+   "tryIt": "Choose “HTTP 429” and then “cannot log in” in the BM25 figure and explain each result. Then run bm25s over <code>policies.json</code> with “PTO carry over”."
   },
   "store": {
    "fit": "best",
@@ -123,7 +123,7 @@
    "failure": "Adding raw BM25 and cosine scores together; their scales mean different things.",
    "fit": "best",
    "fitNote": "ACL-filtered hybrid search with reranking",
-   "tryIt": "In the RRF figure, set k to 5 and then to 100 and watch doc-C and doc-F. Then write Harbor's pipeline as code with the ACL filter inside both searches, not after them."
+   "tryIt": "In the RRF figure, set k to 5 and then to 100 and watch the documents both rankings found. Then write Harbor's pipeline as code with the ACL filter inside both searches, not after them."
   },
   "store": {
    "fit": "good",
@@ -183,7 +183,7 @@
    "failure": "Reading retrieval metrics as answer quality; they do not measure whether the answer was supported.",
    "fit": "good",
    "fitNote": "Recall@10 on 300 pooled, labelled real queries",
-   "tryIt": "In the metrics figure, mark rank 1 as grade 3 and watch MRR and nDCG rise while Recall@k stays the same. Then label five queries over <code>policies.json</code> and compute Recall@10."
+   "tryIt": "In the metrics figure, move the grade 3 result up to rank 1 and watch reciprocal rank and nDCG rise while Recall@k stays the same. Then label five queries over <code>policies.json</code> and compute Recall@10."
   },
   "store": {
    "fit": "best",

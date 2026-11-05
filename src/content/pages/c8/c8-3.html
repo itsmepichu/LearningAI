@@ -4,9 +4,9 @@
 <figure class="fig live"><div class="stage"><div class="wid">
 <p style="font-size:.9rem">Judge vs human labels on the same cases (edit the counts):</p>
 <div class="tw"><table style="max-width:420px">
-<tr><th></th><th>Human: good</th><th>Human: bad</th></tr>
-<tr><th>Judge: good</th><td><input type="number" id="kA" value="160" min="0" style="width:80px"></td><td><input type="number" id="kB" value="18" min="0" style="width:80px"></td></tr>
-<tr><th>Judge: bad</th><td><input type="number" id="kC" value="7" min="0" style="width:80px"></td><td><input type="number" id="kD" value="15" min="0" style="width:80px"></td></tr>
+<tr><th>Cases</th><th>Human: good</th><th>Human: bad</th></tr>
+<tr><th>Judge: good</th><td><input type="number" id="kA" value="160" min="0" aria-label="Cases with judge good, human good" style="width:80px"></td><td><input type="number" id="kB" value="18" min="0" aria-label="Cases with judge good, human bad" style="width:80px"></td></tr>
+<tr><th>Judge: bad</th><td><input type="number" id="kC" value="7" min="0" aria-label="Cases with judge bad, human good" style="width:80px"></td><td><input type="number" id="kD" value="15" min="0" aria-label="Cases with judge bad, human bad" style="width:80px"></td></tr>
 </table></div>
 <div class="kpis" id="kK"></div></div></div>
 <figcaption><b>Agreement calculator.</b> With the default counts the judge agrees 87.5% of the time, but κ is only about 0.48 and it catches less than half of the bad answers. Such a judge is not reliable enough to gate releases; improve the rubric and re-measure.</figcaption></figure>

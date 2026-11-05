@@ -6,16 +6,10 @@
 <div><b>nDCG@k</b> (normalised discounted cumulative gain): DCG = Σ gain(rel<sub>i</sub>)/log₂(i+1) rewards highly relevant items near the top; divided by the ideal DCG so 1.0 is a perfect ranking. Two gain conventions are common: <b>linear</b> (gain = rel) and <b>exponential</b> (gain = 2<sup>rel</sup> − 1, which rewards the most relevant items far more). Always state which one you report; the calculator below shows both.</div>
 </div>
 <p><b>Labels limit every metric.</b> All four metrics assume the relevance labels are complete. An unlabelled but relevant result counts as a miss, which makes a new retriever that finds different (unlabelled) good results look worse than it is. Pooling results from several retrievers before labelling (example below) reduces this bias.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<p style="font-size:.9rem">Query: "How many days of parental leave in Germany?" There are <b>3</b> relevant chunks in the corpus. Click a result to cycle its relevance (0 → 1 → 2 → 3).</p>
-<div id="rmList" style="display:grid;gap:4px"></div>
-<label for="rmK">k <input type="range" id="rmK" min="1" max="10" value="5"><span id="rmKO"></span></label>
-<div class="kpis" id="rmK2"></div></div></div>
-<figcaption><b>Retrieval metrics, computed live.</b> Recall and precision treat any relevance &gt; 0 as relevant; nDCG uses the graded values. Move a highly relevant result to rank 1 (by marking rank 1 as 3) and watch MRR and nDCG rise while Recall@k stays the same.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="ctl" style="margin-top:0"><label for="rcK" style="font-size:.82rem;font-weight:500">cutoff k <input type="range" id="rcK" min="1" max="8" value="5" style="min-width:120px"><span id="rcKO"></span></label></div>
-<div class="cols3" id="rcCols"></div><div class="tw"><table id="rcTbl"></table></div></div></div>
-<figcaption><b>Three retrievers on one query</b> ("How many days of parental leave do I get in Germany?"). Relevant passages: P1 (grade 3), P4 (grade 2), P7 (grade 1). Lexical search finds the exact policy but misses a paraphrase; dense search finds paraphrases but buries the exact clause; hybrid + rerank gets both near the top. Rankings are fixed illustrations; the metrics are computed live with both nDCG gain conventions.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div data-widget="retrieval-metrics"></div></div>
+<figcaption><b>Retrieval metrics, computed live.</b> Recall and precision treat any relevance &gt; 0 as relevant; nDCG uses the graded values. The ranking and grades are illustrative; the arithmetic is real. Move a relevant result up to rank 1 and watch reciprocal rank and nDCG rise while Recall@k stays the same.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div data-widget="retriever-compare"></div></div>
+<figcaption><b>Three retrievers on one query.</b> The lexical ranking is real BM25 over your example project's documents. The dense and hybrid + rerank rankings are fixed illustrations, because no embedding model runs on this page; the metrics for all three are computed live, with both nDCG gain conventions. Lexical search tends to find exact wording and miss a paraphrase, dense search finds paraphrases and can bury an exact clause, and hybrid with reranking aims for both. One query proves nothing about a retriever: compare them over a labelled set, as in the example below.</figcaption></figure>
 <div class="box example"><h5>Example: building retrieval labels cheaply</h5><p>Take 200 real user questions. For each, pool the top 20 results from BM25, dense and hybrid retrievers, and have a subject-matter expert mark relevant chunks (or use an LLM judge, calibrated on 50 human-labelled queries). This "pooled" judgement set lets you compare retrievers fairly. Tools like <a href="https://github.com/AmenRa/ranx">ranx</a> and <a href="https://github.com/beir-cellar/beir">BEIR</a> compute the metrics.</p></div>
 <div data-slot="practice"></div>
 <div class="tools">

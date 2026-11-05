@@ -5,22 +5,9 @@
 <div><b>ROC curve</b>: true positive rate vs false positive rate across all thresholds; <b>AUC</b> summarises it (0.5 = random, 1 = perfect). <b>PR curve</b>: precision vs recall across thresholds; more informative when positives are rare.</div>
 <div><b>Calibration</b>: a model is calibrated if, among cases it scores 0.8, about 80% are positive. Shown with a reliability diagram; summarised by expected calibration error (ECE).</div>
 </div>
-<figure class="fig live"><div class="stage"><div class="wid">
-<label for="thr">Decision threshold <input type="range" id="thr" min="0" max="100" value="50"><span id="thrO"></span></label>
-<div class="cols2"><div id="cmBox"></div><div class="kpis" id="cmK"></div></div>
-<div class="cols2"><svg id="rocSvg" viewBox="0 0 300 260"></svg><svg id="prSvg" viewBox="0 0 300 260"></svg></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="threshold-roc"></div></div>
 <figcaption><b>Move the threshold.</b> 400 synthetic cases (80 positive) with overlapping score distributions. The dot on each curve is your current threshold. Lowering it raises recall and lowers precision. The curves are computed from the same scores.</figcaption></figure>
-<figure class="fig"><div class="stage">
-<svg viewBox="0 0 640 260" role="img" aria-label="Reliability diagram">
-<rect x="60" y="20" width="220" height="200" class="fsunk"/>
-<path d="M60 220 L280 20" class="ln dash"/>
-<g id="relA"></g>
-<text x="170" y="245" text-anchor="middle" class="xs">predicted probability</text><text x="20" y="120" class="xs" transform="rotate(-90 20 120)" text-anchor="middle">observed frequency</text>
-<text x="60" y="235" class="xs mut">0</text><text x="275" y="235" class="xs mut">1</text>
-<rect x="360" y="20" width="220" height="200" class="fsunk"/><path d="M360 220 L580 20" class="ln dash"/>
-<g id="relB"></g>
-<text x="170" y="14" text-anchor="middle" class="sm bad">Over-confident (ECE ≈ 0.14)</text><text x="470" y="14" text-anchor="middle" class="sm okc">After calibration (ECE ≈ 0.02)</text>
-<text x="470" y="245" text-anchor="middle" class="xs">predicted probability</text>
-</svg></div><figcaption><b>Reliability diagrams</b> (illustrative). Bars below the diagonal mean the model claims more confidence than it earns. Platt scaling or isotonic regression, fitted on validation data, fixes this for classical models. LLM-generated confidence statements need the same measurement before you use them.</figcaption></figure>
+<figure class="fig"><div class="stage"><div data-widget="reliability"></div></div>
+<figcaption><b>Reliability diagrams</b> (illustrative). Bars below the diagonal mean the model claims more confidence than it earns. Platt scaling or isotonic regression, fitted on validation data, fixes this for classical models. LLM-generated confidence statements need the same measurement before you use them.</figcaption></figure>
 <div class="box example"><h5>Example: choosing the threshold from costs</h5><p>A missed fraud costs $400; a false alarm costs $5 of analyst time. Expected cost = 400·FN + 5·FP. Sweep thresholds on validation data and pick the minimum; with these costs it will sit at a low threshold (high recall). If false alarms instead block customers' cards (cost $60 in churn), the optimum moves up. Metrics serve a business cost function, not the other way round.</p></div>
 <div data-slot="practice"></div>

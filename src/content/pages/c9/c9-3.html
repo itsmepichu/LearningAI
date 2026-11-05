@@ -5,10 +5,7 @@
 <div><b>Learned sparse retrieval</b> (e.g. SPLADE): a model outputs weights for vocabulary terms, including related terms not in the text, stored in an inverted index. Combines keyword-index efficiency with some semantic matching.</div>
 </div>
 <p>BM25 for query Q and document D: score = Σ<sub>q∈Q</sub> IDF(q) · f(q,D)·(k₁+1) / (f(q,D) + k₁·(1 − b + b·|D|/avgdl)), where f is the term count in D, |D| the document length and avgdl the average length. IDF(q) = ln(1 + (N − n<sub>q</sub> + 0.5)/(n<sub>q</sub> + 0.5)) with N documents and n<sub>q</sub> containing q.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<label for="bmQ">Query <input type="text" id="bmQ" value="reset password error" style="flex:1;min-width:200px"></label>
-<div class="tw"><table id="bmTbl"></table></div>
-<div class="out" id="bmIdx"></div></div></div>
-<figcaption><b>Real BM25 (k₁ = 1.2, b = 0.75)</b> over 8 short help-centre documents, with the inverted index entries for your query terms. Try "invoice", "E-4012" (an exact error code), and "can't log in" (BM25 finds nothing: "log" never appears; the relevant documents say "login" and "sign in". This vocabulary mismatch is where dense retrieval helps).</figcaption></figure>
+<figure class="fig live"><div class="stage"><div data-widget="bm25"></div></div>
+<figcaption><b>Real BM25 (k₁ = 1.2, b = 0.75)</b> over your example project's documents, with the inverted index entries for your query terms. The suggested queries show an exact term, where BM25 finds the right document, and a vocabulary mismatch, where it finds the wrong one or nothing: that mismatch is where dense retrieval helps. This shows how the scoring behaves on one small corpus, not how a production index would rank.</figcaption></figure>
 <div class="box example"><h5>Example: where each method wins</h5><p>Query "error E-4012 on checkout": BM25 finds the one document containing "E-4012" immediately; an embedding model may rank generic checkout-error pages higher because the code carries little semantic signal. Query "my card keeps getting declined when I pay": dense retrieval finds "Payment method rejected" pages that share no keywords. This is why production systems combine both (9.5).</p></div>
 <div data-slot="practice"></div>

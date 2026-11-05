@@ -1,9 +1,7 @@
 <p>Batching more sequences together raises <b>throughput</b> (total tokens/s per GPU) because the weight read is shared, but each step takes longer, so <b>per-user latency</b> rises. At some batch size the GPU becomes compute-bound and throughput plateaus while latency keeps growing. The operating point is chosen by the SLO: "maximise tokens/s subject to p95 ITL ≤ 50 ms and p95 TTFT ≤ 1 s".</p>
 <p><b>Admission control</b> protects that operating point: cap concurrent sequences per replica (e.g. vLLM <code>max_num_seqs</code>) and KV usage, queue extra requests with a bounded queue, reject or redirect when the queue's expected wait exceeds the deadline (15.6), and prioritise interactive traffic over batch.</p>
 <p><b>GPU utilisation</b> metrics need care: "GPU utilisation 100%" from <code>nvidia-smi</code> only means a kernel was running, not that compute units were busy. Prefer tokens/s, model FLOPs utilisation (MFU) for prefill, memory-bandwidth utilisation for decode, KV-cache usage and batch size.</p>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<label for="tlB">Max batch size (concurrent sequences) <input type="range" id="tlB" min="1" max="256" value="32"><span id="tlBO"></span></label>
-<svg id="tlSvg" viewBox="0 0 640 240"></svg><div class="kpis" id="tlK"></div></div></div>
+<figure class="fig sim"><div class="stage"><div data-widget="throughput-latency"></div></div>
 <figcaption><b>Throughput vs latency</b> from a simple roofline-style model of decode for an 8B BF16 model on one high-bandwidth GPU (step time = max(memory-bound time, compute-bound time); illustrative constants, not a benchmark). The dashed line is an ITL SLO of 50 ms; the best batch size is the largest one under it.</figcaption></figure>
 <div class="box lab"><h5>GPU lab: benchmark vLLM for real <span class="tag gpu">Needs external compute · ~1 GPU-hour</span></h5>
 <pre><code># On a rented GPU (24 GB+) or a Colab/Kaggle GPU runtime

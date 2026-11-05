@@ -155,28 +155,28 @@
    "failure": "Assuming a checkpoint written after a tool call prevents duplicates if the process crashes in between.",
    "fit": "good",
    "fitNote": "a lost ticket-create response",
-   "tryIt": "In the ticket-store figure, step through with the idempotency key off, then on, and count tickets at the end. Then write Harbor's key formula from task ID, step and arguments."
+   "tryIt": "In the timeout figure, step through with the idempotency key off, then on, and count tickets at the end. Then write Harbor's key formula from task ID, step and arguments."
   },
   "store": {
    "fit": "good",
    "fitNote": "refunds and coupons must happen once",
    "practice": "{company}'s refund call carries a key built from the return ID and the step, so a retry after a timeout returns the first refund instead of paying twice. The refund and its “refund issued” event are written together through an outbox.",
    "failure": "Generating a new random key on each retry, which makes every retry look like a new refund.",
-   "tryIt": "In the ticket-store figure, turn the key off and step through to the duplicate. Then pick a returned order in <code>orders.csv</code> and write the idempotency key and the check that runs before a refund."
+   "tryIt": "In the timeout figure, turn the key off and step through to the duplicate. Then pick a returned order in <code>orders.csv</code> and write the idempotency key and the check that runs before a refund."
   },
   "bank": {
    "fit": "best",
    "fitNote": "a duplicate credit is real money",
    "practice": "Every {company} provisional credit carries a key derived from the case ID and step. A resumed run first asks the ledger whether a credit for this case exists, and the credit plus its notification are written in one transaction with an outbox row.",
    "failure": "Notifying the customer from the agent after the credit call, so a crash in between sends the message twice or not at all.",
-   "tryIt": "Run the ticket-store figure with the key on and off. Then write the key for a provisional credit on a case in <code>disputes.csv</code> and the outbox row written with it."
+   "tryIt": "Run the timeout figure with the key on and off. Then write the key for a provisional credit on a case in <code>disputes.csv</code> and the outbox row written with it."
   },
   "travel": {
    "fit": "best",
    "fitNote": "the saga example is a trip booking",
    "practice": "A {company} package booking is a saga: reserve flight, reserve hotel, charge card, send confirmation. If the charge fails, the hotel and flight holds are released in reverse order. The confirmation, which cannot be undone, goes last.",
    "failure": "Sending the confirmation before charging the card, so a failed payment leaves a traveller with an itinerary that does not exist.",
-   "tryIt": "In the saga figure, set the failure at step 3 and run it, then turn on the duplicate retry of step 1. Then write the compensations for a package booking in <code>bookings.csv</code>."
+   "tryIt": "In the saga figure, set the failure at step 3 and play it, then turn off the duplicate retry of step 1 and compare. Then write the compensations for a package booking in <code>bookings.csv</code>."
   }
  },
  "c11-7": {
