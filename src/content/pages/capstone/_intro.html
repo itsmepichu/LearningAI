@@ -12,7 +12,7 @@
 <li data-n="8"><b>Delivery</b> (ch 18): a release manifest file, a promptfoo gate in CI, and a written readiness checklist. Ship a prompt change through the whole path and roll it back once.</li>
 </ol></div>
 <figcaption><b>Nine stages, one system.</b> Everything except the optional GPU experiments runs on a 16 GB laptop; expect the agent and evaluation runs to be slow on CPU, so start with 20-question subsets and run the full suite overnight.</figcaption></figure>
-<div class="box"><h5>What to do next with external compute <span class="tag gpu">Needs external compute</span></h5><ul>
-<li>Serve an 8B model with vLLM on one rented GPU; reproduce the throughput–latency curve (14.7) and the prefix-caching effect (14.3) with real numbers.</li>
-<li>QLoRA fine-tune a 1–8B model on your capstone's extraction or answer-format task in a Colab/Kaggle GPU notebook; run the 13.6 scorecard before and after.</li>
-<li>Run nanochat or a TRL GRPO example on a short rented multi-GPU session to see distributed training and RL fine-tuning end to end.</li></ul></div>
+<div class="box"><h5>What to do next on a GPU <span class="tag gpu">Colab · GPU</span></h5><ul>
+<li>Serve a model with vLLM on a free Colab GPU, following the <a href="#colab-vllm">14.7 guide</a>: reproduce the throughput–latency curve (14.7) and the prefix-caching effect (14.3) with real numbers, then swap the guide's question and documents for your capstone's and send your evaluation questions through the same server.</li>
+<li>QLoRA fine-tune a model on your capstone's extraction or answer-format task, following the <a href="#colab-qlora">13.3 guide</a> with your own labelled rows in place of the example project's; run the 13.6 scorecard before and after.</li>
+<li>Train a small GPT from scratch with the <a href="#colab-train-gpt">6.7 guide</a>. Distributed training and RL fine-tuning end to end (nanochat, a TRL GRPO run) need several GPUs at once, which one Colab GPU cannot provide: read their code and reports rather than run them.</li></ul></div>

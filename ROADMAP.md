@@ -283,7 +283,9 @@ The Colab guide is a set of cells to copy and a notebook to download, for reader
 
 e2e: **a full pass is recorded for phase 5**, on `development` at a868c3b (5 November 2026): every route, every widget, the stubbed download gates, and the axe check with no serious or critical findings.
 
-### Phase 5b — Move GPU practicals to Google Colab
+### Phase 5b — Move GPU practicals to Google Colab ✅
+
+*Delivered: four Colab guides built from data with shared setup and finish steps (5.6 decoding, 6.7 training a small GPT, 13.3 QLoRA, 14.7 vLLM benchmark), the wording that sent readers to rented GPUs replaced across chapters 6, 13 and 14, the capstone, the guide page and Appendices B and E, and a CPU check that runs every guide's code with tiny stand-ins.*
 
 Everything that involves LLM training or hands-on GPU work points readers to a step-by-step Colab guide, like the one on 5.6, rather than to a rented GPU or a passing mention of a notebook.
 
@@ -298,6 +300,16 @@ Everything that involves LLM training or hands-on GPU work points readers to a s
 - **What Colab cannot do:** multi-GPU and cluster material (DeepSpeed, FSDP, torchtitan, Megatron-LM, a full nanochat run) is unlikely to run on one Colab GPU. Keep it as reading, say so, and give a scaled-down single-GPU guide where one teaches the idea.
 - **Fit the free tier:** some labs state 16–24 GB of GPU memory, which may exceed a free GPU. Choose models and settings that fit, and say what a larger GPU would change.
 - **Check each guide's code before it ships,** as the 5.6 guide is checked: every cell parses as Python, and the calls run on a CPU with a tiny model. Guides are not run in Colab by the course (owner's decision), so word timings as rough estimates.
+
+What was built, and the decisions that carry forward:
+- **One widget, many guides.** `colab-guide` takes `{"guide": "<id>"}`. Each guide is a `GuideDef` module (`decoding.ts`, `train-gpt.ts`, `qlora.ts`, `vllm-bench.ts`) whose steps are wrapped by `withSetup`, so the setup, the GPU check (always step 4) and the finish step are shared. Each guide figure has an id, `colab-<id>`, that labs, tool cards and appendices link to.
+- **6.7, train a small GPT:** nanoGPT's character-level Shakespeare recipe at its full GPU size (about 10.7M parameters), cut to 2,000 steps for a free T4, with float16 and no `torch.compile`. nanoGPT is pinned to a commit. The guide is neutral, the same for every project, since pretraining from scratch takes no project data. A short CPU timing run and one experiment follow.
+- **13.3, QLoRA:** Qwen3-1.7B in 4-bit NF4 (float16 compute) with rank-16 LoRA on every linear layer, trained on the selected project's labelled text, the same rows as the 3.2 classifier, in a plain PyTorch loop with loss on the label only. It reports the majority and prompt-only baselines, the gain on a stratified held-out split, general answers with the adapter off and on, the train–test gap, and a save-and-reload. It is the chapter 13 lab's substantive fine-tune. The lab scenarios' extraction tasks need data the datasets do not all have, so the guide teaches the mechanics and the evaluation on classification.
+- **14.7, vLLM:** vLLM is pinned to 0.19.0, because newer wheels target CUDA 13, which Colab's runtime did not have (CUDA 12.8) when this was written. Qwen3-1.7B in float16, `vllm bench serve` at 1–32 concurrent requests, throughput and inter-token latency on two charts with the 50 ms target from the 14.7 figure, then a prefix-caching test whose shared prompt is the project's documents, topped up with its recent messages to about 1,500 tokens.
+- **Capstone:** no fourth guide. Its GPU extensions link to the 14.7, 13.3 and 6.7 guides, with what to swap in for the capstone. nanochat and GRPO runs stay as reading, since they need several GPUs at once.
+- **Labels:** `Colab · GPU` marks a guide that runs on one free Colab GPU. `Needs external compute` now means several GPUs or a cluster, which the course treats as reading. The guide page, Appendix B (with a new "Colab GPU" value) and Appendix E define both.
+- **CPU check** (`scripts/colab-notebooks.ts`, then `scripts/check_colab_guides.py`): every guide's notebook, for every project, runs cell by cell on a CPU. Decoding and QLoRA use a tiny random Qwen3-shaped model with a locally trained tokenizer and chat template. nanoGPT is cloned at its pinned commit and trained for a few steps at a tiny size. vLLM is replaced by a mock OpenAI-compatible server and a mock `vllm bench serve` that writes the pinned version's result fields. This proves the code runs on current Transformers 5.22, PEFT 0.21 and PyTorch 2.15. It does not prove that vLLM 0.19.0 or bitsandbytes work on Colab's GPU, or the guides' timings and memory figures, which are estimates.
+- **Search:** `scripts/refresh_search.py` rebuilds `search.json` from the pages. Only the one-time importer had written it before, so 140 of 143 topics' search text was stale.
 
 ### Phase 6 — 3D and scroll-driven walkthroughs
 

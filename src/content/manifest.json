@@ -524,8 +524,8 @@
       "cpu",
       "gpu"
      ],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 598
     }
    ],
@@ -1119,8 +1119,8 @@
       "cpu",
       "gpu"
      ],
-     "figures": 4,
-     "interactive": 2,
+     "figures": 5,
+     "interactive": 3,
      "words": 600
     },
     {
@@ -1249,8 +1249,8 @@
      "tags": [
       "gpu"
      ],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 333
     },
     {

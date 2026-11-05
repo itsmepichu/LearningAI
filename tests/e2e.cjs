@@ -39,11 +39,14 @@ const KIT_WIDGETS = [
   ['cost-attribution', '/c17/c17-5'],
   ['py-lab', '/app-a/app-a-run'],
   ['colab-guide', '/c5/c5-6'],
+  ['colab-guide', '/c13/c13-3'],
+  ['colab-guide', '/c14/c14-7'],
   ['bpe', '/c5/c5-1'],
   ['tokenizer-compare', '/c5/c5-1'],
   ['text-classifier', '/c3/c3-2'],
   // These show no example data, so they look the same for every project.
   ['attention', '/c5/c5-2', 'neutral'],
+  ['colab-guide', '/c6/c6-7', 'neutral'],
   ['hnsw', '/c9/c9-4', 'neutral'],
   ['gradient-descent', '/c2/c2-3', 'neutral'],
   ['threshold-roc', '/c3/c3-5', 'neutral'],
@@ -363,19 +366,27 @@ const PROJECTS = require('../src/content/projects.json').projects
     if ((await c.$eval(`${rc} .wk-bar i`, (e) => getComputedStyle(e).transitionDuration)) !== '0s') fails.push('gate: the progress bar should not animate with reduced motion')
     await calm.close()
 
-    // The Colab guide: real steps, the project's data in the code, and a notebook that opens
+    // The Colab guides: real steps, the project's data in the code (unless neutral), and a notebook that opens
     const dl = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true })
     const d = await dl.newPage()
     const cg = kitSel('colab-guide')
-    await d.goto(`${BASE}/c5/c5-6?project=travel`, { waitUntil: 'networkidle' })
-    await d.waitForSelector(`${cg} .wk-guide li`)
-    const guide = await d.textContent(cg)
-    if (!/Change runtime type/.test(guide) || !/Disconnect and delete runtime/.test(guide)) fails.push('colab guide: it should cover GPU setup and giving the GPU back')
-    if (!/Safarnova/.test(guide)) fails.push('colab guide: the code should use the selected project')
-    const [nbFile] = await Promise.all([d.waitForEvent('download'), d.click(`${cg} .btn:has-text("Download the notebook")`)])
-    if (nbFile.suggestedFilename() !== 'decoding-on-a-gpu-travel.ipynb') fails.push(`colab guide: notebook named ${nbFile.suggestedFilename()}`)
-    const nb = JSON.parse(fs.readFileSync(await nbFile.path(), 'utf8'))
-    if (nb.nbformat !== 4 || !nb.cells.some((x) => x.cell_type === 'code' && x.source.join('').includes('nvidia-smi'))) fails.push('colab guide: the notebook is not as expected')
+    const COLAB = [
+      { route: '/c5/c5-6', file: 'decoding-on-a-gpu-travel.ipynb', code: 'nvidia-smi', project: true },
+      { route: '/c6/c6-7', file: 'train-a-small-gpt.ipynb', code: 'git checkout -q', project: false },
+      { route: '/c13/c13-3', file: 'qlora-fine-tune-travel.ipynb', code: 'load_in_4bit=True', project: true },
+      { route: '/c14/c14-7', file: 'vllm-benchmark-travel.ipynb', code: 'vllm==', project: true },
+    ]
+    for (const g of COLAB) {
+      await d.goto(`${BASE}${g.route}?project=travel`, { waitUntil: 'networkidle' })
+      await d.waitForSelector(`${cg} .wk-guide li`)
+      const guide = await d.textContent(cg)
+      if (!/Change runtime type/.test(guide) || !/Disconnect and delete runtime/.test(guide)) fails.push(`colab guide ${g.route}: it should cover GPU setup and giving the GPU back`)
+      if (g.project !== /Safarnova/.test(guide)) fails.push(`colab guide ${g.route}: ${g.project ? 'the code should use the selected project' : 'a neutral guide should not name a project'}`)
+      const [nbFile] = await Promise.all([d.waitForEvent('download'), d.click(`${cg} .btn:has-text("Download the notebook")`)])
+      if (nbFile.suggestedFilename() !== g.file) fails.push(`colab guide ${g.route}: notebook named ${nbFile.suggestedFilename()}`)
+      const nb = JSON.parse(fs.readFileSync(await nbFile.path(), 'utf8'))
+      if (nb.nbformat !== 4 || !nb.cells.some((x) => x.cell_type === 'code' && x.source.join('').includes(g.code))) fails.push(`colab guide ${g.route}: the notebook is not as expected`)
+    }
     await dl.close()
   }
 
