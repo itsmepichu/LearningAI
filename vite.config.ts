@@ -16,4 +16,5 @@ const spaFallback = (): Plugin => ({
 export default defineConfig({
   plugins: [react(), spaFallback()],
   build: { chunkSizeWarningLimit: 1200 },
+  worker: { format: 'es' },
 })

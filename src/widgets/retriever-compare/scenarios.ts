@@ -2,7 +2,7 @@ import type { ProjectId } from '../../data/projects'
 
 /**
  * One query per project. The lexical ranking is computed live with BM25.
- * Dense and hybrid rankings are written by hand, because no embedding model runs on this page.
+ * Dense and hybrid rankings are written by hand, because no embedding model runs until the reader opts in (see runs.ts).
  */
 export interface CompareScenario {
   query: string

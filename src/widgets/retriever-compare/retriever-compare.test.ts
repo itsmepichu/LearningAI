@@ -4,6 +4,7 @@ import { loadCorpus } from '../bm25/corpus.ts'
 import { rankIds } from '../bm25/engine.ts'
 import { PROJECT_IDS, projectOf, readerOf } from '../kit/testing.ts'
 import { rankMetrics } from '../retrieval-metrics/metrics.ts'
+import { compareRuns } from './runs.ts'
 import { COMPARE } from './scenarios.ts'
 
 const LIST = 8
@@ -35,3 +36,19 @@ for (const id of PROJECT_IDS) {
     assert.ok(score(s.dense, 3).ndcg < 1, 'dense is not already perfect')
   })
 }
+
+test('each column says what it is, with and without the real model', () => {
+  const s = COMPARE.bank
+  const fixed = compareRuns(s, ['NB-001'], null, 'model-x', LIST)
+  assert.deepEqual(fixed.map((r) => r.note), ['computed live', 'fixed illustration', 'fixed illustration'])
+  assert.deepEqual(fixed[1].list, s.dense)
+  assert.equal(fixed[2].name, 'Hybrid + rerank')
+
+  const real = compareRuns(s, ['NB-001', 'NB-002'], ['NB-002', 'NB-005', 'NB-001'], 'model-x', LIST)
+  assert.match(real[1].note, /real: model-x/)
+  assert.deepEqual(real[1].list, ['NB-002', 'NB-005', 'NB-001'])
+  assert.notEqual(real[2].name, 'Hybrid + rerank', 'nothing reranks, so the name must not say so')
+  assert.match(real[2].name, /no reranker/)
+  // RRF: the two documents in both lists rank above the one found only by dense
+  assert.deepEqual(real[2].list, ['NB-002', 'NB-001', 'NB-005'])
+})

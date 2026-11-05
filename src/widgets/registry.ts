@@ -26,6 +26,7 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'token-estimator': lazy(() => import('./token-estimator/TokenEstimator')),
   'class-imbalance': lazy(() => import('./class-imbalance/ClassImbalance')),
   rrf: lazy(() => import('./rrf/Rrf')),
+  'vector-search': lazy(() => import('./vector-search/VectorSearch')),
   'trace-waterfall': lazy(() => import('./trace-waterfall/TraceWaterfall')),
   'critical-path': lazy(() => import('./critical-path/CriticalPath')),
   'cost-attribution': lazy(() => import('./cost-attribution/CostAttribution')),

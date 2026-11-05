@@ -744,8 +744,8 @@
      "tn": "9.3",
      "title": "Keyword search, inverted indexes, BM25, dense embeddings and sparse retrieval",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 389
     },
     {
@@ -753,8 +753,8 @@
      "tn": "9.4",
      "title": "Vector similarity, approximate nearest-neighbour search, HNSW and quantisation",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 420
     },
     {

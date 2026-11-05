@@ -32,6 +32,8 @@ const KIT_WIDGETS = [
   ['token-estimator', '/c1/c1-4'],
   ['class-imbalance', '/c3/c3-3'],
   ['rrf', '/c9/c9-5'],
+  ['vector-search', '/c9/c9-3'],
+  ['vector-quant', '/c9/c9-4'],
   ['trace-waterfall', '/c17/c17-2'],
   ['critical-path', '/c17/c17-2'],
   ['cost-attribution', '/c17/c17-5'],
