@@ -72,7 +72,7 @@
   - Load runtimes and models in a Web Worker (`src/widgets/engines/`), from a pinned URL. Nothing may download or start before the reader opts in.
   - Say what each real result does and does not prove, and keep labels accurate about whether a figure is showing real results or an illustration.
   - Tests and e2e never download a model. Test the logic with small fixtures. e2e stubs `Worker` and tells each engine apart by the worker's name.
-- No GPU integrations: no WebGPU or other GPU compute in this project. GPU work goes in a step-by-step Google Colab guide, as `colab-guide` does on 5.6.
+- GPU use: study material (diagrams, 3D scenes, interactive figures) may use the reader's GPU, and should stay usable on laptops with integrated graphics. Do not run LLM training or inference on the reader's GPU. LLM training and other practical GPU work go in a step-by-step Google Colab guide, as `colab-guide` does on 5.6.
 - 3D (three.js / @react-three/fiber):
   - Mount only near the viewport.
   - Use `frameloop="demand"` unless animating.
