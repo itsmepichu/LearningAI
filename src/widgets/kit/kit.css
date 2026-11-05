@@ -192,8 +192,10 @@ button.wk-tb-r[aria-pressed=true]{border-color:var(--accent);background:var(--ac
 
 /* Step-by-step guides */
 .wk-guide{display:grid;gap:14px;margin:0;padding-left:1.6em;font-size:var(--fs-sm);line-height:1.55}
-.wk-guide li{display:grid;gap:6px;min-width:0;margin:0}
-.wk-guide li::marker{font-weight:600}
+.wk-guide>li{min-width:0;margin:0}
+.wk-guide>li>*+*{margin-top:6px}
+.wk-guide>li>b{display:block}
+.wk-guide>li::marker{font-weight:600}
 .wk-guide p{margin:0}
 .wk-guide b{font-weight:600}
 .wk-guide .ctl{margin-top:0}
