@@ -6,7 +6,7 @@ const { AxeBuilder } = require('@axe-core/playwright')
 // /c8/c8-3 is here for the number inputs in its v3 kappa figure.
 const PAGES = ['/', '/guide', '/c9', '/c9/c9-3', '/c8/c8-3', '/c5/check', '/practice', '/progress']
 // Topic pages with a React widget from src/widgets/kit beside v3 flow steppers, code blocks and tables.
-const WIDGET_PAGES = ['/c1/c1-4', '/c2/c2-3', '/c3/c3-2', '/c3/c3-3', '/c3/c3-5', '/c5/c5-1', '/c5/c5-2', '/c7/c7-3', '/c7/c7-4', '/c7/c7-5', '/c9/c9-2', '/c9/c9-3', '/c9/c9-4', '/c9/c9-5', '/c9/c9-7', '/c11/c11-2', '/c11/c11-6', '/c11/c11-7', '/c14/c14-3', '/c14/c14-7', '/c15/c15-1', '/c16/c16-2', '/c16/c16-4', '/c16/c16-5', '/c17/c17-2', '/c17/c17-5', '/c17/c17-8']
+const WIDGET_PAGES = ['/app-a/app-a-run', '/c1/c1-4', '/c2/c2-1', '/c2/c2-3', '/c2/c2-5', '/c3/c3-2', '/c3/c3-3', '/c3/c3-5', '/c5/c5-1', '/c5/c5-2', '/c7/c7-3', '/c7/c7-4', '/c7/c7-5', '/c9/c9-2', '/c9/c9-3', '/c9/c9-4', '/c9/c9-5', '/c9/c9-7', '/c11/c11-2', '/c11/c11-6', '/c11/c11-7', '/c14/c14-3', '/c14/c14-7', '/c15/c15-1', '/c16/c16-2', '/c16/c16-4', '/c16/c16-5', '/c17/c17-2', '/c17/c17-5', '/c17/c17-8']
 
 async function runAxe(browser, base) {
   const problems = []

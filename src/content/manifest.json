@@ -154,8 +154,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 455
     },
     {
@@ -194,8 +194,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 465
     },
     {
@@ -270,8 +270,8 @@
      "tn": "3.5",
      "title": "Metrics: precision, recall, F1, ROC/PR curves and probability calibration",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 332
     },
     {
@@ -1712,8 +1712,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 0,
-     "interactive": 0,
+     "figures": 1,
+     "interactive": 1,
      "words": 656
     },
     {

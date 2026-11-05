@@ -23,4 +23,6 @@ E = E / np.linalg.norm(E, axis=1, keepdims=True)              # normalise
 print(np.round(E @ E.T, 3))          # all pairwise cosine similarities in one matrix multiply
 q = np.array([0.85,0.15,0.25]); q /= np.linalg.norm(q)
 print(np.argsort(-(E @ q)))          # brute-force "vector search": rank rows by similarity</code></pre></div>
+<figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"cosine"}'></div></div>
+<figcaption><b>Lab, in real Python if you opt in: cosine similarity with NumPy.</b> <a href="https://pyodide.org/en/stable/">Pyodide</a> runs Python and NumPy in a worker on your device, over your example project's documents. The checks recompute each answer themselves and tell you which part is off.</figcaption></figure>
 <div data-slot="practice"></div>

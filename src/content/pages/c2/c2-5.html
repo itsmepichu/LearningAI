@@ -22,4 +22,6 @@ df = pd.DataFrame({"case": range(5), "passed": [1,0,1,1,1], "latency_ms": [820,1
 print(df.describe())
 cfg = {"seed": 42, "model": "llama3.2:1b", "prompt_version": "v3"}
 print("config hash", hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()[:12])</code></pre></div>
+<figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"stats"}'></div></div>
+<figcaption><b>Lab, in real Python if you opt in: summarise a column.</b> Mean, median, a percentile and group means with <a href="https://numpy.org/doc/stable/">NumPy</a>, over your example project's data. Its long right tail is why the mean and the median disagree.</figcaption></figure>
 <div data-slot="practice"></div>

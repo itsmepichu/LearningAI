@@ -10,4 +10,6 @@
 <figure class="fig"><div class="stage"><div data-widget="reliability"></div></div>
 <figcaption><b>Reliability diagrams</b> (illustrative). Bars below the diagonal mean the model claims more confidence than it earns. Platt scaling or isotonic regression, fitted on validation data, fixes this for classical models. LLM-generated confidence statements need the same measurement before you use them.</figcaption></figure>
 <div class="box example"><h5>Example: choosing the threshold from costs</h5><p>A missed fraud costs $400; a false alarm costs $5 of analyst time. Expected cost = 400·FN + 5·FP. Sweep thresholds on validation data and pick the minimum; with these costs it will sit at a low threshold (high recall). If false alarms instead block customers' cards (cost $60 in churn), the optimum moves up. Metrics serve a business cost function, not the other way round.</p></div>
+<figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"metrics"}'></div></div>
+<figcaption><b>Lab, in real Python if you opt in: precision and recall by hand.</b> Score a simple rule over your example project's data, with the zero cases handled, then compare its accuracy with always answering no.</figcaption></figure>
 <div data-slot="practice"></div>

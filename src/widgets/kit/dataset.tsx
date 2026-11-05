@@ -29,6 +29,8 @@ export interface DataReader {
   json<T>(file: string): Promise<T>
   /** A CSV file, or only its first `rows` rows, which avoids downloading all of a large file. */
   csv(file: string, rows?: number): Promise<Record<string, string>[]>
+  /** The file as it is, for handing to a program. */
+  text(file: string): Promise<string>
 }
 
 function readerFor(project: Project): DataReader {
@@ -43,6 +45,10 @@ function readerFor(project: Project): DataReader {
         const res = await fetchOk(url)
         return rows ? readCsvHead(res, rows) : parseCsv(await res.text())
       })
+    },
+    text(file) {
+      const url = datasetUrl(project, file)
+      return once(`${url}#text`, () => fetchOk(url).then((r) => r.text()))
     },
   }
 }

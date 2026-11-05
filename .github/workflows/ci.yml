@@ -19,5 +19,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      # The Python labs' solutions are checked on a local Python. Without NumPy those tests skip.
+      - run: python3 -m pip install numpy
       - run: npm run test:unit
       - run: npm run build

@@ -184,6 +184,12 @@ button.wk-tb-r[aria-pressed=true]{border-color:var(--accent);background:var(--ac
 .wk-tokz-n{margin-left:auto;font-family:var(--f-mono);font-size:var(--fs-2xs);color:var(--accent)}
 .wk-tokz .wk-word{min-width:0}
 
+/* Python labs */
+.wk .wk-code{white-space:pre;overflow:auto;font-size:var(--fs-2xs);line-height:1.5;tab-size:4}
+.wk-output{max-height:260px;overflow:auto;background:var(--sunk);border:1px solid var(--rule);border-radius:var(--r-1);padding:8px 12px}
+.wk-output pre{margin:0;background:none;padding:0;font-size:var(--fs-2xs);color:var(--ink);white-space:pre}
+.wk-output-e{color:var(--bad)}
+
 /* Opt-in downloads */
 .wk-gate{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--rule-2);border-radius:var(--r-2);background:var(--sunk);font-size:var(--fs-sm);line-height:1.5;color:var(--ink);min-width:0}
 .wk-gate.bad{border-color:var(--bad)}

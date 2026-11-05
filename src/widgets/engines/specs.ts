@@ -52,3 +52,24 @@ export const TOKENIZERS: DownloadSpec = {
   docs: TRANSFORMERS_DOCS,
   load: { op: 'loadTokenizers', args: { models: TOKENIZER_MODELS.map((m) => m.id) } },
 }
+
+export const PYODIDE_VERSION = '314.0.7'
+export const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`
+/** Sizes are as sent, compressed. Fetched one by one, so the bar moves in these steps. */
+export const PYODIDE_FILES = [
+  { name: 'pyodide.asm.mjs', label: 'the Python loader', bytes: 262_041 },
+  { name: 'pyodide.asm.wasm', label: 'the Python runtime', bytes: 3_438_516 },
+  { name: 'python_stdlib.zip', label: 'the Python standard library', bytes: 2_505_313 },
+  { name: 'pyodide-lock.json', label: 'the package list', bytes: 24_708 },
+  { name: 'numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl', label: 'NumPy', bytes: 2_929_885 },
+]
+
+export const PYTHON: DownloadSpec = {
+  id: 'python',
+  version: PYODIDE_VERSION,
+  what: 'Python and NumPy',
+  files: PYODIDE_FILES.map((f) => ({ label: f.label.replace(/^the /, 'The '), bytes: f.bytes, host: JSDELIVR })),
+  needs: ['worker', 'wasm'],
+  docs: { label: 'Pyodide documentation', href: 'https://pyodide.org/en/stable/' },
+  load: { op: 'loadPython' },
+}

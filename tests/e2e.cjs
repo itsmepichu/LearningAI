@@ -37,6 +37,7 @@ const KIT_WIDGETS = [
   ['trace-waterfall', '/c17/c17-2'],
   ['critical-path', '/c17/c17-2'],
   ['cost-attribution', '/c17/c17-5'],
+  ['py-lab', '/app-a/app-a-run'],
   ['bpe', '/c5/c5-1'],
   ['tokenizer-compare', '/c5/c5-1'],
   ['text-classifier', '/c3/c3-2'],

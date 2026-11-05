@@ -30,6 +30,7 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'trace-waterfall': lazy(() => import('./trace-waterfall/TraceWaterfall')),
   'critical-path': lazy(() => import('./critical-path/CriticalPath')),
   'cost-attribution': lazy(() => import('./cost-attribution/CostAttribution')),
+  'py-lab': lazy(() => import('./py-lab/PyLab')),
   bpe: lazy(() => import('./bpe/Bpe')),
   'tokenizer-compare': lazy(() => import('./tokenizer-compare/TokenizerCompare')),
   'text-classifier': lazy(() => import('./text-classifier/TextClassifier')),
