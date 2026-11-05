@@ -277,9 +277,11 @@ Decisions that carry forward:
 - e2e replaces `Worker` with a stub and fails if the main run reaches a model host or starts a worker, so tests never download anything.
 - A test runs every lab's solution on a local Python when NumPy is present, and CI installs it.
 
-Checked by hand, once, with real downloads: embeddings, tokenizers, the classifier and all four labs, in Chromium on Windows. The Colab guide's cells ran on a CPU with a tiny random model, which proves the calls work on a current `transformers`. **They have not been run in Colab itself or on a GPU**, so run the guide once before relying on its timings and wording.
+Checked by hand, once, with real downloads: embeddings, tokenizers, the classifier and all four labs, in Chromium on Windows. The Colab guide's cells ran on a CPU with a tiny random model, which proves the calls work on a current `transformers`.
 
-e2e: the last full run, including the then-new stubbed gate checks, had one failure, an axe finding on 5.6 for code blocks that scrolled without a tab stop. That is fixed and was checked by hand on the page, but the full suite has not run since, so **a full pass has not been recorded for phase 5**. Run it when wanted.
+The Colab guide is a set of cells to copy and a notebook to download, for readers to run in their own Colab. By the owner's decision, the course does not run it in Colab itself: the guide's timings ("a minute or two") are rough estimates and its expected outputs are what the code prints, not a recorded GPU run.
+
+e2e: **a full pass is recorded for phase 5**, on `development` at a868c3b (5 November 2026): every route, every widget, the stubbed download gates, and the axe check with no serious or critical findings.
 
 ### Phase 5b — Move GPU practicals to Google Colab
 
@@ -295,7 +297,7 @@ Everything that involves LLM training or hands-on GPU work points readers to a s
 - **Check practice notes and lab scenarios** for the same wording.
 - **What Colab cannot do:** multi-GPU and cluster material (DeepSpeed, FSDP, torchtitan, Megatron-LM, a full nanochat run) is unlikely to run on one Colab GPU. Keep it as reading, say so, and give a scaled-down single-GPU guide where one teaches the idea.
 - **Fit the free tier:** some labs state 16–24 GB of GPU memory, which may exceed a free GPU. Choose models and settings that fit, and say what a larger GPU would change.
-- **Run each guide once in Colab before it ships,** starting with 5.6, which has only run on a CPU with a tiny model.
+- **Check each guide's code before it ships,** as the 5.6 guide is checked: every cell parses as Python, and the calls run on a CPU with a tiny model. Guides are not run in Colab by the course (owner's decision), so word timings as rough estimates.
 
 ### Phase 6 — 3D and scroll-driven walkthroughs
 
@@ -425,4 +427,5 @@ Decided:
 - **Practice page:** yes, built in phase 2.
 - **Project choice:** no up-front choice; Harbor by default, switchable at any time.
 - **GPU use:** study visuals may use the reader's GPU; LLM training and practical GPU work go to Google Colab guides.
+- **Colab guides:** copyable cells and a downloadable notebook that readers run in their own Colab. The course does not run them in Colab itself.
 - **Company names:** fictional only. Real companies' names (for example the proposed Meesho and SBI) cannot carry invented systems, figures and mistakes on a public site.
