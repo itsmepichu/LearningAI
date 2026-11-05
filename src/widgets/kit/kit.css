@@ -187,7 +187,7 @@ button.wk-tb-r[aria-pressed=true]{border-color:var(--accent);background:var(--ac
 /* Python labs */
 .wk .wk-code{white-space:pre;overflow:auto;font-size:var(--fs-2xs);line-height:1.5;tab-size:4}
 .wk-output{max-height:260px;overflow:auto;background:var(--sunk);border:1px solid var(--rule);border-radius:var(--r-1);padding:8px 12px}
-.wk-output pre{margin:0;background:none;padding:0;font-size:var(--fs-2xs);color:var(--ink);white-space:pre}
+.wk-output pre{margin:0;background:none;padding:0;font-size:var(--fs-2xs);color:var(--ink);white-space:pre;overflow:visible}
 .wk-output-e{color:var(--bad)}
 
 /* Step-by-step guides */

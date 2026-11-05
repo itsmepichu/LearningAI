@@ -183,7 +183,6 @@ const PROJECTS = require('../src/content/projects.json').projects
     const THIRD_PARTY = /huggingface\.co|hf\.co|jsdelivr\.net|pyodide/
     const stubWorker = ({ failFirst }) => {
       window.__workers = []
-      window.__loads = 0
       const vector = (text) => {
         const v = new Array(32).fill(0)
         for (const w of text.toLowerCase().split(/\W+/)) if (w) v[[...w].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 32] += 1
@@ -207,13 +206,16 @@ const PROJECTS = require('../src/content/projects.json').projects
           const emit = (progress) => this.reply({ id, type: 'progress', progress })
           const done = (result) => this.reply({ id, type: 'result', result })
           if (/^load/.test(op)) {
-            const attempt = ++window.__loads
             // Slow enough for the test to see the loading state, and to cancel it.
             for (const percent of [10, 40, 70]) {
               await later(window.__holdLoad ? 4000 : 120)
               emit({ file: 'stub.bin', loaded: percent * 1e5, total: 1e7 })
             }
-            if (failFirst && attempt === 1) return this.reply({ id, type: 'error', message: 'Stubbed network failure.' })
+            // Only the first load in this tab fails, across page loads.
+            if (failFirst && !sessionStorage.getItem('stub-failed')) {
+              sessionStorage.setItem('stub-failed', '1')
+              return this.reply({ id, type: 'error', message: 'Stubbed network failure.' })
+            }
             return done({ stub: true })
           }
           if (op === 'embed') {

@@ -278,6 +278,8 @@ Decisions that carry forward:
 
 Checked by hand, once, with real downloads: embeddings, tokenizers, the classifier and all four labs, in Chromium on Windows. The Colab guide's cells ran on a CPU with a tiny random model, which proves the calls work on a current `transformers`. **They have not been run in Colab itself or on a GPU**, so run the guide once before relying on its timings and wording.
 
+e2e: the last full run, including the then-new stubbed gate checks, had one failure, an axe finding on 5.6 for code blocks that scrolled without a tab stop. That is fixed and was checked by hand on the page, but the full suite has not run since, so **a full pass has not been recorded for phase 5**. Run it when wanted.
+
 ### Phase 6 — 3D and scroll-driven walkthroughs
 
 3D only where the third axis carries data:

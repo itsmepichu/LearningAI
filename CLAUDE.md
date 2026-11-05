@@ -90,7 +90,7 @@ npm run test:unit
 npm run build
 ```
 
-Run the end-to-end test once, when all the implementation for a piece of work is done, before opening the pull request. Do not run it after each phase or batch; it takes several minutes, so run it in the background.
+Run the end-to-end test only when the owner asks for it. It takes several minutes, so run it in the background when asked.
 
 ```bash
 npx vite preview --port 4173 &
