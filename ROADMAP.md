@@ -311,6 +311,8 @@ What was built, and the decisions that carry forward:
 - **CPU check** (`scripts/colab-notebooks.ts`, then `scripts/check_colab_guides.py`): every guide's notebook, for every project, runs cell by cell on a CPU. Decoding and QLoRA use a tiny random Qwen3-shaped model with a locally trained tokenizer and chat template. nanoGPT is cloned at its pinned commit and trained for a few steps at a tiny size. vLLM is replaced by a mock OpenAI-compatible server and a mock `vllm bench serve` that writes the pinned version's result fields. This proves the code runs on current Transformers 5.22, PEFT 0.21 and PyTorch 2.15. It does not prove that vLLM 0.19.0 or bitsandbytes work on Colab's GPU, or the guides' timings and memory figures, which are estimates.
 - **Search:** `scripts/refresh_search.py` rebuilds `search.json` from the pages. Only the one-time importer had written it before, so 140 of 143 topics' search text was stale.
 
+e2e: a full pass is recorded for phase 5b, on `development` at 8542dfe (5 November 2026). It downloads every guide's notebook and runs the axe check on the new guide pages, with no serious or critical findings.
+
 ### Phase 6 — 3D and scroll-driven walkthroughs
 
 3D only where the third axis carries data:
