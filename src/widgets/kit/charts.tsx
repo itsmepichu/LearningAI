@@ -73,6 +73,56 @@ export function StackBar({ segments, total, label }: { segments: StackSegment[];
   )
 }
 
+export interface TimeBar {
+  label: string
+  start: number
+  duration: number
+  color: string
+  /** Nesting level, for child spans. */
+  indent?: number
+  /** Not on the path that sets the total, so it is drawn as an outline. */
+  off?: boolean
+  value: string
+}
+
+/** Rows of bars on a shared time axis, as in a trace. With `onSelect`, each row is a button. */
+export function TimeBars({ bars, total, axis, selected, onSelect }: { bars: TimeBar[]; total: number; axis: string[]; selected?: number | null; onSelect?: (index: number) => void }) {
+  return (
+    <div className="wk-tb">
+      {bars.map((b, i) => {
+        const body = (
+          <>
+            <span className="wk-tb-l" style={{ paddingLeft: (b.indent ?? 0) * 12 }} title={b.label}>
+              {b.label}
+            </span>
+            <span className="wk-tb-t">
+              <i
+                className={b.off ? 'off' : undefined}
+                style={{ left: `${(b.start / total) * 100}%`, width: `${Math.max(0.6, (b.duration / total) * 100)}%`, background: b.off ? undefined : b.color, borderColor: b.color }}
+              />
+            </span>
+            <span className="wk-tb-v">{b.value}</span>
+          </>
+        )
+        return onSelect ? (
+          <button key={i} type="button" className="wk-tb-r" aria-pressed={selected === i} onClick={() => onSelect(i)}>
+            {body}
+          </button>
+        ) : (
+          <div key={i} className="wk-tb-r">
+            {body}
+          </div>
+        )
+      })}
+      <div className="wk-tb-a" aria-hidden="true">
+        {axis.map((a) => (
+          <span key={a}>{a}</span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export interface LineSeries {
   name: string
   color: string

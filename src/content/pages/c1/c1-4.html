@@ -34,18 +34,7 @@
 <rect x="620" y="119" width="115" height="40" rx="4" class="nda"/><text x="677" y="144" text-anchor="middle">Append &amp; repeat</text>
 <path d="M310 139H340M450 139H480M590 139H620" class="lna flowing"/><path d="M677 159 C677 182 395 182 395 159" class="lna dash"/></g>
 </svg></div><figcaption><b>Same forward pass, different purpose.</b> Training loops over data to change weights. Inference loops over output tokens with weights fixed. Most engineers only ever run inference, but understanding training explains model behaviour.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid">
-<label for="tcText" style="display:block">Paste any text to estimate its tokens</label>
-<textarea id="tcText">Hi team, please summarise the attached refund policy for EU customers and list the exceptions for annual plans. Reference: INV-2291, order A-1043.</textarea>
-<div class="ctl"><span class="count" id="tcEst" style="margin-left:0"></span><button class="btn" type="button" id="tcUse">Use as input tokens</button></div>
-<div class="row2">
-<label for="tcIn">Input tokens / request <input type="range" id="tcIn" min="100" max="20000" step="100" value="3000"><span id="tcInO"></span></label>
-<label for="tcOut">Output tokens / request <input type="range" id="tcOut" min="20" max="4000" step="10" value="350"><span id="tcOutO"></span></label>
-<label for="tcReq">Requests per day <input type="range" id="tcReq" min="2" max="6.5" step="0.05" value="4"><span id="tcReqO"></span></label>
-<label for="tcPin">Input price ($ / M tokens) <input type="range" id="tcPin" min="0.05" max="15" step="0.05" value="1"><span id="tcPinO"></span></label>
-<label for="tcPout">Output price ($ / M tokens) <input type="range" id="tcPout" min="0.1" max="60" step="0.1" value="4"><span id="tcPoutO"></span></label>
-<label for="tcDec">Decode speed (tokens/s) <input type="range" id="tcDec" min="5" max="200" value="60"><span id="tcDecO"></span></label>
-</div><div class="kpis" id="tcK"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="token-estimator"></div></div>
 <figcaption><b>Token, cost and latency estimator.</b> The text estimate is a rough heuristic (about 4 characters per token for English prose, fewer for code, digits and non-Latin scripts); always confirm with the model's real tokenizer. Latency assumes prefill at 10,000 tokens/s and the decode speed you set. Prices are illustrative inputs.</figcaption></figure>
 <div class="box example"><h5>Example: estimating cost before writing code</h5><p>A summariser receives 3,000-word documents (≈ 4,000 tokens) and writes 200-word summaries (≈ 270 tokens). At an illustrative price of $1 per million input tokens and $4 per million output tokens, one summary costs 4,000 × 1/10⁶ + 270 × 4/10⁶ ≈ <b>$0.005</b>. 100,000 documents a month ≈ $500. Output tokens are usually priced higher and generated much more slowly than input tokens are read, which is why output length dominates latency.</p></div>
 <div class="box lab"><h5>Laptop lab: see tokens <span class="tag cpu">Laptop · CPU</span></h5>

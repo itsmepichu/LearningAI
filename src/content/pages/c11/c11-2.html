@@ -1,11 +1,7 @@
 <p>The basic agent loop (often called <dfn>ReAct</dfn>: reason + act): the model receives the goal, the tool list and the history; it either calls a tool or gives a final answer; the tool result (<dfn>observation</dfn>) is appended; repeat. <b>Tool selection</b> depends on clear tool names and descriptions, few overlapping tools, and examples. <b>Planning</b> can be implicit (decide one step at a time) or explicit (write a plan first, then execute and revise it), which helps on long tasks and makes traces readable.</p>
 <p><b>Termination</b> must be engineered, not hoped for: final-answer detection, a maximum number of steps, a token/cost budget, a wall-clock deadline, loop detection (same tool with same arguments twice), and a "give up and escalate" path.</p>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<div class="ctl"><button class="btn primary" id="agStep" type="button">Next step</button><button class="btn" id="agPlay" type="button">Play</button><button class="btn" id="agReset" type="button">Reset</button>
-<label for="agMax" style="font-family:var(--f-display);font-size:.82rem">step limit <input type="number" id="agMax" value="6" min="2" max="10" style="width:56px"></label>
-<label for="agLoop" style="font-family:var(--f-display);font-size:.82rem"><input type="checkbox" id="agLoop"> inject a tool failure</label><span class="count" id="agCnt"></span></div>
-<div id="agTrace" style="display:grid;gap:6px"></div></div></div>
-<figcaption><b>An agent loop, step by step</b> (scripted trace, no model runs). Task: "Why was invoice INV-2291 charged twice, and fix it if it's our error." Each step shows the model's tool choice, the observation and the running cost. Enable the failure to see retry, loop detection and escalation.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div data-widget="agent-loop"></div></div>
+<figcaption><b>An agent loop, step by step</b> (scripted trace, no model runs), on a task from your example project. Each step shows the model's tool choice, the observation and the running cost. Enable the failure to see retry, loop detection and escalation, and lower the step limit to see the run stop early.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: a minimal agent loop with real termination rules <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code>import json, ollama
 ORDERS = {"A-1043": {"status": "delivered_late", "paid": 120.0}}

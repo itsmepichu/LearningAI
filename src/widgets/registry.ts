@@ -22,4 +22,11 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'cache-key': lazy(() => import('./cache-key/CacheKey')),
   'isolation-grid': lazy(() => import('./isolation-grid/IsolationGrid')),
   'pii-redact': lazy(() => import('./pii-redact/PiiRedact')),
+  'agent-loop': lazy(() => import('./agent-loop/AgentLoop')),
+  'token-estimator': lazy(() => import('./token-estimator/TokenEstimator')),
+  'class-imbalance': lazy(() => import('./class-imbalance/ClassImbalance')),
+  rrf: lazy(() => import('./rrf/Rrf')),
+  'trace-waterfall': lazy(() => import('./trace-waterfall/TraceWaterfall')),
+  'critical-path': lazy(() => import('./critical-path/CriticalPath')),
+  'cost-attribution': lazy(() => import('./cost-attribution/CostAttribution')),
 }

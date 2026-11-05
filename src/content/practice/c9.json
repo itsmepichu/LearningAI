@@ -123,7 +123,7 @@
    "failure": "Adding raw BM25 and cosine scores together; their scales mean different things.",
    "fit": "best",
    "fitNote": "ACL-filtered hybrid search with reranking",
-   "tryIt": "In the RRF figure, set k to 5 and then to 100 and watch doc-C and doc-F. Then write Harbor's pipeline as code with the ACL filter inside both searches, not after them."
+   "tryIt": "In the RRF figure, set k to 5 and then to 100 and watch the documents both rankings found. Then write Harbor's pipeline as code with the ACL filter inside both searches, not after them."
   },
   "store": {
    "fit": "good",

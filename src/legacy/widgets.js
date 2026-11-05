@@ -453,13 +453,6 @@ try{
 
 }catch(e){console.error("legacy widget: 9.4 HNSW-style search",e)}
 try{
-/* ===== 9.5 RRF ===== */
-(function(){if(!$('rrfK'))return;const A=['doc-A','doc-C','doc-F','doc-B','doc-H'],B=['doc-D','doc-F','doc-C','doc-E','doc-G'];function r(){const k=val('rrfK');$('rrfKv').textContent=k;const s={};[A,B].forEach(l=>l.forEach((d,i)=>s[d]=(s[d]||0)+1/(k+i+1)));
-  $('rrfA').innerHTML=A.map(d=>`<li>${d}</li>`).join('');$('rrfB').innerHTML=B.map(d=>`<li>${d}</li>`).join('');$('rrfC').innerHTML=Object.entries(s).sort((a,b)=>b[1]-a[1]).map(([d,v])=>`<li${A.includes(d)&&B.includes(d)?' style="color:var(--accent);font-weight:600"':''}>${d} <span style="color:var(--muted)">${v.toFixed(4)}</span></li>`).join('')}bind(['rrfK'],r)})();
-
-
-}catch(e){console.error("legacy widget: 9.5 RRF",e)}
-try{
 /* ===== 10.1 corpus sizing ===== */
 (function(){if(!$('czD'))return;function r(){const D=val('czD')*1e6,P=val('czP'),T=val('czT'),C=val('czC'),O=val('czO')/100,dim=+$('czDim').value,bp=+$('czB').value,R=val('czR');setO('czD',fN(val('czD'),1)+'M');setO('czP',P);setO('czT',T);setO('czC',C);setO('czO',fN(O*100)+'%');setO('czR',R);
   const tok=D*P*T,ch=tok/(C*(1-O)),etok=ch*C,vec=ch*dim*bp,graph=ch*128,meta=ch*300,text=tok*4,ram=(vec+graph)*R;
@@ -508,21 +501,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 10.9 ColBERT MaxSim",e)}
-try{
-/* ===== 11.2 agent loop ===== */
-(function(){if(!$('agTrace'))return;let i=0,timer;
-  function script(){const fail=$('agLoop').checked;const s=[{k:'plan',t:'Goal: explain the double charge on INV-2291 and fix it if it is our error. Plan: look up the invoice → inspect payment events → check refund policy → act.',c:.004}];
-    s.push({k:'tool',t:'search_invoices(id="INV-2291")',o:'INV-2291: two charges of $49.00 on 2026-10-01 (ch_1, ch_2)',c:.004});
-    if(!fail){s.push({k:'tool',t:'get_payment_events(invoice="INV-2291")',o:'ch_2 created by an automatic retry after a gateway timeout; no idempotency key',c:.006},{k:'tool',t:'check_refund_policy(reason="duplicate_charge")',o:'Duplicate charges: full refund; auto-approve if ≤ $50',c:.005},{k:'tool',t:'propose_refund(charge="ch_2")   (amount computed in code: $49.00)',o:'Refund R-77 created, auto-approved (≤ $50)',c:.005},{k:'final',t:'INV-2291 was charged twice because a payment retry ran without an idempotency key. I refunded the duplicate charge ch_2 ($49.00, refund R-77). It should appear in 5–10 business days.',c:.006})}
-    else{s.push({k:'tool',t:'get_payment_events(invoice="INV-2291")',o:'ERROR: timeout after 10 s',c:.006,e:1},{k:'tool',t:'get_payment_events(invoice="INV-2291")   (retry)',o:'ERROR: timeout after 10 s',c:.006,e:1},{k:'stop',t:'Loop detector: identical call failed twice. ESCALATE to tier-2 with summary: "INV-2291 double charge confirmed; payment events unavailable (timeouts); no refund issued."',c:0})}return s}
-  function draw(){const s=script(),mx=val('agMax');let cost=0,h='';const shown=s.slice(0,i);let stopped=false;shown.forEach((st,k)=>{if(k>=mx&&!stopped){stopped=true;h+=`<div class="card" style="border-color:var(--bad)"><b style="color:var(--bad);font-family:var(--f-display)">Step limit (${mx}) reached</b> → ESCALATE with the work so far.</div>`}if(stopped)return;cost+=st.c;
-    const col=st.k==='final'?'var(--ok)':st.k==='stop'?'var(--bad)':st.e?'var(--bad)':st.k==='plan'?'var(--sim)':'var(--accent)';h+=`<div class="card" style="border-left:3px solid ${col}"><span style="font-family:var(--f-mono);font-size:.7rem;color:var(--muted)">step ${k+1} · ${st.k==='tool'?'action':st.k} · running cost $${cost.toFixed(3)}</span><div style="font-family:${st.k==='tool'?'var(--f-mono)':'inherit'};font-size:.86rem">${esc(st.t)}</div>${st.o?`<div style="font-size:.84rem;color:${st.e?'var(--bad)':'var(--muted)'}">observation: ${esc(st.o)}</div>`:''}</div>`});
-    $('agTrace').innerHTML=h||'<div class="card" style="color:var(--muted)">Press Next step to start the loop.</div>';$('agCnt').textContent=`${Math.min(i,s.length)} / ${s.length} steps`}
-  $('agStep').onclick=()=>{if(i<script().length)i++;draw()};$('agReset').onclick=()=>{clearInterval(timer);i=0;draw()};$('agPlay').onclick=()=>{clearInterval(timer);i=0;draw();timer=setInterval(()=>{if(i>=script().length){clearInterval(timer);return}i++;draw()},RM?200:1100)};
-  ['agLoop','agMax'].forEach(k=>$(k).addEventListener('change',()=>{i=0;draw()}));i=script().length;draw()})();
-
-
-}catch(e){console.error("legacy widget: 11.2 agent loop",e)}
 try{
 /* ===== 11.5 state machine ===== */
 (function(){const g=$('smViz');if(!g)return;const S=[['RECEIVED',10,30],['INVESTIGATING',160,30],['AWAITING_APPROVAL',310,30],['EXECUTING',460,30],['DONE',610,30],['ESCALATED',235,140],['FAILED',535,140]];const seq=[0,1,1,2,3,4];let k=0;
@@ -745,14 +723,6 @@ try{
 
 }catch(e){console.error("legacy widget: 15.9 cost per success",e)}
 try{
-/* ===== 17.2 trace waterfall ===== */
-(function(){if(!$('trWf'))return;const S=[['rag.request',0,5400,0,{'tenant':'acme','prompt.version':'answer@v12','release':'r2026.11.3'}],['gateway.auth',5,18,1,{'enduser.id':'u_9c1e (hashed)','quota.remaining_tpm':381200}],['chat small-2026-05 (query rewrite)',25,410,1,{'gen_ai.operation.name':'chat','gen_ai.request.model':'small-2026-05','gen_ai.usage.input_tokens':620,'gen_ai.usage.output_tokens':24}],['retrieval.search',440,95,1,{'retrieval.k':100,'filter':'tenant=acme AND acl∩groups'}],['bm25',445,40,2,{'hits':100}],['vector.hnsw',445,62,2,{'efSearch':64,'index':'kb-v4'}],['retrieval.rerank',540,820,1,{'candidates':50,'kept':8,'model':'reranker-base','queue_wait_ms':610}],['chat large-2026-09',1370,840,1,{'gen_ai.operation.name':'chat','gen_ai.request.model':'large-2026-09','gen_ai.response.finish_reasons':'["tool_calls"]','gen_ai.usage.input_tokens':5120,'gen_ai.usage.output_tokens':31,'ttft_ms':690}],['execute_tool get_order',2215,240,1,{'gen_ai.operation.name':'execute_tool','gen_ai.tool.name':'get_order','order_id':'A-1043','authz':'allowed'}],['chat large-2026-09',2460,2890,1,{'gen_ai.operation.name':'chat','gen_ai.usage.input_tokens':5390,'gen_ai.usage.output_tokens':388,'gen_ai.response.finish_reasons':'["stop"]','ttft_ms':410}],['guardrail.output',5355,40,1,{'citations.valid':true,'pii.redacted':0}]];const T=5400;
-  $('trWf').innerHTML='<div style="display:grid;gap:3px">'+S.map((s,i)=>`<div data-i="${i}" style="display:grid;grid-template-columns:minmax(120px,34%) 1fr;gap:8px;align-items:center;cursor:pointer;font-size:.8rem"><span style="font-family:var(--f-mono);padding-left:${s[3]*12}px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s[0])}</span><span style="position:relative;height:16px;background:var(--sunk);border-radius:2px"><span style="position:absolute;left:${s[1]/T*100}%;width:${Math.max(.6,s[2]/T*100)}%;top:0;bottom:0;border-radius:2px;background:${s[0].startsWith('chat')?'var(--sim)':s[0].startsWith('execute')?'var(--signal)':s[0].startsWith('retrieval')||s[3]===2?'var(--accent)':'var(--muted)'};opacity:.8"></span><span style="position:absolute;right:4px;top:0;font-family:var(--f-mono);font-size:.65rem;line-height:16px">${fN(s[2])} ms</span></span></div>`).join('')+'</div><div style="display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.68rem;color:var(--muted);margin-top:3px;padding-left:34%"><span>0</span><span>2.7 s</span><span>5.4 s</span></div>';
-  $('trWf').addEventListener('click',e=>{const r=e.target.closest('[data-i]');if(!r)return;const s=S[+r.dataset.i];$('trAttr').textContent=`${s[0]}  start=${s[1]}ms  duration=${s[2]}ms\n`+Object.entries(s[4]).map(([k,v])=>`  ${k} = ${v}`).join('\n')})})();
-
-
-}catch(e){console.error("legacy widget: 17.2 trace waterfall",e)}
-try{
 /* ===== 17.3 percentiles ===== */
 (function(){if(!$('lpSvg'))return;function r(){const w=val('lpTail')/100*.15,rn=mulberry(17),xs=[];setO('lpTail',fN(w*100,1)+'% slow requests');for(let i=0;i<5000;i++)xs.push(rn()<w?6*Math.exp(gauss(rn)*.5):1.2*Math.exp(gauss(rn)*.35));xs.sort((a,b)=>a-b);const q=p=>xs[Math.floor(p*xs.length)],mean=xs.reduce((a,b)=>a+b,0)/xs.length;
   const nb=50,mx=20,bins=new Array(nb).fill(0);xs.forEach(v=>{const b=Math.floor(v/mx*nb);if(b<nb)bins[b]++});const bm=Math.max(...bins),X=v=>40+v/mx*580;let s=axis(40,10,620,175);bins.forEach((v,i)=>s+=`<rect x="${40+i*580/nb}" y="${175-v/bm*155}" width="${580/nb-1}" height="${v/bm*155}" class="fas"/>`);
@@ -769,14 +739,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 17.4 AI panels",e)}
-try{
-/* ===== 17.5 cost attribution ===== */
-(function(){if(!$('caBars'))return;const G={'By feature':[['Agent workflows',18700],['KB assistant',14900],['Batch summaries',7400],['Embeddings & rerank',4100],['Ticket triage',3100]],'By tenant':[['Tenant Orion',14950],['Other 312 tenants',18950],['Tenant Lyra',8200],['Tenant Vega',6100]],'By token type':[['Output tokens',21600],['Uncached input',17400],['Embeddings',4100],['Cached input',2900],['Reasoning tokens',2200]]};const ks=Object.keys(G);
-  $('caBtns').innerHTML=ks.map((k,i)=>`<button class="btn ${i?'':'primary'}" type="button" data-k="${k}">${k}</button>`).join('');function show(k){bars('caBars',G[k].map(([l,v],i)=>({l,v,c:i?'':'s',t:'$'+fN(v)+' · '+fN(v/482,1)+'%'})));[...$('caBtns').children].forEach(b=>b.classList.toggle('primary',b.dataset.k===k))}
-  $('caBtns').addEventListener('click',e=>{if(e.target.dataset.k)show(e.target.dataset.k)});show(ks[0])})();
-
-
-}catch(e){console.error("legacy widget: 17.5 cost attribution",e)}
 try{
 /* ===== 17.6 telemetry, 17.7 drift, 17.8 burn ===== */
 (function(){if($('tsRps')){function r(){const rps=val('tsRps'),kb=val('tsKb'),hb=val('tsHead')/100,er=val('tsErr')/100;setO('tsRps',fN(rps));setO('tsKb',kb+' KB');setO('tsHead',fN(hb*100,1)+'%');setO('tsErr',fN(er*100,1)+'%');const keep=er+(1-er)*hb,gbd=rps*keep*kb*86400/1e6,full=rps*kb*86400/1e6;
@@ -821,18 +783,6 @@ try{
 
 }catch(e){console.error("legacy widget: 18.7 readiness",e)}
 try{
-/* ===== 1.4 token / cost / latency estimator ===== */
-(function(){if(!$('tcText'))return;let est=0;
-  function estimate(){const t=$('tcText').value;let latin=0,digits=0,other=0,ws=0;for(const ch of t){if(/\s/.test(ch))ws++;else if(/[0-9]/.test(ch))digits++;else if(/[\x21-\x7e]/.test(ch))latin++;else other++}
-    est=Math.max(1,Math.round(latin/4+digits/2+other/1.4+ws*0.05));$('tcEst').textContent=`${t.length} characters → about ${fN(est)} tokens (heuristic)`}
-  function r(){const I=val('tcIn'),O=val('tcOut'),R=Math.round(10**val('tcReq')),pi=val('tcPin'),po=val('tcPout'),dec=val('tcDec');setO('tcIn',fN(I));setO('tcOut',fN(O));setO('tcReq',fS(R,1));setO('tcPin','$'+fN(pi,2));setO('tcPout','$'+fN(po,2));setO('tcDec',dec);
-    const c=I/1e6*pi+O/1e6*po,ttft=.08+I/10000,tot=ttft+(O-1)/dec;
-    kpis('tcK',[['cost per request',fUSD(c)],['cost per day',fUSD(c*R)],['cost per month (30 d)',fUSD(c*R*30)],['output share of cost',fN(O/1e6*po/c*100)+'%'],['time to first token',fN(ttft,2)+' s'],['total response time',fN(tot,1)+' s',tot>10?'warn':'']])}
-  $('tcText').addEventListener('input',estimate);$('tcUse').onclick=()=>{const e=$('tcIn');e.value=Math.min(20000,Math.max(100,Math.round(est/100)*100||100));e.dispatchEvent(new Event('input'))};estimate();bind(['tcIn','tcOut','tcReq','tcPin','tcPout','tcDec'],r)})();
-
-
-}catch(e){console.error("legacy widget: 1.4 token / cost / latency estimator",e)}
-try{
 /* ===== 2.6 laptop fit ===== */
 (function(){if(!$('lfM'))return;const M=[[0.49e9,24,2,64],[1.24e9,16,8,64],[3.2e9,28,8,128],[8.03e9,32,8,128],[14.7e9,48,8,128],[70.6e9,80,8,128]];
   function r(){const[p,L,kv,hd]=M[+$('lfM').value],q=+$('lfQ').value,ram=+$('lfR').value*1e9,os=val('lfOs')*1e9,ctx=2**val('lfC'),bw=val('lfBw')*1e9;setO('lfOs',val('lfOs')+' GB');setO('lfC',fS(ctx,0)+' tokens');setO('lfBw',val('lfBw')+' GB/s');
@@ -843,20 +793,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 2.6 laptop fit",e)}
-try{
-/* ===== 3.3 class imbalance ===== */
-(function(){if(!$('imCan'))return;let X=[],Y=[],w=[0,0,0],seed=3;
-  function data(){const r=mulberry(seed),p=+$('imP').value;X=[];Y=[];for(let i=0;i<800;i++){const pos=r()<p;X.push(pos?[0.62+gauss(r)*.11,0.6+gauss(r)*.11]:[0.42+gauss(r)*.15,0.42+gauss(r)*.15]);Y.push(pos?1:0)}train()}
-  function train(){const pw=$('imW').checked?(Y.length-Y.reduce((a,b)=>a+b,0))/Math.max(1,Y.reduce((a,b)=>a+b,0)):1;w=[0,0,0];for(let it=0;it<1500;it++){let g=[0,0,0],tw=0;X.forEach((x,i)=>{const z=w[0]+w[1]*(x[0]-.5)*6+w[2]*(x[1]-.5)*6,p=1/(1+Math.exp(-z)),k=Y[i]?pw:1,e=(p-Y[i])*k;g[0]+=e;g[1]+=e*(x[0]-.5)*6;g[2]+=e*(x[1]-.5)*6;tw+=k});for(let j=0;j<3;j++)w[j]-=1.5*g[j]/tw}draw()}
-  function draw(){const t=val('imT')/100;setO('imT',fN(t,2));const g=cv('imCan');if(!g)return;const{x,W,H}=g,C=COL(),PX=v=>20+v*(W-40),PY=v=>H-10-v*(H-20);let tp=0,fp=0,fn=0,tn=0;
-    X.forEach((p,i)=>{const z=w[0]+w[1]*(p[0]-.5)*6+w[2]*(p[1]-.5)*6,pr=1/(1+Math.exp(-z)),pred=pr>=t;if(pred&&Y[i])tp++;else if(pred)fp++;else if(Y[i])fn++;else tn++;x.fillStyle=Y[i]?C.bad:C.acc;x.globalAlpha=Y[i]?.95:.35;x.beginPath();x.arc(PX(p[0]),PY(p[1]),Y[i]?3.6:2.6,0,7);x.fill();if(pred){x.globalAlpha=1;x.strokeStyle=C.sig;x.lineWidth=1.2;x.beginPath();x.arc(PX(p[0]),PY(p[1]),5,0,7);x.stroke()}});x.globalAlpha=1;
-    const lo=Math.log(t/(1-t));if(Math.abs(w[2])>1e-6){x.strokeStyle=C.ink;x.lineWidth=2;x.setLineDash([6,4]);x.beginPath();for(let k=0;k<=1;k++){const u=k,zx=(u-.5)*6,zy=(lo-w[0]-w[1]*zx)/w[2],v=zy/6+.5;k?x.lineTo(PX(u),PY(v)):x.moveTo(PX(u),PY(v))}x.stroke();x.setLineDash([]);x.lineWidth=1}
-    x.fillStyle=C.mut;x.fillText('amber rings = predicted positive · dashed line = decision boundary',22,16);const P=tp+fp?tp/(tp+fp):0,R=tp+fn?tp/(tp+fn):0;
-    kpis('imK',[['accuracy',fN((tp+tn)/X.length*100,1)+'%'],['recall (rare class)',fN(R*100,0)+'%',R<.5?'bad':R>.8?'ok':'warn'],['precision',tp+fp?fN(P*100,0)+'%':'undefined'],['flagged / actual positives',`${tp+fp} / ${tp+fn}`]])}
-  $('imP').onchange=data;$('imW').onchange=train;$('imT').addEventListener('input',draw);$('imNew').onclick=()=>{seed++;data()};onTheme(draw);data()})();
-
-
-}catch(e){console.error("legacy widget: 3.3 class imbalance",e)}
 try{
 /* ===== 4.1 neural-network playground ===== */
 (function(){if(!$('nnCan'))return;let P=[],L=[],net,run=false,raf,hist=[],epoch=0;
@@ -997,17 +933,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 15.6 load shedding",e)}
-try{
-/* ===== 17.2 critical path ===== */
-(function(){if(!$('cpWf'))return;function r(){const g=id=>val(id);['cpRw','cpBm','cpVe','cpRr','cpM1','cpTo','cpM2'].forEach(id=>setO(id,fN(g(id))+' ms'));const rt=$('cpRt').checked;
-  let t=0;const sp=[];const add=(n,d,par,crit)=>{sp.push({n,s:t,d,par,crit})};add('query rewrite',g('cpRw'),0,true);t+=g('cpRw');const bm=g('cpBm'),ve=g('cpVe');sp.push({n:'BM25',s:t,d:bm,crit:bm>=ve,ind:1});sp.push({n:'vector search',s:t,d:ve,crit:ve>bm,ind:1});t+=Math.max(bm,ve);
-  add('rerank',g('cpRr'),0,true);t+=g('cpRr');add('model call 1 (tool request)',g('cpM1'),0,true);t+=g('cpM1');if(rt){add('tool call → timeout',2000,0,true);t+=2000;add('tool call (retry)',g('cpTo'),0,true);t+=g('cpTo')}else{add('tool call',g('cpTo'),0,true);t+=g('cpTo')}add('model call 2 (answer)',g('cpM2'),0,true);t+=g('cpM2');const T=t;
-  $('cpWf').innerHTML='<div style="display:grid;gap:4px">'+sp.map(s=>`<div style="display:grid;grid-template-columns:minmax(110px,30%) 1fr;gap:8px;align-items:center;font-size:.8rem"><span style="font-family:var(--f-mono);padding-left:${s.ind?14:0}px">${s.n}</span><span style="position:relative;height:18px;background:var(--sunk);border-radius:3px"><span style="position:absolute;left:${s.s/T*100}%;width:${Math.max(.5,s.d/T*100)}%;top:0;bottom:0;border-radius:3px;background:${/timeout/.test(s.n)?'var(--bad)':/model/.test(s.n)?'var(--sim)':/tool/.test(s.n)?'var(--signal)':'var(--accent)'};opacity:${s.crit?.9:.35};${s.crit?'outline:2px solid var(--ink);outline-offset:-1px':''}"></span></span></div>`).join('')+'</div>';
-  const longest=sp.filter(s=>s.crit).sort((a,b)=>b.d-a.d)[0];kpis('cpKp',[['end-to-end',fN(T/1000,2)+' s',T>8000?'bad':T>5000?'warn':''],['longest critical span',longest.n],['its share',fN(longest.d/T*100)+'%'],['off the critical path',bm>=ve?'vector search':'BM25']])}
-  bind(['cpRw','cpBm','cpVe','cpRr','cpM1','cpTo','cpM2','cpRt'],r)})();
-
-
-}catch(e){console.error("legacy widget: 17.2 critical path",e)}
 try{
 /* ===== 17.8 burn-rate simulation ===== */
 (function(){if(!$('bwCan'))return;function r(){const sc=$('bwS').value,slo=+$('bwO').value,bud=(100-slo)/100,rn=mulberry(41),H=720,e=[];
