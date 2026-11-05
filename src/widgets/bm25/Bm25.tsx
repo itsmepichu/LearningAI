@@ -1,5 +1,5 @@
 import { useId, useMemo, useState } from 'react'
-import { DataGate, DataSource, KpiRow, Widget, fmt, useProjectData } from '../kit'
+import { DataGate, DataSource, KpiRow, ScrollRegion, Widget, fmt, useProjectData } from '../kit'
 import { buildIndex, postings, search, tokenize } from './engine'
 import { SUGGESTIONS, loadCorpus, type Corpus, type Suggestion } from './corpus'
 
@@ -47,7 +47,7 @@ function Search({ corpus, suggestions }: { corpus: Corpus; suggestions: Suggesti
           { label: 'documents with a match', value: fmt(hits.length) },
         ]}
       />
-      <div className="tw" tabIndex={0} role="region" aria-label="BM25 results">
+      <ScrollRegion label="BM25 results">
         <table>
           <thead>
             <tr>
@@ -88,7 +88,7 @@ function Search({ corpus, suggestions }: { corpus: Corpus; suggestions: Suggesti
             )}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
       <div className="out">
         {'Inverted index for the query terms (term → posting list):\n'}
         {entries.length

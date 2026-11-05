@@ -155,21 +155,21 @@
    "failure": "Assuming a checkpoint written after a tool call prevents duplicates if the process crashes in between.",
    "fit": "good",
    "fitNote": "a lost ticket-create response",
-   "tryIt": "In the ticket-store figure, step through with the idempotency key off, then on, and count tickets at the end. Then write Harbor's key formula from task ID, step and arguments."
+   "tryIt": "In the timeout figure, step through with the idempotency key off, then on, and count tickets at the end. Then write Harbor's key formula from task ID, step and arguments."
   },
   "store": {
    "fit": "good",
    "fitNote": "refunds and coupons must happen once",
    "practice": "{company}'s refund call carries a key built from the return ID and the step, so a retry after a timeout returns the first refund instead of paying twice. The refund and its “refund issued” event are written together through an outbox.",
    "failure": "Generating a new random key on each retry, which makes every retry look like a new refund.",
-   "tryIt": "In the ticket-store figure, turn the key off and step through to the duplicate. Then pick a returned order in <code>orders.csv</code> and write the idempotency key and the check that runs before a refund."
+   "tryIt": "In the timeout figure, turn the key off and step through to the duplicate. Then pick a returned order in <code>orders.csv</code> and write the idempotency key and the check that runs before a refund."
   },
   "bank": {
    "fit": "best",
    "fitNote": "a duplicate credit is real money",
    "practice": "Every {company} provisional credit carries a key derived from the case ID and step. A resumed run first asks the ledger whether a credit for this case exists, and the credit plus its notification are written in one transaction with an outbox row.",
    "failure": "Notifying the customer from the agent after the credit call, so a crash in between sends the message twice or not at all.",
-   "tryIt": "Run the ticket-store figure with the key on and off. Then write the key for a provisional credit on a case in <code>disputes.csv</code> and the outbox row written with it."
+   "tryIt": "Run the timeout figure with the key on and off. Then write the key for a provisional credit on a case in <code>disputes.csv</code> and the outbox row written with it."
   },
   "travel": {
    "fit": "best",

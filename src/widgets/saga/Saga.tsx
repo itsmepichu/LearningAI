@@ -1,5 +1,5 @@
 import { useId, useMemo, useState } from 'react'
-import { DataGate, DataSource, StepPlayer, Widget, useProjectData } from '../kit'
+import { DataGate, DataSource, EventList, StepPlayer, Widget, useProjectData } from '../kit'
 import { sagaEvents } from './events'
 import { SAGAS, loadSagaRef, type SagaScenario } from './scenarios'
 
@@ -39,20 +39,7 @@ function Run({ scenario, reference }: { scenario: SagaScenario; reference: strin
         </label>
       </div>
       <StepPlayer count={events.length} step={step} onStep={setStep} noun="Event" />
-      <div className="wk-events">
-        {events.slice(0, step + 1).map((e, i) => (
-          <div key={i} className={'wk-ev ' + e.tone}>
-            <span className="wk-ev-s">{e.status}.</span> <b>{e.title}.</b>
-            {e.detail && <> {e.detail}.</>}
-            {e.code && (
-              <>
-                {' '}
-                Key <code>{e.code}</code>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+      <EventList events={events.slice(0, step + 1)} />
     </>
   )
 }

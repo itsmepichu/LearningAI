@@ -46,6 +46,33 @@ export function BarList({ items, max }: { items: BarItem[]; max?: number }) {
   )
 }
 
+export interface StackSegment {
+  name: string
+  size: number
+  color?: string
+  /** Hatched instead of solid, for space that is set aside rather than used. */
+  hatched?: boolean
+}
+
+/** One bar split into named segments, as shares of `total`. `label` is the text alternative. */
+export function StackBar({ segments, total, label }: { segments: StackSegment[]; total: number; label: string }) {
+  return (
+    <div className="wk-stack" role="img" aria-label={label}>
+      {segments.map(
+        (s, i) =>
+          s.size > 0 && (
+            <div
+              key={i}
+              className={s.hatched ? 'hatched' : undefined}
+              title={`${s.name}: ${s.size.toLocaleString('en-US')}`}
+              style={{ width: `${(s.size / total) * 100}%`, background: s.hatched ? undefined : s.color }}
+            />
+          ),
+      )}
+    </div>
+  )
+}
+
 export interface LineSeries {
   name: string
   color: string

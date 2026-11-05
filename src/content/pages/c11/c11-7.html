@@ -4,12 +4,8 @@
 <li><b>Escalation</b>: hand the task to a human queue with a summary when the agent is uncertain, hits a limit, sees conflicting data, or the user asks for a person.</li>
 <li><b>Step limits and budgets</b>: per-task maximum steps, tokens, dollars and wall-clock time; per-user and per-tenant daily budgets. Enforce in the runtime, not the prompt. When a budget is exhausted, stop and escalate with the work so far.</li>
 <li><b>Approve an exact version</b>: an approval applies to one immutable action (target, arguments, content hash). If the agent edits the email or the amount afterwards, it needs a new approval, and cancelling must stop executions that are already queued.</li></ul>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<div class="row2"><label for="bgBud">Task budget ($) <input type="range" id="bgBud" min="0.05" max="1" step="0.05" value="0.30"><span id="bgBudO"></span></label>
-<label for="bgAmt">Proposed credit ($) <input type="range" id="bgAmt" min="5" max="500" step="5" value="80"><span id="bgAmtO"></span></label></div>
-<div class="ctl"><button class="btn primary" id="bgRun" type="button">Run task</button></div>
-<div id="bgViz" style="display:grid;gap:6px"></div></div></div>
-<figcaption><b>Guardrails in the runtime</b> (scripted, illustrative costs). The budget meter fills with each model call; a credit above $50 pauses for approval. Lower the budget to see the task stop and escalate before completion.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div data-widget="budget"></div></div>
+<figcaption><b>Guardrails in the runtime</b> (scripted, illustrative costs). The budget meter fills with each model call, and a proposed amount above $50 pauses for approval. Lower the budget to see the task stop and escalate before completion.</figcaption></figure>
 <div class="box example"><h5>Example: policy as configuration</h5>
 <pre><code>agent: support-resolver
 limits: {max_steps: 12, max_tokens: 60000, max_cost_usd: 0.40, max_wall_clock: 10m}

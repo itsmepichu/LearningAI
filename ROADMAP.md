@@ -231,13 +231,13 @@ The course-wide place to drill questions, linked from the sidebar and the home p
 - A unit test for each rebuilt widget. **Done for batch 1**, with Node's built-in runner (`npm run test:unit`, no new dependency). Each `<name>.test.ts` checks the widget's logic, and checks its scenarios against the real generated datasets, so regenerating the data cannot silently break a figure. `tests/e2e.cjs` covers each widget's behaviour in the browser.
 - Storybook entries: **decided against.** The original plan asked for one per widget, but each widget already runs on its topic page and in e2e, so Storybook would add a dependency and a second place to maintain for little gain.
 
-Batch order (83 v3 widget blocks remain, plus the 4 shared passes that stay: helpers, static bars, flow steppers and the enhancement pass):
+Batch order (76 v3 widget blocks remain, plus the 4 shared passes that stay: helpers, static bars, flow steppers and the enhancement pass):
 
 | Batch | Widgets | Why this order | State |
 |---|---|---|---|
 | 1 | chunking (9.2), BM25 (9.3), retrieval metrics and retriever comparison (9.7), streaming (7.4), saga (11.6) | Proves the kit: they use every kit part, and between them read all four projects' data | **Done** |
-| 2 | context assembler (7.3), memory simulator (7.5), timeout after write (11.6), budget (11.7), injection demo (16.2), cache-key builder and isolation grid (16.4), PII redaction (16.5) | The rest of the example-data list. 7.5 and 16.2 show one company's text today; the isolation grid and PII share a block with 16.4 and 16.5; 11.6 finishes that page | Next |
-| 3 | agent loop (11.2), token estimator (1.4), class imbalance (3.3), RRF (9.5), trace waterfall and critical path (17.2), cost attribution (17.5) | Also show example data, though the original list did not name them. 3.3 can use each dataset's real rare-class rate | Planned |
+| 2 | context assembler (7.3), memory simulator (7.5), timeout after write (11.6), budget (11.7), injection demo (16.2), cache-key builder and isolation grid (16.4), PII redaction (16.5) | The rest of the example-data list. 7.5 and 16.2 show one company's text today; the isolation grid and PII share a block with 16.4 and 16.5; 11.6 finishes that page | **Done** |
+| 3 | agent loop (11.2), token estimator (1.4), class imbalance (3.3), RRF (9.5), trace waterfall and critical path (17.2), cost attribution (17.5) | Also show example data, though the original list did not name them. 3.3 can use each dataset's real rare-class rate | Next |
 | 4 | BPE (5.1), attention (5.2), HNSW (9.4), batching and paged attention, prefix cache (14.3), queueing (15.1), burn rate (17.8), gradient descent (2.3), threshold and ROC (3.5), throughput vs latency (14.7) | Most-used widgets with no project data. Mostly canvas and animation, so they rely on the kit's canvas | Planned |
 
 That is 30 widgets; the other v3 blocks stay in `src/legacy/widgets.js` until a later decision.
@@ -245,7 +245,8 @@ That is 30 widgets; the other v3 blocks stay in `src/legacy/widgets.js` until a 
 Decisions from batch 1, for the later batches:
 - Scenario text that is not in a dataset, such as a saga's steps, lives in `scenarios.ts` beside the widget, per project. It never names a company; datasets and `projects.json` supply the names.
 - Hand-written rankings and answers say that they are illustrative on the figure itself. Where a real computation is possible (BM25), the figure computes it rather than showing a fixed list.
-- Reader-facing figures changed from v3, and the notes were updated to match: the metrics figure can now reorder results, because marking rank 1 relevant also changed recall, which contradicted its caption; streaming is now labelled a simulation; the saga steps through events instead of auto-running.
+- Scenario modules may read another widget's plain modules (the budget and timeout figures reuse the saga's dataset reference, the assembler reuses the BM25 corpus).
+- Reader-facing figures changed from v3, and the notes were updated to match: the metrics figure can now reorder results, because marking rank 1 relevant also changed recall, which contradicted its caption; streaming is now labelled a simulation; the saga steps through events instead of auto-running. In batch 2, the memory simulator is labelled a simulation because what a summary keeps is scripted, its fact store now misses a field to show what the caption claims, and the window no longer counts the question as a kept turn; the assembler reports when must-have items are dropped; the budget uses whole cents.
 
 ### Phase 5 — Real computation in the browser (opt-in downloads)
 

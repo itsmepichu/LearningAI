@@ -5,7 +5,7 @@ const { AxeBuilder } = require('@axe-core/playwright')
 
 const PAGES = ['/', '/guide', '/c9', '/c9/c9-3', '/c5/check', '/practice', '/progress']
 // Topic pages with a React widget from src/widgets/kit beside v3 flow steppers, code blocks and tables.
-const WIDGET_PAGES = ['/c9/c9-2', '/c9/c9-7', '/c7/c7-4', '/c11/c11-6']
+const WIDGET_PAGES = ['/c9/c9-2', '/c9/c9-7', '/c7/c7-3', '/c7/c7-4', '/c7/c7-5', '/c11/c11-6', '/c11/c11-7', '/c16/c16-2', '/c16/c16-4', '/c16/c16-5']
 
 async function runAxe(browser, base) {
   const problems = []

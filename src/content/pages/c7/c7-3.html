@@ -6,12 +6,7 @@
 <li><b>Order</b>: important material near the start or end; models attend less reliably to the middle of very long contexts.</li>
 <li><b>Reserve</b> output tokens: the budget must include max output length.</li>
 </ul>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2"><label for="ceBud">Context window budget (tokens) <input type="range" id="ceBud" min="2000" max="16000" step="500" value="8000"><span id="ceBudO"></span></label>
-<label for="ceOut">Reserved for output <input type="range" id="ceOut" min="200" max="4000" step="100" value="1000"><span id="ceOutO"></span></label>
-<label for="ceComp" style="align-self:end"><input type="checkbox" id="ceComp"> Compress history and long docs</label></div>
-<div id="ceBar" style="display:flex;height:30px;border-radius:4px;overflow:hidden;border:1px solid var(--rule)"></div>
-<div class="tw"><table id="ceTbl"></table></div></div></div>
-<figcaption><b>A context assembler</b> using the same greedy algorithm many systems use: sort candidates by priority, include each if it fits, optionally compress lower-priority items (here, summaries at ~25% of original size). Shrink the budget and watch what gets dropped first.</figcaption></figure>
+<figure class="fig live"><div class="stage"><div data-widget="context-assembler"></div></div>
+<figcaption><b>A context assembler</b> using the same greedy algorithm many systems use: sort candidates by priority, include each if it fits, and optionally compress lower-priority items. The assembly runs live on your example project's items; their sizes are illustrative. Shrink the budget and watch what gets dropped first, and reserve more than the window holds to see even must-have items fall out.</figcaption></figure>
 <div class="box example"><h5>Example: a support assistant's context recipe</h5><p>System prompt (900 tokens, always) → tool schemas (600, always) → customer's plan and open incidents (200, always) → top 5 reranked help-centre chunks (≈ 2,500, drop from the bottom if needed) → summary of conversation so far (300) → last 4 turns verbatim (≈ 800) → current question. Output reserve 800 tokens. Total ≈ 6,100 of a 16k window: faster and cheaper than filling it.</p></div>
 <div data-slot="practice"></div>

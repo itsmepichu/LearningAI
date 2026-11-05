@@ -14,4 +14,12 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'retriever-compare': lazy(() => import('./retriever-compare/RetrieverCompare')),
   streaming: lazy(() => import('./streaming/Streaming')),
   saga: lazy(() => import('./saga/Saga')),
+  'context-assembler': lazy(() => import('./context-assembler/ContextAssembler')),
+  'memory-sim': lazy(() => import('./memory-sim/MemorySim')),
+  'timeout-write': lazy(() => import('./timeout-write/TimeoutWrite')),
+  budget: lazy(() => import('./budget/Budget')),
+  injection: lazy(() => import('./injection/Injection')),
+  'cache-key': lazy(() => import('./cache-key/CacheKey')),
+  'isolation-grid': lazy(() => import('./isolation-grid/IsolationGrid')),
+  'pii-redact': lazy(() => import('./pii-redact/PiiRedact')),
 }

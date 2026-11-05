@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react'
 import { useReducedMotion } from './hooks'
 import './kit.css'
@@ -49,6 +49,30 @@ export function Slider({
         {format(value)}
       </output>
     </label>
+  )
+}
+
+/**
+ * A table or log that may overflow. It takes a tab stop and a name only while it does, so keyboard users can
+ * scroll it without passing through regions that fit. The -1 also tells the legacy pass to leave it alone.
+ */
+export function ScrollRegion({ label, className = 'tw', children }: { label: string; className?: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [overflows, setOverflows] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const check = () => setOverflows(el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1)
+    check()
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    if (el.firstElementChild) ro.observe(el.firstElementChild)
+    return () => ro.disconnect()
+  }, [])
+  return (
+    <div ref={ref} className={className} tabIndex={overflows ? 0 : -1} role={overflows ? 'region' : undefined} aria-label={overflows ? label : undefined}>
+      {children}
+    </div>
   )
 }
 
@@ -139,6 +163,36 @@ export function StepPlayer({
       <div className="wk-meter" aria-hidden="true">
         <i style={{ width: `${count ? ((step + 1) / count) * 100 : 0}%` }} />
       </div>
+    </div>
+  )
+}
+
+export interface StepEvent {
+  tone: Tone | 'info'
+  /** The tone in words, so that state is never shown by colour alone. */
+  status: string
+  title: string
+  detail?: string
+  /** An identifier the event uses, such as an idempotency key. */
+  code?: string
+}
+
+/** A sequence of events, for a run stepped through with `StepPlayer`. */
+export function EventList({ events }: { events: StepEvent[] }) {
+  return (
+    <div className="wk-events">
+      {events.map((e, i) => (
+        <div key={i} className={'wk-ev ' + e.tone}>
+          <span className="wk-ev-s">{e.status}.</span> <b>{e.title}.</b>
+          {e.detail && <> {e.detail}.</>}
+          {e.code && (
+            <>
+              {' '}
+              Key <code>{e.code}</code>
+            </>
+          )}
+        </div>
+      ))}
     </div>
   )
 }

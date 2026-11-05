@@ -11,7 +11,7 @@ const BASE = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '')
 const OUT = path.join(__dirname, 'out')
 fs.mkdirSync(OUT, { recursive: true })
 
-const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'msTbl', 'pkKp', 'rvOut', 'bgmLog', 'twDb', 'lsK', 'pcK', 'qsK', 'lsdBars', 'ckbT', 'cpWf', 'bwK', 'mgLog', 'gdOut', 'kmCan']
+const WIDGETS = ['bpeToks', 'tcK', 'lfK', 'imK', 'nnK', 'tsTbl', 'dpViz', 'pkKp', 'rvOut', 'bgmLog', 'lsK', 'pcK', 'qsK', 'lsdBars', 'cpWf', 'bwK', 'mgLog', 'gdOut', 'kmCan']
 // React widgets from src/widgets, and the page each is embedded on
 const KIT_WIDGETS = [
   ['chunking', '/c9/c9-2'],
@@ -20,6 +20,14 @@ const KIT_WIDGETS = [
   ['retriever-compare', '/c9/c9-7'],
   ['streaming', '/c7/c7-4'],
   ['saga', '/c11/c11-6'],
+  ['context-assembler', '/c7/c7-3'],
+  ['memory-sim', '/c7/c7-5'],
+  ['timeout-write', '/c11/c11-6'],
+  ['budget', '/c11/c11-7'],
+  ['injection', '/c16/c16-2'],
+  ['cache-key', '/c16/c16-4'],
+  ['isolation-grid', '/c16/c16-4'],
+  ['pii-redact', '/c16/c16-5'],
 ]
 const PROJECTS = require('../src/content/projects.json').projects
 
@@ -121,6 +129,20 @@ const PROJECTS = require('../src/content/projects.json').projects
       await check(label)
     }
   }
+  // The same pages at phone width: nothing in a widget may widen the page
+  {
+    const ctx = await b.newContext({ viewport: { width: 360, height: 800 } })
+    const phone = await ctx.newPage()
+    for (const route of [...new Set(KIT_WIDGETS.map((w) => w[1]))]) {
+      await phone.goto(BASE + route, { waitUntil: 'networkidle' })
+      await phone.waitForSelector('[data-kit-widget] .wk-src')
+      await phone.waitForTimeout(200)
+      const over = await phone.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+      if (over > 1) fails.push(`${route} at 360 px: the page overflows by ${over}px`)
+    }
+    await ctx.close()
+  }
+
   const kpi = (name, re) =>
     page.$$eval(`${kitSel(name)} .kpi`, (ks, src) => {
       const k = ks.find((x) => new RegExp(src).test(x.querySelector('span').textContent))
@@ -210,6 +232,90 @@ const PROJECTS = require('../src/content/projects.json').projects
   await page.selectOption(`${kitSel('saga')} select`, '-1')
   if ((await sagaLog()).length !== 1) fails.push('saga: changing the failure should restart the run')
   await check('saga')
+
+  // context assembler: a small budget drops items, and an oversized reserve drops even must-haves
+  const range = (name, n) => page.locator(`${kitSel(name)} input[type=range]`).nth(n)
+  await page.goto(BASE + '/c7/c7-3', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('context-assembler')} .wk-stack`)
+  const dropped8000 = +(await kpi('context-assembler', '^items dropped'))
+  await range('context-assembler', 0).fill('3000')
+  if (+(await kpi('context-assembler', '^items dropped')) <= dropped8000) fails.push('context assembler: a smaller budget should drop more items')
+  await page.check(`${kitSel('context-assembler')} input[type=checkbox]`)
+  if (!(await page.textContent(`${kitSel('context-assembler')} table`)).includes('(from ')) fails.push('context assembler: compression should show the original sizes')
+  await range('context-assembler', 0).fill('2000')
+  await range('context-assembler', 1).fill('4000')
+  if ((await kpi('context-assembler', 'must-have')) === '0') fails.push('context assembler: an oversized reserve should drop must-have items')
+  await check('context assembler')
+
+  // memory simulator: a small window loses early facts, and the fact store misses a field it has no slot for
+  await page.goto(BASE + '/c7/c7-5?project=travel', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('memory-sim')} table`)
+  await range('memory-sim', 0).fill('24')
+  await range('memory-sim', 1).fill('2')
+  const memRow = (t) => page.$$eval(`${kitSel('memory-sim')} tbody tr`, (rows, x) => [...rows.find((r) => r.textContent.includes(x)).children].map((c) => c.textContent), t)
+  const kavya = await memRow('Kavya')
+  if (kavya[1] !== '✓ kept' || kavya[2] !== '✗ lost' || kavya[3] !== '◐ gist only' || kavya[4] !== '✗ lost') fails.push(`memory simulator: unexpected row for the last fact: ${kavya}`)
+  if ((await memRow('Hindi'))[2] !== '✗ lost') fails.push('memory simulator: a small window should lose an early fact')
+  await range('memory-sim', 1).fill('10')
+  if ((await memRow('Kavya'))[2] !== '✓ kept') fails.push('memory simulator: a large window should keep a recent fact')
+  await check('memory simulator')
+
+  // timeout after a write: the key decides whether the retry makes a duplicate
+  await page.goto(BASE + '/c11/c11-6?project=bank', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('timeout-write')} .wk-ev`)
+  const twNext = `${kitSel('timeout-write')} .btn.primary`
+  const twEnd = async () => {
+    while (await page.isEnabled(twNext)) await page.click(twNext)
+    return page.$$eval(`${kitSel('timeout-write')} tbody tr`, (x) => x.map((r) => r.textContent))
+  }
+  if ((await twEnd()).length !== 1) fails.push('timeout write: with a key there should be one record')
+  await page.uncheck(`${kitSel('timeout-write')} input[type=checkbox]`)
+  if ((await twEnd()).length !== 2) fails.push('timeout write: without a key the retry should create a duplicate')
+  await check('timeout write')
+
+  // budget: the approval limit and the budget both change how the run ends
+  await page.goto(BASE + '/c11/c11-7', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('budget')} .wk-ev`)
+  const bgLog = () => page.$$eval(`${kitSel('budget')} .wk-ev`, (x) => x.map((e) => e.textContent))
+  let bg = await bgLog()
+  if (!bg.some((t) => t.startsWith('Paused')) || !bg.at(-1).startsWith('Task complete')) fails.push('budget: $80 should pause for approval, then complete')
+  await range('budget', 1).fill('40')
+  if ((await bgLog()).some((t) => t.startsWith('Paused'))) fails.push('budget: $40 should not need approval')
+  await range('budget', 0).fill('0.1')
+  bg = await bgLog()
+  if (!bg.at(-1).startsWith('Budget exhausted')) fails.push(`budget: $0.10 should stop the task, got "${bg.at(-1)}"`)
+  await check('budget')
+
+  // injection: the store's attack is its dataset's review, and a capability limit stops it
+  await page.goto(BASE + '/c16/c16-2?project=store', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('injection')} .wk-hidden`)
+  if (!(await page.textContent(`${kitSel('injection')} .wk-hidden`)).includes('email the full order history')) fails.push('injection: the store should show the review from its dataset')
+  const piLast = () => page.$$eval(`${kitSel('injection')} .wk-ev`, (x) => x[x.length - 1].textContent)
+  if (!(await piLast()).includes('exfiltrated')) fails.push('injection: with no defences the data should leave')
+  await page.check(`${kitSel('injection')} label:has-text("Read-only tools") input`)
+  if (!(await piLast()).includes('prevented')) fails.push('injection: read-only tools should stop the attack')
+  await check('injection')
+
+  // cache key: security fields are flagged until present, and each field lowers the hit rate
+  await page.goto(BASE + '/c16/c16-4', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('cache-key')} table`)
+  if ((await kpi('cache-key', 'unsafe')) !== '6 of 6' || (await kpi('cache-key', 'hit rate')) !== '30.0%') fails.push('cache key: should start with only the question text')
+  const ckBoxes = `${kitSel('cache-key')} input[type=checkbox]:not([disabled])`
+  for (const box of await page.$$(ckBoxes)) await box.check()
+  if ((await kpi('cache-key', 'unsafe')) !== '0 of 6' || (await kpi('cache-key', 'security')) !== 'present') fails.push('cache key: all fields should leave no unsafe scenario')
+  if (parseFloat(await kpi('cache-key', 'hit rate')) >= 30) fails.push('cache key: more fields should lower the hit rate')
+  if ((await page.$$(`${kitSel('isolation-grid')} tbody .wk-c-fail`)).length !== 1) fails.push('isolation grid: the example state has one failing test')
+  await check('cache key')
+
+  // PII: live redaction of the project's message, and names get through
+  await page.goto(BASE + '/c16/c16-5?project=bank', { waitUntil: 'networkidle' })
+  await page.waitForSelector(`${kitSel('pii-redact')} .wk-redacted`)
+  const piiOut = () => page.textContent(`${kitSel('pii-redact')} .wk-redacted`)
+  const pii0 = await piiOut()
+  if (!/\[EMAIL_1\]/.test(pii0) || !/\[CARD_1\]/.test(pii0) || !/\[PHONE_1\]/.test(pii0) || pii0.includes('4111') || !pii0.includes('Kiran')) fails.push(`pii: unexpected redaction: "${pii0}"`)
+  await page.fill(`${kitSel('pii-redact')} textarea`, 'Write to a@example.com or b@example.com')
+  if (!(await piiOut()).includes('[EMAIL_2]')) fails.push('pii: editing the text should redact again')
+  await check('pii')
 
   // reduced motion: end states appear at once, and Play jumps to the end
   {

@@ -4,9 +4,15 @@
 .wk .btn{min-height:30px}
 .wk .btn:disabled{color:var(--muted);border-color:var(--rule);cursor:not-allowed}
 .wk .btn:disabled:hover{color:var(--muted);border-color:var(--rule)}
+.wk .btn.primary:disabled,.wk .btn.primary:disabled:hover{background:var(--sunk);color:var(--muted);border-color:var(--rule)}
 .wk input[type=range]{height:24px}
 .wk input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--accent)}
 .wk label{min-height:24px}
+.wk label:has(>input[type=checkbox]){flex-wrap:nowrap;align-items:flex-start}
+.wk label>input[type=checkbox]{flex:none}
+.wk th{white-space:normal}
+/* Screen-reader text is absolutely positioned: this keeps it inside the scrolling table, not widening the page. */
+.wk .tw{position:relative}
 .wk select{min-height:30px}
 .wk code{font-size:max(var(--fs-2xs),.86em)}
 
@@ -58,6 +64,35 @@
 .wk-chip:hover{border-color:var(--accent);color:var(--accent)}
 .wk-chip[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
 .wk-hint{margin:0;font-size:var(--fs-xs);color:var(--muted);line-height:1.5}
+
+.wk-sw{display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:2px}
+.wk-from{color:var(--muted);font-size:var(--fs-2xs)}
+.wk-yes{color:var(--ok);font-weight:500}
+.wk-part{color:var(--signal);font-weight:500}
+.wk-no{color:var(--bad);font-weight:500}
+.wk-stack{display:flex;gap:2px;height:30px;border-radius:var(--r-1);overflow:hidden;border:1px solid var(--rule);background:var(--surface)}
+.wk-stack>div{min-width:0}
+.wk-stack .hatched{background:repeating-linear-gradient(45deg,var(--rule-2) 0 4px,var(--sunk) 4px 8px)}
+
+/* Memory simulator */
+.wk-log{max-height:170px;overflow:auto;font-family:var(--f-body);font-size:var(--fs-xs)}
+.wk-log b{font-family:var(--f-mono);font-size:var(--fs-2xs);font-weight:600;margin-right:4px}
+.wk-log-out{color:var(--muted)}
+.wk-log-in{color:var(--ink)}
+.wk-log-q{color:var(--ink);font-weight:600}
+
+/* Injection and redaction */
+.wk-hidden{color:var(--bad);background:var(--bad-soft);border-radius:2px;padding:0 2px}
+.wk-redacted b{color:var(--accent);font-weight:600}
+.wk textarea{width:100%;font-family:var(--f-mono)}
+
+/* Isolation matrix */
+.wk-matrix th[scope=row]{background:none;font-weight:500;white-space:normal}
+.wk-matrix td{text-align:center;font-family:var(--f-mono);min-width:64px}
+.wk-c-pass{background:var(--ok-soft);color:var(--ok)}
+.wk-c-fail{background:var(--bad-soft);color:var(--bad);font-weight:700}
+.wk-c-na{background:var(--sunk);color:var(--muted)}
+.wk-key{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:4px;font-family:var(--f-mono)}
 
 /* Chunking */
 .wk-chunks{display:grid;gap:6px}

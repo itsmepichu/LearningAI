@@ -1,4 +1,6 @@
 /** The events of a saga run, worked out up front so the figure can step through them. Pure. */
+import type { StepEvent } from '../kit'
+
 export interface SagaStep {
   action: string
   /** Null when the step cannot be undone. */
@@ -6,14 +8,7 @@ export interface SagaStep {
   /** Why this step fails when the reader makes it fail. */
   failure: string
 }
-export type EventTone = 'ok' | 'bad' | 'warn' | 'info'
-export interface SagaEvent {
-  tone: EventTone
-  status: string
-  title: string
-  detail?: string
-  code?: string
-}
+export type SagaEvent = StepEvent
 
 export function sagaEvents(steps: SagaStep[], ref: string, failAt: number, retryFirst: boolean): SagaEvent[] {
   const events: SagaEvent[] = []

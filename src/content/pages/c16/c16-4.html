@@ -9,13 +9,9 @@
 <tr><td>Agent state / workflows</td><td>Task IDs guessable; resume another tenant's task</td><td>Unguessable IDs + ownership check on every load</td></tr>
 <tr><td>Fine-tuned models</td><td>Model trained on tenant A's data serves tenant B</td><td>Per-tenant adapters, or only train shared models on consented, de-identified data</td></tr>
 </table></div>
-<figure class="fig"><div class="stage">
-<div class="tw"><table class="heat" id="isoGrid"></table></div>
-<div class="legend"><span><i class="tok" style="background:var(--ok-soft)">✓</i> automated cross-tenant test passing</span><span><i class="tok" style="background:var(--bad-soft)">✕</i> failing</span><span><i class="tok" style="background:var(--sunk)">–</i> not applicable</span></div></div>
+<figure class="fig"><div class="stage"><div data-widget="isolation-grid"></div></div>
 <figcaption><b>An isolation test matrix</b> (example state). Each cell is an automated test in which tenant A's identity tries to reach tenant B's data through that surface. Run it in CI and continuously in production with synthetic tenants.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2" id="ckbF"></div>
-<div class="tw"><table id="ckbT"></table></div><div class="kpis" id="ckbK"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="cache-key"></div></div>
 <figcaption><b>Cache-key builder.</b> Choose which fields go into the answer-cache key. Each scenario shows whether the cache would serve a wrong or leaked answer. The hit-rate estimate (illustrative multipliers per field, starting from 30%) shows the cost of safety: every field you add splits the cache. Tenant and access scope are never optional.</figcaption></figure>
 <div class="box example"><h5>Example: an automated isolation probe</h5>
 <pre><code>def test_retrieval_isolation(client_tenant_a, seed_tenant_b_doc):

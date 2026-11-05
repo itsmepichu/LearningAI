@@ -7,10 +7,8 @@
 <p><b>The crash window.</b> A crash <em>between</em> a tool call and the next checkpoint is the classic duplicate: the action happened, but the saved state says it did not, so the resumed run repeats it. Idempotency keys make that retry safe. When a business change must also publish an event or notify another system, use a <dfn>transactional outbox</dfn>: write the change and an "outbox" row in one database transaction, and let a separate relay deliver the event, so the two can never disagree.</p>
 <figure class="fig sim"><div class="stage"><div data-widget="saga"></div></div>
 <figcaption><b>Saga with compensations</b> (scripted). Steps run forward; if one fails, completed steps are compensated in reverse order. The duplicate retry of step 1 is absorbed by its idempotency key instead of repeating the work. The last step cannot be undone, which is why irreversible steps go last.</figcaption></figure>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<div class="ctl" style="margin-top:0"><label for="twK" style="font-size:.84rem;font-weight:500"><input type="checkbox" id="twK" checked> send an idempotency key</label><button class="btn primary" type="button" id="twNext">Next event</button><button class="btn" type="button" id="twReset">Reset</button></div>
-<div class="cols2"><div id="twEv" style="display:grid;gap:6px"></div><div><b style="font-size:.85rem">Ticket store (server)</b><div class="tw"><table id="twDb"></table></div></div></div></div></div>
-<figcaption><b>A timeout after a successful write.</b> The server commits a ticket, but the response is lost, so the client cannot know whether it worked and retries. With an idempotency key the server finds the stored result and returns the same ticket; without one, the retry creates a duplicate. This is an in-page state model, not durable storage.</figcaption></figure>
+<figure class="fig sim"><div class="stage"><div data-widget="timeout-write"></div></div>
+<figcaption><b>A timeout after a successful write.</b> The server commits a record, but the response is lost, so the client cannot know whether it worked and retries. With an idempotency key the server finds the stored result and returns the same record; without one, the retry creates a duplicate. This is an in-page state model, not durable storage.</figcaption></figure>
 <div class="box example"><h5>Example: idempotency at the tool layer</h5>
 <pre><code>def create_credit(task_id: str, order_id: str, reason: str, db) -> dict:
     key = f"{task_id}:create_credit:{order_id}:{reason}"            # deterministic

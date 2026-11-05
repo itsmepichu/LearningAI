@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { BarList, DataGate, DataSource, SERIES, Slider, Widget, fmt, pct, useProjectData } from '../kit'
+import { BarList, DataGate, DataSource, ScrollRegion, SERIES, Slider, Widget, fmt, pct, useProjectData } from '../kit'
 import { rankIds } from '../bm25/engine'
 import { loadCorpus } from '../bm25/corpus'
 import { rankMetrics } from '../retrieval-metrics/metrics'
@@ -56,7 +56,7 @@ export default function RetrieverCompare() {
                   </div>
                 ))}
               </div>
-              <div className="tw" tabIndex={0} role="region" aria-label="Metrics for each retriever">
+              <ScrollRegion label="Metrics for each retriever">
                 <table>
                   <thead>
                     <tr>
@@ -81,7 +81,7 @@ export default function RetrieverCompare() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ScrollRegion>
               <BarList max={1} items={runs.map((r) => ({ label: `${r.name}, nDCG@${k}`, value: r.linear.ndcg, text: fmt(r.linear.ndcg, 3), color: SERIES[0] }))} />
             </>
           )
