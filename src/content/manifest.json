@@ -392,18 +392,22 @@
      "id": "c5-2",
      "tn": "5.2",
      "title": "Self-attention, cross-attention, multi-head attention and causal masking",
-     "tags": [],
-     "figures": 2,
-     "interactive": 2,
+     "tags": [
+      "real"
+     ],
+     "figures": 3,
+     "interactive": 3,
      "words": 522
     },
     {
      "id": "c5-3",
      "tn": "5.3",
      "title": "Positional representations, residual connections, normalisation and feed-forward layers",
-     "tags": [],
-     "figures": 3,
-     "interactive": 2,
+     "tags": [
+      "real"
+     ],
+     "figures": 4,
+     "interactive": 3,
      "words": 623
     },
     {

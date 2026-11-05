@@ -86,6 +86,8 @@
   - Use `frameloop="demand"` unless animating.
   - Provide a fallback when WebGL is missing and a text description.
   - Use 3D only when the third axis carries data.
+  - Build tensor scenes on `src/widgets/scene3d/`: describe the scene as `SceneStep`s in a plain module (cells with values and positions, a title and a text for each step, using the arithmetic and layouts in `tensor.ts`), and draw them with `Scene3D`. It mounts near the viewport, renders on demand, turns with a drag, the arrow keys or buttons (never the scroll wheel), offers a 2D view of the same matrices, and shows each step's text plus the whole figure in words. A tensor keeps its id and cell order across steps, so its cells glide when it is reshaped; `scene3d/testing.ts` checks that.
+  - Label the numbers honestly: real arithmetic on random weights shows shapes and operations, not what a trained model computes.
 - The v3 vanilla widgets live in `src/legacy/widgets.js`. Each block is guarded by an element id, and `src/legacy/runtime.ts` cancels its timers and animation frames on unmount. When you rebuild a widget in React, delete its block there.
 - Do not add Tailwind or another utility framework without a prefix. The legacy SVG and figure classes (`grid`, `row`, `fill`, `box`, `fig`, `out`, …) would clash with it.
 

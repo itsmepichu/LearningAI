@@ -315,6 +315,14 @@ e2e: a full pass is recorded for phase 5b, on `development` at 8542dfe (5 Novemb
 
 ### Phase 6 — 3D and scroll-driven walkthroughs
 
+*In progress, in three batches. Batch 1 is done: the shared scene kit (`src/widgets/scene3d/`), the multi-head attention scene on 5.2 and the exploded transformer block on 5.3. Batch 2 is the embedding space, HNSW, ZeRO and the paged KV cache. Batch 3 is the failover globe and the four walkthroughs.*
+
+Batch 1, as built:
+- **Scene kit:** a scene is a list of steps, each a set of tensors whose cells have values and 3D positions. One description drives the 3D view, a 2D view of the same matrices and the text, so they cannot disagree. A tensor that is reshaped keeps its cells, which glide to their new places, or jump with reduced motion. The camera turns with a drag, the arrow keys or buttons, and zooms with + and − or buttons; the scroll wheel stays with the page, and on touch only sideways drags turn the scene.
+- **5.2, multi-head attention:** X → Q, K, V → split into 3 heads along the third axis → causal weights per head → weighted values → concatenate and W_O. Real arithmetic, in the browser, on random weights, with a button for new ones. The figure says the patterns are arbitrary and points to the hand-designed heads above it.
+- **5.3, the exploded block:** eight floors, from the residual stream through RMSNorm, attention, the add, RMSNorm, the SwiGLU hidden layer (three times wider) and the down projection to the second add, with the residual stream drawn up the side. It is a real forward pass of a tiny block. Each step's text gives measured values, such as each row's RMS after normalising, and parameter counts for the tiny block and an 8B-like one.
+- **Not yet checked:** the scenes on a laptop with integrated graphics. They were checked in Chromium with software WebGL (SwiftShader) only, so the owner tries them on such a laptop before release.
+
 3D only where the third axis carries data:
 
 - Q/K/V tensor blocks and the multi-head split (5.2–5.3)
