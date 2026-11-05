@@ -1,5 +1,10 @@
 # Working on LearningAI
 
+## Workflow
+- Work in the main checkout, on the one feature branch, `development`. Merge it to `main` through a pull request.
+- Do not create git worktrees or a branch per task, and do not start side sessions with their own worktree.
+- The site deploys on Vercel. There is no GitHub Pages integration, so do not refer to it or suggest enabling it.
+
 ## Content
 - Course structure lives in `src/content/manifest.json`: chapters, topics, and each topic's `figures`, `interactive` and `tags`. If you add a figure or widget to a topic, update its counts there.
 - A topic body is an HTML fragment at `src/content/pages/<chapter>/<topic-id>.html`. It uses the content design system in `src/styles/content.css`:
@@ -7,7 +12,7 @@
   - evidence tags: `.tag cpu|real|sim|gpu`
 - `HtmlContent` rebuilds heading levels into a valid outline when it renders a fragment, and marks a changed heading with `as-hN`, where N is its level in the file. When you style a content heading, style `hN` and `.as-hN` alike.
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
-- Current state (phase 3 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
+- Current state (phase 4 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
@@ -71,12 +76,16 @@
 - The v3 vanilla widgets live in `src/legacy/widgets.js`. Each block is guarded by an element id, and `src/legacy/runtime.ts` cancels its timers and animation frames on unmount. When you rebuild a widget in React, delete its block there.
 - Do not add Tailwind or another utility framework without a prefix. The legacy SVG and figure classes (`grid`, `row`, `fill`, `box`, `fig`, `out`, …) would clash with it.
 
-## Checks before committing
+## Checks
+Before each commit:
+
 ```bash
 npm run typecheck
 npm run test:unit
 npm run build
 ```
+
+Run the end-to-end test once, when all the implementation for a piece of work is done, before opening the pull request. Do not run it after each phase or batch; it takes several minutes, so run it in the background.
 
 ```bash
 npx vite preview --port 4173 &

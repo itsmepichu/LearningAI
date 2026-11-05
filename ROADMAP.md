@@ -2,7 +2,7 @@
 
 ## Agreed scope
 
-- A pure React (Vite) app with heavy use of 3D and motion, hosted from this GitHub repository as a static site (GitHub Pages).
+- A pure React (Vite) app with heavy use of 3D and motion, hosted as a static site on Vercel.
 - Real models in the browser, as opt-in downloads of tens of MB.
 - Deeper versions of all 18 chapters, plus new chapters.
 - **Four example projects you choose between:**
@@ -168,7 +168,7 @@ The course-wide place to drill questions, linked from the sidebar and the home p
 
 ### Phase 1 — Foundation ✅ (merged)
 
-- Vite + React + TypeScript project, React Router, GitHub Pages workflow with a 404 fallback for deep links.
+- Vite + React + TypeScript project, React Router, with a 404 fallback for deep links.
 - All v3 content imported, one file per topic:
   - 23 sections (18 chapters, the capstone and four appendices)
   - 143 topics and 54 quiz questions
