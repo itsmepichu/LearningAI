@@ -32,10 +32,16 @@ const KIT_WIDGETS = [
   ['token-estimator', '/c1/c1-4'],
   ['class-imbalance', '/c3/c3-3'],
   ['rrf', '/c9/c9-5'],
+  ['vector-search', '/c9/c9-3'],
+  ['vector-quant', '/c9/c9-4'],
   ['trace-waterfall', '/c17/c17-2'],
   ['critical-path', '/c17/c17-2'],
   ['cost-attribution', '/c17/c17-5'],
+  ['py-lab', '/app-a/app-a-run'],
+  ['colab-guide', '/c5/c5-6'],
   ['bpe', '/c5/c5-1'],
+  ['tokenizer-compare', '/c5/c5-1'],
+  ['text-classifier', '/c3/c3-2'],
   // These show no example data, so they look the same for every project.
   ['attention', '/c5/c5-2', 'neutral'],
   ['hnsw', '/c9/c9-4', 'neutral'],
@@ -57,6 +63,11 @@ const PROJECTS = require('../src/content/projects.json').projects
   const page = await b.newPage({ viewport: { width: 1280, height: 900 } })
   const errs = []
   page.on('pageerror', (e) => errs.push(e.message))
+  // Nothing may download until a reader opts in, and no test opts in for real.
+  page.on('request', (r) => {
+    if (/huggingface\.co|hf\.co|jsdelivr\.net|pyodide/.test(r.url())) fails.push(`downloaded without an opt-in: ${r.url()}`)
+  })
+  page.on('worker', (w) => fails.push(`a worker started without an opt-in: ${w.url()}`))
   page.on('console', (m) => m.type() === 'error' && errs.push(m.text()))
   const check = async (label) => {
     const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
@@ -163,6 +174,209 @@ const PROJECTS = require('../src/content/projects.json').projects
       if (over > 1) fails.push(`${route} at 360 px: the page overflows by ${over}px`)
     }
     await ctx.close()
+  }
+
+  const kitPy = (p, sel) => p.$eval(`${sel} .kpi b`, (e) => e.textContent)
+
+  // 2c. Opt-in downloads, with Worker stubbed so nothing is fetched. A stub stands in for each engine, by the worker's name.
+  {
+    const THIRD_PARTY = /huggingface\.co|hf\.co|jsdelivr\.net|pyodide/
+    const stubWorker = ({ failFirst }) => {
+      window.__workers = []
+      const vector = (text) => {
+        const v = new Array(32).fill(0)
+        for (const w of text.toLowerCase().split(/\W+/)) if (w) v[[...w].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % 32] += 1
+        const n = Math.hypot(...v) || 1
+        return v.map((x) => x / n)
+      }
+      const later = (ms) => new Promise((r) => setTimeout(r, ms))
+      window.Worker = class {
+        constructor(url, options) {
+          this.name = options.name
+          this.terminated = false
+          window.__workers.push(this)
+        }
+        terminate() {
+          this.terminated = true
+        }
+        reply(m) {
+          if (!this.terminated) this.onmessage?.({ data: m })
+        }
+        async postMessage({ id, op, args }) {
+          const emit = (progress) => this.reply({ id, type: 'progress', progress })
+          const done = (result) => this.reply({ id, type: 'result', result })
+          if (/^load/.test(op)) {
+            // Slow enough for the test to see the loading state, and to cancel it.
+            for (const percent of [10, 40, 70]) {
+              await later(window.__holdLoad ? 4000 : 120)
+              emit({ file: 'stub.bin', loaded: percent * 1e5, total: 1e7 })
+            }
+            // Only the first load in this tab fails, across page loads.
+            if (failFirst && !sessionStorage.getItem('stub-failed')) {
+              sessionStorage.setItem('stub-failed', '1')
+              return this.reply({ id, type: 'error', message: 'Stubbed network failure.' })
+            }
+            return done({ stub: true })
+          }
+          if (op === 'embed') {
+            emit({ done: args.texts.length, total: args.texts.length })
+            return done(args.texts.map(vector))
+          }
+          if (op === 'trainSoftmax') {
+            const classes = [...new Set(args.y)].sort()
+            return done({ classes, weights: classes.map((_, c) => new Array(33).fill(0).map((__, j) => (j === c ? 2 : 0))) })
+          }
+          if (op === 'tokenize') return done([0, 1, 2].map(() => args.texts.map((t) => ({ pieces: t.split(' ') }))))
+          if (op === 'run') {
+            if (args.code.includes('while True')) return
+            emit({ out: 'stubbed output\n' })
+            return done({ checks: [{ name: 'A check that passes', pass: true, detail: 'stub' }, { name: 'A check that fails', pass: false, detail: 'stub' }], ms: 120 })
+          }
+          this.reply({ id, type: 'error', message: `The stub has no ${op}` })
+        }
+      }
+    }
+    const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } })
+    await ctx.addInitScript(stubWorker, { failFirst: true })
+    const g = await ctx.newPage()
+    const gErrs = []
+    const fetched = []
+    g.on('pageerror', (e) => gErrs.push(e.message))
+    g.on('request', (r) => THIRD_PARTY.test(r.url()) && fetched.push(r.url()))
+    const rc = kitSel('retriever-compare')
+    const notes = () => g.$$eval(`${rc} .wk-cols small`, (x) => x.map((e) => e.textContent))
+    const heads = () => g.$$eval(`${rc} .wk-cols .wk-col-h`, (x) => x.map((e) => e.textContent))
+
+    // Before the opt-in: the illustration, labelled as one, the size shown, and no worker
+    await g.goto(`${BASE}/c9/c9-7?project=bank`, { waitUntil: 'networkidle' })
+    await g.waitForSelector(`${rc} [data-gate="idle"]`)
+    const offer = await g.textContent(`${rc} [data-gate="idle"]`)
+    if (!/about 29 MB/.test(offer) || !/Nothing has been downloaded/.test(offer)) fails.push(`gate: the offer should state the size first: "${offer.slice(0, 120)}"`)
+    if ((await g.textContent(`${rc} [data-gate="idle"] .btn.primary`)) !== 'Download 29 MB') fails.push('gate: the button should name the size')
+    if (!(await g.$(`${rc} [data-gate="idle"] details`))) fails.push('gate: it should list what it downloads')
+    if ((await notes()).filter((n) => n === 'fixed illustration').length !== 2) fails.push(`gate: dense and hybrid should start as labelled illustrations: ${await notes()}`)
+    if (await g.evaluate(() => window.__workers.length)) fails.push('gate: a worker started before the opt-in')
+
+    // Yes: progress, then a failure the reader can retry
+    await g.click(`${rc} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${rc} [data-gate="loading"] [role=progressbar]`)
+    await g.waitForFunction((s) => +document.querySelector(`${s} [role=progressbar]`)?.getAttribute('aria-valuenow') > 0, rc)
+    if ((await notes()).filter((n) => n === 'fixed illustration').length !== 2) fails.push('gate: labels should not change while it downloads')
+    await g.waitForSelector(`${rc} [data-gate="failed"] [role=alert]`)
+    if (!/Stubbed network failure/.test(await g.textContent(`${rc} [data-gate="failed"]`))) fails.push('gate: a failure should say what went wrong')
+    if (!(await g.evaluate(() => window.__workers[0].terminated))) fails.push('gate: a failed worker should be ended')
+    if ((await notes()).filter((n) => n === 'fixed illustration').length !== 2) fails.push('gate: a failure should leave the illustration in place')
+    await g.click(`${rc} [data-gate="failed"] .btn.primary`)
+
+    // Ready: the labels change with what is showing, and the reader can switch back
+    await g.waitForFunction((s) => [...document.querySelectorAll(`${s} .wk-cols small`)].some((e) => e.textContent.startsWith('real:')), rc)
+    const real = await notes()
+    if (!/^real: all-MiniLM-L6-v2/.test(real[1]) || (await heads())[2] !== 'Hybrid (RRF, no reranker)') fails.push(`gate: real results need real labels: ${real} / ${await heads()}`)
+    await g.click(`${rc} .wk-chip:has-text("Fixed illustration")`)
+    if ((await notes()).filter((n) => n === 'fixed illustration').length !== 2 || (await heads())[2] !== 'Hybrid + rerank') fails.push('gate: switching back should restore the illustration and its labels')
+    await g.click(`${rc} .wk-chip:has-text("Real model")`)
+
+    // A later visit: it remembers, and still waits for the reader
+    await g.goto(`${BASE}/c9/c9-5?project=bank`, { waitUntil: 'networkidle' })
+    await g.waitForSelector(`${kitSel('rrf')} [data-gate="idle"]`)
+    if ((await g.textContent(`${kitSel('rrf')} [data-gate="idle"] .btn.primary`)) !== 'Load it' || !/load from its cache/.test(await g.textContent(`${kitSel('rrf')} [data-gate="idle"]`))) fails.push('gate: a later visit should say it comes from the cache')
+    if (!/fixed illustration/.test(await g.textContent(`${kitSel('rrf')} .wk-cols .card:nth-child(2) small`))) fails.push('rrf: the dense list should say it is an illustration')
+    await g.click(`${kitSel('rrf')} [data-gate="idle"] .btn.primary`)
+    await g.waitForFunction((s) => document.querySelector(`${s} .wk-cols .card:nth-child(2) small`).textContent.startsWith('real:'), kitSel('rrf'))
+    if (!/all computed live/.test(await g.textContent(`${kitSel('rrf')} .wk-src`))) fails.push('rrf: the source line should say all three are live')
+
+    // Cancel returns to the offer and ends the worker
+    await g.goto(`${BASE}/c5/c5-1?project=travel`, { waitUntil: 'networkidle' })
+    const tc = kitSel('tokenizer-compare')
+    await g.waitForSelector(`${tc} [data-gate="idle"]`)
+    await g.evaluate(() => (window.__holdLoad = true))
+    await g.click(`${tc} [data-gate="idle"] .btn.primary`)
+    await g.click(`${tc} [data-gate="loading"] .btn`)
+    await g.waitForSelector(`${tc} [data-gate="idle"]`)
+    if (!(await g.evaluate(() => window.__workers.at(-1).terminated))) fails.push('gate: cancel should end the worker')
+    await g.evaluate(() => (window.__holdLoad = false))
+
+    // Each figure works once the stub is loaded
+    await g.click(`${tc} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${tc} tbody tr`)
+    if ((await g.$$eval(`${tc} tbody tr`, (x) => x.length)) !== 4) fails.push('tokenizer comparison: Travel should show 4 languages')
+    if ((await g.$$eval(`${tc} [data-tokenizer]`, (x) => x.length)) !== 3) fails.push('tokenizer comparison: expected 3 tokenizers')
+
+    await g.goto(`${BASE}/c9/c9-3?project=harbor`, { waitUntil: 'networkidle' })
+    await g.click(`${kitSel('vector-search')} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${kitSel('vector-search')} tbody tr td code`)
+    if (!/Real, and limited/.test(await g.textContent(kitSel('vector-search')))) fails.push('vector search: it should say what the result does not prove')
+
+    await g.goto(`${BASE}/c9/c9-4?project=harbor`, { waitUntil: 'networkidle' })
+    await g.click(`${kitSel('vector-quant')} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${kitSel('vector-quant')} tbody tr`)
+    if ((await g.$$eval(`${kitSel('vector-quant')} tbody tr`, (x) => x.length)) !== 4) fails.push('quantisation: expected 4 codes')
+
+    await g.goto(`${BASE}/c3/c3-2?project=bank`, { waitUntil: 'networkidle' })
+    await g.click(`${kitSel('text-classifier')} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${kitSel('text-classifier')} .kpi`)
+    if (!/invented data/.test(await g.textContent(kitSel('text-classifier')))) fails.push('classifier: it should say the data is invented')
+
+    // A Python lab: the code survives Stop, which restarts the worker
+    const py = kitSel('py-lab')
+    await g.goto(`${BASE}/c2/c2-5?project=store`, { waitUntil: 'networkidle' })
+    await g.waitForSelector(`${py} [data-gate="idle"]`)
+    if (!/orders\.csv/.test(await g.textContent(`${py} .wk-q`))) fails.push('python lab: the brief should use the project dataset')
+    await g.click(`${py} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${py} textarea`)
+    if (!/orders\.csv/.test(await g.inputValue(`${py} textarea`))) fails.push('python lab: the code should read the project dataset')
+    await g.click(`${py} .btn.primary`)
+    await g.waitForSelector(`${py} .wk-ev`)
+    if ((await g.$$eval(`${py} .wk-ev.ok`, (x) => x.length)) !== 1 || (await g.$$eval(`${py} .wk-ev.bad`, (x) => x.length)) !== 1) fails.push('python lab: each check should show pass or not yet')
+    if ((await kitPy(g, py)) !== '1 of 2') fails.push('python lab: the count of passed checks is wrong')
+    await g.fill(`${py} textarea`, 'while True:\n    pass')
+    const before = await g.evaluate(() => window.__workers.length)
+    await g.click(`${py} .btn.primary`)
+    await g.click(`${py} .btn:has-text("Stop")`)
+    await g.waitForFunction((s) => /Stopped/.test(document.querySelector(`${s}`).textContent) && document.querySelector(`${s} textarea`), py)
+    if ((await g.inputValue(`${py} textarea`)) !== 'while True:\n    pass') fails.push('python lab: Stop should keep the code')
+    if ((await g.evaluate(() => window.__workers.length)) !== before + 1) fails.push('python lab: Stop should replace the worker')
+
+    if (gErrs.length) fails.push('gate: ' + gErrs.join(' | '))
+    if (fetched.length) fails.push(`gate: stubbed checks fetched ${fetched[0]}`)
+    await ctx.close()
+
+    // Not supported here: says so, keeps the illustration, downloads nothing
+    const none = await b.newContext({ viewport: { width: 1280, height: 900 } })
+    await none.addInitScript(() => { delete window.Worker })
+    const n = await none.newPage()
+    await n.goto(`${BASE}/c9/c9-7?project=travel`, { waitUntil: 'networkidle' })
+    await n.waitForSelector(`${rc} [data-gate="unsupported"]`)
+    const why = await n.textContent(`${rc} [data-gate="unsupported"]`)
+    if (!/Not supported here/.test(why) || !/Web Workers/.test(why) || !/Nothing was downloaded/.test(why)) fails.push(`gate: the unsupported state is unclear: "${why.slice(0, 120)}"`)
+    if (await n.$(`${rc} [data-gate="unsupported"] .btn.primary`)) fails.push('gate: an unsupported browser should not be offered the download')
+    await none.close()
+
+    // Reduced motion: the bar does not animate
+    const calm = await b.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' })
+    await calm.addInitScript(stubWorker, { failFirst: false })
+    const c = await calm.newPage()
+    await c.goto(`${BASE}/c9/c9-7`, { waitUntil: 'networkidle' })
+    await c.evaluate(() => (window.__holdLoad = true))
+    await c.click(`${rc} [data-gate="idle"] .btn.primary`)
+    await c.waitForSelector(`${rc} .wk-bar i`)
+    if ((await c.$eval(`${rc} .wk-bar i`, (e) => getComputedStyle(e).transitionDuration)) !== '0s') fails.push('gate: the progress bar should not animate with reduced motion')
+    await calm.close()
+
+    // The Colab guide: real steps, the project's data in the code, and a notebook that opens
+    const dl = await b.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true })
+    const d = await dl.newPage()
+    const cg = kitSel('colab-guide')
+    await d.goto(`${BASE}/c5/c5-6?project=travel`, { waitUntil: 'networkidle' })
+    await d.waitForSelector(`${cg} .wk-guide li`)
+    const guide = await d.textContent(cg)
+    if (!/Change runtime type/.test(guide) || !/Disconnect and delete runtime/.test(guide)) fails.push('colab guide: it should cover GPU setup and giving the GPU back')
+    if (!/Safarnova/.test(guide)) fails.push('colab guide: the code should use the selected project')
+    const [nbFile] = await Promise.all([d.waitForEvent('download'), d.click(`${cg} .btn:has-text("Download the notebook")`)])
+    if (nbFile.suggestedFilename() !== 'decoding-on-a-gpu-travel.ipynb') fails.push(`colab guide: notebook named ${nbFile.suggestedFilename()}`)
+    const nb = JSON.parse(fs.readFileSync(await nbFile.path(), 'utf8'))
+    if (nb.nbformat !== 4 || !nb.cells.some((x) => x.cell_type === 'code' && x.source.join('').includes('nvidia-smi'))) fails.push('colab guide: the notebook is not as expected')
+    await dl.close()
   }
 
   const kpi = (name, re) =>

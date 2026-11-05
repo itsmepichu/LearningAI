@@ -19,5 +19,6 @@ export function readerOf(id: ProjectId): DataReader {
       const all = parseCsv(text(`public/datasets/${id}/${file}`))
       return rows ? all.slice(0, rows) : all
     },
+    text: async (file) => text(`public/datasets/${id}/${file}`),
   }
 }

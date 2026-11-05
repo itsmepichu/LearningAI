@@ -175,6 +175,49 @@ button.wk-tb-r[aria-pressed=true]{border-color:var(--accent);background:var(--ac
   .wk-row-g{grid-column:2}
 }
 
+/* Tokenizer comparison */
+.wk-tokz{display:grid;gap:10px}
+.wk-tokz-r{display:grid;gap:4px;min-width:0}
+.wk-tokz-h{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;font-size:var(--fs-sm)}
+.wk-tokz-h b{font-weight:600}
+.wk-tokz-h span{font-size:var(--fs-2xs);color:var(--muted)}
+.wk-tokz-n{margin-left:auto;font-family:var(--f-mono);font-size:var(--fs-2xs);color:var(--accent)}
+.wk-tokz .wk-word{min-width:0}
+
+/* Python labs */
+.wk .wk-code{white-space:pre;overflow:auto;font-size:var(--fs-2xs);line-height:1.5;tab-size:4}
+.wk-output{max-height:260px;overflow:auto;background:var(--sunk);border:1px solid var(--rule);border-radius:var(--r-1);padding:8px 12px}
+.wk-output pre{margin:0;background:none;padding:0;font-size:var(--fs-2xs);color:var(--ink);white-space:pre;overflow:visible}
+.wk-output-e{color:var(--bad)}
+
+/* Step-by-step guides */
+.wk-guide{display:grid;gap:14px;margin:0;padding-left:1.6em;font-size:var(--fs-sm);line-height:1.55}
+.wk-guide>li{min-width:0;margin:0}
+.wk-guide>li>*+*{margin-top:6px}
+.wk-guide>li>b{display:block}
+.wk-guide>li::marker{font-weight:600}
+.wk-guide p{margin:0}
+.wk-guide b{font-weight:600}
+.wk-guide .ctl{margin-top:0}
+.wk-output code{font-family:var(--f-mono);font-size:var(--fs-2xs);background:none;padding:0}
+a.btn{display:inline-flex;align-items:center;text-decoration:none}
+
+/* Opt-in downloads */
+.wk-gate{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--rule-2);border-radius:var(--r-2);background:var(--sunk);font-size:var(--fs-sm);line-height:1.5;color:var(--ink);min-width:0}
+.wk-gate.bad{border-color:var(--bad)}
+.wk-gate.ready{background:none;border-style:dashed}
+.wk-gate p{margin:0}
+.wk-gate-h{display:block;font-family:var(--f-display);font-weight:600;overflow-wrap:anywhere}
+.wk-gate-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.wk-gate-n{font-size:var(--fs-2xs);color:var(--muted);font-variant-numeric:tabular-nums}
+.wk-gate-files{font-size:var(--fs-2xs);color:var(--muted)}
+.wk-gate-files summary{cursor:pointer;min-height:24px;line-height:24px;color:var(--ink)}
+.wk-gate-files ul{margin:2px 0 0;padding-left:1.4em}
+.wk-gate-files li{margin:1px 0}
+.wk-bar{height:10px;background:var(--surface);border:1px solid var(--rule-2);border-radius:6px;overflow:hidden}
+.wk-bar i{display:block;height:100%;background:var(--accent);transition:width .2s linear}
+.wk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
 @media (prefers-reduced-motion:reduce){
   .wk *{transition:none!important;animation:none!important}
 }

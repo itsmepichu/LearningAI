@@ -143,6 +143,16 @@
      "type",
      "flights_cancelled"
     ]
+   },
+   {
+    "file": "requests.csv",
+    "rows": 300,
+    "fields": [
+     "request_id",
+     "language",
+     "text",
+     "intent"
+    ]
    }
   ]
  }

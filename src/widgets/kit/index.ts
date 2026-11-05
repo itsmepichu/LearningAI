@@ -5,3 +5,5 @@ export { BarList, Legend, LineChart, SERIES, StackBar, TimeBars, type BarItem, t
 export { DataGate, DataSource, useProjectData, type DataReader, type ProjectData } from './dataset'
 export { useNearViewport, useProject, useReducedMotion, useWidth } from './hooks'
 export { compact, fmt, pct, usd } from './format'
+export { DownloadGate, gateFor, useGate } from './DownloadGate'
+export { CallCancelled, Gate, formatBytes, totalBytes, type DownloadSpec, type GateState, type WorkerLike } from './download'

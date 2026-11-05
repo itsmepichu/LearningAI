@@ -2,8 +2,9 @@
 
 ## Agreed scope
 
-- A pure React (Vite) app with heavy use of 3D and motion, hosted from this GitHub repository as a static site (GitHub Pages).
-- Real models in the browser, as opt-in downloads of tens of MB.
+- A pure React (Vite) app with heavy use of 3D and motion, hosted as a static site on Vercel.
+- Real models in the browser, on the CPU, as opt-in downloads of tens of MB.
+- **What may use a GPU:** study material, such as diagrams, 3D scenes and interactive figures, may use the reader's GPU, and should stay light enough for laptops with integrated graphics. LLM training and other practical GPU work does not run in this project: it goes in step-by-step Google Colab guides.
 - Deeper versions of all 18 chapters, plus new chapters.
 - **Four example projects you choose between:**
   - Harbor stays.
@@ -168,7 +169,7 @@ The course-wide place to drill questions, linked from the sidebar and the home p
 
 ### Phase 1 — Foundation ✅ (merged)
 
-- Vite + React + TypeScript project, React Router, GitHub Pages workflow with a 404 fallback for deep links.
+- Vite + React + TypeScript project, React Router, with a 404 fallback for deep links.
 - All v3 content imported, one file per topic:
   - 23 sections (18 chapters, the capstone and four appendices)
   - 143 topics and 54 quiz questions
@@ -257,15 +258,46 @@ Figures that changed from v3, with their notes updated to match:
 - The queue simulation's run button draws a new run; the v3 one reused its seed, so it changed nothing.
 - BPE and the BM25 tokenizer keep combining marks, so Hindi and Tamil words stay whole.
 
-### Phase 5 — Real computation in the browser (opt-in downloads)
+### Phase 5 — Real computation in the browser (opt-in downloads) ✅
 
-- **Pyodide** labs: run the Appendix A NumPy lab and chapter exercises in a Web Worker, with graded checks against your project's dataset.
-- **Transformers.js**:
-  - a real tokenizer comparison (5.1), using the Travel project's 9 languages
-  - real sentence embeddings and vector search over your project's documents (9.3–9.5)
-  - a small classifier (for example the Bank project's dispute reasons)
-- Shown before every download: its size, a progress bar, and caching after the first load.
-- Optional WebGPU model chat (WebLLM), with a clear "not supported here" fallback.
+*Delivered: a shared download gate, real embeddings and vector search, a real tokenizer comparison, a small classifier, Python labs, and a Google Colab guide for GPU work. Nothing downloads until a reader opts in, and no model runs on the reader's GPU.*
+
+- **Download gate** (`src/widgets/kit/download.ts`, `DownloadGate.tsx`): the size before anything starts, a progress bar, cancel, failure with retry, a remembered cached state and a clear "not supported here" state, for a worker that holds a heavy runtime.
+- **Transformers.js**, in a worker:
+  - a real tokenizer comparison (5.1) of GPT-2, BERT multilingual and XLM-R over each project's messages, using the Travel project's 4 languages (English, Hindi, Tamil, Hinglish): about 22 MB
+  - real sentence embeddings with all-MiniLM-L6-v2 and vector search over each project's documents: about 29 MB. 9.3 searches beside BM25, 9.4 measures int8 and binary quantisation against an exact scan, and the RRF (9.5) and retriever comparison (9.7) figures keep their illustration until the reader opts in, with each column saying which it shows
+  - a small classifier (3.2) that trains a softmax layer on those embeddings, using each project's labelled text, such as the Bank project's dispute reasons, beside a majority baseline. Travel had no labelled text, so the generator gained `requests.csv`, on its own random stream, leaving the other files unchanged
+- **Pyodide** labs, in a worker, about 9 MB: the Appendix A script (which reproduces the appendix's reported losses on the manual's own text) and exercises on 2.1, 2.5 and 3.5, with graded checks over each project's dataset. Graders recompute their answers, and Stop or a 60 second limit ends a runaway program without freezing the page.
+- **GPU work goes to Google Colab.** 5.6 has a step-by-step guide, from a new notebook and turning on a GPU to giving it back, with code using the selected project's question and document, as cells to copy or a notebook to download.
+
+Decisions that carry forward:
+- **LLM training and practical GPU work go to Google Colab**, by the owner's decision. Study material may still use the GPU to draw (see Agreed scope). A WebGPU model chat was built and dropped in favour of the Colab guide. Testing it had also shown that SmolLM2-360M's 4-bit weights return invalid numbers on an AMD GCN 5 GPU, while Qwen3-0.6B answers correctly.
+- Runtimes and models load at run time from pinned CDN URLs inside workers, so they add nothing to `npm install` or the page bundles. Each new widget does add its one line to the registry, which is in the main bundle.
+- The stated sizes were measured from the hosts' response headers, and are what crosses the network. A new runtime or model version needs them measured again.
+- e2e replaces `Worker` with a stub and fails if the main run reaches a model host or starts a worker, so tests never download anything.
+- A test runs every lab's solution on a local Python when NumPy is present, and CI installs it.
+
+Checked by hand, once, with real downloads: embeddings, tokenizers, the classifier and all four labs, in Chromium on Windows. The Colab guide's cells ran on a CPU with a tiny random model, which proves the calls work on a current `transformers`.
+
+The Colab guide is a set of cells to copy and a notebook to download, for readers to run in their own Colab. By the owner's decision, the course does not run it in Colab itself: the guide's timings ("a minute or two") are rough estimates and its expected outputs are what the code prints, not a recorded GPU run.
+
+e2e: **a full pass is recorded for phase 5**, on `development` at a868c3b (5 November 2026): every route, every widget, the stubbed download gates, and the axe check with no serious or critical findings.
+
+### Phase 5b — Move GPU practicals to Google Colab
+
+Everything that involves LLM training or hands-on GPU work points readers to a step-by-step Colab guide, like the one on 5.6, rather than to a rented GPU or a passing mention of a notebook.
+
+- **Make the guide reusable.** `colab-guide` is written for 5.6 only. Move each guide's steps into data, and share the setup steps (new notebook, turning on the GPU, running a cell, giving the GPU back).
+- **Write the guides:**
+  - training a small model, nanoGPT or similar (6.7)
+  - a QLoRA fine-tune (13.3), which the chapter 13 lab's substantive fine-tune also uses
+  - the vLLM benchmark (14.7), which the chapter 14 lab also uses, measuring what the simulations in chapter 14 only illustrate
+  - the capstone's external-compute extensions
+- **Update the wording that sends readers elsewhere:** the chapter 14 introduction, the 14.7 lab, the capstone, and the external-compute definitions in the guide page and Appendix E. Tool cards on 6.7, 13.7 and 14.8 and in Appendix B link to the relevant guide.
+- **Check practice notes and lab scenarios** for the same wording.
+- **What Colab cannot do:** multi-GPU and cluster material (DeepSpeed, FSDP, torchtitan, Megatron-LM, a full nanochat run) is unlikely to run on one Colab GPU. Keep it as reading, say so, and give a scaled-down single-GPU guide where one teaches the idea.
+- **Fit the free tier:** some labs state 16–24 GB of GPU memory, which may exceed a free GPU. Choose models and settings that fit, and say what a larger GPU would change.
+- **Check each guide's code before it ships,** as the 5.6 guide is checked: every cell parses as Python, and the calls run on a CPU with a tiny model. Guides are not run in Colab by the course (owner's decision), so word timings as rough estimates.
 
 ### Phase 6 — 3D and scroll-driven walkthroughs
 
@@ -273,13 +305,13 @@ Figures that changed from v3, with their notes updated to match:
 
 - Q/K/V tensor blocks and the multi-head split (5.2–5.3)
 - exploded transformer block (5.3)
-- embedding space using your project's real vectors (9.3)
+- embedding space (9.3): your project's real vectors once the reader opts in to the embedding download, and a labelled illustrative set until then
 - HNSW layers (9.4)
 - GPU cluster parallelism and ZeRO sharding (6.6)
 - paged KV-cache blocks (14.3)
 - a globe of regions with failover (15.x)
 
-Each scene has a 2D fallback, a text description and keyboard controls.
+Each scene has a 2D fallback, a text description and keyboard controls. Scenes may use the GPU, and must stay usable on laptops with integrated graphics, so try each one on such a laptop before it ships.
 
 Scroll-driven walkthroughs, each told through your selected project:
 
@@ -294,12 +326,12 @@ Scroll-driven walkthroughs, each told through your selected project:
   - Intuition
   - Mechanism
   - Math (KaTeX)
-  - Code (runnable)
+  - Code (runnable: Pyodide in the browser for CPU work, a step-by-step Colab guide for GPU work)
   - In practice (your project)
   - Failure to avoid
   - Try it
   - Primary sources
-- **New chapters**, each written with all four projects and full section checks from the start:
+- **New chapters**, each written with all four projects and full section checks from the start, and with Colab guides for any GPU practicals:
   - multimodal models
   - distillation and small models
   - cost engineering and FinOps
@@ -314,7 +346,8 @@ Scroll-driven walkthroughs, each told through your selected project:
 - A sandbox for your project that grows chapter by chapter.
 - Spaced-repetition scheduling on the Practice page: missed questions come back after increasing intervals (FSRS).
 - Export and import of progress (project choice, studied topics, check scores).
-- PWA offline mode, accessibility audit (WCAG 2.1 AA), performance budgets.
+- PWA offline mode for the course itself. Opt-in runtimes and models work offline only if already cached, and Colab guides always need a connection.
+- Accessibility audit (WCAG 2.1 AA) and performance budgets, including 3D scenes on integrated graphics. CI does not run e2e and it runs only on request, so decide what enforces these.
 
 ---
 
@@ -385,11 +418,14 @@ Every place that referred to Harbor as the only example, or to the chapter quiz.
 1. **Pilot review.** Read chapters 1–3 with each project and try their check pages, then confirm or adjust:
    - the length and tone of the In practice, Failure to avoid and Try it notes
    - the question mix (10 choose-the-answer and 8 interview per section, about 3 fundamentals, 3 applied and 2 system design)
-   - before phase 3 writes the remaining ~2,100–2,600 questions and ~400 notes.
+   - This was planned before phase 3, which has since shipped, so a change now means editing written content.
 2. **Names.** Keep Bazrova, Navakosh Bank and Safarnova, or choose other fictional names (one-file change in `projects.json`).
+3. **Legacy widgets.** Whether to port the 59 v3 blocks left in `src/legacy/widgets.js`. They work and are not scheduled.
 
 Decided:
 - **Question counts:** 10–12 choose-the-answer and 8–10 interview questions per section.
 - **Practice page:** yes, built in phase 2.
 - **Project choice:** no up-front choice; Harbor by default, switchable at any time.
+- **GPU use:** study visuals may use the reader's GPU; LLM training and practical GPU work go to Google Colab guides.
+- **Colab guides:** copyable cells and a downloadable notebook that readers run in their own Colab. The course does not run them in Colab itself.
 - **Company names:** fictional only. Real companies' names (for example the proposed Meesho and SBI) cannot carry invented systems, figures and mistakes on a public site.

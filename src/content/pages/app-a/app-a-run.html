@@ -91,3 +91,6 @@ print(f&quot;vocab {V}  params {W.size}  {secs:.2f}s&quot;)
 print(f&quot;uniform {np.log(V):.3f}  unigram test {baseline:.3f}  bigram test {test_loss:.3f}  best val {best_val:.3f}&quot;)
 print(&quot;sample:&quot;, report[&quot;sample_t0.8&quot;][:120].replace(&quot;\n&quot;, &quot; / &quot;))
 </code></pre></div>
+<h4>Or run it here</h4>
+<figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"bigram"}'></div></div>
+<figcaption><b>The same script, in real Python if you opt in.</b> <a href="https://pyodide.org/en/stable/">Pyodide</a> runs it in a worker on your device, and the checks test the lifecycle rather than a target number. Pick the manual's own text to compare with <a href="#app-a-res">the run this appendix reports</a>; expect the same losses to within a little, because the seed is fixed, and a longer training time, because this is WebAssembly.</figcaption></figure>

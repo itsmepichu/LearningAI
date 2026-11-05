@@ -154,8 +154,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 455
     },
     {
@@ -194,8 +194,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 465
     },
     {
@@ -243,8 +243,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 449
     },
     {
@@ -270,8 +270,8 @@
      "tn": "3.5",
      "title": "Metrics: precision, recall, F1, ROC/PR curves and probability calibration",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 332
     },
     {
@@ -384,8 +384,8 @@
      "tn": "5.1",
      "title": "Tokenisation: subwords, BPE, vocabulary and multilingual implications",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 413
     },
     {
@@ -431,8 +431,8 @@
      "tn": "5.6",
      "title": "Decoding: temperature, top-k, top-p, stop conditions and reproducibility limits",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 400
     },
     {
@@ -744,8 +744,8 @@
      "tn": "9.3",
      "title": "Keyword search, inverted indexes, BM25, dense embeddings and sparse retrieval",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
+     "figures": 2,
+     "interactive": 2,
      "words": 389
     },
     {
@@ -753,8 +753,8 @@
      "tn": "9.4",
      "title": "Vector similarity, approximate nearest-neighbour search, HNSW and quantisation",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
+     "figures": 3,
+     "interactive": 2,
      "words": 420
     },
     {
@@ -1712,8 +1712,8 @@
      "tags": [
       "cpu"
      ],
-     "figures": 0,
-     "interactive": 0,
+     "figures": 1,
+     "interactive": 1,
      "words": 656
     },
     {

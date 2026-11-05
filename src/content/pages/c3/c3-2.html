@@ -37,4 +37,6 @@ for name, m in [("baseline", DummyClassifier(strategy="most_frequent")),
                 ("logistic", make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))),
                 ("boosting", HistGradientBoostingClassifier(random_state=0))]:
     print(f"{name:9} accuracy = {m.fit(Xtr, ytr).score(Xte, yte):.3f}")</code></pre></div>
+<figure class="fig live"><div class="stage"><div data-widget="text-classifier"></div></div>
+<figcaption><b>A small classifier, trained on your device if you opt in.</b> Your example project's labelled text goes through a small open <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">embedding model</a>, then a softmax layer learns from a seeded, stratified split and is scored on the rows it never saw, beside the majority-class baseline. The text is synthetic and comes from a few templates, so this shows the method and how to read its results, not what the method would score on real messages.</figcaption></figure>
 <div data-slot="practice"></div>

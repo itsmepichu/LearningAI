@@ -47,12 +47,9 @@ Screenshots are written to `tests/out/`. The test uses the Playwright package th
 
 ## Deploy
 
-`.github/workflows/deploy.yml` builds on every push to `main` and publishes `dist/` to GitHub Pages. The site is served under `/<repo-name>/`. To enable it:
+The site deploys on Vercel. `.github/workflows/ci.yml` runs the typecheck, unit tests and build on every pull request and every push to `main`.
 
-1. Open the repository's **Settings → Pages**.
-2. Set **Source** to **GitHub Actions**.
-
-The build copies `index.html` to `404.html` so that deep links such as `/c9/c9-3` work on Pages.
+The build copies `index.html` to `404.html` so that deep links such as `/c9/c9-3` work.
 
 ## Stack
 
