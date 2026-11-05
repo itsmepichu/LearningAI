@@ -322,6 +322,7 @@ Batch 1, as built:
 - **5.2, multi-head attention:** X → Q, K, V → split into 3 heads along the third axis → causal weights per head → weighted values → concatenate and W_O. Real arithmetic, in the browser, on random weights, with a button for new ones. The figure says the patterns are arbitrary and points to the hand-designed heads above it.
 - **5.3, the exploded block:** eight floors, from the residual stream through RMSNorm, attention, the add, RMSNorm, the SwiGLU hidden layer (three times wider) and the down projection to the second add, with the residual stream drawn up the side. It is a real forward pass of a tiny block. Each step's text gives measured values, such as each row's RMS after normalising, and parameter counts for the tiny block and an 8B-like one.
 - **Not yet checked:** the scenes on a laptop with integrated graphics. They were checked in Chromium with software WebGL (SwiftShader) only, so the owner tries them on such a laptop before release.
+- e2e: a full pass is recorded for batch 1, at bbd57a2 (5 November 2026), with no serious or critical axe findings.
 
 3D only where the third axis carries data:
 
