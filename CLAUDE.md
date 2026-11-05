@@ -12,10 +12,11 @@
   - evidence tags: `.tag cpu|real|sim|gpu`
 - `HtmlContent` rebuilds heading levels into a valid outline when it renders a fragment, and marks a changed heading with `as-hN`, where N is its level in the file. When you style a content heading, style `hN` and `.as-hN` alike.
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
-- Current state (phase 5 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
+- Current state (phase 5b done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
+- After editing topic HTML, run `python3 scripts/refresh_search.py`, which rebuilds the search text in `src/content/search.json` from the pages.
 - The course is one required sequence: every chapter, section and topic is a must-learn for an expert AI/ML engineer. Do not add learning paths, role-based tracks or wording that makes a topic optional.
 - Progress totals count the chapters and the capstone (`courseTopics` in `src/data/course.ts`), not the appendices.
 - Keep the course's standards:
@@ -72,7 +73,14 @@
   - Load runtimes and models in a Web Worker (`src/widgets/engines/`), from a pinned URL. Nothing may download or start before the reader opts in.
   - Say what each real result does and does not prove, and keep labels accurate about whether a figure is showing real results or an illustration.
   - Tests and e2e never download a model. Test the logic with small fixtures. e2e stubs `Worker` and tells each engine apart by the worker's name.
-- GPU use: study material (diagrams, 3D scenes, interactive figures) may use the reader's GPU, and should stay usable on laptops with integrated graphics. Do not run LLM training or inference on the reader's GPU. LLM training and other practical GPU work go in a step-by-step Google Colab guide, as `colab-guide` does on 5.6.
+- GPU use: study material (diagrams, 3D scenes, interactive figures) may use the reader's GPU, and should stay usable on laptops with integrated graphics. Do not run LLM training or inference on the reader's GPU. LLM training and other practical GPU work go in a step-by-step Google Colab guide (5.6, 6.7, 13.3, 14.7).
+- Colab guides:
+  - Each guide is a `GuideDef` module in `src/widgets/colab-guide/` (`decoding.ts`, `train-gpt.ts`, `qlora.ts`, `vllm-bench.ts`), listed in `guides.ts`. Build its steps with `withSetup`, so every guide shares the setup steps, the GPU check as step 4, and the finish step that gives the GPU back.
+  - Embed it as `<div data-widget="colab-guide" data-props='{"guide":"<id>"}'>` inside a `figure.fig.colab` (its label says it runs in Colab, not in the browser) with `id="colab-<id>"` (add it to `idmap.json`) and the `Colab · GPU` tag. Link to it from labs and tool cards with `#colab-<id>`.
+  - Size it for a free T4: float16, not bfloat16, and models that fit 16 GB. Pin what it installs or clones (a commit, `==` versions), and say in `limits` what the run does and does not show.
+  - Put the selected project's data into the code, unless the guide is `neutral`. The reader runs the notebook in their own Colab; the course does not run guides in Colab.
+  - Before a guide ships, run its code on a CPU: `node scripts/colab-notebooks.ts /tmp/nb`, then `python scripts/check_colab_guides.py /tmp/nb` in an environment with torch, transformers, peft, accelerate, tokenizers, tiktoken, numpy, matplotlib and openai. It uses tiny stand-ins (a tiny local model, nanoGPT at tiny size, a mock vLLM); add one for anything a CPU cannot run.
+  - Work that needs several GPUs at once (DeepSpeed, Megatron-LM, a full nanochat run) is reading, tagged `Needs external compute`.
 - 3D (three.js / @react-three/fiber):
   - Mount only near the viewport.
   - Use `frameloop="demand"` unless animating.

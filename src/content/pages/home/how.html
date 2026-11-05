@@ -8,7 +8,8 @@
     <tr><td><span class="tag cpu">Laptop · CPU</span></td><td>You can run this on an ordinary laptop with no dedicated GPU. Expect 8–16 GB of RAM to be enough unless stated otherwise.</td></tr>
     <tr><td><span class="tag real">Runs in browser</span></td><td>The figure does real computation in this page (a real algorithm on real input), for example BPE merges, BM25 scoring or a tiny language model trained by counting.</td></tr>
     <tr><td><span class="tag sim">Simulation</span></td><td>An animated model of system behaviour. It shows the steps and the shape of the tradeoffs, using made-up but realistic numbers. <b>No neural network is executed.</b></td></tr>
-    <tr><td><span class="tag gpu">Needs external compute</span></td><td>Realistic only with a GPU or a cluster. Free or cheap options: Google Colab, Kaggle Notebooks, or renting an hourly cloud GPU. Free tiers change, so check their current limits.</td></tr>
+    <tr><td><span class="tag gpu">Colab · GPU</span></td><td>Needs one GPU. The page has a step-by-step <a href="https://colab.research.google.com/">Google Colab</a> guide, with cells to copy and a notebook to download, that runs on a free Colab GPU. The code runs on Google's machines, not on this site, and free GPU access is limited and not guaranteed. Guides: <a href="#colab-decoding">5.6</a>, <a href="#colab-train-gpt">6.7</a>, <a href="#colab-qlora">13.3</a> and <a href="#colab-vllm">14.7</a>.</td></tr>
+    <tr><td><span class="tag gpu">Needs external compute</span></td><td>Needs several GPUs at once or a cluster, which one Colab GPU cannot provide (for example DeepSpeed, Megatron-LM or a full nanochat run). Read the code and reports; where a single-GPU version teaches the idea, a Colab guide is linked.</td></tr>
   </table></div>
 
 

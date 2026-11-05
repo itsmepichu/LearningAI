@@ -15,7 +15,7 @@
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for inference serving</h3>
 <div class="cols3">
-<div class="card"><h5><a href="https://docs.vllm.ai/">vLLM</a></h5><span class="meta">GPU serving engine</span><p>OpenAI-compatible server with paged attention, continuous batching and prefix caching; includes benchmarking tools. A CPU backend exists (build-from-source/nightly wheels) for experimentation, far slower than GPU.</p></div>
+<div class="card"><h5><a href="https://docs.vllm.ai/">vLLM</a></h5><span class="meta">GPU serving engine</span><p>OpenAI-compatible server with paged attention, continuous batching and prefix caching; includes benchmarking tools. A CPU backend exists (build-from-source/nightly wheels) for experimentation, far slower than GPU. The <a href="#colab-vllm">14.7 Colab guide</a> serves and benchmarks it on a free GPU.</p></div>
 <div class="card"><h5><a href="https://github.com/sgl-project/sglang">SGLang</a></h5><span class="meta">GPU serving engine</span><p>High-performance serving with radix-tree prefix caching and structured generation.</p></div>
 <div class="card"><h5><a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a></h5><span class="meta">CPU-friendly inference</span><p><code>llama-bench</code>, <code>llama-server</code>, quantisation tools. Your laptop testbed for prefill/decode and quantisation.</p></div>
 <div class="card"><h5><a href="https://github.com/vllm-project/llm-compressor">LLM Compressor</a></h5><span class="meta">quantisation for vLLM</span><p>Apply FP8, INT8, GPTQ/AWQ-style quantisation and sparsity, producing checkpoints vLLM serves. <span class="tag gpu">GPU</span></p></div>

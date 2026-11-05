@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { DataGate, DataSource, ScrollRegion, Widget, useProjectData } from '../kit'
 import type { Project } from '../../data/projects'
-import { COLAB_FAQ, COLAB_URL, MODEL, MODEL_CARD, guideSteps, loadColabSeed, toNotebook, type ColabSeed } from './notebook'
+import type { DataReader } from '../kit'
+import { getGuide } from './guides'
+import { COLAB_FAQ, COLAB_URL, notebookName, toNotebook, type GuideDef } from './notebook'
 
 function CopyButton({ code, step }: { code: string; step: number }) {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
@@ -22,32 +24,38 @@ function CopyButton({ code, step }: { code: string; step: number }) {
   )
 }
 
-export default function ColabGuide() {
-  const data = useProjectData(loadColabSeed)
+/** A step-by-step Google Colab guide. `guide` picks one from guides.ts; the default is the 5.6 decoding guide. */
+export default function ColabGuide({ guide }: { guide?: string }) {
+  const def = getGuide(guide)
+  const load = useCallback((p: Project, read: DataReader) => def.load(p, read), [def])
+  const data = useProjectData(load)
   return (
     <Widget name="colab-guide">
       <DataGate state={data}>
-        {(seed, project) => <Guide key={project.id} seed={seed} project={project} />}
+        {(seed, project) => <Guide key={`${def.id}-${project.id}`} def={def} seed={seed} project={project} />}
       </DataGate>
     </Widget>
   )
 }
 
-function Guide({ seed, project }: { seed: ColabSeed; project: Project }) {
-  const steps = useMemo(() => guideSteps(project, seed), [project, seed])
+function Guide({ def, seed, project }: { def: GuideDef<unknown>; seed: unknown; project: Project }) {
+  const steps = useMemo(() => def.steps(project, seed), [def, project, seed])
+  const source = def.source?.(seed)
   const download = () => {
-    const url = URL.createObjectURL(new Blob([toNotebook(project, steps)], { type: 'application/x-ipynb+json' }))
+    const url = URL.createObjectURL(new Blob([toNotebook(def, def.neutral ? null : project, steps)], { type: 'application/x-ipynb+json' }))
     const a = document.createElement('a')
     a.href = url
-    a.download = `decoding-on-a-gpu-${project.id}.ipynb`
+    a.download = notebookName(def, project.id)
     a.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   return (
     <>
-      <DataSource project={project} files={[seed.file]}>
-        The code below uses this question and document ({seed.doc.id}).
-      </DataSource>
+      {source && (
+        <DataSource project={project} files={source.files}>
+          {source.note}
+        </DataSource>
+      )}
       <div className="ctl">
         <a className="btn primary" href={COLAB_URL} target="_blank" rel="noreferrer">
           Open Google Colab
@@ -82,14 +90,19 @@ function Guide({ seed, project }: { seed: ColabSeed; project: Project }) {
         ))}
       </ol>
       <p className="wk-hint">
-        <b>What this does and does not show.</b> You will see how decoding settings change the output of a real model, and roughly what a GPU buys you on one prompt. It does not show that this model’s answers can be trusted, what serving it would cost, or how another GPU would perform: Colab’s hardware varies. {project.company} and its documents are invented. Nothing here runs on this site; the code runs on Google’s machines, under{' '}
+        <b>What this does and does not show.</b> {def.limits(project)} Nothing here runs on this site; the code runs on Google’s machines, under{' '}
         <a href={COLAB_FAQ} target="_blank" rel="noreferrer">
           Colab’s limits and terms
         </a>
-        . Read the{' '}
-        <a href={MODEL_CARD} target="_blank" rel="noreferrer">
-          {MODEL} model card
-        </a>{' '}
+        . Read{' '}
+        {def.links.map((l, i) => (
+          <span key={l.href}>
+            {i > 0 && (i === def.links.length - 1 ? ' and ' : ', ')}
+            <a href={l.href} target="_blank" rel="noreferrer">
+              {l.label}
+            </a>
+          </span>
+        ))}{' '}
         too.
       </p>
     </>

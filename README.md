@@ -18,7 +18,8 @@ Interactive figures run in the browser. Each one carries an evidence label:
 - **Runs in browser**: real computation on this page.
 - **Simulation**: illustrative numbers; no model is executed.
 - **Laptop · CPU**: you can run it on an ordinary laptop.
-- **Needs external compute**: you need a GPU or a cluster.
+- **Colab · GPU**: a step-by-step Google Colab guide (cells to copy, or a notebook to download) that runs on one free Colab GPU. Guides: 5.6 decoding, 6.7 training a small GPT, 13.3 QLoRA fine-tuning and 14.7 vLLM benchmarking.
+- **Needs external compute**: you need several GPUs or a cluster, more than one Colab GPU, so the course treats it as reading.
 
 ## Run it
 
