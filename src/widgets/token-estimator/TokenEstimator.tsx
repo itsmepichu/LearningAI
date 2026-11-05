@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
-import { DataGate, DataSource, KpiRow, Slider, Widget, fmt, pct, useProjectData } from '../kit'
-import { asInputTokens, compact, estimateTokens, requestCost, usd } from './estimate'
+import { DataGate, DataSource, KpiRow, Slider, Widget, compact, fmt, pct, usd, useProjectData } from '../kit'
+import { asInputTokens, estimateTokens, requestCost } from './estimate'
 import { loadSamples, type Sample } from './samples'
 
 function TextBox({ samples, onUse }: { samples: Sample[]; onUse: (tokens: number) => void }) {

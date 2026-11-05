@@ -147,6 +147,8 @@ function spreadLabels(ys: number[]): number[] {
  */
 export function LineChart({
   x,
+  xTicks,
+  reference,
   series,
   xLabel,
   marker,
@@ -155,6 +157,10 @@ export function LineChart({
   label,
 }: {
   x: number[]
+  /** The x values to label, when there are too many to label them all. */
+  xTicks?: number[]
+  /** A target line across the plot. */
+  reference?: { value: number; label: string }
   series: LineSeries[]
   xLabel: string
   marker?: number
@@ -164,7 +170,7 @@ export function LineChart({
 }) {
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<number | null>(null)
-  const direct = width >= 440
+  const direct = width >= 440 && series.length > 1
   const right = direct ? 110 : 16
   const iw = Math.max(0, width - M.left - right)
   const ih = height - M.top - M.bottom
@@ -179,7 +185,7 @@ export function LineChart({
   const tipLeft = hover === null ? 0 : Math.min(xs(hover) + 10, Math.max(0, width - 170))
   return (
     <div>
-      <Legend items={series} />
+      {series.length > 1 && <Legend items={series} />}
       <div ref={ref} className="wk-chart" style={{ height }}>
         {width > 0 && (
           <svg width={width} height={height} role="img" aria-label={label}>
@@ -191,11 +197,19 @@ export function LineChart({
                 </text>
               </g>
             ))}
-            {x.map((v, i) => (
-              <text key={v} className="wk-tick" x={xs(i)} y={M.top + ih + 18} textAnchor="middle">
+            {(xTicks ?? x).map((v) => (
+              <text key={v} className="wk-tick" x={xs(x.indexOf(v))} y={M.top + ih + 18} textAnchor="middle">
                 {v}
               </text>
             ))}
+            {reference && (
+              <g>
+                <line className="wk-ref" x1={M.left} x2={M.left + iw} y1={ys(reference.value)} y2={ys(reference.value)} />
+                <text className="wk-ref-t" x={M.left + iw} y={ys(reference.value) - 4} textAnchor="end">
+                  {reference.label}
+                </text>
+              </g>
+            )}
             <text className="wk-tick" x={M.left + iw / 2} y={height - 4} textAnchor="middle">
               {xLabel}
             </text>

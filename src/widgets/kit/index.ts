@@ -4,4 +4,4 @@ export { ThemeCanvas, readTokens, type CanvasFrame, type Tokens } from './ThemeC
 export { BarList, Legend, LineChart, SERIES, StackBar, TimeBars, type BarItem, type LineSeries, type StackSegment, type TimeBar } from './charts'
 export { DataGate, DataSource, useProjectData, type DataReader, type ProjectData } from './dataset'
 export { useNearViewport, useProject, useReducedMotion, useWidth } from './hooks'
-export { fmt, pct } from './format'
+export { compact, fmt, pct, usd } from './format'

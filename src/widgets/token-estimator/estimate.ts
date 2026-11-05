@@ -47,17 +47,3 @@ export function requestCost(r: RequestShape) {
 /** The input slider's value for a counted text: nearest 100, within the slider's range. */
 export const asInputTokens = (tokens: number) => Math.min(20000, Math.max(100, Math.round(tokens / 100) * 100))
 
-const group = (n: number, d = 0) => n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d })
-
-export function usd(n: number): string {
-  if (n >= 1e6) return `$${group(n / 1e6, 2)}M`
-  if (n >= 1000) return `$${group(n)}`
-  if (n >= 1) return `$${group(n, 2)}`
-  return `$${group(n, 4)}`
-}
-
-export function compact(n: number): string {
-  if (n >= 1e6) return `${group(n / 1e6, 1)}M`
-  if (n >= 1000) return `${group(n / 1000, 1)}k`
-  return group(n)
-}

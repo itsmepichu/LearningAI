@@ -5,9 +5,7 @@
 <li><b>Quantisation</b> shrinks vectors: <b>scalar</b> (float32 → int8, 4× smaller), <b>product quantisation (PQ)</b> (split vector into sub-vectors, store each as a codebook ID; 16–64× smaller), <b>binary</b> (1 bit per dimension, 32× smaller, used with re-scoring). Common pattern: search compressed vectors, then re-score the top candidates with full-precision vectors.</li>
 <li><b>DiskANN</b>-style indexes keep the graph on SSD for collections larger than RAM.</li>
 </ul>
-<figure class="fig live"><div class="stage"><div class="wid">
-<canvas id="hnswCan" width="640" height="380"></canvas>
-<div class="ctl"><button class="btn primary" id="hnswGo" type="button">Search (new random query)</button><button class="btn" id="hnswStep" type="button">Step</button><span class="count" id="hnswOut"></span></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="hnsw"></div></div>
 <figcaption><b>Layered greedy graph search</b> on 300 random 2-D points, implemented in your browser. Top panel = sparse upper layer, bottom = full layer. The search hops along links toward the query (star), descends, and continues until no neighbour is closer. Compare "distance computations" with the 300 a brute-force scan needs. Simplified relative to real HNSW (fixed layers, simple neighbour selection).</figcaption></figure>
 <figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">Memory for 10 million 768-dimension vectors (vectors only, before index overhead)</p>
 <div class="bars" data-unit=" GB"><div data-v="30.7" data-c="b">float32 (4 B/dim)</div><div data-v="15.4" data-c="s">float16</div><div data-v="7.7">int8 scalar</div><div data-v="0.96" data-c="g">binary (1 bit/dim)</div><div data-v="0.64" data-c="g">PQ, 64 bytes/vector</div></div></div>

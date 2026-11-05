@@ -6,11 +6,7 @@
 <div><b>Chain rule</b>: if y = f(g(x)) then dy/dx = f′(g(x))·g′(x). Backpropagation is the chain rule applied through every layer.</div>
 </div>
 <p>A model with 8 billion parameters has a loss landscape in 8 billion dimensions. You cannot see it, but the gradient still tells each parameter which direction lowers the loss locally. Training is millions of small downhill steps. The learning rate is the most important setting: too small and training crawls; too large and the steps overshoot, the loss oscillates or explodes (often showing up as <code>NaN</code>).</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2"><label for="gdLr">Learning rate η <input type="range" id="gdLr" min="1" max="200" value="20"><span id="gdLrO"></span></label>
-<label for="gdX0">Start x₀ <input type="range" id="gdX0" min="-30" max="30" value="-26"><span id="gdX0O"></span></label></div>
-<canvas id="gdCan" width="640" height="260"></canvas>
-<div class="ctl"><button class="btn primary" id="gdRun" type="button">Run 25 steps</button><button class="btn" id="gdStep" type="button">One step</button><button class="btn" id="gdReset" type="button">Reset</button><span class="count" id="gdOut"></span></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="gradient-descent"></div></div>
 <figcaption><b>Gradient descent on a real function</b>, L(x) = 0.1x² + sin(x) + 3, which has a local and a global minimum. Try η ≈ 0.2 (smooth), η ≈ 1.0 (oscillates), η ≈ 1.9 (bounces between valleys) and different starts (lands in different valleys). Real optimisers (4.2) add momentum and per-parameter step sizes.</figcaption></figure>
 <p><b>From one parameter to two, in 3D.</b> Real models have millions of parameters, but two are enough to see what an optimiser does. Below, three update rules start from the same point on the same surface. <dfn>Momentum</dfn> keeps a running velocity, so it speeds up on long slopes and can roll through small dips. <dfn>Adam</dfn> divides each step by a running estimate of the gradient's size, so every parameter moves at a similar pace however steep its direction is. Chapter 4.2 covers how they are used in training.</p>
 <div data-widget="loss-landscape-3d"></div>

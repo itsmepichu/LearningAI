@@ -9,6 +9,7 @@ export interface Tokens {
   surface: string
   sunk: string
   accent: string
+  accentSoft: string
   signal: string
   sim: string
   ok: string
@@ -28,6 +29,7 @@ export function readTokens(): Tokens {
     surface: v('--surface'),
     sunk: v('--sunk'),
     accent: v('--accent'),
+    accentSoft: v('--accent-soft'),
     signal: v('--signal'),
     sim: v('--sim'),
     ok: v('--ok'),
