@@ -361,6 +361,21 @@ Scroll-driven walkthroughs, each told through your selected project:
 - the agent loop
 - a request through the serving stack
 
+### Phase 6b — Fix the question bank (before phase 7)
+
+From the review of phases 1–5 and the pilot review. The content checker counts each problem (`node scripts/content-summary.mjs --quality` lists them); at the start, on 6 November 2026:
+
+| Rule | Hits | Fix |
+|---|---|---|
+| Right answer is the longest option by far | 1,013 | Rewrite option text so the wrong options are as specific and as long as the right one. Keep the option order and which option is right, since saved answers are option indices. |
+| Interview question without a follow-up | 876 | Add the question an interviewer would ask next. |
+| Section with fewer than 4 scenario or calculation questions | 90 | Add up to 2 new scenario or calculation questions (new ids, up to 12 per section). Where that is not enough, reframe a concept question as a scenario, keeping its options and answer. |
+| No explanation for each wrong option | 54 | The questions migrated from v3: add the explanations. |
+| Repeated question text | 2 | Reword one of each pair. |
+
+- Done chapter by chapter, each checked against the quality rules before the next.
+- When every count is zero, the rules become errors, so they cannot come back.
+
 ### Phase 7 — Deeper content and new chapters
 
 - **Every topic follows one structure:**
@@ -456,14 +471,14 @@ Every place that referred to Harbor as the only example, or to the chapter quiz.
 
 ## Open decisions
 
-1. **Pilot review.** Read chapters 1–3 with each project and try their check pages, then confirm or adjust:
-   - the length and tone of the In practice, Failure to avoid and Try it notes
-   - the question mix (10 choose-the-answer and 8 interview per section, about 3 fundamentals, 3 applied and 2 system design)
-   - This was planned before phase 3, which has since shipped, so a change now means editing written content.
-2. **Names.** Keep Bazrova, Navakosh Bank and Safarnova, or choose other fictional names (one-file change in `projects.json`).
-3. **Legacy widgets.** Whether to port the 59 v3 blocks left in `src/legacy/widgets.js`. They work and are not scheduled.
+1. **Names.** Keep Bazrova, Navakosh Bank and Safarnova, or choose other fictional names (one-file change in `projects.json`).
+2. **Legacy widgets.** Whether to port the 59 v3 blocks left in `src/legacy/widgets.js`. They work and are not scheduled.
 
 Decided:
+- **Pilot review (6 November 2026):** chapters 1–3 against the rollout in chapters 4–18.
+  - **Notes:** both lengths are kept. Pilot notes run about 30% longer (In practice: a median of 39 words against 28), and both are concrete and project-specific. The standard is the range they span: about 25–45 words for In practice and Try it, and 12–25 for Failure to avoid.
+  - **Question mix:** 10–12 choose-the-answer and 8–10 interview questions per section, with about 3 fundamentals, 3 applied and 2 system design, as built. At least 4 of each section's choose-the-answer questions must be scenario or calculation questions; 75% of the rollout's are plain concept questions.
+  - **Quality:** the question bank is fixed before phase 7, so new chapters follow a clean standard. The checker counts each problem (see the phase below).
 - **Question counts:** 10–12 choose-the-answer and 8–10 interview questions per section.
 - **Practice page:** yes, built in phase 2.
 - **Project choice:** no up-front choice; Harbor by default, switchable at any time.

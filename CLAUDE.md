@@ -14,7 +14,7 @@
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
 - Current state (phase 6 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
-- `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
+- `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items. Its quality rules (follow-ups, wrong-option explanations, length giveaways, scenario share, duplicate questions) print a count per rule; add `--quality` to list every hit. New and edited questions must not add to them.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
 - After editing topic HTML, run `python3 scripts/refresh_search.py`, which rebuilds the search text in `src/content/search.json` from the pages.
 - The course is one required sequence: every chapter, section and topic is a must-learn for an expert AI/ML engineer. Do not add learning paths, role-based tracks or wording that makes a topic optional.
@@ -30,7 +30,7 @@
   - Scale figures are illustrative; say so where they appear.
 - There is no up-front project choice. Harbor is the default; readers switch from the top bar, the In practice tabs or the end-of-topic note.
 - Per-topic notes go in `src/content/practice/<chapter>.json`, keyed `topicId -> projectId -> { practice, failure, tryIt, fit, fitNote }`.
-  - Each of `practice`, `failure` and `tryIt` is a short HTML string. Write the company and assistant as `{company}` and `{assistant}`, so names live only in `projects.json` (Harbor's existing notes name Harbor directly).
+  - Each of `practice`, `failure` and `tryIt` is a short HTML string: about 25–45 words for In practice and Try it, 12–25 for Failure to avoid (the range chapters 1–18 already use). Write the company and assistant as `{company}` and `{assistant}`, so names live only in `projects.json` (Harbor's existing notes name Harbor directly).
   - `fit` is `best`, `good` or `limited`. `fitNote` is a short phrase on why the project suits the topic; the end-of-topic note shows it when the reader's project is `limited`. A `limited` topic needs at least one other project rated `best` or `good`.
   - A chapter's `_lab` key holds `projectId -> { scenario }`: an HTML scenario for doing the chapter lab with that project.
   - Every topic needs an entry for all four projects. Do not write a weak note when a project barely fits a topic: set `fit: "limited"` and keep the note short, and the end-of-topic note will point readers to a better project.
@@ -42,14 +42,17 @@
 ## Chapter checks
 - Each chapter has a separate check page at `/<chapter>/check`. The chapter page shows no quiz, only a link card after the lab.
 - Questions go in `src/content/checks/<chapter>.json`, keyed by topic id (one section per topic):
-  - `mcq`: 10–12 per section, `{ id, q, options, answer (index or array for "choose all"), why, distractors?, kind: "concept" | "calculation" | "scenario" }`
+  - `mcq`: 10–12 per section, `{ id, q, options, answer (index or array for "choose all"), why, distractors, kind: "concept" | "calculation" | "scenario" }`
   - `interview`: 8–10 per section, `{ id, q, level: "fundamentals" | "applied" | "system-design", covers: [..], followUp, project? }`
     - Aim for about 3 fundamentals, 3–4 applied and 2–3 system design per section.
     - At most 2 per section are framed in a project (`project` set).
   - `id` is stable (for example `c5-3-m07`, `c5-3-i04`), because saved answers and Practice-page history are keyed by it. Never reuse or renumber ids.
 - Every question must be traceable to its topic's content or a cited primary source. Avoid near-duplicates within and across sections.
 - The course-wide Practice page (`/practice`) reads the same files, loading only the chapters its filters select.
-- Explain why the right answer is right. Use distractors that are real misconceptions, not filler, and explain each one in `distractors` (aligned with `options`, `""` for right answers).
+- Explain why the right answer is right. Use distractors that are real misconceptions, not filler, and explain each one in `distractors` (aligned with `options`, `""` for right answers). Every question needs them.
+- Do not let length give the answer away: write wrong options as specific and as long as the right one. The checker flags a right answer at least 1.4 times the wrong options' average length.
+- At least 4 of a section's choose-the-answer questions are `scenario` or `calculation`, not plain recall.
+- Every interview question has a `followUp`: the question an interviewer would ask next.
 - Vary the position of the right answer. Shuffle options with a fixed seed when adding questions; the checker warns when more than half of a section's answers share a position. Never reorder options of a question that is already published, because saved answers are option indices.
 - Write interview questions the way interviewers ask them, with a checklist of what a strong answer covers. Do not write a script to memorise.
 
