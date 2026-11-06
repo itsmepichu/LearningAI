@@ -340,6 +340,7 @@ Batch 3, as built:
   - **14.2, the serving stack:** the project's question and document as the prompt, through gateway, router, queue, prefill and decode, with time to first token cold and with a cached system prompt, at 14.2's illustrative rates.
   - **6.4, one training step:** one of the project's labelled messages as a supervised fine-tuning example, through the chat template, tokenizing, loss masking, the forward pass, the loss (with real −ln p arithmetic on illustrative probabilities), the backward pass and the update.
 - **Checks:** unit tests cover the globe geometry (known city distances), residency, that shares sum to 1, every story's boxes and arrows for every project, the serving timing formula and the training example. e2e steps through the globe and scrolls each walkthrough to check that its diagram follows and stays pinned. axe found nothing serious in light or dark, at 1280 and 390 px, after scrollable tables were made keyboard-reachable.
+- e2e: a full pass is recorded for batch 3, at d6a2011 (6 November 2026), with no serious or critical axe findings. The first run failed because the globe did not say whose data it showed; it now names the company and says its regions are illustrative.
 
 3D only where the third axis carries data:
 
