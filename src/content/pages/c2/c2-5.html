@@ -18,18 +18,6 @@
 <div class="nodes"><div class="nd">Pin environment<small>lockfile</small></div><div class="nd">Snapshot data<small>hash / version</small></div><div class="nd">Fix seeds<small>numpy, torch, random</small></div><div class="nd">Config file<small>all hyperparameters</small></div><div class="nd">Run &amp; log<small>metrics + artefacts</small></div><div class="nd">Compare runs<small>tracked, not remembered</small></div></div>
 <ol class="steps"><li data-n="0">Lock exact package versions (<code>uv lock</code>, <code>pip freeze</code>, or a container image). A minor library update can change tokenisation or numerics.</li><li data-n="1">Store the dataset with a content hash or a version tool (DVC, Hugging Face dataset revisions). "data.csv" is not a version.</li><li data-n="2">Set seeds for every random source. Record that GPU results may still vary slightly.</li><li data-n="3">Put every setting in a config file that is committed, never only in a notebook cell.</li><li data-n="4">Log metrics, the config, the git commit and output artefacts to an experiment tracker (MLflow, 13.7).</li><li data-n="5">Compare runs side by side. A decision should cite run IDs, not memory.</li></ol></div>
 <figcaption><b>Reproducible experiment workflow.</b> The same discipline later becomes LLMOps versioning (18.1).</figcaption></figure>
-<div class="box lab"><h5>Laptop lab: vectorisation and a reproducible run <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code>import numpy as np, pandas as pd, time, json, hashlib
-rng = np.random.default_rng(seed=42)                 # explicit, seeded generator
-x = rng.standard_normal(1_000_000)
-t = time.perf_counter(); s = sum(v*v for v in x); loop = time.perf_counter() - t
-t = time.perf_counter(); s2 = x @ x;              vec  = time.perf_counter() - t
-print(f"loop {loop:.3f}s  vectorised {vec:.5f}s  speedup {loop/vec:.0f}x")
-
-df = pd.DataFrame({"case": range(5), "passed": [1,0,1,1,1], "latency_ms": [820,1400,760,990,1010]})
-print(df.describe())
-cfg = {"seed": 42, "model": "llama3.2:1b", "prompt_version": "v3"}
-print("config hash", hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()[:12])</code></pre></div>
 <figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"stats"}'></div></div>
 <figcaption><b>Lab, in real Python if you opt in: summarise a column.</b> Mean, median, a percentile and group means with <a href="https://numpy.org/doc/stable/">NumPy</a>, over your example project's data. Its long right tail is why the mean and the median disagree.</figcaption></figure>
 </section>
@@ -45,6 +33,18 @@ print("config hash", hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).he
 <p>The program sums the squares of a million values from your example project’s data with a Python loop and with one NumPy operation, checks both give the same answer, then draws a seeded sample and fingerprints the settings. Run it twice: the sample and fingerprint stay the same until you change <code>SEED</code>.</p>
 <figure class="fig live" id="snip-vectorise"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"vectorise"}'></div></div>
 <figcaption><b>Vectorised Python and a reproducible run, in real Python.</b> Browser timings are slower than native Python and vary; read the ratio, not the seconds.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: vectorisation and a reproducible run <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>import numpy as np, pandas as pd, time, json, hashlib
+rng = np.random.default_rng(seed=42)                 # explicit, seeded generator
+x = rng.standard_normal(1_000_000)
+t = time.perf_counter(); s = sum(v*v for v in x); loop = time.perf_counter() - t
+t = time.perf_counter(); s2 = x @ x;              vec  = time.perf_counter() - t
+print(f"loop {loop:.3f}s  vectorised {vec:.5f}s  speedup {loop/vec:.0f}x")
+
+df = pd.DataFrame({"case": range(5), "passed": [1,0,1,1,1], "latency_ms": [820,1400,760,990,1010]})
+print(df.describe())
+cfg = {"seed": 42, "model": "llama3.2:1b", "prompt_version": "v3"}
+print("config hash", hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()[:12])</code></pre></div>
 </section>
 
 <div data-slot="practice"></div>

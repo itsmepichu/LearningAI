@@ -24,13 +24,6 @@
 <div class="kpis" id="vecK"></div></div></div>
 <figcaption><b>Drag the sliders.</b> The orange segment is the projection of a onto b. Cosine similarity ignores length; the dot product does not. Doubling the length of a doubles the dot product but leaves cosine unchanged, which is why cosine is used to compare meaning.</figcaption></figure>
 <div class="box example"><h5>Example: three tiny "embeddings"</h5><p>Suppose "invoice" = [0.9, 0.1, 0.2], "bill" = [0.8, 0.2, 0.3], "giraffe" = [0.1, 0.9, 0.1]. cos(invoice, bill) = (0.72+0.02+0.06)/(0.93·0.88) ≈ 0.98; cos(invoice, giraffe) = (0.09+0.09+0.02)/(0.93·0.91) ≈ 0.24. A search for "bill" therefore retrieves documents about invoices even though the word differs.</p></div>
-<div class="box lab"><h5>Laptop lab <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code>import numpy as np
-E = np.array([[0.9,0.1,0.2],[0.8,0.2,0.3],[0.1,0.9,0.1]])   # rows = vectors
-E = E / np.linalg.norm(E, axis=1, keepdims=True)              # normalise
-print(np.round(E @ E.T, 3))          # all pairwise cosine similarities in one matrix multiply
-q = np.array([0.85,0.15,0.25]); q /= np.linalg.norm(q)
-print(np.argsort(-(E @ q)))          # brute-force "vector search": rank rows by similarity</code></pre></div>
 <figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"cosine"}'></div></div>
 <figcaption><b>Lab, in real Python if you opt in: cosine similarity with NumPy.</b> <a href="https://pyodide.org/en/stable/">Pyodide</a> runs Python and NumPy in a worker on your device, over your example project's documents. The checks recompute each answer themselves and tell you which part is off.</figcaption></figure>
 </section>
@@ -52,6 +45,13 @@ print(np.argsort(-(E @ q)))          # brute-force "vector search": rank rows by
 <p>The program turns your example project’s English messages into word-count vectors, then finds the three messages closest to one of them: first by dot product, then by cosine similarity. Change <code>QUERY</code> to another message number and run it again.</p>
 <figure class="fig live" id="snip-similarity"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"similarity"}'></div></div>
 <figcaption><b>Dot product and cosine similarity, in real Python.</b> Word counts do not capture meaning; embeddings (9.3) do.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>import numpy as np
+E = np.array([[0.9,0.1,0.2],[0.8,0.2,0.3],[0.1,0.9,0.1]])   # rows = vectors
+E = E / np.linalg.norm(E, axis=1, keepdims=True)              # normalise
+print(np.round(E @ E.T, 3))          # all pairwise cosine similarities in one matrix multiply
+q = np.array([0.85,0.15,0.25]); q /= np.linalg.norm(q)
+print(np.argsort(-(E @ q)))          # brute-force "vector search": rank rows by similarity</code></pre></div>
 </section>
 
 <div data-slot="practice"></div>

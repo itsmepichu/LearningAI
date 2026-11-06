@@ -1,13 +1,48 @@
+<section class="tp tp-intuition" id="c6-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>It is often easier to say which of two answers is better than to write the perfect answer yourself. Preference tuning uses that: people (or a strong model) compare pairs of answers, and the model is nudged towards the kind of answer that wins.</p>
+<p>There is a catch, like a student gaming a marking scheme. If the scorers secretly like long answers, the model learns to waffle. Where an answer can be checked automatically, such as code that passes its tests or a maths result that is correct, the reward is harder to fool.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c6-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Preference data</b>: for one prompt, two or more responses and a judgement of which is better (from humans or a model).</div>
-<div><b>Reward model</b>: a model trained on preference data to output a scalar score for (prompt, response).</div>
-<div><b>RLHF</b> (reinforcement learning from human feedback): generate responses, score them with the reward model, update the policy (the LLM) with an RL algorithm such as PPO to increase reward, with a <b>KL penalty</b> to the original model so it does not drift into exploiting the reward model.</div>
-<div><b>DPO</b> (direct preference optimisation, 2023): skip the reward model and RL loop; a closed-form loss directly increases the probability of the preferred response relative to the rejected one, relative to a frozen reference model. Simpler and more stable; widely used for open models.</div>
-<div><b>RL with verifiable rewards (RLVR)</b>: when correctness can be checked automatically (unit tests, maths answers, format rules), use that as the reward. Algorithms like GRPO sample several answers per prompt and reinforce the better-than-average ones. This is how "reasoning" models learn long chains of thought.</div>
+<div><b><a class="gl" href="#gl-reward-model">Reward model</a></b>: a model trained on preference data to output a scalar score for (prompt, response).</div>
+<div><b><a class="gl" href="#gl-rlhf">RLHF</a></b> (reinforcement learning from human feedback): generate responses, score them with the reward model, update the policy (the LLM) with an RL algorithm such as PPO to increase reward, with a <b>KL penalty</b> to the original model so it does not drift into exploiting the reward model.</div>
+<div><b><a class="gl" href="#gl-dpo">DPO</a></b> (direct preference optimisation, 2023): skip the reward model and RL loop; a closed-form loss directly increases the probability of the preferred response relative to the rejected one, relative to a frozen reference model. Simpler and more stable; widely used for open models.</div>
+<div><b><a class="gl" href="#gl-rlvr">RL with verifiable rewards (RLVR)</a></b>: when correctness can be checked automatically (unit tests, maths answers, format rules), use that as the reward. Algorithms like GRPO sample several answers per prompt and reinforce the better-than-average ones. This is how "reasoning" models learn long chains of thought.</div>
 </div>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Prompt</div><div class="nd">Policy samples<small>N responses</small></div><div class="nd">Score<small>reward model / verifier / preference</small></div><div class="nd">Advantage<small>better or worse than average?</small></div><div class="nd">Update policy<small>+ KL to reference</small></div></div>
-<ol class="steps"><li data-n="0">Take a prompt from the RL dataset (e.g. "Implement <code>parse_date()</code>; tests attached").</li><li data-n="1">The current model generates several candidate responses.</li><li data-n="2">RLHF: reward model score. RLVR: run the tests, 1 if they pass, 0 otherwise. DPO skips sampling and uses fixed (chosen, rejected) pairs.</li><li data-n="3">Compare each response to the group: GRPO uses (reward − group mean)/std; PPO uses a learned value baseline.</li><li data-n="4">Increase probability of above-average responses, decrease below-average, while a KL term keeps the model close to its starting point to avoid <b>reward hacking</b> (gaming the scorer).</li></ol></div>
+<ol class="steps"><li data-n="0">Take a prompt from the RL dataset (e.g. "Implement <code>parse_date()</code>; tests attached").</li><li data-n="1">The current model generates several candidate responses.</li><li data-n="2">RLHF: reward model score. RLVR: run the tests, 1 if they pass, 0 otherwise. DPO skips sampling and uses fixed (chosen, rejected) pairs.</li><li data-n="3">Compare each response to the group: GRPO uses (reward − group mean)/std; PPO uses a learned value baseline.</li><li data-n="4">Increase probability of above-average responses, decrease below-average, while a KL term keeps the model close to its starting point to avoid <b><a class="gl" href="#gl-reward-hacking">reward hacking</a></b> (gaming the scorer).</li></ol></div>
 <figcaption><b>The preference / RL loop.</b> Reward hacking is real: models learn to write longer answers if the reward model favours length, or to special-case tests. Verifiers must be robust.</figcaption></figure>
 <div class="box example"><h5>Example: a DPO pair</h5><p>Prompt: "Customer asks for a refund outside the 14-day window." <b>Chosen:</b> polite explanation of the policy plus the escalation option. <b>Rejected:</b> "Sure, refund processed!" (violates policy). Thousands of such pairs teach the model the organisation's preferred behaviour, which is exactly what you can do in chapter 13.</p></div>
+</section>
+
+<section class="tp tp-math" id="c6-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>GRPO in numbers.</b> The model writes 8 answers to one coding task and 3 pass the tests. The group’s average reward is 3 ÷ 8 = 0.375. Each passing answer gets 1 − 0.375 = +0.625 (make it more likely) and each failing one 0 − 0.375 = −0.375 (make it less likely). No separate reward model is needed.</p>
+<p><b>How a bias becomes reward.</b> In the simulation in the code, raters who are slightly swayed by length produce a reward model that gives the same answer about 2 more points when it is padded from 100 to 400 words. A model optimised against that reward will learn to pad.</p>
+<p><b>Scale.</b> A typical DPO run uses a few thousand to a few hundred thousand preference pairs; the example in the box below needs only enough to cover the behaviours you care about.</p>
+</section>
+
+<section class="tp tp-code" id="c6-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program learns a reward model from 2,000 simulated preference pairs, shows how raters’ taste for length turns into reward for padding, and computes GRPO advantages for a group of answers. Set <code>LENGTH_BIAS</code> to 0 and then 1, and run it again.</p>
+<figure class="fig live" id="snip-preferences"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"preferences"}'></div></div>
+<figcaption><b>A reward model, and how it gets gamed, in real Python.</b> The answers and preferences are simulated with a fixed seed.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c6-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1706.03741">Christiano et al. (2017), Deep Reinforcement Learning from Human Preferences</a> <small>Learning a reward from pairwise human comparisons.</small></li>
+<li><a href="https://arxiv.org/abs/2305.18290">Rafailov et al. (2023), Direct Preference Optimization</a> <small>DPO: preference tuning without a reward model or RL loop.</small></li>
+<li><a href="https://arxiv.org/abs/2402.03300">Shao et al. (2024), DeepSeekMath</a> <small>Introduces GRPO, the group-relative method in the figure.</small></li>
+<li><a href="https://arxiv.org/abs/2210.10760">Gao, Schulman and Hilton (2022), Scaling Laws for Reward Model Overoptimization</a> <small>How optimising too hard against a reward model makes real quality fall.</small></li>
+<li><a href="https://huggingface.co/docs/trl">TRL documentation</a> <small>DPOTrainer, GRPOTrainer and RewardTrainer in code.</small></li>
+</ol>
+</section>

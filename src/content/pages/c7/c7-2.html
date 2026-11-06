@@ -1,8 +1,16 @@
-<p>A prompt is the program you give the model. Messages usually have roles: <b>system</b> (persistent instructions from the developer), <b>user</b> (the request), <b>assistant</b> (prior model replies), and <b>tool</b> (results of tool calls). A well-structured prompt has distinct parts:</p>
+<section class="tp tp-intuition" id="c7-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A prompt is a brief for a capable new colleague who knows nothing about your company. A good brief says who they are acting as, what a good result looks like, the rules, the material to work from, a couple of worked examples, and exactly what shape the answer should take.</p>
+<p>And like any important document, it changes over time. Keep every version, note why it changed, test each change before it goes live, and record which version produced each answer, so you can always trace a bad answer back to its cause.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c7-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A prompt is the program you give the model. Messages usually have roles: <b><a class="gl" href="#gl-system-prompt">system</a></b> (persistent instructions from the developer), <b>user</b> (the request), <b>assistant</b> (prior model replies), and <b>tool</b> (results of tool calls). A well-structured prompt has distinct parts:</p>
 <ol><li><b>Role and goal</b>: who the model is acting as and what success looks like.</li>
 <li><b>Instructions and constraints</b>: specific, positive ("answer in under 80 words"), with the reason when it helps the model generalise.</li>
 <li><b>Context</b>: documents, data, user profile; clearly delimited (e.g. XML-style tags) so the model knows what is data versus instruction.</li>
-<li><b>Examples</b> (<dfn>few-shot</dfn>): 2–5 input→output pairs showing format and edge cases. They are very strong signals; make them diverse so the model does not copy surface details.</li>
+<li><b>Examples</b> (<dfn><a class="gl" href="#gl-few-shot">few-shot</a></dfn>): 2–5 input→output pairs showing format and edge cases. They are very strong signals; make them diverse so the model does not copy surface details.</li>
 <li><b>Output format</b>: a schema or template.</li>
 <li><b>The input</b> itself, last.</li></ol>
 <figure class="fig"><div class="stage">
@@ -16,7 +24,7 @@
 <rect x="20" y="256" width="420" height="34" rx="4" class="nd"/><text x="34" y="278">→ model output (bounded by max_tokens)</text>
 <path d="M450 20 V100" class="lna"/><path d="M450 108 V250" class="lns"/></g>
 </svg></div><figcaption><b>Prompt anatomy.</b> Stable parts first (they can be prompt-cached, 14.3), variable parts last. Delimiting retrieved content matters for security (16.2).</figcaption></figure>
-<p><b>Prompt versioning.</b> Treat prompts as code: store them in the repository or a prompt registry with an ID and version (<code>ticket_triage@v7</code>), review changes, run the evaluation set on every change, and log the prompt version with every production request so any output can be traced to the exact prompt that produced it (18.1).</p>
+<p><b><a class="gl" href="#gl-prompt-versioning">Prompt versioning</a>.</b> Treat prompts as code: store them in the repository or a prompt registry with an ID and version (<code>ticket_triage@v7</code>), review changes, run the evaluation set on every change, and log the prompt version with every production request so any output can be traced to the exact prompt that produced it (18.1).</p>
 <div class="box example"><h5>Example: a versioned prompt file</h5>
 <pre><code># prompts/ticket_triage/v7.yaml
 id: ticket_triage
@@ -32,4 +40,30 @@ examples:
   - in: "I was charged twice this month"           out: {"category":"billing","urgent":false}
   - in: "Nobody on my team can log in since 9am"   out: {"category":"access","urgent":true}
 changelog: "v7: clarified urgency rule after eval case #118 regression"</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c7-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What examples cost.</b> Five examples of about 60 tokens each add 300 tokens to every call. At a million calls a month and $1 per million input tokens, that is 300 million tokens, about $300 a month: usually worth it, but worth knowing.</p>
+<p><b>Why versions matter.</b> Suppose version 7 of a prompt fixes urgency on 6 of 150 test cases but breaks 2 others. Without the evaluation run you would see only the fix; with it, you see a net gain of 4 cases and know which 2 to look at.</p>
+<p><b>Tracing.</b> If every request logs <code>ticket_triage@v7</code> and a hash of the exact prompt text, a complaint about one answer leads straight to the prompt, model and settings that produced it.</p>
+</section>
+
+<section class="tp tp-code" id="c7-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds a classification prompt from clearly delimited parts, with one example per label from your example project’s data, then makes version 2 with a new rule and prints the difference and a hash of each version. Change the rule, or the examples’ <code>seed</code>, and run it again.</p>
+<figure class="fig live" id="snip-prompt-versions"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"prompt-versions"}'></div></div>
+<figcaption><b>A prompt from parts, with versions, in real Python.</b> It does not show which version works better; only an evaluation run can.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c7-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">Anthropic: Prompt engineering overview</a> <small>Structure, examples, XML tags and the other techniques above.</small></li>
+<li><a href="https://platform.openai.com/docs/guides/prompt-engineering">OpenAI: Prompt engineering</a> <small>Another provider’s guide to the same ideas.</small></li>
+<li><a href="https://arxiv.org/abs/2005.14165">Brown et al. (2020), Language Models are Few-Shot Learners</a> <small>Why a few examples in the prompt work.</small></li>
+<li><a href="https://arxiv.org/abs/2201.11903">Wei et al. (2022), Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a> <small>Examples that show reasoning steps, not only answers.</small></li>
+</ol>
+</section>

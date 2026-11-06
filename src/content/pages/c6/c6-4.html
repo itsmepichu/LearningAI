@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c6-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>To teach a model to be an assistant, you show it thousands of example conversations. Each one has to be written in the exact format the model expects, with special markers for who is speaking, like a script with the character names in bold. Use the wrong format and the model gets confused about whose turn it is.</p>
+<p>When it learns from those conversations, it should only practise its own lines. Marking the user’s words and the instructions as "read, don’t learn to write" is called loss masking.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c6-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p><b>Instruction datasets</b> contain conversations: system prompt, user turns, assistant turns, and increasingly tool calls and tool results. Sources: human-written demonstrations, filtered public datasets, and synthetic data from stronger models (check the licence of the generating model).</p>
-<p>A <dfn>chat template</dfn> converts a list of messages into the exact token sequence the model was trained on, with special tokens marking roles. Each model family has its own format. Using the wrong template at inference or fine-tuning silently degrades quality. Libraries apply it for you: <code>tokenizer.apply_chat_template(messages)</code>.</p>
-<p><dfn>Loss masking</dfn>: during SFT you usually compute loss only on assistant tokens. The model should learn to <em>produce</em> answers, not to predict the user's words or the system prompt. Masked positions get label −100 in PyTorch/Hugging Face, which the cross-entropy loss ignores.</p>
+<p>A <dfn><a class="gl" href="#gl-chat-template">chat template</a></dfn> converts a list of messages into the exact token sequence the model was trained on, with special tokens marking roles. Each model family has its own format. Using the wrong template at inference or fine-tuning silently degrades quality. Libraries apply it for you: <code>tokenizer.apply_chat_template(messages)</code>.</p>
+<p><dfn><a class="gl" href="#gl-loss-masking">Loss masking</a></dfn>: during SFT you usually compute loss only on assistant tokens. The model should learn to <em>produce</em> answers, not to predict the user's words or the system prompt. Masked positions get label −100 in PyTorch/Hugging Face, which the cross-entropy loss ignores.</p>
 <figure class="fig"><div class="stage">
 <div id="maskTokens" style="line-height:2"></div>
 <div class="legend"><span><i class="tok" style="background:var(--sunk)">abc</i> masked (label −100, no loss)</span><span><i class="tok" style="background:var(--accent-soft);outline:1px solid var(--accent)">abc</i> trained (contributes to loss)</span></div>
@@ -13,4 +21,29 @@
   {"role": "assistant", "content": "{\"number\":\"4471\",\"vendor\":\"Acme GmbH\",\"total\":1240.50,\"currency\":\"EUR\",\"due\":\"2026-12-01\"}"}
 ]}</code></pre></div>
 <div class="walkthru" id="walk-training"><p class="walkthru-h"><b>Walkthrough: one training step, from example to updated weights.</b> One supervised fine-tuning example is templated, tokenized and masked, then goes through the forward pass, the loss, the backward pass and the optimiser update. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"training"}'></div></div>
+</section>
+
+<section class="tp tp-math" id="c6-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How much of a conversation trains the model.</b> A conversation with a 30-token system prompt, a 40-token user message and a 25-token answer has 95 tokens, but only the 25 answer tokens (plus the end marker) have a loss: about a quarter.</p>
+<p><b>At dataset scale.</b> 1,000 conversations of 400 tokens, each with 120 tokens of assistant reply, contain 400,000 tokens but only 120,000 that teach. A dataset’s size in "trained tokens" is what to compare, not its size on disk.</p>
+</section>
+
+<section class="tp tp-code" id="c6-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program turns three of your example project’s labelled messages into fine-tuning conversations, applies a ChatML-style template, and builds the labels with −100 on every token that should not be learned. Change <code>SYSTEM</code> to a longer prompt and see the masked share grow.</p>
+<figure class="fig live" id="snip-chat-template"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"chat-template"}'></div></div>
+<figcaption><b>A chat template and its loss mask, in real Python.</b> The template is generic and the tokenizer is a stand-in, so the counts are not real token counts.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c6-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://huggingface.co/docs/transformers/main/en/chat_templating">Hugging Face: Chat templates</a> <small>How templates are defined and applied for each model.</small></li>
+<li><a href="https://huggingface.co/docs/trl/sft_trainer">TRL: SFT Trainer</a> <small>Supervised fine-tuning with masking of everything but the assistant’s turns.</small></li>
+<li><a href="https://arxiv.org/abs/2109.01652">Wei et al. (2021), Finetuned Language Models Are Zero-Shot Learners (FLAN)</a> <small>Instruction tuning on many tasks.</small></li>
+<li><a href="https://arxiv.org/abs/2305.11206">Zhou et al. (2023), LIMA: Less Is More for Alignment</a> <small>A thousand carefully chosen examples can go a long way.</small></li>
+</ol>
+</section>

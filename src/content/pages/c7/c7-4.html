@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c7-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Free text is for people; programs need data. Asking a model for structured output is like giving it a form to fill in instead of a blank page: the answer comes back in fields your code can read. Tool calling goes one step further: the model fills in a request form ("please look up order A-1043"), and your code decides whether to run it.</p>
+<p>The model never acts by itself. It only asks. Your code checks every request, runs the ones that are allowed, and hands back the result.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c7-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Structured output</b>: the model returns data in a declared format, usually JSON matching a <b>JSON Schema</b>. Many APIs and local engines support <b>constrained decoding</b>, which masks tokens that would break the schema, so the output always parses.</div>
+<div><b><a class="gl" href="#gl-structured-output">Structured output</a></b>: the model returns data in a declared format, usually JSON matching a <b>JSON Schema</b>. Many APIs and local engines support <b><a class="gl" href="#gl-constrained-decoding">constrained decoding</a></b>, which masks tokens that would break the schema, so the output always parses.</div>
 <div><b>Schema validation</b>: parse and check the output in code (e.g. Pydantic). Constrained decoding guarantees shape, not truth: a valid JSON with a wrong amount is still wrong, so add semantic checks.</div>
-<div><b>Tool calling</b> (function calling): you describe functions (name, description, parameter schema); the model may answer with a request to call one with arguments; <em>your code</em> executes it and returns the result as a tool message; the model continues.</div>
-<div><b>Streaming</b>: receive tokens as they are generated (usually Server-Sent Events) instead of waiting for the full response. Improves perceived latency; complicates validation and error handling.</div>
+<div><b><a class="gl" href="#gl-tool-calling">Tool calling</a></b> (function calling): you describe functions (name, description, parameter schema); the model may answer with a request to call one with arguments; <em>your code</em> executes it and returns the result as a tool message; the model continues.</div>
+<div><b><a class="gl" href="#gl-streaming">Streaming</a></b>: receive tokens as they are generated (usually Server-Sent Events) instead of waiting for the full response. Improves perceived latency; complicates validation and error handling.</div>
 </div>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">App sends messages + tool schemas</div><div class="nd">Model returns tool_call<small>get_order(id="A-1043")</small></div><div class="nd">App validates args &amp; permissions</div><div class="nd">App executes tool<small>DB / API</small></div><div class="nd">App sends tool result</div><div class="nd">Model writes final answer</div><div class="nd">App validates &amp; returns</div></div>
@@ -10,6 +18,19 @@
 <figcaption><b>The tool-calling handshake.</b> The model proposes; deterministic code disposes.</figcaption></figure>
 <figure class="fig sim"><div class="stage"><div data-widget="streaming"></div></div>
 <figcaption><b>Streaming vs non-streaming (scripted, illustrative timing).</b> Both finish at the same time; streaming shows the first words after the time-to-first-token. For JSON, stream to the UI but validate the complete object before acting on it.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c7-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Failures at volume.</b> If 2% of free-form answers fail to parse, 100,000 calls a day means 2,000 retries a day. Constrained decoding brings shape failures close to zero, but an answer can still parse and be wrong, so semantic checks stay.</p>
+<p><b>Why streaming feels faster.</b> A 200-token answer at 50 tokens per second, after 0.4 seconds to the first token, takes 0.4 + 200 ÷ 50 = 4.4 seconds to finish either way. With streaming, the reader starts reading at 0.4 seconds instead of staring at a spinner for 4.4.</p>
+</section>
+
+<section class="tp tp-code" id="c7-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks five proposed tool calls against a schema, the list of allowed tools, your example project’s records and who owns each record, and runs only the ones that pass. Add your own proposal to <code>PROPOSALS</code> and run it again.</p>
+<figure class="fig live" id="snip-validate-calls"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"validate-calls"}'></div></div>
+<figcaption><b>Checking a model’s tool calls, in real Python.</b> The proposals are written by hand, not by a model.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: structured output, tool call and streaming with Ollama <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code># pip install ollama pydantic ; ollama pull qwen2.5:1.5b
 from typing import Literal
@@ -38,4 +59,17 @@ for call in r.message.tool_calls or []:
 for chunk in ollama.chat(model="qwen2.5:1.5b", messages=msg, stream=True):
     print(chunk.message.content, end="", flush=True)</code></pre>
 <p>Small models make more tool-call mistakes (wrong arguments, calling when not needed). That is useful: you will see the failure modes your validation must handle.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c7-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://json-schema.org/">JSON Schema</a> <small>The schema language structured outputs and tool definitions use.</small></li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Anthropic: Tool use</a> <small>Defining tools and handling tool calls and results.</small></li>
+<li><a href="https://platform.openai.com/docs/guides/structured-outputs">OpenAI: Structured Outputs</a> <small>Schema-constrained JSON from a hosted API.</small></li>
+<li><a href="https://arxiv.org/abs/2307.09702">Willard and Louf (2023), Efficient Guided Generation for Large Language Models</a> <small>How constrained decoding works (the Outlines library).</small></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">MDN: Server-sent events</a> <small>The protocol most streaming APIs use.</small></li>
+</ol>
+</section>

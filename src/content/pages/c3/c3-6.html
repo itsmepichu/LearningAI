@@ -23,19 +23,6 @@
 <ol class="steps"><li data-n="0">Pull a random sample of failures from validation (not hand-picked ones).</li><li data-n="1">Write one cause per failure. Invent categories as you go, then merge.</li><li data-n="2">Rank buckets by count × business impact.</li><li data-n="3">The fix is often data (labels, coverage), not a bigger model.</li><li data-n="4">Check the fix did not break other slices. This loop is exactly how LLM prompts and RAG systems are improved too (8, 17.9).</li></ol></div>
 <figcaption><b>The error-analysis loop.</b></figcaption></figure>
 <div class="box example"><h5>Example</h5><p>A document classifier drops from 92% to 84% in March. Input monitoring shows the share of scanned PDFs rose from 5% to 30% after a new client onboarded; OCR text is noisy. Error analysis confirms 70% of new errors are scanned documents. Fix: improve OCR and add scanned samples to training, then add a "scanned" slice to the dashboard.</p></div>
-<div class="box lab"><h5>Laptop lab: tuning with Optuna <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code># pip install optuna
-import optuna
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import cross_val_score
-from sklearn.ensemble import HistGradientBoostingClassifier
-X, y = load_breast_cancer(return_X_y=True)
-def objective(t):
-    m = HistGradientBoostingClassifier(learning_rate=t.suggest_float("lr", 0.01, 0.5, log=True),
-                                       max_depth=t.suggest_int("depth", 2, 8), random_state=0)
-    return cross_val_score(m, X, y, cv=5, scoring="f1").mean()
-study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=0))
-study.optimize(objective, n_trials=30); print(study.best_params, round(study.best_value, 4))</code></pre></div>
 </section>
 
 <section class="tp tp-math" id="c3-6-math">
@@ -58,6 +45,19 @@ study.optimize(objective, n_trials=30); print(study.best_params, round(study.bes
 <p>The program breaks the results on your example project’s table down by one column, to find where the model is weakest, then compares the first and last three months of data to look for drift. Change which months are compared (<code>order[:3]</code> and <code>order[-3:]</code>) and run it again.</p>
 <figure class="fig live" id="snip-slices"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"slices"}'></div></div>
 <figcaption><b>Slices and drift, in real Python.</b> The synthetic data has little real drift, so small changes here do not prove a real dataset is stable.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: tuning with Optuna <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># pip install optuna
+import optuna
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import HistGradientBoostingClassifier
+X, y = load_breast_cancer(return_X_y=True)
+def objective(t):
+    m = HistGradientBoostingClassifier(learning_rate=t.suggest_float("lr", 0.01, 0.5, log=True),
+                                       max_depth=t.suggest_int("depth", 2, 8), random_state=0)
+    return cross_val_score(m, X, y, cv=5, scoring="f1").mean()
+study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=0))
+study.optimize(objective, n_trials=30); print(study.best_params, round(study.best_value, 4))</code></pre></div>
 </section>
 
 <div data-slot="practice"></div>

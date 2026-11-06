@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c4-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Before transformers, two designs did most of the work. A CNN looks at an image through a small window that it slides everywhere, like scanning a page with a magnifying glass: the same "edge detector" works in every corner. An RNN reads a sentence one word at a time and keeps a running summary in its head, like listening to a long story and trying to remember the beginning.</p>
+<p>The magnifying glass is efficient but only sees a little at once. The running summary forgets the start of long stories, and it cannot be hurried, because each word has to wait for the one before. Attention fixed both problems, but these designs still turn up in vision, OCR and small time-series models.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c4-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Convolutional neural networks (CNNs)</b> slide small learned filters (kernels) across an image, detecting local patterns (edges → textures → parts → objects). Weight sharing makes them efficient. Still used for vision and OCR components in document pipelines.</li>
-<li><b>Recurrent neural networks (RNNs)</b> process a sequence one element at a time, updating a hidden state h<sub>t</sub> = f(W·x<sub>t</sub> + U·h<sub>t−1</sub>). The same weights are applied at each step. Information from early tokens must survive many multiplications, so it fades.</li>
+<li><b><a class="gl" href="#gl-cnn">Convolutional neural networks (CNNs)</a></b> slide small learned filters (kernels) across an image, detecting local patterns (edges → textures → parts → objects). Weight sharing makes them efficient. Still used for vision and OCR components in document pipelines.</li>
+<li><b><a class="gl" href="#gl-rnn">Recurrent neural networks (RNNs)</a></b> process a sequence one element at a time, updating a hidden state h<sub>t</sub> = f(W·x<sub>t</sub> + U·h<sub>t−1</sub>). The same weights are applied at each step. Information from early tokens must survive many multiplications, so it fades.</li>
 <li><b>LSTMs</b> add a cell state and gates (forget, input, output) that learn what to keep, write and expose, which preserves information over longer spans. GRUs are a simpler variant.</li>
 <li><b>Sequence-to-sequence (seq2seq)</b>: an encoder RNN reads the input into a vector; a decoder RNN generates the output from it. The single fixed vector is a bottleneck for long inputs, which is exactly what attention was invented to fix (1.2, 5.2).</li>
 </ul>
@@ -33,4 +41,31 @@
 <text x="540" y="115" class="okc">attention: look at every</text><text x="540" y="130" class="okc">input position directly</text></g>
 </svg></div><figcaption><b>The bottleneck and its fix.</b> With attention, generating "student" can weight "étudiant" most heavily, regardless of input length.</figcaption></figure>
 <div class="box example"><h5>Example: where these still appear</h5><p>A document-ingestion pipeline (10.3) may use a CNN-based layout detector and a CNN/transformer OCR model before any LLM sees the text. Time-series anomaly detectors on GPU telemetry sometimes use LSTMs because they are small and fast.</p></div>
+</section>
+
+<section class="tp tp-math" id="c4-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Why sharing weights is cheap.</b> A 3 × 3 filter has 9 weights, and the same 9 are reused at every one of the roughly 50,000 positions in a 224 × 224 image. A fully connected layer linking all 50,176 pixels to 50,176 outputs would need 50,176 × 50,176 ≈ 2.5 billion weights.</p>
+<p><b>How fast an RNN forgets.</b> If each step keeps half of the old state, the first word’s share after 20 steps is 0.5 multiplied by itself 20 times: about one millionth. LSTM gates learn to keep more, but very long inputs still fade.</p>
+<p><b>Why RNNs train slowly.</b> A 1,000-word input takes 1,000 steps one after another, because each step needs the result of the one before. A transformer processes all 1,000 positions of a training example at once.</p>
+</section>
+
+<section class="tp tp-code" id="c4-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program counts your example project’s records per day, slides two hand-made filters along the series (a 7-day average and a change detector), and then shows how fast a plain RNN’s memory of its first input fades. Change the <code>EDGE</code> filter or <code>KEEP</code> and run it again.</p>
+<figure class="fig live" id="snip-conv-rnn"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"conv-rnn"}'></div></div>
+<figcaption><b>Convolution and a fading memory, in real Python.</b> The filters here are written by hand; a CNN learns its own.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c4-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://cs231n.github.io/convolutional-networks/">Stanford CS231n: Convolutional Neural Networks</a> <small>How convolution layers, filters and pooling work.</small></li>
+<li><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Olah (2015), Understanding LSTM Networks</a> <small>The clearest picture of LSTM gates.</small></li>
+<li><a href="https://www.bioinf.jku.at/publications/older/2604.pdf">Hochreiter and Schmidhuber (1997), Long Short-Term Memory</a> <small>The LSTM paper.</small></li>
+<li><a href="https://arxiv.org/abs/1409.3215">Sutskever, Vinyals and Le (2014), Sequence to Sequence Learning with Neural Networks</a> <small>The encoder–decoder RNN with its single-vector bottleneck.</small></li>
+<li><a href="https://arxiv.org/abs/1409.0473">Bahdanau, Cho and Bengio (2014), Neural Machine Translation by Jointly Learning to Align and Translate</a> <small>Attention, added to fix that bottleneck.</small></li>
+</ol>
+</section>

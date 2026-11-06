@@ -308,27 +308,27 @@
      "tn": "4.1",
      "title": "Neurons, layers, activations, loss functions and backpropagation",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 531
+     "figures": 4,
+     "interactive": 4,
+     "words": 849
     },
     {
      "id": "c4-2",
      "tn": "4.2",
      "title": "Optimisers, learning rates, batch sizes, epochs and learning-rate schedules",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 356
+     "figures": 3,
+     "interactive": 2,
+     "words": 702
     },
     {
      "id": "c4-3",
      "tn": "4.3",
      "title": "Initialisation, normalisation, dropout and gradient stability",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 356
+     "figures": 2,
+     "interactive": 1,
+     "words": 731
     },
     {
      "id": "c4-4",
@@ -337,18 +337,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 461
+     "figures": 3,
+     "interactive": 2,
+     "words": 788
     },
     {
      "id": "c4-5",
      "tn": "4.5",
      "title": "CNNs, RNNs, LSTMs and sequence-to-sequence models (conceptual)",
      "tags": [],
-     "figures": 2,
-     "interactive": 0,
-     "words": 336
+     "figures": 3,
+     "interactive": 1,
+     "words": 697
     },
     {
      "id": "c4-6",
@@ -357,9 +357,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 483
+     "figures": 2,
+     "interactive": 2,
+     "words": 801
     }
    ],
    "hasIntro": false,
@@ -471,54 +471,54 @@
      "tn": "6.1",
      "title": "Pretraining, continued pretraining, supervised fine-tuning and preference optimisation",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 374
+     "figures": 2,
+     "interactive": 2,
+     "words": 646
     },
     {
      "id": "c6-2",
      "tn": "6.2",
      "title": "Training corpora: collection, licensing, filtering, deduplication, quality and contamination",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 428
+     "figures": 3,
+     "interactive": 2,
+     "words": 768
     },
     {
      "id": "c6-3",
      "tn": "6.3",
      "title": "Dataset mixtures, token budgets, scaling relationships and compute requirements",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 327
+     "figures": 2,
+     "interactive": 2,
+     "words": 612
     },
     {
      "id": "c6-4",
      "tn": "6.4",
      "title": "Instruction datasets, chat templates, loss masking and training objectives",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 276
+     "figures": 2,
+     "interactive": 2,
+     "words": 601
     },
     {
      "id": "c6-5",
      "tn": "6.5",
      "title": "RLHF, reward models, DPO and reinforcement learning for verifiable tasks",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 409
+     "figures": 2,
+     "interactive": 2,
+     "words": 749
     },
     {
      "id": "c6-6",
      "tn": "6.6",
      "title": "Distributed training: data, tensor and pipeline parallelism, plus sharding",
      "tags": [],
-     "figures": 5,
-     "interactive": 4,
-     "words": 563
+     "figures": 6,
+     "interactive": 5,
+     "words": 931
     },
     {
      "id": "c6-7",
@@ -530,7 +530,7 @@
      ],
      "figures": 2,
      "interactive": 2,
-     "words": 598
+     "words": 993
     }
    ],
    "hasIntro": false,
@@ -555,27 +555,27 @@
      "tn": "7.1",
      "title": "Hosted APIs vs self-hosted models; selecting models using task-specific evidence",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 346
+     "figures": 2,
+     "interactive": 1,
+     "words": 653
     },
     {
      "id": "c7-2",
      "tn": "7.2",
      "title": "Prompt structure, instructions, examples and prompt versioning",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 405
+     "figures": 2,
+     "interactive": 1,
+     "words": 714
     },
     {
      "id": "c7-3",
      "tn": "7.3",
      "title": "Context engineering: assembling, prioritising, compressing and managing context",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 313
+     "figures": 2,
+     "interactive": 2,
+     "words": 572
     },
     {
      "id": "c7-4",
@@ -584,36 +584,36 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 514
+     "figures": 3,
+     "interactive": 2,
+     "words": 776
     },
     {
      "id": "c7-5",
      "tn": "7.5",
      "title": "Conversation state, context limits and persistent memory",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 449
+     "figures": 3,
+     "interactive": 3,
+     "words": 730
     },
     {
      "id": "c7-6",
      "tn": "7.6",
      "title": "Timeouts, retries, rate limits, fallbacks and token budgets",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 351
+     "figures": 2,
+     "interactive": 2,
+     "words": 621
     },
     {
      "id": "c7-7",
      "tn": "7.7",
      "title": "Separating probabilistic model output from deterministic business rules",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 448
+     "figures": 2,
+     "interactive": 1,
+     "words": 727
     }
    ],
    "hasIntro": false,

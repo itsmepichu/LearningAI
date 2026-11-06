@@ -1,5 +1,13 @@
-<p>A <dfn>data mixture</dfn> is the proportion of each source in training (e.g. 60% web, 15% code, 10% books and papers, 8% multilingual, 7% maths). Mixtures are tuned with small-scale experiments because they strongly shape capabilities. Often a higher-quality slice is upweighted near the end of training ("annealing").</p>
-<p><dfn>Scaling laws</dfn> are empirical relationships: loss falls smoothly and predictably as a power law in parameters N, tokens D and compute C. Two results are worth memorising:</p>
+<section class="tp tp-intuition" id="c6-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A training run is a budget problem. You have a fixed amount of computer time, and you can spend it on a bigger model or on more reading. Scaling laws are the price list: from small test runs, they predict how good a big run will be, so nobody has to gamble millions on a guess.</p>
+<p>The data mixture is the diet: how much web, code, books and maths the model reads. Change the diet and you change what it is good at, even with the same budget.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c6-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A <dfn><a class="gl" href="#gl-data-mixture">data mixture</a></dfn> is the proportion of each source in training (e.g. 60% web, 15% code, 10% books and papers, 8% multilingual, 7% maths). Mixtures are tuned with small-scale experiments because they strongly shape capabilities. Often a higher-quality slice is upweighted near the end of training ("annealing").</p>
+<p><dfn><a class="gl" href="#gl-scaling-laws">Scaling laws</a></dfn> are empirical relationships: loss falls smoothly and predictably as a power law in parameters N, tokens D and compute C. Two results are worth memorising:</p>
 <ul><li><b>Training compute ≈ 6 · N · D FLOPs</b> (2 for the forward pass, 4 for backward, per parameter per token).</li>
 <li><b>Chinchilla-optimal</b> (2022): for a fixed compute budget, loss is minimised with roughly <b>20 tokens per parameter</b>. Modern models are deliberately trained far past this (hundreds or thousands of tokens per parameter) because a smaller model trained longer is cheaper to <em>serve</em>, and serving costs dominate over a model's lifetime.</li></ul>
 <figure class="fig live"><div class="stage"><div class="wid">
@@ -8,6 +16,32 @@
 <label for="scMfu">Hardware utilisation (MFU) % <input type="range" id="scMfu" min="20" max="60" value="40"><span id="scMfuO"></span></label>
 <label for="scG">GPUs <input type="range" id="scG" min="0" max="100" value="60"><span id="scGO"></span></label></div>
 <div class="kpis" id="scK"></div></div></div>
-<figcaption><b>Compute calculator</b> using C = 6ND and an H100-class GPU at ~989 TFLOPS dense BF16 peak. MFU (model FLOPs utilisation) is the fraction of peak actually achieved; 35–50% is typical for well-tuned large runs. Results are order-of-magnitude estimates and exclude failed runs, experiments and evaluation.</figcaption></figure>
+<figcaption><b>Compute calculator</b> using C = 6ND and an H100-class GPU at ~989 TFLOPS dense BF16 peak. <a class="gl" href="#gl-mfu">MFU</a> (model FLOPs utilisation) is the fraction of peak actually achieved; 35–50% is typical for well-tuned large runs. Results are order-of-magnitude estimates and exclude failed runs, experiments and evaluation.</figcaption></figure>
 <div class="box example"><h5>Example: an 8B model on 15T tokens</h5><p>C = 6 × 8×10⁹ × 15×10¹² = 7.2×10²³ FLOPs. At 40% MFU (≈ 4×10¹⁴ FLOP/s per GPU) that is ≈ 1.8×10⁹ GPU-seconds ≈ 500,000 GPU-hours, the same order of magnitude as published figures for models of this size. At an illustrative $2.50 per GPU-hour, ≈ $1.25M for the final run alone. This is why enterprises adapt existing models rather than pretrain.</p></div>
+</section>
+
+<section class="tp tp-math" id="c6-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Compute-optimal against train-longer.</b> For an 8-billion-parameter model, the compute-optimal point is about 20 tokens per parameter: 20 × 8 billion = 160 billion tokens. Llama 3 8B was trained on about 15 trillion, roughly 1,900 tokens per parameter, about 94 times more. That costs more to train but gives a small model that is cheaper every time it answers.</p>
+<p><b>What a run costs.</b> 8B parameters on 15 trillion tokens is about 500,000 GPU-hours at 40% utilisation. On 1,024 GPUs that is 500,000 ÷ 1,024 ≈ 490 hours, about 20 days, and at an illustrative $2.50 per GPU-hour about $1.25 million, for the final run alone.</p>
+<p><b>A mixture in tokens.</b> If 15% of 15 trillion tokens are code, the model reads 2.25 trillion tokens of code.</p>
+</section>
+
+<section class="tp tp-code" id="c6-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program works out training GPU-hours, days and cost for four model sizes and token budgets. Change <code>MFU</code>, <code>GPUS</code> or the price, or add your own model size, and run it again.</p>
+<figure class="fig live" id="snip-scaling"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"scaling"}'></div></div>
+<figcaption><b>Compute, tokens and cost, in real Python.</b> Prices, utilisation and GPU counts are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c6-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2001.08361">Kaplan et al. (2020), Scaling Laws for Neural Language Models</a> <small>The first scaling laws, and the 6 × parameters × tokens estimate.</small></li>
+<li><a href="https://arxiv.org/abs/2203.15556">Hoffmann et al. (2022), Training Compute-Optimal Large Language Models (Chinchilla)</a> <small>The 20-tokens-per-parameter result.</small></li>
+<li><a href="https://arxiv.org/abs/2204.02311">Chowdhery et al. (2022), PaLM: Scaling Language Modeling with Pathways</a> <small>Defines model FLOPs utilisation (MFU) and reports it for a large run.</small></li>
+<li><a href="https://arxiv.org/abs/2407.21783">Llama Team (2024), The Llama 3 Herd of Models</a> <small>A real data mixture, token budget and compute figure.</small></li>
+</ol>
+</section>
