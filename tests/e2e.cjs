@@ -943,13 +943,10 @@ const PROJECTS = require('../src/content/projects.json').projects
   await page.click('a.gl[href="#gl-bpe"]')
   await page.waitForSelector('#gl-bpe.hit')
   if (!page.url().endsWith('/glossary#gl-bpe')) fails.push(`glossary: the term link went to ${page.url()}`)
-  // math is typeset, and the topic's parts lead its contents
+  // the topic's parts lead its contents
   await page.goto(BASE + '/c5/c5-2', { waitUntil: 'networkidle' })
-  await page.waitForSelector('.math[data-tex] .katex')
-  const raw = await page.$$eval('.math:not([data-tex])', (x) => x.length)
-  if (raw) fails.push(`math: ${raw} formulas were not typeset`)
   const rail = await page.$$eval('.t-rail a.rk-part', (x) => x.map((a) => a.textContent))
-  if (rail.join() !== 'Intuition,Mechanism,The math,Code,Primary sources') fails.push(`topic parts in the rail: ${rail.join(', ')}`)
+  if (rail.join() !== 'Intuition,Mechanism,The numbers,Code,Primary sources') fails.push(`topic parts in the rail: ${rail.join(', ')}`)
 
   await page.goto(BASE + '/c5', { waitUntil: 'networkidle' })
   const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))

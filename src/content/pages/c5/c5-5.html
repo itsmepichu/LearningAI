@@ -18,21 +18,23 @@
 </section>
 
 <section class="tp tp-math" id="c5-5-math">
-<h3 data-n="3">The math</h3>
-<p>A language model factorises the probability of a whole text into next-token predictions:</p>
-<div class="math">p(x_1, \dots, x_n) = \prod_{t=1}^{n} p(x_t \mid x_{&lt;t})</div>
-<p>At each step the final hidden state <span class="math">h_t</span> is multiplied by the LM head <span class="math">W_U \in \mathbb{R}^{d \times |V|}</span> to give one logit per token, and softmax turns logits into probabilities:</p>
-<div class="math">z = h_t W_U, \qquad p_i = \operatorname{softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^{|V|} e^{z_j}}</div>
-<p>Adding a constant <span class="math">c</span> to every logit multiplies the top and bottom by <span class="math">e^{c}</span>, so the probabilities do not change. Implementations subtract <span class="math">\max_j z_j</span> before exponentiating so that <span class="math">e^{z}</span> cannot overflow.</p>
-<p>Training minimises the <a class="gl" href="#gl-cross-entropy">cross-entropy</a> of the true next tokens (2.4), averaged over positions:</p>
-<div class="math">\mathcal{L} = -\frac{1}{n}\sum_{t=1}^{n} \log p(x_t \mid x_{&lt;t}), \qquad \frac{\partial \mathcal{L}_t}{\partial z_i} = p_i - \mathbb{1}[i = x_t]</div>
-<p>The gradient is simply "predicted probability minus 1 for the right token, minus 0 for the others". A model that guesses uniformly scores <span class="math">\mathcal{L} = \ln |V|</span>, about 11.8 nats for a 128k vocabulary; <span class="math">e^{\mathcal{L}}</span> is the <b>perplexity</b>, the effective number of tokens the model is choosing between.</p>
+<h3 data-n="3">The numbers</h3>
+<p><b>The probability of a whole sentence</b> is the probabilities of its tokens multiplied together. If the model gives "The" 0.2, then "cat" 0.1, then "sat" 0.3, the whole phrase gets 0.2 × 0.1 × 0.3 = 0.006.</p>
+<p><b>Softmax in three steps.</b> Raise the number e (about 2.718) to the power of each score, add the results, and divide each by the total. The example below does this by hand. Adding the same number to every score changes nothing: the scores [12, 11, 10.1] give the same probabilities as [2, 1, 0.1].</p>
 <div class="box example"><h5>Example: softmax by hand</h5><p>Logits for three tokens: [2.0, 1.0, 0.1]. e<sup>2</sup> = 7.39, e<sup>1</sup> = 2.72, e<sup>0.1</sup> = 1.11, total 11.22. Probabilities: 0.66, 0.24, 0.10. If the true next token is the second one, its cross-entropy loss is −ln(0.24) = 1.42.</p></div>
+<p><b>The training loss.</b> For each position, take the probability the model gave to the token that really came next, and take minus its natural log (the <a class="gl" href="#gl-cross-entropy">cross-entropy</a>, 2.4). A confident right answer costs little and a confident wrong one costs a lot:</p>
+<div class="tw"><table>
+<tr><th>Probability given to the right token</th><th>Loss</th></tr>
+<tr><td>0.9</td><td>0.11</td></tr>
+<tr><td>0.24</td><td>1.42</td></tr>
+<tr><td>0.01</td><td>4.61</td></tr>
+</table></div>
+<p>A model that guesses evenly across a 128,000-token vocabulary scores a loss of about 11.8, so training starts near there and goes down.</p>
 </section>
 
 <section class="tp tp-code" id="c5-5-code">
 <h3 data-n="4">Code</h3>
-<p>The program builds the smallest possible language model from your example project's English messages: a bigram model whose logit for the next word is the log of how often it followed the current word. It prints the top candidates with their probabilities, generates greedily, and measures held-out cross-entropy against the uniform baseline <span class="math">\ln|V|</span>. Change the smoothing value 0.1 to 1.0 and watch the held-out loss and the probabilities change.</p>
+<p>The program builds the smallest possible language model from your example project's English messages: a bigram model whose logit for the next word is the log of how often it followed the current word. It prints the top candidates with their probabilities, generates greedily, and measures its loss on messages it did not train on, next to the loss of an even guess. Change the smoothing value 0.1 to 1.0 and watch the held-out loss and the probabilities change.</p>
 <figure class="fig live" id="snip-softmax"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"softmax"}'></div></div>
 <figcaption><b>From logits to a generated sentence, in real Python.</b> The operations are the ones an LLM uses; the model sees one word of context, so its output and loss are not comparable to an LLM's.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: look at real logits <span class="tag cpu">Laptop · CPU</span></h5>

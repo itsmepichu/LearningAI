@@ -29,14 +29,22 @@
 </section>
 
 <section class="tp tp-math" id="c5-6-math">
-<h3 data-n="3">The math</h3>
-<p><b>Temperature</b> <span class="math">T &gt; 0</span> divides the logits before softmax:</p>
-<div class="math">p_i(T) = \frac{e^{z_i/T}}{\sum_j e^{z_j/T}}</div>
-<div class="math">\lim_{T \to 0} p(T) = \text{one-hot on } \arg\max_i z_i, \qquad \lim_{T \to \infty} p_i(T) = \frac{1}{|V|}</div>
-<p>Two tokens whose logits differ by <span class="math">\Delta</span> have a probability ratio of <span class="math">e^{\Delta/T}</span>: at <span class="math">T = 0.5</span> a gap of 1 becomes a ratio of 7.4 instead of 2.7.</p>
-<p><b>Top-k</b> keeps the set <span class="math">S_k</span> of the <span class="math">k</span> most probable tokens. <b>Top-p</b> sorts the probabilities <span class="math">p_{(1)} \ge p_{(2)} \ge \dots</span> and keeps the smallest prefix that reaches <span class="math">p</span>:</p>
-<div class="math">S_p = \{(1), \dots, (m)\}, \quad m = \min\Big\{ m' : \sum_{r=1}^{m'} p_{(r)} \ge p \Big\}, \qquad q_i = \frac{p_i\, \mathbb{1}[i \in S]}{\sum_{j \in S} p_j}</div>
-<p>The token is then drawn from the renormalised <span class="math">q</span>. When the model is confident, <span class="math">S_p</span> holds one or two tokens; when it is unsure, it holds many, which is why top-p adapts where top-k cannot. <b>Min-p</b> keeps tokens with <span class="math">p_i \ge p_{\min} \cdot \max_j p_j</span>, a threshold that scales with the top token's probability.</p>
+<h3 data-n="3">The numbers</h3>
+<p><b>Temperature.</b> Divide every score by the temperature, then apply softmax. With two tokens scored 2 and 1:</p>
+<div class="tw"><table>
+<tr><th>Temperature</th><th>Scores after dividing</th><th>Chance of the first token</th></tr>
+<tr><td>0.5</td><td>4 and 2</td><td>88%</td></tr>
+<tr><td>1</td><td>2 and 1</td><td>73%</td></tr>
+<tr><td>2</td><td>1 and 0.5</td><td>62%</td></tr>
+</table></div>
+<p>A low temperature makes the favourite even more likely; a high one evens things out.</p>
+<p><b>Top-k, top-p and min-p on five tokens</b> with probabilities 0.50, 0.20, 0.15, 0.10 and 0.05:</p>
+<ul>
+<li><b>Top-k = 2</b> keeps the two biggest, 0.50 and 0.20. They add to 0.70, so after renormalising (dividing each by 0.70) they become 0.71 and 0.29.</li>
+<li><b>Top-p = 0.8</b> adds from the top until the total reaches 0.8: 0.50 + 0.20 = 0.70 is not enough, + 0.15 = 0.85 is. It keeps three tokens, which become 0.59, 0.24 and 0.18.</li>
+<li><b>Min-p = 0.25</b> keeps tokens with at least a quarter of the top token's probability: 0.25 × 0.50 = 0.125, so it keeps 0.50, 0.20 and 0.15.</li>
+</ul>
+<p>If the top token had 0.95, top-p 0.8 would keep only that one: top-p keeps fewer tokens when the model is sure and more when it is not.</p>
 </section>
 
 <section class="tp tp-code" id="c5-6-code">

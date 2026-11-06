@@ -50,18 +50,18 @@
 </section>
 
 <section class="tp tp-math" id="c5-3-math">
-<h3 data-n="3">The math</h3>
-<p><b>RoPE.</b> Split a query or key vector into pairs of dimensions. For the pair <span class="math">i</span> of a token at position <span class="math">m</span>, rotate by the angle <span class="math">m\theta_i</span>, with frequencies falling geometrically across the pairs:</p>
-<div class="math">R_{m}^{(i)} = \begin{pmatrix} \cos m\theta_i &amp; -\sin m\theta_i \\ \sin m\theta_i &amp; \cos m\theta_i \end{pmatrix}, \qquad \theta_i = 10000^{-2i/d}</div>
-<p>Rotations compose by adding angles, and the transpose of a rotation is the rotation the other way, so the score between a query at <span class="math">m</span> and a key at <span class="math">n</span> depends only on the distance:</p>
-<div class="math">(R_m q)^\top (R_n k) = q^\top R_m^\top R_n\, k = q^\top R_{n-m}\, k</div>
-<p><b>RMSNorm and the pre-norm block.</b> With a learned gain <span class="math">g</span> and a small <span class="math">\varepsilon</span>:</p>
-<div class="math">\operatorname{RMSNorm}(x) = \frac{x}{\sqrt{\tfrac{1}{d}\sum_{j=1}^{d} x_j^2 + \varepsilon}} \odot g</div>
-<div class="math">h = x + \operatorname{Attn}(\operatorname{RMSNorm}(x)), \qquad y = h + \operatorname{FFN}(\operatorname{RMSNorm}(h))</div>
-<p>Because each sub-layer is added, the gradient of the output with respect to the input is the identity plus the sub-layer's own gradient, <span class="math">\partial y / \partial x = I + \partial F/\partial x</span>, so a path straight through all the layers always exists.</p>
-<p><b>SwiGLU FFN.</b> With <span class="math">\operatorname{Swish}(z) = z\,\sigma(z)</span> and three matrices:</p>
-<div class="math">\operatorname{FFN}(x) = \big(\operatorname{Swish}(xW_1) \odot xW_3\big)\,W_2, \qquad W_1, W_3 \in \mathbb{R}^{d \times f},\ W_2 \in \mathbb{R}^{f \times d}</div>
-<p>That is <span class="math">3df</span> parameters per layer: <span class="math">3 \times 4096 \times 14336 \approx 176\text{M}</span> for the 8B shape in the example above.</p>
+<h3 data-n="3">The numbers</h3>
+<p><b>RoPE, like the hand of a clock.</b> Each position turns the query or key vector by a fixed step, the way a clock hand moves a fixed amount every minute. A query at position 5 is turned 5 steps and a key at position 2 is turned 2 steps, so the angle between them is 3 steps. At positions 105 and 102 both are turned much further, but the angle between them is still 3 steps. The attention score depends on that angle, so it depends only on how far apart the two tokens are. Real RoPE does this with many clock hands turning at different speeds.</p>
+<p><b>RMSNorm on a tiny vector.</b> Take the vector [3, 4]:</p>
+<ul>
+<li>Square each number and take the average: (9 + 16) ÷ 2 = 12.5.</li>
+<li>Take the square root: about 3.54. This is the vector's typical size.</li>
+<li>Divide each number by it: [0.85, 1.13].</li>
+<li>Multiply by learned gains, which the model tunes during training.</li>
+</ul>
+<p>A vector ten times bigger, [30, 40], gives the same [0.85, 1.13], so every token reaches the next layer at a similar scale.</p>
+<p><b>The residual add.</b> Each sub-layer's output is added to its input: new value = old value + what the sub-layer adds. If a sub-layer learns nothing useful, it can add almost nothing and the signal passes through unchanged, which is why 100 layers can be stacked.</p>
+<p><b>The FFN's size.</b> A SwiGLU FFN has three matrices of 4,096 × 14,336 numbers each. That is 3 × 4,096 × 14,336 ≈ 176 million parameters in every layer of the 8B model above.</p>
 </section>
 
 <section class="tp tp-code" id="c5-3-code">

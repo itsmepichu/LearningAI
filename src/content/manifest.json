@@ -386,7 +386,7 @@
      "tags": [],
      "figures": 4,
      "interactive": 3,
-     "words": 812
+     "words": 849
     },
     {
      "id": "c5-2",
@@ -397,7 +397,7 @@
      ],
      "figures": 4,
      "interactive": 4,
-     "words": 959
+     "words": 1040
     },
     {
      "id": "c5-3",
@@ -408,7 +408,7 @@
      ],
      "figures": 5,
      "interactive": 4,
-     "words": 1125
+     "words": 1257
     },
     {
      "id": "c5-4",
@@ -417,7 +417,7 @@
      "tags": [],
      "figures": 2,
      "interactive": 1,
-     "words": 499
+     "words": 571
     },
     {
      "id": "c5-5",
@@ -428,7 +428,7 @@
      ],
      "figures": 2,
      "interactive": 1,
-     "words": 663
+     "words": 720
     },
     {
      "id": "c5-6",
@@ -437,7 +437,7 @@
      "tags": [],
      "figures": 3,
      "interactive": 3,
-     "words": 784
+     "words": 871
     },
     {
      "id": "c5-7",
@@ -446,7 +446,7 @@
      "tags": [],
      "figures": 3,
      "interactive": 2,
-     "words": 801
+     "words": 866
     }
    ],
    "hasIntro": false,

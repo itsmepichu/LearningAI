@@ -16,21 +16,24 @@
 <figure class="fig live"><div class="stage"><div class="wid">
 <label for="ctxN">Context length <input type="range" id="ctxN" min="10" max="17" value="13" step="1"><span id="ctxNO"></span></label>
 <div class="kpis" id="ctxK"></div><svg id="ctxSvg" viewBox="0 0 620 170"></svg></div></div>
-<figcaption><b>How costs scale with context</b> for an 8B-class model (32 layers, 8 KV heads × 128 dims, BF16). Attention FLOPs per layer ≈ 4·n²·d; KV cache = 2 × layers × kv_heads × head_dim × 2 bytes × n. Computed exactly from these formulas.</figcaption></figure>
+<figcaption><b>How costs scale with context</b> for an 8B-class model (32 layers, 8 KV heads × 128 dims, BF16). Attention work grows with the square of the context length, and the KV cache grows in a straight line with it (the numbers part below works through both). Computed exactly, not simulated.</figcaption></figure>
 <div class="box example"><h5>Example: stuffing the context vs retrieving</h5><p>You could put a 400-page manual (≈ 250k tokens) in every prompt. Each request would pay for 250k input tokens, wait seconds for prefill, and need ~33 GB (≈ 31 GiB) of KV cache for an 8B model. Retrieving the 5 most relevant chunks (≈ 3k tokens) is roughly 80× cheaper in tokens and usually more accurate. Prompt caching (14.3) reduces the cost of repeated long prefixes, but not the quality issue.</p></div>
 </section>
 
 <section class="tp tp-math" id="c5-7-math">
-<h3 data-n="3">The math</h3>
-<p><b>MoE layer.</b> The router scores the <span class="math">E</span> experts with <span class="math">r = xW_r</span>, keeps the top <span class="math">k</span>, and mixes their outputs with softmax weights over the kept scores:</p>
-<div class="math">y = \sum_{e \in \operatorname{TopK}(r,\,k)} g_e(x)\, \operatorname{FFN}_e(x), \qquad g_e(x) = \frac{e^{r_e}}{\sum_{e' \in \operatorname{TopK}(r,\,k)} e^{r_{e'}}}</div>
-<p>With <span class="math">L</span> layers, attention parameters <span class="math">A</span> per layer and <span class="math">F</span> per expert, the model stores and uses:</p>
-<div class="math">N_{\text{total}} = L\,(A + E\,F), \qquad N_{\text{active}} = L\,(A + k\,F)</div>
-<div class="math">\text{FLOPs per token} \approx 2\,N_{\text{active}}</div>
-<p>Memory follows <span class="math">N_{\text{total}}</span>; compute per token follows <span class="math">N_{\text{active}}</span>. Training adds a load-balancing loss so the router does not send every token to the same few experts.</p>
-<p><b>Attention and KV cache.</b> For context length <span class="math">n</span> and model width <span class="math">d</span>, the score and weighted-sum products cost per layer, counting a multiply-add as 2:</p>
-<div class="math">\text{FLOPs}_{\text{attn}} \approx 4\,n^2 d, \qquad \text{KV bytes} = 2 \times L \times h_{kv} \times d_{\text{head}} \times b \times n</div>
-<p>For an 8B-class model (<span class="math">L = 32</span>, <span class="math">h_{kv} = 8</span>, <span class="math">d_{\text{head}} = 128</span>, <span class="math">b = 2</span> bytes in BF16) that is 131,072 bytes, or 128 KiB, per token: about 31 GiB for the 250k-token manual in the example above.</p>
+<h3 data-n="3">The numbers</h3>
+<p><b>MoE: stored versus used.</b> Mixtral 8x7B has 8 experts in each layer and uses 2 of them for each token:</p>
+<ul>
+<li>Stored: about 47 billion parameters. All of them must fit in memory.</li>
+<li>Used for each token: about 13 billion, so each token costs about as much compute as a 13B dense model.</li>
+<li>A rule of thumb is about 2 calculations per used parameter per token: 2 × 13 billion ≈ 26 billion calculations for each token.</li>
+</ul>
+<p><b>Attention grows with the square of the length.</b> Going from 1,000 to 8,000 tokens makes the text 8 times longer and the attention work 8 × 8 = 64 times bigger.</p>
+<p><b>The KV cache.</b> For each token, an 8B-class model keeps a key and a value (2) in each of 32 layers, for 8 key-value heads of 128 numbers, at 2 bytes per number:</p>
+<ul>
+<li>2 × 32 × 8 × 128 × 2 = 131,072 bytes, which is 128 KiB per token.</li>
+<li>For the 250,000-token manual in the example above: 128 KiB × 250,000 ≈ 31 GiB, just for one request's cache.</li>
+</ul>
 </section>
 
 <section class="tp tp-code" id="c5-7-code">

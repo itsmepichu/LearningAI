@@ -19,13 +19,15 @@
 </section>
 
 <section class="tp tp-math" id="c5-1-math">
-<h3 data-n="3">The math</h3>
-<p>One BPE training step picks the adjacent pair that occurs most often across the corpus, counting each word as often as it appears:</p>
-<div class="math">(a^*, b^*) = \arg\max_{(a,b)} \sum_{w \in \text{corpus}} \text{count}(w)\cdot \#\{\,i : s_i(w) = a,\ s_{i+1}(w) = b\,\}</div>
-<p>Here <span class="math">s(w)</span> is the word's current list of symbols. The pair is replaced by the new symbol <span class="math">ab</span> everywhere, and the vocabulary grows by one. After <span class="math">M</span> merges a character-level start of <span class="math">C</span> symbols has <span class="math">|V| = C + M</span> tokens (byte-level BPE starts at <span class="math">C = 256</span>).</p>
-<p>The token tax of a language <span class="math">\ell</span> on a given tokenizer is its token count relative to English for the same content:</p>
-<div class="math">\text{tax}(\ell) = \frac{\text{tokens}(\text{text}_\ell)}{\text{tokens}(\text{text}_{\text{en}})}, \qquad \text{cost}_\ell \approx \text{tax}(\ell)\cdot \text{cost}_{\text{en}}</div>
-<p>For example, a tax of 2.4 means a Tamil conversation costs about 2.4 times as much as the same conversation in English, and fits 1/2.4 ≈ 42% as much text into the same <a class="gl" href="#gl-context-window">context window</a>.</p>
+<h3 data-n="3">The numbers</h3>
+<p><b>One BPE step.</b> Look at every pair of neighbouring pieces in every word, and count how often each pair appears. A word that appears 10 times in the text counts 10 times. The pair with the highest count is merged into one new piece, and that piece is added to the vocabulary.</p>
+<p><b>Vocabulary size.</b> Every merge adds exactly one token. Byte-level BPE starts with 256 tokens (one per byte), so 50,000 merges give 50,256 tokens. GPT-2 did exactly this and added one special end-of-text token: 50,257 in total.</p>
+<p><b>The token tax.</b> Take the same message in two languages and count the tokens in each. Divide the other language's count by the English count:</p>
+<ul>
+<li>English: 100 tokens. Tamil: 240 tokens. The tax is 240 ÷ 100 = 2.4.</li>
+<li>The Tamil conversation costs about 2.4 times as much.</li>
+<li>It also fits only 100 ÷ 240 ≈ 42% as much text into the same <a class="gl" href="#gl-context-window">context window</a>.</li>
+</ul>
 </section>
 
 <section class="tp tp-code" id="c5-1-code">

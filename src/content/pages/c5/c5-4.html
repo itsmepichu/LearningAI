@@ -20,13 +20,15 @@
 </section>
 
 <section class="tp tp-math" id="c5-4-math">
-<h3 data-n="3">The math</h3>
-<p>All three families use the same attention, <span class="math">\operatorname{softmax}(QK^\top/\sqrt{d_k} + M)V</span>; they differ in the mask <span class="math">M</span> and in where <span class="math">Q</span>, <span class="math">K</span> and <span class="math">V</span> come from. Writing <span class="math">M_{ij} = 0</span> for "may attend" and <span class="math">-\infty</span> for "may not":</p>
-<div class="math">M^{\text{enc}}_{ij} = 0 \ \ \forall\, i,j \qquad M^{\text{dec}}_{ij} = \begin{cases} 0 &amp; j \le i \\ -\infty &amp; j &gt; i \end{cases}</div>
-<div class="math">M^{\text{cross}}_{ij} = 0,\ \ Q = H_{\text{dec}}W_Q,\ K = H_{\text{enc}}W_K,\ V = H_{\text{enc}}W_V</div>
-<p>The training objectives follow from the masks. A decoder-only model maximises the probability of each next token given the ones before it; an encoder-only model predicts a random subset <span class="math">\mathcal{M}</span> of masked tokens from everything else:</p>
-<div class="math">\mathcal{L}_{\text{causal}} = -\sum_{t=1}^{n} \log p(x_t \mid x_{&lt;t}), \qquad \mathcal{L}_{\text{masked}} = -\sum_{t \in \mathcal{M}} \log p(x_t \mid x_{\setminus \mathcal{M}})</div>
-<p>A causal mask allows <span class="math">n(n+1)/2</span> of the <span class="math">n^2</span> pairs. Because no token's representation depends on later tokens, the keys and values of earlier tokens never change during generation and can be cached (the <a class="gl" href="#gl-kv-cache">KV cache</a>); a bidirectional model would have to recompute them every time a token is added.</p>
+<h3 data-n="3">The numbers</h3>
+<p><b>Who can see whom.</b> Count the allowed pairs with 4 output tokens and 5 input tokens:</p>
+<ul>
+<li>Encoder-only, with 4 tokens: every token sees all 4, so 4 × 4 = 16 pairs.</li>
+<li>Decoder-only, with 4 tokens: the first sees 1, the second 2, the third 3, the fourth 4, so 1 + 2 + 3 + 4 = 10 pairs.</li>
+<li>Cross-attention: each of the 4 output tokens sees all 5 input tokens, so 4 × 5 = 20 pairs.</li>
+</ul>
+<p><b>How much each text teaches.</b> A decoder-only model gets a lesson at every position: a 1,000-token text gives 1,000 "what comes next?" questions. BERT hides about 15% of the tokens and learns only from those, so the same text gives about 150 questions.</p>
+<p><b>Why the decoder can reuse work.</b> In a decoder-only model, an earlier token never sees later tokens, so its keys and values do not change when a new token is added. They can be saved and reused (the <a class="gl" href="#gl-kv-cache">KV cache</a>). In an encoder, adding a token changes what every earlier token sees, so everything would have to be computed again.</p>
 </section>
 
 <section class="tp tp-code" id="c5-4-code">

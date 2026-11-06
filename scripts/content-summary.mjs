@@ -162,7 +162,7 @@ for (const c of manifest.chapters) {
       const body = part(name)
       if (body && !new RegExp(`^<section[^>]*>\\s*<h3 data-n="[^"]+">`).test(body)) err(where, `the ${name} part starts with <h3 data-n="…">`)
     }
-    if (!/class="math"/.test(part('math'))) err(where, 'the Math part needs at least one formula (class="math")')
+    if (/class="math"/.test(html)) err(where, 'explain with words and worked numbers, not formulas (class="math")')
     const code = part('code')
     const widgets = [...code.matchAll(/data-widget="(py-snippet|colab-guide)"(?:\s+data-props='([^']*)')?/g)]
     if (!widgets.length) err(where, 'the Code part needs a py-snippet or a colab-guide')
