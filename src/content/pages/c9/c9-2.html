@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c9-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Before anything can be retrieved, documents have to be prepared, like a library cataloguing new books: read the file, clean it up, cut it into passages, record what each passage is about, and file it so it can be found fast. That is the offline half of RAG. The online half happens per question: find the best passages and hand them to the model.</p>
+<p>How you cut the passages matters more than it sounds. Cut a rule away from its exception, or a sentence away from its heading, and the right answer can never be found again.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c9-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>RAG has an <b>offline</b> path (prepare documents) and an <b>online</b> path (answer a question). Each stage has design choices that affect quality.</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Ingest<small>connectors, crawl</small></div><div class="nd">Parse<small>PDF, HTML, DOCX</small></div><div class="nd">Clean<small>boilerplate, headers</small></div><div class="nd">Chunk<small>~200–800 tokens</small></div><div class="nd">Embed<small>vector per chunk</small></div><div class="nd">Index<small>vector + keyword + metadata</small></div><div class="nd">Retrieve<small>top-k for query</small></div><div class="nd">Generate<small>answer + citations</small></div></div>
@@ -12,6 +20,31 @@
 <li data-n="7"><b>Generate</b>: put the top chunks with IDs into a prompt instructing the model to answer only from them and cite chunk IDs, or to abstain.</li>
 </ol></div><figcaption><b>The RAG pipeline.</b> Stages 1–6 run offline (continuously at scale, chapter 10); 7–8 run per question in a few hundred milliseconds plus generation time.</figcaption></figure>
 <figure class="fig live"><div class="stage"><div data-widget="chunking"></div></div>
-<figcaption><b>Chunking, computed live</b> on a short document from your example project. Fixed-size chunks can cut a rule from its exception and run sections together; paragraph-aware chunking keeps sections intact and prepends the section heading, so each chunk makes sense on its own. Overlap (highlighted) protects sentences that straddle a boundary at the cost of extra storage.</figcaption></figure>
+<figcaption><b><a class="gl" href="#gl-chunking">Chunking</a>, computed live</b> on a short document from your example project. Fixed-size chunks can cut a rule from its exception and run sections together; paragraph-aware chunking keeps sections intact and prepends the section heading, so each chunk makes sense on its own. Overlap (highlighted) protects sentences that straddle a boundary at the cost of extra storage.</figcaption></figure>
 <div class="box example"><h5>Example: why context headers help</h5><p>A chunk reading "The limit is 5 days per year" is ambiguous. With a prepended header "Employee Handbook › Leave › Bereavement leave (2026)" it embeds and retrieves correctly for "how many bereavement days do I get?", and the model can cite it unambiguously.</p></div>
+</section>
+
+<section class="tp tp-math" id="c9-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How many chunks.</b> 10,000 documents of 2,000 words, cut into 400-word chunks with 50 words of overlap, move forward 350 words at a time: about 2,000 ÷ 350 ≈ 6 chunks per document, so about 57,000 chunks in all.</p>
+<p><b>What overlap costs.</b> 50 words of overlap on every 350 new words stores and embeds about 50 ÷ 350 ≈ 14% more text, in exchange for fewer facts cut in half.</p>
+<p><b>What a header costs.</b> A title like "Employee Handbook › Leave › Bereavement leave" adds about 15 tokens to each chunk: 15 × 57,000 ≈ 855,000 extra tokens to embed once, a small price for chunks that make sense on their own.</p>
+</section>
+
+<section class="tp tp-code" id="c9-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program cuts six of your example project’s documents into fixed 30-word chunks with overlap, then into sentence-aware chunks that each start with their document title, and counts the chunks that end mid-sentence. Change <code>SIZE</code> and <code>OVERLAP</code> and run it again.</p>
+<figure class="fig live" id="snip-chunking"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"chunking"}'></div></div>
+<figcaption><b>Fixed-size against sentence-aware chunks, in real Python.</b> It does not measure retrieval quality; only an evaluation (9.7) can.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c9-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a> <small>Adding context to each chunk before embedding it, with measured gains.</small></li>
+<li><a href="https://docs.langchain.com/oss/python/integrations/splitters">LangChain: Text splitters</a> <small>Common chunking methods and their settings.</small></li>
+<li><a href="https://arxiv.org/abs/2312.10997">Gao et al. (2023), Retrieval-Augmented Generation for Large Language Models: A Survey</a> <small>Chunking and indexing choices in context.</small></li>
+</ol>
+</section>

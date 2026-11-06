@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c10-9-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The advanced methods each fix one specific kind of failure. Searching summaries first helps with "big picture" questions. Matching token by token helps when exact details matter. A knowledge graph helps with questions about connections between things. An agent that searches several times helps with messy questions that need several sources.</p>
+<p>Each one costs money, speed and complexity, so they are tools for a diagnosed problem, not upgrades to apply by default. Measure first, then add the one that fixes what you measured.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-9-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>These techniques help specific failure patterns and add cost and complexity. Adopt one only when evaluation shows (a) the failure pattern is common in your queries and (b) the technique fixes it on your benchmark by more than simpler fixes (better parsing, hybrid search, reranking, query rewriting).</p>
 <div class="tw"><table>
 <tr><th>Technique</th><th>How it works</th><th>Fixes</th><th>Costs</th><th>Justified when evaluation shows</th></tr>
-<tr><td><b>Hierarchical search</b></td><td>Index summaries at document/section level as well as chunks; search coarse first, then drill into the best documents. RAPTOR-style trees cluster and summarise recursively.</td><td>"Big picture" questions, very large corpora where chunk-level search returns scattered pieces</td><td>LLM summarisation of the corpus; summaries must be refreshed on change</td><td>Low recall on broad or document-level questions; many near-duplicate chunks from different docs crowd results</td></tr>
-<tr><td><b>Late interaction</b> (ColBERT)</td><td>Keep one vector <em>per token</em>; score = Σ over query tokens of the max similarity to any document token ("MaxSim").</td><td>Fine-grained matching (names, specifics) that a single vector blurs</td><td>10–100× more vectors per chunk; specialised indexes (PLAID, compression)</td><td>Single-vector dense + reranker still misses precise matches; reranker latency is too high</td></tr>
-<tr><td><b>Knowledge graphs / GraphRAG</b></td><td>Extract entities and relations into a graph; retrieve by traversing relations or by community summaries.</td><td>Multi-hop and relationship questions ("which suppliers of X also supply Y?"), corpus-wide themes</td><td>Expensive LLM extraction; graph quality and freshness to maintain</td><td>Many multi-hop questions fail; the domain is naturally entity-centric (products, parts, people)</td></tr>
+<tr><td><b><a class="gl" href="#gl-hierarchical-retrieval">Hierarchical search</a></b></td><td>Index summaries at document/section level as well as chunks; search coarse first, then drill into the best documents. RAPTOR-style trees cluster and summarise recursively.</td><td>"Big picture" questions, very large corpora where chunk-level search returns scattered pieces</td><td>LLM summarisation of the corpus; summaries must be refreshed on change</td><td>Low recall on broad or document-level questions; many near-duplicate chunks from different docs crowd results</td></tr>
+<tr><td><b><a class="gl" href="#gl-late-interaction">Late interaction</a></b> (ColBERT)</td><td>Keep one vector <em>per token</em>; score = Σ over query tokens of the max similarity to any document token ("MaxSim").</td><td>Fine-grained matching (names, specifics) that a single vector blurs</td><td>10–100× more vectors per chunk; specialised indexes (PLAID, compression)</td><td>Single-vector dense + reranker still misses precise matches; reranker latency is too high</td></tr>
+<tr><td><b><a class="gl" href="#gl-graphrag">Knowledge graphs / GraphRAG</a></b></td><td>Extract entities and relations into a graph; retrieve by traversing relations or by community summaries.</td><td>Multi-hop and relationship questions ("which suppliers of X also supply Y?"), corpus-wide themes</td><td>Expensive LLM extraction; graph quality and freshness to maintain</td><td>Many multi-hop questions fail; the domain is naturally entity-centric (products, parts, people)</td></tr>
 <tr><td><b>Agentic retrieval</b></td><td>An agent decides which indexes or tools to query, rewrites queries, judges results, and iterates (11.2).</td><td>Heterogeneous sources, ambiguous queries, questions needing several searches</td><td>Multiple LLM calls per question; higher latency and variance</td><td>Single-pass pipeline cannot route between sources; complex questions are a meaningful share of traffic</td></tr>
 </table></div>
 <figure class="fig"><div class="stage">
@@ -12,7 +20,7 @@
 <g id="colbertViz"></g></g>
 </svg></div><figcaption><b>Late interaction (MaxSim), animated.</b> Each query token finds its best-matching document token (highlighted line); the document's score is the sum of those maxima. Precise tokens like "E-4012" must find an exact counterpart, which a single averaged vector can lose.</figcaption></figure>
 <div class="box example"><h5>Example: evaluation-driven adoption</h5><p>A team considering GraphRAG labels 300 real queries by type and finds only 6% are multi-hop. On those, GraphRAG improves accuracy from 41% to 63%, but query-decomposition (9.6) with the existing index reaches 58% at a fraction of the cost. They adopt decomposition and revisit graphs if multi-hop traffic grows.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for RAG at scale</h3>
 <div class="cols3">
@@ -23,3 +31,29 @@
 <div class="card"><h5><a href="https://github.com/lightonai/pylate">PyLate</a></h5><span class="meta">late interaction (ColBERT)</span><p>Train and use ColBERT-style multi-vector models built on Sentence Transformers.</p></div>
 <div class="card"><h5><a href="https://microsoft.github.io/graphrag/">GraphRAG</a></h5><span class="meta">knowledge-graph RAG</span><p>Entity/relation extraction, community summaries, local and global search. Indexing is LLM-call heavy; try on a small corpus.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c10-9-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Is it worth it?</b> In the example below, 6% of 300 queries are multi-hop: 18 queries. Raising their accuracy from 41% to 63% fixes about 4 more answers, which moves overall accuracy by about 1.3 points, while every query pays for a more complex system.</p>
+<p><b>What late interaction stores.</b> A single 768-number int8 vector per chunk is 768 bytes. One 128-number vector per token, for 300 tokens at 2 bytes each, is 300 × 128 × 2 = 76,800 bytes: about 100 times more storage per chunk.</p>
+</section>
+
+<section class="tp tp-code" id="c10-9-code">
+<h3 data-n="4">Code</h3>
+<p>The program searches every sentence of your example project’s documents directly, then searches titles first and only the sentences of the two best documents, and compares how much work each does. Change how many documents the first stage keeps (the <code>[:2]</code>) and run it again.</p>
+<figure class="fig live" id="snip-hierarchical"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"hierarchical"}'></div></div>
+<figcaption><b>Coarse first, then fine, in real Python.</b> Titles stand in for the summaries a real hierarchical index would use.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-9-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2401.18059">Sarthi et al. (2024), RAPTOR</a> <small>Recursive summaries for hierarchical retrieval.</small></li>
+<li><a href="https://arxiv.org/abs/2004.12832">Khattab and Zaharia (2020), ColBERT</a> <small>Late interaction with one vector per token.</small></li>
+<li><a href="https://arxiv.org/abs/2404.16130">Edge et al. (2024), From Local to Global: A Graph RAG Approach to Query-Focused Summarization</a> <small>Microsoft’s GraphRAG.</small></li>
+<li><a href="https://arxiv.org/abs/2310.11511">Asai et al. (2023), Self-RAG</a> <small>A model that decides when and what to retrieve.</small></li>
+</ol>
+</section>

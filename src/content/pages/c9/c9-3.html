@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c9-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>There are two ways to search. Keyword search is the index at the back of a book: look up the exact word and go straight to the pages that contain it. It is fast and perfect for codes and names, but it misses a page that says "can’t sign in" when you looked up "login".</p>
+<p>Dense search is like asking a librarian who understands what you mean: it compares meanings, so paraphrases match, but it can be vague about exact codes and rare names. Most good systems use both.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c9-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Inverted index</b>: a map from each term to the list of documents containing it (a <b>posting list</b>), like the index at the back of a book. Finding documents with "refund" means reading one posting list, not scanning every document.</div>
-<div><b>TF-IDF / BM25</b>: score a document by how often query terms occur in it (term frequency, TF), weighted by how rare each term is across the collection (inverse document frequency, IDF). BM25 adds <b>saturation</b> (the 10th occurrence adds little; parameter k₁ ≈ 1.2) and <b>length normalisation</b> (long documents are not favoured just for being long; parameter b ≈ 0.75).</div>
-<div><b>Dense retrieval</b>: embed query and documents into vectors (4.4) and rank by similarity. Captures meaning and paraphrase ("can't sign in" ≈ "login failure"); weaker on exact identifiers, codes and rare names.</div>
-<div><b>Learned sparse retrieval</b> (e.g. SPLADE): a model outputs weights for vocabulary terms, including related terms not in the text, stored in an inverted index. Combines keyword-index efficiency with some semantic matching.</div>
+<div><b><a class="gl" href="#gl-inverted-index">Inverted index</a></b>: a map from each term to the list of documents containing it (a <b>posting list</b>), like the index at the back of a book. Finding documents with "refund" means reading one posting list, not scanning every document.</div>
+<div><b>TF-IDF / <a class="gl" href="#gl-bm25">BM25</a></b>: score a document by how often query terms occur in it (term frequency, TF), weighted by how rare each term is across the collection (inverse document frequency, IDF). BM25 adds <b>saturation</b> (the 10th occurrence adds little; parameter k₁ ≈ 1.2) and <b>length normalisation</b> (long documents are not favoured just for being long; parameter b ≈ 0.75).</div>
+<div><b><a class="gl" href="#gl-dense-retrieval">Dense retrieval</a></b>: embed query and documents into vectors (4.4) and rank by similarity. Captures meaning and paraphrase ("can't sign in" ≈ "login failure"); weaker on exact identifiers, codes and rare names.</div>
+<div><b><a class="gl" href="#gl-sparse-retrieval">Learned sparse retrieval</a></b> (e.g. SPLADE): a model outputs weights for vocabulary terms, including related terms not in the text, stored in an inverted index. Combines keyword-index efficiency with some semantic matching.</div>
 </div>
 <p>BM25 for query Q and document D: score = Σ<sub>q∈Q</sub> IDF(q) · f(q,D)·(k₁+1) / (f(q,D) + k₁·(1 − b + b·|D|/avgdl)), where f is the term count in D, |D| the document length and avgdl the average length. IDF(q) = ln(1 + (N − n<sub>q</sub> + 0.5)/(n<sub>q</sub> + 0.5)) with N documents and n<sub>q</sub> containing q.</p>
 <figure class="fig live"><div class="stage"><div data-widget="bm25"></div></div>
@@ -12,4 +20,30 @@
 <figure class="fig live" id="scene-embeddings"><div class="stage"><div data-widget="embedding-space"></div></div>
 <figcaption><b>Your example project's messages as points in a vector space.</b> Each labelled message from your project's dataset becomes a vector, by word counts weighted by rarity (TF-IDF, computed in your browser) or, once you opt in, by the same embedding model as the figure above. PCA projects the vectors onto the three directions that spread them most, and the figure says how much of the variance those three keep: the rest is flattened away, so nearest neighbours are found in the full space, not in the picture. Points are coloured by their label, so you can see whether meaning, or shared words, groups them. The 2D view shows the same points from above, with the neighbours as a table.</figcaption></figure>
 <div class="box example"><h5>Example: where each method wins</h5><p>Query "error E-4012 on checkout": BM25 finds the one document containing "E-4012" immediately; an embedding model may rank generic checkout-error pages higher because the code carries little semantic signal. Query "my card keeps getting declined when I pay": dense retrieval finds "Payment method rejected" pages that share no keywords. This is why production systems combine both (9.5).</p></div>
+</section>
+
+<section class="tp tp-math" id="c9-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Rare words count more.</b> In a collection of 16 documents, a word found in only 1 of them gets a weight of about 2.4; a word found in 2 gets about 1.9; a word in every document gets almost nothing. "Refund" tells you far more than "plan".</p>
+<p><b>Repeats stop counting.</b> With the usual settings, and a document of average length, a word that appears twice scores about 1.4 times as much as once, and ten times scores only about twice as much. So stuffing a page with one keyword gains little.</p>
+<p><b>Why the index is fast.</b> Searching for "refund" reads one list of the few documents that contain it, instead of scanning all 16, or all 16 million.</p>
+</section>
+
+<section class="tp tp-code" id="c9-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds an inverted index over your example project’s documents, prints each query word’s rarity weight, and ranks the documents with BM25. Change <code>QUERY</code>, or <code>K1</code> and <code>B</code>, and run it again.</p>
+<figure class="fig live" id="snip-bm25"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"bm25"}'></div></div>
+<figcaption><b>BM25 from an inverted index, in real Python.</b> It matches exact words only, so paraphrases are missed.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c9-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.staff.city.ac.uk/~sbrp622/papers/foundations_bm25_review.pdf">Robertson and Zaragoza (2009), The Probabilistic Relevance Framework: BM25 and Beyond</a> <small>BM25 explained by one of its authors.</small></li>
+<li><a href="https://nlp.stanford.edu/IR-book/">Manning, Raghavan and Schütze, Introduction to Information Retrieval (free book)</a> <small>Inverted indexes, TF-IDF and ranking, from the start.</small></li>
+<li><a href="https://arxiv.org/abs/2004.04906">Karpukhin et al. (2020), Dense Passage Retrieval for Open-Domain Question Answering</a> <small>Dense retrieval beating BM25 on question answering.</small></li>
+<li><a href="https://arxiv.org/abs/2107.05720">Formal, Piwowarski and Clinchant (2021), SPLADE</a> <small>Learned sparse retrieval.</small></li>
+</ol>
+</section>

@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c8-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Grading an agent by its final message is like grading a plumber by what they say at the door. You need to check the pipes: did they use the right tools, did they do it in a sensible order, is the leak actually fixed, and did they tell you the truth about what they did?</p>
+<p>Agents also do not behave the same way every time. One success in five tries is not good enough for a job that runs every day, so test each case several times and count how often all of the runs succeed.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c8-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>An agent (chapter 11) takes many steps, so a correct final message can hide unsafe or wasteful behaviour, and an awkward message can follow a perfectly executed task. Evaluate four levels:</p>
 <ol><li><b>Tool use</b>: right tool chosen, valid arguments, no forbidden calls, permission errors handled.</li>
 <li><b>Execution trace (trajectory)</b>: number of steps, loops, redundant calls, recovery from errors, time and tokens consumed.</li>
 <li><b>Resulting state</b>: inspect the environment after the run. Was the ticket actually updated? Was exactly one refund created? Nothing else changed? This is usually the most important check and is fully deterministic.</li>
 <li><b>Final answer</b>: correct, honest about what was done, appropriate tone.</li></ol>
-<p>Run agents in a <b>sandboxed, resettable environment</b> (test database, mocked APIs) seeded per case, run each case several times because agents are non-deterministic, and report <dfn>pass@k</dfn> (succeeded at least once in k runs) and <dfn>pass^k</dfn> (succeeded in all k runs; what reliability requires).</p>
+<p>Run agents in a <b>sandboxed, resettable environment</b> (test database, mocked APIs) seeded per case, run each case several times because agents are non-deterministic, and report <dfn><a class="gl" href="#gl-pass-at-k">pass@k</a></dfn> (succeeded at least once in k runs) and <dfn>pass^k</dfn> (succeeded in all k runs; what reliability requires).</p>
 <p><b>Check invariants, not one golden path.</b> Requiring an exact tool sequence rejects valid, often cheaper, solutions. Assert properties instead: the end state is correct, no forbidden or unauthorised call happened, the step and cost limits held, and the final message matches what was actually done. Do not require the model's hidden chain-of-thought as evidence; the tool proposals, tool results and state changes are the observable, auditable record.</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Seed sandbox<small>order A-1043 delivered late</small></div><div class="nd">Agent runs<small>task: "issue the late-delivery credit"</small></div><div class="nd">Trace checks<small>tools, args, steps</small></div><div class="nd">State checks<small>DB diff</small></div><div class="nd">Answer checks<small>judge + rules</small></div><div class="nd">Score &amp; repeat ×5</div></div>
@@ -15,7 +23,7 @@
 <svg id="pkSvg" viewBox="0 0 620 220"></svg><div class="kpis" id="pkKp"></div></div></div>
 <figcaption><b>pass@k vs pass^k, computed.</b> pass@k = 1 − (1 − p)ᵏ (at least one success in k independent runs) rises towards 100%; pass^k = pᵏ (all k succeed) falls. A workflow that runs every day needs the second number, and it collapses quickly unless p is very close to 1.</figcaption></figure>
 <div class="box example"><h5>Example: pass@k vs pass^k</h5><p>An agent succeeds 80% of the time per run, independently. pass@5 = 1 − 0.2⁵ ≈ 99.97%, which looks great. pass^5 = 0.8⁵ ≈ 33%, which shows that in a workflow run five times a day, a failure almost every day is likely. Production readiness depends on the second number.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for evaluation</h3>
 <div class="cols3">
@@ -26,6 +34,19 @@
 <div class="card"><h5><a href="https://github.com/EleutherAI/lm-evaluation-harness">lm-evaluation-harness</a></h5><span class="meta">model benchmarks</span><p>Standard academic benchmarks on any HF or API model. Use to check general-capability regressions after fine-tuning (13.6). Small models run on CPU slowly.</p></div>
 <div class="card"><h5><a href="https://arize.com/docs/phoenix">Phoenix</a> · <a href="https://langfuse.com/docs">Langfuse</a></h5><span class="meta">datasets · experiments · traces</span><p>Store eval datasets, run experiments, attach scores to production traces (chapter 17). Both self-hostable.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c8-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Reliability over repeated runs.</b> If an agent succeeds 95% of the time per run, all 5 of 5 runs succeed only 0.95 multiplied by itself 5 times ≈ 77% of the time. At 99% per run it is about 95%. Daily workflows need per-run success very close to 100%.</p>
+<p><b>The cost of steps.</b> An agent that takes 12 steps of about 3,000 tokens each uses 36,000 tokens per task. If a better prompt cuts that to 6 steps, it halves the cost and the time, even with the same success rate, which is why step counts belong in the evaluation.</p>
+</section>
+
+<section class="tp tp-code" id="c8-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks four recorded agent runs for allowed tools, step limits, checking the order before acting, the right end state and an honest final message, then works out pass@3 and pass^3. Edit a run in <code>RUNS</code> to fix or break it and run it again.</p>
+<figure class="fig live" id="snip-agent-eval"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"agent-eval"}'></div></div>
+<figcaption><b>Grading an agent by trace and end state, in real Python.</b> The runs are written by hand to show each kind of failure.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: a promptfoo regression suite against a local model <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code># npx promptfoo@latest init  → then edit promptfooconfig.yaml:
 prompts: [file://prompts/triage_v7.txt]
@@ -41,3 +62,16 @@ tests:
       - type: javascript
         value: JSON.parse(output).urgent === false
 # run:  npx promptfoo@latest eval   then   npx promptfoo@latest view</code></pre></div>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c8-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2406.12045">Yao et al. (2024), τ-bench</a> <small>Agent evaluation by end state, and the pass^k reliability measure.</small></li>
+<li><a href="https://arxiv.org/abs/2107.03374">Chen et al. (2021), Evaluating Large Language Models Trained on Code</a> <small>Defines pass@k.</small></li>
+<li><a href="https://arxiv.org/abs/2310.06770">Jimenez et al. (2023), SWE-bench</a> <small>Agents graded by whether real tests pass after their changes.</small></li>
+<li><a href="https://inspect.aisi.org.uk/">Inspect</a> <small>An evaluation framework with sandboxes for agent tasks.</small></li>
+</ol>
+</section>

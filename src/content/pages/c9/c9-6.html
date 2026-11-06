@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c9-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>People ask questions badly for search engines: "what about contractors?" only makes sense after the previous message, and "compare leave in Germany and the UK" is really two searches. So before searching, rewrite the question into what a search engine needs, split it into parts, or search in steps when one answer leads to the next question.</p>
+<p>Then show your working. Every claim gets a citation that can be checked, and if nothing relevant was found, the honest answer is "I could not find that", not a confident guess.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c9-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Query rewriting</b>: user queries are short, ambiguous or conversational ("what about for contractors?"). An LLM rewrites them into standalone search queries using conversation history, expands acronyms, or generates several variants (multi-query). <dfn>HyDE</dfn> generates a hypothetical answer and embeds that instead of the question.</li>
+<li><b><a class="gl" href="#gl-query-rewriting">Query rewriting</a></b>: user queries are short, ambiguous or conversational ("what about for contractors?"). An LLM rewrites them into standalone search queries using conversation history, expands acronyms, or generates several variants (multi-query). <dfn>HyDE</dfn> generates a hypothetical answer and embeds that instead of the question.</li>
 <li><b>Decomposition</b>: split compound questions ("compare the parental leave policies in Germany and the UK") into sub-queries, retrieve for each, then synthesise.</li>
-<li><b>Multi-hop retrieval</b>: some answers require a chain: find entity A, then use a fact from A to search for B ("Who approves expenses for the team that owns the billing service?" → find owning team → find its approver). Implemented as an iterative loop, effectively a small agent (10.9, 11).</li>
+<li><b><a class="gl" href="#gl-multi-hop">Multi-hop retrieval</a></b>: some answers require a chain: find entity A, then use a fact from A to search for B ("Who approves expenses for the team that owns the billing service?" → find owning team → find its approver). Implemented as an iterative loop, effectively a small agent (10.9, 11).</li>
 <li><b>Citations</b>: label chunks, require the model to cite labels per claim, then <em>verify</em> in code that each cited label exists and (with a judge or string overlap) that the cited chunk supports the sentence. Render citations as links to the source.</li>
-<li><b>Abstention</b>: when retrieval scores are low or the judge finds no support, say "I couldn't find this in the knowledge base" and offer a next step. A confident wrong answer is worse than an honest "not found".</li>
+<li><b><a class="gl" href="#gl-abstention">Abstention</a></b>: when retrieval scores are low or the judge finds no support, say "I couldn't find this in the knowledge base" and offer a next step. A confident wrong answer is worse than an honest "not found".</li>
 </ul>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">"Who approves expenses for the billing service team?"</div><div class="nd">Hop 1 query<small>"owner of billing service"</small></div><div class="nd">Found: Team Ledger<small>service catalog chunk</small></div><div class="nd">Hop 2 query<small>"Team Ledger expense approver"</small></div><div class="nd">Found: Priya N., Eng Manager<small>org chart chunk</small></div><div class="nd">Answer + 2 citations<small>or abstain if a hop fails</small></div></div>
@@ -19,4 +27,30 @@ def check_citations(answer: str, chunks: dict[str, str]) -> list[str]:
         for i in ids:
             if i not in chunks: problems.append(f"cites missing source [{i}]")
     return problems          # non-empty → regenerate, or show answer with a warning, or abstain</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c9-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What extra steps cost</b> (illustrative). A rewrite by a small model takes about 0.5 seconds; each retrieval about 0.3 seconds. A two-hop answer with a rewrite before each hop adds about 2 × (0.5 + 0.3) = 1.6 seconds before generation even starts, so use it only where evaluation shows single searches fail.</p>
+<p><b>Decomposition doubles the context.</b> Two sub-questions with the top 3 passages each send 6 passages instead of 3. At 500 tokens a passage, that is 3,000 tokens instead of 1,500.</p>
+<p><b>Abstaining is cheaper than being wrong.</b> If a wrong answer to a policy question costs a support follow-up of 20 minutes and an honest "not found" costs 2, an assistant that abstains on 50 hard questions instead of guessing (and getting half wrong) saves about 25 × 20 − 50 × 2 = 400 minutes.</p>
+</section>
+
+<section class="tp tp-code" id="c9-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program splits a two-part question about your example project into sub-questions, finds a source for each, writes the answer with a citation per part or declines a part it cannot support, and then checks every citation in code. Change <code>QUESTION</code> to ask about something not in the documents, or raise <code>MIN_SCORE</code>, and run it again.</p>
+<figure class="fig live" id="snip-decompose-cite"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"decompose-cite"}'></div></div>
+<figcaption><b>Split the question, cite each part, in real Python.</b> The answer is quoted from the sources, not written by a model.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c9-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2212.10496">Gao et al. (2022), Precise Zero-Shot Dense Retrieval without Relevance Labels (HyDE)</a> <small>Searching with a hypothetical answer instead of the question.</small></li>
+<li><a href="https://arxiv.org/abs/2305.14283">Ma et al. (2023), Query Rewriting for Retrieval-Augmented Large Language Models</a> <small>Training a rewriter for better retrieval.</small></li>
+<li><a href="https://arxiv.org/abs/2212.10509">Trivedi et al. (2022), Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions</a> <small>Multi-hop retrieval in a loop.</small></li>
+<li><a href="https://arxiv.org/abs/2305.14627">Gao et al. (2023), Enabling Large Language Models to Generate Text with Citations (ALCE)</a> <small>Measuring whether citations really support the claims.</small></li>
+</ol>
+</section>

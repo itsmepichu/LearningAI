@@ -1,4 +1,12 @@
-<p><b>Offline experiments</b> run candidates on stored datasets: fast, safe, repeatable, but limited to what the dataset represents. <b>Online experiments</b> expose real users. In an <dfn>A/B test</dfn>, users are randomly assigned to control (A) or treatment (B) and you compare outcomes; randomisation makes the difference attributable to the change. Decide the primary metric, guardrail metrics (latency, complaints, cost) and sample size <em>before</em> starting, and do not stop early when the result looks good ("peeking" inflates false positives unless you use a sequential testing method).</p>
+<section class="tp tp-intuition" id="c8-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An offline test tells you whether the new version answers your saved questions better. Only real users tell you whether it actually helps: fewer escalations, faster resolutions, more sales. An A/B test is a fair coin toss for each user, half get the old version and half the new, so any difference in outcomes is down to the change.</p>
+<p>The catch is patience. Small improvements need many users to see clearly, and peeking at the results every day and stopping as soon as they look good will fool you.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c8-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><b>Offline experiments</b> run candidates on stored datasets: fast, safe, repeatable, but limited to what the dataset represents. <b>Online experiments</b> expose real users. In an <dfn><a class="gl" href="#gl-ab-test">A/B test</a></dfn>, users are randomly assigned to control (A) or treatment (B) and you compare outcomes; randomisation makes the difference attributable to the change. Decide the primary metric, guardrail metrics (latency, complaints, cost) and sample size <em>before</em> starting, and do not stop early when the result looks good ("peeking" inflates false positives unless you use a sequential testing method).</p>
 <p><b>Business outcomes</b> are what the organisation actually cares about: tickets resolved without escalation, time saved per analyst, conversion, retention, error rates in downstream processes. Model metrics are leading indicators; business metrics are the goal, and often arrive with delay (17.7).</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2"><label for="abP">Baseline rate (e.g. self-resolution) % <input type="range" id="abP" min="2" max="80" value="30"><span id="abPO"></span></label>
@@ -12,4 +20,30 @@
 <ol class="steps"><li data-n="0">Candidate must pass quality, safety, latency and cost gates on the offline suite.</li><li data-n="1">Run on mirrored production traffic; compare outputs without showing them (18.4).</li><li data-n="2">Small real exposure; watch error rates, latency, complaints; automatic rollback on breach.</li><li data-n="3">Randomised test with pre-registered metric and sample size.</li><li data-n="4">Check delayed business outcomes (escalations, retention) before declaring success.</li></ol></div>
 <figcaption><b>From offline to online.</b> Each stage risks more exposure and yields more realistic evidence.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>Illustrative numbers. Offline, new prompt B improves answer quality by 4 points. In the A/B test, B's self-resolution rate is +1.1 points (95% CI +0.3 to +1.9), but average conversation length grew 18% and cost per conversation rose 12%. The business review decides the gain is worth it for premium customers only.</p></div>
+<p>The chance that a test detects a real effect of a given size is its <a class="gl" href="#gl-statistical-power">power</a>; 80% is the usual target.</p>
+</section>
+
+<section class="tp tp-math" id="c8-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How many users.</b> With a 30% self-resolution rate today, detecting a 2-point lift (to 32%) with 80% power needs about 8,400 users in each group. At 4,000 eligible users a day split in two, that is 8,400 ÷ 2,000 ≈ 4 to 5 days.</p>
+<p><b>Halve the lift, quadruple the users.</b> To detect a 1-point lift instead, you need roughly four times as many users, about 33,000 per group, which takes over two weeks at the same traffic.</p>
+<p><b>The peeking trap.</b> With no real difference at all, checking the result every day for 20 days and stopping at the first "significant" day declares a winner in about a quarter of tests, five times the 5% you think you are accepting.</p>
+</section>
+
+<section class="tp tp-code" id="c8-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program works out how many users an A/B test needs to detect a 2-point lift, simulates one such test, and then runs 400 tests with no real difference while checking every day, to count the false winners. Change <code>BASE</code> and <code>LIFT</code> and run it again.</p>
+<figure class="fig live" id="snip-ab-test"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"ab-test"}'></div></div>
+<figcaption><b>A/B test size, result and the peeking trap, in real Python.</b> Users are simulated, not real traffic.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c8-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://experimentguide.com/">Kohavi, Tang and Xu, Trustworthy Online Controlled Experiments</a> <small>The standard book on running A/B tests correctly.</small></li>
+<li><a href="https://www.evanmiller.org/how-not-to-run-an-ab-test.html">Miller, How Not To Run an A/B Test</a> <small>The peeking problem, explained with simulations.</small></li>
+<li><a href="https://www.evanmiller.org/ab-testing/sample-size.html">Miller, Sample Size Calculator</a> <small>The same calculation as the figure and the code.</small></li>
+</ol>
+</section>

@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c10-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When an index is too big or too busy for one machine, split it into shards, like splitting a phone book into volumes, and keep copies (replicas) so more people can read at once and a broken machine does not take anything offline.</p>
+<p>How you split matters. Put each customer in one volume and most lookups touch one book, but one huge customer can overload theirs. Spread everyone evenly and the load balances, but every lookup has to open every volume.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Shard</b>: a subset of the index on one node. Queries fan out to all relevant shards and results are merged (scatter-gather). Sharding scales data size and write throughput.</div>
+<div><b><a class="gl" href="#gl-shard-replica">Shard</a></b>: a subset of the index on one node. Queries fan out to all relevant shards and results are merged (scatter-gather). Sharding scales data size and write throughput.</div>
 <div><b>Replica</b>: a copy of a shard on another node. Replicas scale read throughput and provide availability when a node fails.</div>
 <div><b>Partitioning strategy</b>: how documents map to shards. <em>By tenant</em> (each query hits one or few shards; good isolation; risk of uneven size). <em>By hash of chunk ID</em> (even spread; every query hits every shard). Hybrids: tenants get dedicated shards when large, shared shards when small.</div>
-<div><b>Hot tenant</b>: one tenant with far more data or traffic than others, overloading the shard(s) it lives on: a "noisy neighbour" (15.5).</div>
+<div><b><a class="gl" href="#gl-hot-tenant">Hot tenant</a></b>: one tenant with far more data or traffic than others, overloading the shard(s) it lives on: a "noisy neighbour" (15.5).</div>
 </div>
 <p>Capacity planning for an index: memory (vectors + graph + metadata, × replicas, plus headroom for rebuilds, typically 30–50%), query throughput per replica (measured QPS at target latency and recall), write throughput (upserts per second during backfills), and growth rate. Plan to re-shard before shards exceed what a node can rebuild quickly after failure.</p>
 <figure class="fig sim"><div class="stage"><div class="wid">
@@ -11,4 +19,29 @@
 <div class="bars" id="htBars"></div><div class="out" id="htOut"></div></div></div>
 <figcaption><b>Shard load under tenant skew</b> (8 shards, each able to serve 100% = its capacity; illustrative). Tenant placement concentrates the hot tenant on one shard. Hashing spreads it but makes every query fan out to all 8 shards. Dedicated shards with replicas give the large tenant its own scaled capacity.</figcaption></figure>
 <div class="box example"><h5>Example: a mixed strategy</h5><p>A SaaS platform has 12,000 tenants; 11,950 have under 100k chunks and share 16 shards (placed by tenant ID hash, so each query touches one shard). The 50 largest tenants get dedicated collections with 2–6 shards and replicas sized to their traffic. A tenant is promoted to dedicated when it passes 5M chunks or 50 QPS.</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Sizing by memory.</b> 218 GB of index (from 10.1) on machines with 64 GB usable each needs at least 218 ÷ 64 ≈ 4 machines; plan 6 to 8 so that one can fail and rebuilds have room.</p>
+<p><b>Sizing by traffic.</b> If one replica serves 200 queries a second at the target latency and the peak is 1,000, you need 1,000 ÷ 200 = 5 replicas, plus one spare for failures: 6.</p>
+<p><b>A hot tenant.</b> With 8 shards, each shard’s fair share is 12.5% of traffic. A tenant sending 21% of all queries puts at least 1.7 times a fair share on its shard by itself, before any other tenant’s queries.</p>
+</section>
+
+<section class="tp tp-code" id="c10-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program spreads 200 tenants with very uneven traffic over 8 shards in three ways, by tenant, by hash, and with dedicated shards for the three biggest, and compares the busiest shard with the number of shards each query touches. Change <code>SHARDS</code> or the 1.1 that sets how uneven traffic is, and run it again.</p>
+<figure class="fig live" id="snip-sharding"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"sharding"}'></div></div>
+<figcaption><b>Shards under a hot tenant, in real Python.</b> The traffic shape is simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/size-your-shards.html">Elasticsearch: Size your shards</a> <small>Practical shard sizing from a widely used search engine.</small></li>
+<li><a href="https://qdrant.tech/documentation/guides/multiple-partitions/">Qdrant: Multitenancy</a> <small>Partitioning a vector index by tenant.</small></li>
+<li><a href="https://research.google/pubs/the-tail-at-scale/">Dean and Barroso (2013), The Tail at Scale</a> <small>Why fan-out to many shards makes slow responses more likely.</small></li>
+</ol>
+</section>

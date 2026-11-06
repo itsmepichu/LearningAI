@@ -1,4 +1,12 @@
-<p>RAG solves a <b>knowledge</b> problem: the model lacks facts (private, recent or long-tail) or you need answers traceable to sources. Fine-tuning solves a <b>behaviour</b> problem: the model knows enough but does not respond in the format, style, vocabulary or decision pattern you need. Fine-tuning is a poor way to inject facts: it is expensive to update, hard to delete from, gives no citations, and models recall fine-tuned facts unreliably.</p>
+<section class="tp tp-intuition" id="c9-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>RAG is an open-book exam. Instead of hoping the model memorised your company’s policies, you look up the relevant pages for each question and hand them over with the question: "answer from these, and say which page you used". When a policy changes, you swap the page; nothing needs retraining.</p>
+<p>Fine-tuning is different: it is practice, not a textbook. It changes how the model behaves, such as its format, tone or decision style, but it is a poor way to teach facts that change every week.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c9-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><a class="gl" href="#gl-rag">RAG</a> solves a <b>knowledge</b> problem: the model lacks facts (private, recent or long-tail) or you need answers traceable to sources. Fine-tuning solves a <b>behaviour</b> problem: the model knows enough but does not respond in the format, style, vocabulary or decision pattern you need. Fine-tuning is a poor way to inject facts: it is expensive to update, hard to delete from, gives no citations, and models recall fine-tuned facts unreliably.</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 640 320" role="img" aria-label="Quadrant: knowledge need vs behaviour need">
 <rect x="80" y="20" width="250" height="130" class="fss"/><rect x="330" y="20" width="250" height="130" class="fvs"/>
@@ -13,4 +21,29 @@
 </svg></div><figcaption><b>Choose by the type of gap.</b> Always start with prompting plus RAG; fine-tune only when evaluation shows a behaviour gap that prompting cannot close (13.1).</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>A bank wants an assistant for its 3,000 internal policies that change weekly. RAG: re-index on change, cite policy IDs, filter by employee role. Later, evaluation shows answers are correct but not in the mandated "Decision / Basis / Exceptions" format, and few-shot prompting costs too many tokens. A small fine-tune on 2,000 formatted examples fixes format; RAG still supplies the facts.</p></div>
 <div class="walkthru" id="walk-rag"><p class="walkthru-h"><b>Walkthrough: one RAG request, end to end.</b> A question goes through every stage this chapter covers: rewriting, retrieval, permission filtering, reranking, context assembly, generation with citations and checking. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"rag"}'></div></div>
+</section>
+
+<section class="tp tp-math" id="c9-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Why not send everything?</b> 3,000 policies averaging 1,500 tokens is 3,000 × 1,500 = 4.5 million tokens, more than 20 times a 200,000-token context window. Retrieving 5 passages of 500 tokens sends 2,500 tokens per question: under a thousandth of the collection.</p>
+<p><b>Freshness.</b> A changed policy can be re-indexed in minutes. Getting the same change into a fine-tuned model means new training data, a training run and a new evaluation, usually days or weeks.</p>
+<p><b>Cost at volume</b> (illustrative). At $1 per million input tokens and 100,000 questions a month, 2,500 tokens per question costs about $250 a month; 50,000 tokens per question, from sending far more than needed, would cost $5,000.</p>
+</section>
+
+<section class="tp tp-code" id="c9-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program counts the tokens in all of your example project’s documents, retrieves the top 3 for one question, and compares the monthly cost of sending everything with sending only what was retrieved. Change <code>QUESTION</code> or <code>QUESTIONS_PER_MONTH</code> and run it again.</p>
+<figure class="fig live" id="snip-stuff-or-retrieve"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"stuff-or-retrieve"}'></div></div>
+<figcaption><b>Send everything, or retrieve? In real Python.</b> The corpus is tiny and the price is illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c9-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2005.11401">Lewis et al. (2020), Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a> <small>The paper that named RAG.</small></li>
+<li><a href="https://arxiv.org/abs/2312.05934">Ovadia et al. (2023), Fine-Tuning or Retrieval? Comparing Knowledge Injection in LLMs</a> <small>Evidence that retrieval beats fine-tuning for adding new facts.</small></li>
+<li><a href="https://arxiv.org/abs/2312.10997">Gao et al. (2023), Retrieval-Augmented Generation for Large Language Models: A Survey</a> <small>An overview of RAG designs and their trade-offs.</small></li>
+</ol>
+</section>
