@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c13-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When a model falls short, there is a ladder of fixes. Better instructions cost an afternoon. Adding a search step costs days. Fine-tuning costs weeks and a dataset. Teaching a small model to copy a big one (<a class="gl" href="#gl-distillation">distillation</a>) or continuing pretraining costs more again, and each rung brings its own upkeep.</p>
+<p>So climb one rung at a time, and only when measurement shows the current rung cannot meet the target. The symptom tells you which rung: missing facts point to retrieval, wrong behaviour despite good examples points to fine-tuning, and a good but expensive model points to distillation.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Climb this ladder one rung at a time, and move up only when evaluation shows the current rung cannot reach the acceptance criteria.</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Prompting<small>instructions, examples</small></div><div class="nd">Retrieval<small>add knowledge</small></div><div class="nd">Fine-tuning (PEFT)<small>change behaviour</small></div><div class="nd">Distillation<small>small model learns from big</small></div><div class="nd">Continued pretraining<small>deep domain shift</small></div></div>
@@ -5,7 +13,7 @@
 <li data-n="0"><b>Prompting</b>: hours of work, no training. Try better instructions, few-shot examples, structured output, a stronger model. Often enough.</li>
 <li data-n="1"><b>Retrieval</b>: when the gap is missing or changing facts (9.1). Not a substitute for behaviour change.</li>
 <li data-n="2"><b>Fine-tuning</b>: when the model has the knowledge but consistently fails the format, style, decision policy or tool-use pattern, or you need the behaviour with fewer prompt tokens. Needs hundreds to tens of thousands of high-quality examples.</li>
-<li data-n="3"><b>Distillation</b>: when a large model already does the task well but is too slow or expensive at your volume. Generate (and verify) outputs from the large "teacher" on real inputs, then fine-tune a small "student" on them. Check the teacher's licence permits this.</li>
+<li data-n="3"><b><a class="gl" href="#gl-distillation">Distillation</a></b>: when a large model already does the task well but is too slow or expensive at your volume. Generate (and verify) outputs from the large "teacher" on real inputs, then fine-tune a small "student" on them. Check the teacher's licence permits this.</li>
 <li data-n="4"><b>Continued pretraining</b>: when the domain's language is far from general text (specialised clinical notes, a low-resource language, proprietary code), with millions to billions of domain tokens. Costly, and needs SFT afterwards to restore instruction following.</li>
 </ol></div><figcaption><b>The adaptation ladder.</b> Each rung roughly multiplies cost, data needs and maintenance burden.</figcaption></figure>
 <div class="tw"><table>
@@ -18,4 +26,33 @@
 <tr><td>Retrieval misses domain synonyms and codes</td><td>Fine-tune the embedding model or reranker (13.5)</td></tr>
 </table></div>
 <div class="box example"><h5>Example: a distillation business case (illustrative)</h5><p>A logistics firm classifies 3M shipping exceptions per month. A large hosted model reaches 94% at $0.004 each ($12,000/month). Distilling into a fine-tuned 3B open model on 40,000 teacher-labelled and human-spot-checked examples reaches 93% at an estimated $0.0003 each on a self-hosted GPU (about $900/month) with lower latency. The 1-point drop was accepted after checking it was not concentrated on critical exception types.</p></div>
+</section>
+
+<section class="tp tp-math" id="c13-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The distillation example, worked through</b> (illustrative).</p>
+<ul>
+<li>Large hosted model: 3,000,000 items × 0.004 dollars = 12,000 dollars a month.</li>
+<li>Small self-hosted model: about 900 dollars a month for the GPU. Add an engineer’s share for upkeep, say 1,500 dollars: 2,400 dollars a month.</li>
+<li>Saving: 12,000 − 2,400 = 9,600 dollars a month. A one-off cost of 6,000 dollars for labelling and training is paid back in about 6,000 ÷ 9,600 ≈ 0.6 months.</li>
+</ul>
+<p><b>At lower volume it fails.</b> At 300,000 items the large model costs 1,200 dollars a month, less than the 2,400 the small one needs, so distillation never pays.</p>
+</section>
+
+<section class="tp tp-code" id="c13-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares the large and the distilled model at five monthly volumes, including upkeep, and works out the payback time and the break-even volume. Change <code>UPKEEP_MONTH</code> or <code>LARGE_PER_ITEM</code> and run it again.</p>
+<figure class="fig live" id="snip-distillation-payback"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"distillation-payback"}'></div></div>
+<figcaption><b>The economics of distillation, in real Python.</b> Every price is illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1503.02531">Hinton et al. (2015), Distilling the Knowledge in a Neural Network</a> <small>Where distillation comes from.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/distillation">OpenAI: Model distillation</a> <small>A provider’s workflow for teacher outputs and student fine-tuning.</small></li>
+<li><a href="https://arxiv.org/abs/2004.10964">Gururangan et al. (2020), Don’t Stop Pretraining</a> <small>When continued pretraining on domain text helps.</small></li>
+</ol>
+</section>

@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c18-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A new model version is like a new colleague taking over a job: probably capable, but with different habits. It may write longer answers, follow the JSON format less strictly, refuse more often, or count tokens differently.</p>
+<p>So a <a class="gl" href="#gl-model-upgrade">model upgrade</a> is a release, not a setting. Run the suite with the current prompts to see the raw difference, re-tune the prompts, check the properties your code depends on, then shadow, canary and keep the old route until the rollback window has passed.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c18-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Models change more often than most dependencies: new versions every few months, deprecations with fixed retirement dates, behaviour changes inside a version alias. Treat each as a release:</p>
 <ul>
 <li><b>Inventory and deprecation tracking</b>: which features use which model versions; provider retirement dates on a calendar with owners.</li>
-<li><b>Compatibility testing</b>: run the full suite with the new model and the <em>current</em> prompts, then with re-tuned prompts. Check structured-output adherence, tool-calling format, refusal behaviour, verbosity (output tokens change cost and latency), tokenizer differences (context budgets, 7.3), and supported parameters (some models ignore temperature or require different settings).</li>
+<li><b><a class="gl" href="#gl-model-upgrade">Compatibility testing</a></b>: run the full suite with the new model and the <em>current</em> prompts, then with re-tuned prompts. Check structured-output adherence, tool-calling format, refusal behaviour, verbosity (output tokens change cost and latency), tokenizer differences (context budgets, 7.3), and supported parameters (some models ignore temperature or require different settings).</li>
 <li><b>Prompt portability</b>: prompts tuned for one model often underperform on another; budget time to re-tune, and keep model-specific prompt variants versioned together.</li>
 <li><b>Embedding migrations</b>: full re-embed with blue/green indexes (10.7); queries and documents must switch embedding models atomically.</li>
 <li><b>Fine-tuned models</b>: a new base model means re-running fine-tuning and all of 13.6.</li>
@@ -21,4 +29,28 @@
 <div class="nodes"><div class="nd">Deprecation notice / new model</div><div class="nd">Run suite as-is</div><div class="nd">Re-tune prompts</div><div class="nd">Compatibility checks<small>format, tools, length, refusals</small></div><div class="nd">Shadow</div><div class="nd">Canary → 100%</div><div class="nd">Retire old route</div></div>
 <ol class="steps"><li data-n="0">Track it with an owner and a date well before retirement.</li><li data-n="1">Measure the raw difference first; it tells you how much work is needed.</li><li data-n="2">Adapt prompts and settings for the new model; version them separately.</li><li data-n="3">Check the properties code depends on, not just answer quality.</li><li data-n="4">Compare on real traffic without exposure.</li><li data-n="5">Progressive rollout with automatic analysis (18.4).</li><li data-n="6">Remove the old model from the gateway only after the rollback window.</li></ol></div>
 <figcaption><b>Model upgrade procedure.</b></figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c18-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Longer answers cost money</b> (illustrative). If median output grows from 220 to 305 tokens, that is 85 more tokens a request. At 3 million requests a month and 15 dollars per million output tokens: 85 × 3,000,000 × 15 ÷ 1,000,000 ≈ 3,800 dollars a month more.</p>
+<p><b>Small format changes break code.</b> JSON adherence falling from 99.8% to 99.1% sounds tiny, but at 3 million requests it is 0.7% × 3,000,000 = 21,000 more parser failures a month.</p>
+</section>
+
+<section class="tp tp-code" id="c18-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares simulated results for the current and a new model on JSON adherence, over-refusal and output length, names an action for each failed check, and prices the longer outputs. Change the new model’s behaviour and run it again.</p>
+<figure class="fig live" id="snip-upgrade-report"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"upgrade-report"}'></div></div>
+<figcaption><b>A compatibility report, in real Python.</b> The results are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c18-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://platform.claude.com/docs/en/about-claude/model-deprecations">Anthropic: Model deprecations</a> <small>Retirement dates and migration planning.</small></li>
+<li><a href="https://developers.openai.com/api/docs/deprecations">OpenAI: Deprecations</a> <small>Another provider’s deprecation schedule.</small></li>
+<li><a href="https://arxiv.org/abs/2307.09009">Chen et al. (2023), How Is ChatGPT’s Behavior Changing over Time?</a> <small>Behaviour changes behind the same model name.</small></li>
+</ol>
+</section>

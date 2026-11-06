@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c12-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>One person can read a report. Reading a library takes a team: each person reads a shelf and writes a one-page summary, and someone combines the pages. That is the honest case for a <a class="gl" href="#gl-multi-agent">multi-agent system</a>: more material, or more kinds of tools and permissions, than one agent can handle well.</p>
+<p>A team also costs more: briefs, summaries, meetings. If you can write down the split yourself, "summarise each of these 20 contracts, then compare", do it in code with parallel calls. Let agents plan only when the plan really cannot be written in advance.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Multiple agents help when at least one of these is true:</p>
 <ul><li><b>Breadth exceeds one context</b>: the task needs reading far more material than fits in one window (research over 200 documents), so parallel workers each read a part and return condensed findings.</li>
 <li><b>Separable expertise or tools</b>: different subtasks need different tools, permissions or instructions (a billing agent with payment tools, an account agent with identity tools), and mixing them in one prompt degrades tool selection.</li>
@@ -9,4 +17,33 @@
 <div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Same task: tokens used (× single agent)</p><div class="bars" data-max="16" data-unit="×"><div data-v="1">Single agent</div><div data-v="3.5" data-c="s">Parallel workflow</div><div data-v="12" data-c="b">Coordinator + workers</div></div></div>
 </div></div><figcaption><b>Quality vs cost.</b> Published reports from teams building research agents describe multi-agent systems using several times to an order of magnitude more tokens than single-agent chat. Whether the quality gain is worth it depends on the task's value.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>"Summarise customer complaints about onboarding in Q3 across support tickets, sales notes and app reviews." Three sources, different tools and access rules, ~40,000 records. A coordinator assigns one worker per source; each worker searches, clusters and returns a 300-word summary with evidence IDs; the coordinator synthesises. A single agent would exhaust its context in the first source.</p></div>
+</section>
+
+<section class="tp tp-math" id="c12-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Does it fit in one context?</b> (illustrative). A 128,000-token context can use about 96,000 tokens for material once instructions and the answer have room.</p>
+<ul>
+<li>40,000 records × 60 tokens = 2.4 million tokens. One agent sees 96,000 ÷ 2,400,000 = 4% of it.</li>
+<li>Split among workers that each read 96,000 tokens: 2,400,000 ÷ 96,000 = 25 workers.</li>
+<li>Each returns a 400-token summary: 25 × 400 = 10,000 tokens for the final step, which fits easily.</li>
+</ul>
+<p><b>The overhead.</b> Briefs, plans and summaries add tokens on top of reading. When reading dominates, that is a few per cent; on a small task it can be more than the useful work.</p>
+</section>
+
+<section class="tp tp-code" id="c12-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program measures your project’s documents, pretends the corpus is 1,000 times larger, and works out how many workers are needed for each part to fit, and the tokens a workflow and a coordinator would use. Change <code>COPIES</code> to 50 and run it again.</p>
+<figure class="fig live" id="snip-breadth-tokens"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"breadth-tokens"}'></div></div>
+<figcaption><b>Splitting by context size, in real Python.</b> Sizes are illustrative; it does not measure quality.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c12-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: How we built our multi-agent research system</a> <small>When parallel workers helped, and what they cost in tokens.</small></li>
+<li><a href="https://cognition.ai/blog/dont-build-multi-agents">Cognition: Don’t build multi-agents</a> <small>The opposing view: shared context matters more than splitting.</small></li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a> <small>Parallelisation as a workflow before reaching for agents.</small></li>
+</ol>
+</section>

@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c15-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Capacity planning turns "we have two million users" into "we need to answer 150 requests a second at the busiest minute". Each step multiplies: how many use the feature on a day, how often, how bunched up at the busy hour, and how bursty within it.</p>
+<p><a class="gl" href="#gl-littles-law">Little’s law</a> then says how many requests are inside the system at once: arrivals per second times seconds each one stays. That number sizes connection pools, GPU slots and rate limits.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Work through a chain of assumptions, each of which you should measure from product analytics or a pilot:</p>
 <ol><li>Registered users → <b>daily active users</b> of the AI feature (activation rate).</li>
 <li>× requests per active user per day → requests per day.</li>
 <li>Requests concentrate in busy hours: <b>peak-hour share</b> (e.g. 15% of the day's requests in the peak hour), and within the hour a further burst factor (peak minute vs hour average, often 1.5–3×).</li>
 <li>→ <b>peak requests per second (RPS)</b>.</li>
-<li><b>Little's law</b>: concurrency = arrival rate × time in system. 50 RPS × 8 s average = 400 requests in flight. This sizes connection pools, GPU batch slots and rate limits. Little's law gives the <em>average</em> in flight for a stable system (arrivals below capacity); it is not a p99 or burst figure, so plan headroom above it.</li>
+<li><b><a class="gl" href="#gl-littles-law">Little’s law</a></b>: concurrency = arrival rate × time in system. 50 RPS × 8 s average = 400 requests in flight. This sizes connection pools, GPU batch slots and rate limits. Little's law gives the <em>average</em> in flight for a stable system (arrivals below capacity); it is not a p99 or burst figure, so plan headroom above it.</li>
 <li>× tokens per request → <b>peak input and output tokens/second</b>, which sizes model capacity or API rate limits.</li>
 <li>Add <b>background workload</b>: ingestion and re-embedding (chapter 10), evaluation runs, batch summarisation, agent jobs, which should be scheduled away from peaks.</li></ol>
 <figure class="fig live"><div class="stage"><div class="wid">
@@ -20,6 +28,36 @@
 <div class="kpis" id="cpK"></div></div></div>
 <figcaption><b>Capacity calculator.</b> Peak RPS = DAU × requests/day × peak-hour share ÷ 3600 × burst. Concurrency by Little's law (an average, not a p99). Equivalent form used by many capacity sheets: average RPS = DAU × requests/day ÷ 86,400, then × a peak factor (here the peak factor = peak-hour share × 24 × burst). Change the latency: concurrency, and therefore GPU slots and connection pools, scale with it directly.</figcaption></figure>
 <figure class="fig live"><div class="stage"><div data-widget="queue-sim"></div></div>
-<figcaption><b>Queue simulation, computed live</b> (random arrivals and service times, c parallel servers). Utilisation ρ = λ × service time ÷ c. Below about 80% the queue stays short; near 100% waits explode; above 100% the queue grows without limit. The in-flight average matches Little's law, but the p95 wait is much higher than the mean.</figcaption></figure>
+<figcaption><b>Queue simulation, computed live</b> (random arrivals and service times, c parallel servers). Utilisation = arrivals per second × service time ÷ servers. Below about 80% the queue stays short; near 100% waits explode; above 100% the queue grows without limit. The in-flight average matches Little's law, but the p95 wait is much higher than the mean.</figcaption></figure>
 <div class="box example"><h5>Example: the default numbers</h5><p>10M registered × 8% = 800k DAU × 6 = 4.8M requests/day. 12% in the peak hour = 576k/hour = 160 RPS average, × 2 burst = 320 RPS at the peak minute. × 6 s = ~1,900 requests in flight. Output: 320 × 350 = 112k output tokens/s; input 960k tokens/s (much of it cacheable system prompt). That is a large deployment, and every assumption deserves a measurement before buying capacity.</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The default chain</b> (illustrative).</p>
+<ul>
+<li>10 million registered × 8% active = 800,000 users a day × 6 requests = 4.8 million requests a day.</li>
+<li>12% in the busiest hour: 576,000 ÷ 3,600 seconds = 160 a second on average in that hour.</li>
+<li>The busiest minute is twice the hour’s average: 320 a second.</li>
+<li>Each request takes 6 seconds, so 320 × 6 ≈ 1,900 requests are in flight at once.</li>
+<li>Output: 320 × 350 tokens = 112,000 tokens a second.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c15-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program measures how much busier the busiest day is than an average day in your project’s dated records, then runs the chain from users to peak requests, requests in flight and output tokens for both. Change <code>PEAK_HOUR</code> or <code>BURST</code> and run it again.</p>
+<figure class="fig live" id="snip-peak-load"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"peak-load"}'></div></div>
+<figcaption><b>From users to peak load, in real Python.</b> The peak-day factor comes from your project’s data; the rest is illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Little%27s_law">Little’s law</a> <small>The relation between arrivals, time in system and items in flight.</small></li>
+<li><a href="https://sre.google/sre-book/software-engineering-in-sre/">Google SRE book: capacity planning in practice</a> <small>Intent-based capacity planning.</small></li>
+<li><a href="https://grafana.com/docs/k6/latest/using-k6/scenarios/executors/ramping-arrival-rate/">k6: ramping-arrival-rate</a> <small>Testing at a target number of requests per second.</small></li>
+</ol>
+</section>

@@ -387,7 +387,7 @@ Done (6 November 2026), one commit per chapter:
 
 The last phase. Decided on 6 November 2026:
 - **Order:** the platform pieces first (the topic structure and its checker, glossary hover cards, FSRS flashcards), with one pilot chapter restructured for review. Then the other chapters, the new chapters and the paper walkthroughs.
-- **Existing topics:** all 143 are restructured fully, two or three chapters per pull request.
+- **Existing topics:** all 143 are restructured fully: two or three chapters per pull request at first, then (at the owner's request) chapters 11–18 and the capstone together in one.
 - **New chapters:** appended as chapters 19–23 (ids `c19`–`c23`), after chapter 18 and before the capstone, so no existing id or chapter number changes.
 
 Progress:
@@ -396,7 +396,7 @@ Progress:
 - [x] Chapters 1–3 (18 topics, 18 snippets, 51 more glossary terms).
 - [x] Chapters 4, 6 and 7 (20 topics, 19 snippets plus the existing nanoGPT Colab guide in 6.7, 52 more glossary terms). Laptop labs now sit in the Code part in every restructured chapter.
 - [x] Chapters 8–10 (24 topics, 24 snippets, 50 more glossary terms).
-- [ ] Chapters 11–18 and the capstone, two or three chapters per pull request.
+- [x] Chapters 11–18 and the capstone in one pull request (68 topics, 68 snippets plus the existing QLoRA and vLLM Colab guides in 13.3 and 14.7, 94 more glossary terms). All 143 topics now use the structure.
 - [ ] Chapters 19–23.
 - [ ] Paper walkthroughs.
 

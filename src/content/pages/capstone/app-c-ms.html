@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="app-c-ms-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The capstone is a small but complete version of your example project, built in eight milestones. Each milestone is like a driving-test manoeuvre: a specific thing to build, the evidence to keep, and a <a class="gl" href="#gl-pass-condition">pass condition</a> written before you start, so "done" is a measurement and not a feeling.</p>
+<p>Keep the data and traffic modest. What makes it convincing is not size but honesty: measured results next to an explicit design for scale, with each kept apart from the other.</p>
+</section>
+
+<section class="tp tp-mechanism" id="app-c-ms-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Build a lite version of your example project (Harbor by default, or the online store, bank or travel agent; switch with the Example picker): a small but complete system. Keep data and traffic modest, and write an explicit scale design next to your measured results, so your reasoning about enterprise operation is concrete without pretending a laptop test is production.</p>
 <div class="tw"><table><tr><th>Milestone</th><th>Build</th><th>Evidence to keep</th><th>Pass condition</th></tr>
 <tr><td><b>1 · Baseline</b></td><td>100–1,000 approved or synthetic documents; BM25; 100 labelled questions</td><td>Dataset manifest, split policy, relevance labels, Recall@k / MRR, error list</td><td>Reproducible baseline with known, written-down failures</td></tr>
@@ -8,4 +16,32 @@
 <tr><td><b>6 · Operations</b></td><td>OTel tracing; quality sampling; alerts; budgets; runbook</td><td>Injected-failure investigation; incident turned into an eval case</td><td>Another engineer diagnoses and recovers using only your dashboards and runbook</td></tr>
 <tr><td><b>7 · Security</b></td><td>Second synthetic tenant; injection corpus; PII redaction before logging</td><td>Threat model; isolation and injection test results</td><td>Every canary stays in its tenant; no injected instruction triggers a write</td></tr>
 <tr><td><b>8 · Scale + release</b></td><td>Capacity assumptions; versioned index; release manifest; canary and rollback drill</td><td>Measured load-test report kept separate from projections; rollback evidence</td><td>A coherent, compatible restore and clearly bounded claims</td></tr></table></div>
+</section>
+
+<section class="tp tp-math" id="app-c-ms-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Reading milestone 3</b>. On 100 labelled questions, Recall@10 rising from 0.71 to 0.88 means 0.88 × 100 − 0.71 × 100 = 88 − 71 = 17 more questions find their answer in the top ten.</p>
+<ul>
+<li>Compare the two systems question by question: if the new one wins 21 and loses 4, the net gain is 17.</li>
+<li>Resample the 100 questions 2,000 times and recompute the gain each time; if 95% of those gains are above zero, keep the component. If not, write down why you did not add it.</li>
+</ul>
+<p><b>Milestone 4</b>. pass^5 means a task passes all 5 repeated runs: a task that passes each run 90% of the time passes all five only 0.9 × 0.9 × 0.9 × 0.9 × 0.9 ≈ 59% of the time.</p>
+</section>
+
+<section class="tp tp-code" id="app-c-ms-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds labelled questions from your project’s documents, compares a baseline retriever with a candidate question by question, and decides with a paired bootstrap interval whether the candidate stays. Change <code>K</code> to 3 and run it again.</p>
+<figure class="fig live" id="snip-milestone-evidence"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"milestone-evidence"}'></div></div>
+<figcaption><b>A milestone decided by evidence, in real Python.</b> The questions are synthetic stand-ins for labelled ones.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="app-c-ms-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://dl.acm.org/doi/10.1145/1321440.1321528">Smucker, Allan and Carterette (2007), significance tests for IR evaluation</a> <small>Paired tests, including the bootstrap, for comparing retrieval systems.</small></li>
+<li><a href="https://arxiv.org/abs/2406.12045">Yao et al. (2024), τ-bench</a> <small>pass^k: reliability over repeated runs.</small></li>
+<li><a href="https://modelcontextprotocol.io/specification/2025-11-25">MCP specification</a> <small>The protocol for milestone 4’s tool server.</small></li>
+</ol>
+</section>

@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c15-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A service that keeps nothing in memory between requests can be copied, restarted or moved freely; the conversation and the task live in a database. Work that need not finish while the user waits goes into a queue.</p>
+<p>Caches save time and money, but only when the stored answer really fits the new request. An exact cache is safe if its key includes the tenant and the user’s permissions. A <a class="gl" href="#gl-semantic-cache">semantic cache</a> reuses answers for similar questions, and similar is not the same: "cancel my subscription" and "cancel my colleague’s subscription" need different answers.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Stateless services</b>: request handlers keep no session in memory, so any replica can serve any request and replicas can be added or killed freely. Conversation state lives in a database (7.5); streaming connections can resume by response ID.</li>
 <li><b>Durable state</b>: conversations, agent checkpoints, tasks, usage records and audit logs in replicated databases with backups. Choose stores per access pattern (Postgres for transactional state, object storage for documents, a vector store for embeddings).</li>
 <li><b>Queues</b>: anything that need not finish within the user's request (document processing, long agent tasks, batch summarisation, evaluation) goes through a queue with workers, giving retries, backpressure and smoothing of peaks.</li>
-<li><b>Caches</b>: <em>exact-match response cache</em> (same normalised request → stored answer; safe for deterministic, non-personal queries); <em>semantic cache</em> (similar query embedding → stored answer; risky: similar is not identical, so restrict to FAQ-style content and include tenant and permission scope in the key); <em>retrieval cache</em> (query → chunk IDs); <em>prefix/KV cache</em> in the model server (14.3). Every cache needs invalidation tied to document updates (10.4).</li>
+<li><b>Caches</b>: <em>exact-match response cache</em> (same normalised request → stored answer; safe for deterministic, non-personal queries); <em><a class="gl" href="#gl-semantic-cache">semantic cache</a></em> (similar query embedding → stored answer; risky: similar is not identical, so restrict to FAQ-style content and include tenant and permission scope in the key); <em>retrieval cache</em> (query → chunk IDs); <em>prefix/KV cache</em> in the model server (14.3). Every cache needs invalidation tied to document updates (10.4).</li>
 <li><b>Asynchronous UX</b>: for tasks over ~30 s, return a task ID immediately, show progress, and notify on completion, rather than holding an HTTP connection open.</li>
 </ul>
 <figure class="fig flow"><div class="stage">
@@ -10,4 +18,32 @@
 <ol class="steps"><li data-n="0">A request arrives with tenant, user and permission scope.</li><li data-n="1">Key = hash(tenant, normalised prompt, model, prompt version, ACL scope). Identical requests return instantly.</li><li data-n="2">For public FAQ content only: if a past query's embedding is within a tight threshold, reuse its answer. Evaluate false-hit rate before enabling.</li><li data-n="3">Reuse the retrieved chunk IDs for repeated queries within a short TTL.</li><li data-n="4">The model server reuses KV for the shared system-prompt prefix.</li><li data-n="5">Store with TTL and document dependencies so edits purge stale answers.</li></ol></div>
 <figcaption><b>Cache layers</b> from cheapest to most expensive. Never cache across tenants or permission scopes.</figcaption></figure>
 <div class="box example"><h5>Example: a semantic cache incident</h5><p>"How do I cancel my subscription?" and "How do I cancel my colleague's subscription?" are 0.94 cosine-similar. A semantic cache with threshold 0.92 served the first answer to the second question, which required an admin role. Fix: scope semantic caching to a curated FAQ set, raise the threshold, and include role in the cache key.</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What caches save</b> (illustrative). 1 million requests a day at 0.01 dollars each costs 10,000 dollars.</p>
+<ul>
+<li>An exact cache with a 5% hit rate saves 50,000 × 0.01 = 500 dollars a day and answers those requests in milliseconds.</li>
+<li>A semantic cache with a 20% hit rate saves 2,000 dollars, but if 3% of its hits are wrong, 200,000 × 0.03 = 6,000 users a day get an answer to a different question.</li>
+</ul>
+<p>That is why semantic caching is limited to curated FAQ content and its false-hit rate is measured first.</p>
+</section>
+
+<section class="tp tp-code" id="c15-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program shows that tenant and role change an exact cache key, then runs a word-overlap semantic cache over your project’s distinct requests and counts the hits whose type, numbers or names differ from the cached request. Change the thresholds and run it again.</p>
+<figure class="fig live" id="snip-cache-scope"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"cache-scope"}'></div></div>
+<figcaption><b>Cache keys and false hits, in real Python.</b> Word overlap stands in for embedding similarity.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/vectors/">Redis: vector search</a> <small>The building block behind many semantic caches.</small></li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Anthropic: Prompt caching</a> <small>Provider-side prefix caching, different from response caching.</small></li>
+<li><a href="https://12factor.net/processes">The Twelve-Factor App: Processes</a> <small>Stateless processes with state in backing services.</small></li>
+</ol>
+</section>

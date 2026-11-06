@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c14-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p><a class="gl" href="#gl-weight-quantisation">Quantisation</a> is like saving a photo at lower quality: the file is smaller and loads faster, and most of the time you cannot tell, until you zoom in on the hard parts. For a model, the hard parts are long contexts, maths, code and less common languages.</p>
+<p><a class="gl" href="#gl-speculative-decoding">Speculative decoding</a> is a fast junior who drafts the next few words and a senior who checks them all at once, keeping the ones they agree with. When the text is predictable, the senior signs off several words per look, and the answer is exactly what the senior alone would have written.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c14-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Weight quantisation</b> (gains depend on kernels and hardware; a format your GPU lacks fast kernels for can be slower): store weights in 8, 4 or fewer bits. Methods: FP8 (hardware-supported on recent GPUs, near-lossless), INT8, 4-bit methods such as GPTQ and AWQ (calibrated on sample data), and llama.cpp's GGUF k-quants (Q4_K_M, Q5_K_M, Q8_0) for CPU and Apple silicon. Smaller weights mean less memory and faster decode (fewer bytes read per token).</li>
+<li><b><a class="gl" href="#gl-weight-quantisation">Weight quantisation</a></b> (gains depend on kernels and hardware; a format your GPU lacks fast kernels for can be slower): store weights in 8, 4 or fewer bits. Methods: FP8 (hardware-supported on recent GPUs, near-lossless), INT8, 4-bit methods such as GPTQ and AWQ (calibrated on sample data), and llama.cpp's GGUF k-quants (Q4_K_M, Q5_K_M, Q8_0) for CPU and Apple silicon. Smaller weights mean less memory and faster decode (fewer bytes read per token).</li>
 <li><b>Activation and KV-cache quantisation</b>: FP8 KV cache doubles capacity; W8A8 quantises both weights and activations to use INT8/FP8 matrix units for faster prefill.</li>
 <li><b>Quality cost</b>: usually small at 8-bit, noticeable on hard tasks at 4-bit for small models, larger at 2–3 bits. Long-context, maths, code and non-English often degrade first. <em>Always evaluate the quantised model on your task suite</em> rather than trusting perplexity.</li>
-<li><b>Speculative decoding</b>: a small fast <dfn>draft</dfn> model (or extra prediction heads, as in Medusa/EAGLE, or n-gram lookup) proposes k tokens; the large target model verifies all k in one forward pass and accepts the longest correct prefix, plus one token of its own. Output distribution is mathematically the same as the target model's. Speeds up decode when acceptance rates are high (predictable text, code) and batch sizes are small.</li>
+<li><b><a class="gl" href="#gl-speculative-decoding">Speculative decoding</a></b>: a small fast <dfn>draft</dfn> model (or extra prediction heads, as in Medusa/EAGLE, or n-gram lookup) proposes k tokens; the large target model verifies all k in one forward pass and accepts the longest correct prefix, plus one token of its own. Output distribution is mathematically the same as the target model's. Speeds up decode when acceptance rates are high (predictable text, code) and batch sizes are small.</li>
 <li><b>Other compression</b>: distillation into smaller models (13.1), pruning (removing weights or whole layers/heads), and smaller vocabularies or shorter outputs.</li>
 </ul>
 <figure class="fig sim"><div class="stage"><div class="wid">
@@ -10,7 +18,7 @@
 <label for="sdA">Draft acceptance rate % <input type="range" id="sdA" min="30" max="95" value="75"><span id="sdAO"></span></label></div>
 <div class="ctl"><button class="btn primary" id="sdRun" type="button">Next round</button><button class="btn" id="sdReset" type="button">Reset</button><span class="count" id="sdOut"></span></div>
 <div id="sdViz" style="display:grid;gap:6px"></div></div></div>
-<figcaption><b>Speculative decoding, round by round</b> (random acceptance at the chosen rate). Green = accepted draft tokens, red = first rejected draft token (replaced by the target's own token), dashed = discarded. Expected tokens per target pass = (1 − aᵏ⁺¹)/(1 − a) for acceptance rate a. The target model runs once per round instead of once per token.</figcaption></figure>
+<figcaption><b>Speculative decoding, round by round</b> (random acceptance at the chosen rate). Green = accepted draft tokens, red = first rejected draft token (replaced by the target's own token), dashed = discarded. On average each target pass yields more than one token: with 4 draft tokens and 80% acceptance, about 3.4. The target model runs once per round instead of once per token.</figcaption></figure>
 <figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">8B model: memory and indicative quality retention (illustrative; measure on your tasks)</p>
 <div class="tw"><table><tr><th>Format</th><th>Weights</th><th>Decode speed (memory-bound)</th><th>Typical quality impact</th></tr>
 <tr><td>BF16</td><td>16 GB</td><td>1.0×</td><td>reference</td></tr>
@@ -18,10 +26,35 @@
 <tr><td>4-bit (AWQ/GPTQ/Q4_K_M)</td><td>~4.5–5 GB</td><td>~2.5–3.5×</td><td>small drop; larger on hard reasoning, long context</td></tr>
 <tr><td>2–3-bit</td><td>~3 GB</td><td>higher</td><td>often significant for small models</td></tr></table></div></div>
 <figcaption><b>Quantisation tradeoffs.</b> Speedups are below the ideal byte ratio because of dequantisation work and non-weight memory traffic. Lower precision does not always mean lower latency: it depends on kernel support, hardware and batch size, so measure on your own stack.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c14-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Smaller weights</b>. An 8B model in 16-bit is 8 × 2 = 16 GB; in 8-bit 8 GB; in 4-bit about 4.5 GB. Decode reads all weights for every token, so 8-bit could at best be 2× faster and 4-bit about 3.5×; real gains are lower.</p>
+<p><b>Speculative decoding</b> with 4 draft tokens and 80% acceptance. The first draft token is accepted 80% of the time, the second 80% × 80% = 64%, then 51% and 41%. Add the target’s own token: 1 + 0.8 + 0.64 + 0.51 + 0.41 ≈ 3.4 tokens per target pass instead of 1. At 50% acceptance it is only 1 + 0.5 + 0.25 + 0.13 + 0.06 ≈ 1.9.</p>
+</section>
+
+<section class="tp tp-code" id="c14-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates draft-and-verify rounds for three draft lengths and three acceptance rates and compares the tokens per target pass with the expected value, then sizes an 8B model in three formats. Change the acceptance rates and run it again.</p>
+<figure class="fig live" id="snip-speculative-decoding"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"speculative-decoding"}'></div></div>
+<figcaption><b>Speculative decoding and quantised sizes, in real Python.</b> It ignores the draft model’s own cost.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: quantisation on CPU with llama.cpp <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code># Download two GGUF quantisations of the same small model from Hugging Face (e.g. Q8_0 and Q4_K_M of a 1–3B model)
 llama-bench -m model-Q8_0.gguf   -p 512 -n 128      # pp512 = prefill tok/s, tg128 = decode tok/s
 llama-bench -m model-Q4_K_M.gguf -p 512 -n 128
 llama-perplexity -m model-Q4_K_M.gguf -f wiki.test.raw   # quality proxy; then run YOUR eval set too</code></pre>
 <p>Expect decode (tg) to be noticeably faster for Q4 than Q8 while prefill (pp) changes less: decode is bandwidth-bound, prefill is compute-bound. llama.cpp also supports speculative decoding with a draft model in <code>llama-server</code> (<code>-md</code>); check the current flags in its README.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c14-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2211.17192">Leviathan et al. (2022), Fast Inference via Speculative Decoding</a> <small>Draft-and-verify with an unchanged output distribution.</small></li>
+<li><a href="https://arxiv.org/abs/2306.00978">Lin et al. (2023), AWQ</a> <small>Activation-aware 4-bit weight quantisation.</small></li>
+<li><a href="https://arxiv.org/abs/2210.17323">Frantar et al. (2022), GPTQ</a> <small>Post-training quantisation from calibration data.</small></li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md">llama.cpp: quantize</a> <small>GGUF quantisation types used in the laptop lab.</small></li>
+</ol>
+</section>

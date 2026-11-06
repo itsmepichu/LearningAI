@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c12-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Organisations use a few familiar shapes. A manager splits a project and collects the results (<a class="gl" href="#gl-coordinator-worker">coordinator and workers</a>). A receptionist sends each visitor to the right desk (routing). A support agent transfers a caller to billing, with a note so the caller need not repeat everything (a <a class="gl" href="#gl-handoff">handoff</a>). An editor reviews a draft and sends it back (evaluator and optimiser).</p>
+<p>Agent systems reuse the same shapes, with the same weak points: a busy manager, a visitor sent to the wrong desk, a transfer that loses the note.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <figure class="fig"><div class="stage">
 <div class="ctl" id="patBtns" style="margin-bottom:10px"></div>
 <svg id="patSvg" viewBox="0 0 720 260" role="img" aria-label="Multi-agent pattern diagram"></svg>
@@ -5,11 +13,38 @@
 <figcaption><b>Five patterns.</b> Select one to see its structure (animated message flow) and when to use it.</figcaption></figure>
 <div class="tw"><table>
 <tr><th>Pattern</th><th>Control</th><th>Use when</th><th>Main risk</th></tr>
-<tr><td><b>Coordinator–worker</b> (orchestrator)</td><td>Central agent decomposes, delegates, synthesises</td><td>Breadth-first tasks with separable parts</td><td>Coordinator bottleneck; cost</td></tr>
+<tr><td><b><a class="gl" href="#gl-coordinator-worker">Coordinator–worker</a></b> (orchestrator)</td><td>Central agent decomposes, delegates, synthesises</td><td>Breadth-first tasks with separable parts</td><td>Coordinator bottleneck; cost</td></tr>
 <tr><td><b>Routing</b></td><td>Classifier/LLM sends request to one specialist</td><td>Distinct request types with distinct tools</td><td>Misrouting; needs an "other" path</td></tr>
-<tr><td><b>Handoff</b></td><td>Active agent transfers the conversation to another</td><td>Customer journeys crossing departments</td><td>Context lost in transfer; ping-pong</td></tr>
+<tr><td><b><a class="gl" href="#gl-handoff">Handoff</a></b></td><td>Active agent transfers the conversation to another</td><td>Customer journeys crossing departments</td><td>Context lost in transfer; ping-pong</td></tr>
 <tr><td><b>Supervisor</b> (hierarchical)</td><td>Manager agent monitors, can override or reassign</td><td>Long tasks needing oversight and replanning</td><td>Deep hierarchies multiply cost and latency</td></tr>
 <tr><td><b>Evaluator–optimiser</b> (critic)</td><td>Producer drafts, evaluator critiques, loop</td><td>Clear quality criteria; drafting tasks</td><td>Endless loops; evaluator shares producer's blind spots if same model/context</td></tr>
 </table></div>
 <div class="box example"><h5>Example: handoff with context transfer</h5><p>A general support agent determines the issue is a disputed charge and hands off to the billing agent. The handoff passes a structured summary (customer ID, issue, evidence collected, what the customer was told) rather than the full transcript, and the billing agent receives only billing tools. The customer sees one continuous conversation.</p></div>
+</section>
+
+<section class="tp tp-math" id="c12-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Routing errors add up</b> (illustrative). A router that is 95% right on 10,000 requests a day sends 500 to the wrong specialist.</p>
+<ul>
+<li>If the router may say "not sure" and send 6% of requests to a general path, and is then 99% right on the remaining 94%: 9,400 × 0.01 = 94 misroutes, and 600 cases handled more slowly.</li>
+<li>A handoff with a 300-token summary instead of a 6,000-token transcript saves 5,700 tokens per transfer: at 2,000 transfers a day, 11.4 million tokens.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c12-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program learns a simple word-based router from half of your project’s labelled requests, routes the other half, and sends a request to the "other" path when no specialist is clearly ahead. Off-topic requests show why that path is needed. Change the shares in the loop and run it again.</p>
+<figure class="fig live" id="snip-specialist-router"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"specialist-router"}'></div></div>
+<figcaption><b>Routing with an “other” path, in real Python.</b> A keyword router stands in for an LLM router.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c12-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a> <small>Routing, orchestrator–workers and evaluator–optimiser patterns.</small></li>
+<li><a href="https://openai.github.io/openai-agents-python/handoffs/">OpenAI Agents SDK: Handoffs</a> <small>How one agent hands a conversation to another.</small></li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent">LangChain: Multi-agent</a> <small>Supervisor and handoff patterns in a framework.</small></li>
+</ol>
+</section>

@@ -1,10 +1,18 @@
+<section class="tp tp-intuition" id="c11-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>You press "Pay" and the page freezes. Did it work? If you press again and it pays twice, the system was not safe to retry. An <a class="gl" href="#gl-idempotency-key">idempotency key</a> is a receipt number sent with the request: if the same number arrives again, the shop shows the first receipt instead of charging again.</p>
+<p>Some steps cannot be retried away. When a trip has a flight, a hotel and a payment and the payment fails, the flight and hotel must be cancelled. That chain of steps, each with its undo, is a <a class="gl" href="#gl-saga">saga</a>.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Idempotent operation</b>: doing it twice has the same effect as once ("set status = shipped" is idempotent; "add $10 credit" is not, unless keyed).</div>
-<div><b>Idempotency key</b>: a unique key sent with a non-idempotent request; the server stores the result under the key and returns it for duplicates. Derive it deterministically from (task, step, arguments), not randomly per attempt.</div>
-<div><b>Compensating action</b>: an action that semantically undoes an earlier one when a later step fails (cancel the booking, reverse the charge). A multi-step process with compensations is a <b>saga</b>.</div>
+<div><b><a class="gl" href="#gl-idempotency-key">Idempotency key</a></b>: a unique key sent with a non-idempotent request; the server stores the result under the key and returns it for duplicates. Derive it deterministically from (task, step, arguments), not randomly per attempt.</div>
+<div><b>Compensating action</b>: an action that semantically undoes an earlier one when a later step fails (cancel the booking, reverse the charge). A multi-step process with compensations is a <b><a class="gl" href="#gl-saga">saga</a></b>.</div>
 </div>
 <p>Duplicate actions in agents come from network retries, crash-resume, and the model itself deciding to call the same tool again ("let me try that again"). Defences: idempotency keys at the tool layer, deduplication of identical calls within a task, and checking current state before acting ("does a credit for this order already exist?").</p>
-<p><b>The crash window.</b> A crash <em>between</em> a tool call and the next checkpoint is the classic duplicate: the action happened, but the saved state says it did not, so the resumed run repeats it. Idempotency keys make that retry safe. When a business change must also publish an event or notify another system, use a <dfn>transactional outbox</dfn>: write the change and an "outbox" row in one database transaction, and let a separate relay deliver the event, so the two can never disagree.</p>
+<p><b>The crash window.</b> A crash <em>between</em> a tool call and the next checkpoint is the classic duplicate: the action happened, but the saved state says it did not, so the resumed run repeats it. Idempotency keys make that retry safe. When a business change must also publish an event or notify another system, use a <dfn><a class="gl" href="#gl-transactional-outbox">transactional outbox</a></dfn>: write the change and an "outbox" row in one database transaction, and let a separate relay deliver the event, so the two can never disagree.</p>
 <figure class="fig sim"><div class="stage"><div data-widget="saga"></div></div>
 <figcaption><b>Saga with compensations</b> (scripted). Steps run forward; if one fails, completed steps are compensated in reverse order. The duplicate retry of step 1 is absorbed by its idempotency key instead of repeating the work. The last step cannot be undone, which is why irreversible steps go last.</figcaption></figure>
 <figure class="fig sim"><div class="stage"><div data-widget="timeout-write"></div></div>
@@ -15,4 +23,34 @@
     if (existing := db.get_by_idempotency_key(key)): return existing   # duplicate → same result
     amount = policy.credit_amount(order_id, reason)                    # computed in code
     return db.insert_credit(order_id, amount, idempotency_key=key)     # unique constraint on key</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c11-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Duplicates from retries</b> (illustrative). Suppose 1 call in 100 times out after the write succeeded, and the client retries.</p>
+<ul>
+<li>At 20,000 refunds a day, 20,000 × 0.01 = 200 refunds are paid twice without a key.</li>
+<li>At an average of 1,500 rupees each, that is 200 × 1,500 = 300,000 rupees a day paid out by mistake.</li>
+<li>With a key built from the task, the action and the arguments, the retry returns the stored result: 0 duplicates.</li>
+</ul>
+<p>A random key per attempt does not help: each retry looks like a new request.</p>
+</section>
+
+<section class="tp tp-code" id="c11-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program sends 100 of your project’s money movements through a server that loses 30% of its replies after writing. Retrying with a new key each time pays some twice; a key derived from the record and action does not. Set <code>LOST_REPLY</code> to 0.05 and run it again.</p>
+<figure class="fig live" id="snip-idempotent-retries"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"idempotent-retries"}'></div></div>
+<figcaption><b>Lost replies and retries, in real Python.</b> The loss rate is simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.stripe.com/api/idempotent_requests">Stripe API: Idempotent requests</a> <small>How a payment API stores and replays results by key.</small></li>
+<li><a href="https://microservices.io/patterns/data/saga.html">microservices.io: Saga pattern</a> <small>Compensating transactions across services.</small></li>
+<li><a href="https://microservices.io/patterns/data/transactional-outbox.html">microservices.io: Transactional outbox</a> <small>Publishing an event in the same transaction as the change.</small></li>
+<li><a href="https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf">Garcia-Molina and Salem (1987), Sagas</a> <small>The original paper on long-lived transactions with compensations.</small></li>
+</ol>
+</section>

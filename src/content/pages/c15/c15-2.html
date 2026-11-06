@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c15-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>"The service should be reliable" cannot be checked. "99.5% of requests answered successfully within 10 seconds over 28 days" can. That target is a <a class="gl" href="#gl-slo">service-level objective</a>, and the 0.5% it allows to fail is the <a class="gl" href="#gl-error-budget">error budget</a>: room to ship changes and survive incidents.</p>
+<p>For AI features, availability is not enough. A service can answer every request quickly and still answer badly, so quality, cost and freshness need targets too.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>SLI</b> (indicator): a measured quantity, e.g. "fraction of requests completed successfully within 10 s".</div>
-<div><b>SLO</b> (objective): the target for an SLI over a window, e.g. "99.5% over 28 days".</div>
-<div><b>Error budget</b>: 100% − SLO; the amount of failure you can afford (0.5% of requests). Spending it fast triggers alerts and freezes risky releases (17.8).</div>
+<div><b><a class="gl" href="#gl-slo">SLO</a></b> (objective): the target for an SLI over a window, e.g. "99.5% over 28 days".</div>
+<div><b><a class="gl" href="#gl-error-budget">Error budget</a></b>: 100% − SLO; the amount of failure you can afford (0.5% of requests). Spending it fast triggers alerts and freezes risky releases (17.8).</div>
 <div><b>SLA</b>: a contractual promise to customers, usually looser than the internal SLO.</div>
 </div>
 <div class="tw"><table>
@@ -18,4 +26,33 @@
 <div class="kpis" id="ebK"></div></div></div>
 <figcaption><b>Error budget calculator.</b> Each extra "nine" cuts the budget tenfold. For AI features, a provider outage can consume a month's 99.9% budget in under an hour, which is why fallbacks (15.7) matter.</figcaption></figure>
 <div class="box example"><h5>Example: why quality needs an SLO too</h5><p>A deployment keeps 99.95% availability while a silent retrieval bug drops groundedness from 96% to 81% for three days. No availability alert fires. A daily sampled-quality SLO with an alert at 92% would have caught it on day one (17.4).</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What a budget allows</b> over 28 days (40,320 minutes) and 30 million requests.</p>
+<ul>
+<li>99.9%: 0.1% of 30 million = 30,000 failed requests, or 0.1% of 40,320 ≈ 40 minutes of full outage.</li>
+<li>99.99%: 3,000 requests, or about 4 minutes.</li>
+<li>A 45-minute provider outage with no fallback uses 45 ÷ 40 ≈ 112% of a 99.9% month.</li>
+</ul>
+<p><b>Burn rate.</b> 2% errors in the last hour against a 0.1% allowance is 2 ÷ 0.1 = 20 times too fast: the whole month’s budget would be gone in 28 days ÷ 20 ≈ 34 hours.</p>
+</section>
+
+<section class="tp tp-code" id="c15-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program turns five SLOs into the failed requests and outage minutes they allow per 28 days, shows how much of each a 45-minute outage uses, and computes a burn rate. Change <code>REQUESTS</code> or the last hour’s errors and run it again.</p>
+<figure class="fig live" id="snip-error-budget"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"error-budget"}'></div></div>
+<figcaption><b>Error budgets and burn rate, in real Python.</b> The traffic is illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://sre.google/sre-book/service-level-objectives/">Google SRE book: Service Level Objectives</a> <small>SLIs, SLOs and SLAs.</small></li>
+<li><a href="https://sre.google/workbook/alerting-on-slos/">Google SRE workbook: Alerting on SLOs</a> <small>Burn-rate alerts over several windows.</small></li>
+<li><a href="https://sre.google/workbook/error-budget-policy/">Google SRE workbook: Error budget policy</a> <small>What happens when the budget runs out.</small></li>
+</ol>
+</section>

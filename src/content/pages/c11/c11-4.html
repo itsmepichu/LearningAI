@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c11-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An assistant’s notebook has two parts. One page is for the task in hand and is torn out when it is done. The other part keeps things worth remembering: this customer prefers Hindi, reports go to the finance list.</p>
+<p><a class="gl" href="#gl-agent-memory">Memories</a> need the same care as any other record. Each says who it belongs to, where it came from and when it expires, a newer fact replaces an older one instead of contradicting it, and nobody else’s notes are ever read out.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Short-term (working) state</b>: the current task's messages, tool results, plan and scratch notes. Lives in the context window and in the agent's checkpointed state (11.5). Compact it as it grows (7.5).</li>
-<li><b>Persistent memory</b>: facts worth keeping across tasks: user preferences, prior resolutions, learned environment facts ("the staging DB is called stg-eu-2"). Stored as records with source, timestamp, owner and scope.</li>
+<li><b><a class="gl" href="#gl-agent-memory">Persistent memory</a></b>: facts worth keeping across tasks: user preferences, prior resolutions, learned environment facts ("the staging DB is called stg-eu-2"). Stored as records with source, timestamp, owner and scope.</li>
 <li><b>Memory retrieval</b>: fetch relevant memories by semantic search plus filters (same user/tenant), recency and importance scores, then inject the top few into context.</li>
 <li><b>Expiration and hygiene</b>: memories go stale or wrong. Give them TTLs, update or supersede instead of piling up contradictions, let users view and delete them, and never store secrets or sensitive data without a policy (16.5). Memory written from untrusted content can be poisoned; record provenance.</li>
 </ul>
@@ -21,4 +29,32 @@
  "source": {"type": "conversation", "trace_id": "4bf9…", "turn": 12},
  "created": "2026-10-02", "expires": "2027-04-02", "confidence": "user_stated",
  "supersedes": "mem_51a"}</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c11-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Scoring a memory</b> (illustrative). One simple score adds three things: words shared with the question, importance and recency.</p>
+<ul>
+<li>"prefers summaries in English", saved 10 days ago, importance 2: 1 shared word + 0.3 × 2 + (1 − 10 ÷ 365) ≈ 1 + 0.6 + 0.97 = 2.57.</li>
+<li>"reports go to the finance list", saved 250 days ago, importance 3: 0 + 0.9 + (1 − 250 ÷ 365) ≈ 0.9 + 0.32 = 1.22.</li>
+</ul>
+<p>The fresher, matching memory wins. <b>Storage grows.</b> 50,000 users × 40 memories each = 2 million records; with expiry after a year and superseding, far fewer stay live.</p>
+</section>
+
+<section class="tp tp-code" id="c11-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program stores six memories for two users, recalls the best three for a question, and filters out another user’s memory, an expired one and one that was replaced. Change <code>TODAY</code> to 600 and run it again.</p>
+<figure class="fig live" id="snip-agent-memory"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"agent-memory"}'></div></div>
+<figcaption><b>Scope, expiry and superseding, in real Python.</b> Word overlap stands in for semantic search.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2304.03442">Park et al. (2023), Generative Agents</a> <small>Memory retrieval by relevance, importance and recency.</small></li>
+<li><a href="https://arxiv.org/abs/2310.08560">Packer et al. (2023), MemGPT</a> <small>Managing what stays in the context and what is paged out.</small></li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/memory">LangGraph: Memory</a> <small>Short-term thread state and long-term stores in a framework.</small></li>
+</ol>
+</section>

@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c14-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A new GPU replica is not a light switch. Finding a machine, pulling a multi-gigabyte image, loading tens of gigabytes of weights and warming up can take minutes: the <a class="gl" href="#gl-cold-start">cold start</a>. If you only add replicas when they are already busy, the morning rush is over before help arrives.</p>
+<p>So scale on signals that move early, such as the queue of waiting requests, keep a few replicas warm, and only call a replica ready once it has actually answered a test request.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c14-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="tw"><table>
 <tr><th>Engine</th><th>Strengths</th><th>Typical use</th></tr>
 <tr><td><a href="https://docs.vllm.ai/">vLLM</a></td><td>PagedAttention, continuous batching, prefix caching, broad model and quantisation support, OpenAI-compatible server, TP/PP/EP</td><td>Default open-source GPU serving engine</td></tr>
@@ -8,7 +16,7 @@
 </table></div>
 <ul>
 <li><b>Packaging</b>: a container image with a pinned engine version, model weights pulled from an internal registry or object storage at start (or baked in for faster starts), configuration (TP size, max model length, memory fraction, quantisation) as versioned config, health and readiness endpoints.</li>
-<li><b>Cold start</b>: scheduling a GPU node (minutes if the cluster must scale), pulling the image (GBs), loading weights (tens of GB from storage), allocating KV cache, compiling CUDA graphs. Total can be several minutes, so autoscaling must anticipate demand.</li>
+<li><b><a class="gl" href="#gl-cold-start">Cold start</a></b>: scheduling a GPU node (minutes if the cluster must scale), pulling the image (GBs), loading weights (tens of GB from storage), allocating KV cache, compiling CUDA graphs. Total can be several minutes, so autoscaling must anticipate demand.</li>
 <li><b>Warm-up</b>: send synthetic requests of typical shapes before marking ready, so first real users do not pay compilation and cache-allocation costs.</li>
 <li><b>Autoscaling signals</b>: GPU utilisation is a poor signal; use queue depth / waiting requests, KV-cache utilisation, and TTFT against SLO. Keep a minimum warm pool; scale down slowly.</li>
 <li><b>Readiness means a real answer</b>: mark a replica ready only after the model and tokenizer are loaded and a small validation inference succeeds, not when the port opens. Scale-to-zero saves money but conflicts with tight first-request latency targets.</li></ul>
@@ -18,10 +26,38 @@
 <label for="asSig">Scale on <select id="asSig"><option value="queue" selected>queue depth (leading)</option><option value="util">GPU utilisation (lagging)</option></select></label></div>
 <canvas id="asCan" width="640" height="220"></canvas><div class="kpis" id="asK"></div></div></div>
 <figcaption><b>Autoscaling through a morning traffic ramp</b> (simulated). Grey = demand in replicas' worth of load; blue = ready replicas; amber = replicas still starting; red shading = periods where demand exceeds ready capacity (SLO violations). Long cold starts make reactive scaling miss the ramp; a larger warm pool or scheduled pre-scaling fixes it.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c14-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A ramp</b> (illustrative). Load grows from 2 to 10 replicas’ worth between 8:00 and 9:00, about one more replica every 7.5 minutes.</p>
+<ul>
+<li>With a 12-minute cold start, a replica requested at 8:15 arrives at 8:27, by which time load has grown by about 12 ÷ 7.5 ≈ 1.6 replicas.</li>
+<li>If the signal also lags by 5 minutes, you are behind by about 17 ÷ 7.5 ≈ 2.3 replicas through the whole ramp.</li>
+<li>Keeping 3 extra replicas warm costs 3 × 24 × 2.50 = 180 dollars a day at 2.50 dollars an hour (illustrative).</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c14-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates three hours with a morning ramp and counts the minutes short of capacity for cold starts of 2, 6 and 12 minutes, warm pools of 2 and 6, and a queue signal against a lagging utilisation signal. Change <code>demand</code> and run it again.</p>
+<figure class="fig live" id="snip-autoscale-ramp"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"autoscale-ramp"}'></div></div>
+<figcaption><b>Reactive scaling against a ramp, in real Python.</b> The demand curve and signal lag are invented.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: run an OpenAI-compatible server locally <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code>llama-server -m model-Q4_K_M.gguf --port 8080 -c 8192 --parallel 4     # 4 concurrent slots
 curl http://localhost:8080/health
 curl http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" \
   -d '{"messages":[{"role":"user","content":"Say hello in five words."}],"max_tokens":20}'</code></pre>
 <p>Send 1, then 4, then 8 concurrent requests (e.g. with a small Python asyncio script) and watch per-request speed fall as slots share your CPU: the throughput–latency tradeoff of 14.7 in miniature.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c14-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">Kubernetes: Horizontal Pod Autoscaling</a> <small>Scaling on custom metrics such as queue depth.</small></li>
+<li><a href="https://kserve.github.io/website/">KServe documentation</a> <small>Model serving on Kubernetes with autoscaling.</small></li>
+<li><a href="https://docs.vllm.ai/en/latest/deployment/docker.html">vLLM: Using Docker</a> <small>Packaging an engine with a pinned version.</small></li>
+</ol>
+</section>

@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c15-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When a building’s wiring is overloaded, a fuse trips instead of letting the wires melt. A <a class="gl" href="#gl-circuit-breaker">circuit breaker</a> does the same for a failing dependency: after too many errors it stops calling it for a while and uses a fallback, then tries a few calls to see whether it has recovered.</p>
+<p>When there is simply too much traffic, <a class="gl" href="#gl-load-shedding">load shedding</a> says no early to the requests that would time out anyway, and <a class="gl" href="#gl-graceful-degradation">graceful degradation</a> offers a smaller service, such as a smaller model or cached answers, rather than none.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Backpressure</b>: propagate "slow down" upstream (bounded queues, 429 with Retry-After) instead of accepting work you cannot finish in time.</li>
-<li><b>Load shedding</b>: when overloaded, reject some requests early and cheaply (lowest priority first: batch, then free tier) so the rest succeed. Reject based on predicted wait vs deadline; a request that will time out anyway should not consume GPU time.</li>
-<li><b>Circuit breaker</b>: wrap each dependency. After an error-rate threshold, the breaker <b>opens</b> and calls fail fast (or go to fallback) for a cool-down period; then it goes <b>half-open</b> and lets a few trial calls through; success closes it, failure re-opens it. Prevents piling threads onto a dying provider.</li>
-<li><b>Graceful degradation</b>: a ladder of reduced service levels: smaller model, fewer retrieved chunks, no reranker, shorter max output, disable non-essential features (suggested follow-ups), cached answers only, and finally a clear "temporarily unavailable, here's search" message.</li>
+<li><b><a class="gl" href="#gl-load-shedding">Load shedding</a></b>: when overloaded, reject some requests early and cheaply (lowest priority first: batch, then free tier) so the rest succeed. Reject based on predicted wait vs deadline; a request that will time out anyway should not consume GPU time.</li>
+<li><b><a class="gl" href="#gl-circuit-breaker">Circuit breaker</a></b>: wrap each dependency. After an error-rate threshold, the breaker <b>opens</b> and calls fail fast (or go to fallback) for a cool-down period; then it goes <b>half-open</b> and lets a few trial calls through; success closes it, failure re-opens it. Prevents piling threads onto a dying provider.</li>
+<li><b><a class="gl" href="#gl-graceful-degradation">Graceful degradation</a></b>: a ladder of reduced service levels: smaller model, fewer retrieved chunks, no reranker, shorter max output, disable non-essential features (suggested follow-ups), cached answers only, and finally a clear "temporarily unavailable, here's search" message.</li>
 </ul>
 <figure class="fig sim"><div class="stage"><div class="wid">
 <div class="ctl"><button class="btn primary" id="cbkRun" type="button">Pause</button><button class="btn" id="cbkOut2" type="button">Toggle provider outage</button><span class="count" id="cbkState"></span></div>
@@ -17,4 +25,29 @@
 <div class="bars" id="lsdBars"></div><div class="out" id="lsdOut"></div></div></div>
 <figcaption><b>Deadline-aware load shedding</b> (simulated 120 s burst against a service that completes 10 requests/s, each taking 1 s). <i>No shedding</i> queues everything, so requests wait past their deadline and their work is wasted. <i>Shed by predicted wait</i> rejects requests at the door when the queue is already longer than the deadline allows. <i>Priority</i> does the same but always admits paid-tier requests (30% of traffic) first. Green = answered in time; amber = rejected quickly (client can retry or degrade); red = timed out after waiting.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>During a viral launch, queue wait reaches 12 s against a 10 s deadline. The gateway sheds free-tier batch requests (L4 for them), moves free-tier chat to L2, and keeps paid tiers at L0. Overall success rate stays above 99% for paid users, and the incident report shows exactly which levels were active and when.</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Waiting on a dead provider</b>. During a 400-call outage with a 10-second timeout, every call waits 10 seconds before failing: 400 × 10 = 4,000 seconds, more than an hour of users waiting.</p>
+<p>A breaker that opens after 10 failures in its last 20 calls spends about 10 timeouts finding out, then sends the rest straight to the fallback.</p>
+<p><b>Shedding by deadline.</b> A service that answers 10 requests a second has 85 waiting. A new request would start after about 85 ÷ 10 = 8.5 seconds; with an 8-second deadline, it is better to say no now.</p>
+</section>
+
+<section class="tp tp-code" id="c15-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program sends 1,000 calls through a provider outage with and without a circuit breaker, counting calls served, sent to the fallback and failed, and the time lost to timeouts, then sheds requests whose predicted wait beats the deadline. Change <code>THRESHOLD</code> or <code>OPEN_FOR</code> and run it again.</p>
+<figure class="fig live" id="snip-circuit-breaker"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"circuit-breaker"}'></div></div>
+<figcaption><b>A breaker and deadline-aware shedding, in real Python.</b> The outage is simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://martinfowler.com/bliki/CircuitBreaker.html">Martin Fowler: Circuit Breaker</a> <small>The pattern and its closed, open and half-open states.</small></li>
+<li><a href="https://sre.google/sre-book/handling-overload/">Google SRE book: Handling Overload</a> <small>Load shedding, criticality and client-side throttling.</small></li>
+<li><a href="https://aws.amazon.com/builders-library/using-load-shedding-to-avoid-overload/">Amazon Builders’ Library: Using load shedding to avoid overload</a> <small>Rejecting work that would miss its deadline.</small></li>
+</ol>
+</section>

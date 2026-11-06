@@ -1,4 +1,12 @@
-<p><dfn>Semantic conventions</dfn> are agreed names and meanings for telemetry attributes, so tools from different vendors understand your data. The <b>GenAI semantic conventions</b> define spans, metrics and events for model calls, agents and tools. As of this writing (checked November 2026), they are marked <b>Development</b> status (not stable) and are now maintained in a dedicated repository, <a href="https://github.com/open-telemetry/semantic-conventions-genai">open-telemetry/semantic-conventions-genai</a>; the old pages on opentelemetry.io point there.</p>
+<section class="tp tp-intuition" id="c17-10-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>If every team names the same thing differently, "model", "llm_model", "modelName", no tool can read everyone’s data. <a class="gl" href="#gl-semantic-conventions">Semantic conventions</a> are the shared dictionary: OpenTelemetry’s gen_ai.* names for model calls, tokens, agents and tools.</p>
+<p>The GenAI conventions are still in development, so names can change. Use them, but treat them like any dependency: pin versions, read the changelog, and absorb renames in one place, such as a Collector rule, rather than all over your code.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-10-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><dfn><a class="gl" href="#gl-semantic-conventions">Semantic conventions</a></dfn> are agreed names and meanings for telemetry attributes, so tools from different vendors understand your data. The <b>GenAI semantic conventions</b> define spans, metrics and events for model calls, agents and tools. As of this writing (checked November 2026), they are marked <b>Development</b> status (not stable) and are now maintained in a dedicated repository, <a href="https://github.com/open-telemetry/semantic-conventions-genai">open-telemetry/semantic-conventions-genai</a>; the old pages on opentelemetry.io point there.</p>
 <div class="tw"><table>
 <tr><th>Element</th><th>Examples (names as of the current draft; verify before use)</th></tr>
 <tr><td>Span names</td><td><code>chat {model}</code>, <code>embeddings {model}</code>, <code>execute_tool {tool}</code>, <code>invoke_agent {agent}</code></td></tr>
@@ -12,7 +20,7 @@
 <div class="nodes"><div class="nd">Read status<small>spec page badge per attribute</small></div><div class="nd">Check changelog<small>recent renames</small></div><div class="nd">Pin instrumentation versions</div><div class="nd">Map in Collector<small>transform old ↔ new names</small></div><div class="nd">Abstract in your code<small>one telemetry helper</small></div><div class="nd">Re-check each upgrade</div></div>
 <ol class="steps"><li data-n="0">Each attribute in the spec carries its own stability badge (Development, Release Candidate, Stable). Note which ones you depend on.</li><li data-n="1">Read the repository's CHANGELOG for breaking changes since your instrumentation's version.</li><li data-n="2">Pin the versions of OTel SDKs and GenAI instrumentation libraries (OpenLLMetry, OpenInference, OpenLIT, vendor SDK instrumentations) so names do not change under you.</li><li data-n="3">Use Collector transform processors to rename attributes, so dashboards keep working across changes.</li><li data-n="4">Emit GenAI telemetry through one internal helper; when conventions change, you edit one place.</li><li data-n="5">On every instrumentation upgrade, diff emitted attributes in staging before production.</li></ol></div>
 <figcaption><b>Adopting a moving standard safely.</b> Use the conventions (they are far better than inventing your own names), but treat them as a dependency that can change.</figcaption></figure>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for observability</h3>
 <div class="cols3">
@@ -23,3 +31,28 @@
 <div class="card"><h5><a href="https://www.jaegertracing.io/docs/">Jaeger</a> · <a href="https://prometheus.io/docs/">Prometheus</a> · <a href="https://grafana.com/docs/">Grafana</a></h5><span class="meta">traces · metrics · dashboards</span><p>Classic open-source backends; all run locally in Docker for practice.</p></div>
 <div class="card"><h5><a href="https://docs.evidentlyai.com/">Evidently</a></h5><span class="meta">drift and quality monitoring</span><p>Data drift, LLM output evaluations and monitoring reports; runs as a Python library.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c17-10-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Why one place matters</b> (illustrative). 14 services each set 12 GenAI attributes: 168 places in code. A rename of 3 attributes means 42 edits spread over 14 teams, or 3 lines in one Collector transform.</p>
+<p><b>Dashboards break silently.</b> If a renamed attribute feeds a cost dashboard, the dashboard shows zero for the new name rather than an error, until someone notices the spend has "dropped" to nothing.</p>
+</section>
+
+<section class="tp tp-code" id="c17-10-code">
+<h3 data-n="4">Code</h3>
+<p>The program renames attributes an older GenAI instrumentation used, drops message content as a Collector rule would, and lists recommended attributes still missing. Add an attribute your own code uses and run it again.</p>
+<figure class="fig live" id="snip-semconv-mapping"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"semconv-mapping"}'></div></div>
+<figcaption><b>Absorbing renames, in real Python.</b> Names reflect a draft; check the current conventions.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-10-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/">OpenTelemetry: GenAI semantic conventions</a> <small>The current draft and each attribute’s stability.</small></li>
+<li><a href="https://github.com/open-telemetry/semantic-conventions-genai">open-telemetry/semantic-conventions-genai</a> <small>The repository where the GenAI conventions and their changelog now live.</small></li>
+<li><a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor">Collector: transform processor</a> <small>Renaming attributes in one place.</small></li>
+</ol>
+</section>

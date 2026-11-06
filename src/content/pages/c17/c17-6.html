@@ -1,5 +1,13 @@
+<section class="tp tp-intuition" id="c17-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Keeping every trace of millions of requests is like keeping every frame of every security camera forever: expensive, and full of private information. Keep what matters instead.</p>
+<p><a class="gl" href="#gl-tail-sampling">Tail sampling</a> decides after each trace is complete: keep every error, slow request and flagged answer, plus a small random share of normal ones. Message content is dropped, hashed or kept in a separate, restricted store with a short retention period.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Sampling</b>: storing every span for millions of requests is expensive. <em>Head sampling</em> decides at the start (keep 5% at random): cheap but misses rare failures. <em>Tail sampling</em> (in the Collector) decides after the trace completes: keep all errors, slow traces, low quality scores and flagged safety events, plus a random baseline. Keep metrics unsampled.</li>
+<li><b><a class="gl" href="#gl-tail-sampling">Sampling</a></b>: storing every span for millions of requests is expensive. <em>Head sampling</em> decides at the start (keep 5% at random): cheap but misses rare failures. <em>Tail sampling</em> (in the Collector) decides after the trace completes: keep all errors, slow traces, low quality scores and flagged safety events, plus a random baseline. Keep metrics unsampled.</li>
 <li><b>Redaction</b>: prompts and outputs contain personal and confidential data. Options per field: do not record (default for message content in many conventions), record hashed, record redacted (16.5), or record in a separate, more restricted store with shorter retention. Never log secrets or auth tokens.</li>
 <li><b>Retention</b>: e.g. metrics 13 months, sampled traces 30 days, full content 7 days in a restricted store, audit logs per legal requirement. Deletion requests must reach telemetry too.</li>
 <li><b>Telemetry costs</b>: LLM traces are large (prompts can be tens of KB). Budget storage and ingest; drop high-cardinality attributes from metrics (e.g. never use raw user IDs as metric labels).</li>
@@ -23,4 +31,31 @@
       - {name: errors,  type: status_code, status_code: {status_codes: [ERROR]}}
       - {name: slow,    type: latency,     latency: {threshold_ms: 8000}}
       - {name: baseline, type: probabilistic, probabilistic: {sampling_percentage: 5}}</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c17-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Volume</b> (illustrative). 400 requests a second × 86,400 seconds = 34.6 million traces a day. At 60 KB each, that is about 2,070 GB a day.</p>
+<ul>
+<li>Keep the 3% that are interesting and 5% of the other 97%: 3% + 4.85% = 7.85% of traces, about 163 GB a day.</li>
+<li>Rare failures: 1 trace in 1,000 fails. Random head sampling at 5% keeps only 1 in 20 of them; tail sampling keeps all.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c17-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program works out daily trace volume and storage with and without tail sampling, then counts how many rare failures head sampling and tail sampling each keep. Change <code>TRACE_KB</code> or <code>BASELINE</code> and run it again.</p>
+<figure class="fig live" id="snip-tail-sampling"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tail-sampling"}'></div></div>
+<figcaption><b>Sampling and telemetry cost, in real Python.</b> Sizes and prices are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://opentelemetry.io/docs/concepts/sampling/">OpenTelemetry: Sampling</a> <small>Head and tail sampling.</small></li>
+<li><a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor">Collector: tail sampling processor</a> <small>Policies for keeping errors, slow traces and a baseline.</small></li>
+<li><a href="https://opentelemetry.io/docs/security/handling-sensitive-data/">OpenTelemetry: Handling sensitive data</a> <small>Redacting and dropping attributes.</small></li>
+</ol>
+</section>

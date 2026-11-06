@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c17-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A shared phone bill is easy to pay and hard to explain. <a class="gl" href="#gl-cost-attribution">Cost attribution</a> itemises it: every model call carries tags for the tenant, the feature, the user and the prompt version, and its token counts come from the provider’s response.</p>
+<p>Then spend can be grouped any way you need, and surprises have names: one tenant calling an endpoint on every page view, or one feature whose outputs grew longer after a prompt change.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Token accounting</b>: record input, cached input, output and reasoning tokens per call (from the provider response, not estimates), with model and price version.</li>
-<li><b>Cost attribution</b>: tag every call with tenant, user (or hashed ID), feature, environment and prompt version, so cost can be grouped any way. Include non-token costs (embeddings, vector DB, GPU-hours, tool APIs) allocated by usage.</li>
+<li><b><a class="gl" href="#gl-cost-attribution">Cost attribution</a></b>: tag every call with tenant, user (or hashed ID), feature, environment and prompt version, so cost can be grouped any way. Include non-token costs (embeddings, vector DB, GPU-hours, tool APIs) allocated by usage.</li>
 <li><b>GPU utilisation</b> (self-hosted): tokens/s per GPU, KV usage, batch size, MFU/bandwidth utilisation (14.7), idle hours; cost per million tokens actually served.</li>
 <li><b>Tenant-level usage</b>: usage vs quota and contract, for billing, abuse detection and capacity forecasts (15.9).</li>
 </ul>
@@ -11,4 +19,33 @@
  "provider":"provider-a","model":"large-2026-09","prompt_version":"answer@v12",
  "tokens":{"input":5120,"input_cached":4096,"output":388},"price_table":"2026-10",
  "cost_usd":0.00618,"latency_ms":{"ttft":690,"total":4210},"outcome":"answered"}</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c17-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>One call</b> from the usage record, at illustrative prices of 3 dollars per million input tokens, 0.30 for cached input and 15 for output.</p>
+<ul>
+<li>Uncached input: 5,120 − 4,096 = 1,024 tokens × 3 ÷ 1,000,000 ≈ 0.0031 dollars.</li>
+<li>Cached input: 4,096 × 0.30 ÷ 1,000,000 ≈ 0.0012 dollars.</li>
+<li>Output: 388 × 15 ÷ 1,000,000 ≈ 0.0058 dollars.</li>
+<li>Total about 0.010 dollars; output is more than half of it, though it is under a tenth of the tokens.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c17-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program creates usage records tagged with a tenant and a grouping taken from your project’s data, prices their tokens and groups the spend by tenant, by that grouping and by token type. Raise the output price and run it again.</p>
+<figure class="fig live" id="snip-cost-attribution"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"cost-attribution"}'></div></div>
+<figcaption><b>Grouping spend three ways, in real Python.</b> Tenants, token counts and prices are invented.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/">OpenTelemetry: GenAI metrics</a> <small>Token usage as a metric with model and operation attributes.</small></li>
+<li><a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps Foundation: FinOps for AI</a> <small>Allocating AI spend to teams and products.</small></li>
+<li><a href="https://docs.litellm.ai/docs/proxy/cost_tracking">LiteLLM: Cost tracking</a> <small>Per-key, per-team and per-tag spend in a gateway.</small></li>
+</ol>
+</section>

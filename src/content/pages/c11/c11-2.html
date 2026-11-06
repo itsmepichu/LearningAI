@@ -1,7 +1,34 @@
-<p>The basic agent loop (often called <dfn>ReAct</dfn>: reason + act): the model receives the goal, the tool list and the history; it either calls a tool or gives a final answer; the tool result (<dfn>observation</dfn>) is appended; repeat. <b>Tool selection</b> depends on clear tool names and descriptions, few overlapping tools, and examples. <b>Planning</b> can be implicit (decide one step at a time) or explicit (write a plan first, then execute and revise it), which helps on long tasks and makes traces readable.</p>
+<section class="tp tp-intuition" id="c11-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An agent works like someone solving a problem at a help desk: decide what to check, check it, look at what came back, and decide again. This <a class="gl" href="#gl-react">loop</a> is simple. The hard part is knowing when to stop.</p>
+<p>A person stops when the job is done, when they notice they are going round in circles, or when it is taking far too long. An agent only stops for those reasons if code makes it: a step limit, a budget, a deadline and a check for repeated calls.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>The basic agent loop (often called <dfn><a class="gl" href="#gl-react">ReAct</a></dfn>: reason + act): the model receives the goal, the tool list and the history; it either calls a tool or gives a final answer; the tool result (<dfn>observation</dfn>) is appended; repeat. <b>Tool selection</b> depends on clear tool names and descriptions, few overlapping tools, and examples. <b>Planning</b> can be implicit (decide one step at a time) or explicit (write a plan first, then execute and revise it), which helps on long tasks and makes traces readable.</p>
 <p><b>Termination</b> must be engineered, not hoped for: final-answer detection, a maximum number of steps, a token/cost budget, a wall-clock deadline, loop detection (same tool with same arguments twice), and a "give up and escalate" path.</p>
 <figure class="fig sim"><div class="stage"><div data-widget="agent-loop"></div></div>
 <figcaption><b>An agent loop, step by step</b> (scripted trace, no model runs), on a task from your example project. Each step shows the model's tool choice, the observation and the running cost. Enable the failure to see retry, loop detection and escalation, and lower the step limit to see the run stop early.</figcaption></figure>
+<div class="walkthru" id="walk-agent"><p class="walkthru-h"><b>Walkthrough: one agent run, round the loop.</b> A task goes round the action–observation loop: the model decides, code validates, the tool runs, the observation comes back, limits are checked, and an action waits for approval. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"agent"}'></div></div>
+</section>
+
+<section class="tp tp-math" id="c11-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Steps add up</b> (illustrative). If one step, a model call plus a tool call, costs 0.012 dollars:</p>
+<ul>
+<li>A normal run of 3 steps costs 3 × 0.012 = 0.036 dollars.</li>
+<li>A run that wanders until a 6-step limit costs 6 × 0.012 = 0.072 dollars, twice as much, and produces nothing.</li>
+<li>With a budget of 0.05 dollars, it stops after 4 steps, since 5 × 0.012 = 0.06 would go over.</li>
+</ul>
+<p><b>Loops at scale.</b> If 2% of 10,000 daily tasks loop until a limit of 20 steps, that is 200 × 20 = 4,000 wasted steps a day, more than the 3,000 steps that 1,000 normal tasks need.</p>
+</section>
+
+<section class="tp tp-code" id="c11-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs a scripted agent loop on a case from your project: a normal run, one that repeats a call and one that never decides. The tool choices are scripted, so the termination rules are what you see. Change <code>MAX_STEPS</code> or <code>BUDGET</code> and run it again.</p>
+<figure class="fig live" id="snip-agent-loop-limits"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"agent-loop-limits"}'></div></div>
+<figcaption><b>Step limits, budgets and loop detection, in real Python.</b> No model runs; costs are illustrative.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: a minimal agent loop with real termination rules <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code>import json, ollama
 ORDERS = {"A-1043": {"status": "delivered_late", "paid": 120.0}}
@@ -33,5 +60,15 @@ def run(task, max_steps=6):
     return "ESCALATE: step limit reached"
 print(run("Order A-1043 arrived late. Sort it out."))</code></pre>
 <p>Run it several times: a small model will sometimes compute the credit wrongly or skip the lookup. That is exactly why the credit amount should be computed in code (7.7) and why agents need evaluation over repeated runs (8.8).</p></div>
-<div class="walkthru" id="walk-agent"><p class="walkthru-h"><b>Walkthrough: one agent run, round the loop.</b> A task goes round the action–observation loop: the model decides, code validates, the tool runs, the observation comes back, limits are checked, and an action waits for approval. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"agent"}'></div></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2210.03629">Yao et al. (2022), ReAct</a> <small>The original action–observation loop.</small></li>
+<li><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Anthropic: Tool use</a> <small>How a tool call and its result travel between your code and the model.</small></li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph documentation</a> <small>Agent loops as graphs, with recursion limits and interrupts.</small></li>
+</ol>
+</section>

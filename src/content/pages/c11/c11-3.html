@@ -1,5 +1,13 @@
+<section class="tp tp-intuition" id="c11-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Giving an agent a tool is like giving a new employee access to a system. You would describe clearly what the system is for, check every form they fill in, and give them only the access their job needs.</p>
+<p>A <a class="gl" href="#gl-tool-schema">tool schema</a> is that form. Code checks every field before anything runs, checks that the person the agent works for may act on that record, and works out sensitive values, such as an amount, itself instead of trusting the model’s number.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Schemas</b>: each tool has a name, a description written for the model (what it does, when to use it, what it returns), and a strict JSON Schema for arguments (types, enums, formats, required fields, <code>additionalProperties: false</code>).</li>
+<li><b><a class="gl" href="#gl-tool-schema">Schemas</a></b>: each tool has a name, a description written for the model (what it does, when to use it, what it returns), and a strict JSON Schema for arguments (types, enums, formats, required fields, <code>additionalProperties: false</code>).</li>
 <li><b>Validation</b>: validate arguments in code before execution; return clear, structured errors the model can act on ("order_id must match A-\d{4}").</li>
 <li><b>Scoped permissions</b>: the agent acts <em>on behalf of</em> a user with that user's permissions, or with a narrowly scoped service identity. Prefer read-only tools; separate "propose" from "commit"; scope tokens to the tenant and the task; never give an agent a generic admin credential.</li>
 <li><b>Safe execution</b>: timeouts, rate limits, result-size limits, sandboxes for code execution (containers, gVisor/Firecracker microVMs, no network or an allowlist), dry-run modes, and allowlists of hosts/commands.</li>
@@ -18,4 +26,33 @@
      "order_id":    {"type": "string", "pattern": "^A-[0-9]{4}$"},
      "reason_code": {"type": "string", "enum": ["late_delivery", "damaged", "missing_item"]}}}}</code></pre>
 <p>Note that the amount is <em>not</em> a parameter: code computes it from the reason code and order total, removing a whole class of model errors.</p></div>
+</section>
+
+<section class="tp tp-math" id="c11-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Errors stopped before they run</b> (illustrative). Suppose an agent proposes 10,000 tool calls a day and 2% are malformed: a wrong id format, an unknown field or a made-up reason.</p>
+<ul>
+<li>That is 10,000 × 0.02 = 200 bad calls a day.</li>
+<li>If even a quarter of those would have done something wrong, that is 50 wrong actions a day without validation, and 0 with it.</li>
+<li>Each rejected call costs one more model step to fix, about 200 × 0.01 = 2 dollars a day: cheap insurance.</li>
+</ul>
+<p><b>Why the amount is not a parameter.</b> If the model computed refunds and was wrong 1 time in 200, then 5,000 refunds would contain about 25 wrong amounts. Computing the amount in code from the record removes that error entirely.</p>
+</section>
+
+<section class="tp tp-code" id="c11-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks six proposed calls to your project’s write tool: a good one, a bad id, an invented reason, an extra amount field, a missing id and a record the user may not touch. Add your own call to <code>calls</code> and run it again.</p>
+<figure class="fig live" id="snip-tool-arguments"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tool-arguments"}'></div></div>
+<figcaption><b>Schema, permission and amount checks, in real Python.</b> A tiny hand-written validator stands in for a JSON Schema library.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://json-schema.org/understanding-json-schema/">Understanding JSON Schema</a> <small>Types, patterns, enums and additionalProperties.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function calling</a> <small>Tool definitions with strict schemas.</small></li>
+<li><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/">OWASP LLM06:2025 Excessive Agency</a> <small>Why tools need narrow permissions and checks.</small></li>
+</ol>
+</section>

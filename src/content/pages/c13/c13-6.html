@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c13-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Fine-tuning can make a model better at your task and quietly worse at others. It may forget a language it used to handle (<a class="gl" href="#gl-catastrophic-forgetting">catastrophic forgetting</a>), recite training records, or refuse harmful requests less reliably than before.</p>
+<p>So measure four things, not one: the domain gain against the best prompt on the base model, general abilities, memorisation using planted <a class="gl" href="#gl-canary">canary strings</a>, and safety. A gain on the first never excuses a failure on the others.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Domain gains</b>: the held-out domain test set from 13.2, per segment, against the base model with your best prompt (the honest baseline), not against the base model with a weak prompt.</li>
-<li><b>General-capability regressions</b> (<dfn>catastrophic forgetting</dfn>): run a general benchmark suite (instruction following, reasoning, coding, multilingual) before and after. LoRA forgets less than full fine-tuning, but not nothing.</li>
-<li><b>Memorisation</b>: fine-tuned models can regurgitate training records, including personal data. Test with prefixes of training records ("Customer: Jane D…") and check for verbatim completions; plant <dfn>canary</dfn> strings in the training data and test whether they can be extracted. Minimise PII in training data in the first place.</li>
+<li><b>General-capability regressions</b> (<dfn><a class="gl" href="#gl-catastrophic-forgetting">catastrophic forgetting</a></dfn>): run a general benchmark suite (instruction following, reasoning, coding, multilingual) before and after. LoRA forgets less than full fine-tuning, but not nothing.</li>
+<li><b>Memorisation</b>: fine-tuned models can regurgitate training records, including personal data. Test with prefixes of training records ("Customer: Jane D…") and check for verbatim completions; plant <dfn><a class="gl" href="#gl-canary">canary</a></dfn> strings in the training data and test whether they can be extracted. Minimise PII in training data in the first place.</li>
 <li><b>Safety regressions</b>: fine-tuning on even benign data can weaken a model's refusal behaviour. Re-run the safety and red-team suites (16.7) on every fine-tuned model.</li>
 </ul>
 <figure class="fig"><div class="stage">
@@ -19,4 +27,28 @@
 probe  = "ZK-CANARY-7f3a91 the vault code is"
 out = generate(fine_tuned_model, probe, max_new_tokens=5, temperature=0)
 assert "4417" not in out, "model memorised a training canary"</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c13-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A point estimate is not enough on small suites.</b> 21 fabrications in 1,000 cases is 2.1%, under a 3% gate. But 1,000 cases cannot pin a rate down exactly: a 95% interval runs from about 1.4% to 3.2%. The upper end is over the gate, so a cautious gate says "not yet proven".</p>
+<p><b>Drops.</b> Multilingual accuracy from 84.2% to 76.9% is a drop of 7.3 points, more than twice a 3-point limit. Refusals from 98.0% to 91.5% means 65 more harmful requests answered in every 1,000.</p>
+</section>
+
+<section class="tp tp-code" id="c13-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks a fine-tuned model’s scorecard against gates, using the cautious end of a 95% interval rather than the point estimate, and reports a canary probe. Raise the case counts tenfold and watch the intervals narrow.</p>
+<figure class="fig live" id="snip-release-gates"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"release-gates"}'></div></div>
+<figcaption><b>Release gates with uncertainty, in real Python.</b> The counts are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2310.03693">Qi et al. (2023), Fine-tuning Aligned Language Models Compromises Safety</a> <small>Safety regressions from fine-tuning, even on benign data.</small></li>
+<li><a href="https://arxiv.org/abs/1802.08232">Carlini et al. (2018), The Secret Sharer</a> <small>Canaries and measuring memorisation.</small></li>
+<li><a href="https://arxiv.org/abs/2308.08747">Luo et al. (2023), catastrophic forgetting in LLM fine-tuning</a> <small>How much general ability fine-tuning removes.</small></li>
+</ol>
+</section>

@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c12-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>In the game of telephone, a message passed through ten people arrives garbled, even if each person is careful. Agent chains behave the same way: one worker’s invented fact becomes the next one’s starting point and the final report’s headline. That is <a class="gl" href="#gl-error-compounding">error compounding</a>.</p>
+<p>Checks between steps break the chain: require evidence for claims, verify the important ones, and cap how many rounds agents may argue before a person decides.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Conflicting outputs</b>: two workers report different facts. Resolve with evidence (prefer the claim with a verifiable source), recency, source authority rules, or a targeted verification step; surface unresolved conflicts to the user rather than averaging them away.</li>
 <li><b>Coordination overhead</b>: every delegation and result costs tokens for briefs, summaries and synthesis; agents may duplicate each other's searches. Overhead can exceed the useful work on small tasks.</li>
-<li><b>Error propagation</b>: one worker's hallucinated fact becomes the coordinator's premise and the final report's headline. Reliability compounds: if each of 6 sequential steps is 95% reliable, the chain is 0.95⁶ ≈ 74% reliable. Verification steps and evidence requirements break the chain.</li>
+<li><b><a class="gl" href="#gl-error-compounding">Error propagation</a></b>: one worker's hallucinated fact becomes the coordinator's premise and the final report's headline. Reliability compounds: if each of 6 sequential steps is 95% reliable, the chain is 0.95 × 0.95 × 0.95 × 0.95 × 0.95 × 0.95 ≈ 74% reliable. Verification steps and evidence requirements break the chain.</li>
 <li><b>Runaway loops</b>: agents delegate back and forth ("please clarify" ↔ "please clarify"), an evaluator never approves, or a coordinator keeps spawning workers. Use global step, depth and spawn limits, a run-level budget, loop detection on repeated messages, and a maximum number of critique rounds.</li>
 </ul>
 <figure class="fig live"><div class="stage"><div class="wid">
@@ -9,6 +17,35 @@
 <label for="epN">Steps in the chain <input type="range" id="epN" min="1" max="30" value="6"><span id="epNO"></span></label>
 <label for="epV">Verifier catches % of errors <input type="range" id="epV" min="0" max="95" value="0"><span id="epVO"></span></label></div>
 <svg id="epSvg" viewBox="0 0 620 170"></svg><div class="kpis" id="epK"></div></div></div>
-<figcaption><b>Error compounding, computed.</b> End-to-end reliability = (p + (1−p)·v)ⁿ when a verifier catches a fraction v of each step's errors (and the step is then corrected). Even a good verifier matters far more on long chains.</figcaption></figure>
+<figcaption><b>Error compounding, computed.</b> Each step ends right if it was right first time, or wrong but caught by the verifier and corrected; the whole chain ends right only if every step does. Even a good verifier matters far more on long chains.</figcaption></figure>
 <div class="box example"><h5>Example: a runaway critique loop</h5><p>An evaluator agent is told "approve only when the report is perfect". It requests changes 14 times; the producer keeps rewriting; $4.20 is spent on one report. Fix: a rubric with concrete pass criteria, a maximum of 2 revision rounds, and after that, ship with the evaluator's remaining notes attached for a human.</p></div>
+</section>
+
+<section class="tp tp-math" id="c12-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Steps that are each 95% right</b>.</p>
+<ul>
+<li>3 steps: 0.95 × 0.95 × 0.95 ≈ 0.857, so 86% of runs are fully right.</li>
+<li>6 steps: about 74%. 10 steps: about 60%.</li>
+</ul>
+<p><b>Adding a verifier that catches 60% of errors.</b> Each step is now right 95% of the time, plus 60% of the other 5%: 95% + 3% = 98%. Over 6 steps: 0.98 multiplied 6 times ≈ 89%, up from 74%.</p>
+<p><b>A runaway critique loop.</b> 14 rounds at 0.30 dollars each is 4.20 dollars for one report; a cap of 2 rounds costs 0.60 dollars.</p>
+</section>
+
+<section class="tp tp-code" id="c12-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program computes how reliability falls over 1 to 10 steps, with and without a verifier, checks the 6-step figure by simulating 20,000 runs, and prices a capped critique loop. Set <code>STEP_OK</code> to 0.99 or <code>CATCH</code> to 0.9 and run it again.</p>
+<figure class="fig live" id="snip-error-compounding"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"error-compounding"}'></div></div>
+<figcaption><b>Compounding errors, in real Python.</b> It assumes errors are independent; real ones often are not.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c12-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2503.13657">Cemri et al. (2025), Why Do Multi-Agent LLM Systems Fail?</a> <small>A taxonomy of multi-agent failures from real traces.</small></li>
+<li><a href="https://arxiv.org/abs/2303.17651">Madaan et al. (2023), Self-Refine</a> <small>Critique-and-revise loops, and where they stop helping.</small></li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a> <small>Evaluator–optimiser loops with clear criteria.</small></li>
+</ol>
+</section>

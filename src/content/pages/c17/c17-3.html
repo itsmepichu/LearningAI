@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c17-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The <a class="gl" href="#gl-golden-signals">golden signals</a> are a service’s pulse: how slow it is, how busy, how often it fails and how full. For AI services, measure them per stage and per model.</p>
+<p>Averages lie about speed. If most requests take 2 seconds and a few take 20, the average describes nobody. <a class="gl" href="#gl-latency-percentile">Percentiles</a> say what the slowest users really experience, and the age of the oldest item in a queue says more than how many items are waiting.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>The classic "golden signals" still apply: <b>latency</b>, <b>traffic</b>, <b>errors</b> and <b>saturation</b>. For AI services, measure them per stage and per model.</p>
 <ul>
-<li><b>Latency percentiles</b>: report p50, p95, p99, never only the mean. LLM latency distributions are skewed; the mean hides the slow tail that users complain about. Track TTFT, ITL and total time separately (14.2), and per-step durations for agents.</li>
+<li><b><a class="gl" href="#gl-latency-percentile">Latency percentiles</a></b>: report p50, p95, p99, never only the mean. LLM latency distributions are skewed; the mean hides the slow tail that users complain about. Track TTFT, ITL and total time separately (14.2), and per-step durations for agents.</li>
 <li><b>Errors</b>: by type (timeouts, 429 rate limits, 5xx, schema-validation failures, tool errors, content-filter blocks). A rise in validation failures is often the first sign of a model change.</li>
 <li><b>Saturation</b>: GPU KV-cache usage, running/waiting sequences, provider rate-limit headroom, connection pool use, index node memory.</li>
 <li><b>Queue depth and age</b>: number of waiting items and age of the oldest one, for ingestion, agent tasks and request queues. Age is the better alert signal: it directly measures delay.</li>
@@ -11,4 +19,32 @@
 <svg id="lpSvg" viewBox="0 0 640 210"></svg><div class="kpis" id="lpK"></div></div></div>
 <figcaption><b>Why percentiles</b> (5,000 latencies generated in your browser from a mixture of normal and slow requests). As the tail gets heavier, p99 moves dramatically while the median barely changes; the mean lands somewhere that describes no real user.</figcaption></figure>
 <div class="box example"><h5>Example: an early warning</h5><p>p50 latency is flat, but p99 climbs from 6 s to 19 s over an hour while the waiting-sequences gauge on one model replica rises. A long-context tenant has started sending 100k-token prompts that occupy KV cache. Admission limits per tenant (15.5) and a separate long-context pool resolve it.</p></div>
+</section>
+
+<section class="tp tp-math" id="c17-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A small tail</b> (illustrative). 95 requests take 2 seconds and 5 take 20.</p>
+<ul>
+<li>Mean: (95 × 2 + 5 × 20) ÷ 100 = (190 + 100) ÷ 100 = 2.9 seconds, a time no request took.</li>
+<li>Median: 2 seconds. 99th percentile: 20 seconds.</li>
+</ul>
+<p><b>Queue age.</b> A queue of 4 items looks healthy, but if the oldest has waited 50 minutes, someone has been waiting 50 minutes.</p>
+</section>
+
+<section class="tp tp-code" id="c17-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program generates latencies with 0%, 2%, 5% and 15% slow requests and prints the mean, median, 95th and 99th percentiles, then compares a queue’s depth with the age of its oldest item. Change the slow requests’ typical time and run it again.</p>
+<figure class="fig live" id="snip-tail-percentiles"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tail-percentiles"}'></div></div>
+<figcaption><b>Means against percentiles, in real Python.</b> The latencies are synthetic.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://sre.google/sre-book/monitoring-distributed-systems/">Google SRE book: Monitoring Distributed Systems</a> <small>The four golden signals.</small></li>
+<li><a href="https://prometheus.io/docs/practices/histograms/">Prometheus: Histograms and summaries</a> <small>Computing percentiles from histograms.</small></li>
+<li><a href="https://docs.vllm.ai/en/latest/design/metrics.html">vLLM: Metrics</a> <small>Saturation signals such as waiting requests and KV usage.</small></li>
+</ol>
+</section>

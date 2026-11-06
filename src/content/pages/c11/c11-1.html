@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c11-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A <a class="gl" href="#gl-llm-workflow">workflow</a> is a recipe: the steps are written down in advance, and the model only does the parts that need language, such as reading a message or drafting a reply. An <a class="gl" href="#gl-agent">agent</a> is a cook who decides the next step while cooking. That freedom helps when the dish is different every time, and it costs time, money and predictability when it is not.</p>
+<p>Most requests in a business follow a few well-known paths. Give those paths a fixed workflow, and keep the agent for the unusual cases whose next step depends on what the last one found.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>A <dfn>workflow</dfn> is a sequence of steps fixed in code, some of which call an LLM (classify → retrieve → draft → validate). An <dfn>agent</dfn> lets the model decide which step comes next and when to stop. Between them lie patterns like routing (an LLM picks one of several fixed paths) and bounded loops (retry drafting until a check passes, at most 3 times).</p>
 <p>Prefer the least autonomy that solves the problem. Workflows are cheaper, faster, easier to test and to explain. Autonomy adds value when the path genuinely varies by case and cannot be enumerated: open-ended investigation, tasks whose next step depends on what the previous step found, or long-tail exceptions too numerous to hand-code.</p>
 <figure class="fig"><div class="stage">
@@ -11,4 +19,33 @@
 <text x="380" y="150" text-anchor="middle" class="xs mut">Move right only when evaluation shows the simpler pattern fails on a meaningful share of real cases.</text></g>
 </svg></div><figcaption><b>The autonomy spectrum.</b> Many production "agents" are routers or bounded loops; that is a strength, not a compromise.</figcaption></figure>
 <div class="box example"><h5>Example: refund requests</h5><p>90% of refund emails follow one path (look up order → check policy → approve or deny → reply): a workflow. 10% involve partial shipments, multiple orders, or disputes needing investigation across order history, shipping records and prior tickets: a bounded agent with read-only tools and a human approval step for any payout. Route between them with a classifier.</p></div>
+</section>
+
+<section class="tp tp-math" id="c11-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What routing saves</b> (illustrative). Suppose 1,000 requests a day, a workflow that makes 2 model calls a request and an agent that makes about 7.</p>
+<ul>
+<li>Everything through the agent: 1,000 × 7 = 7,000 calls a day.</li>
+<li>If the common categories cover 85% of requests: 850 × 2 + 150 × 7 = 1,700 + 1,050 = 2,750 calls.</li>
+<li>That is 7,000 − 2,750 = 4,250 fewer calls, about 61% less, before counting the easier testing.</li>
+</ul>
+<p>The share matters more than the call counts: if the common paths covered only 50%, the saving would fall to 500 × 5 = 2,500 calls.</p>
+</section>
+
+<section class="tp tp-code" id="c11-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program counts the categories in your project’s labelled data, gives the commonest a fixed workflow until they cover 80% of requests, and compares model calls with an agent-only design. Set <code>WORKFLOW_SHARE</code> to 0.5 or 0.95 and run it again.</p>
+<figure class="fig live" id="snip-workflow-routing"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"workflow-routing"}'></div></div>
+<figcaption><b>Which requests get a workflow, in real Python.</b> The call counts and prices are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a> <small>Workflow patterns, when to use agents, and the case for the simplest design.</small></li>
+<li><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">OpenAI: A practical guide to building agents</a> <small>When an agent is worth it, and single-agent before multi-agent.</small></li>
+<li><a href="https://arxiv.org/abs/2210.03629">Yao et al. (2022), ReAct</a> <small>The reason-and-act loop most agents are built on.</small></li>
+</ol>
+</section>

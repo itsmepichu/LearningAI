@@ -1,10 +1,18 @@
+<section class="tp tp-intuition" id="c14-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A GPU’s memory is a desk. The model’s weights take up a fixed part of it, shared by everyone. What is left holds each conversation’s notes, the <a class="gl" href="#gl-kv-cache">KV cache</a>, which grow with every token read or written.</p>
+<p>So the number of people one GPU can serve at once depends mostly on how long their conversations are. Long contexts are expensive not because of the model, but because their notes fill the desk.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c14-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Weights</b>: parameters × bytes per parameter (2.6). Loaded once, shared by all requests.</li>
 <li><b>KV cache</b>: for every token in every active sequence, each layer stores its key and value vectors so they are not recomputed (5.5). Bytes per token = 2 (K and V) × layers × KV heads × head dimension × bytes per value. It grows with context length × number of concurrent sequences, and is usually what limits how many users one GPU can serve.</li>
 <li><b>Activations</b>: temporary tensors during a forward pass; modest at inference, larger during long prefills.</li>
 <li><b>Overhead</b>: CUDA context, framework buffers, CUDA graphs, fragmentation. Engines typically reserve a fraction (e.g. 90%) of GPU memory and use whatever remains after weights for KV cache.</li>
 </ul>
-<p><dfn>Grouped-query attention (GQA)</dfn> shares each KV head across several query heads (e.g. 32 query heads, 8 KV heads), cutting KV cache by 4× with little quality loss. That is why modern models list "KV heads" separately.</p>
+<p><dfn><a class="gl" href="#gl-gqa">Grouped-query attention (GQA)</a></dfn> shares each KV head across several query heads (e.g. 32 query heads, 8 KV heads), cutting KV cache by 4× with little quality loss. That is why modern models list "KV heads" separately.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2">
 <label for="gmM">Model <select id="gmM"><option value="3">3B (28 layers, 8 KV heads)</option><option value="8" selected>8B (32 layers, 8 KV heads)</option><option value="70">70B (80 layers, 8 KV heads)</option><option value="47">MoE 8×7B, 47B total (32 layers, 8 KV)</option></select></label>
@@ -18,4 +26,33 @@
 <div class="kpis" id="gmK"></div></div></div>
 <figcaption><b>GPU memory estimator</b> (exact formulas; overhead assumed 8% of VRAM + 2 GB). Try: 8B at FP8 on one 80 GB GPU with 32 users at 8k context needs ~34 GB of KV cache and fits; push context to 128k tokens × 32 users and the KV cache alone needs ~540 GB. This is the arithmetic behind context-length pricing and concurrency limits.</figcaption></figure>
 <div class="box example"><h5>Example: one 80 GB GPU, 8B model in BF16</h5><p>Weights 16 GB; overhead ~8 GB; leaves ~56 GB for KV. At 128 KiB per token (BF16, GQA with 8 KV heads), that holds ~427,000 tokens: about 52 concurrent conversations of 8k tokens, or 3 of 128k. Switching the KV cache to FP8 doubles that.</p></div>
+</section>
+
+<section class="tp tp-math" id="c14-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>KV cache per token</b> for an 8B model with 32 layers and 8 KV heads of 128 numbers, in 16-bit (2 bytes):</p>
+<ul>
+<li>Keys and values: 2 × 32 layers × 8 heads × 128 numbers × 2 bytes = 131,072 bytes = 128 KiB per token.</li>
+<li>One 8,000-token conversation: 8,000 × 131,072 bytes ≈ 1.05 GB.</li>
+<li>One 80 GB GPU: 16 GB of weights and about 8 GB of overhead leave about 56 GB, so about 56 ÷ 1.05 ≈ 53 conversations of 8,000 tokens, or 3 of 128,000.</li>
+</ul>
+<p>Storing the cache in 8-bit halves the bytes per token and doubles those numbers.</p>
+</section>
+
+<section class="tp tp-code" id="c14-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program works out weights, KV cache per token and how many tokens and conversations fit on one 80 GB GPU for 3B, 8B and 70B models in three weight formats. Set <code>KV_BYTES</code> to 1 for an FP8 cache and run it again.</p>
+<figure class="fig live" id="snip-gpu-memory"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"gpu-memory"}'></div></div>
+<figcaption><b>GPU memory arithmetic, in real Python.</b> The overhead is an assumption; engines reserve memory differently.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c14-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.vllm.ai/en/latest/configuration/optimization.html">vLLM: Optimization and tuning</a> <small>GPU memory fraction, KV cache size and preemption.</small></li>
+<li><a href="https://arxiv.org/abs/2305.13245">Ainslie et al. (2023), GQA</a> <small>Sharing KV heads to shrink the cache.</small></li>
+<li><a href="https://huggingface.co/docs/transformers/main/en/kv_cache">Hugging Face: KV cache strategies</a> <small>How the cache is stored and quantised.</small></li>
+</ol>
+</section>

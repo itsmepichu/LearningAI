@@ -1,4 +1,12 @@
-<p><b>Cost per request</b> is misleading: retries, failed agent runs, abandoned conversations and escalations to humans all cost money without delivering value. <b>Cost per successful task</b> = total cost (model tokens, embeddings, retrieval infrastructure, tools, GPU time, human review) ÷ number of tasks that met the success definition (8.1). It ties engineering choices to business value and makes tradeoffs visible: a cheaper model with a lower success rate can cost more per success.</p>
+<section class="tp tp-intuition" id="c15-9-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The cheapest model per call is not always the cheapest way to get the job done. Failed attempts still cost money, and a failure that a person must fix costs far more than the call.</p>
+<p><a class="gl" href="#gl-cost-per-success">Cost per successful task</a> counts everything, including retries and people, and divides by the tasks that really succeeded. It turns "which model is cheaper?" into "which design solves problems for less?"</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-9-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><b>Cost per request</b> is misleading: retries, failed agent runs, abandoned conversations and escalations to humans all cost money without delivering value. <b><a class="gl" href="#gl-cost-per-success">Cost per successful task</a></b> = total cost (model tokens, embeddings, retrieval infrastructure, tools, GPU time, human review) ÷ number of tasks that met the success definition (8.1). It ties engineering choices to business value and makes tradeoffs visible: a cheaper model with a lower success rate can cost more per success.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="cols2">
 <div><b style="font-family:var(--f-display);font-size:.85rem">Option A</b>
@@ -15,4 +23,32 @@
 <li><b>Budget enforcement</b>: hard limits per request (max tokens), per task (agent budgets, 11.7), per user and tenant (daily spend in the gateway), and per feature (monthly). Alert at 50/80/100%; at the limit, degrade (smaller model) or block, depending on the tenant's contract.</li>
 </ul>
 <div class="box example"><h5>Example: attributing cost</h5><p>Monthly AI spend rises 40% with flat traffic. Cost attribution by feature and tenant (17.5) shows one tenant's integration calling the summarise endpoint on every page view. A per-tenant daily budget and a cache for identical documents cut that tenant's cost by 85%.</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-9-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Two options for 100,000 tasks</b> (illustrative), with 1.50 dollars when a person handles a failure.</p>
+<ul>
+<li>Small model: 0.004 dollars a try, 70% success. Model 400 dollars; 30,000 failures × 1.50 = 45,000 dollars. Total 45,400.</li>
+<li>Large model: 0.012 dollars, 88% success. Model 1,200 dollars; 12,000 × 1.50 = 18,000. Total 19,200.</li>
+</ul>
+<p>The model that costs three times as much per call costs less than half as much overall. Trying the small model first and retrying failures on the large one costs about 18,800.</p>
+</section>
+
+<section class="tp tp-code" id="c15-9-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares a small model, a large model and a small model with a large-model retry on 100,000 tasks, counting model cost and the cost of people handling failures. Set <code>HUMAN</code> to 0.10 and see which option wins.</p>
+<figure class="fig live" id="snip-cost-per-success"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"cost-per-success"}'></div></div>
+<figcaption><b>Cost per successful task, in real Python.</b> Prices and success rates are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-9-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps Foundation: FinOps for AI</a> <small>Attributing and managing AI spend.</small></li>
+<li><a href="https://arxiv.org/abs/2407.01502">Kapoor et al. (2024), AI Agents That Matter</a> <small>Reporting cost alongside accuracy.</small></li>
+<li><a href="https://docs.litellm.ai/docs/proxy/users">LiteLLM: budgets and rate limits</a> <small>Per-user and per-team budgets in a gateway.</small></li>
+</ol>
+</section>

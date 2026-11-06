@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c12-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Good delegation is a clear assignment: what to find, where to look, how long to spend and what to hand back. A worker given "research the market" wanders; a worker given a <a class="gl" href="#gl-task-brief">task brief</a> with a scope, a budget and a result format comes back with something usable.</p>
+<p>Running workers at the same time cuts the waiting, not the work. Everyone still reads what they read, and the final summary cannot start until the slowest worker is done, unless you set a deadline and accept a partial result.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Decomposition</b>: split the goal into subtasks that are as independent as possible, each with a clear objective, scope, expected output format and stopping rule. Vague delegation ("research the market") produces overlapping, unfocused work.</li>
-<li><b>Delegation</b>: send each worker a task brief (objective, constraints, tools allowed, budget, output schema) and only the context it needs.</li>
+<li><b><a class="gl" href="#gl-task-brief">Delegation</a></b>: send each worker a task brief (objective, constraints, tools allowed, budget, output schema) and only the context it needs.</li>
 <li><b>Parallel execution</b>: independent subtasks run concurrently, cutting wall-clock time. Concurrency limits protect rate limits and budgets.</li>
 <li><b>Synthesis</b>: combine worker outputs, resolve overlaps and conflicts (12.6), and keep evidence links so the final result is traceable. Workers return <em>condensed</em> findings, not raw dumps, to protect the coordinator's context.</li>
 </ul>
@@ -15,4 +23,33 @@
  "tools": ["reviews.search", "reviews.get"], "budget": {"max_steps": 10, "max_cost_usd": 0.15},
  "output_schema": {"themes": [{"theme": "str", "count": "int", "evidence_ids": ["str"]}]},
  "deadline": "2026-11-04T15:10:00Z"}</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c12-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Six subtasks</b> taking 12, 9, 8, 6, 5 and 4 seconds (illustrative).</p>
+<ul>
+<li>One after another: 12 + 9 + 8 + 6 + 5 + 4 = 44 seconds.</li>
+<li>All six at once: the slowest decides, 12 seconds.</li>
+<li>Three at a time: 12, 9 and 8 start; the 6-second task starts at 8 s and ends at 14 s; the others fit in before that, so about 14 seconds.</li>
+</ul>
+<p>The total work is 44 seconds of model time in every case, so the bill is the same. Only the wait changes.</p>
+</section>
+
+<section class="tp tp-code" id="c12-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program splits your project’s documents among six workers, gives each a simulated duration that grows with what it reads, and compares the waiting time at concurrency 1, 3 and 6, then with a deadline. Change <code>SYNTHESIS</code> or the deadline and run it again.</p>
+<figure class="fig live" id="snip-parallel-workers"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"parallel-workers"}'></div></div>
+<figcaption><b>Concurrency, waiting and deadlines, in real Python.</b> Durations are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c12-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: multi-agent research system</a> <small>Task briefs, parallel subagents and synthesis in practice.</small></li>
+<li><a href="https://docs.python.org/3/library/asyncio-task.html">Python: asyncio tasks</a> <small>Running calls concurrently with limits and timeouts.</small></li>
+<li><a href="https://arxiv.org/abs/2303.17580">Shen et al. (2023), HuggingGPT</a> <small>An early planner that decomposes tasks for specialised models.</small></li>
+</ol>
+</section>

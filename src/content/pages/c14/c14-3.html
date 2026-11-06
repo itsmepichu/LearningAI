@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c14-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A lift that waits until all its passengers reach their floors before letting anyone else on wastes most of its trips. <a class="gl" href="#gl-continuous-batching">Continuous batching</a> lets someone step in at every floor as soon as someone steps out.</p>
+<p>Memory works the same way. Reserving a full-length cache for every conversation is like booking a whole bus for each passenger; <a class="gl" href="#gl-paged-attention">paged attention</a> hands out small blocks as they are needed. And when many requests start with the same long instructions, <a class="gl" href="#gl-prefix-caching">prefix caching</a> reads them once and reuses the result.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c14-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Static batching</b>: wait for N requests, run them together until <em>all</em> finish. Short requests wait for the longest one; new arrivals wait for the whole batch. GPU slots sit idle.</li>
-<li><b>Continuous (in-flight) batching</b>: the scheduler re-forms the batch at every decode step: finished sequences leave immediately and waiting requests join (their prefill is inserted, often split into chunks so it does not stall decoding: <dfn>chunked prefill</dfn>). Typically multiplies throughput several-fold.</li>
-<li><b>Paged attention</b> (vLLM, 2023): store the KV cache in fixed-size blocks (e.g. 16 tokens) allocated on demand, mapped through a per-sequence block table, like virtual memory pages. Eliminates the waste of pre-reserving max-length contiguous memory, so many more sequences fit. Blocks can be shared between sequences.</li>
-<li><b>Prefix caching</b>: if many requests share a prefix (system prompt, tool definitions, a long document), keep its KV blocks and reuse them, skipping that part of prefill. Big TTFT and cost win; hosted APIs expose this as "prompt caching" with discounted cached-input pricing. Structure prompts with stable content first (7.2).</li>
+<li><b><a class="gl" href="#gl-continuous-batching">Continuous (in-flight) batching</a></b>: the scheduler re-forms the batch at every decode step: finished sequences leave immediately and waiting requests join (their prefill is inserted, often split into chunks so it does not stall decoding: <dfn>chunked prefill</dfn>). Typically multiplies throughput several-fold.</li>
+<li><b><a class="gl" href="#gl-paged-attention">Paged attention</a></b> (vLLM, 2023): store the KV cache in fixed-size blocks (e.g. 16 tokens) allocated on demand, mapped through a per-sequence block table, like virtual memory pages. Eliminates the waste of pre-reserving max-length contiguous memory, so many more sequences fit. Blocks can be shared between sequences.</li>
+<li><b><a class="gl" href="#gl-prefix-caching">Prefix caching</a></b>: if many requests share a prefix (system prompt, tool definitions, a long document), keep its KV blocks and reuse them, skipping that part of prefill. Big TTFT and cost win; hosted APIs expose this as "prompt caching" with discounted cached-input pricing. Structure prompts with stable content first (7.2).</li>
 </ul>
 <figure class="fig sim"><div class="stage"><div data-widget="batching"></div></div>
 <figcaption><b>Static vs continuous batching</b> with 4 batch slots and 12 requests of random lengths. Each column is one decode step; coloured cells are useful work, pale cells are idle slots. Compare total steps to finish all requests and the slot utilisation.</figcaption></figure>
@@ -13,4 +21,29 @@
 <figure class="fig live"><div class="stage"><div data-widget="prefix-cache"></div></div>
 <figcaption><b>Prefix caching: hit rate vs first-token time and cost.</b> On a hit only the unique tokens need prefill and the cached prefix is billed at the discount; on a miss everything is processed at full price. Queueing and the first decode step add a fixed 80 ms. Discounts and cache rules differ by provider; these are illustrative inputs.</figcaption></figure>
 <div class="box example"><h5>Example: prefix caching economics</h5><p>A support bot sends a 6,000-token system prompt + tool definitions with every request, plus ~800 tokens of conversation. With prefix caching, only ~800 tokens need prefill on a cache hit: TTFT drops from ~700 ms to ~120 ms (illustrative), and with a provider that discounts cached input, input cost drops by most of its value. Changing one character near the start of the system prompt (e.g. inserting the current time) breaks the cache for everything after it.</p></div>
+</section>
+
+<section class="tp tp-math" id="c14-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Wasted slots</b>. Four requests of 40, 10, 10 and 10 tokens in a static batch take 40 steps, and the 4 slots × 40 steps = 160 slot-steps do 70 tokens of work: 44% busy.</p>
+<p><b>Reserved memory</b>. Reserving 4,096 tokens for each of 20 sequences that use about 800 on average holds 20 × 4,096 = 81,920 token slots for about 16,000 tokens of real cache: 80% wasted. Blocks of 16 waste at most 15 tokens a sequence.</p>
+<p><b>Prefix caching</b> (the example). 6,000 shared tokens + 800 new ones: on a hit only 800 need prefill, so 6,800 ÷ 800 = 8.5 times less prefill work.</p>
+</section>
+
+<section class="tp tp-code" id="c14-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs 12 requests of random length through 4 slots with static and continuous batching, counting decode steps and busy slots, then compares reserving maximum-length cache with blocks on demand. Change <code>SLOTS</code> or <code>BLOCK</code> and run it again.</p>
+<figure class="fig live" id="snip-batching-steps"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"batching-steps"}'></div></div>
+<figcaption><b>Batching and paged memory, in real Python.</b> It counts steps; it does not time kernels.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c14-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2309.06180">Kwon et al. (2023), PagedAttention / vLLM</a> <small>Paged KV cache and why it raises throughput.</small></li>
+<li><a href="https://www.usenix.org/conference/osdi22/presentation/yu">Yu et al. (2022), Orca</a> <small>Iteration-level (continuous) batching.</small></li>
+<li><a href="https://docs.vllm.ai/en/latest/features/automatic_prefix_caching.html">vLLM: Automatic prefix caching</a> <small>How shared prefixes are cached and reused.</small></li>
+</ol>
+</section>

@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c14-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When a model is too big for one GPU, it is cut into pieces that work together, like a team carrying a sofa: every GPU must be there, and they talk constantly. That team is one serving unit. To serve more people, you add more whole teams.</p>
+<p>Large deployments also split the two phases of work: some GPUs only read prompts and others only write answers (<a class="gl" href="#gl-disaggregated-serving">disaggregated serving</a>), because the two are limited by different things.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c14-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Tensor parallelism (TP)</b>: split each layer's matrices across GPUs in one node (e.g. TP = 4 or 8 over NVLink). Needed when weights + KV do not fit one GPU; also reduces per-token latency. Communication every layer.</li>
+<li><b><a class="gl" href="#gl-tensor-parallelism">Tensor parallelism (TP)</a></b>: split each layer's matrices across GPUs in one node (e.g. TP = 4 or 8 over NVLink). Needed when weights + KV do not fit one GPU; also reduces per-token latency. Communication every layer.</li>
 <li><b>Pipeline parallelism (PP)</b>: split layers across GPUs or nodes; used for very large models across nodes.</li>
 <li><b>Expert parallelism (EP)</b>: place MoE experts on different GPUs; tokens are routed over the network to their experts (all-to-all communication).</li>
 <li><b>Data parallelism / replicas</b>: run several independent copies behind a load balancer; the main way to scale throughput. Prefix-aware routing sends requests with the same prefix to the same replica to hit its cache.</li>
-<li><b>Disaggregated serving</b>: run prefill and decode on separate GPU pools (compute-heavy vs bandwidth-heavy), transferring the KV cache between them. Lets each pool be sized and tuned independently; used in large-scale deployments (e.g. NVIDIA Dynamo, llm-d, and SGLang/vLLM disaggregation features).</li>
+<li><b><a class="gl" href="#gl-disaggregated-serving">Disaggregated serving</a></b>: run prefill and decode on separate GPU pools (compute-heavy vs bandwidth-heavy), transferring the KV cache between them. Lets each pool be sized and tuned independently; used in large-scale deployments (e.g. NVIDIA Dynamo, llm-d, and SGLang/vLLM disaggregation features).</li>
 <li><b>Redundancy counts units, not GPUs</b>: a model split across 4 GPUs with tensor parallelism is one serving unit, and losing any one GPU stops that unit. Plan redundancy as N+1 complete units.</li></ul>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 260" role="img" aria-label="Multi-GPU serving topology">
@@ -22,4 +30,32 @@
 <text x="490" y="180" class="xs">• size each pool to its own bottleneck</text><text x="490" y="196" class="xs">• long prefills no longer stall decoding</text><text x="490" y="212" class="xs">• adds KV transfer cost and complexity</text></g>
 </svg></div><figcaption><b>Two serving topologies.</b> Left: replicas of a tensor-parallel model behind a prefix-aware router. Right: separate prefill and decode pools.</figcaption></figure>
 <div class="box example"><h5>Example: sizing a 70B deployment</h5><p>70B in FP8 ≈ 70 GB of weights. On 80 GB GPUs, TP = 2 leaves ~70 GB for KV across the pair (≈ 210k tokens at 320 KiB/token in BF16); TP = 4 leaves ~215 GB and lowers latency per token. For 600 concurrent 4k-token conversations (≈ 2.4M tokens of KV ≈ 790 GB), you need roughly 4 replicas of TP = 4, before headroom.</p></div>
+</section>
+
+<section class="tp tp-math" id="c14-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The 70B example</b>. In 8-bit the weights take about 70 GB. Its KV cache is 2 × 80 layers × 8 heads × 128 × 2 bytes = 327,680 bytes, about 320 KiB per token.</p>
+<ul>
+<li>600 conversations × 4,096 tokens ≈ 2.5 million tokens × 320 KiB ≈ 805 GB of cache.</li>
+<li>Four 80 GB GPUs leave about 4 × 72 − 70 = 218 GB for cache: 218 GB ÷ 320 KiB ≈ 665,000 tokens per unit.</li>
+<li>2.5 million ÷ 665,000 ≈ 3.7, so 4 units of 4 GPUs = 16 GPUs, plus one whole spare unit: 20.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c14-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program sizes a 70B 8-bit deployment for 600 conversations of 4,096 tokens at tensor-parallel sizes 1, 2, 4 and 8, counting units, GPUs and a spare unit. Change <code>CONVERSATIONS</code> or <code>CONTEXT</code> and run it again.</p>
+<figure class="fig live" id="snip-tp-replicas"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tp-replicas"}'></div></div>
+<figcaption><b>Units, replicas and spares, in real Python.</b> No headroom or latency targets are included.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c14-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.vllm.ai/en/latest/serving/parallelism_scaling/">vLLM: Parallelism and scaling</a> <small>Tensor, pipeline and data parallel serving.</small></li>
+<li><a href="https://arxiv.org/abs/1909.08053">Shoeybi et al. (2019), Megatron-LM</a> <small>How tensor parallelism splits each layer.</small></li>
+<li><a href="https://arxiv.org/abs/2401.09670">Zhong et al. (2024), DistServe</a> <small>Disaggregating prefill and decode.</small></li>
+</ol>
+</section>

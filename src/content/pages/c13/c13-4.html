@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c13-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Each kind of task needs its own kind of example. An extractor learns from documents paired with the fields they contain, and also with fields they do not contain. Show it only filled-in forms and it learns that every form is filled in, so it makes values up: <a class="gl" href="#gl-field-fabrication">field fabrication</a>.</p>
+<p>The same holds for tool use: include cases where no tool is needed, or the model learns that every question needs one. And before training a large model to classify, try a small one; it is often as good and far cheaper.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="tw"><table>
 <tr><th>Goal</th><th>Training data shape</th><th>Key evaluation</th><th>Notes</th></tr>
-<tr><td><b>Extraction</b></td><td>document → JSON of fields (null when absent)</td><td>Field-level exact match; null accuracy; hallucinated-field rate</td><td>Include many "field absent" examples, or the model learns to always fill fields.</td></tr>
+<tr><td><b>Extraction</b> (<a class="gl" href="#gl-field-fabrication">watch for fabrication</a>)</td><td>document → JSON of fields (null when absent)</td><td>Field-level exact match; null accuracy; hallucinated-field rate</td><td>Include many "field absent" examples, or the model learns to always fill fields.</td></tr>
 <tr><td><b>Classification</b></td><td>text → label (optionally with short rationale)</td><td>Per-class precision/recall, calibration</td><td>Often a small encoder (fine-tuned BERT-style) is cheaper and as good as an LLM.</td></tr>
 <tr><td><b>Domain language</b></td><td>continued pretraining on domain text, then SFT on domain tasks</td><td>Domain task suite + perplexity on held-out domain text</td><td>Highest regression risk; mix in general data (e.g. 10–30%).</td></tr>
 <tr><td><b>Structured output</b></td><td>input → output in exact house format</td><td>Schema validity without constrained decoding; format adherence</td><td>Constrained decoding (7.4) may be enough without training.</td></tr>
@@ -10,4 +18,33 @@
 <div id="ftShapes" class="cols2"></div>
 </div><figcaption><b>What a training record looks like</b> for two of the goals. Tool-use records include the tool result turn so the model learns to <em>use</em> results, not only to call tools.</figcaption></figure>
 <div class="box example"><h5>Example: an extraction regression caught</h5><p>A fine-tuned contract extractor reaches 97% field accuracy, but on contracts with no termination clause it invents one 31% of the time, because only 2% of training examples had the field absent. Adding 600 absent-field examples brings fabrication to 2% with no loss elsewhere.</p></div>
+</section>
+
+<section class="tp tp-math" id="c13-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Why the overall score hides it</b> (the contract example). Suppose 1,000 test contracts, 900 with a termination clause and 100 without.</p>
+<ul>
+<li>On the 900, the extractor is right 97% of the time: 873 right.</li>
+<li>On the 100 without, it invents a clause 31% of the time: 69 right, 31 wrong.</li>
+<li>Overall: (873 + 69) ÷ 1,000 = 94.2%, which looks fine, while nearly a third of the absent cases are fabricated.</li>
+</ul>
+<p>Report the absent-field rate on its own line. In the example, adding 600 absent-field examples brought it from 31% to 2%.</p>
+</section>
+
+<section class="tp tp-code" id="c13-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds a one-field extraction set from the sentences of your project’s documents, removes the number from every other sentence, and scores a simulated extractor trained with 2%, 10% and 30% absent examples. Change <code>TRIALS</code> or the fabrication rule and run it again.</p>
+<figure class="fig live" id="snip-extraction-metrics"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"extraction-metrics"}'></div></div>
+<figcaption><b>Field accuracy versus fabrication, in real Python.</b> The extractor is simulated; the metrics are real.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://huggingface.co/docs/trl/dataset_formats">TRL: Dataset formats</a> <small>Prompt–completion, conversational and tool-use training records.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/supervised-fine-tuning">OpenAI: Supervised fine-tuning</a> <small>Preparing examples, including tool calls, for fine-tuning.</small></li>
+<li><a href="https://arxiv.org/abs/1810.04805">Devlin et al. (2018), BERT</a> <small>The small encoder models that often classify as well as an LLM.</small></li>
+</ol>
+</section>

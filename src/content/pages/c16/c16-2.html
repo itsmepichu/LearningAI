@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c16-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A model cannot reliably tell the difference between instructions from you and instructions that happen to be inside the text it reads. So a sentence hidden in a review, an email or a web page can try to take over: <a class="gl" href="#gl-prompt-injection">prompt injection</a>.</p>
+<p>Filters catch many attempts, but attackers rephrase. The dependable defence is architectural: decide what a manipulated model could do, and make sure the answer is "nothing harmful". Read-only tools while reading untrusted text, approvals for writes, and no unapproved ways to send data out.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Direct prompt injection</b>: the user types instructions to override the system prompt ("ignore your rules and…"). <b>Jailbreaks</b> are injections aimed at safety policies.</li>
-<li><b>Indirect prompt injection</b>: instructions hidden in content the model reads: a web page, an email, a PDF (even in white text or metadata), a code comment, a tool description or tool output. The user may be the victim, not the attacker.</li>
+<li><b>Indirect <a class="gl" href="#gl-prompt-injection">prompt injection</a></b>: instructions hidden in content the model reads: a web page, an email, a PDF (even in white text or metadata), a code comment, a tool description or tool output. The user may be the victim, not the attacker.</li>
 <li><b>Data exfiltration</b>: getting data out through any channel the model can influence: URLs in links or images, tool calls that send messages or make HTTP requests, or simply the answer shown to an attacker-controlled account.</li>
 <li><b>Poisoned content</b>: false facts planted in the knowledge base or in training data so the model confidently repeats them; also memory poisoning in agents (11.4).</li>
 <li><b>Unsafe tool execution</b>: the model calls powerful tools with attacker-chosen arguments (deleting records, sending money, running shell commands).</li>
@@ -13,4 +21,32 @@
 <li>The model's tools while processing untrusted content are read-only; <code>send_email</code> requires a user click showing recipient and content.</li>
 <li>Outbound recipients outside the organisation trigger a warning; links and images in output are restricted to an allowlist of domains.</li>
 <li>An injection classifier flags suspicious content for logging and lower trust, and red-team cases (8.6) cover the pattern.</li></ul></div>
+</section>
+
+<section class="tp tp-math" id="c16-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Filters reduce, they do not remove</b> (illustrative). 10,000 injection attempts a month against a filter that catches 95% still leaves 500 that reach the model.</p>
+<ul>
+<li>If the model has a send tool while reading them and follows 1 in 20, that is 25 attempts a month that can act.</li>
+<li>If the tools available while reading untrusted content are read-only, the same 500 attempts can at worst produce a bad draft that a person reviews.</li>
+</ul>
+<p><b>False alarms cost too.</b> A filter that flags 2% of 1 million ordinary messages wrongly blocks 20,000 customers.</p>
+</section>
+
+<section class="tp tp-code" id="c16-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs a keyword injection filter over your project’s ordinary messages and a set of injected texts, lists what it misses, and shows what a missed injection could do with and without write tools. Add your own rephrased attack and see whether it gets through.</p>
+<figure class="fig live" id="snip-injection-layers"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"injection-layers"}'></div></div>
+<figcaption><b>Filters and capabilities, in real Python.</b> A keyword list stands in for a classifier.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://genai.owasp.org/llmrisk/llm012025-prompt-injection/">OWASP LLM01:2025 Prompt Injection</a> <small>Direct and indirect injection and mitigations.</small></li>
+<li><a href="https://arxiv.org/abs/2302.12173">Greshake et al. (2023), Not what you’ve signed up for</a> <small>Indirect prompt injection in real applications.</small></li>
+<li><a href="https://arxiv.org/abs/2506.08837">Beurer-Kellner et al. (2025), Design Patterns for Securing LLM Agents against Prompt Injections</a> <small>Architectural patterns that limit what an injection can do.</small></li>
+</ol>
+</section>

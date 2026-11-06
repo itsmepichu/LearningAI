@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c17-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A good alert wakes someone only when users are being hurt and tells them where to start. <a class="gl" href="#gl-burn-rate-alert">Burn-rate alerts</a> ask how fast the error budget is being spent: a sharp incident spends it in hours and pages at once; a slow leak spends it over days and opens a ticket.</p>
+<p>Every alert links to a <a class="gl" href="#gl-runbook">runbook</a>: how to confirm, the first safe actions (a flag, a rollback, a degradation level), who to call, and how to know it is fixed. Afterwards, a blameless postmortem turns the incident into new tests and alerts.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Dashboards</b>: one overview per service (SLOs, golden signals, AI signals, cost) with drill-downs per stage, model, tenant and feature. Put deploys, model changes and config changes as annotations.</li>
-<li><b>Actionable alerts</b>: alert on symptoms users feel (SLO burn), not on every cause. Use <dfn>burn-rate alerts</dfn>: page when the error budget is being consumed fast (e.g. 2% of a 30-day budget in 1 hour, a burn rate of 14.4), ticket when slow. Each alert links to a runbook.</li>
-<li><b>Runbooks</b>: for each alert, what it means, how to confirm, first mitigations (flags, rollbacks, degradation levels, failover), escalation contacts, and how to verify recovery.</li>
+<li><b>Actionable alerts</b>: alert on symptoms users feel (SLO burn), not on every cause. Use <dfn><a class="gl" href="#gl-burn-rate-alert">burn-rate alerts</a></dfn>: page when the error budget is being consumed fast (e.g. 2% of a 30-day budget in 1 hour, a burn rate of 14.4), ticket when slow. Each alert links to a runbook.</li>
+<li><b><a class="gl" href="#gl-runbook">Runbooks</a></b>: for each alert, what it means, how to confirm, first mitigations (flags, rollbacks, degradation levels, failover), escalation contacts, and how to verify recovery.</li>
 <li><b>Incident investigation</b>: start from affected traces (exemplars linked from metrics), compare with healthy traces, check recent changes (deploys, prompt versions, model versions, index versions, provider status).</li>
 <li><b>Postmortems</b>: blameless write-up of timeline, impact, root causes, what went well, and action items with owners, including new evaluation cases and alerts.</li>
 </ul>
@@ -21,4 +29,32 @@
 4. If index_version changed: switch search alias back (10.7). Verify Recall@10 smoke test.
 5. If neither: pull 30 low-scoring traces; classify retrieval vs generation failure (8.5); escalate to owners.
 6. Record timeline in incident channel; create eval cases from failing traces (17.9).</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c17-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Burn rate</b> with a 99.9% SLO, so a 0.1% error budget.</p>
+<ul>
+<li>1.44% errors in the last hour is 1.44 ÷ 0.1 = 14.4 times the sustainable rate. A 30-day budget lasts 30 ÷ 14.4 ≈ 2 days at that pace: page now.</li>
+<li>One hour at 14.4 times uses 14.4 ÷ 720 hours = 2% of the month’s budget.</li>
+<li>0.2% errors for five days is only 2 times the rate, so the fast rule never fires; a 3-day window with a threshold of 1 catches it.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c17-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program generates 30 days of hourly error rates with a sharp incident and a slow leak, and finds when a fast page, a slow page and a ticket rule would each fire. Make the leak smaller and see which rule still catches it.</p>
+<figure class="fig live" id="snip-burn-rate-alerts"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"burn-rate-alerts"}'></div></div>
+<figcaption><b>Multi-window alerting, in real Python.</b> The error series is generated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://sre.google/workbook/alerting-on-slos/">Google SRE workbook: Alerting on SLOs</a> <small>Multi-window, multi-burn-rate alerts.</small></li>
+<li><a href="https://sre.google/sre-book/postmortem-culture/">Google SRE book: Postmortem Culture</a> <small>Blameless postmortems.</small></li>
+<li><a href="https://response.pagerduty.com/">PagerDuty Incident Response</a> <small>Incident roles and runbooks.</small></li>
+</ol>
+</section>

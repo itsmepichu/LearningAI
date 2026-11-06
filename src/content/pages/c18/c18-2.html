@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c18-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>If every kitchen in a restaurant chain cooked from memory, no two meals would match. <a class="gl" href="#gl-infrastructure-as-code">Infrastructure as code</a> writes the recipe down: GPU pools, databases, permissions and alerts are files that are reviewed and applied by a pipeline.</p>
+<p>And the meal is cooked once. The artefact built and tested in staging is the very one that runs in production: <a class="gl" href="#gl-environment-promotion">environment promotion</a> moves the same image digest forward and changes only configuration.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c18-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Reproducible builds</b>: lockfiles, pinned base images by digest, pinned engine versions (vLLM, CUDA), deterministic container builds; the same commit produces the same image.</li>
-<li><b>Infrastructure as code (IaC)</b>: GPU node pools, vector databases, queues, gateways, IAM, secrets references, dashboards and alerts are defined in code (OpenTofu/Terraform, Pulumi, Kubernetes manifests with Helm/Kustomize), reviewed and applied by pipelines, not clicked in consoles.</li>
-<li><b>Environment promotion</b>: dev → staging → production with the <em>same</em> artefacts (image digests, prompt versions, model IDs); only configuration differs. Staging mirrors production shape (same engine, same index type, a realistic data sample) so tests are meaningful.</li>
+<li><b><a class="gl" href="#gl-infrastructure-as-code">Infrastructure as code (IaC)</a></b>: GPU node pools, vector databases, queues, gateways, IAM, secrets references, dashboards and alerts are defined in code (OpenTofu/Terraform, Pulumi, Kubernetes manifests with Helm/Kustomize), reviewed and applied by pipelines, not clicked in consoles.</li>
+<li><b><a class="gl" href="#gl-environment-promotion">Environment promotion</a></b>: dev → staging → production with the <em>same</em> artefacts (image digests, prompt versions, model IDs); only configuration differs. Staging mirrors production shape (same engine, same index type, a realistic data sample) so tests are meaningful.</li>
 <li><b>GitOps</b>: the desired state of each environment lives in a repository; a controller (Argo CD, Flux) syncs clusters to it, giving an audit trail and easy rollback by reverting a commit.</li>
 </ul>
 <figure class="fig flow"><div class="stage">
@@ -18,4 +26,28 @@
   labels        = { workload = "interactive", model = "8b-fp8" }
   taints        = ["gpu=true:NoSchedule"]
 }</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c18-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Unpinned dependencies drift</b> (illustrative). If 40 dependencies are unpinned and each publishes a new release on average every 3 months, about 40 ÷ 90 ≈ 0.44 of them change on any given day. Rebuild a week later and about 3 dependencies are probably different from what you tested.</p>
+<p><b>Rollback by commit.</b> With GitOps, the previous state of production is one revert away; reapplying it takes as long as the sync, often a few minutes.</p>
+</section>
+
+<section class="tp tp-code" id="c18-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds an artefact from pinned inputs and promotes its digest through development, staging and production, then shows that rebuilding from unpinned inputs ships something staging never tested. Pin the second build’s inputs and run it again.</p>
+<figure class="fig live" id="snip-build-once"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"build-once"}'></div></div>
+<figcaption><b>Build once, promote the digest, in real Python.</b> A hash stands in for a container build.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c18-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://opentofu.org/docs/">OpenTofu documentation</a> <small>Declarative infrastructure as code.</small></li>
+<li><a href="https://argo-cd.readthedocs.io/en/stable/">Argo CD</a> <small>GitOps: syncing clusters to the state in a repository.</small></li>
+<li><a href="https://reproducible-builds.org/docs/definition/">Reproducible Builds: definition</a> <small>What it means for the same source to give the same artefact.</small></li>
+</ol>
+</section>

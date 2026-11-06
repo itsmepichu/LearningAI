@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c18-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>New versions meet real users gradually. A <a class="gl" href="#gl-shadow-deployment">shadow deployment</a> lets the new version answer real requests in private, so you can compare without anyone seeing its answers. A <a class="gl" href="#gl-canary-release">canary</a> then gives it a small share of real users and compares the two side by side.</p>
+<p>Each step widens only if the numbers stay within bounds, and any breach sends traffic back automatically. Rollback has one limit: it cannot unsend an email or reverse a refund, so shadow traffic must never reach tools that change things.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c18-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Shadow deployment</b>: send a copy of production requests to the new version, discard its outputs (users see the old version), and compare: output differences, judge scores, latency, cost, errors. No user risk; for agents, shadow only with side-effect-free (mocked) tools.</li>
-<li><b>Canary</b>: route a small share of real traffic (1–5%) to the new version, compare its metrics with the baseline on the same time window, and promote automatically if healthy.</li>
+<li><b><a class="gl" href="#gl-shadow-deployment">Shadow deployment</a></b>: send a copy of production requests to the new version, discard its outputs (users see the old version), and compare: output differences, judge scores, latency, cost, errors. No user risk; for agents, shadow only with side-effect-free (mocked) tools.</li>
+<li><b><a class="gl" href="#gl-canary-release">Canary</a></b>: route a small share of real traffic (1–5%) to the new version, compare its metrics with the baseline on the same time window, and promote automatically if healthy.</li>
 <li><b>Controlled rollout</b>: increase exposure in steps (5% → 25% → 50% → 100%), optionally by tenant cohort (internal users first, then low-risk tenants), with feature flags controlling which prompt/model/index version each cohort gets.</li>
 <li><b>Rollback</b>: one action, minutes not hours: flip the flag or alias back. Requires the previous version to still be deployed and compatible (for indexes, keep the old one warm: 10.7). Practice it.</li>
 <li><b>Rollback does not undo actions</b>: messages sent, refunds issued and tickets created by the bad version stay done. Plan reconciliation or compensation for them. Shadow traffic must never reach write tools: stub or disable side effects in shadow mode.</li></ul>
@@ -22,4 +30,31 @@ analysis (candidate vs baseline, same window):
   groundedness_sample: min_delta: -1.5pp   (500 sampled traces, judge@v4)
   thumbs_down_rate:    max_delta: +1.0pp
 on_failure: set weight 0, page owner, attach comparison report</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c18-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How much a canary sees</b> (illustrative). At 100,000 requests a day, a 5% canary for 2 hours sees about 100,000 × 0.05 × 2 ÷ 24 ≈ 420 requests.</p>
+<ul>
+<li>With 500 judged samples, a groundedness of 95% is measured to within about ±2 points, so a drop to 90% is visible, but a drop to 94% is not.</li>
+<li>If a bad version is caught at 5%, only 1 in 20 users met it; caught at 50%, half of them did.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c18-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program steps a candidate through 5%, 25%, 50% and 100% of traffic, compares sampled errors and groundedness with the baseline at each step, and rolls back on a breach. Make the regression smaller, from 0.95 to 0.93, and see whether 500 samples still catch it.</p>
+<figure class="fig live" id="snip-canary-analysis"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"canary-analysis"}'></div></div>
+<figcaption><b>Automated canary analysis, in real Python.</b> The metrics are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c18-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://argo-rollouts.readthedocs.io/en/stable/">Argo Rollouts</a> <small>Canary steps with automated analysis and rollback.</small></li>
+<li><a href="https://sre.google/workbook/canarying-releases/">Google SRE workbook: Canarying Releases</a> <small>Comparing canary and control populations.</small></li>
+<li><a href="https://openfeature.dev/docs/reference/intro">OpenFeature</a> <small>Feature flags to route cohorts and roll back quickly.</small></li>
+</ol>
+</section>

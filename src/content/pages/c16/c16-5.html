@@ -1,10 +1,18 @@
+<section class="tp tp-intuition" id="c16-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>AI systems copy data everywhere: into prompts, chunks, vectors, caches, memories, traces and training sets. Each copy is another place a leak can happen and another place a deletion request must reach.</p>
+<p>So send the model only what it needs (<a class="gl" href="#gl-data-minimisation">data minimisation</a>), encrypt and set a retention period for every copy, and keep an <a class="gl" href="#gl-audit-log">audit log</a> of who saw what and what the system did, so you can answer questions later.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Classify data</b>: public, internal, confidential, regulated (personal data, health, payment, export-controlled). Classification drives which models and regions may process it.</li>
-<li><b>Minimise</b>: send the model only what the task needs; redact or pseudonymise personal data (replace names with tokens and re-identify after) where possible.</li>
+<li><b><a class="gl" href="#gl-data-minimisation">Minimise</a></b>: send the model only what the task needs; redact or pseudonymise personal data (replace names with tokens and re-identify after) where possible.</li>
 <li><b>Encryption</b>: TLS in transit; encryption at rest for databases, indexes, object storage and backups; per-tenant keys (customer-managed keys) for high-sensitivity tenants, enabling crypto-shredding on exit.</li>
 <li><b>Provider terms</b>: confirm hosted-model contracts on data retention, training use, region and sub-processors; configure zero/limited retention where offered and required.</li>
 <li><b>Retention and deletion</b>: define retention per data type (prompts, outputs, traces, memories, eval datasets, fine-tuning sets). Deletion requests must reach every copy: source mirror, chunks, vectors, caches, memories, logs, evaluation and training datasets, and derived models (which may require retraining or per-tenant adapters).</li>
-<li><b>Auditability</b>: immutable logs of who accessed what, what the model was given, what actions it took and on whose behalf, which model/prompt versions were used, and approvals, retained per policy and queryable for investigations and regulators.</li>
+<li><b><a class="gl" href="#gl-audit-log">Auditability</a></b>: immutable logs of who accessed what, what the model was given, what actions it took and on whose behalf, which model/prompt versions were used, and approvals, retained per policy and queryable for investigations and regulators.</li>
 <li><b>Derived data is still sensitive</b>: embeddings can leak information about their source text, and summaries, memories and caches can repeat personal data verbatim. Classify, encrypt, retain and delete them under the same rules as the source.</li></ul>
 <figure class="fig live"><div class="stage"><div data-widget="pii-redact"></div></div>
 <figcaption><b>Pattern-based redaction, running live</b> (emails, phone numbers, card numbers with a Luhn check, IBAN-like strings). Names are not caught by patterns; they need an NER model such as Microsoft Presidio's. Pattern redaction is a baseline, not a guarantee.</figcaption></figure>
@@ -12,4 +20,28 @@
 <div class="nodes"><div class="nd">Deletion request<small>user / tenant offboarding</small></div><div class="nd">Resolve all copies<small>lineage (10.4)</small></div><div class="nd">Source mirror + chunks + vectors</div><div class="nd">Caches + memories</div><div class="nd">Logs / traces<small>per retention</small></div><div class="nd">Eval &amp; training sets</div><div class="nd">Verify + record<small>audit evidence</small></div></div>
 <ol class="steps"><li data-n="0">A data-subject request or tenant exit, with a legal deadline.</li><li data-n="1">Lineage lists every derived artefact linked to the subject's data.</li><li data-n="2">Delete documents, chunks and vectors (tombstone + compaction so they are physically removed).</li><li data-n="3">Purge cache entries and agent memories.</li><li data-n="4">Redact or delete from logs and traces as policy allows (some audit logs have legal retention).</li><li data-n="5">Remove from evaluation and training sets; flag models trained on them for review.</li><li data-n="6">Run verification queries (the canary approach of 16.4) and store proof of deletion.</li></ol></div>
 <figcaption><b>Deletion has to reach every copy.</b> AI systems create many more copies of data than traditional apps.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c16-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Copies of one document</b> (illustrative). One policy file becomes 40 chunks, 40 vectors, perhaps 15 cached answers, 200 traces a month that quote it and 3 rows in an evaluation set. Deleting it means finding about 300 copies, which is why lineage (10.4) matters.</p>
+<p><b>Retention adds up.</b> 1 million traces a day at 20 KB each is 20 GB a day. Kept for 30 days: 600 GB of potentially personal data; kept for a year: about 7.3 TB.</p>
+</section>
+
+<section class="tp tp-code" id="c16-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program plants fictional emails, phone numbers, a test card number, an order number that only looks like a card, and a name into copies of your project’s messages, then redacts them with patterns and a Luhn check. Notice which ones get through.</p>
+<figure class="fig live" id="snip-pii-redaction"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"pii-redaction"}'></div></div>
+<figcaption><b>Pattern redaction and its limits, in real Python.</b> All planted details are fictional test values.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://microsoft.github.io/presidio/">Microsoft Presidio</a> <small>Detecting and anonymising personal data, including names.</small></li>
+<li><a href="https://gdpr-info.eu/art-17-gdpr/">GDPR Article 17: Right to erasure</a> <small>Why deletion must reach every copy.</small></li>
+<li><a href="https://arxiv.org/abs/2310.06816">Morris et al. (2023), Text Embeddings Reveal (Almost) As Much As Text</a> <small>Why embeddings are sensitive data too.</small></li>
+</ol>
+</section>

@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c15-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A restaurant does not let the catering order for 500 people use the same stove as the dinner service. Bulk work and live customers need different things: bulk work wants throughput and can wait, live users want answers now.</p>
+<p><a class="gl" href="#gl-workload-separation">Workload separation</a> gives ingestion, retrieval, generation and agent runs their own pools and quotas. A big re-ingestion then only takes longer; it never makes search slow for everyone.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>These workloads have different resource profiles, latency needs and failure modes. Running them on shared capacity lets one starve the others (a backfill saturating embedding GPUs that also serve query embeddings; long agent runs holding all model slots during peak chat).</p>
 <div class="tw"><table>
 <tr><th>Workload</th><th>Profile</th><th>Latency need</th><th>Scaling unit</th></tr>
@@ -23,4 +31,32 @@
 <text x="10" y="290" class="xs mut">Separate pools and quotas per workload: a backfill or an agent storm cannot exhaust interactive capacity.</text></g>
 </svg></div><figcaption><b>Workload separation.</b> Query-time embeddings use a small low-latency pool; bulk ingestion uses a separate batch pool. Agents draw from their own model quota.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>Monday 09:00: a large tenant triggers re-ingestion of 2M documents, and 40,000 employees open the assistant. Because query embeddings and ingestion embeddings run on separate pools, search latency stays at 40 ms while the backfill queue simply takes longer, within its freshness budget.</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A shared pool</b> (illustrative). 4 embedding workers at 8 ms each can do 4 × 1,000 ÷ 8 = 500 embeddings a second.</p>
+<ul>
+<li>Live search needs 300 a second: 60% busy, waits stay tiny.</li>
+<li>A backfill adds 400 a second: 700 against 500 means 200 a second pile up. After 10 seconds, 2,000 are queued, and a search query arriving then waits about 2,000 ÷ 500 = 4 seconds.</li>
+<li>On separate pools, search keeps its 60% and the backfill simply runs at whatever its own pool allows.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c15-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates live query embeddings on a worker pool, with and without a bulk backfill sharing it, and compares the queries’ median and 95th-percentile waits. Change <code>BACKFILL_PER_S</code> to 150 and run it again.</p>
+<figure class="fig live" id="snip-workload-isolation"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"workload-isolation"}'></div></div>
+<figcaption><b>Shared against separate pools, in real Python.</b> The rates are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_fault_isolation.html">AWS Well-Architected: fault isolation</a> <small>Bulkheads and isolating workloads.</small></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead">Azure Architecture Center: Bulkhead pattern</a> <small>Separate pools so one workload cannot exhaust another’s resources.</small></li>
+<li><a href="https://keda.sh/docs/latest/concepts/">KEDA concepts</a> <small>Scaling queue consumers separately from interactive services.</small></li>
+</ol>
+</section>

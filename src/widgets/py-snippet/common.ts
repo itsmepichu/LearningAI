@@ -206,3 +206,69 @@ export async function projectTable(p: Project, read: DataReader) {
     },
   }
 }
+
+export interface ActionItem {
+  id: string
+  amount: number
+  reason: string
+}
+
+export interface ProjectActions {
+  /** The write action an agent proposes, the record it acts on and the money it moves. */
+  action: string
+  entity: string
+  currency: string
+  /** Amounts above this need a person's approval (illustrative). */
+  threshold: number
+  idPattern: string
+  reasons: string[]
+  items: ActionItem[]
+}
+
+const SLA_HOURS: Record<string, number> = { low: 48, normal: 24, high: 8, urgent: 4 }
+
+/**
+ * Each project's money-moving agent action, with up to 150 real cases from its dataset: Harbor's service credits for
+ * tickets resolved after their target (an illustrative 10 dollars an hour over, at most 200), the store's refunds on
+ * returned orders, the bank's provisional credits on disputes, and the travel agency's refunds on cancelled bookings.
+ */
+export async function projectActions(p: Project, read: DataReader): Promise<{ actions: ProjectActions; sources: string[] }> {
+  let a: Omit<ProjectActions, 'items'>
+  let items: ActionItem[]
+  let sources: string[]
+  if (p.id === 'harbor') {
+    const rows = (await read.csv('tickets.csv')) as unknown as Row[]
+    sources = ['tickets.csv']
+    a = { action: 'issue_credit', entity: 'ticket', currency: 'dollars', threshold: 50, idPattern: '^T-[0-9]{6}$', reasons: ['sla_breach', 'outage', 'billing_error'] }
+    items = rows
+      .filter((r) => Number(r.resolved_hours) > SLA_HOURS[r.priority])
+      .map((r) => ({ id: r.ticket_id, amount: Math.min(200, Math.round(10 * (Number(r.resolved_hours) - SLA_HOURS[r.priority]))), reason: 'sla_breach' }))
+  } else if (p.id === 'store') {
+    const rows = (await read.csv('orders.csv')) as unknown as Row[]
+    sources = ['orders.csv']
+    a = { action: 'refund_order', entity: 'order', currency: 'rupees', threshold: 5000, idPattern: '^OD-[0-9]{7}$', reasons: ['damaged', 'wrong_item', 'not_delivered', 'changed_mind'] }
+    const reasons = a.reasons
+    items = rows.filter((r) => r.returned === '1').map((r, i) => ({ id: r.order_id, amount: Number(r.refund_amount_inr), reason: reasons[i % reasons.length] }))
+  } else if (p.id === 'bank') {
+    const disputes = (await read.csv('disputes.csv')) as unknown as Row[]
+    const txns = (await read.csv('transactions.csv')) as unknown as Row[]
+    const amount = new Map(txns.map((t) => [t.txn_id, Number(t.amount_inr)]))
+    sources = ['disputes.csv', 'transactions.csv']
+    a = { action: 'provisional_credit', entity: 'dispute', currency: 'rupees', threshold: 2500, idPattern: '^DS-[0-9]{5}$', reasons: ['unrecognised', 'duplicate', 'not_received', 'failed_upi', 'amount_differs'] }
+    items = disputes.filter((d) => amount.has(d.txn_id)).map((d) => ({ id: d.case_id, amount: amount.get(d.txn_id)!, reason: d.reason }))
+  } else {
+    const rows = (await read.csv('bookings.csv')) as unknown as Row[]
+    sources = ['bookings.csv']
+    a = { action: 'refund_booking', entity: 'booking', currency: 'rupees', threshold: 20000, idPattern: '^SN-[0-9]{6}$', reasons: ['traveller_cancelled', 'disruption', 'schedule_change'] }
+    items = rows
+      .filter((r) => r.cancelled === '1')
+      .map((r, i) => ({ id: r.booking_id, amount: Number(r.fare_inr) - Number(r.cancellation_fee_inr), reason: ['traveller_cancelled', 'disruption', 'schedule_change'][i % 3] }))
+  }
+  return { actions: { ...a, items: items.slice(0, 150) }, sources }
+}
+
+/** A snippet built on the project's agent action: writes `actions.json`. */
+export const fromActions = (code: string) => async (p: Project, read: DataReader): Promise<SnippetBundle> => {
+  const { actions, sources } = await projectActions(p, read)
+  return { code, files: { 'actions.json': JSON.stringify(actions) }, sources }
+}

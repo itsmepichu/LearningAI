@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c15-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A load test is a rehearsal, and it only helps if it looks like the real show. Real prompts are mostly short with a few very long ones, real users arrive in bursts, and agents make many calls in a row. A test with identical 500-token prompts sent at an even pace rehearses a different show.</p>
+<p>How the test sends requests matters too. A tester that waits for each reply before sending the next slows down exactly when the service does, so it never sees the queue: <a class="gl" href="#gl-coordinated-omission">coordinated omission</a>.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="tw"><table>
 <tr><th>Test</th><th>Question</th><th>Shape</th></tr>
 <tr><td><b>Load</b></td><td>Do we meet SLOs at expected peak?</td><td>Ramp to forecast peak, hold 30–60 min</td></tr>
@@ -7,9 +15,26 @@
 <tr><td><b>Failure / chaos</b></td><td>Do breakers, retries and failover behave?</td><td>Inject provider errors, latency, node loss, region loss under load</td></tr>
 </table></div>
 <p><b>Realistic distributions</b> matter more for AI than for typical APIs. Prompt and output lengths are heavy-tailed (most short, a few very long); a test with fixed 500-token prompts underestimates KV-cache pressure and tail latency. Replay sampled production traces (lengths, tenants, features, cache-hit rates), use realistic arrival processes (bursty, not evenly spaced), and include agent sessions with many sequential calls. For hosted APIs, test against a mock that reproduces latency distributions and rate limits, so load tests do not cost a fortune or hit provider limits.</p>
-<p><b>Open vs closed loop.</b> A closed-loop tester (N virtual users, each waiting for its response before sending the next) slows down when the service slows down, so it under-reports latency: this is called <dfn>coordinated omission</dfn>. An open-loop tester sends requests at a set arrival rate regardless of responses (k6's <code>ramping-arrival-rate</code> executor in the lab below), which exposes queue build-up. Tests against a mocked model validate orchestration, queues and gateways only; real model-serving capacity needs its own benchmark (14.7).</p>
+<p><b>Open vs closed loop.</b> A closed-loop tester (N virtual users, each waiting for its response before sending the next) slows down when the service slows down, so it under-reports latency: this is called <dfn><a class="gl" href="#gl-coordinated-omission">coordinated omission</a></dfn>. An open-loop tester sends requests at a set arrival rate regardless of responses (k6's <code>ramping-arrival-rate</code> executor in the lab below), which exposes queue build-up. Tests against a mocked model validate orchestration, queues and gateways only; real model-serving capacity needs its own benchmark (14.7).</p>
 <figure class="fig"><div class="stage"><svg id="ltHist" viewBox="0 0 640 200" role="img" aria-label="Heavy-tailed prompt length distribution"></svg></div>
 <figcaption><b>Prompt lengths: real vs naive test</b> (log-normal sample, generated in your browser). The naive test uses one fixed length at the median; the real distribution has a long tail where the expensive requests live: here the top 10% of requests account for close to 40% of all tokens.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c15-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The tail holds the work</b>. In a typical heavy-tailed sample with a median of about 600 tokens, the longest 10% of prompts hold close to 40% of all tokens. A test at a fixed 600 tokens has none of them, so it underestimates cache pressure and slow requests.</p>
+<p><b>A 5-second stall</b> at 10 requests a second.</p>
+<ul>
+<li>A closed-loop tester with one user records one slow request of 5 seconds.</li>
+<li>In reality 5 × 10 = 50 requests arrive during the stall and wait up to 5 seconds each, so the 99th percentile is far worse than the closed-loop test reports.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c15-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program samples heavy-tailed prompt lengths and measures how much of the work the longest tenth holds, then compares a closed-loop and an open-loop measurement of the same 5-second stall. Change <code>sigma</code> or <code>STALL_S</code> and run it again.</p>
+<figure class="fig live" id="snip-load-test-shape"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"load-test-shape"}'></div></div>
+<figcaption><b>Realistic shapes for load tests, in real Python.</b> The distribution is synthetic.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: load-test a mock LLM endpoint with k6 <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code>// mock: a tiny server that sleeps TTFT + n_tokens*ITL and streams (write one in FastAPI), or point at llama-server
 // loadtest.js  — run with:  k6 run loadtest.js
@@ -26,4 +51,15 @@ export default function () {
   check(r, { 'status 200': (x) => x.status === 200 });
 }</code></pre>
 <p><b>Limitation:</b> your laptop is both load generator and server, so absolute numbers mean little. The point is to practise realistic scenarios, thresholds and reading percentile output.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/">k6: Open and closed models</a> <small>Arrival-rate testing and coordinated omission.</small></li>
+<li><a href="https://docs.locust.io/en/stable/">Locust documentation</a> <small>Python load tests with custom load shapes.</small></li>
+<li><a href="https://github.com/Shopify/toxiproxy">Toxiproxy</a> <small>Injecting latency and failures into dependencies.</small></li>
+</ol>
+</section>

@@ -1,4 +1,12 @@
-<p><dfn>Threat modelling</dfn> asks, for each component and data flow: what can go wrong, who could cause it, and what controls prevent, detect or limit it. Draw the data-flow diagram, mark <b>trust boundaries</b> (where data crosses from less to more trusted zones), and walk each flow. Frameworks like STRIDE (spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege) structure the walk; the <a href="https://genai.owasp.org/">OWASP Top 10 for LLM Applications</a> and <a href="https://atlas.mitre.org/">MITRE ATLAS</a> list AI-specific threats.</p>
+<section class="tp tp-intuition" id="c16-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Before locking a house, you walk round it: which doors and windows are there, who might try them, and what stops them. <a class="gl" href="#gl-threat-modelling">Threat modelling</a> is that walk for an AI system: users’ prompts, retrieved documents, tools, models and logs are all doors.</p>
+<p>One combination deserves special care: an assistant that can see private data, reads content written by outsiders, and can send things out. With all three, a hidden instruction in an email can leak your data. Removing any one leg of this <a class="gl" href="#gl-lethal-trifecta">lethal trifecta</a> breaks the attack.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><dfn><a class="gl" href="#gl-threat-modelling">Threat modelling</a></dfn> asks, for each component and data flow: what can go wrong, who could cause it, and what controls prevent, detect or limit it. Draw the data-flow diagram, mark <b>trust boundaries</b> (where data crosses from less to more trusted zones), and walk each flow. Frameworks like STRIDE (spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege) structure the walk; the <a href="https://genai.owasp.org/">OWASP Top 10 for LLM Applications</a> and <a href="https://atlas.mitre.org/">MITRE ATLAS</a> list AI-specific threats.</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 780 320" role="img" aria-label="Threat model data-flow diagram">
 <g class="sm">
@@ -28,5 +36,30 @@
 <tr><td>Model / weights</td><td>Backdoors, malicious serialisation, licence violation</td><td>Trusted sources, safetensors, scanning, signing, evaluation (16.6)</td></tr>
 <tr><td>Logs, caches, memory</td><td>Cross-tenant leakage, over-retention</td><td>Isolation, redaction, retention limits (16.4–16.5)</td></tr>
 </table></div>
-<div class="box example"><h5>Example: one finding from a review</h5><p>The assistant can read a user's email (private data), reads arbitrary inbound emails (untrusted content), and can render Markdown images (a channel to an external URL). Together these allow an attacker's email to instruct the model to embed private data in an image URL that the client fetches. This combination of private data + untrusted content + an exfiltration channel is sometimes called the "lethal trifecta"; remove at least one leg (here: block external image URLs in rendered output).</p></div>
+<div class="box example"><h5>Example: one finding from a review</h5><p>The assistant can read a user's email (private data), reads arbitrary inbound emails (untrusted content), and can render Markdown images (a channel to an external URL). Together these allow an attacker's email to instruct the model to embed private data in an image URL that the client fetches. This combination of private data + untrusted content + an exfiltration channel is sometimes called the "<a class="gl" href="#gl-lethal-trifecta">lethal trifecta</a>"; remove at least one leg (here: block external image URLs in rendered output).</p></div>
+</section>
+
+<section class="tp tp-math" id="c16-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Counting the review</b>. An assistant with 6 components and 9 data flows gives 9 flows × 6 STRIDE categories = 54 questions to ask. Most have obvious answers; the few that do not are the findings.</p>
+<p><b>Why combinations matter</b> (illustrative). If 1 email in 10,000 carries an injection and the assistant processes 50,000 emails a day, about 5 attacks a day reach the model. With the trifecta in place, each one can try to leak data; with external links and images blocked, the same 5 attacks have no way out.</p>
+</section>
+
+<section class="tp tp-code" id="c16-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks five assistant components for private data, untrusted content and a way to send data out, flags the ones with all three, and shows that blocking one leg breaks the combination. Add your own component and run it again.</p>
+<figure class="fig live" id="snip-lethal-trifecta"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"lethal-trifecta"}'></div></div>
+<figcaption><b>Spotting the trifecta, in real Python.</b> It only checks what you list.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a> <small>AI-specific threats to walk through.</small></li>
+<li><a href="https://atlas.mitre.org/">MITRE ATLAS</a> <small>Adversary tactics and techniques against AI systems.</small></li>
+<li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison: The lethal trifecta</a> <small>Private data, untrusted content and external communication.</small></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats">Microsoft: STRIDE threat categories</a> <small>The six categories used to structure the walk.</small></li>
+</ol>
+</section>
