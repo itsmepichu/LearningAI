@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c1-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Each era of AI fixed the biggest problem of the one before. First people wrote rules by hand, which broke on anything unexpected. Then computers learned weights from data, but people still had to choose what to look at. Then neural networks learned what to look at too. Then attention let a model look at a whole sentence at once instead of word by word, which made training fast on GPUs and opened the way to today's large models.</p>
+<p>It is like the history of maps: hand-drawn sketches, then surveyed maps, then satellite photos, then live maps that update themselves. Each step kept what worked and removed one big limit.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c1-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Each era of AI solved the main limitation of the previous one, and introduced a new one. Knowing this chain tells you <em>why</em> transformers look the way they do.</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Rule-based<small>1950s–80s</small></div><div class="nd">Statistical ML<small>1990s–2000s</small></div><div class="nd">Neural nets<small>1986 → 2012</small></div><div class="nd">RNNs / LSTMs<small>1997 → 2015</small></div><div class="nd">Attention<small>2014</small></div><div class="nd">Transformers<small>2017</small></div><div class="nd">Foundation models<small>2018 →</small></div><div class="nd">Agents<small>2023 →</small></div></div>
@@ -8,8 +16,43 @@
 <li data-n="3"><b>RNNs and LSTMs.</b> Language is a sequence, so recurrent networks read one token at a time and carry a hidden state. LSTMs (1997) added gates to remember longer. Limits: they process tokens strictly in order (slow to train in parallel) and still forget over long distances.</li>
 <li data-n="4"><b>Attention.</b> For translation (2014), a decoder learned to "look back" at every encoder position and weight the relevant ones. Long-range dependencies became direct lookups instead of a chain of hidden states.</li>
 <li data-n="5"><b>Transformers.</b> "Attention Is All You Need" (2017) removed recurrence entirely. Every token attends to every other token in parallel, which suits GPUs and scales to huge datasets.</li>
-<li data-n="6"><b>Foundation models.</b> Pretrain one large transformer on broad data, then adapt it to many tasks: BERT (2018), GPT-2 (2019), GPT-3 (2020) showed abilities improve with scale. Instruction tuning and RLHF (2022) made them follow instructions, producing chat assistants.</li>
-<li data-n="7"><b>Agents.</b> LLMs that call tools, observe results and decide next steps in a loop. Reinforcement learning on verifiable tasks (2024–25) produced "reasoning" models that think longer before answering. Protocols like MCP (2024) standardised tool access.</li>
+<li data-n="6"><b><a class="gl" href="#gl-foundation-model">Foundation models</a>.</b> Pretrain one large transformer on broad data, then adapt it to many tasks: BERT (2018), GPT-2 (2019), GPT-3 (2020) showed abilities improve with scale. Instruction tuning and RLHF (2022) made them follow instructions, producing chat assistants.</li>
+<li data-n="7"><b><a class="gl" href="#gl-agent">Agents</a>.</b> LLMs that call tools, observe results and decide next steps in a loop. Reinforcement learning on verifiable tasks (2024–25) produced "reasoning" models that think longer before answering. Protocols like MCP (2024) standardised tool access.</li>
 </ol></div><figcaption><b>Step through the eras.</b> The recurring theme: hand-made knowledge was replaced by learned knowledge, and sequential computation was replaced by parallel computation that scales with hardware.</figcaption></figure>
 <div class="box example"><h5>Example: the same sentence across eras</h5><p>Task: decide whether "The movie was not bad at all" is positive. A rule-based system that flags "bad" says negative. A bag-of-words classifier may also say negative because "bad" has a negative weight. An LSTM can learn that "not … at all" flips meaning. A transformer attends from "bad" to "not" directly, and a foundation model has seen millions of similar phrases during pretraining, so it gets it right with no task-specific training.</p></div>
+</section>
+
+<section class="tp tp-math" id="c1-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How the models grew.</b> Parameter counts of some milestone models:</p>
+<div class="tw"><table>
+<tr><th>Model</th><th>Year</th><th>Parameters</th></tr>
+<tr><td>AlexNet (images)</td><td>2012</td><td>about 60 million</td></tr>
+<tr><td>BERT large</td><td>2018</td><td>340 million</td></tr>
+<tr><td>GPT-2</td><td>2019</td><td>1.5 billion</td></tr>
+<tr><td>GPT-3</td><td>2020</td><td>175 billion</td></tr>
+</table></div>
+<p>From 2012 to 2020 that is about 175,000,000,000 ÷ 60,000,000 ≈ 2,900 times bigger. Training text grew too: GPT-3 was trained on about 300 billion tokens, and Llama 3 (2024) on about 15 trillion, 50 times more.</p>
+<p><b>Why transformers won.</b> An RNN reads a 1,000-word text in 1,000 steps, one after another, because each step needs the one before. A transformer handles all 1,000 positions of a training text in one parallel pass, which is exactly the kind of work a GPU with thousands of cores is good at.</p>
+</section>
+
+<section class="tp tp-code" id="c1-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program classifies the same three sentences in three ways: counting good and bad words (rules), learning a weight for each single word, and learning weights for pairs of neighbouring words too. Add your own sentence to <code>TESTS</code>, or a new review to <code>TRAIN</code>, and run it again.</p>
+<figure class="fig live" id="snip-eras"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"eras"}'></div></div>
+<figcaption><b>One sentence, three eras, in real Python.</b> Fourteen invented reviews are far too few for a real model; compare the three columns, not their accuracy.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c1-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.nature.com/articles/323533a0">Rumelhart, Hinton and Williams (1986), Learning representations by back-propagating errors</a> <small>The paper that made multi-layer neural networks trainable.</small></li>
+<li><a href="https://arxiv.org/abs/1409.0473">Bahdanau, Cho and Bengio (2014), Neural Machine Translation by Jointly Learning to Align and Translate</a> <small>The first attention mechanism.</small></li>
+<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> <small>The transformer, which removed recurrence.</small></li>
+<li><a href="https://arxiv.org/abs/2005.14165">Brown et al. (2020), Language Models are Few-Shot Learners (GPT-3)</a> <small>Showed that a large pretrained model can do new tasks from a few examples.</small></li>
+<li><a href="https://arxiv.org/abs/2203.02155">Ouyang et al. (2022), Training language models to follow instructions with human feedback</a> <small>The instruction tuning and RLHF behind chat assistants.</small></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol documentation</a> <small>The open standard for connecting agents to tools (11.8).</small></li>
+</ol>
+</section>

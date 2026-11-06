@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c3-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>There are three ways to learn, and they differ in the feedback you get. With a teacher who marks every answer, you learn from right answers: that is supervised learning. With a pile of photos and no captions, you can still sort them into groups that look alike: that is unsupervised learning. And like learning to ride a bike, you can try things and learn from how well they went: that is reinforcement learning.</p>
+<p>LLMs use a clever fourth trick. They hide the next word of real text and try to guess it, so every sentence on the internet becomes a free lesson with its own answer.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c3-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Supervised learning</b>: learn from input–output pairs (<b>labels</b>). "Email → spam/not spam", "house features → price".</div>
-<div><b>Unsupervised learning</b>: find structure in inputs without labels: groups (clustering), compressed representations, anomalies.</div>
-<div><b>Self-supervised learning</b>: create labels from the data itself, e.g. hide the next word and predict it. LLM pretraining is self-supervised, which is why it can use trillions of tokens without human labelling.</div>
-<div><b>Reinforcement learning (RL)</b>: an <b>agent</b> takes <b>actions</b> in an <b>environment</b>, receives <b>rewards</b>, and learns a <b>policy</b> that maximises total reward. Used in RLHF and reasoning-model training (6.5).</div>
+<div><b><a class="gl" href="#gl-supervised-learning">Supervised learning</a></b>: learn from input–output pairs (<b>labels</b>). "Email → spam/not spam", "house features → price".</div>
+<div><b><a class="gl" href="#gl-unsupervised-learning">Unsupervised learning</a></b>: find structure in inputs without labels: groups (clustering), compressed representations, anomalies.</div>
+<div><b><a class="gl" href="#gl-self-supervised-learning">Self-supervised learning</a></b>: create labels from the data itself, e.g. hide the next word and predict it. LLM pretraining is self-supervised, which is why it can use trillions of tokens without human labelling.</div>
+<div><b><a class="gl" href="#gl-reinforcement-learning">Reinforcement learning (RL)</a></b>: an <b>agent</b> takes <b>actions</b> in an <b>environment</b>, receives <b>rewards</b>, and learns a <b>policy</b> that maximises total reward. Used in RLHF and reasoning-model training (6.5).</div>
 </div>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 780 230" role="img" aria-label="Three learning paradigms">
@@ -28,4 +36,30 @@
 <text x="648" y="196" text-anchor="middle" class="xs mut">learn by trial, maximise reward</text></g>
 </svg></div><figcaption><b>Three ways to learn.</b> The difference is the feedback signal: correct answers, no answers, or a score for actions taken.</figcaption></figure>
 <div class="box example"><h5>Example: one company, three paradigms</h5><p>An e-commerce site trains a <b>supervised</b> model to predict return probability from order data, uses <b>unsupervised</b> clustering to discover customer segments for marketing, and uses <b>RL-style</b> bandit algorithms to choose which recommendation layout to show, rewarded by clicks.</p></div>
+</section>
+
+<section class="tp tp-math" id="c3-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Why labels are the bottleneck.</b> 10,000 labelled examples at 30 seconds each is 300,000 seconds: about 83 hours of someone’s time, before any checking.</p>
+<p><b>Why self-supervision scales.</b> Every token in a text is a question with a known answer: "what comes next?". A 1,000-token page gives 1,000 lessons for free. A model trained on 15 trillion tokens gets 15 trillion lessons, with no one labelling anything.</p>
+<p><b>Reinforcement by trial.</b> A learner choosing between three reply styles that succeed 5%, 12% and 8% of the time tries each one, keeps a running score, and picks its best so far 9 times in 10. After a few thousand tries it is choosing the 12% style most of the time, without ever being told which was best.</p>
+</section>
+
+<section class="tp tp-code" id="c3-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs a tiny example of each kind on your example project’s data: it predicts a number from a group average learned from labelled rows, groups the same numbers into three clusters with no labels, and lets a learner find the best of three options by trial and reward. Change <code>TRUE_RATES</code>, or the 0.1 that sets how often it explores, and run it again.</p>
+<figure class="fig live" id="snip-learning-types"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"learning-types"}'></div></div>
+<figcaption><b>Three kinds of learning, in real Python.</b> The reinforcement part is simulated with made-up success rates.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c3-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.deeplearningbook.org/contents/ml.html">Goodfellow, Bengio and Courville, Deep Learning, chapter 5</a> <small>Machine-learning basics, including the kinds of learning.</small></li>
+<li><a href="https://scikit-learn.org/stable/supervised_learning.html">scikit-learn: Supervised learning</a> <small>The standard library’s guide to supervised methods.</small></li>
+<li><a href="https://scikit-learn.org/stable/unsupervised_learning.html">scikit-learn: Unsupervised learning</a> <small>Clustering and other methods without labels.</small></li>
+<li><a href="http://incompleteideas.net/book/the-book-2nd.html">Sutton and Barto, Reinforcement Learning: An Introduction (free book)</a> <small>The standard text; chapter 2 covers the trial-and-reward example in the code.</small></li>
+</ol>
+</section>

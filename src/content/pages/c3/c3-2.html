@@ -1,10 +1,18 @@
+<section class="tp tp-intuition" id="c3-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Most prediction tasks are one of three shapes: guess a number (how long will delivery take?), pick a category (is this fraud?), or find groups nobody labelled (which customers behave alike?). Each shape has simple, well-tested tools.</p>
+<p>Before trusting any of them, ask "compared with what?". A weather forecaster who always says "same as today" is right surprisingly often. That lazy answer is the baseline, and a model is only worth what it adds on top of it.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c3-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Regression</b> predicts a number (delivery time, price). Linear regression fits y = w·x + b by minimising squared error.</li>
 <li><b>Classification</b> predicts a category. <b>Logistic regression</b> outputs a probability via the sigmoid σ(z) = 1/(1+e<sup>−z</sup>); a threshold turns it into a decision.</li>
-<li><b>Clustering</b> groups similar points. <b>k-means</b> alternates two steps: assign each point to its nearest centre, then move each centre to the mean of its points.</li>
+<li><b>Clustering</b> groups similar points. <b><a class="gl" href="#gl-k-means">k-means</a></b> alternates two steps: assign each point to its nearest centre, then move each centre to the mean of its points.</li>
 <li><b>Decision trees</b> split data with yes/no questions on features ("amount &gt; 500?"). Easy to read, but a single deep tree overfits.</li>
-<li><b>Ensembles</b> combine many models. <b>Random forests</b> average many trees trained on random subsets. <b>Gradient boosting</b> (XGBoost, LightGBM, CatBoost) adds trees one at a time, each correcting the previous errors. For tabular data, gradient boosting is usually the strongest practical choice.</li>
-<li><b>Baselines</b> are the simplest reasonable models: always predict the most common class, predict the mean, a keyword rule. If your sophisticated model barely beats the baseline, it is not adding value. Always report the baseline next to your result, including for LLM systems.</li>
+<li><b>Ensembles</b> combine many models. <b>Random forests</b> average many trees trained on random subsets. <b><a class="gl" href="#gl-gradient-boosting">Gradient boosting</a></b> (XGBoost, LightGBM, CatBoost) adds trees one at a time, each correcting the previous errors. For tabular data, gradient boosting is usually the strongest practical choice.</li>
+<li><b><a class="gl" href="#gl-baseline">Baselines</a></b> are the simplest reasonable models: always predict the most common class, predict the mean, a keyword rule. If your sophisticated model barely beats the baseline, it is not adding value. Always report the baseline next to your result, including for LLM systems.</li>
 </ul>
 <figure class="fig live"><div class="stage"><canvas id="kmCan" width="640" height="300"></canvas>
 <div class="ctl"><button class="btn primary" id="kmStep" type="button">Next step</button><button class="btn" id="kmNew" type="button">New data</button><label for="kmK" style="font-family:var(--f-display);font-size:.82rem">k <select id="kmK"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label><span class="count" id="kmOut">step 0</span></div></div>
@@ -39,4 +47,35 @@ for name, m in [("baseline", DummyClassifier(strategy="most_frequent")),
     print(f"{name:9} accuracy = {m.fit(Xtr, ytr).score(Xte, yte):.3f}")</code></pre></div>
 <figure class="fig live"><div class="stage"><div data-widget="text-classifier"></div></div>
 <figcaption><b>A small classifier, trained on your device if you opt in.</b> Your example project's labelled text goes through a small open <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">embedding model</a>, then a softmax layer learns from a seeded, stratified split and is scored on the rows it never saw, beside the majority-class baseline. The text is synthetic and comes from a few templates, so this shows the method and how to read its results, not what the method would score on real messages.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c3-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A baseline in numbers.</b> 1,000 tickets, 880 of them "general". Always answering "general" is right 880 times: 88% accuracy. A model scoring 91% is only 3 points better. If 10 tickets are security incidents and the model catches 2, its recall on the class that matters most is 2 ÷ 10 = 20%.</p>
+<p><b>k-means by hand.</b> Four values, 1, 2, 10 and 11, and two centres that start at 1 and 2:</p>
+<ol>
+<li>Each value joins its nearest centre: {1} and {2, 10, 11}.</li>
+<li>Each centre moves to the middle of its group: 1 and (2 + 10 + 11) ÷ 3 ≈ 7.7.</li>
+<li>Regroup: 2 is now nearer 1 than 7.7, so the groups become {1, 2} and {10, 11}.</li>
+<li>Move again: 1.5 and 10.5. Nothing changes after that, so it stops.</li>
+</ol>
+</section>
+
+<section class="tp tp-code" id="c3-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program predicts a rare yes/no outcome in your example project’s table, first with a baseline that always gives the most common answer, then with a logistic regression trained on a few columns, and prints the weight it learned for each column. Remove a column from the data, or change the 0.5 threshold, and run it again.</p>
+<figure class="fig live" id="snip-baselines"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"baselines"}'></div></div>
+<figcaption><b>A model against its baseline, in real Python.</b> The data is synthetic and the features are few, so the numbers do not predict real performance.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c3-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html">scikit-learn: DummyClassifier</a> <small>Ready-made baselines to report next to every model.</small></li>
+<li><a href="https://arxiv.org/abs/1603.02754">Chen and Guestrin (2016), XGBoost: A Scalable Tree Boosting System</a> <small>The gradient-boosting library that dominated tabular competitions.</small></li>
+<li><a href="https://arxiv.org/abs/2207.08815">Grinsztajn, Oyallon and Varoquaux (2022), Why do tree-based models still outperform deep learning on tabular data?</a> <small>Evidence for choosing trees over neural networks for tables.</small></li>
+<li><a href="https://scikit-learn.org/stable/modules/clustering.html#k-means">scikit-learn: k-means</a> <small>The algorithm in the figure, with its options and pitfalls.</small></li>
+</ol>
+</section>

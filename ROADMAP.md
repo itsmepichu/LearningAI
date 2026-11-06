@@ -392,8 +392,9 @@ The last phase. Decided on 6 November 2026:
 
 Progress:
 - [x] **Platform** (pull request 1): the topic structure, with a checker that enforces the order of the parts, a runnable snippet or Colab guide in Code and at least two links in Primary sources; runnable Python snippets (`py-snippet`, Pyodide, built from the selected project's data); glossary term cards and a `/glossary` page; flashcards with FSRS at `/flashcards`, fed by wrong answers and "Missed it" on the check and Practice pages.
-- [x] **Pilot:** chapter 5 restructured (7 topics), with 7 snippets, 34 glossary terms and 33 primary sources. Waiting for the owner's review before the rollout.
-- [ ] Chapters 1–4 and 6–18 and the capstone, two or three chapters per pull request.
+- [x] **Pilot:** chapter 5 restructured (7 topics), with 7 snippets, 34 glossary terms and 33 primary sources. Reviewed and merged; formulas replaced with plain words and worked numbers at the owner's request.
+- [x] Chapters 1–3 (18 topics, 18 snippets, 51 more glossary terms).
+- [ ] Chapters 4 and 6–18 and the capstone, two or three chapters per pull request.
 - [ ] Chapters 19–23.
 - [ ] Paper walkthroughs.
 

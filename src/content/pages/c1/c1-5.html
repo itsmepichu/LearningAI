@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c1-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An LLM is like a very confident friend who has read a lot but cannot check anything. Ask about something they half remember and they will still give a smooth, sure answer, because sounding right is what they learned. They also stopped reading on a certain date, and they have never seen your company's private documents.</p>
+<p>The fix is not to trust the friend more, but to hand them the right page and ask them to answer from it, quoting where the answer came from, and to say "I don't know" when the page does not have it.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c1-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>LLMs are strong at language transformation (summarise, rewrite, translate, extract), at pattern-following from a few examples, at writing and explaining code, and at broad general knowledge. Their weaknesses follow directly from "predict the likely next token from frozen weights":</p>
 <ul>
-<li><b>Hallucination</b>: fluent, confident output that is false. The model produces what is <em>plausible</em>; when it lacks the fact, a plausible-sounding fabrication is still the likely continuation. Invented citations, API methods and policy clauses are typical.</li>
-<li><b>Outdated knowledge</b>: weights reflect data up to a <dfn>training cutoff</dfn>. The model does not know about your product release last week, or your internal documents at all, unless you put them in the context (that is RAG, chapter 9).</li>
+<li><b><a class="gl" href="#gl-hallucination">Hallucination</a></b>: fluent, confident output that is false. The model produces what is <em>plausible</em>; when it lacks the fact, a plausible-sounding fabrication is still the likely continuation. Invented citations, API methods and policy clauses are typical.</li>
+<li><b>Outdated knowledge</b>: weights reflect data up to a <dfn><a class="gl" href="#gl-training-cutoff">training cutoff</a></dfn>. The model does not know about your product release last week, or your internal documents at all, unless you put them in the context (that is RAG, chapter 9).</li>
 <li><b>Bias</b>: training data reflects the world's skews. Models can associate professions with genders, rate dialects as less formal, or default to US conventions. In hiring, lending or moderation this becomes a legal and ethical problem.</li>
 <li><b>Unreliable confidence</b>: tone does not track correctness. "I'm certain" carries no information. Even token probabilities are only loosely related to factual accuracy after instruction tuning. Do not use the model's self-reported confidence as a control signal without measuring it (3.5, 8.3).</li>
 <li><b>Other practical limits</b>: arithmetic and exact counting errors (tokens are not characters), sensitivity to prompt wording, non-determinism, and vulnerability to instructions hidden in input text (prompt injection, chapter 16).</li>
@@ -23,4 +31,32 @@
 <text x="640" y="158" class="okc">✓ grounded</text><text x="640" y="174" class="xs mut">citation verifiable</text></g>
 </svg></div><figcaption><b>Design around the limitation.</b> You cannot remove hallucination from the model, but you can supply the facts (retrieval), constrain behaviour (cite or say "I don't know"), and verify outputs (evaluation).</figcaption></figure>
 <div class="box example"><h5>Example: a real failure pattern</h5><p>An internal assistant is asked "Which config flag enables audit logging in our gateway?" It answers <code>--enable-audit-log=true</code>. That flag does not exist; the real one is <code>audit.sink</code> in a YAML file. The model generated the most typical shape of such a flag. Mitigation: retrieve the gateway's documentation, require answers to quote the doc, and add this question to the evaluation set.</p></div>
+<p>Giving the model the facts in its input and asking it to answer from them, with citations, is called <a class="gl" href="#gl-grounding">grounding</a>.</p>
+</section>
+
+<section class="tp tp-math" id="c1-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Small error rates add up.</b> Suppose a model gets each fact right 95% of the time. An answer that depends on 10 separate facts is fully right only if all 10 are, which happens about 0.95 multiplied by itself 10 times ≈ 60% of the time. Four answers in ten have at least one mistake.</p>
+<p><b>Confidence that does not match accuracy.</b> Collect 100 answers where the model said it was "90% sure" and check them. If only 70 are correct, the model is overconfident by 20 points, and "90% sure" cannot be used to decide what to show a customer without measuring it first (3.5).</p>
+<p><b>Stale knowledge.</b> If a refund policy changed from 30 days to 14 days after the training cutoff, a model answering from memory will keep saying 30 days, every time, with full confidence, until the new policy is put into its input.</p>
+</section>
+
+<section class="tp tp-code" id="c1-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program answers four questions from your example project’s documents. For each, it finds the document that shares the most words with the question, quotes its best sentence with the document id, and declines when no document shares enough words. Add a question of your own to <code>QUESTIONS</code>, or change <code>MIN_OVERLAP</code>, and run it again.</p>
+<figure class="fig live" id="snip-grounding"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"grounding"}'></div></div>
+<figcaption><b>Answer from a source, or say so, in real Python.</b> Word overlap is a crude way to find sources; chapter 9 builds real retrieval.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c1-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2202.03629">Ji et al. (2022), Survey of Hallucination in Natural Language Generation</a> <small>Types and causes of hallucination, and how it is measured.</small></li>
+<li><a href="https://arxiv.org/abs/2005.11401">Lewis et al. (2020), Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a> <small>The original RAG paper: answering from retrieved documents.</small></li>
+<li><a href="https://arxiv.org/abs/2207.05221">Kadavath et al. (2022), Language Models (Mostly) Know What They Know</a> <small>How well a model’s confidence matches its accuracy, and where it does not.</small></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3442188.3445922">Bender et al. (2021), On the Dangers of Stochastic Parrots</a> <small>Bias and other risks that come from the training data.</small></li>
+<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a> <small>Prompt injection and the other security risks listed above (chapter 16).</small></li>
+</ol>
+</section>

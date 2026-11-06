@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c2-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Imagine standing on a foggy hillside, trying to reach the valley floor. You cannot see the valley, but you can feel which way the ground slopes under your feet. So you take a step downhill, feel again, and take another step. That is gradient descent, and it is how every neural network learns.</p>
+<p>The height of the hill is the loss: how wrong the model is. The direction you feel is the gradient. The size of your step is the learning rate: tiny steps take forever, and giant leaps jump right over the valley.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c2-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Derivative</b> f′(x): how fast f changes when x changes a little; the slope.</div>
-<div><b>Gradient</b> ∇f: the vector of partial derivatives, one per parameter. It points in the direction of steepest <em>increase</em>.</div>
-<div><b>Loss function</b>: a single number that measures how wrong the model is. Training minimises it.</div>
-<div><b>Gradient descent</b>: repeat θ ← θ − η·∇L(θ). Step against the gradient by a <b>learning rate</b> η.</div>
+<div><b><a class="gl" href="#gl-gradient">Gradient</a></b> ∇f: the vector of partial derivatives, one per parameter. It points in the direction of steepest <em>increase</em>.</div>
+<div><b><a class="gl" href="#gl-loss-function">Loss function</a></b>: a single number that measures how wrong the model is. Training minimises it.</div>
+<div><b><a class="gl" href="#gl-gradient-descent">Gradient descent</a></b>: repeat θ ← θ − η·∇L(θ). Step against the gradient by a <b><a class="gl" href="#gl-learning-rate">learning rate</a></b> η.</div>
 <div><b>Chain rule</b>: if y = f(g(x)) then dy/dx = f′(g(x))·g′(x). Backpropagation is the chain rule applied through every layer.</div>
 </div>
 <p>A model with 8 billion parameters has a loss landscape in 8 billion dimensions. You cannot see it, but the gradient still tells each parameter which direction lowers the loss locally. Training is millions of small downhill steps. The learning rate is the most important setting: too small and training crawls; too large and the steps overshoot, the loss oscillates or explodes (often showing up as <code>NaN</code>).</p>
@@ -15,4 +23,35 @@
 <ol class="steps"><li data-n="0">Input value x = 2.</li><li data-n="1">Forward: first function u = 3x. Record its local derivative du/dx = 3.</li><li data-n="2">Forward: second function y = u². Local derivative dy/du = 2u = 12.</li><li data-n="3">Backward: multiply local derivatives along the path. This product rule, applied across millions of operations, is backpropagation (4.1).</li></ol></div>
 <figcaption><b>Chain rule, step by step.</b> Each operation only needs its own local derivative; the framework multiplies them on the way back.</figcaption></figure>
 <div class="box example"><h5>Example: one manual step</h5><p>Fit y = w·x to the single point (x=2, y=6). Loss L = (w·2 − 6)². Gradient dL/dw = 2·(2w − 6)·2. At w = 1: gradient = −16. With η = 0.05: w ← 1 − 0.05·(−16) = 1.8. Next step: gradient = 2·(3.6−6)·2 = −9.6, w ← 2.28. It converges toward w = 3.</p></div>
+</section>
+
+<section class="tp tp-math" id="c2-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The step size decides everything.</b> In the example above, at w = 1 the slope is −16 (the loss falls as w grows):</p>
+<div class="tw"><table>
+<tr><th>Learning rate</th><th>Step: rate × 16</th><th>New w</th><th>Result</th></tr>
+<tr><td>0.005</td><td>0.08</td><td>1.08</td><td>Right direction, very slow</td></tr>
+<tr><td>0.05</td><td>0.8</td><td>1.8</td><td>Reaches 3 in a few steps</td></tr>
+<tr><td>0.25</td><td>4</td><td>5</td><td>Jumps past 3, then swings back and forth</td></tr>
+</table></div>
+<p><b>The chain rule, in numbers.</b> Suppose a model has three stages in a row. Nudge the input by a little, and the first stage’s output moves 2 times as much; that moves the second stage’s output 3 times as much again, and the third 2 times as much again. The input moves the final output 2 × 3 × 2 = 12 times as much. Backpropagation does that multiplication for every one of a model’s billions of parameters, at every training step.</p>
+</section>
+
+<section class="tp tp-code" id="c2-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program fits one number to four points by stepping downhill, at three learning rates, and measures the slope by nudging the number a tiny bit each way. Change the learning rates (try 0.14) or the points and run it again.</p>
+<figure class="fig live" id="snip-descent"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"descent"}'></div></div>
+<figcaption><b>Gradient descent by hand, in real Python.</b> Real training computes slopes with backpropagation instead of nudging each parameter.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c2-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.deeplearningbook.org/contents/numerical.html">Goodfellow, Bengio and Courville, Deep Learning, chapter 4</a> <small>Gradient-based optimisation, and why learning rates matter.</small></li>
+<li><a href="https://arxiv.org/abs/1609.04747">Ruder (2016), An overview of gradient descent optimization algorithms</a> <small>Plain-language tour of momentum, Adam and the others.</small></li>
+<li><a href="https://arxiv.org/abs/1412.6980">Kingma and Ba (2014), Adam: A Method for Stochastic Optimization</a> <small>The optimiser most models train with (4.2).</small></li>
+<li><a href="https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html">PyTorch: A Gentle Introduction to torch.autograd</a> <small>How a framework applies the chain rule for you.</small></li>
+</ol>
+</section>

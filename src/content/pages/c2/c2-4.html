@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c2-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Information theory measures surprise. If your friend is always late, "they were late again" tells you almost nothing; "they came early" is a big surprise. Entropy is the average surprise of something: a fair coin is surprising every time, a coin that always lands heads never is.</p>
+<p>A language model is trained to be as little surprised as possible by the real next word. If it gave the right word a high chance, there is little surprise and a small loss; if it gave it a tiny chance, the surprise and the loss are big. That loss is called cross-entropy.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c2-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Entropy</b> H(p) = −Σ p(x) log p(x): the average "surprise" of outcomes drawn from p. A fair coin has 1 bit; a coin that always lands heads has 0.</div>
+<div><b><a class="gl" href="#gl-entropy">Entropy</a></b> H(p) = −Σ p(x) log p(x): the average "surprise" of outcomes drawn from p. A fair coin has 1 bit; a coin that always lands heads has 0.</div>
 <div><b>Cross-entropy</b> H(p, q) = −Σ p(x) log q(x): the average surprise when outcomes come from the true distribution p but you predicted q. It is the <b>loss used to train language models</b>: p puts all mass on the real next token, so the loss is simply −log q(real token).</div>
-<div><b>KL divergence</b> KL(p‖q) = H(p,q) − H(p): the extra surprise caused by using q instead of p. Always ≥ 0; zero only when q = p. Used in RLHF and DPO to keep a tuned model close to its original (6.5), and in distillation.</div>
-<div><b>Perplexity</b> = e<sup>cross-entropy</sup> (natural log): roughly "how many tokens the model is choosing between". Lower is better.</div>
+<div><b><a class="gl" href="#gl-kl-divergence">KL divergence</a></b> KL(p‖q) = H(p,q) − H(p): the extra surprise caused by using q instead of p. Always ≥ 0; zero only when q = p. Used in RLHF and DPO to keep a tuned model close to its original (6.5), and in distillation.</div>
+<div><b><a class="gl" href="#gl-perplexity">Perplexity</a></b> = e<sup>cross-entropy</sup> (natural log): roughly "how many tokens the model is choosing between". Lower is better.</div>
 </div>
 <figure class="fig live"><div class="stage"><div class="wid">
 <p style="font-size:.9rem">True distribution p (what actually happens) vs the model's prediction q over three next tokens.</p>
@@ -13,4 +21,32 @@
 <svg id="infoSvg" viewBox="0 0 600 120"></svg><div class="kpis" id="infoK"></div></div></div>
 <figcaption><b>Live calculator</b> (natural log, so units are nats). With p = 100% "yes", cross-entropy is −ln q(yes). Raise q(yes) toward 100% and the loss falls toward 0. Being confidently wrong (q(yes) near 1%) costs about 4.6 nats.</figcaption></figure>
 <div class="box example"><h5>Example: reading a training log</h5><p>A training log shows <code>loss 2.30</code> at step 0 for a 10-class classifier. ln(10) = 2.30, which is exactly the loss of a uniform guess, so the model starts knowing nothing, as expected. For an LLM with a 50,000-token vocabulary, the initial loss should be near ln(50,000) ≈ 10.8. A first-step loss far from that suggests a bug in initialisation or labels.</p></div>
+</section>
+
+<section class="tp tp-math" id="c2-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Surprise in bits.</b> An outcome that had a 50% chance carries 1 bit of surprise; 25% carries 2 bits; 12.5% carries 3. Each halving of the chance adds one bit.</p>
+<ul>
+<li>A fair coin: every toss is a 50% outcome, so its entropy is 1 bit.</li>
+<li>A coin that lands heads 90% of the time: heads surprises you by about 0.15 bits, tails by about 3.3 bits. On average, 0.9 × 0.15 + 0.1 × 3.3 ≈ 0.47 bits. It is more predictable, so it has less entropy.</li>
+</ul>
+<p><b>The training loss.</b> If the model gave the real next token a 90% chance, the loss for that token is small (about 0.1). At 1%, it is about 4.6. A model whose average loss corresponds to a perplexity of 10 is as unsure as if it were picking between 10 equally likely tokens at every step.</p>
+</section>
+
+<section class="tp tp-code" id="c2-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program measures how mixed your example project’s labels are, then how surprised two guessers are by the real labels: one that thinks every label is equally likely, and one that knows the real mix. Remove the rarest label from the data, or change the 0.9 and 0.01 at the end, and run it again.</p>
+<figure class="fig live" id="snip-entropy"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"entropy"}'></div></div>
+<figcaption><b>Entropy and cross-entropy of your labels, in real Python.</b> Guessing from the label mix ignores the text, so these are baselines, not a model’s results.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c2-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.inference.org.uk/itprnn/book.html">MacKay, Information Theory, Inference, and Learning Algorithms (free book)</a> <small>Entropy and its links to learning, with many worked examples.</small></li>
+<li><a href="https://www.deeplearningbook.org/contents/prob.html">Goodfellow, Bengio and Courville, Deep Learning, section 3.13</a> <small>Entropy, cross-entropy and KL as deep learning uses them.</small></li>
+<li><a href="https://pytorch.org/docs/stable/generated/torch.nn.KLDivLoss.html">PyTorch: KLDivLoss</a> <small>KL divergence as a training loss, used in distillation and RLHF.</small></li>
+</ol>
+</section>

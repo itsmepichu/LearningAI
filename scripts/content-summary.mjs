@@ -118,8 +118,19 @@ for (const [id, e] of Object.entries(glossary)) {
   if (!e.term || !e.def) err(`glossary ${id}`, 'needs term and def')
   if (!topicIds.has(e.topic)) err(`glossary ${id}`, `unknown topic ${e.topic}`)
 }
-const snippetSrc = readFileSync(join(process.cwd(), 'src', 'widgets', 'py-snippet', 'snippets.ts'), 'utf8')
-const SNIPPET_IDS = new Set([...snippetSrc.slice(snippetSrc.indexOf('export const SNIPPETS')).matchAll(/^  ([a-z][\w-]*): \{$/gm)].map((m) => m[1]))
+// The snippet ids come from the module itself; a Node without TypeScript support falls back to reading the sources.
+const SNIPPET_IDS = await import('../src/widgets/py-snippet/snippets.ts').then(
+  (m) => new Set(m.SNIPPET_IDS),
+  () => {
+    const dir = join(process.cwd(), 'src', 'widgets', 'py-snippet')
+    const ids = new Set()
+    for (const f of readdirSync(dir).filter((x) => /^c\d+\.ts$/.test(x))) {
+      const src = readFileSync(join(dir, f), 'utf8')
+      for (const m of src.slice(src.indexOf('export const C')).matchAll(/^  ['"]?([a-z][\w-]*)['"]?: \{$/gm)) ids.add(m[1])
+    }
+    return ids
+  },
+)
 const unescape = (t) => t.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
 const structure = { topics: 0, math: 0, glossaryLinks: 0 }
 for (const c of manifest.chapters) {

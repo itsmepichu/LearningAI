@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c1-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Pick the simplest tool that does the job. You would not hire a novelist to add up a bill, and you would not use a calculator to write a thank-you letter. Rules and code are the calculator: exact, free and easy to check. An LLM is the novelist: great with messy language, but slower, more expensive and sometimes wrong.</p>
+<p>Most good systems mix them: code for anything that must be exact, search to find the facts, and an LLM only for the parts that really need language.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c1-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>The most expensive mistake in enterprise AI is using an LLM where a simpler tool is more accurate, cheaper and easier to audit. Choose by asking what the task really is.</p>
 <div class="tw"><table>
 <tr><th>Approach</th><th>Fits when</th><th>Strengths</th><th>Weaknesses</th></tr>
@@ -9,4 +17,29 @@
 </table></div>
 <figure class="fig"><div class="stage"><div class="dtree" id="dt1"></div></div><figcaption><b>Interactive decision guide.</b> Answer the questions for a problem you are considering. The guide reflects the table above; real decisions also weigh data access, risk and team skills.</figcaption></figure>
 <div class="box example"><h5>Example: an insurance claims intake</h5><p>"Is the policy active on the incident date?" is a database query and a date comparison: rules. "Which clause covers water damage?" is search. "Is this claim likely fraudulent?" is traditional ML on claim history. "Turn the customer's long email into the structured claim form" is an LLM job, with schema validation (7.4) and rules checking the extracted amounts. One product, four techniques.</p></div>
+</section>
+
+<section class="tp tp-math" id="c1-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The same task, a million requests a month</b> (illustrative prices). An LLM call with 1,500 tokens in and 200 out, at $1 and $4 per million tokens, costs 1,500 × 1 ÷ 1,000,000 + 200 × 4 ÷ 1,000,000 = $0.0023. A million calls is $2,300 a month, and each takes about a second and a half.</p>
+<p>A rule that does the same job runs in about a millisecond and costs almost nothing. If rules can answer 70% of requests and only 30% go to the LLM, the LLM bill falls to 30% of $2,300 = $690, and 7 in 10 users get an instant, exact answer.</p>
+<p><b>Accuracy is a cost too.</b> If an LLM is right 97% of the time on a task a rule gets 100% right, then on a million requests that is 30,000 wrong answers a month to find, explain and fix.</p>
+</section>
+
+<section class="tp tp-code" id="c1-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares the monthly cost and the wait of rules, search, traditional ML and an LLM for a million requests, then a combination where rules answer first. Change <code>SHARE_FOR_LLM</code>, the token counts or the prices and run it again.</p>
+<figure class="fig live" id="snip-tool-choice"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tool-choice"}'></div></div>
+<figcaption><b>What each approach costs, in real Python.</b> Every price and wait here is illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c1-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://developers.google.com/machine-learning/guides/rules-of-ml">Google: Rules of Machine Learning</a> <small>Rule 1: do not be afraid to launch a product without machine learning.</small></li>
+<li><a href="https://proceedings.neurips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html">Sculley et al. (2015), Hidden Technical Debt in Machine Learning Systems</a> <small>The long-term cost of adding ML to a system.</small></li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a> <small>Start with the simplest solution and add LLM steps only when they are needed.</small></li>
+</ol>
+</section>
