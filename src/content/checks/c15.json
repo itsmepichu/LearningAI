@@ -5,14 +5,20 @@
     "id": "c15-1-m01",
     "q": "10 M registered users means you need…",
     "options": [
-     "10 M concurrent capacity",
-     "Unknown until you know active usage, peaks and task duration",
-     "1 M RPS",
-     "Nothing yet"
+     "10 M concurrent requests of capacity, one per user",
+     "Unknown until you know active use, peaks and task time",
+     "About 1 M requests per second at the busiest minute",
+     "Nothing yet, since users will arrive slowly at first"
     ],
     "answer": 1,
     "why": "Load comes from active users, peak behaviour and request cost, not registrations.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Few registered users are active at once.",
+     "",
+     "There is no basis for this without usage data.",
+     "Capacity needs planning before launch."
+    ]
    },
    {
     "id": "c15-1-m02",
@@ -25,7 +31,13 @@
     ],
     "answer": 2,
     "why": "Little's law: L = λW = 50 × 8 (an average, not a p99).",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "That divides 50 by 8 instead of multiplying.",
+     "That is the arrival rate, not the number in flight.",
+     "",
+     "That is ten times too many."
+    ]
    },
    {
     "id": "c15-1-m03",
@@ -50,37 +62,37 @@
     "id": "c15-1-m04",
     "q": "Little's law gives which number?",
     "options": [
-     "The p99 concurrency",
-     "The average number of requests in flight for a stable system",
-     "The peak burst",
-     "The number of users online"
+     "The p99 concurrency during bursts",
+     "The average in flight, for a stable system",
+     "The peak burst in a single minute",
+     "The number of users online at once"
     ],
     "answer": 1,
     "why": "Concurrency = arrival rate × time in system, an average; plan headroom above it.",
     "kind": "concept",
     "distractors": [
-     "It is an average, not a tail.",
+     "It gives an average, not a tail.",
      "",
-     "It does not model bursts.",
-     "Users are not requests."
+     "Bursts need a separate factor.",
+     "It counts requests in flight."
     ]
    },
    {
     "id": "c15-1-m05",
     "q": "A team puts p99 latency into Little's law. What is wrong?",
     "options": [
-     "It should use p50 arrival rate",
-     "It needs tokens, not seconds",
-     "Nothing",
-     "Little's law uses average time in system; p99 overstates it"
+     "It should use the p50 arrival rate instead",
+     "It needs tokens per request, not seconds",
+     "Nothing; p99 is the safer input to use",
+     "It uses average time in system; p99 overstates it"
     ],
     "answer": 3,
     "why": "Use the average time; handle tails with headroom.",
     "kind": "concept",
     "distractors": [
-     "Arrival rate is a rate, not a percentile.",
-     "Time in seconds is correct.",
-     "It misuses the formula.",
+     "The arrival rate is not the issue.",
+     "Time in system is in seconds.",
+     "It overstates the average.",
      ""
     ]
    },
@@ -126,19 +138,19 @@
     "id": "c15-1-m08",
     "q": "Average RPS × a peak factor of (peak-hour share × 24 × burst) equals…",
     "options": [
-     "The concurrency",
-     "The same peak RPS as the hour-based formula",
-     "Double the peak RPS",
-     "The daily total"
+     "The average concurrency in flight",
+     "The same peak RPS as the hour formula",
+     "Double the hour-based peak RPS",
+     "The total requests for the day"
     ],
     "answer": 1,
     "why": "Both forms are equivalent; do not apply the peak factor twice.",
     "kind": "concept",
     "distractors": [
-     "Concurrency needs time in system.",
+     "Concurrency also needs time in system.",
      "",
-     "Applying peaks twice is a known mistake.",
-     "Not the daily total."
+     "The two forms agree.",
+     "That is a daily count."
     ]
    },
    {
@@ -166,17 +178,36 @@
     "options": [
      "3,500 tokens/s",
      "350,000 tokens/s",
-     "35,000 output tokens/s",
+     "35,000 tokens/s",
      "100 tokens/s"
     ],
     "answer": 2,
     "why": "100 × 350 = 35,000 tokens per second.",
     "kind": "calculation",
     "distractors": [
-     "Off by 10×.",
-     "Off by 10×.",
+     "That is 10 RPS, not 100.",
+     "That is ten times too many.",
      "",
-     "Ignores tokens per request."
+     "That ignores the 350 tokens each."
+    ]
+   },
+   {
+    "id": "c15-1-m11",
+    "q": "An AI feature has 200,000 daily active users making 6 requests a day. 12% of requests fall in the peak hour, with a burst factor of 2. What is the peak RPS?",
+    "options": [
+     "About 80",
+     "About 14",
+     "About 40",
+     "About 160"
+    ],
+    "answer": 0,
+    "why": "200,000 × 6 × 0.12 ÷ 3,600 = 40 per second in the peak hour, × 2 for the burst.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the daily average: 1.2M ÷ 86,400.",
+     "That leaves out the burst factor.",
+     "That applies the burst factor twice."
     ]
    }
   ],
@@ -191,7 +222,8 @@
      "peak share and burst",
      "Little's law",
      "tokens per second"
-    ]
+    ],
+    "followUp": "Which assumption in the chain usually moves the answer most?"
    },
    {
     "id": "c15-1-i02",
@@ -202,7 +234,8 @@
      "stable system",
      "not p99",
      "headroom"
-    ]
+    ],
+    "followUp": "How much headroom would you plan above it, and why?"
    },
    {
     "id": "c15-1-i03",
@@ -212,7 +245,8 @@
      "utilisation formula",
      "random arrivals",
      "p95 much higher than mean"
-    ]
+    ],
+    "followUp": "At what utilisation would you start to worry?"
    },
    {
     "id": "c15-1-i04",
@@ -235,7 +269,8 @@
      "concurrency from Little's law",
      "headroom",
      "per-dependency fan-out"
-    ]
+    ],
+    "followUp": "How does a tool call inside each request change the pool size?"
    },
    {
     "id": "c15-1-i06",
@@ -246,7 +281,8 @@
      "separate pools",
      "quotas",
      "pause rules"
-    ]
+    ],
+    "followUp": "What would you do if a backfill overruns into the peak?"
    },
    {
     "id": "c15-1-i07",
@@ -271,7 +307,8 @@
      "measured inputs",
      "versioning",
      "sensitivity"
-    ]
+    ],
+    "followUp": "How do you keep its inputs current?"
    }
   ]
  },
@@ -288,24 +325,30 @@
     ],
     "answer": 2,
     "why": "(0.004 + 0.38 × 4) / 0.62 ≈ $2.46.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "That is the cost per attempt divided by the success rate, ignoring human cost.",
+     "That leaves out most of the human cost.",
+     "",
+     "That is the human cost of one failure alone."
+    ]
    },
    {
     "id": "c15-9-m02",
     "q": "Why is cost per request misleading?",
     "options": [
-     "Requests are free",
-     "It always overstates cost",
-     "It is too hard to compute",
-     "Retries, failed runs, abandoned chats and escalations cost money without value"
+     "Requests are free with most providers, so it reads zero",
+     "It always overstates the real cost of serving users",
+     "It is too hard to compute for teams in practice",
+     "Retries, failures and escalations cost money without value"
     ],
     "answer": 3,
     "why": "Cost per successful task ties cost to value.",
     "kind": "concept",
     "distractors": [
-     "Not true.",
-     "It usually understates.",
-     "It is easy; that is the trap.",
+     "They are not.",
+     "It understates it.",
+     "It is easy; it is just misleading.",
      ""
     ]
    },
@@ -375,74 +418,74 @@
     "q": "Spend rose 40% with flat traffic. What helped find the cause?",
     "options": [
      "Cost attribution by feature and tenant",
-     "Ignoring it",
-     "Raising budgets",
-     "Switching providers"
+     "Ignoring it until traffic grows",
+     "Raising every team's budget",
+     "Switching to another provider"
     ],
     "answer": 0,
     "why": "One tenant called summarise on every page view (17.5).",
     "kind": "scenario",
     "distractors": [
      "",
-     "Not a fix.",
-     "Hides the cause.",
-     "Does not find it."
+     "The cost was already real.",
+     "That hides the cause.",
+     "The cause was one tenant's usage."
     ]
    },
    {
     "id": "c15-9-m07",
     "q": "At what budget levels does the chapter suggest alerts?",
     "options": [
-     "50%, 80% and 100%",
-     "Never",
-     "Only at 100%",
-     "Every 1%"
+     "At 50%, 80% and 100%",
+     "Never; budgets should stop spend silently",
+     "Only at 100%, when the limit is hit",
+     "At every single percent of spend"
     ],
     "answer": 0,
     "why": "At the limit, degrade or block per contract.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unsafe.",
-     "Too late.",
-     "Too noisy."
+     "Teams need warning before limits bite.",
+     "That is too late to act.",
+     "Far too noisy."
     ]
    },
    {
     "id": "c15-9-m08",
     "q": "What should capacity forecasting add beyond growth trends?",
     "options": [
-     "Random noise",
-     "Known events: launches, large customers, seasonal peaks",
-     "Nothing",
-     "Last week only"
+     "Random noise to stress-test the plan",
+     "Known events: launches, big customers, seasons",
+     "Nothing beyond the long-run growth trend",
+     "Last week's traffic, repeated each week"
     ],
     "answer": 1,
     "why": "Order GPUs or raise quotas with lead time.",
     "kind": "concept",
     "distractors": [
-     "Not useful.",
+     "Noise is not a forecast input.",
      "",
-     "Misses events.",
-     "Too short."
+     "Known events cause step changes.",
+     "One week misses seasons and launches."
     ]
    },
    {
     "id": "c15-9-m09",
     "q": "Where are budgets enforced?",
     "options": [
-     "Only in the prompt",
-     "Only per provider",
-     "Only per month",
-     "Per request, task, user/tenant and feature"
+     "Only in the system prompt of each app",
+     "Only per model provider, on its invoice",
+     "Only once, at the end of each month",
+     "Per request, task, user, tenant, feature"
     ],
     "answer": 3,
     "why": "Layered limits catch runaway use early.",
     "kind": "concept",
     "distractors": [
-     "Prompts do not enforce.",
-     "Too coarse.",
-     "Too coarse.",
+     "Prompts do not enforce budgets.",
+     "Tenants and features need limits too.",
+     "Too late to act.",
      ""
     ]
    },
@@ -450,19 +493,38 @@
     "id": "c15-9-m10",
     "q": "A cheaper model has a lower success rate. Can it cost more per success?",
     "options": [
-     "Only if tokens are free",
-     "No, never",
-     "Only for agents",
-     "Yes, once failures and escalations are counted"
+     "Only if its tokens are free",
+     "No, never, since it is cheaper",
+     "Only for agent tasks, not chat",
+     "Yes, once failures and escalations count"
     ],
     "answer": 3,
     "why": "That is the point of the metric.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "It can.",
-     "Any task.",
+     "Free tokens do not remove human cost.",
+     "Failures add cost per success.",
+     "It applies to any task.",
      ""
+    ]
+   },
+   {
+    "id": "c15-9-m11",
+    "q": "Option B costs $0.02 per attempt and succeeds 90% of the time; each failure costs $4 of human time. What is its cost per successful task?",
+    "options": [
+     "About $0.47",
+     "About $0.022",
+     "About $0.42",
+     "About $4.02"
+    ],
+    "answer": 0,
+    "why": "(0.02 + 0.10 × 4) ÷ 0.90 ≈ $0.47.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is 0.02 ÷ 0.90, ignoring the human cost of failures.",
+     "That forgets to divide by the success rate.",
+     "That adds a whole failure to every task."
     ]
    }
   ],
@@ -476,7 +538,8 @@
      "successful tasks",
      "includes human cost",
      "ties to value"
-    ]
+    ],
+    "followUp": "Work it out for $0.01 per attempt, 80% success and $3 failures."
    },
    {
     "id": "c15-9-i02",
@@ -488,7 +551,8 @@
      "events",
      "measured capacity",
      "lead time"
-    ]
+    ],
+    "followUp": "What lead time do GPUs or quota increases need?"
    },
    {
     "id": "c15-9-i03",
@@ -500,7 +564,8 @@
      "per tenant",
      "per feature",
      "alerts"
-    ]
+    ],
+    "followUp": "Which limit would you enforce first?"
    },
    {
     "id": "c15-9-i04",
@@ -523,7 +588,8 @@
      "human cost",
      "quality",
      "break-even"
-    ]
+    ],
+    "followUp": "At what human cost per failure does the decision flip?"
    },
    {
     "id": "c15-9-i06",
@@ -534,7 +600,8 @@
      "degrade or block",
      "notify",
      "audit"
-    ]
+    ],
+    "followUp": "Who decides between degrading and blocking?"
    },
    {
     "id": "c15-9-i07",
@@ -559,7 +626,8 @@
      "alerts",
      "degradation",
      "reporting"
-    ]
+    ],
+    "followUp": "How do you attribute shared costs such as retrieval?"
    }
   ]
  },
@@ -569,19 +637,19 @@
     "id": "c15-2-m01",
     "q": "What is the difference between an SLI and an SLO?",
     "options": [
-     "An SLO is a contract with customers",
-     "They are the same",
-     "An SLI is a measured quantity; an SLO is a target for it over a window",
-     "An SLI is a target"
+     "An SLO is the contract signed with customers",
+     "They are the same measurement, under two names",
+     "An SLI is a measure; an SLO is its target over a window",
+     "An SLI is the target the service must reach"
     ],
     "answer": 2,
     "why": "SLA is the contractual promise, usually looser.",
     "kind": "concept",
     "distractors": [
      "That is an SLA.",
-     "They differ.",
+     "One measures; the other is a target.",
      "",
-     "Reversed."
+     "The SLI is the measurement."
     ]
    },
    {
@@ -608,55 +676,55 @@
     "q": "Each extra “nine” in an SLO changes the error budget how?",
     "options": [
      "Cuts it tenfold",
-     "Halves it",
-     "No change",
-     "Doubles it"
+     "Halves it each time",
+     "Leaves it unchanged",
+     "Doubles the budget"
     ],
     "answer": 0,
     "why": "99.9% → 0.1% budget; 99.99% → 0.01%.",
     "kind": "concept",
     "distractors": [
      "",
-     "Tenfold, not half.",
-     "It changes.",
-     "Reversed."
+     "Each nine divides the allowed failure by ten, not two.",
+     "Every nine changes the budget.",
+     "A higher SLO shrinks the budget."
     ]
    },
    {
     "id": "c15-2-m04",
     "q": "Why is an SLA usually looser than the internal SLO?",
     "options": [
-     "SLAs are not measured",
-     "Because SLOs are optional",
-     "So the team gets warned and can act before breaching the contract",
-     "Customers prefer worse service"
+     "SLAs are not measured by anyone in practice",
+     "Because internal SLOs are optional for teams",
+     "So the team is warned before breaching the contract",
+     "Customers prefer a slightly worse service"
     ],
     "answer": 2,
     "why": "The gap is a safety margin.",
     "kind": "concept",
     "distractors": [
-     "SLAs are measured.",
-     "SLOs guide operations.",
+     "They are measured, often by customers.",
+     "SLOs drive operations.",
      "",
-     "Not the reason."
+     "The gap gives a safety margin."
     ]
    },
    {
     "id": "c15-2-m05",
     "q": "Availability stayed at 99.95% while groundedness fell from 96% to 81% for three days. What would have caught it?",
     "options": [
-     "A stricter availability SLO",
-     "A cost SLO",
-     "More replicas",
+     "A stricter availability SLO, such as 99.99%",
+     "A cost SLO per resolved conversation",
+     "More replicas of the answer service",
      "A daily sampled-quality SLO with an alert"
     ],
     "answer": 3,
     "why": "Quality needs its own SLO (17.4).",
     "kind": "scenario",
     "distractors": [
-     "Availability was fine.",
-     "Cost was not the issue.",
-     "Capacity was not the issue.",
+     "Availability never dropped.",
+     "Cost did not change.",
+     "Capacity was not the problem.",
      ""
     ]
    },
@@ -664,56 +732,56 @@
     "id": "c15-2-m06",
     "q": "What happens when the error budget is spent fast?",
     "options": [
-     "Alerts fire and risky releases are frozen",
-     "Users are charged",
-     "The SLO is raised",
-     "Nothing"
+     "Alerts fire; risky releases freeze",
+     "Users are charged for the failures",
+     "The SLO target is raised to compensate",
+     "Nothing happens until the month ends"
     ],
     "answer": 0,
     "why": "Budgets guide release decisions (17.8).",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "Not how it works.",
-     "That is what budgets prevent."
+     "Budgets are internal.",
+     "That makes it worse.",
+     "The point is to act early."
     ]
    },
    {
     "id": "c15-2-m07",
     "q": "Which is a freshness SLI for RAG?",
     "options": [
-     "Cost per task",
-     "Groundedness",
+     "Cost per successful task",
+     "Groundedness of answers",
      "Edit-to-searchable lag",
-     "TTFT"
+     "Time to first token"
     ],
     "answer": 2,
     "why": "e.g. p99 ≤ 10 minutes.",
     "kind": "concept",
     "distractors": [
-     "Cost.",
-     "Quality.",
+     "That is a cost SLI.",
+     "That is a quality SLI.",
      "",
-     "Latency."
+     "That is a latency SLI."
     ]
    },
    {
     "id": "c15-2-m08",
     "q": "A sampled judge score is…",
     "options": [
-     "An availability SLI",
-     "A contract",
-     "A complete measurement",
-     "An estimate from a sample, not a complete measurement of all answers"
+     "A measure of the service's availability",
+     "A contract signed with each customer",
+     "A complete measure of every answer given",
+     "An estimate from a sample, not all answers"
     ],
     "answer": 3,
     "why": "State the sample and its limits.",
     "kind": "concept",
     "distractors": [
-     "It is a quality SLI.",
-     "It is a measurement.",
-     "It covers only the sample.",
+     "It measures quality.",
+     "It is an internal measure.",
+     "It covers a sample.",
      ""
     ]
    },
@@ -721,18 +789,18 @@
     "id": "c15-2-m09",
     "q": "A provider outage lasts 1 hour in a 30-day month. Roughly what share of the month is that?",
     "options": [
-     "About 1.4%",
-     "About 14%",
-     "About 0.014%",
-     "About 0.14%, more than a 99.9% budget allows"
+     "About 1.4%, far over any budget",
+     "About 14% of the month",
+     "About 0.014%, well inside 99.9%",
+     "About 0.14%, over a 99.9% budget"
     ],
     "answer": 3,
     "why": "1 / 720 hours ≈ 0.14% > 0.1%.",
     "kind": "calculation",
     "distractors": [
-     "Off by 10×.",
-     "Off by 100×.",
-     "Off by 10×.",
+     "That is ten times too much.",
+     "That is a hundred times too much.",
+     "That is ten times too little.",
      ""
     ]
    },
@@ -740,19 +808,38 @@
     "id": "c15-2-m10",
     "q": "Which is a cost SLO from the chapter?",
     "options": [
-     "p95 TTFT ≤ 1.5 s",
-     "99.9% availability",
-     "Groundedness ≥ 95%",
-     "≤ $0.012 per resolved conversation (monthly)"
+     "p95 TTFT ≤ 1.5 seconds",
+     "99.9% availability, monthly",
+     "Groundedness ≥ 95% daily",
+     "≤ $0.012 per resolved chat"
     ],
     "answer": 3,
     "why": "Cost per successful task belongs in the SLO set.",
     "kind": "concept",
     "distractors": [
-     "Latency.",
-     "Availability.",
-     "Quality.",
+     "That is a latency SLO.",
+     "That is availability.",
+     "That is quality.",
      ""
+    ]
+   },
+   {
+    "id": "c15-2-m11",
+    "q": "A service handles 20 million requests a month with an availability SLO of 99.9%. How many failed requests does the error budget allow?",
+    "options": [
+     "20,000",
+     "2,000",
+     "200,000",
+     "999"
+    ],
+    "answer": 0,
+    "why": "0.1% of 20 million.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is a 99.99% SLO.",
+     "That is a 99% SLO.",
+     "That reads 99.9% as a count."
     ]
    }
   ],
@@ -766,7 +853,8 @@
      "target",
      "allowed failure",
      "contract"
-    ]
+    ],
+    "followUp": "Who owns each, and who sees it?"
    },
    {
     "id": "c15-2-i02",
@@ -777,7 +865,8 @@
      "quality",
      "cost",
      "freshness"
-    ]
+    ],
+    "followUp": "How would you measure quality without judging every answer?"
    },
    {
     "id": "c15-2-i03",
@@ -787,7 +876,8 @@
      "budget remaining",
      "freeze risky changes",
      "burn-rate alerts"
-    ]
+    ],
+    "followUp": "What is a burn-rate alert, and why not a simple threshold?"
    },
    {
     "id": "c15-2-i04",
@@ -810,7 +900,8 @@
      "dependency availability",
      "cost of nines",
      "provider outages"
-    ]
+    ],
+    "followUp": "Your model provider offers 99.9%. Can you promise 99.95%?"
    },
    {
     "id": "c15-2-i06",
@@ -821,7 +912,8 @@
      "end-to-end for non-streaming",
      "per-step for agents",
      "percentiles"
-    ]
+    ],
+    "followUp": "What do you measure for an agent that runs for minutes?"
    },
    {
     "id": "c15-2-i07",
@@ -845,7 +937,8 @@
      "burn-rate alerts",
      "quality sampling",
      "dashboards and owners"
-    ]
+    ],
+    "followUp": "How do you stop teams from setting SLOs nobody meets?"
    }
   ]
  },
@@ -855,29 +948,29 @@
     "id": "c15-3-m01",
     "q": "Why separate ingestion, retrieval, generation and agent workloads?",
     "options": [
-     "They have different resource profiles and latency needs, and one can starve the others on shared capacity",
-     "To use more servers",
-     "To simplify billing only",
-     "Because frameworks require it"
+     "Different profiles and latency needs; one can starve the others",
+     "To use more servers in total, so each one runs cooler",
+     "To simplify billing so each team pays for its own servers",
+     "Because agent frameworks require separate clusters"
     ],
     "answer": 0,
     "why": "e.g. a backfill saturating embedding GPUs used for query embeddings.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not the reason.",
-     "Billing is a side benefit.",
-     "Not required."
+     "Separation is about isolation, not size.",
+     "Billing is a side benefit at most.",
+     "No framework requires this."
     ]
    },
    {
     "id": "c15-3-m02",
     "q": "What latency does retrieval need, per the chapter's table?",
     "options": [
-     "About 1 second TTFT",
-     "Seconds to hours",
+     "About one second, for first token",
+     "Seconds to hours per task",
      "Tens of milliseconds",
-     "Minutes"
+     "Minutes, within a freshness SLO"
     ],
     "answer": 2,
     "why": "Many small, RAM-heavy reads.",
@@ -891,7 +984,7 @@
    },
    {
     "id": "c15-3-m03",
-    "q": "Which workload can use spot or preemptible capacity?",
+    "q": "To cut GPU costs, a team wants to run some work on cheaper spot capacity that can be reclaimed at short notice. Which workload suits it?",
     "options": [
      "Ingestion",
      "Interactive generation",
@@ -900,7 +993,7 @@
     ],
     "answer": 0,
     "why": "Ingestion is bulk and can retry; freshness SLOs are in minutes.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
      "Needs reliable capacity.",
@@ -912,18 +1005,18 @@
     "id": "c15-3-m04",
     "q": "In the Monday example, why did search latency stay at 40 ms during a 2M-document re-ingestion?",
     "options": [
-     "Search used a cache only",
-     "The backfill was cancelled",
-     "Employees did not search",
-     "Query and ingestion embeddings ran on separate pools"
+     "Search was served from a cache only",
+     "The backfill was cancelled for the day",
+     "Employees did not use search that morning",
+     "Query and ingestion embeddings used separate pools"
     ],
     "answer": 3,
     "why": "The backfill queue took longer, within its freshness budget.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
-     "It ran.",
-     "40,000 opened the assistant.",
+     "Search ran normally.",
+     "It ran, just more slowly.",
+     "40,000 employees opened the assistant.",
      ""
     ]
    },
@@ -931,10 +1024,10 @@
     "id": "c15-3-m05",
     "q": "What is the scaling unit for agent execution?",
     "options": [
-     "Workflow workers with a separate model quota",
-     "Queue consumers on spot",
-     "Model replicas only",
-     "Index replicas"
+     "Workflow workers, own model quota",
+     "Queue consumers on spot capacity",
+     "Model replicas and nothing else",
+     "Index replicas for each tenant"
     ],
     "answer": 0,
     "why": "Agents are long-running with durable state.",
@@ -942,7 +1035,7 @@
     "distractors": [
      "",
      "That is ingestion.",
-     "Agents also need workflow workers.",
+     "Agents need durable workers too.",
      "That is retrieval."
     ]
    },
@@ -950,37 +1043,37 @@
     "id": "c15-3-m06",
     "q": "Services are split but share one unbounded queue and a saturated database. What happens?",
     "options": [
-     "Nothing; they are separate",
+     "Nothing; the services are separate",
      "They can still starve each other",
-     "The queue limits load",
-     "Latency improves"
+     "The shared queue limits the load",
+     "Latency improves for every service"
     ],
     "answer": 1,
     "why": "Separation must cover shared dependencies too.",
     "kind": "scenario",
     "distractors": [
-     "Shared dependencies couple them.",
+     "Shared dependencies couple them again.",
      "",
-     "Unbounded queues do not limit.",
-     "Not likely."
+     "An unbounded queue limits nothing.",
+     "Contention makes it worse."
     ]
    },
    {
     "id": "c15-3-m07",
     "q": "Long agent runs hold all model slots during peak chat. What fixes it?",
     "options": [
-     "A longer chat timeout",
-     "More agents",
-     "Disable chat",
+     "A longer timeout for chat requests",
+     "More agents to finish runs faster",
+     "Disabling chat during agent runs",
      "A separate model quota for agents"
     ],
     "answer": 3,
     "why": "Agents draw from their own quota.",
     "kind": "concept",
     "distractors": [
-     "Users still wait.",
-     "Makes it worse.",
-     "Not acceptable.",
+     "Chat would just wait longer.",
+     "More agents take more slots.",
+     "That fails users.",
      ""
     ]
    },
@@ -988,10 +1081,10 @@
     "id": "c15-3-m08",
     "q": "Which resource dominates ingestion?",
     "options": [
-     "CPU for parsing and OCR, plus GPU for embedding",
-     "RAM for index reads",
-     "Streaming GPU decode",
-     "Durable workflow state"
+     "CPU to parse and OCR, GPU to embed",
+     "RAM for reading the index fast",
+     "Streaming GPU decode per token",
+     "Durable workflow state storage"
     ],
     "answer": 0,
     "why": "Bursty bulk work.",
@@ -1000,45 +1093,83 @@
      "",
      "That is retrieval.",
      "That is generation.",
-     "That is agents."
+     "That is agent execution."
     ]
    },
    {
     "id": "c15-3-m09",
     "q": "During a backfill, what should the assistant answer from?",
     "options": [
-     "Nothing until done",
-     "Half-written chunks",
-     "The last consistent index, with visible lag",
-     "A random index"
+     "Nothing until the backfill is done",
+     "Half-written chunks as they land",
+     "The last consistent index, showing its lag",
+     "A randomly chosen older index"
     ],
     "answer": 2,
     "why": "Readers use published versions.",
     "kind": "concept",
     "distractors": [
-     "Unnecessary outage.",
-     "Inconsistent.",
+     "Users still need answers.",
+     "Inconsistent results.",
      "",
-     "Not a design."
+     "Unpredictable answers."
     ]
    },
    {
     "id": "c15-3-m10",
     "q": "Which is the right isolation for query embeddings?",
     "options": [
-     "CPU only",
-     "No embeddings at query time",
-     "The same pool as ingestion",
-     "A small low-latency pool separate from bulk embedding"
+     "CPU only, to keep GPUs for ingestion",
+     "No embeddings at query time at all",
+     "The same pool as bulk ingestion",
+     "A small low-latency pool, separate from bulk"
     ],
     "answer": 3,
     "why": "Query embedding is on the critical path.",
     "kind": "concept",
     "distractors": [
-     "May be too slow.",
-     "Dense retrieval needs them.",
-     "That is the starvation risk.",
+     "Too slow for query latency.",
+     "Dense search needs a query vector.",
+     "Backfills would starve search.",
      ""
+    ]
+   },
+   {
+    "id": "c15-3-m11",
+    "q": "Search query embeddings share a GPU pool with a 2-million-document backfill, and search p95 jumps from 40 ms to 900 ms. What fixes it?",
+    "options": [
+     "Pause search until the backfill completes",
+     "Raise the backfill's priority so it finishes sooner",
+     "Run the backfill on the query pool at night only",
+     "Give query embeddings their own small low-latency pool"
+    ],
+    "answer": 3,
+    "why": "Latency-critical and bulk work need separate pools; the backfill then just takes longer.",
+    "kind": "scenario",
+    "distractors": [
+     "Users need search.",
+     "That makes search worse.",
+     "Backfills often cannot wait, and the pools still collide.",
+     ""
+    ]
+   },
+   {
+    "id": "c15-3-m12",
+    "q": "A tenant's 2 million documents must be re-ingested within 2 hours. Each ingestion worker processes 50 documents per second. How many workers are needed, at minimum?",
+    "options": [
+     "278",
+     "6",
+     "3",
+     "40"
+    ],
+    "answer": 1,
+    "why": "2,000,000 ÷ 7,200 s ≈ 278 documents per second, ÷ 50 ≈ 5.6, so 6 workers.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the documents per second needed, not the workers.",
+     "",
+     "That divides by 100 per worker.",
+     "That uses minutes instead of seconds somewhere."
     ]
    }
   ],
@@ -1053,7 +1184,8 @@
      "generation",
      "agents",
      "latency and scaling unit"
-    ]
+    ],
+    "followUp": "Which of these most often starves the others?"
    },
    {
     "id": "c15-3-i02",
@@ -1063,7 +1195,8 @@
      "latency vs throughput",
      "starvation",
      "freshness budget"
-    ]
+    ],
+    "followUp": "How do you size each pool?"
    },
    {
     "id": "c15-3-i03",
@@ -1074,7 +1207,8 @@
      "databases",
      "rate limits",
      "network"
-    ]
+    ],
+    "followUp": "Give an example where a shared database undid the split."
    },
    {
     "id": "c15-3-i04",
@@ -1097,7 +1231,8 @@
      "priority",
      "worker pools",
      "budgets"
-    ]
+    ],
+    "followUp": "How do you stop one agent run from using the whole quota?"
    },
    {
     "id": "c15-3-i06",
@@ -1107,7 +1242,8 @@
      "ingestion yes",
      "interactive no",
      "retry design"
-    ]
+    ],
+    "followUp": "What happens to an ingestion job when its spot node is reclaimed?"
    },
    {
     "id": "c15-3-i07",
@@ -1131,7 +1267,8 @@
      "queues",
      "durable state",
      "scaling signals"
-    ]
+    ],
+    "followUp": "Which pool would you scale first in a traffic surge?"
    }
   ]
  },
@@ -1141,37 +1278,37 @@
     "id": "c15-4-m01",
     "q": "Why make request handlers stateless?",
     "options": [
-     "To use less RAM",
-     "Because databases are slow",
-     "Any replica can serve any request, so replicas can be added or killed freely",
-     "To avoid logging"
+     "To use less RAM on each replica of the service",
+     "Because databases are too slow to hold any state",
+     "Any replica can serve any request, so scaling is free",
+     "To avoid writing any logs for each request"
     ],
     "answer": 2,
     "why": "State lives in databases.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
-     "Not the reason.",
+     "Memory is not the main reason.",
+     "State goes to a database.",
      "",
-     "Unrelated."
+     "Logging is unaffected."
     ]
    },
    {
     "id": "c15-4-m02",
     "q": "What belongs in a queue rather than in the user's request?",
     "options": [
-     "Streaming tokens",
-     "Authentication",
-     "Health checks",
-     "Work that need not finish within the request, such as document processing and long agent tasks"
+     "Streaming the generated tokens back to the user's browser",
+     "Authenticating the user before the request is accepted",
+     "Health checks that the load balancer sends every few seconds",
+     "Work that need not finish in the request, such as document processing"
     ],
     "answer": 3,
     "why": "Queues give retries, backpressure and smoothing.",
     "kind": "concept",
     "distractors": [
-     "Synchronous.",
-     "Synchronous.",
-     "Synchronous.",
+     "They belong to the request.",
+     "That must happen in the request.",
+     "Those are synchronous.",
      ""
     ]
    },
@@ -1179,24 +1316,24 @@
     "id": "c15-4-m03",
     "q": "Why is a semantic cache risky?",
     "options": [
-     "It needs GPUs",
-     "Similar is not identical, so it can return the wrong answer",
-     "It is slow",
-     "It cannot store text"
+     "It needs GPUs to run its lookups",
+     "Similar is not identical: wrong answers",
+     "It is too slow to be worth using",
+     "It cannot store long answers"
     ],
     "answer": 1,
     "why": "Restrict it to FAQ-style content and include tenant and permission scope.",
     "kind": "concept",
     "distractors": [
-     "Not required.",
+     "Not the risk.",
      "",
-     "It is fast.",
+     "Not the risk.",
      "It can."
     ]
    },
    {
     "id": "c15-4-m04",
-    "q": "Choose all the fields the exact-cache key should include.",
+    "q": "An exact response cache returned tenant A's answer to tenant B, and kept serving old answers after a prompt update. Which fields should its key include? Choose all that apply.",
     "options": [
      "Normalised prompt and prompt version",
      "Tenant",
@@ -1209,7 +1346,7 @@
      3
     ],
     "why": "Key = hash(tenant, normalised prompt, model, prompt version, ACL scope).",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
      "",
@@ -1221,10 +1358,10 @@
     "id": "c15-4-m05",
     "q": "“How do I cancel my subscription?” and “How do I cancel my colleague's subscription?” hit the same semantic-cache entry. What is the lesson?",
     "options": [
-     "Lower the similarity threshold",
-     "Similar queries can need different answers; restrict semantic caching and evaluate false hits",
-     "Use a bigger embedding model",
-     "Cache everything"
+     "Lower the similarity threshold so more queries match",
+     "Similar queries need different answers; restrict and test it",
+     "Use a bigger embedding model to tell them apart",
+     "Cache every answer, since misses are costly"
     ],
     "answer": 1,
     "why": "A tight threshold and FAQ-only scope reduce false hits.",
@@ -1232,27 +1369,27 @@
     "distractors": [
      "That makes false hits worse.",
      "",
-     "Bigger models still confuse these.",
-     "That multiplies the risk."
+     "Similar queries stay similar.",
+     "That spreads the risk."
     ]
    },
    {
     "id": "c15-4-m06",
     "q": "When should a task use asynchronous UX?",
     "options": [
-     "Over about 30 seconds: return a task ID, show progress, notify on completion",
-     "Never",
-     "Only for errors",
-     "Always"
+     "Over ~30 s: task ID, progress, notify",
+     "Never; hold the connection open",
+     "Only when an error has occurred",
+     "Always, even for one-second tasks"
     ],
     "answer": 0,
     "why": "Do not hold HTTP connections open for long tasks.",
     "kind": "concept",
     "distractors": [
      "",
-     "Long ones need it.",
-     "Unrelated.",
-     "Short requests can be synchronous."
+     "Connections time out.",
+     "Long tasks need it anyway.",
+     "Short tasks should answer directly."
     ]
    },
    {
@@ -1260,36 +1397,36 @@
     "q": "What must every cache have?",
     "options": [
      "Invalidation tied to document updates",
-     "A GPU",
-     "No keys",
-     "Unlimited TTL"
+     "A GPU to compute its lookups fast",
+     "No keys at all, to keep it simple",
+     "An unlimited time to live per entry"
     ],
     "answer": 0,
     "why": "Edits must purge stale answers (10.4).",
     "kind": "concept",
     "distractors": [
      "",
-     "Not required.",
-     "Keys are required.",
-     "Stale answers persist."
+     "Caches do not need GPUs.",
+     "Keys define what is cached.",
+     "Stale answers would persist."
     ]
    },
    {
     "id": "c15-4-m08",
     "q": "Which store fits transactional state such as conversations and tasks?",
     "options": [
-     "A vector store",
-     "A CPU cache",
-     "Object storage",
-     "Postgres (or another transactional database)"
+     "A vector store built for embeddings",
+     "An in-memory cache on each CPU host",
+     "Object storage for documents and files",
+     "A transactional database such as Postgres"
     ],
     "answer": 3,
     "why": "Choose stores per access pattern.",
     "kind": "concept",
     "distractors": [
-     "For embeddings.",
+     "That is for similarity search.",
      "Not durable.",
-     "For documents.",
+     "Not transactional.",
      ""
     ]
    },
@@ -1316,19 +1453,57 @@
     "id": "c15-4-m10",
     "q": "Never cache across…",
     "options": [
-     "Languages",
+     "Different user languages",
      "Tenants or permission scopes",
-     "Model versions only",
-     "Time zones"
+     "Model versions, nothing else",
+     "Different user time zones"
     ],
     "answer": 1,
     "why": "A cached answer can leak data to another tenant.",
     "kind": "concept",
     "distractors": [
-     "Not the rule.",
+     "Not a security boundary.",
      "",
-     "Model version belongs in the key too, but the rule is about tenants and scopes.",
-     "Not the rule."
+     "Versions belong in the key, but tenants matter most.",
+     "Not a security boundary."
+    ]
+   },
+   {
+    "id": "c15-4-m11",
+    "q": "A 3-minute report agent sits behind a synchronous HTTP endpoint, and the load balancer cuts requests at 60 seconds. What should the design be?",
+    "options": [
+     "Retry the request automatically after each timeout",
+     "Raise the load balancer's timeout to ten minutes",
+     "Return a task ID at once, show progress and notify on completion",
+     "Shorten the report until it fits in 60 seconds"
+    ],
+    "answer": 2,
+    "why": "Tasks over about 30 s need asynchronous UX, not a held-open request.",
+    "kind": "scenario",
+    "distractors": [
+     "Each retry restarts the agent.",
+     "Long-held connections still drop and waste resources.",
+     "",
+     "The task needs its full time."
+    ]
+   },
+   {
+    "id": "c15-4-m12",
+    "q": "A policy document was updated, but cached answers kept quoting the old version for a day. What was missing?",
+    "options": [
+     "A bigger cache so new answers fit in",
+     "Cache invalidation tied to document updates",
+     "A longer time to live for each entry",
+     "A semantic cache in front of the exact cache"
+    ],
+    "answer": 1,
+    "why": "Every cache needs invalidation when its source documents change.",
+    "kind": "scenario",
+    "distractors": [
+     "Size does not remove old entries.",
+     "",
+     "That keeps stale answers longer.",
+     "More caching does not remove stale entries."
     ]
    }
   ],
@@ -1341,7 +1516,8 @@
      "any replica serves",
      "database for conversations",
      "resume streams by ID"
-    ]
+    ],
+    "followUp": "How does a streaming response resume after a replica dies?"
    },
    {
     "id": "c15-4-i02",
@@ -1353,7 +1529,8 @@
      "retrieval",
      "prefix/KV",
      "invalidation"
-    ]
+    ],
+    "followUp": "Which cache layer would you add first?"
    },
    {
     "id": "c15-4-i03",
@@ -1364,7 +1541,8 @@
      "retries",
      "backpressure",
      "smoothing peaks"
-    ]
+    ],
+    "followUp": "What happens when a queue item fails repeatedly?"
    },
    {
     "id": "c15-4-i04",
@@ -1387,7 +1565,8 @@
      "TTL",
      "purge on edit",
      "versioned keys"
-    ]
+    ],
+    "followUp": "How do you know which answers depend on which documents?"
    },
    {
     "id": "c15-4-i06",
@@ -1398,7 +1577,8 @@
      "progress",
      "notification",
      "cancellation"
-    ]
+    ],
+    "followUp": "What happens if the user closes the tab?"
    },
    {
     "id": "c15-4-i07",
@@ -1423,7 +1603,8 @@
      "replication and backups",
      "queues",
      "retention"
-    ]
+    ],
+    "followUp": "Which store needs the strictest backups?"
    }
   ]
  },
@@ -1433,43 +1614,43 @@
     "id": "c15-5-m01",
     "q": "What is a model gateway?",
     "options": [
-     "A prompt template",
-     "A central service between applications and all model backends",
-     "A vector index",
-     "A GPU type"
+     "A shared prompt template that all the teams use",
+     "A central service between apps and all model backends",
+     "A vector index that several applications share",
+     "A type of GPU that is used for model serving"
     ],
     "answer": 1,
     "why": "One API with credentials, routing, quotas, retries, caching, metering and policy.",
     "kind": "concept",
     "distractors": [
-     "Not a prompt.",
+     "Templates are content, not a service.",
      "",
-     "Not an index.",
-     "Not hardware."
+     "Indexes are retrieval.",
+     "A gateway is software."
     ]
    },
    {
     "id": "c15-5-m02",
     "q": "What happens without a gateway?",
     "options": [
-     "Costs fall",
-     "Models get faster",
-     "Every team reimplements quotas and fallbacks, and nobody sees total spend",
-     "Nothing changes"
+     "Costs fall, because no one adds an extra service hop",
+     "Models get faster without the extra network hop in front",
+     "Every team rebuilds quotas and fallbacks; no one sees total spend",
+     "Nothing changes for the teams that already call providers"
     ],
     "answer": 2,
     "why": "A gateway centralises these concerns.",
     "kind": "concept",
     "distractors": [
-     "Usually the opposite.",
-     "Unrelated.",
+     "Duplicated work raises cost.",
+     "The hop is small; the gaps are large.",
      "",
-     "Duplication and blind spots."
+     "Each team rebuilds the same controls."
     ]
    },
    {
     "id": "c15-5-m03",
-    "q": "Choose all the routing criteria the chapter lists.",
+    "q": "A gateway must send classification to a cheap model, keep EU tenants in the EU, and avoid a provider that is degraded. Which routing criteria does it need? Choose all that apply.",
     "options": [
      "Tenant tier and region or residency",
      "Load and provider health",
@@ -1482,7 +1663,7 @@
      3
     ],
     "why": "Routing by identity of a person is not a criterion.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
      "",
@@ -1494,37 +1675,37 @@
     "id": "c15-5-m04",
     "q": "How are tenant quotas typically enforced?",
     "options": [
-     "With token buckets on requests, tokens, concurrency and spend",
-     "By DNS",
-     "By asking tenants to slow down",
-     "By the model"
+     "With token buckets on requests, tokens, concurrency, spend",
+     "By DNS records that point each tenant elsewhere",
+     "By asking tenants politely to slow down at peaks",
+     "By the model refusing requests once it is busy"
     ],
     "answer": 0,
     "why": "Token buckets allow short bursts within limits.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not the mechanism.",
-     "Not enforcement.",
-     "The model cannot enforce quotas."
+     "DNS cannot meter tokens.",
+     "Requests are not enforcement.",
+     "Models do not enforce quotas."
     ]
    },
    {
     "id": "c15-5-m05",
     "q": "Capacity 100 units/s. Tenants B–E send 15 each; tenant A normally sends 10 and bursts to 10×. What is total offered load?",
     "options": [
-     "100 units/s",
-     "70 units/s",
-     "250 units/s",
+     "100 units/s, exactly the capacity",
+     "70 units/s, as A's burst is capped",
+     "250 units/s, counting A's burst twice",
      "160 units/s, above capacity"
     ],
     "answer": 3,
     "why": "4 × 15 + 100 = 160 > 100, so FIFO waits grow for everyone.",
     "kind": "calculation",
     "distractors": [
-     "That is the capacity.",
-     "Leaves out A's burst.",
-     "Not the sum.",
+     "A's burst adds 90 units/s.",
+     "A is not capped without quotas.",
+     "A sends 100, not 190.",
      ""
     ]
    },
@@ -1532,67 +1713,67 @@
     "id": "c15-5-m06",
     "q": "With per-tenant quotas and fair queuing, what happens to tenant A's burst?",
     "options": [
-     "A gets priority",
-     "The service crashes",
-     "A is throttled to its share; others are unaffected",
-     "Everyone slows equally"
+     "A gets priority for its burst",
+     "The whole service crashes",
+     "A is throttled; others are unaffected",
+     "Everyone slows down equally"
     ],
     "answer": 2,
     "why": "Fair queuing contains noisy neighbours.",
     "kind": "concept",
     "distractors": [
-     "The opposite.",
-     "Not the result.",
+     "That hurts everyone else.",
+     "Quotas prevent that.",
      "",
-     "That is FIFO."
+     "Fair queuing protects the others."
     ]
    },
    {
     "id": "c15-5-m07",
     "q": "Why can automatic fallback to another model be risky?",
     "options": [
-     "Fallbacks are always slower",
-     "It is not allowed",
-     "The fallback may not support the same tools or schema behaviour",
-     "It uses more tokens"
+     "Fallbacks are always slower than the primary model",
+     "It is not allowed under most provider contracts",
+     "The fallback may handle tools and schemas differently",
+     "It uses many more tokens for each request it serves"
     ],
     "answer": 2,
     "why": "Evaluate fallbacks for compatibility.",
     "kind": "concept",
     "distractors": [
-     "Not always.",
+     "Not necessarily.",
      "It is allowed.",
      "",
-     "Not the main risk."
+     "Tokens are not the main risk."
     ]
    },
    {
     "id": "c15-5-m08",
     "q": "What is fairness when capacity is short?",
     "options": [
-     "Largest tenant first",
-     "Each tenant gets its fair share, e.g. weighted fair queuing by tier",
-     "Random",
-     "First come, first served"
+     "The largest tenant goes first, always",
+     "Each tenant gets a fair share, weighted by tier",
+     "A random tenant is picked each time",
+     "First come, first served for everyone"
     ],
     "answer": 1,
     "why": "FIFO lets one tenant's spike dominate.",
     "kind": "concept",
     "distractors": [
-     "Unfair to others.",
+     "That starves small tenants.",
      "",
-     "Unpredictable.",
-     "That lets bursts dominate."
+     "Random is not fair by design.",
+     "A burst would take everything."
     ]
    },
    {
     "id": "c15-5-m09",
     "q": "Why weight quotas by estimated context size?",
     "options": [
-     "A request with a huge context costs much more capacity than a short one",
-     "To simplify billing",
-     "Because tokens are free",
-     "To favour long prompts"
+     "A huge context costs far more capacity",
+     "To simplify billing for tenants",
+     "Because tokens are free to serve",
+     "To favour tenants with long prompts"
     ],
     "answer": 0,
     "why": "Request counts alone ignore cost differences.",
@@ -1600,7 +1781,7 @@
     "distractors": [
      "",
      "Not the reason.",
-     "Not true.",
+     "They are not.",
      "The opposite."
     ]
    },
@@ -1608,19 +1789,57 @@
     "id": "c15-5-m10",
     "q": "Why must the gateway record usage per tenant and feature?",
     "options": [
-     "To train models",
-     "To slow requests down",
+     "To train models on usage patterns",
+     "To slow requests down when busy",
      "Because providers require it",
-     "So total spend can be seen and attributed, and budgets enforced"
+     "So spend is visible and budgets enforced"
     ],
     "answer": 3,
     "why": "Without central metering, nobody can see total spend.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
+     "Not its purpose.",
      "Metering does not slow requests.",
-     "Not the reason.",
+     "Your own visibility is the reason.",
      ""
+    ]
+   },
+   {
+    "id": "c15-5-m11",
+    "q": "Capacity is 100 units/s. Tenants B–E send 15 units/s each. With per-tenant fair queuing, roughly how much can tenant A use while it bursts to 100 units/s?",
+    "options": [
+     "About 40 units/s, the capacity left after the others",
+     "About 20 units/s, an equal fifth of all capacity",
+     "About 100 units/s, the whole of its burst",
+     "About 10 units/s, its usual steady rate"
+    ],
+    "answer": 0,
+    "why": "B–E use 60 between them; fair queuing gives A the rest, so the others are unaffected.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Unused share is not wasted while others need less.",
+     "That would starve B–E.",
+     "Spare capacity can serve part of the burst."
+    ]
+   },
+   {
+    "id": "c15-5-m12",
+    "q": "During a capacity shortage, an enterprise-tier tenant and a free-tier bulk script both send many requests. How should the gateway share capacity?",
+    "options": [
+     "Weighted fair queuing by tier, within each tenant's quota",
+     "Largest tenant first, since it pays the most money",
+     "Randomly, so that no single tenant is favoured",
+     "First come, first served, whatever each tenant's tier"
+    ],
+    "answer": 0,
+    "why": "Fairness gives each tenant its share, weighted by tier, instead of first come, first served.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "That starves others completely.",
+     "Random is not fair by design.",
+     "The bulk script would take everything."
     ]
    }
   ],
@@ -1636,7 +1855,8 @@
      "quotas",
      "metering",
      "policy"
-    ]
+    ],
+    "followUp": "What would you build first if you had two weeks?"
    },
    {
     "id": "c15-5-i02",
@@ -1647,7 +1867,8 @@
      "quotas",
      "per-tenant queues",
      "fair queuing"
-    ]
+    ],
+    "followUp": "How do you show a tenant why it was throttled?"
    },
    {
     "id": "c15-5-i03",
@@ -1659,7 +1880,8 @@
      "load",
      "region",
      "health"
-    ]
+    ],
+    "followUp": "Which criterion overrides the others?"
    },
    {
     "id": "c15-5-i04",
@@ -1682,7 +1904,8 @@
      "quality suite",
      "latency",
      "game day"
-    ]
+    ],
+    "followUp": "How would you run a game day for the fallback?"
    },
    {
     "id": "c15-5-i06",
@@ -1693,7 +1916,8 @@
      "tokens and concurrency",
      "context weighting",
      "burst allowance"
-    ]
+    ],
+    "followUp": "How do you handle a tenant that needs a short burst above quota?"
    },
    {
     "id": "c15-5-i07",
@@ -1718,7 +1942,8 @@
      "routing and fallbacks",
      "quotas and budgets",
      "observability"
-    ]
+    ],
+    "followUp": "How do teams get a new model added to the gateway?"
    }
   ]
  },
@@ -1726,26 +1951,26 @@
   "mcq": [
    {
     "id": "c15-6-m01",
-    "q": "What is backpressure?",
+    "q": "During a provider slowdown, a gateway keeps accepting every request, and its queue grows to 40,000 items that mostly time out. What should it have done?",
     "options": [
-     "Propagating “slow down” upstream, e.g. bounded queues and 429 with Retry-After",
-     "Retrying faster",
-     "Compressing requests",
-     "Adding servers automatically"
+     "Push “slow down” upstream: bounded queues, 429 with Retry-After",
+     "Retried the slow requests faster and more often",
+     "Compressed the requests to save time on the network",
+     "Added servers and kept accepting all incoming work"
     ],
     "answer": 0,
     "why": "Do not accept work you cannot finish in time.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
      "That adds load.",
-     "Unrelated.",
-     "That is autoscaling."
+     "Size is not the problem.",
+     "The provider is the bottleneck."
     ]
    },
    {
     "id": "c15-6-m02",
-    "q": "What should be shed first under overload?",
+    "q": "A service is at twice its capacity. It serves paid chat, free-tier chat and overnight batch summaries. Which should it shed first?",
     "options": [
      "Paid interactive requests",
      "The newest requests regardless of priority",
@@ -1754,7 +1979,7 @@
     ],
     "answer": 3,
     "why": "Shed early and cheaply so the rest succeed.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Highest priority should be kept.",
      "Ignores priority.",
@@ -1766,17 +1991,17 @@
     "id": "c15-6-m03",
     "q": "What does a circuit breaker do after the error rate crosses its threshold?",
     "options": [
-     "Retries harder",
-     "Restarts the provider",
-     "Opens: calls fail fast or go to a fallback for a cool-down period",
-     "Disables logging"
+     "Retries harder against the failing provider to recover",
+     "Restarts the provider's service from the client side",
+     "Opens: calls fail fast or go to a fallback for a while",
+     "Disables logging to save time on each failed call"
     ],
     "answer": 2,
     "why": "Then half-open trial calls decide whether to close.",
     "kind": "concept",
     "distractors": [
-     "That piles onto a dying provider.",
-     "Not its role.",
+     "That adds load.",
+     "It cannot.",
      "",
      "Unrelated."
     ]
@@ -1785,36 +2010,36 @@
     "id": "c15-6-m04",
     "q": "In the half-open state, what happens?",
     "options": [
-     "All traffic goes through",
-     "The breaker is removed",
-     "A few trial calls go through; success closes the breaker, failure re-opens it",
-     "No traffic goes through"
+     "All traffic goes through again at full rate",
+     "The breaker is removed from the path for good",
+     "A few trial calls test it: success closes, failure re-opens",
+     "No traffic goes through at all, as when open"
     ],
     "answer": 2,
     "why": "Trial calls test recovery.",
     "kind": "concept",
     "distractors": [
-     "That is closed.",
-     "Not a state.",
+     "That risks a relapse.",
+     "It stays in place.",
      "",
-     "That is open."
+     "That is the open state."
     ]
    },
    {
     "id": "c15-6-m05",
     "q": "Why reject a request whose predicted wait exceeds its deadline?",
     "options": [
-     "To save logs",
-     "It is always malicious",
-     "To raise the SLO",
-     "It would time out anyway and waste GPU time"
+     "To save space in the request logs",
+     "Because late requests are always malicious",
+     "To raise the service's SLO target",
+     "It would time out anyway, wasting GPU time"
     ],
     "answer": 3,
     "why": "Deadline-aware shedding keeps capacity for requests that can succeed.",
     "kind": "concept",
     "distractors": [
      "Not the reason.",
-     "Not true.",
+     "Most are not.",
      "Unrelated.",
      ""
     ]
@@ -1823,19 +2048,19 @@
     "id": "c15-6-m06",
     "q": "Which is lower on the degradation ladder than “mid model, same retrieval”?",
     "options": [
-     "Mid model, 4 chunks, no reranker, shorter outputs",
-     "Two large models",
-     "Full service",
-     "Large model, 8 chunks + reranker"
+     "Mid model, 4 chunks, no reranker, shorter",
+     "Two large models in parallel",
+     "Full service with every feature",
+     "Large model, 8 chunks and a reranker"
     ],
     "answer": 0,
     "why": "L2 reduces retrieval and output after L1.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not on the ladder.",
-     "That is L0.",
-     "That is L0."
+     "That is more capability.",
+     "That is the top level.",
+     "That is the top level."
     ]
    },
    {
@@ -1843,37 +2068,37 @@
     "q": "What should be done with each degradation level before an incident?",
     "options": [
      "Nothing; decide during the incident",
-     "Delete it",
-     "Evaluate its quality offline and define when to switch",
-     "Hide it from users"
+     "Delete it once the plan is written",
+     "Evaluate its quality; define when to switch",
+     "Hide it from the users entirely"
     ],
     "answer": 2,
     "why": "Levels are defined in advance and switched automatically.",
     "kind": "concept",
     "distractors": [
-     "Too late.",
-     "Then there is no ladder.",
+     "Too late to evaluate quality.",
+     "Levels must exist to be used.",
      "",
-     "Users should know."
+     "Users should know about degradation."
     ]
    },
    {
     "id": "c15-6-m08",
     "q": "Load is 1.6× capacity with no shedding. What happens?",
     "options": [
-     "The queue grows; many requests wait past their deadline and their work is wasted",
-     "All requests succeed",
-     "The service gets faster",
-     "Only batch requests fail"
+     "The queue grows; many miss deadlines and work is wasted",
+     "All requests succeed, just more slowly than usual",
+     "The service gets faster as its caches warm up",
+     "Only batch requests fail, by design of the queue"
     ],
     "answer": 0,
     "why": "Unbounded queues trade rejections for long delays.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Capacity is exceeded.",
-     "Not true.",
-     "Without priority, everyone suffers."
+     "Many miss their deadlines.",
+     "Overload does not speed it up.",
+     "Without shedding, all requests suffer."
     ]
    },
    {
@@ -1903,8 +2128,8 @@
     "id": "c15-6-m10",
     "q": "Shedding by predicted wait vs priority shedding: what does priority add in the chapter's figure?",
     "options": [
-     "It removes deadlines",
-     "It always admits paid-tier requests first",
+     "It removes deadlines from requests",
+     "Paid-tier requests are admitted first",
      "It rejects paid requests first",
      "It accepts every request"
     ],
@@ -1912,10 +2137,48 @@
     "why": "Paid tier (30% of traffic) is admitted before others.",
     "kind": "concept",
     "distractors": [
-     "Deadlines remain.",
+     "Deadlines still apply.",
      "",
      "The opposite.",
-     "Still sheds."
+     "That is no shedding."
+    ]
+   },
+   {
+    "id": "c15-6-m11",
+    "q": "A provider starts timing out after 30 s on every call. Threads pile up waiting, and the whole assistant hangs. Which control prevents this?",
+    "options": [
+     "A circuit breaker that opens and fails fast to a fallback",
+     "More replicas of the assistant service, started automatically",
+     "More retries for each call that times out, with backoff",
+     "Longer timeouts so that slow calls eventually finish"
+    ],
+    "answer": 0,
+    "why": "After the error threshold, calls fail fast instead of waiting on a dying provider.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "New replicas hang the same way.",
+     "Retries add load to a failing provider.",
+     "Threads pile up even longer."
+    ]
+   },
+   {
+    "id": "c15-6-m12",
+    "q": "A queue holds 600 requests and the service completes 20 per second. A new request arrives with a 10-second deadline. What should deadline-aware shedding do?",
+    "options": [
+     "Hold it until the queue empties, then run it",
+     "Admit it, since 600 ÷ 20 is only about 3 s",
+     "Reject or degrade it now: the predicted wait is about 30 s",
+     "Admit it, since the queue is shorter than 1,000"
+    ],
+    "answer": 2,
+    "why": "600 ÷ 20 = 30 s, longer than the 10 s deadline, so the work would be wasted.",
+    "kind": "calculation",
+    "distractors": [
+     "It would miss its deadline anyway.",
+     "That misreads the arithmetic.",
+     "",
+     "The rule compares wait with the deadline, not queue size."
     ]
    }
   ],
@@ -1928,7 +2191,8 @@
      "slow down upstream",
      "reject early by priority",
      "fail fast and fallback"
-    ]
+    ],
+    "followUp": "Which would you add first to a service with none of them?"
    },
    {
     "id": "c15-6-i02",
@@ -1939,7 +2203,8 @@
      "evaluated offline",
      "automatic switching",
      "clear final message"
-    ]
+    ],
+    "followUp": "How do you switch levels automatically, and back?"
    },
    {
     "id": "c15-6-i03",
@@ -1949,7 +2214,8 @@
      "long delays",
      "wasted work",
      "cascading failure"
-    ]
+    ],
+    "followUp": "What bound would you put on a queue?"
    },
    {
     "id": "c15-6-i04",
@@ -1972,7 +2238,8 @@
      "client deadline",
      "priority classes",
      "fast rejection"
-    ]
+    ],
+    "followUp": "How do you predict the wait for a new request?"
    },
    {
     "id": "c15-6-i06",
@@ -1983,7 +2250,8 @@
      "quality evaluation",
      "cost saved",
      "regulatory limits"
-    ]
+    ],
+    "followUp": "Which level would you never go below for paid tenants?"
    },
    {
     "id": "c15-6-i07",
@@ -2008,7 +2276,8 @@
      "shedding",
      "ladder",
      "monitoring"
-    ]
+    ],
+    "followUp": "How do you test it before an incident?"
    }
   ]
  },
@@ -2018,29 +2287,29 @@
     "id": "c15-7-m01",
     "q": "What is the difference between active-active and active-passive?",
     "options": [
-     "Active-passive has more regions",
-     "Active-active never fails over",
-     "Active-active: both regions serve traffic; active-passive: a standby takes over on failure",
-     "They are the same"
+     "Active-passive has more regions than active-active does",
+     "Active-active never needs to fail over when a region dies",
+     "Active-active: both serve; active-passive: a standby takes over",
+     "They are the same design, just with two different names"
     ],
     "answer": 2,
     "why": "Active-active is more complex for data consistency.",
     "kind": "concept",
     "distractors": [
-     "Not the distinction.",
-     "Traffic shifts between active regions.",
+     "Region count does not define them.",
+     "It still shifts traffic on failure.",
      "",
-     "They differ."
+     "They differ in who serves traffic."
     ]
    },
    {
     "id": "c15-7-m02",
     "q": "What is RPO?",
     "options": [
-     "How much data you may lose, e.g. 5 minutes",
-     "How fast you must recover",
-     "Requests per operation",
-     "A replication protocol"
+     "How much data you may lose",
+     "How fast you must recover service",
+     "Requests per operation served",
+     "A replication protocol between regions"
     ],
     "answer": 0,
     "why": "RTO is recovery time.",
@@ -2048,18 +2317,18 @@
     "distractors": [
      "",
      "That is RTO.",
-     "Not the meaning.",
-     "Not an acronym for that."
+     "Not a recovery measure.",
+     "It is an objective."
     ]
    },
    {
     "id": "c15-7-m03",
     "q": "Why is a replica not a backup?",
     "options": [
-     "Replicas copy corruption and accidental deletes instantly",
-     "Replicas cannot be read",
-     "Backups are always faster",
-     "Replicas are slower"
+     "Replicas copy corruption and deletes instantly",
+     "Replicas cannot be read during an outage",
+     "Backups are always faster to restore",
+     "Replicas are slower than the primary"
     ],
     "answer": 0,
     "why": "Test restores on a schedule.",
@@ -2067,7 +2336,7 @@
     "distractors": [
      "",
      "They can be read.",
-     "Not true.",
+     "Not the reason.",
      "Not the reason."
     ]
    },
@@ -2076,61 +2345,61 @@
     "q": "EU tenants' data must stay in the EU. Where can they fail over?",
     "options": [
      "Only to EU capacity",
-     "Any region",
-     "Nowhere",
-     "The US only"
+     "Any region, nearest first",
+     "Nowhere; they wait it out",
+     "The US only, as the backup"
     ],
     "answer": 0,
     "why": "Residency constrains failover targets.",
     "kind": "concept",
     "distractors": [
      "",
-     "Breaks residency.",
-     "EU capacity is allowed.",
-     "Breaks residency."
+     "That breaks residency.",
+     "EU capacity can take over.",
+     "That breaks residency."
     ]
    },
    {
     "id": "c15-7-m05",
     "q": "Why replicate or snapshot vector indexes?",
     "options": [
-     "Regulations require it",
-     "Rebuilding from chunks and embeddings takes hours at scale",
-     "They are small",
+     "Regulations require snapshots",
+     "Rebuilding takes hours at scale",
+     "They are small and cheap to keep",
      "They cannot be rebuilt at all"
     ],
     "answer": 1,
     "why": "Rebuilding is possible but slow.",
     "kind": "concept",
     "distractors": [
-     "Not the reason given.",
-     "",
      "Not the reason.",
-     "They can be rebuilt."
+     "",
+     "They are large.",
+     "They can, slowly."
     ]
    },
    {
     "id": "c15-7-m06",
     "q": "In the game-day example, what did the first run find?",
     "options": [
-     "The database was lost",
-     "Everything worked",
-     "The primary provider was down",
-     "The fallback ignored the JSON schema in 4% of responses, and fallback quota was too small"
+     "The database was lost during the test and had to be restored",
+     "Everything worked exactly as planned on the first run",
+     "The primary provider was really down during the game day",
+     "The fallback ignored the schema in 4% of replies, and quota was short"
     ],
     "answer": 3,
     "why": "Both would have surfaced during a real outage.",
     "kind": "concept",
     "distractors": [
-     "Not reported.",
-     "Two issues were found.",
-     "It was a test.",
+     "It was not.",
+     "Two problems were found.",
+     "The test injected the failure.",
      ""
     ]
    },
    {
     "id": "c15-7-m07",
-    "q": "What must failback to the primary region include?",
+    "q": "After a regional outage, traffic moves back to the primary region while writes queued during the failover are still pending. What must failback include?",
     "options": [
      "Nothing; failback is automatic",
      "Deleting the secondary region",
@@ -2139,7 +2408,7 @@
     ],
     "answer": 2,
     "why": "Rehearse failback too.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "It must be rehearsed.",
      "Not needed.",
@@ -2151,29 +2420,29 @@
     "id": "c15-7-m08",
     "q": "Active-active read-only search across regions is fine. Why do business actions need care?",
     "options": [
-     "Reads are slower",
+     "Reads are slower across regions",
      "Search is not replicated",
-     "Writes need one execution owner to avoid duplicates across regions",
-     "Writes never fail"
+     "Writes need one owner to avoid duplicates",
+     "Writes never fail, so no care is needed"
     ],
     "answer": 2,
     "why": "Active-active does not give consistent business actions automatically.",
     "kind": "scenario",
     "distractors": [
-     "Not the issue.",
-     "Search is replicated.",
+     "Speed is not the issue.",
+     "It is.",
      "",
-     "They fail."
+     "Duplicates are the risk."
     ]
    },
    {
     "id": "c15-7-m09",
     "q": "How often should failover be tested?",
     "options": [
-     "Never",
-     "Once at launch",
-     "Only during real outages",
-     "Regularly; untested failover usually fails"
+     "Never, as the test itself is too risky",
+     "Once at launch, and never again after that",
+     "Only during real outages, when it matters",
+     "Regularly: untested failover usually fails"
     ],
     "answer": 3,
     "why": "Regular game days find problems early.",
@@ -2181,7 +2450,7 @@
     "distractors": [
      "Untested failover fails.",
      "Systems change.",
-     "Too late.",
+     "Too late to learn.",
      ""
     ]
    },
@@ -2189,19 +2458,57 @@
     "id": "c15-7-m10",
     "q": "What is RTO?",
     "options": [
-     "A token limit",
-     "How fast you must recover, e.g. 30 minutes",
+     "A token limit per request",
+     "How fast you must recover",
      "How much data you may lose",
-     "The number of regions"
+     "The number of regions in use"
     ],
     "answer": 1,
     "why": "RPO is the data-loss window.",
     "kind": "concept",
     "distractors": [
-     "Not the meaning.",
+     "Not a recovery measure.",
      "",
      "That is RPO.",
-     "Not the meaning."
+     "Not an objective."
+    ]
+   },
+   {
+    "id": "c15-7-m11",
+    "q": "A conversation store is backed up every 4 hours, with no other copy. Its RPO target is 1 hour. Is the target met?",
+    "options": [
+     "Yes, because backups exist",
+     "No, because an RPO needs backups every minute",
+     "Yes, because a restore takes under an hour",
+     "No: up to 4 hours of data could be lost"
+    ],
+    "answer": 3,
+    "why": "RPO is how much data you may lose; backups every 4 hours can lose up to 4 hours.",
+    "kind": "calculation",
+    "distractors": [
+     "Their interval sets the possible loss.",
+     "It needs them at least every hour.",
+     "That is RTO, not RPO.",
+     ""
+    ]
+   },
+   {
+    "id": "c15-7-m12",
+    "q": "The EU region fails. The nearest healthy region is in the US, but EU tenants' data must stay in the EU. Where should EU traffic go?",
+    "options": [
+     "To the US region, since an outage overrides data residency",
+     "Only to other EU capacity, or to the degradation ladder if none is left",
+     "Nowhere: EU tenants should simply wait for the region to return",
+     "To whichever region has the lowest latency for those users"
+    ],
+    "answer": 1,
+    "why": "Residency constrains failover targets as well as normal routing.",
+    "kind": "scenario",
+    "distractors": [
+     "Residency still applies during failover.",
+     "",
+     "Other EU capacity or degraded service can help.",
+     "Latency does not override residency."
     ]
    }
   ],
@@ -2214,7 +2521,8 @@
      "both serve vs standby",
      "consistency complexity",
      "failover speed"
-    ]
+    ],
+    "followUp": "Which would you choose for a first multi-region launch?"
    },
    {
     "id": "c15-7-i02",
@@ -2225,7 +2533,8 @@
      "recovery time",
      "per store",
      "cost"
-    ]
+    ],
+    "followUp": "Which component needs the tightest RPO?"
    },
    {
     "id": "c15-7-i03",
@@ -2236,7 +2545,8 @@
      "breakers",
      "ladder",
      "test failover"
-    ]
+    ],
+    "followUp": "How do you test the fallback provider's prompts?"
    },
    {
     "id": "c15-7-i04",
@@ -2259,7 +2569,8 @@
      "regional endpoints",
      "routing",
      "logs and backups too"
-    ]
+    ],
+    "followUp": "What about logs and backups for EU tenants?"
    },
    {
     "id": "c15-7-i06",
@@ -2270,7 +2581,8 @@
      "RTO measured",
      "data checks",
      "documented steps"
-    ]
+    ],
+    "followUp": "How often, and what counts as a pass?"
    },
    {
     "id": "c15-7-i07",
@@ -2294,7 +2606,8 @@
      "traffic share",
      "stop criteria",
      "findings tracked"
-    ]
+    ],
+    "followUp": "What stop criteria end a game day early?"
    }
   ]
  },
@@ -2302,7 +2615,7 @@
   "mcq": [
    {
     "id": "c15-8-m01",
-    "q": "Which test answers “where and how do we break, and does shedding work?”",
+    "q": "Before launch, a team wants to know at what load its service breaks and whether load shedding kicks in. Which test answers that?",
     "options": [
      "Unit test",
      "Load test",
@@ -2311,7 +2624,7 @@
     ],
     "answer": 2,
     "why": "Ramp beyond peak until SLOs fail.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Not a load test.",
      "Checks SLOs at expected peak.",
@@ -2342,18 +2655,18 @@
     "id": "c15-8-m03",
     "q": "Why do fixed 500-token prompts make a poor load test?",
     "options": [
-     "Fixed prompts cost more",
-     "Models reject fixed prompts",
-     "500 tokens is too long",
-     "Real lengths are heavy-tailed, so fixed prompts underestimate KV pressure and tail latency"
+     "Fixed prompts cost more to send than prompts of varied lengths",
+     "Models reject repeated fixed prompts as a form of abuse",
+     "500 tokens is too long for a test, so the model times out",
+     "Real lengths are heavy-tailed: fixed prompts miss KV pressure and tails"
     ],
     "answer": 3,
     "why": "Replay sampled production traces.",
     "kind": "concept",
     "distractors": [
-     "Not the issue.",
-     "Not true.",
-     "Not the issue.",
+     "Cost is not the issue.",
+     "They do not.",
+     "Length alone is not the problem.",
      ""
     ]
    },
@@ -2361,16 +2674,16 @@
     "id": "c15-8-m04",
     "q": "What is coordinated omission?",
     "options": [
-     "Dropping errors from reports",
-     "Two testers coordinating",
-     "Missing log lines",
-     "A closed-loop tester slows down with the service and under-reports latency"
+     "Dropping error responses from the final load-test report",
+     "Two testers coordinating their runs so they do not overlap",
+     "Missing log lines on the server while it is under load",
+     "A closed-loop tester slows with the service, hiding latency"
     ],
     "answer": 3,
     "why": "Use open-loop arrival rates.",
     "kind": "concept",
     "distractors": [
-     "Not the meaning.",
+     "That is a reporting bug.",
      "Not the meaning.",
      "Not the meaning.",
      ""
@@ -2380,19 +2693,19 @@
     "id": "c15-8-m05",
     "q": "What does a test against a mocked model validate?",
     "options": [
-     "Orchestration, queues and gateways, not model-serving capacity",
-     "Model-serving capacity",
-     "Nothing useful",
-     "Model quality"
+     "Orchestration, queues and gateways only",
+     "Model-serving capacity on the GPUs",
+     "Nothing useful, since the model is fake",
+     "The quality of the model's answers"
     ],
     "answer": 0,
     "why": "Real model capacity needs its own benchmark (14.7).",
     "kind": "concept",
     "distractors": [
      "",
-     "That needs a real benchmark.",
-     "It validates the rest of the system.",
-     "Not quality."
+     "The mock has no model.",
+     "It tests the orchestration.",
+     "Quality needs the real model."
     ]
    },
    {
@@ -2416,7 +2729,7 @@
    },
    {
     "id": "c15-8-m07",
-    "q": "Which test jumps from 20% to 150% of capacity in one minute?",
+    "q": "A marketing email will push traffic from 20% to 150% of capacity within a minute. Which test checks that autoscaling and queues absorb it?",
     "options": [
      "Soak test",
      "Load test",
@@ -2425,7 +2738,7 @@
     ],
     "answer": 2,
     "why": "Checks autoscaling and queues absorb bursts.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Long, moderate.",
      "Ramps to forecast peak.",
@@ -2437,38 +2750,38 @@
     "id": "c15-8-m08",
     "q": "Why use a mock for hosted APIs in load tests?",
     "options": [
-     "Mocks are more accurate",
-     "Providers forbid testing",
-     "To reproduce latency and rate limits without huge cost or hitting provider limits",
-     "Mocks measure quality"
+     "Mocks are more accurate than the real provider's API",
+     "Providers forbid any load testing against their API",
+     "To mimic latency and limits without cost or hitting limits",
+     "Mocks measure answer quality as well as latency"
     ],
     "answer": 2,
     "why": "The mock must reproduce realistic distributions.",
     "kind": "concept",
     "distractors": [
-     "They approximate.",
-     "Not the reason.",
+     "Not more accurate.",
+     "Not the main reason.",
      "",
-     "Not quality."
+     "They do not."
     ]
    },
    {
     "id": "c15-8-m09",
     "q": "Your laptop runs both the load generator and the server. What do the numbers mean?",
     "options": [
-     "Little in absolute terms; the lab practises scenarios, thresholds and percentiles",
-     "Exact GPU throughput",
-     "Provider limits",
-     "Production capacity"
+     "Little; it practises scenarios and percentiles",
+     "Exact GPU throughput for the production fleet",
+     "The provider's real rate limits under load",
+     "Production capacity, give or take a little"
     ],
     "answer": 0,
     "why": "State the limitation.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not GPU.",
-     "Not provider.",
-     "Not production."
+     "Not on a laptop.",
+     "Not tested.",
+     "The numbers do not transfer."
     ]
    },
    {
@@ -2489,6 +2802,44 @@
      "",
      "Closed-loop virtual users."
     ]
+   },
+   {
+    "id": "c15-8-m11",
+    "q": "A closed-loop load test with 200 virtual users reports p95 latency of 1.2 s, but production at the same request rate sees 6 s. What is the likely cause?",
+    "options": [
+     "p95 is always five times lower in tests",
+     "The test machine was too fast for the service",
+     "Coordinated omission: use an open-loop arrival-rate test",
+     "Production traffic was mocked incorrectly"
+    ],
+    "answer": 2,
+    "why": "The closed-loop tester slowed down with the service and hid queueing.",
+    "kind": "scenario",
+    "distractors": [
+     "There is no such rule.",
+     "Speed of the tester is not the cause.",
+     "",
+     "The test, not production, was mocked."
+    ]
+   },
+   {
+    "id": "c15-8-m12",
+    "q": "An 8-hour soak test at moderate load shows memory growing 1.5 GB an hour on each replica, with 16 GB of headroom. Roughly when will a replica run out?",
+    "options": [
+     "After about 8 hours, when the test itself ended",
+     "After about 16 hours, the size of the headroom",
+     "After about 11 hours, within a day: a leak to fix",
+     "Never, since the test passed its full 8 hours"
+    ],
+    "answer": 2,
+    "why": "16 ÷ 1.5 ≈ 10.7 hours, which a daily traffic cycle reaches.",
+    "kind": "calculation",
+    "distractors": [
+     "The test ending is not the limit.",
+     "That ignores the 1.5 GB hourly growth rate.",
+     "",
+     "The trend shows it will fail later."
+    ]
    }
   ],
   "interview": [
@@ -2502,7 +2853,8 @@
      "leaks",
      "bursts",
      "faults"
-    ]
+    ],
+    "followUp": "Which would you run before every major launch?"
    },
    {
     "id": "c15-8-i02",
@@ -2513,7 +2865,8 @@
      "KV pressure",
      "tenant mix",
      "agent sessions"
-    ]
+    ],
+    "followUp": "How would you get realistic prompt lengths?"
    },
    {
     "id": "c15-8-i03",
@@ -2522,7 +2875,8 @@
     "covers": [
      "closed-loop under-reporting",
      "open-loop arrival rate"
-    ]
+    ],
+    "followUp": "How would you show a team their test suffered from it?"
    },
    {
     "id": "c15-8-i04",
@@ -2545,7 +2899,8 @@
      "lengths and tenants",
      "arrival process",
      "cache-hit rates"
-    ]
+    ],
+    "followUp": "How do you replay traffic without leaking customer data?"
    },
    {
     "id": "c15-8-i06",
@@ -2556,7 +2911,8 @@
      "latency injection",
      "node loss",
      "region loss"
-    ]
+    ],
+    "followUp": "How do you stop a chaos test from harming real users?"
    },
    {
     "id": "c15-8-i07",
@@ -2580,7 +2936,8 @@
      "open loop",
      "separate GPU benchmark",
      "labelled reports"
-    ]
+    ],
+    "followUp": "How do you report the two results so they are not confused?"
    }
   ]
  },
@@ -2628,10 +2985,10 @@
     "id": "c15-10-m03",
     "q": "What is actual production usage good for?",
     "options": [
-     "Ground truth for the past and input to the next forecast",
-     "Marketing claims",
+     "Ground truth for the past; input to forecasts",
+     "Marketing claims about how far it scales",
      "Predicting any future load exactly",
-     "Replacing load tests"
+     "Replacing load tests entirely from now on"
     ],
     "answer": 0,
     "why": "It describes what happened.",
@@ -2639,8 +2996,8 @@
     "distractors": [
      "",
      "Not its purpose.",
-     "It does not predict exactly.",
-     "Tests are still needed."
+     "It is history, not a forecast.",
+     "Tests answer what-if questions."
     ]
    },
    {
@@ -2666,37 +3023,37 @@
     "id": "c15-10-m05",
     "q": "What procedural fix does the chapter recommend after that failed projection?",
     "options": [
-     "Trust vendors less but keep their numbers",
-     "Capacity plans cite measured numbers with test conditions, and launch reviews compare them with the first week's actual usage",
-     "Always add 10%",
-     "Skip load tests"
+     "Trust vendors less, but keep their benchmark numbers in capacity plans",
+     "Plans cite measured numbers with conditions; launch reviews check them against actuals",
+     "Always add 10% to every projection as a buffer, whatever the source",
+     "Skip load tests and size the fleet from production telemetry later on"
     ],
     "answer": 1,
     "why": "Label and compare all three kinds of number.",
     "kind": "concept",
     "distractors": [
-     "Their numbers are not your conditions.",
+     "Vendor numbers were the problem.",
      "",
-     "A fixed margin does not fix the method.",
-     "That is the cause."
+     "A fixed buffer would not have covered it.",
+     "Too late for launch."
     ]
    },
    {
     "id": "c15-10-m06",
     "q": "Why does a measured number not transfer to another workload?",
     "options": [
-     "Hardware is irrelevant",
-     "It holds only for the tested prompt mix, hardware and conditions",
-     "Measurements expire after a day",
-     "Measured numbers are always wrong"
+     "Hardware makes no difference to measured throughput",
+     "It holds only for the tested mix, hardware, conditions",
+     "Measurements expire after one day and must be redone",
+     "Measured numbers are always wrong for any workload"
     ],
     "answer": 1,
     "why": "Change the mix and you must re-measure.",
     "kind": "concept",
     "distractors": [
-     "Hardware matters.",
+     "It matters a lot.",
      "",
-     "Not about time.",
+     "Not the reason.",
      "They are right for their conditions."
     ]
    },
@@ -2704,18 +3061,18 @@
     "id": "c15-10-m07",
     "q": "The actual peak crossed the safe limit and the forecast reaches projected capacity in two weeks. What should happen?",
     "options": [
-     "Remove the forecast",
-     "Lower the SLO",
-     "Wait and see",
-     "Add replicas or re-measure with the current traffic mix"
+     "Remove the forecast from the dashboard",
+     "Lower the SLO to fit the capacity",
+     "Wait and see whether it holds",
+     "Add replicas or re-measure with today's mix"
     ],
     "answer": 3,
     "why": "The projection may rest on an outdated load test.",
     "kind": "scenario",
     "distractors": [
-     "Not a fix.",
-     "Hides the problem.",
-     "Risky.",
+     "That hides the risk.",
+     "That fails users.",
+     "The trend says it will not.",
      ""
     ]
    },
@@ -2725,36 +3082,36 @@
     "options": [
      "As measured performance",
      "As production usage",
-     "As a projection from a simulation, with its assumptions",
+     "As a projection, with its assumptions",
      "As a system that served 5 million users"
     ],
     "answer": 2,
     "why": "Never describe a simulation as real usage.",
     "kind": "concept",
     "distractors": [
-     "Not measured on the real system.",
-     "Not production.",
+     "Nothing was measured.",
+     "No users were served.",
      "",
-     "That overstates it."
+     "That claims what did not happen."
     ]
    },
    {
     "id": "c15-10-m09",
     "q": "Which goes in a launch review statement?",
     "options": [
-     "“Same as the vendor benchmark”",
-     "“Fast enough”",
-     "“Measured 60 RPS on staging with p95 1.8 s; projected 100 RPS with two more replicas, not yet validated”",
-     "“Handles millions of users”"
+     "“Same as the vendor benchmark for this GPU and model size”",
+     "“Fast enough for launch, based on the team's experience”",
+     "“Measured 60 RPS on staging at p95 1.8 s; 100 RPS projected, not validated”",
+     "“Handles millions of users, as other companies have shown”"
     ],
     "answer": 2,
     "why": "Each figure is labelled with its kind and conditions.",
     "kind": "concept",
     "distractors": [
-     "Not your conditions.",
-     "Not a figure.",
+     "Not measured on your system.",
+     "Not a measured statement.",
      "",
-     "Unlabelled claim."
+     "Unsupported."
     ]
    },
    {
@@ -2775,6 +3132,44 @@
      "Not a test.",
      "Not a calculation."
     ]
+   },
+   {
+    "id": "c15-10-m11",
+    "q": "Peak demand is forecast at 30,000 output tokens/s. One replica measured 2,400 tokens/s at the SLO with the real traffic mix. How many replicas, with one spare for redundancy?",
+    "options": [
+     "14: 13 for the load plus 1 spare",
+     "7, using a vendor figure of 5,000 tokens/s",
+     "13, which already rounds up the 12.5",
+     "12, since 12.5 rounds down"
+    ],
+    "answer": 0,
+    "why": "30,000 ÷ 2,400 = 12.5, so 13, plus one spare.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Vendor figures overstate your capacity.",
+     "That has no spare.",
+     "That is under capacity."
+    ]
+   },
+   {
+    "id": "c15-10-m12",
+    "q": "A slide says “our system handles 2,000 RPS”, from a staging load test against a mocked model. How should it be labelled?",
+    "options": [
+     "Actual production usage, since the test ran on our own production code",
+     "Measured on staging, mocked model: orchestration only, not model capacity",
+     "Vendor benchmark, to be confirmed with the model provider before launch",
+     "Projected capacity, valid for production traffic exactly as it stands"
+    ],
+    "answer": 1,
+    "why": "Label the kind of number and its conditions; a mock does not test model serving.",
+    "kind": "scenario",
+    "distractors": [
+     "Staging tests are not production.",
+     "",
+     "It is your own test.",
+     "It is a measurement with narrow conditions."
+    ]
    }
   ],
   "interview": [
@@ -2787,7 +3182,8 @@
      "projected",
      "actual",
      "trust and conditions"
-    ]
+    ],
+    "followUp": "Give an example statement of each kind."
    },
    {
     "id": "c15-10-i02",
@@ -2798,7 +3194,8 @@
      "peak conditions",
      "no SLO",
      "hardware"
-    ]
+    ],
+    "followUp": "How would you ask a vendor for a more useful number?"
    },
    {
     "id": "c15-10-i03",
@@ -2809,7 +3206,8 @@
      "conditions",
      "date",
      "assumptions"
-    ]
+    ],
+    "followUp": "Rewrite “the system scales to a million users” properly."
    },
    {
     "id": "c15-10-i04",
@@ -2832,7 +3230,8 @@
      "new model or engine",
      "actuals approach limits",
      "hardware change"
-    ]
+    ],
+    "followUp": "Who triggers the re-measurement?"
    },
    {
     "id": "c15-10-i06",
@@ -2843,7 +3242,8 @@
      "ranges",
      "assumptions",
      "what is not proven"
-    ]
+    ],
+    "followUp": "What would you leave off the slide?"
    },
    {
     "id": "c15-10-i07",
@@ -2867,7 +3267,8 @@
      "labels and dates",
      "alerts",
      "links to tests"
-    ]
+    ],
+    "followUp": "What alert would you put on it?"
    }
   ]
  }
