@@ -12,7 +12,13 @@
     ],
     "answer": 1,
     "why": "The logic is explicit and must be exact, so a rule is cheaper, auditable and correct every time.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "An LLM follows examples but is not exact; a PO-number check must be right every time and cost almost nothing.",
+     "",
+     "A classifier needs labels and returns a probability; the PO-number format is explicit logic, not a prediction.",
+     "An agent adds a loop, tools and cost around what is a single deterministic check."
+    ]
    },
    {
     "id": "c1-6-m02",
@@ -37,37 +43,37 @@
     "id": "c1-6-m03",
     "q": "“Is the policy active on the incident date?” is best handled by…",
     "options": [
-     "A web search",
-     "An LLM reading the policy",
+     "A web search for the policy's public terms",
+     "An LLM reading the policy and the incident",
      "A rule: a database query and a date comparison",
-     "A clustering model"
+     "A clustering model trained on past policies"
     ],
     "answer": 2,
     "why": "The logic can be written down and must be exact, so code is deterministic, auditable and free to run.",
     "kind": "scenario",
     "distractors": [
      "The answer is in your own records, not on the web.",
-     "An LLM could guess wrong and adds cost for an exact question.",
+     "An exact date check needs no language model, and an LLM could get it wrong.",
      "",
-     "Clustering finds groups; it does not check dates."
+     "Clustering groups similar items; it cannot say whether a date falls in a range."
     ]
    },
    {
     "id": "c1-6-m04",
     "q": "“Is this claim likely fraudulent?”, with years of labelled claim history, is a job for…",
     "options": [
-     "Keyword search",
-     "An LLM prompt",
-     "A hand-written rule only",
+     "Keyword search over past claim notes",
+     "An LLM prompt with the fraud policy",
+     "A hand-written rule for each fraud type",
      "Traditional ML on structured claim data"
     ],
     "answer": 3,
     "why": "Tabular data, a fixed output and plenty of labels fit traditional ML, which gives cheap, calibrated scores.",
     "kind": "scenario",
     "distractors": [
-     "Search finds documents; it does not score risk.",
-     "An LLM is costly and poorly calibrated for tabular scoring.",
-     "Rules can be a baseline but miss patterns learned from history.",
+     "Search finds documents; it does not estimate a likelihood.",
+     "With years of labels, a trained model is cheaper, measurable and calibrated; an LLM is none of these here.",
+     "Fraud patterns change and overlap; written rules are brittle and miss what they did not anticipate.",
      ""
     ]
    },
@@ -75,18 +81,18 @@
     "id": "c1-6-m05",
     "q": "“Turn the customer's long email into the structured claim form” is a job for…",
     "options": [
-     "A rule that copies the email",
-     "Search over past claims",
-     "Traditional ML on the email length",
+     "A rule that copies the email text into the form's free-text field",
+     "Search over past claims for the most similar form already filled in",
+     "Traditional ML that predicts each form field from the email's length",
      "An LLM, with schema validation and rules that check the extracted amounts"
     ],
     "answer": 3,
     "why": "Free text in, structured fields out is what LLMs do well, but the output must be validated (7.4) and checked by rules.",
     "kind": "scenario",
     "distractors": [
-     "Rules cannot reliably parse open-ended language.",
-     "Search finds similar claims; it does not fill this one in.",
-     "Email length does not give you the fields.",
+     "Copying text does not fill the structured fields the form needs.",
+     "A similar old claim has different facts; the form must come from this email.",
+     "Email length carries no information about the fields' values.",
      ""
     ]
    },
@@ -95,36 +101,36 @@
     "q": "According to the topic, what is the most expensive mistake in enterprise AI?",
     "options": [
      "Using an LLM where a simpler tool is more accurate, cheaper and easier to audit",
-     "Using rules for permissions",
-     "Measuring a baseline",
-     "Showing sources in search results"
+     "Using rules for permissions, where a model would adapt to new roles better",
+     "Measuring a baseline before building, which delays the first release",
+     "Showing sources in search results, which makes users read instead of ask"
     ],
     "answer": 0,
     "why": "LLMs add cost, latency and risk; when a simpler method fits, it usually wins on all three.",
     "kind": "concept",
     "distractors": [
      "",
-     "Rules are the right tool for exact logic such as permissions.",
-     "Baselines keep you honest (3.2).",
-     "Showing sources is a strength of search."
+     "Permissions must be exact and auditable, which is what rules are for.",
+     "A baseline is how you know whether a model helps at all.",
+     "Showing sources is one of search's strengths."
     ]
    },
    {
     "id": "c1-6-m07",
     "q": "Which are strengths of search as an approach?",
     "options": [
-     "It learns from labels",
-     "It handles vague queries best",
-     "It writes new text",
+     "It learns from labels, so it improves with each query",
+     "It handles vague queries better than any other tool",
+     "It writes new text that combines several documents",
      "It shows sources, is fast and does not fabricate"
     ],
     "answer": 3,
     "why": "Search returns existing documents, so answers are traceable. Its weakness is that users must read and synthesise, and vague queries do poorly.",
     "kind": "concept",
     "distractors": [
-     "Learning from labels is traditional ML.",
-     "Vague queries are search's weakness.",
-     "Generating text is the LLM's job.",
+     "Learning from labels describes traditional ML, not search.",
+     "Vague queries are one of search's weaknesses.",
+     "Writing new text is an LLM's job; search returns existing documents.",
      ""
     ]
    },
@@ -132,19 +138,19 @@
     "id": "c1-6-m08",
     "q": "When does traditional ML fit best?",
     "options": [
-     "Exact tax calculation",
+     "Exact tax calculations that must give the same result every time",
      "Structured or tabular data, a fixed set of outputs and plenty of labels",
-     "Open-ended drafting",
-     "Finding a policy document"
+     "Open-ended drafting of letters and replies from a short brief",
+     "Finding a policy document that a user describes in their own words"
     ],
     "answer": 1,
     "why": "Churn, fraud and demand forecasts are typical: cheap at scale, measurable and calibrated.",
     "kind": "concept",
     "distractors": [
-     "Exact calculation is a rule.",
+     "Exact logic that can be written down belongs in rules.",
      "",
-     "Drafting is an LLM task.",
-     "Finding a document is search."
+     "Open-ended text is an LLM job; traditional ML does not generate text.",
+     "Finding a document is a search task."
     ]
    },
    {
@@ -175,18 +181,18 @@
     "q": "A team chooses an agent framework first and then looks for a problem to use it on. What is wrong with this?",
     "options": [
      "It reverses the decision: start from the task and the simplest tool that fits",
-     "Agents cannot use tools",
-     "Nothing, frameworks are always needed",
-     "Frameworks are too cheap"
+     "Agents cannot call tools reliably, so the framework adds no new capability",
+     "Nothing: a framework is always needed before any problem is chosen",
+     "Frameworks are too cheap to signal a serious investment to leadership"
     ],
     "answer": 0,
     "why": "Problem selection asks what the task really is; the tool follows.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Agents do use tools; that is not the issue.",
-     "Many tasks need no agent at all.",
-     "Cost is not the issue; fit is."
+     "Agents do call tools; the problem is choosing the tool before the task.",
+     "Many tasks need no framework at all; a rule or search may fit better.",
+     "Cost signalling is not a reason to pick a tool; fit to the task is."
     ]
    }
   ],
@@ -201,7 +207,8 @@
      "Cost of a wrong answer and auditability",
      "Latency and volume",
      "Start with the simplest tool that fits"
-    ]
+    ],
+    "followUp": "Walk me through that decision for one task you have worked on."
    },
    {
     "id": "c1-6-i02",
@@ -212,7 +219,8 @@
      "Search finds facts, an LLM phrases, rules enforce limits",
      "Combination adds components to monitor",
      "Boundaries make failures traceable"
-    ]
+    ],
+    "followUp": "What does combining them cost, and how do you keep that manageable?"
    },
    {
     "id": "c1-6-i03",
@@ -223,7 +231,8 @@
      "Which clause applies: search",
      "Fraud likelihood: trained model",
      "Email to form: LLM with validation and checks"
-    ]
+    ],
+    "followUp": "The fraud score and the LLM-extracted amount point different ways. Which decides, and why?"
    },
    {
     "id": "c1-6-i04",
@@ -235,7 +244,8 @@
      "Cancellation-risk pricing: a trained model",
      "Understanding the traveller's message: an LLM"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "Which of those parts would you build first, and why?"
    },
    {
     "id": "c1-6-i05",
@@ -246,7 +256,8 @@
      "When labels exist and a small model is cheaper",
      "At very high volume with tight latency",
      "When the data must not leave a boundary"
-    ]
+    ],
+    "followUp": "The team says the LLM is good enough. What evidence would settle it?"
    },
    {
     "id": "c1-6-i06",
@@ -272,7 +283,8 @@
      "Inputs, outputs and versions captured per case",
      "Human approval for refunds above a limit"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "A customer disputes a decision from eight months ago. Walk me through reproducing it."
    },
    {
     "id": "c1-6-i08",
@@ -283,7 +295,8 @@
      "Show the simpler solution's accuracy, cost and latency",
      "Explain the agent's added risks",
      "Offer an LLM where it adds value, such as phrasing"
-    ]
+    ],
+    "followUp": "The stakeholder says an agent will be needed later anyway. How do you respond?"
    }
   ]
  },
@@ -293,31 +306,37 @@
     "id": "c1-3-m01",
     "q": "Why can an LLM state a wrong invoice due date fluently?",
     "options": [
-     "It looked it up in a stale database",
+     "It looked the date up in a stale database that it was connected to",
      "It predicts a likely continuation, which need not be true",
-     "Its temperature was too low",
-     "Its context window was too small"
+     "Its temperature was too low, so it repeated the most common due date",
+     "Its context window was too small to hold the rest of the conversation"
     ],
     "answer": 1,
     "why": "Generation picks plausible tokens; without the invoice in context, a plausible date is still the likely continuation.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "A bare LLM looks nothing up; without the invoice in context it can only produce a likely-looking date.",
+     "",
+     "Low temperature makes output more consistent, not wrong; the cause is predicting what is likely rather than true.",
+     "A small window can drop facts, but the root cause is that a plausible date is still the likely continuation."
+    ]
    },
    {
     "id": "c1-3-m02",
     "q": "At each step, what does a modern language model output?",
     "options": [
-     "One fixed correct answer",
-     "A list of web pages",
-     "A database row",
+     "The single correct next word, chosen by a rule",
+     "A ranked list of web pages that match the text",
+     "A database row that matches the question asked",
      "A probability for every token in its vocabulary"
     ],
     "answer": 3,
     "why": "Given the text so far, the model outputs a probability distribution over its whole vocabulary; generation picks one token and repeats.",
     "kind": "concept",
     "distractors": [
-     "The model outputs a distribution, not a guaranteed answer.",
-     "A language model does not retrieve pages unless a system adds retrieval.",
-     "Facts are spread across weights, not stored as rows.",
+     "The model outputs a distribution; a decoding rule then picks a token, and it need not be correct.",
+     "Search engines return pages; a language model returns token probabilities.",
+     "Nothing in the model is a database row; knowledge is spread across weights.",
      ""
     ]
    },
@@ -325,56 +344,56 @@
     "id": "c1-3-m03",
     "q": "Answering a question, writing code and summarising a document are, for an LLM, all…",
     "options": [
-     "Hard-coded skills added by engineers",
-     "Separate algorithms in separate modules",
+     "Separate skills that engineers hard-code into the model after training",
+     "Separate algorithms in separate modules, chosen by a router per request",
      "Continuing text in a way that is likely given everything before it",
-     "Lookups in a knowledge base"
+     "Lookups in a knowledge base that was built during pretraining"
     ],
     "answer": 2,
     "why": "The core mechanism is the same continuation; instruction tuning makes a helpful answer the likely continuation of a question.",
     "kind": "concept",
     "distractors": [
-     "Skills emerge from training, not hand-coding.",
-     "There is one mechanism, next-token prediction.",
+     "No task is hard-coded; every task is next-token prediction.",
+     "One model runs one operation for all of them: predict the next token.",
      "",
-     "There is no knowledge base inside the model."
+     "Pretraining spreads associations across weights; there is no knowledge base to look up."
     ]
    },
    {
     "id": "c1-3-m04",
     "q": "Which three things together usually make a model an LLM?",
     "options": [
-     "Any neural network that reads text",
-     "A transformer, a large number of parameters and pretraining on a very large broad corpus",
-     "A chatbot interface",
-     "A model with exactly one billion parameters"
+     "Any neural network that reads text, with a tokenizer and a vocabulary",
+     "A transformer, many parameters and pretraining on a broad, very large corpus",
+     "A chatbot interface, a system prompt and a conversation history store",
+     "Exactly one billion parameters, a GPU cluster and a context window"
     ],
     "answer": 1,
     "why": "The term combines architecture, scale and broad pretraining; there is no agreed parameter cut-off.",
     "kind": "concept",
     "distractors": [
-     "Small text classifiers are not LLMs.",
+     "A small text classifier has a tokenizer too; scale and broad pretraining are what make it large.",
      "",
-     "The interface does not make the model an LLM.",
-     "There is no fixed parameter threshold."
+     "Those are parts of an application, not of the model.",
+     "There is no agreed parameter cut-off, and hardware does not define the model."
     ]
    },
    {
     "id": "c1-3-m05",
     "q": "Which statement about parameter count is correct?",
     "options": [
-     "Above 10 billion parameters a model cannot hallucinate",
-     "Parameter count is the same as context length",
-     "More parameters always means better answers",
+     "Above 10 billion parameters a model no longer hallucinates on facts",
+     "Parameter count is the same number as the model's context length",
+     "More parameters always give better answers on every task and dataset",
      "It alone does not measure quality; data, training and the task matter as much"
     ],
     "answer": 3,
     "why": "Parameter count is one factor. Data, training objectives and adaptation strongly affect quality.",
     "kind": "concept",
     "distractors": [
-     "Models of any size can hallucinate.",
-     "Context length is a separate limit on input size.",
-     "Smaller well-trained models often beat larger ones on specific tasks.",
+     "No size removes hallucination; it comes from predicting what is likely.",
+     "Parameters are learned weights; context length is how many tokens fit in the input and output.",
+     "A smaller, better-trained or task-adapted model often beats a larger one.",
      ""
     ]
    },
@@ -382,18 +401,18 @@
     "id": "c1-3-m06",
     "q": "In the illustrative example, why does “March” get the highest probability after “The invoice is due on the 15th of”?",
     "options": [
-     "March is the current month",
-     "The tokenizer prefers short words",
-     "The model looked the invoice up",
+     "March is the current month, which the model reads from the system clock",
+     "The tokenizer prefers short words, so shorter month names score higher",
+     "The model looked the invoice up and found that it is due in March",
      "It is a common continuation, not because the model knows the invoice"
     ],
     "answer": 3,
     "why": "The model ranks likely text; it has no access to your invoice unless it is in the context. The gap between likely and true is the root of hallucination.",
     "kind": "scenario",
     "distractors": [
-     "The model does not know today's date unless told.",
-     "Tokenisation does not decide the meaning-level choice.",
-     "No lookup happens unless the application provides the record.",
+     "The model has no clock; it only sees the text in its context.",
+     "The tokenizer splits text; it does not score continuations.",
+     "Nothing was looked up; no invoice was in the context.",
      ""
     ]
    },
@@ -401,76 +420,114 @@
     "id": "c1-3-m07",
     "q": "Where is the knowledge that “Canberra” follows “capital of Australia” stored?",
     "options": [
-     "In the tokenizer's vocabulary",
+     "In the tokenizer's vocabulary, as a token that joins the two words",
      "Spread across billions of weights as learned associations",
-     "In the system prompt",
-     "In a table row labelled “capital of Australia”"
+     "In the system prompt that the provider adds to every request",
+     "In a table row labelled “capital of Australia” inside the model"
     ],
     "answer": 1,
     "why": "There is no database row; the association is distributed across the model's parameters.",
     "kind": "concept",
     "distractors": [
-     "The vocabulary lists tokens, not facts.",
+     "The vocabulary is a list of text pieces with IDs; it stores no facts.",
      "",
-     "The system prompt only contains what the application puts in it.",
-     "Models do not contain a lookup table of facts."
+     "The model answers this without any prompt saying so; the association is in the weights.",
+     "There is no table inside the model; that is the misconception the topic warns against."
     ]
    },
    {
     "id": "c1-3-m08",
     "q": "Why do some abilities appear only in larger models?",
     "options": [
-     "Some tasks, such as following new formats or rare translations, only become reliable above a certain scale",
-     "Large models use different maths",
-     "Small models cannot read text",
-     "Abilities depend only on the prompt"
+     "Some tasks, like new formats or rare translations, only become reliable above a certain scale",
+     "Large models use different mathematics, such as symbolic logic, in their upper layers",
+     "Small models cannot read text directly, so they need a larger model to tokenise it",
+     "Abilities depend only on the prompt; a larger model just reads longer prompts"
     ],
     "answer": 0,
     "why": "Scale (with data) makes some abilities reliable; the “large” in LLM matters for that reason.",
     "kind": "concept",
     "distractors": [
      "",
-     "The core maths is the same.",
-     "Small models read text, just less capably.",
-     "Prompts matter, but scale changes what the model can do."
+     "Small and large transformers run the same operations; only the scale differs.",
+     "Every model has its own tokenizer; size does not change how text is read.",
+     "The same prompt works on one size and fails on another, so scale matters, not just the prompt."
     ]
    },
    {
     "id": "c1-3-m09",
     "q": "What does instruction tuning change?",
     "options": [
-     "It removes next-token prediction",
-     "It turns the model into a database",
+     "It removes next-token prediction and replaces it with answer lookup",
+     "It turns the model into a database of approved question-answer pairs",
      "It makes a helpful answer the likely continuation of a user's question",
-     "It guarantees factual answers"
+     "It guarantees factual answers by training on verified instructions"
     ],
     "answer": 2,
     "why": "Instruction-tuned models still predict continuations; tuning shapes which continuations are likely.",
     "kind": "concept",
     "distractors": [
-     "The model still predicts the next token.",
-     "It does not store facts as records.",
+     "Instruction-tuned models still predict continuations.",
+     "Instruction tuning adjusts weights; it does not store answers to look up.",
      "",
-     "Factual accuracy still needs grounding and evaluation."
+     "Tuned models still hallucinate; the likely answer need not be true."
     ]
    },
    {
     "id": "c1-3-m10",
     "q": "Which design choice best addresses the “likely is not true” gap for questions about your own records?",
     "options": [
-     "Lower the temperature to zero",
+     "Lower the temperature to zero so the answer is always the same",
      "Retrieve the record and require the answer to cite it",
-     "Use a larger model",
-     "Ask the model to be careful"
+     "Use a larger model that has memorised more of your records",
+     "Add “be careful and only state facts” to the system prompt"
     ],
     "answer": 1,
     "why": "Only supplying the facts and requiring citations closes the gap; bigger models and lower temperature still guess when facts are missing.",
     "kind": "scenario",
     "distractors": [
-     "Greedy decoding picks the most likely continuation, which can still be wrong.",
+     "Consistent is not correct: the same likely-but-wrong answer every time.",
      "",
-     "A larger model still does not know your records.",
-     "Instructions alone do not supply missing facts."
+     "Your records were never in its training data, and memorised facts are unattributable.",
+     "An instruction cannot supply a fact the model does not have."
+    ]
+   },
+   {
+    "id": "c1-3-m11",
+    "q": "In an illustrative next-token distribution after “The invoice is due on the 15th of”, “␣March” has 0.30, “␣each” 0.20 and “␣every” 0.15. Which statement is correct?",
+    "options": [
+     "There is a 30% chance that this particular invoice is really due in March",
+     "The probabilities need not sum to 1, so the remaining share is unknown",
+     "All other tokens hold 0, because the model keeps only its top three tokens",
+     "All other tokens together hold 0.35, and March leads without knowing the invoice"
+    ],
+    "answer": 3,
+    "why": "The model gives every vocabulary token a probability, and they sum to 1: 1 − (0.30 + 0.20 + 0.15) = 0.35 for everything else. A high probability means a common continuation, not a fact about this invoice.",
+    "kind": "calculation",
+    "distractors": [
+     "0.30 is how likely the text continues with “March”, not how likely the invoice is due then; no invoice is in the context.",
+     "Softmax makes the probabilities sum to 1, so the rest is exactly 0.35.",
+     "The model outputs a probability for every token in its vocabulary; a decoding rule may sample from fewer, but the distribution covers all.",
+     ""
+    ]
+   },
+   {
+    "id": "c1-3-m12",
+    "q": "A team sends “What is our refund window?” to a base model that has not been instruction-tuned. It replies with three more questions in the same style. What explains this?",
+    "options": [
+     "For an untuned model, more questions were a likelier continuation than an answer",
+     "The context window was full, so the model never saw the question itself",
+     "Its temperature was zero, which makes any model repeat the input's format",
+     "The model refused, because the question was about the company's own policy"
+    ],
+    "answer": 0,
+    "why": "Every task is continuation. Instruction tuning is what makes a helpful answer the likely continuation of a question; a base model may continue the text as a list of questions.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "A one-line prompt does not fill a context window, and the questions it wrote follow the prompt's style.",
+     "Temperature changes how a token is picked from the distribution, not which kind of continuation is likely.",
+     "Writing more questions is not a refusal; the model continued the text in its likeliest form."
     ]
    }
   ],
@@ -484,7 +541,8 @@
      "Generation repeats: pick a token, append, predict again",
      "All tasks are continuation",
      "Instruction tuning shapes which continuations are likely"
-    ]
+    ],
+    "followUp": "If every task is continuation, why can the same prompt give different answers on two runs?"
    },
    {
     "id": "c1-3-i02",
@@ -495,7 +553,8 @@
      "No fixed threshold",
      "Data, objectives and adaptation matter as much as size",
      "Scale makes some abilities reliable"
-    ]
+    ],
+    "followUp": "How would you compare two models of different sizes on your own task?"
    },
    {
     "id": "c1-3-i03",
@@ -506,7 +565,8 @@
      "Missing facts still yield a likely-looking answer",
      "Facts are spread across weights, not looked up",
      "Mitigation needs grounding and verification"
-    ]
+    ],
+    "followUp": "Does retrieval remove hallucination completely? Why not?"
    },
    {
     "id": "c1-3-i04",
@@ -517,7 +577,8 @@
      "Yesterday the context probably contained the order",
      "Retrieval or tool calls may have failed today",
      "Check logs of what was in the context"
-    ]
+    ],
+    "followUp": "Which logs would you check first, and what would you expect them to show?"
    },
    {
     "id": "c1-3-i05",
@@ -542,7 +603,8 @@
      "Block numeric answers without a source",
      "Add the case to the evaluation set"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "The compliance officer asks how you will know it is fixed. What do you measure?"
    },
    {
     "id": "c1-3-i07",
@@ -554,7 +616,8 @@
      "Require citations for each claim",
      "Verify claims against retrieved text before sending",
      "Fallback wording when nothing is found"
-    ]
+    ],
+    "followUp": "How would you check that a cited passage really supports the claim, at production volume?"
    },
    {
     "id": "c1-3-i08",
@@ -565,7 +628,8 @@
      "Facts that must be right live in systems of record",
      "Retrieval and tools supply them at question time",
      "The model phrases and reasons over supplied facts"
-    ]
+    ],
+    "followUp": "Which questions would you still let the model answer from its own weights?"
    }
   ]
  },
@@ -582,7 +646,13 @@
     ],
     "answer": 2,
     "why": "Only training updates parameters. Prompts, chats and retrieved text change the input only.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "A conversation only changes the input; the weights stay fixed however long it runs.",
+     "A system prompt is part of the input; it steers behaviour without changing any parameter.",
+     "",
+     "Retrieval adds documents to the context; the model reads them but does not learn from them."
+    ]
    },
    {
     "id": "c1-4-m02",
@@ -645,37 +715,37 @@
     "id": "c1-4-m05",
     "q": "What is an embedding?",
     "options": [
-     "A compressed copy of the text that can be decoded back exactly",
-     "The file that stores a model's weights",
+     "A compressed copy of the text that can be decoded back to the exact original",
+     "The file that stores the model's weights, including its embedding table",
      "A vector of numbers that represents text, with similar meanings close together",
-     "The integer ID of a token"
+     "The integer ID that the tokenizer gives each token in its vocabulary"
     ],
     "answer": 2,
     "why": "An embedding places text in a vector space where related meanings are near each other. It is not a reversible compression of the text.",
     "kind": "concept",
     "distractors": [
-     "You cannot reliably reconstruct the original document from its embedding.",
-     "Weights are the model's parameters; embeddings are outputs (or one table within them).",
+     "You cannot reliably decode the original document from an embedding.",
+     "The embedding table is part of the weights; an embedding is one vector from it, or for a piece of text.",
      "",
-     "A token ID is one integer; the embedding is the vector looked up for it."
+     "The token ID selects a row; the vector in that row is the embedding."
     ]
    },
    {
     "id": "c1-4-m06",
     "q": "What does the context window limit?",
     "options": [
-     "The number of requests per minute",
-     "The size of the vocabulary",
-     "The number of parameters",
+     "The number of requests per minute that the provider accepts from one key",
+     "The size of the vocabulary, the number of distinct tokens it can produce",
+     "The number of parameters that are active for each token it processes",
      "The total number of input and output tokens the model can consider at once"
     ],
     "answer": 3,
     "why": "Everything outside the context window is invisible to the model, and the output must fit in it too.",
     "kind": "concept",
     "distractors": [
-     "Request limits are set by the provider or your serving stack.",
-     "Vocabulary size is fixed by the tokenizer.",
-     "Parameter count is a property of the model, not the input limit.",
+     "That is a rate limit, set by the provider, not by the model.",
+     "Vocabulary size is fixed by the tokenizer and unrelated to how much text fits at once.",
+     "Parameters are the learned weights; the window is about tokens.",
      ""
     ]
    },
@@ -683,18 +753,18 @@
     "id": "c1-4-m07",
     "q": "Why should you count tokens with the model's own tokenizer rather than converting from words?",
     "options": [
-     "Prices are charged per word",
-     "Words and tokens are always identical",
-     "Tokenizers are the same for every model",
+     "Prices are charged per word, so a word count is what the invoice uses",
+     "Words and tokens are identical in English, the language prices use",
+     "Every model uses the same tokenizer, so a fixed ratio is always exact",
      "Token counts vary widely with language, code, numbers and tokenizer"
     ],
     "answer": 3,
     "why": "The four-characters-per-token rule is a rough English average; other text and other tokenizers can differ a lot.",
     "kind": "concept",
     "distractors": [
-     "Prices, limits and speed are all counted in tokens.",
-     "Many words split into several tokens.",
-     "Each model family has its own vocabulary and rules.",
+     "Prices, speed and limits are all counted in tokens.",
+     "Even in English a token is about 0.75 words on average, and only on average.",
+     "Tokenizers differ between models; the same text gives different counts.",
      ""
     ]
    },
@@ -702,18 +772,18 @@
     "id": "c1-4-m08",
     "q": "A chat product “remembers” a user's preference across sessions. Where does that memory live?",
     "options": [
-     "In the model's weights, updated by chatting",
-     "Permanently in the GPU's memory",
-     "In the tokenizer's vocabulary",
+     "In the model's weights, which update a little after every chat",
+     "In the GPU's memory, where the session's state stays loaded",
+     "In the tokenizer's vocabulary, which adds the user's new terms",
      "In application storage that is put back into the context"
     ],
     "answer": 3,
     "why": "Prompting never changes the weights. “Memory” is stored by the application and re-sent as text (7.5).",
     "kind": "scenario",
     "distractors": [
-     "Inference uses fixed weights; a conversation does not retrain the model.",
-     "GPU memory is reused across requests; it is not a per-user store.",
-     "The vocabulary is fixed before training.",
+     "Chatting never changes weights; only training does.",
+     "Serving memory is shared and freed between requests; nothing personal persists there.",
+     "The vocabulary is fixed when the tokenizer is built.",
      ""
     ]
    },
@@ -721,19 +791,19 @@
     "id": "c1-4-m09",
     "q": "Why does output length usually dominate latency?",
     "options": [
-     "Output tokens are cached in advance",
-     "Input tokens are skipped",
+     "Output tokens are computed in advance and cached, so input reading waits for them",
+     "Input tokens are skipped after the first layer, so only output tokens use compute",
      "Output tokens are generated one at a time, while input tokens are read in parallel",
-     "Output tokens are cheaper to compute"
+     "Output tokens are cheaper to compute, so providers queue them behind input tokens"
     ],
     "answer": 2,
     "why": "The prompt is processed in one parallel pass; each output token needs another step through the model.",
     "kind": "concept",
     "distractors": [
-     "Output depends on earlier output, so it cannot be computed in advance.",
-     "Every input token is processed, just in parallel.",
+     "Output cannot be computed before the input is read; each output token depends on the ones before it.",
+     "Every input token passes through every layer; it is just done in one parallel pass.",
      "",
-     "Output tokens are usually priced higher, and are slower per token."
+     "Output tokens are usually priced higher, and the delay comes from generating them one by one."
     ]
    },
    {
@@ -766,7 +836,8 @@
      "Embeddings are vectors looked up for each token",
      "Parameters are the learned numbers that transform them",
      "The context window caps input plus output tokens"
-    ]
+    ],
+    "followUp": "Which of these drive cost, and which drive latency?"
    },
    {
     "id": "c1-4-i02",
@@ -777,7 +848,8 @@
      "Look up embeddings",
      "Pass through transformer layers",
      "Logits, softmax, decode one token, append and repeat"
-    ]
+    ],
+    "followUp": "Which of these steps differ during training, and which stay the same?"
    },
    {
     "id": "c1-4-i03",
@@ -788,7 +860,8 @@
      "Inference uses fixed weights and is cheap per call",
      "Prompting never changes weights",
      "Most product work is inference"
-    ]
+    ],
+    "followUp": "When would a product team need to fine-tune rather than prompt?"
    },
    {
     "id": "c1-4-i04",
@@ -812,7 +885,8 @@
      "Old turns were truncated or summarised away",
      "Memory is application storage, not weights",
      "Options: summaries, retrieval over history, pinned facts"
-    ]
+    ],
+    "followUp": "How would you choose between summarising old turns and retrieving from them?"
    },
    {
     "id": "c1-4-i06",
@@ -825,7 +899,8 @@
      "Price per language and per request type",
      "Monitor as the language mix changes"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "Hinglish requests use far more tokens than you budgeted. What do you change first?"
    },
    {
     "id": "c1-4-i07",
@@ -837,7 +912,8 @@
      "Summarising or retrieving history instead of sending all of it",
      "Counting with the tokenizer at runtime",
      "Logging token use per component"
-    ]
+    ],
+    "followUp": "On long chats the retrieved passages crowd out the history. What do you trim, and how do you check it was the right choice?"
    },
    {
     "id": "c1-4-i08",
@@ -850,7 +926,8 @@
      "Route simple requests to a cheaper model",
      "Load-test with realistic prompts"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "Which of those levers would you try first, and how would you check that answer quality held?"
    }
   ]
  },
@@ -936,37 +1013,37 @@
     "id": "c1-1-m05",
     "q": "You use an LLM to label emails with a team name. What check does the topic say you must add?",
     "options": [
-     "Ask the model how confident it is",
+     "Ask the model to report how confident it is in each label it returns",
      "Validate that the returned label is one of the allowed values",
-     "Raise the temperature so labels vary",
-     "Retrain the LLM every week"
+     "Raise the temperature so the model explores more possible team labels",
+     "Retrain the LLM every week on the emails it labelled the week before"
     ],
     "answer": 1,
     "why": "Open-ended output can contain anything, so an application must check that the label is from the allowed set before acting on it.",
     "kind": "scenario",
     "distractors": [
-     "Self-reported confidence is not a reliable control signal until measured (1.5).",
+     "Self-reported confidence does not track correctness (1.5), and it cannot catch an invented team name.",
      "",
-     "Higher temperature makes output more random, not more valid.",
-     "Prompting does not retrain the model, and retraining does not remove the need to validate."
+     "Higher temperature adds randomness, which makes an off-list label more likely, not less.",
+     "Training on its own unchecked labels reinforces its mistakes and still does not guarantee a valid label."
     ]
    },
    {
     "id": "c1-1-m06",
     "q": "Which of these is deep learning but not generative AI?",
     "options": [
-     "A chat LLM that drafts replies",
-     "A keyword rule for invoices",
-     "Logistic regression on TF-IDF features",
+     "A chat LLM that drafts replies to the same incoming emails",
+     "A hand-written keyword rule that routes invoice emails to Billing",
+     "Logistic regression trained on TF-IDF word features of the emails",
      "A fine-tuned BERT-style encoder that classifies emails"
     ],
     "answer": 3,
     "why": "An encoder classifier is a deep network, but it outputs a label from a fixed set rather than new content.",
     "kind": "concept",
     "distractors": [
-     "Drafting replies is generating new content, so it is generative.",
-     "A keyword rule is rule-based AI with no learning.",
-     "Logistic regression is classical ML, not deep learning.",
+     "A chat LLM is deep learning and generative: it produces open-ended text.",
+     "A keyword rule is AI, but nothing is learned, so it is not ML at all.",
+     "Logistic regression on chosen features is classical ML: no deep network learns the features.",
      ""
     ]
    },
@@ -997,19 +1074,19 @@
     "id": "c1-1-m08",
     "q": "A team calls its whole pipeline “the AI”, and a wrong answer reaches a customer. What does naming each component (rules, search, reranker, LLM) make possible?",
     "options": [
-     "Removing the need for evaluation",
-     "Making the LLM deterministic",
+     "Skipping evaluation, since each named component is already tested alone",
+     "Making the LLM deterministic, because each component has a fixed role",
      "Tracing which component caused the error and what it cost",
-     "Avoiding any logging"
+     "Dropping request logs, because component names already explain failures"
     ],
     "answer": 2,
     "why": "Separate components have separate failure modes and costs. Naming them lets you log, measure and fix each one.",
     "kind": "scenario",
     "distractors": [
-     "Each component still needs evaluating; naming them makes that possible.",
-     "Naming components does not change how the LLM samples.",
+     "Named parts still need evaluation, alone and together; naming makes the results attributable, not unnecessary.",
+     "Naming components changes nothing about how the LLM samples tokens.",
      "",
-     "The point of separating components is to log each one."
+     "Names are only useful with per-component logs; without logs a bad answer cannot be traced."
     ]
    },
    {
@@ -1017,18 +1094,18 @@
     "q": "In a rule-based AI system, where does the knowledge come from?",
     "options": [
      "The programmer who writes the rules",
-     "Labelled examples",
-     "Feedback from users",
-     "A pretraining corpus"
+     "Labelled examples the system was fitted to",
+     "Feedback that users give on its answers",
+     "Patterns learned from a pretraining corpus"
     ],
     "answer": 0,
     "why": "Rule-based systems encode a person's knowledge directly as rules; nothing is learned from data.",
     "kind": "concept",
     "distractors": [
      "",
-     "Learning from labelled examples is classical machine learning.",
-     "Learning from feedback is a form of machine learning, not hand-written rules.",
-     "Pretraining corpora are how foundation models learn."
+     "Learning from labelled examples is machine learning, not rules.",
+     "A rule-based system does not change from feedback unless a person rewrites the rules.",
+     "Pretraining on a corpus is how large neural models learn, not rule-based systems."
     ]
    },
    {
@@ -1036,18 +1113,37 @@
     "q": "For a fixed labelling task with plenty of labelled data, which statement matches the topic's warning?",
     "options": [
      "A small classifier can beat a generative model on cost and accuracy",
-     "Rules can never be part of the solution",
-     "Deep learning needs no data",
-     "Generative AI is always the best choice"
+     "Rules can never be part of the solution once labelled data exists",
+     "Deep learning is required because labelled data is already plentiful",
+     "A generative model is the best choice because it needs no training"
     ],
     "answer": 0,
     "why": "A generative model is not automatically better than a small classifier when the output is a fixed label.",
     "kind": "concept",
     "distractors": [
      "",
-     "Rules are often the right tool for exact logic such as permissions.",
-     "Deep learning needs large amounts of data.",
-     "For fixed labels with good data, simpler models are often cheaper and as accurate or better."
+     "Rules still validate and enforce limits in ML systems; labels do not make them useless.",
+     "Plenty of labels makes classical ML viable; it does not force a deep model.",
+     "Needing no training data helps you start, but at volume a trained classifier is usually cheaper and easier to measure."
+    ]
+   },
+   {
+    "id": "c1-1-m11",
+    "q": "A keyword rule routes support emails to six teams, but paraphrased complaints such as “I was charged twice” keep landing in General. The team has 20,000 labelled emails. Which next step does the topic's example support?",
+    "options": [
+     "Fine-tune a generative model to write replies instead of routing them",
+     "Add keyword rules until every paraphrase has a rule of its own",
+     "Prompt an LLM for a free-text team name and route on its exact words",
+     "Train a classifier on the labelled emails and compare it with the rule"
+    ],
+    "answer": 3,
+    "why": "Rules are brittle when wording changes. With 20,000 labels, classical ML (or a fine-tuned encoder for harder paraphrase) learns the variations cheaply, and the rule is the baseline to beat.",
+    "kind": "scenario",
+    "distractors": [
+     "The problem is routing; writing replies does not put the email in the right team.",
+     "Paraphrases are open-ended; the rule set grows without end and stays brittle.",
+     "An LLM can route, but its label must be validated against the allowed teams, not used as free text.",
+     ""
     ]
    }
   ],
@@ -1073,7 +1169,8 @@
      "Data and compute needs",
      "Typical fit: tabular data versus text, images and audio",
      "Interpretability and cost trade-offs"
-    ]
+    ],
+    "followUp": "When would you still pick classical ML for a text task?"
    },
    {
     "id": "c1-1-i03",
@@ -1084,7 +1181,8 @@
      "Needs rubrics, checks, or human and model judges",
      "Open-ended output can contain unsupported claims",
      "So evaluation design starts before building (chapter 8)"
-    ]
+    ],
+    "followUp": "How would you evaluate an LLM that writes refund emails?"
    },
    {
     "id": "c1-1-i04",
@@ -1108,7 +1206,8 @@
      "Per-component metrics and logs",
      "Tracing a single bad output through each step",
      "Attributing cost per component"
-    ]
+    ],
+    "followUp": "Several components share one request. How would you split its cost between them?"
    },
    {
     "id": "c1-1-i06",
@@ -1121,7 +1220,8 @@
      "Use per-component logs to reproduce the case",
      "Add the case to a regression test"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "Once you find the cause, how do you stop the same wrong refusal from coming back?"
    },
    {
     "id": "c1-1-i07",
@@ -1147,7 +1247,8 @@
      "Stable request IDs linking all three",
      "Retention and access controls for the logs themselves"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "A year later the auditor asks you to replay the decision. What must you have kept to do it?"
    }
   ]
  },
@@ -1157,19 +1258,19 @@
     "id": "c1-2-m01",
     "q": "What limitation of rule-based expert systems did statistical machine learning address?",
     "options": [
-     "Rules required labelled data",
-     "Rules could not run without the internet",
+     "Rules could only be written once enough labelled data had been collected",
+     "Rules needed constant network access to look up facts while running",
      "Rules broke on cases they did not anticipate and became unmaintainable",
-     "Rules were too slow on GPUs"
+     "Rules ran too slowly because they needed GPUs that did not yet exist"
     ],
     "answer": 2,
     "why": "Expert systems worked in narrow domains but broke on anything unanticipated; learning weights from data made systems more robust to noise and variation.",
     "kind": "concept",
     "distractors": [
-     "Rules need no labelled data; that is exactly the difference.",
-     "Connectivity was not the issue.",
+     "Rules are written by people; labelled data is what statistical ML needs.",
+     "Expert systems ran locally on their own rule base; network access was not their limit.",
      "",
-     "GPUs were not part of the expert-system era."
+     "Rules are cheap to run; GPUs mattered later, for training neural networks."
     ]
    },
    {
@@ -1177,36 +1278,36 @@
     "q": "What was the main remaining limitation of statistical ML before deep learning?",
     "options": [
      "Engineers still had to hand-design the features",
-     "It required reinforcement learning",
-     "It only worked on images",
-     "It could not use any data"
+     "It needed reinforcement learning to reach useful accuracy",
+     "It only worked on images, not on text or tabular data",
+     "It could not learn weights from data, only follow rules"
     ],
     "answer": 0,
     "why": "Statistical models learned weights, but people still decided the features (for example “count of exclamation marks”). Deep networks learn features themselves.",
     "kind": "concept",
     "distractors": [
      "",
-     "Reinforcement learning was not required.",
-     "It worked mostly on tabular and text features, not only images.",
-     "Statistical ML is learned from data."
+     "Statistical ML used supervised methods such as naive Bayes and SVMs, not reinforcement learning.",
+     "Spam filters on text were a classic statistical ML success.",
+     "Learning weights from data is exactly what statistical ML introduced."
     ]
    },
    {
     "id": "c1-2-m03",
     "q": "What changed in 2012 that made neural networks take off?",
     "options": [
-     "Transformers were published",
-     "Backpropagation was invented",
-     "The first chatbot was released",
+     "Transformers were published and replaced convolutional networks for images",
+     "Backpropagation was invented, so multi-layer networks could finally be trained",
+     "The first chat assistant was released and showed what neural networks could do",
      "GPUs and large labelled datasets let deep networks win ImageNet by a wide margin"
     ],
     "answer": 3,
     "why": "Backpropagation was popularised in 1986; the breakthrough came when GPUs and large datasets arrived, shown by AlexNet in 2012.",
     "kind": "concept",
     "distractors": [
-     "Transformers arrived in 2017.",
-     "Backpropagation was popularised in 1986, decades earlier.",
-     "Chatbots long predate 2012 and were not the trigger.",
+     "Transformers came in 2017, five years later.",
+     "Backpropagation was popularised in 1986; it was not the 2012 change.",
+     "Chat assistants came after instruction tuning, around 2022.",
      ""
     ]
    },
@@ -1214,18 +1315,18 @@
     "id": "c1-2-m04",
     "q": "Why were RNNs and LSTMs slow to train on large datasets?",
     "options": [
-     "They cannot represent text",
-     "They have no parameters",
-     "They only work for images",
+     "They cannot represent text, so it must first be converted to images",
+     "They have so many parameters that each step needs several GPUs",
+     "They attend from every token to every other token at each step",
      "They process tokens strictly in order, which limits parallelism"
     ],
     "answer": 3,
     "why": "Recurrent networks carry a hidden state from token to token, so steps cannot run in parallel across the sequence.",
     "kind": "concept",
     "distractors": [
-     "They were the standard text models of their era.",
-     "They have many learned parameters.",
-     "They were designed for sequences such as text.",
+     "RNNs were built for sequences such as text; they read one token at a time.",
+     "Their limit was sequential computation, not parameter count.",
+     "That describes attention in a transformer, which is what made training parallel.",
      ""
     ]
    },
@@ -1234,18 +1335,18 @@
     "q": "What did the 2017 transformer remove compared with earlier sequence models?",
     "options": [
      "Recurrence: every token attends to every other token in parallel",
-     "The need for any data",
-     "Attention",
-     "Learned parameters"
+     "The need for training data: it learns language from the architecture",
+     "Attention: it kept only the feed-forward layers and dropped attention",
+     "Learned parameters: its attention weights are fixed rules, not trained"
     ],
     "answer": 0,
     "why": "“Attention Is All You Need” removed recurrence and kept attention, which suits GPUs and scales to huge datasets.",
     "kind": "concept",
     "distractors": [
      "",
-     "They need very large datasets.",
-     "Attention is the transformer's core mechanism.",
-     "Transformers have billions of learned parameters."
+     "Transformers need very large datasets; the architecture alone knows nothing.",
+     "The paper is “Attention Is All You Need”: attention is the core, recurrence is what went.",
+     "All of a transformer's weights, including attention projections, are learned."
     ]
    },
    {
@@ -1253,18 +1354,18 @@
     "q": "What defines a foundation model?",
     "options": [
      "One large model pretrained on broad data, then adapted to many tasks",
-     "A rule-based system with many rules",
-     "A model trained only on one company's data",
-     "Any model with more than one layer"
+     "A rule-based system with thousands of rules written by domain experts",
+     "A model trained only on one company's data for that company's tasks",
+     "Any neural network with more than one layer, whatever its training data"
     ],
     "answer": 0,
     "why": "Foundation models (BERT, GPT-2, GPT-3) are pretrained once on broad data and adapted to many tasks by prompting or fine-tuning.",
     "kind": "concept",
     "distractors": [
      "",
-     "Rule-based systems learn nothing from data.",
-     "Foundation models are trained on broad data, not one task's data.",
-     "Depth alone does not make a model a foundation model."
+     "That is an expert system, the first era.",
+     "Narrow, single-owner training is the opposite of broad pretraining.",
+     "Depth alone makes a deep network, not a foundation model; broad pretraining and reuse define it."
     ]
    },
    {
@@ -1291,55 +1392,93 @@
     "q": "Which statement about agents is accurate?",
     "options": [
      "An agent is an application architecture: a model in a control loop that calls tools",
-     "An agent proves the model reasons like a person",
-     "An agent is a new kind of neural network layer",
-     "Agents do not use language models"
+     "An agent proves the model reasons like a person, since it plans its own steps",
+     "An agent is a new kind of neural network layer that is trained to call tools",
+     "An agent replaces the language model with a planner written as fixed rules"
     ],
     "answer": 0,
     "why": "An agent is a design pattern: the model chooses actions, observes results and decides next steps in a loop.",
     "kind": "concept",
     "distractors": [
      "",
-     "Using tools in a loop is not evidence of human-like reasoning.",
-     "Agents reuse existing models; the novelty is the loop around them.",
-     "Modern agents are built around LLMs."
+     "Planning steps in a loop is a design pattern; it says nothing about human-like reasoning.",
+     "Tool calls come from the application loop around the model, not from a new layer type.",
+     "The LLM is the decision-maker inside the loop; agents are built around it."
     ]
    },
    {
     "id": "c1-2-m09",
     "q": "In the example sentence “The movie was not bad at all”, why might a bag-of-words classifier get the sentiment wrong?",
     "options": [
-     "It always predicts positive",
+     "It always predicts positive for short sentences with few words",
      "“bad” carries a negative weight and word order is ignored",
-     "It cannot read English",
-     "It uses attention from “bad” to “not”"
+     "It cannot read English words that it did not see during training",
+     "It attends from “bad” to “not”, but the attention weight is too small"
     ],
     "answer": 1,
     "why": "A bag-of-words model sums word weights without order, so “not … at all” does not flip “bad”.",
     "kind": "scenario",
     "distractors": [
-     "Nothing forces it to predict positive.",
+     "Bag-of-words has no rule about sentence length; it sums word weights.",
      "",
-     "It reads words; it ignores their order.",
-     "Attending from “bad” to “not” is what a transformer does."
+     "“not” and “bad” are common words; unseen words are not the problem here.",
+     "Bag-of-words has no attention; that is how a transformer handles this sentence."
     ]
    },
    {
     "id": "c1-2-m10",
     "q": "A support team already has keyword rules, a trained classifier and a RAG answerer. A new agent workflow is proposed. What does the history of the field suggest?",
     "options": [
-     "The agent should replace everything before it",
-     "Retrieval is unnecessary once agents exist",
-     "Rules are obsolete once ML exists",
+     "The agent should replace the rules, classifier and RAG answerer at once",
+     "Retrieval is unnecessary once an agent can call tools and plan its steps",
+     "Rules became obsolete once trained classifiers could learn from data",
      "Each stage fixes a specific failure; earlier stages often stay useful"
     ],
     "answer": 3,
     "why": "Each era solved the previous one's main limitation without making it useless. Rules and classifiers are still cheaper and more exact for some jobs.",
     "kind": "scenario",
     "distractors": [
-     "Replacing working components adds risk without a measured gain.",
-     "Agents still need retrieval to ground their answers.",
-     "Rules remain the right tool for exact logic.",
+     "Replacing working parts adds risk without fixing a named failure.",
+     "Agents still need retrieval to get facts; tool calls often are retrieval.",
+     "Rules still do exact checks and permissions better than any model.",
+     ""
+    ]
+   },
+   {
+    "id": "c1-2-m11",
+    "q": "A claims team maintains 4,000 IF–THEN rules, and every new product line breaks several of them in ways nobody predicted. Which shift from the history of the field addresses this?",
+    "options": [
+     "Running the same rules on GPUs, the change that made deep networks win in 2012",
+     "Adding attention so that each rule can look back at the rules before it",
+     "Learning weights from labelled claims instead of writing every rule by hand",
+     "Asking the rule writers to use a stricter format so rules cannot conflict"
+    ],
+    "answer": 2,
+    "why": "Expert systems broke on cases the rules did not anticipate, and thousands of rules became unmaintainable. Statistical ML replaced hand-written rules with weights learned from data.",
+    "kind": "scenario",
+    "distractors": [
+     "GPUs speed up training neural networks; they do nothing for rules that miss new cases.",
+     "Attention is a mechanism inside neural networks, not a way to organise written rules.",
+     "",
+     "A stricter format keeps rules tidy, but people still have to anticipate every case."
+    ]
+   },
+   {
+    "id": "c1-2-m12",
+    "q": "An LSTM sentiment model handles “not bad at all” but misses negations that sit hundreds of tokens before the verdict, and it takes days to train on the team's corpus. Which change addresses both problems?",
+    "options": [
+     "A bag-of-words classifier, which ignores word order and trains much faster",
+     "A rule that flips the sentiment whenever “not” appears anywhere in a review",
+     "A deeper LSTM with more gates, so it carries its memory over longer spans",
+     "A transformer, where every token attends to every other token in parallel"
+    ],
+    "answer": 3,
+    "why": "LSTMs read tokens strictly in order, which is slow to train, and still forget over long distances. Attention turns a long-range link into a direct lookup, and transformers compute it for all tokens in parallel.",
+    "kind": "scenario",
+    "distractors": [
+     "It trains fast but ignores order, so it loses the negation entirely.",
+     "Brittle: “not only great but…” would be flipped wrongly, as rule systems always were.",
+     "Still sequential, so still slow, and gates only reduce forgetting over long distances.",
      ""
     ]
    }
@@ -1355,7 +1494,8 @@
      "Deep learning learned features, enabled by GPUs and data",
      "Attention and transformers replaced sequential processing with parallel attention",
      "Foundation models, instruction tuning, then agents"
-    ]
+    ],
+    "followUp": "What limitation did transformers bring that later work still has to deal with?"
    },
    {
     "id": "c1-2-i02",
@@ -1366,7 +1506,8 @@
      "Direct attention between distant tokens instead of a chain of hidden states",
      "Scales to very large datasets",
      "RNNs forget over long distances and train slowly"
-    ]
+    ],
+    "followUp": "What did transformers give up compared with RNNs, for example on very long inputs?"
    },
    {
     "id": "c1-2-i03",
@@ -1377,7 +1518,8 @@
      "Adapted to many tasks with prompts or fine-tuning",
      "Teams start from a capable model instead of collecting task data first",
      "Capabilities improved with scale"
-    ]
+    ],
+    "followUp": "When would you still train a task-specific model instead of adapting a foundation model?"
    },
    {
     "id": "c1-2-i04",
@@ -1388,7 +1530,8 @@
      "Tools, observations and decisions are application code",
      "Risks come from actions, not architecture",
      "Limits, approvals and evaluation are still needed"
-    ]
+    ],
+    "followUp": "Which agent risks would you test before giving it write access to a system?"
    },
    {
     "id": "c1-2-i05",
@@ -1399,7 +1542,8 @@
      "Cost, exactness, auditability or latency advantage",
      "How you would show the newer approach is not better",
      "When you would revisit the choice"
-    ]
+    ],
+    "followUp": "What evidence would make you switch to the newer approach?"
    },
    {
     "id": "c1-2-i06",
@@ -1412,7 +1556,8 @@
      "Limits on steps and cost",
      "Evaluating whole workflows, not single answers"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "The flight is booked but the hotel step fails. Walk me through the recovery."
    },
    {
     "id": "c1-2-i07",
@@ -1436,7 +1581,8 @@
      "New models change capabilities, not requirements",
      "Evaluation decides, not novelty",
      "Cost, latency and risk constraints still apply"
-    ]
+    ],
+    "followUp": "Leadership asks you to pick a model anyway. How do you decide?"
    }
   ]
  },
@@ -1447,36 +1593,36 @@
     "q": "What is a hallucination?",
     "options": [
      "Fluent, confident output that is false",
-     "Any output the user dislikes",
-     "A slow response",
-     "A refusal to answer"
+     "Any output that the user dislikes or rejects",
+     "A slow response that times out before finishing",
+     "A refusal to answer a question it could answer"
     ],
     "answer": 0,
     "why": "When the model lacks a fact, a plausible-sounding fabrication is still the likely continuation.",
     "kind": "concept",
     "distractors": [
      "",
-     "Disliked output may be correct.",
-     "Latency is unrelated to truthfulness.",
-     "Refusing is the opposite of fabricating."
+     "A correct answer can be disliked; hallucination is about falseness.",
+     "Latency is a serving problem, not a hallucination.",
+     "Over-refusal is a separate failure; a hallucination is a confident false answer."
     ]
    },
    {
     "id": "c1-5-m02",
     "q": "Why does a model not know about your product release last week?",
     "options": [
-     "It only reads one language",
-     "It deletes recent memories",
-     "Release notes are too long",
+     "It only reads English, and the release notes are translated",
+     "It deletes memories older than its context window allows",
+     "Release notes are too long to fit into its parameters",
      "Its weights reflect data up to a training cutoff"
     ],
     "answer": 3,
     "why": "Knowledge in the weights is frozen at the cutoff, and your internal documents were never in training at all unless supplied in context.",
     "kind": "concept",
     "distractors": [
-     "Language support is not the issue.",
-     "Models have no memory to delete; they were never trained on it.",
-     "Length is not the reason; the data was never seen.",
+     "Language is not the issue; the release happened after the training data was collected.",
+     "Weights are not deleted over time; they are frozen at training.",
+     "Parameters are not a store that documents are put into; new facts reach the model through the context.",
      ""
     ]
    },
@@ -1484,37 +1630,37 @@
     "id": "c1-5-m03",
     "q": "An assistant invents a configuration flag that does not exist. Which mitigation does the topic recommend?",
     "options": [
-     "Raise the temperature",
-     "Ask the model to double-check itself",
-     "Retrieve the real documentation, require quoting it, and add the question to the evaluation set",
-     "Switch to a model with more parameters"
+     "Raise the temperature so the model samples other flag names and picks the best",
+     "Ask the model to double-check its own answer before replying, in the same prompt",
+     "Retrieve the real docs, require a quote from them, and add the case to the eval set",
+     "Switch to a model with more parameters, which has seen more configuration files"
     ],
     "answer": 2,
     "why": "Supply the facts, constrain the answer to cite them, and keep the case as a regression test.",
     "kind": "scenario",
     "distractors": [
-     "Higher temperature adds randomness.",
-     "Self-checking without the facts still produces a plausible guess.",
+     "More sampling produces more plausible-looking fabrications, not the real flag.",
+     "The model has no new information to check against; it will often confirm the same invented flag.",
      "",
-     "Bigger models still do not know your config."
+     "Your gateway's docs were not in its training data; size does not supply missing facts."
     ]
    },
    {
     "id": "c1-5-m04",
     "q": "Why is “I'm certain” from a model not a usable control signal?",
     "options": [
-     "It only appears in English",
-     "Models are never certain",
-     "It is always false",
+     "It only appears in English, so it cannot be used for answers in other languages",
+     "Models are never certain, so the phrase is filtered out before the reply is sent",
+     "It is always false: a model says it only when it has no supporting evidence",
      "Tone does not track correctness until confidence is measured against labelled cases"
     ],
     "answer": 3,
     "why": "Even token probabilities are only loosely related to factual accuracy after instruction tuning; measure calibration before relying on any confidence.",
     "kind": "concept",
     "distractors": [
-     "Language is not the issue.",
-     "Models can be confident and right; the point is the signal is unmeasured.",
-     "It is sometimes true; you cannot tell when.",
+     "The issue is not language; tone carries no information about correctness in any language.",
+     "Nothing filters the phrase; models say it freely, which is why it must not be trusted.",
+     "It is not reliably false either; it simply carries no information until measured.",
      ""
     ]
    },
@@ -1546,36 +1692,36 @@
     "q": "A model screens job applications. Which limitation becomes a legal and ethical problem?",
     "options": [
      "Bias learned from skewed training data",
-     "Long context windows",
-     "Slow decoding",
-     "Large vocabulary"
+     "Long context windows that include whole CVs",
+     "Slow decoding when many applications arrive",
+     "A large vocabulary that splits rare names"
     ],
     "answer": 0,
     "why": "Associations learned from the world's skews can treat groups differently, which matters in hiring, lending and moderation.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Context length is unrelated.",
-     "Speed is not a fairness issue.",
-     "Vocabulary size is unrelated."
+     "Context length is a cost and capacity concern, not a fairness problem.",
+     "Throughput is an operations problem with no legal dimension.",
+     "Vocabulary size affects token counts, not fair treatment of candidates."
     ]
    },
    {
     "id": "c1-5-m07",
     "q": "Which limitation does retrieval-augmented generation (RAG) mainly address?",
     "options": [
-     "Tokenisation of non-English text",
-     "Bias in the model's weights",
-     "Non-determinism",
+     "Poor tokenisation of non-English text in your documents",
+     "Bias learned from skewed data in the model's weights",
+     "Non-determinism, so the same question gets one answer",
      "Missing or outdated knowledge of your own documents"
     ],
     "answer": 3,
     "why": "RAG puts current, private facts into the context. It does not change the weights, so bias and randomness need other controls.",
     "kind": "concept",
     "distractors": [
-     "Token counts depend on the tokenizer.",
-     "Bias lives in the weights and needs evaluation and controls, not just retrieval.",
-     "Sampling randomness is set by decoding.",
+     "Tokenisation is fixed by the model; retrieval does not change it.",
+     "Retrieval supplies facts; it does not change biases in the weights.",
+     "Retrieval does not make sampling deterministic.",
      ""
     ]
    },
@@ -1583,18 +1729,18 @@
     "id": "c1-5-m08",
     "q": "An answer comes with a citation. What must you still check?",
     "options": [
-     "That the citation is formatted correctly",
-     "That the passage is long",
-     "Nothing; a citation proves the claim",
+     "That the citation is formatted in the style the team agreed on",
+     "That the cited passage is long enough to be a reliable source",
+     "Nothing more, because a citation proves the claim is supported",
      "That the cited passage actually supports the specific claim"
     ],
     "answer": 3,
     "why": "Models can attach real sources to unsupported claims, so grade support claim by claim.",
     "kind": "scenario",
     "distractors": [
-     "Formatting does not prove support.",
-     "Length is irrelevant.",
-     "A citation is evidence only if it supports the claim.",
+     "A well-formatted citation can still point to a passage that says something else.",
+     "Length says nothing about whether the passage supports this claim.",
+     "Models can attach real citations to unsupported claims.",
      ""
     ]
    },
@@ -1603,18 +1749,18 @@
     "q": "Why do models often miscount the letters in a word?",
     "options": [
      "They see tokens, not individual characters",
-     "Letters are removed during training",
-     "They cannot count at all",
-     "Counting needs a GPU"
+     "Letters are removed from words during training",
+     "They cannot count at all, even small numbers",
+     "Counting needs a GPU that inference does not use"
     ],
     "answer": 0,
     "why": "A word may be one or a few tokens, so the characters inside are not directly visible.",
     "kind": "concept",
     "distractors": [
      "",
-     "Nothing removes letters.",
-     "They can count tokens and things in text reasonably; characters are the issue.",
-     "Hardware is not the cause."
+     "Training keeps the text; it is split into tokens, which hide individual letters.",
+     "They count small sets of tokens reasonably; the problem is that letters are inside tokens.",
+     "Inference runs on the same hardware; the limit is how the text is represented."
     ]
    },
    {
@@ -1622,18 +1768,18 @@
     "q": "Which test case best catches stale-knowledge failures in a policy assistant?",
     "options": [
      "A question about a policy that was revised last week",
-     "A question asked twice in a row",
-     "A question about the most common policy",
-     "A greeting"
+     "The same question asked twice in a row, to compare",
+     "A question about the most frequently asked policy",
+     "A greeting followed by a request for the policy list"
     ],
     "answer": 0,
     "why": "A recently revised policy shows whether the system answers from the current version or from older knowledge.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Repetition tests determinism, not freshness.",
-     "The most common policy is likely answered correctly either way.",
-     "Greetings test nothing about knowledge."
+     "Repeating a question tests consistency, not whether knowledge is current.",
+     "Common, stable policies are the least likely to expose stale knowledge.",
+     "A greeting tests conversation handling, not stale facts."
     ]
    }
   ],
@@ -1648,7 +1794,8 @@
      "Bias from skewed training data",
      "Unreliable confidence",
      "Counting errors, wording sensitivity, injection"
-    ]
+    ],
+    "followUp": "Which of these can you fix in your application, and which only by changing the model?"
    },
    {
     "id": "c1-5-i02",
@@ -1659,7 +1806,8 @@
      "Outdated: a fact that was true at the cutoff but has changed",
      "Both are fixed by supplying current facts",
      "Tests need different cases for each"
-    ]
+    ],
+    "followUp": "Write one test case for each, for a policy assistant."
    },
    {
     "id": "c1-5-i03",
@@ -1670,7 +1818,8 @@
      "Token probabilities are loosely related to accuracy after tuning",
      "Confidence must be calibrated on labelled cases",
      "Use measured signals instead"
-    ]
+    ],
+    "followUp": "What does a reliability diagram show that a single accuracy number does not?"
    },
    {
     "id": "c1-5-i04",
@@ -1694,7 +1843,8 @@
      "Retrieval returned a related but wrong passage",
      "Check claim-level support automatically and by sampling",
      "Track the rate over time"
-    ]
+    ],
+    "followUp": "How would you measure claim-level support without reviewing every answer by hand?"
    },
    {
     "id": "c1-5-i06",
@@ -1706,7 +1856,8 @@
      "Per-language failure rates",
      "Monitor the production language mix and quality by language"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "Tamil answers fail twice as often as English ones. Where do you look first?"
    },
    {
     "id": "c1-5-i07",
@@ -1730,7 +1881,8 @@
      "Plot a reliability diagram",
      "Pick a threshold from review capacity and risk",
      "Re-check calibration after model or prompt changes"
-    ]
+    ],
+    "followUp": "After a model upgrade, how would you notice that calibration has drifted?"
    }
   ]
  }

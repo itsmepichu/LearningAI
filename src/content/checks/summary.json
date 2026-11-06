@@ -1,11 +1,11 @@
 {
  "totals": {
-  "mcq": 1353,
+  "mcq": 1358,
   "interview": 1080
  },
  "chapters": {
   "c1": {
-   "mcq": 60,
+   "mcq": 65,
    "interview": 48,
    "sections": {
     "c1-6": {
@@ -13,7 +13,7 @@
      "interview": 8
     },
     "c1-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c1-4": {
@@ -21,11 +21,11 @@
      "interview": 8
     },
     "c1-1": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c1-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c1-5": {
