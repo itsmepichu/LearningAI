@@ -38,6 +38,10 @@ const KIT_WIDGETS = [
   ['critical-path', '/c17/c17-2'],
   ['cost-attribution', '/c17/c17-5'],
   ['py-lab', '/app-a/app-a-run'],
+  ['py-snippet', '/c5/c5-1'],
+  ['py-snippet', '/c5/c5-2'],
+  ['py-snippet', '/c5/c5-5'],
+  ['py-snippet', '/c5/c5-6'],
   ['colab-guide', '/c5/c5-6'],
   ['colab-guide', '/c13/c13-3'],
   ['colab-guide', '/c14/c14-7'],
@@ -68,6 +72,9 @@ const KIT_WIDGETS = [
   ['throughput-latency', '/c14/c14-7', 'neutral'],
   ['queue-sim', '/c15/c15-1', 'neutral'],
   ['burn-rate', '/c17/c17-8', 'neutral'],
+  ['py-snippet', '/c5/c5-3', 'neutral'],
+  ['py-snippet', '/c5/c5-4', 'neutral'],
+  ['py-snippet', '/c5/c5-7', 'neutral'],
 ]
 const PROJECTS = require('../src/content/projects.json').projects
 
@@ -105,7 +112,7 @@ const PROJECTS = require('../src/content/projects.json').projects
   }
 
   // 1. every route
-  const routes = ['/', '/guide', '/progress', '/practice', '/does-not-exist']
+  const routes = ['/', '/guide', '/progress', '/practice', '/glossary', '/flashcards', '/does-not-exist']
   for (const c of manifest.chapters) {
     routes.push('/' + c.id)
     if (c.kind === 'chapter') routes.push(`/${c.id}/check`)
@@ -350,6 +357,23 @@ const PROJECTS = require('../src/content/projects.json').projects
     await g.waitForFunction((s) => /Stopped/.test(document.querySelector(`${s}`).textContent) && document.querySelector(`${s} textarea`), py)
     if ((await g.inputValue(`${py} textarea`)) !== 'while True:\n    pass') fails.push('python lab: Stop should keep the code')
     if ((await g.evaluate(() => window.__workers.length)) !== before + 1) fails.push('python lab: Stop should replace the worker')
+
+    // A runnable snippet: the project's data in its files, output shown, Reset restores the code
+    const sn = kitSel('py-snippet')
+    await g.goto(`${BASE}/c5/c5-1?project=bank`, { waitUntil: 'networkidle' })
+    await g.waitForSelector(`${sn} [data-gate="idle"]`)
+    if (!/disputes\.csv/.test(await g.textContent(`${sn} .wk-src`))) fails.push('snippet: the source line should name the project dataset')
+    await g.click(`${sn} [data-gate="idle"] .btn.primary`)
+    await g.waitForSelector(`${sn} textarea`)
+    const original = await g.inputValue(`${sn} textarea`)
+    if (!/messages\.json/.test(original)) fails.push('snippet: the code should read the project messages')
+    await g.click(`${sn} .btn.primary`)
+    await g.waitForSelector(`${sn} .wk-output`)
+    if (!/stubbed output/.test(await g.textContent(`${sn} .wk-output`))) fails.push('snippet: the output is not shown')
+    if (!/ran in/.test(await g.textContent(`${sn} .ctl`))) fails.push('snippet: the run time is not shown')
+    await g.fill(`${sn} textarea`, 'print(1)')
+    await g.click(`${sn} .btn:has-text("Reset the code")`)
+    if ((await g.inputValue(`${sn} textarea`)) !== original) fails.push('snippet: Reset should restore the code')
 
     if (gErrs.length) fails.push('gate: ' + gErrs.join(' | '))
     if (fetched.length) fails.push(`gate: stubbed checks fetched ${fetched[0]}`)
@@ -894,6 +918,39 @@ const PROJECTS = require('../src/content/projects.json').projects
   const mistakes = await page.$$eval('.pm .mcq', (x) => x.length)
   console.log('review-mistakes cards:', mistakes)
   if (!mistakes) fails.push('practice page: wrong answer did not appear under Review mistakes')
+  // the wrong answer joined the flashcard deck; review it once
+  await page.goto(BASE + '/flashcards', { waitUntil: 'networkidle' })
+  await page.waitForSelector('.fc-card')
+  const dueBefore = +(await page.textContent('.fc-stats li:nth-child(2) b'))
+  await page.keyboard.press(' ')
+  await page.waitForSelector('.fc-back')
+  const grades = await page.$$eval('.fc-grades .btn small', (x) => x.map((e) => e.textContent))
+  if (grades.length !== 4) fails.push('flashcards: expected four grade buttons with their waits')
+  await page.keyboard.press('3')
+  await page.waitForTimeout(150)
+  const dueAfter = +(await page.textContent('.fc-stats li:nth-child(2) b'))
+  console.log('flashcards due:', dueBefore, '->', dueAfter)
+  if (!(dueBefore >= 1 && dueAfter === dueBefore - 1)) fails.push(`flashcards: grading should take the card out of "due now" (${dueBefore} -> ${dueAfter})`)
+  await checkHeadings('flashcards with a card')
+
+  // glossary: a term in the text shows its card, and its link opens the glossary entry
+  await page.goto(BASE + '/c5/c5-1', { waitUntil: 'networkidle' })
+  await page.hover('a.gl[href="#gl-bpe"]')
+  await page.waitForSelector('#gl-tip')
+  if (!/Byte-pair encoding/.test(await page.textContent('#gl-tip'))) fails.push('glossary: the hover card does not show the term')
+  if ((await page.getAttribute('a.gl[href="#gl-bpe"]', 'aria-describedby')) !== 'gl-tip') fails.push('glossary: the term is not described by its card')
+  await page.keyboard.press('Escape')
+  await page.click('a.gl[href="#gl-bpe"]')
+  await page.waitForSelector('#gl-bpe.hit')
+  if (!page.url().endsWith('/glossary#gl-bpe')) fails.push(`glossary: the term link went to ${page.url()}`)
+  // math is typeset, and the topic's parts lead its contents
+  await page.goto(BASE + '/c5/c5-2', { waitUntil: 'networkidle' })
+  await page.waitForSelector('.math[data-tex] .katex')
+  const raw = await page.$$eval('.math:not([data-tex])', (x) => x.length)
+  if (raw) fails.push(`math: ${raw} formulas were not typeset`)
+  const rail = await page.$$eval('.t-rail a.rk-part', (x) => x.map((a) => a.textContent))
+  if (rail.join() !== 'Intuition,Mechanism,The math,Code,Primary sources') fails.push(`topic parts in the rail: ${rail.join(', ')}`)
+
   await page.goto(BASE + '/c5', { waitUntil: 'networkidle' })
   const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
   await page.click('button[aria-label^="Switch to"]')

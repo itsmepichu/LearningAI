@@ -9,7 +9,7 @@ import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
 
-interface Mark { id: string; label: string; kind: 'fig' | 'box' | 'ff' }
+interface Mark { id: string; label: string; kind: 'part' | 'fig' | 'box' | 'ff' }
 
 
 export function TopicPage() {
@@ -34,16 +34,19 @@ export function TopicPage() {
     if (topic) visit(topicPath(topic))
   }, [topic, visit])
 
-  // Build "On this page" from figures and callouts, then follow the reader.
+  // Build "On this page" from the topic's parts (Intuition, Mechanism, …), figures and callouts, then follow the reader.
   useEffect(() => {
     if (!html || !body.current) return
-    const els = [...body.current.querySelectorAll<HTMLElement>('figure, .box, .ff, [data-slot="practice"], .terms, .tools')]
+    const els = [...body.current.querySelectorAll<HTMLElement>('.tp, figure, .box, .ff, [data-slot="practice"], .terms, .tools')]
     const list: Mark[] = []
     els.forEach((el, i) => {
       let label = ''
       let kind: Mark['kind'] = 'box'
       const cl = el.classList
-      if (el.tagName === 'FIGURE') {
+      if (cl.contains('tp')) {
+        kind = 'part'
+        label = el.querySelector('h2,h3,h4')?.textContent || 'Part'
+      } else if (el.tagName === 'FIGURE') {
         kind = 'fig'
         label = el.querySelector('figcaption b')?.textContent || el.querySelector('figcaption')?.textContent?.slice(0, 60) || 'Figure'
       } else if (cl.contains('ff') || el.dataset.slot === 'practice') {

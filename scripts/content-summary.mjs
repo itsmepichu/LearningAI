@@ -3,6 +3,7 @@
 // Runs automatically before `npm run dev` and `npm run build`; exits non-zero on any content error.
 import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+import katex from 'katex'
 
 const root = join(process.cwd(), 'src', 'content')
 const manifest = JSON.parse(readFileSync(join(root, 'manifest.json'), 'utf8'))
@@ -108,10 +109,81 @@ for (const c of manifest.chapters) {
   summary.totals.interview += ch.interview
 }
 
+// ---- Topic pages: math, glossary links and the topic structure ----
+// A structured topic has, in this order: Intuition, Mechanism, Math, Code, the practice block, Primary sources.
+const PARTS = ['intuition', 'mechanism', 'math', 'code', 'sources']
+const glossary = JSON.parse(readFileSync(join(root, 'glossary.json'), 'utf8'))
+for (const [id, e] of Object.entries(glossary)) {
+  if (!/^[a-z0-9-]+$/.test(id)) err(`glossary ${id}`, 'ids are lowercase letters, digits and hyphens')
+  if (!e.term || !e.def) err(`glossary ${id}`, 'needs term and def')
+  if (!topicIds.has(e.topic)) err(`glossary ${id}`, `unknown topic ${e.topic}`)
+}
+const snippetSrc = readFileSync(join(process.cwd(), 'src', 'widgets', 'py-snippet', 'snippets.ts'), 'utf8')
+const SNIPPET_IDS = new Set([...snippetSrc.slice(snippetSrc.indexOf('export const SNIPPETS')).matchAll(/^  ([a-z][\w-]*): \{$/gm)].map((m) => m[1]))
+const unescape = (t) => t.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
+const structure = { topics: 0, math: 0, glossaryLinks: 0 }
+for (const c of manifest.chapters) {
+  let structured = 0
+  for (const t of c.topics) {
+    const file = join(root, 'pages', c.id, `${t.id}.html`)
+    if (!existsSync(file)) continue
+    const html = readFileSync(file, 'utf8')
+    const where = `pages/${c.id}/${t.id}.html`
+    for (const m of html.matchAll(/<(span|div) class="math">([\s\S]*?)<\/\1>/g)) {
+      structure.math++
+      try {
+        katex.renderToString(unescape(m[2]), { displayMode: m[1] === 'div', throwOnError: true })
+      } catch (e) {
+        err(where, `math does not parse: ${m[2].slice(0, 60)} (${e.message.split('\n')[0]})`)
+      }
+    }
+    if (/class="[^"]*(?<![\w-])math(?![\w-])[^"]*"/.test(html.replace(/<(span|div) class="math">/g, ''))) err(where, 'write math as <span class="math"> or <div class="math"> with no other class')
+    for (const m of html.matchAll(/<a\b[^>]*class="gl"[^>]*>/g)) {
+      structure.glossaryLinks++
+      const id = /href="#gl-([^"]+)"/.exec(m[0])?.[1]
+      if (!id) err(where, `glossary link needs href="#gl-<id>": ${m[0]}`)
+      else if (!glossary[id]) err(where, `glossary link to unknown term ${id}`)
+    }
+    const parts = [...html.matchAll(/<section class="tp tp-([a-z]+)"[^>]*>/g)]
+    if (!parts.length) continue
+    structured++
+    structure.topics++
+    const names = parts.map((m) => m[1])
+    if (names.join() !== PARTS.join()) err(where, `topic parts must be ${PARTS.join(', ')} in that order (found ${names.join(', ')})`)
+    const part = (name) => {
+      const i = parts.findIndex((m) => m[1] === name)
+      if (i < 0) return ''
+      const from = parts[i].index
+      const to = i + 1 < parts.length ? parts[i + 1].index : html.length
+      return html.slice(from, to)
+    }
+    for (const m of parts) if (!/^<section class="tp tp-[a-z]+" id="[a-z0-9-]+">$/.test(m[0])) err(where, `write a part as <section class="tp tp-${m[1]}" id="${t.id}-${m[1]}">`)
+    for (const name of PARTS) {
+      const body = part(name)
+      if (body && !new RegExp(`^<section[^>]*>\\s*<h3 data-n="[^"]+">`).test(body)) err(where, `the ${name} part starts with <h3 data-n="…">`)
+    }
+    if (!/class="math"/.test(part('math'))) err(where, 'the Math part needs at least one formula (class="math")')
+    const code = part('code')
+    const widgets = [...code.matchAll(/data-widget="(py-snippet|colab-guide)"(?:\s+data-props='([^']*)')?/g)]
+    if (!widgets.length) err(where, 'the Code part needs a py-snippet or a colab-guide')
+    for (const w of widgets.filter((x) => x[1] === 'py-snippet')) {
+      const id = JSON.parse(w[2] || '{}').snippet
+      if (!SNIPPET_IDS.has(id)) err(where, `unknown py-snippet ${id}`)
+    }
+    const slot = html.indexOf('data-slot="practice"')
+    const src = parts.find((m) => m[1] === 'sources')?.index ?? -1
+    const codeAt = parts.find((m) => m[1] === 'code')?.index ?? -1
+    if (slot < 0 || !(slot > codeAt && slot < src)) err(where, 'the practice block goes between the Code and Primary sources parts')
+    const links = [...part('sources').matchAll(/href="https?:\/\//g)].length
+    if (links < 2) err(where, `Primary sources needs at least 2 links (found ${links})`)
+  }
+  if (structured && structured < c.topics.length) err(c.id, `${structured} of ${c.topics.length} topics use the topic structure; restructure a chapter all at once`)
+}
+
 if (errors.length) {
   console.error('Content errors:\n- ' + errors.join('\n- '))
   process.exit(1)
 }
 if (warnings.length) console.warn('Content warnings:\n- ' + warnings.join('\n- '))
 writeFileSync(join(root, 'checks', 'summary.json'), JSON.stringify(summary, null, 1) + '\n')
-console.log(`content ok · ${summary.totals.mcq} choose-the-answer · ${summary.totals.interview} interview questions`)
+console.log(`content ok · ${summary.totals.mcq} choose-the-answer · ${summary.totals.interview} interview questions · ${structure.topics} structured topics · ${structure.math} formulas · ${Object.keys(glossary).length} glossary terms`)

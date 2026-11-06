@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import legacyQuizMap from '../content/checks/legacy-quiz-map.json'
 import { DEFAULT_PROJECT, type ProjectId } from '../data/projects'
+import { newCard, review, type GradeName, type SavedCard } from '../data/flashcards'
 
 export type Rating = 'missed' | 'partly' | 'covered'
 export type Answer = number | number[]
@@ -15,6 +16,8 @@ interface ProgressState {
   results: Record<string, boolean>
   /** Interview self-ratings, keyed by stable question id. */
   ratings: Record<string, Rating>
+  /** Flashcards, keyed by question id. A choose-the-answer question answered wrongly joins the deck by itself. */
+  cards: Record<string, SavedCard>
   project: ProjectId
   last?: string
   setStudied: (id: string, on: boolean) => void
@@ -22,6 +25,9 @@ interface ProgressState {
   answer: (qid: string, a: Answer, correct: boolean) => void
   clearAnswers: (qids: string[]) => void
   rate: (qid: string, r: Rating | undefined) => void
+  addCard: (qid: string) => void
+  removeCard: (qid: string) => void
+  reviewCard: (qid: string, grade: GradeName) => void
   setProject: (p: ProjectId) => void
   visit: (path: string) => void
   reset: () => void
@@ -46,6 +52,7 @@ export const useProgress = create<ProgressState>()(
       answers: {},
       results: {},
       ratings: {},
+      cards: {},
       project: DEFAULT_PROJECT,
       setStudied: (id, on) =>
         set((s) => {
@@ -60,7 +67,12 @@ export const useProgress = create<ProgressState>()(
           ids.forEach((id) => (on ? (studied[id] = true) : delete studied[id]))
           return { studied }
         }),
-      answer: (qid, a, correct) => set((s) => ({ answers: { ...s.answers, [qid]: a }, results: { ...s.results, [qid]: correct } })),
+      answer: (qid, a, correct) =>
+        set((s) => ({
+          answers: { ...s.answers, [qid]: a },
+          results: { ...s.results, [qid]: correct },
+          ...(!correct && !s.cards[qid] ? { cards: { ...s.cards, [qid]: newCard(new Date()) } } : {}),
+        })),
       clearAnswers: (qids) =>
         set((s) => {
           const answers = { ...s.answers }
@@ -76,17 +88,27 @@ export const useProgress = create<ProgressState>()(
           const ratings = { ...s.ratings }
           if (r) ratings[qid] = r
           else delete ratings[qid]
+          // An interview question you missed joins the flashcard deck, like a wrong answer does.
+          if (r === 'missed' && !s.cards[qid]) return { ratings, cards: { ...s.cards, [qid]: newCard(new Date()) } }
           return { ratings }
         }),
+      addCard: (qid) => set((s) => (s.cards[qid] ? {} : { cards: { ...s.cards, [qid]: newCard(new Date()) } })),
+      removeCard: (qid) =>
+        set((s) => {
+          const cards = { ...s.cards }
+          delete cards[qid]
+          return { cards }
+        }),
+      reviewCard: (qid, grade) => set((s) => (s.cards[qid] ? { cards: { ...s.cards, [qid]: review(s.cards[qid], grade, new Date()) } } : {})),
       setProject: (project) => set({ project }),
       visit: (path) => set({ last: path }),
-      reset: () => set({ studied: {}, answers: {}, results: {}, ratings: {}, last: undefined }),
+      reset: () => set({ studied: {}, answers: {}, results: {}, ratings: {}, cards: {}, last: undefined }),
     }),
     {
       name: 'lai-progress-v1',
       storage: safeStorage,
-      version: 2,
-      // v1 stored chapter quiz answers as quiz["c5:0"]; v2 keys answers by question id.
+      version: 3,
+      // v1 stored chapter quiz answers as quiz["c5:0"]; v2 keys answers by question id; v3 adds flashcards.
       migrate: (persisted, version) => {
         const s = (persisted ?? {}) as Record<string, unknown>
         if (version < 2) {
@@ -101,7 +123,14 @@ export const useProgress = create<ProgressState>()(
             results[m.id] = v === m.answer
           }
           delete s.quiz
-          return { ...s, answers, results, ratings: {}, project: DEFAULT_PROJECT } as unknown as ProgressState
+          return { ...s, answers, results, ratings: {}, cards: {}, project: DEFAULT_PROJECT } as unknown as ProgressState
+        }
+        if (version < 3) {
+          // Questions already answered wrongly start the deck, due now.
+          const results = (s.results ?? {}) as Record<string, boolean>
+          const now = new Date()
+          const cards = Object.fromEntries(Object.entries(results).filter(([, ok]) => !ok).map(([id]) => [id, newCard(now)]))
+          return { ...s, cards } as unknown as ProgressState
         }
         return s as unknown as ProgressState
       },

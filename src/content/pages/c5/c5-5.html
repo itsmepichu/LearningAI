@@ -1,13 +1,40 @@
+<section class="tp tp-intuition" id="c5-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An LLM does one thing over and over: given the text so far, it scores every token in its vocabulary for how well it would fit next. The scores become probabilities, one token is chosen, it is appended to the text, and the whole step repeats. A long answer is thousands of these small guesses in a row, like predictive text on a phone, run with a far better model.</p>
+<p>Training uses the same step in reverse: show the model real text, and nudge it to give more probability to the token that really came next.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c5-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Logits</b>: raw, unbounded scores the LM head outputs, one per vocabulary token. Higher = more likely.</div>
-<div><b>Softmax</b>: p<sub>i</sub> = e<sup>z<sub>i</sub></sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub></sup>. Converts logits to probabilities that are positive and sum to 1. Adding a constant to all logits changes nothing; only differences matter.</div>
-<div><b>Autoregressive</b>: each output token becomes part of the input for the next step. Generation is inherently sequential: token 50 cannot be computed before token 49.</div>
+<div><b><a class="gl" href="#gl-logits">Logits</a></b>: raw, unbounded scores the LM head outputs, one per vocabulary token. Higher = more likely.</div>
+<div><b><a class="gl" href="#gl-softmax">Softmax</a></b>: converts logits to probabilities that are positive and sum to 1. Adding a constant to all logits changes nothing; only differences matter.</div>
+<div><b><a class="gl" href="#gl-autoregressive">Autoregressive</a></b>: each output token becomes part of the input for the next step. Generation is inherently sequential: token 50 cannot be computed before token 49.</div>
 </div>
-<p>Two phases matter for performance. <b>Prefill</b> processes the whole prompt in one parallel pass (fast per token). <b>Decode</b> then produces one token per forward pass (slow per token). To avoid recomputing keys and values for earlier tokens at each step, engines store them in the <dfn>KV cache</dfn> (14.1).</p>
+<p>Two phases matter for performance. <b><a class="gl" href="#gl-prefill-decode">Prefill</a></b> processes the whole prompt in one parallel pass (fast per token). <b>Decode</b> then produces one token per forward pass (slow per token). To avoid recomputing keys and values for earlier tokens at each step, engines store them in the <dfn><a class="gl" href="#gl-kv-cache">KV cache</a></dfn> (14.1).</p>
 <figure class="fig"><div class="stage">
 <div id="genViz" class="wid"></div>
 </div><figcaption><b>Autoregressive generation, animated.</b> Each step shows the top candidates and their probabilities (illustrative), the chosen token is appended, and the loop repeats until an end-of-sequence token.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c5-5-math">
+<h3 data-n="3">The math</h3>
+<p>A language model factorises the probability of a whole text into next-token predictions:</p>
+<div class="math">p(x_1, \dots, x_n) = \prod_{t=1}^{n} p(x_t \mid x_{&lt;t})</div>
+<p>At each step the final hidden state <span class="math">h_t</span> is multiplied by the LM head <span class="math">W_U \in \mathbb{R}^{d \times |V|}</span> to give one logit per token, and softmax turns logits into probabilities:</p>
+<div class="math">z = h_t W_U, \qquad p_i = \operatorname{softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^{|V|} e^{z_j}}</div>
+<p>Adding a constant <span class="math">c</span> to every logit multiplies the top and bottom by <span class="math">e^{c}</span>, so the probabilities do not change. Implementations subtract <span class="math">\max_j z_j</span> before exponentiating so that <span class="math">e^{z}</span> cannot overflow.</p>
+<p>Training minimises the <a class="gl" href="#gl-cross-entropy">cross-entropy</a> of the true next tokens (2.4), averaged over positions:</p>
+<div class="math">\mathcal{L} = -\frac{1}{n}\sum_{t=1}^{n} \log p(x_t \mid x_{&lt;t}), \qquad \frac{\partial \mathcal{L}_t}{\partial z_i} = p_i - \mathbb{1}[i = x_t]</div>
+<p>The gradient is simply "predicted probability minus 1 for the right token, minus 0 for the others". A model that guesses uniformly scores <span class="math">\mathcal{L} = \ln |V|</span>, about 11.8 nats for a 128k vocabulary; <span class="math">e^{\mathcal{L}}</span> is the <b>perplexity</b>, the effective number of tokens the model is choosing between.</p>
 <div class="box example"><h5>Example: softmax by hand</h5><p>Logits for three tokens: [2.0, 1.0, 0.1]. e<sup>2</sup> = 7.39, e<sup>1</sup> = 2.72, e<sup>0.1</sup> = 1.11, total 11.22. Probabilities: 0.66, 0.24, 0.10. If the true next token is the second one, its cross-entropy loss is −ln(0.24) = 1.42.</p></div>
+</section>
+
+<section class="tp tp-code" id="c5-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds the smallest possible language model from your example project's English messages: a bigram model whose logit for the next word is the log of how often it followed the current word. It prints the top candidates with their probabilities, generates greedily, and measures held-out cross-entropy against the uniform baseline <span class="math">\ln|V|</span>. Change the smoothing value 0.1 to 1.0 and watch the held-out loss and the probabilities change.</p>
+<figure class="fig live" id="snip-softmax"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"softmax"}'></div></div>
+<figcaption><b>From logits to a generated sentence, in real Python.</b> The operations are the ones an LLM uses; the model sees one word of context, so its output and loss are not comparable to an LLM's.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: look at real logits <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code>import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -19,4 +46,16 @@ probs = torch.softmax(logits, -1); top = torch.topk(probs, 8)
 for p, i in zip(top.values, top.indices): print(f"{p:.3f}  {tok.decode(i)!r}")
 out = model.generate(ids, max_new_tokens=12, do_sample=False)  # greedy autoregressive loop
 print(tok.decode(out[0]))</code></pre></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c5-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.deeplearningbook.org/contents/mlp.html">Goodfellow, Bengio and Courville (2016), Deep Learning, chapter 6</a> <small>Section 6.2.2.3 derives softmax outputs, their cross-entropy loss and its gradient.</small></li>
+<li><a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">Radford et al. (2019), Language Models are Unsupervised Multitask Learners (GPT-2)</a> <small>Language modelling as next-token prediction, with the factorisation above.</small></li>
+<li><a href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">PyTorch: CrossEntropyLoss</a> <small>The loss as implemented, taking raw logits rather than probabilities.</small></li>
+<li><a href="https://huggingface.co/docs/transformers/main/en/generation_strategies">Hugging Face Transformers: generation strategies</a> <small>How <code>generate</code> runs the autoregressive loop, with greedy and sampling options.</small></li>
+</ol>
+</section>

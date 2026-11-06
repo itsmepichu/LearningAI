@@ -39,6 +39,7 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'critical-path': lazy(() => import('./critical-path/CriticalPath')),
   'cost-attribution': lazy(() => import('./cost-attribution/CostAttribution')),
   'py-lab': lazy(() => import('./py-lab/PyLab')),
+  'py-snippet': lazy(() => import('./py-snippet/PySnippet')),
   bpe: lazy(() => import('./bpe/Bpe')),
   'colab-guide': lazy(() => import('./colab-guide/ColabGuide')),
   'tokenizer-compare': lazy(() => import('./tokenizer-compare/TokenizerCompare')),

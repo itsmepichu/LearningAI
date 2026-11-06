@@ -1,12 +1,49 @@
-<p>A model needs a fixed vocabulary. Whole words fail (infinite variety, typos, new names); single characters make sequences very long. <dfn>Subword tokenisation</dfn> is the compromise: common words become one token, rare words split into pieces.</p>
-<p><dfn>Byte-Pair Encoding (BPE)</dfn> learns the vocabulary from a corpus: start with individual characters (or bytes), count every adjacent pair, merge the most frequent pair into a new token, and repeat until the vocabulary reaches its target size. At tokenisation time, the learned merges are applied in the same order. <dfn>Byte-level BPE</dfn> starts from the 256 byte values, so any text, including emoji and unseen scripts, can be encoded with no "unknown" token. Other algorithms (WordPiece, Unigram/SentencePiece) differ in how they choose merges but have the same effect.</p>
+<section class="tp tp-intuition" id="c5-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A model cannot read letters or words directly; it reads numbers from a fixed list. If the list held every word, it would never be finished: typos, new product names and other languages keep arriving. If it held only single characters, every sentence would be very long and slow to process. <dfn>Subword tokenisation</dfn> sits in between: common words get one entry each, and rare words are spelled out from smaller pieces that are in the list.</p>
+<p>Think of it as a shorthand learned from one stack of documents. The shorthand is excellent for text like that stack and clumsy for anything else, which is why the same message can cost very different amounts in different languages.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c5-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><dfn><a class="gl" href="#gl-bpe">Byte-pair encoding (BPE)</a></dfn> learns the <a class="gl" href="#gl-vocabulary">vocabulary</a> from a corpus: start with individual characters (or bytes), count every adjacent pair, merge the most frequent pair into a new <a class="gl" href="#gl-token">token</a>, and repeat until the vocabulary reaches its target size. At tokenisation time, the learned merges are applied in the same order. <dfn><a class="gl" href="#gl-byte-level-bpe">Byte-level BPE</a></dfn> starts from the 256 byte values, so any text, including emoji and unseen scripts, can be encoded with no "unknown" token. Other algorithms (WordPiece, Unigram/SentencePiece) differ in how they choose merges but have the same effect.</p>
 <figure class="fig live"><div class="stage"><div data-widget="bpe"></div></div>
 <figcaption><b>Real BPE, running in your browser.</b> "▁" marks the start of a word. Each click finds the most frequent adjacent pair and merges it everywhere. In the classic example, frequent endings like "est" and "er" become tokens quickly and rare words stay split. Train it on your example project's text, or your own, to see which pieces its vocabulary forms.</figcaption></figure>
 <p><b>Multilingual implications.</b> Tokenisers are trained mostly on English-heavy data, so other languages often need more tokens for the same meaning. More tokens means higher cost, slower responses, and less content fitting in the context window. Some scripts (e.g. Thai, Amharic, Burmese) can need several times more tokens than English on older tokenisers. Newer models with larger vocabularies (100k–260k tokens) reduce but do not eliminate the gap. Always measure token counts on your real languages before estimating cost.</p>
 <figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">Relative token count for the same sentence (illustrative, varies by tokeniser)</p>
 <div class="bars" data-unit="×" data-max="4"><div data-v="1.0">English</div><div data-v="1.2">Spanish</div><div data-v="1.3">German</div><div data-v="1.6" data-c="s">Hindi</div><div data-v="1.5" data-c="s">Japanese</div><div data-v="2.4" data-c="b">Tamil</div><div data-v="3.1" data-c="b">Burmese</div></div></div>
-<figcaption><b>The "token tax".</b> A multilingual support bot with a fixed per-conversation token budget gives non-English users less history and less retrieved context. Treat this as a fairness and cost issue.</figcaption></figure>
+<figcaption><b>The "<a class="gl" href="#gl-token-tax">token tax</a>".</b> A multilingual support bot with a fixed per-conversation token budget gives non-English users less history and less retrieved context. Treat this as a fairness and cost issue.</figcaption></figure>
 <figure class="fig live"><div class="stage"><div data-widget="tokenizer-compare"></div></div>
 <figcaption><b>Measure it, if you opt in.</b> Three real tokenizers (<a href="https://huggingface.co/gpt2">GPT-2</a>, <a href="https://huggingface.co/bert-base-multilingual-cased">BERT multilingual</a> and <a href="https://huggingface.co/xlm-roberta-base">XLM-R</a>) run on your device over your example project's messages, so the chart above stops being only an illustration. The counts are exact for these three tokenizers. They are not what a hosted model will bill, so measure with its own tokenizer before you estimate cost.</figcaption></figure>
 <div class="box example"><h5>Example: why models miscount letters</h5><p>"How many r's in strawberry?" The model may see tokens like <code>str</code>·<code>aw</code>·<code>berry</code>, never individual letters. Counting requires knowledge it learned indirectly about spelling. Tasks that depend on characters (counting, reversing, exact string edits) should be done in code, with the LLM calling a tool (7.4).</p></div>
+</section>
+
+<section class="tp tp-math" id="c5-1-math">
+<h3 data-n="3">The math</h3>
+<p>One BPE training step picks the adjacent pair that occurs most often across the corpus, counting each word as often as it appears:</p>
+<div class="math">(a^*, b^*) = \arg\max_{(a,b)} \sum_{w \in \text{corpus}} \text{count}(w)\cdot \#\{\,i : s_i(w) = a,\ s_{i+1}(w) = b\,\}</div>
+<p>Here <span class="math">s(w)</span> is the word's current list of symbols. The pair is replaced by the new symbol <span class="math">ab</span> everywhere, and the vocabulary grows by one. After <span class="math">M</span> merges a character-level start of <span class="math">C</span> symbols has <span class="math">|V| = C + M</span> tokens (byte-level BPE starts at <span class="math">C = 256</span>).</p>
+<p>The token tax of a language <span class="math">\ell</span> on a given tokenizer is its token count relative to English for the same content:</p>
+<div class="math">\text{tax}(\ell) = \frac{\text{tokens}(\text{text}_\ell)}{\text{tokens}(\text{text}_{\text{en}})}, \qquad \text{cost}_\ell \approx \text{tax}(\ell)\cdot \text{cost}_{\text{en}}</div>
+<p>For example, a tax of 2.4 means a Tamil conversation costs about 2.4 times as much as the same conversation in English, and fits 1/2.4 ≈ 42% as much text into the same <a class="gl" href="#gl-context-window">context window</a>.</p>
+</section>
+
+<section class="tp tp-code" id="c5-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program trains BPE on your example project's English messages only, shows the first merges it learns, and then measures tokens per character for every language in the dataset. Change <code>N_MERGES</code> and run it again: more merges shorten English further, while the other scripts barely move.</p>
+<figure class="fig live" id="snip-bpe"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"bpe"}'></div></div>
+<figcaption><b>BPE from scratch, in real Python.</b> It runs in your browser after you opt in to the Python download. The tokenizer is tiny and word-level, so the ratios are not a production tokenizer's; the direction of the gap is the point.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c5-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1508.07909">Sennrich, Haddow and Birch (2016), Neural Machine Translation of Rare Words with Subword Units</a> <small>The paper that brought BPE to language models; its algorithm is the one above.</small></li>
+<li><a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">Radford et al. (2019), Language Models are Unsupervised Multitask Learners (GPT-2)</a> <small>Section 2.2 introduces byte-level BPE.</small></li>
+<li><a href="https://arxiv.org/abs/1808.06226">Kudo and Richardson (2018), SentencePiece</a> <small>Language-independent subword tokenisation, used by many multilingual models.</small></li>
+<li><a href="https://arxiv.org/abs/2305.15425">Petrov et al. (2023), Language Model Tokenizers Introduce Unfairness Between Languages</a> <small>Measures the token tax across many languages and tokenizers.</small></li>
+<li><a href="https://huggingface.co/docs/tokenizers">Hugging Face Tokenizers documentation</a> <small>How to train and run BPE, WordPiece and Unigram tokenizers in practice.</small></li>
+</ol>
+</section>

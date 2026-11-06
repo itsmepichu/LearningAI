@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { CheckCircle2, ChevronDown, Eye, EyeOff, MessagesSquare, RotateCcw, XCircle } from 'lucide-react'
+import { BookmarkCheck, BookmarkPlus, CheckCircle2, ChevronDown, Eye, EyeOff, MessagesSquare, RotateCcw, XCircle } from 'lucide-react'
 import { KIND_LABEL, LEVEL_LABEL, answerSet, isCorrect, isMulti, type InterviewQ, type Mcq, type Section } from '../data/checks'
 import { fill, getProject, type ProjectId } from '../data/projects'
 import { useProgress, type Answer, type Rating } from '../store/progress'
@@ -61,6 +61,7 @@ export function McqCard({ q, mode, draft, onDraft, reveal, index, context, topLe
         {q.kind && <span className="badge">{KIND_LABEL[q.kind]}</span>}
         {multi && <span className="badge multi">Choose all that apply</span>}
         {context}
+        <CardToggle qid={q.id} />
       </div>
       <div className="mcq-opts" role={multi ? 'group' : 'radiogroup'} aria-labelledby={`${q.id}-q`}>
         {q.options.map((o, j) => {
@@ -120,6 +121,18 @@ export function McqCard({ q, mode, draft, onDraft, reveal, index, context, topLe
   )
 }
 
+/** Adds the question to the flashcard deck, or takes it out. */
+export function CardToggle({ qid }: { qid: string }) {
+  const inDeck = useProgress((s) => !!s.cards[qid])
+  const add = useProgress((s) => s.addCard)
+  const remove = useProgress((s) => s.removeCard)
+  return (
+    <button type="button" className={'card-tg' + (inDeck ? ' on' : '')} aria-pressed={inDeck} onClick={() => (inDeck ? remove(qid) : add(qid))}>
+      {inDeck ? <BookmarkCheck size={14} /> : <BookmarkPlus size={14} />} {inDeck ? 'In flashcards' : 'Add to flashcards'}
+    </button>
+  )
+}
+
 /* ---------------------------------------------------------------- interview */
 
 const RATINGS: { id: Rating; label: string }[] = [
@@ -148,6 +161,7 @@ export function InterviewCard({ q, index, context, defaultOpen = false, topLevel
           </span>
         )}
         {context}
+        <CardToggle qid={q.id} />
       </div>
       <button type="button" className="iv-toggle" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
         {open ? <EyeOff size={14} /> : <Eye size={14} />} {open ? 'Hide' : 'Show'} what a strong answer covers

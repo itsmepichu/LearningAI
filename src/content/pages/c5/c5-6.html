@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c5-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The model gives you a probability for every possible next token; it does not tell you which one to pick. Decoding is that choice. Always taking the favourite is safe but dull and can loop. Drawing at random from the whole list is varied but occasionally picks something absurd from the long tail. The usual controls sit between the two: they reshape the probabilities or cut off the tail, and then draw.</p>
+<p>It is like asking a room for suggestions: you can take only the loudest answer, listen to everyone, or listen only to the few people who clearly know the topic.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c5-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Greedy</b>: always take the most probable token. Deterministic in principle; can be repetitive.</li>
-<li><b>Temperature T</b>: divide logits by T before softmax. T &lt; 1 sharpens the distribution (more predictable), T &gt; 1 flattens it (more varied, more errors). T → 0 approaches greedy.</li>
-<li><b>Top-k</b>: keep only the k most probable tokens, renormalise, sample.</li>
-<li><b>Top-p (nucleus)</b>: keep the smallest set of tokens whose cumulative probability reaches p (e.g. 0.9), renormalise, sample. Adapts to how confident the model is.</li>
+<li><b><a class="gl" href="#gl-greedy-decoding">Greedy</a></b>: always take the most probable token. Deterministic in principle; can be repetitive.</li>
+<li><b><a class="gl" href="#gl-temperature">Temperature T</a></b>: divide logits by T before softmax. T &lt; 1 sharpens the distribution (more predictable), T &gt; 1 flattens it (more varied, more errors). T → 0 approaches greedy.</li>
+<li><b><a class="gl" href="#gl-top-k">Top-k</a></b>: keep only the k most probable tokens, renormalise, sample.</li>
+<li><b><a class="gl" href="#gl-top-p">Top-p (nucleus)</a></b>: keep the smallest set of tokens whose cumulative probability reaches p (e.g. 0.9), renormalise, sample. Adapts to how confident the model is.</li>
 <li><b>Stop conditions</b>: end-of-sequence token, a maximum number of new tokens, or stop strings (e.g. <code>"\n\nUser:"</code>). Always set a max token limit; it bounds cost and latency.</li>
 <li>Other controls: repetition/frequency penalties, min-p, and constrained decoding to force valid JSON (7.4).</li>
 </ul>
@@ -18,6 +26,36 @@
 <figcaption><b>Decoding controls, computed live</b> on a fixed set of 10 illustrative logits. Greyed tokens are excluded by top-k or top-p. Sampling uses real random draws from the resulting distribution.</figcaption></figure>
 <p><b>Reproducibility limits.</b> Even with temperature 0 and a fixed seed, outputs can differ between runs. Causes include floating-point non-associativity on GPUs (summing in a different order gives slightly different results), batching with other requests changing kernel choices, different hardware or library versions, and silent model updates by providers. Tiny numeric differences can flip a near-tie between two tokens, and the texts then diverge. Design tests to check properties ("valid JSON", "mentions clause 4.2") rather than exact strings, and pin model versions.</p>
 <div class="box example"><h5>Example: settings per use case</h5><p>Data extraction into JSON: temperature 0, constrained schema, max 500 tokens. Customer reply drafting: temperature 0.5–0.7, top-p 0.9, stop at signature. Brainstorming product names: temperature 1.0, sample several candidates and rank them. Reasoning models often recommend specific settings; check the provider documentation, as some ignore or restrict these parameters.</p></div>
+</section>
+
+<section class="tp tp-math" id="c5-6-math">
+<h3 data-n="3">The math</h3>
+<p><b>Temperature</b> <span class="math">T &gt; 0</span> divides the logits before softmax:</p>
+<div class="math">p_i(T) = \frac{e^{z_i/T}}{\sum_j e^{z_j/T}}</div>
+<div class="math">\lim_{T \to 0} p(T) = \text{one-hot on } \arg\max_i z_i, \qquad \lim_{T \to \infty} p_i(T) = \frac{1}{|V|}</div>
+<p>Two tokens whose logits differ by <span class="math">\Delta</span> have a probability ratio of <span class="math">e^{\Delta/T}</span>: at <span class="math">T = 0.5</span> a gap of 1 becomes a ratio of 7.4 instead of 2.7.</p>
+<p><b>Top-k</b> keeps the set <span class="math">S_k</span> of the <span class="math">k</span> most probable tokens. <b>Top-p</b> sorts the probabilities <span class="math">p_{(1)} \ge p_{(2)} \ge \dots</span> and keeps the smallest prefix that reaches <span class="math">p</span>:</p>
+<div class="math">S_p = \{(1), \dots, (m)\}, \quad m = \min\Big\{ m' : \sum_{r=1}^{m'} p_{(r)} \ge p \Big\}, \qquad q_i = \frac{p_i\, \mathbb{1}[i \in S]}{\sum_{j \in S} p_j}</div>
+<p>The token is then drawn from the renormalised <span class="math">q</span>. When the model is confident, <span class="math">S_p</span> holds one or two tokens; when it is unsure, it holds many, which is why top-p adapts where top-k cannot. <b>Min-p</b> keeps tokens with <span class="math">p_i \ge p_{\min} \cdot \max_j p_j</span>, a threshold that scales with the top token's probability.</p>
+</section>
+
+<section class="tp tp-code" id="c5-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program takes the word in your example project's messages with the most varied next words, turns their counts into logits, and shows what temperature, top-k and top-p do to them, then samples with a fixed seed. Change <code>TOP_P</code>, <code>k</code> and the temperatures, or the seed, and run it again.</p>
+<figure class="fig live" id="snip-decoding"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"decoding"}'></div></div>
+<figcaption><b>Temperature, top-k and top-p, in real Python.</b> The rules are the real ones; the candidates come from word counts in a small dataset, not from a language model.</figcaption></figure>
 <figure class="fig colab" id="colab-decoding"><div class="stage"><div data-widget="colab-guide" data-props='{"guide":"decoding"}'></div></div>
 <figcaption><b>Try decoding on a real model, on a GPU in <a href="https://colab.research.google.com/">Google Colab</a>.</b> <span class="tag gpu">Colab · GPU</span> The figure above uses illustrative logits. This guide takes you from a new notebook to a real model on a free GPU, one step at a time, using your example project's question and document. The code runs on Google's machines, not on this site, and free GPU access is limited and <a href="https://research.google.com/colaboratory/faq.html">not guaranteed</a>.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c5-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1904.09751">Holtzman et al. (2019), The Curious Case of Neural Text Degeneration</a> <small>Introduces nucleus (top-p) sampling and shows why greedy and pure sampling both fail.</small></li>
+<li><a href="https://arxiv.org/abs/1805.04833">Fan, Lewis and Dauphin (2018), Hierarchical Neural Story Generation</a> <small>Top-k sampling for open-ended generation.</small></li>
+<li><a href="https://arxiv.org/abs/2407.01082">Nguyen et al. (2024), Turning Up the Heat: Min-p Sampling for Creative and Coherent LLM Outputs</a> <small>The min-p rule above.</small></li>
+<li><a href="https://huggingface.co/docs/transformers/main/en/generation_strategies">Hugging Face Transformers: generation strategies</a> <small>The decoding parameters as one widely used library implements them.</small></li>
+</ol>
+</section>
