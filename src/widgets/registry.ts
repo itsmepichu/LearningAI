@@ -8,6 +8,8 @@ import { lazy, type ComponentType, type LazyExoticComponent } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = {
   'loss-landscape-3d': lazy(() => import('./loss-landscape/LossLandscape3D')),
+  multihead: lazy(() => import('./multihead/Multihead')),
+  'transformer-block': lazy(() => import('./transformer-block/TransformerBlock')),
   chunking: lazy(() => import('./chunking/Chunking')),
   bm25: lazy(() => import('./bm25/Bm25')),
   'retrieval-metrics': lazy(() => import('./retrieval-metrics/RetrievalMetrics')),
