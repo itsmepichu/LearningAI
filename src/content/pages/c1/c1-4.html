@@ -1,16 +1,24 @@
+<section class="tp tp-intuition" id="c1-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A model reads text the way a shop till reads a barcode: as numbers. The text is cut into pieces called tokens, each piece is swapped for its id number, and each id is swapped again for a list of numbers the model has learned. Everything the model knows lives in its parameters, billions of numbers set during training.</p>
+<p>Training is like writing a textbook: slow, expensive, done once. Inference is like a student using the book in an exam: fast, done every day, and the book does not change while it is being used. Chatting with a model never rewrites its book.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c1-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Token</b>: the unit of text a model reads and writes. Usually a word or a piece of a word ("unbeliev" + "ably"). In English prose, 1 token is roughly 4 characters or 0.75 words on average; other languages, code, numbers and identifiers differ widely, so always count with the model's own tokenizer rather than converting from words. Prices, speed and limits are all counted in tokens.</div>
-<div><b>Vocabulary</b>: the fixed list of tokens a model knows, typically 32,000–260,000 entries. Each has an integer ID.</div>
-<div><b>Parameter (weight)</b>: one learned number inside the model. An "8B model" has about 8 billion of them. Parameters store everything the model learned.</div>
-<div><b>Embedding</b>: a list of numbers (a vector) that represents a token or a piece of text. Similar meanings get nearby vectors. An embedding is not a compressed copy of the text: you cannot reliably decode the original document from it.</div>
-<div><b>Context window</b>: the maximum number of tokens (input plus output) the model can consider at once, for example 128,000. Anything outside it is invisible to the model.</div>
-<div><b>Training</b>: adjusting parameters so predictions improve. Expensive, done rarely. <b>Inference</b>: using fixed parameters to produce outputs. Cheap per call, done millions of times. Prompting and chatting change only the input, never the weights: a conversation does not retrain the model, and "memory" in chat products is application storage (7.5).</div>
+<div><b><a class="gl" href="#gl-token">Token</a></b>: the unit of text a model reads and writes. Usually a word or a piece of a word ("unbeliev" + "ably"). In English prose, 1 token is roughly 4 characters or 0.75 words on average; other languages, code, numbers and identifiers differ widely, so always count with the model's own tokenizer rather than converting from words. Prices, speed and limits are all counted in tokens.</div>
+<div><b><a class="gl" href="#gl-vocabulary">Vocabulary</a></b>: the fixed list of tokens a model knows, typically 32,000–260,000 entries. Each has an integer ID.</div>
+<div><b><a class="gl" href="#gl-parameter">Parameter (weight)</a></b>: one learned number inside the model. An "8B model" has about 8 billion of them. Parameters store everything the model learned.</div>
+<div><b><a class="gl" href="#gl-embedding">Embedding</a></b>: a list of numbers (a vector) that represents a token or a piece of text. Similar meanings get nearby vectors. An embedding is not a compressed copy of the text: you cannot reliably decode the original document from it.</div>
+<div><b><a class="gl" href="#gl-context-window">Context window</a></b>: the maximum number of tokens (input plus output) the model can consider at once, for example 128,000. Anything outside it is invisible to the model.</div>
+<div><b><a class="gl" href="#gl-training-inference">Training</a></b>: adjusting parameters so predictions improve. Expensive, done rarely. <b>Inference</b>: using fixed parameters to produce outputs. Cheap per call, done millions of times. Prompting and chatting change only the input, never the weights: a conversation does not retrain the model, and "memory" in chat products is application storage (7.5).</div>
 </div>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Text<small>"Refund my order"</small></div><div class="nd">Tokens<small>Ref · und · ␣my · ␣order</small></div><div class="nd">Token IDs<small>[4032, 1263, 856, 2015]</small></div><div class="nd">Embeddings<small>4 × 4096 numbers</small></div><div class="nd">Transformer layers<small>billions of parameters</small></div><div class="nd">Logits → probabilities<small>one per vocab entry</small></div><div class="nd">Next token<small>"␣please"</small></div></div>
 <ol class="steps">
 <li data-n="0">Your application sends text. Everything that will influence the answer (system instructions, history, retrieved documents) must be in this text, because the model has no other input.</li>
-<li data-n="1">A <b>tokenizer</b> splits the text into tokens using rules learned before model training (chapter 5.1). The same text can be a different number of tokens for different models.</li>
+<li data-n="1">A <b><a class="gl" href="#gl-tokenizer">tokenizer</a></b> splits the text into tokens using rules learned before model training (chapter 5.1). The same text can be a different number of tokens for different models.</li>
 <li data-n="2">Each token is replaced by its integer ID in the vocabulary. This list of IDs, plus the room for the output, must fit in the context window.</li>
 <li data-n="3">Each ID selects a row from an <b>embedding table</b> (itself part of the parameters), giving one vector per token.</li>
 <li data-n="4">The vectors flow through dozens of transformer layers. Each layer mixes information between positions (attention) and transforms each position (feed-forward). This is where almost all parameters and computation live.</li>
@@ -44,4 +52,38 @@ for s in ["Refund my order", "Unbelievably", "Rückerstattung", "退款", "    d
     ids = tok.encode(s)
     print(f"{s!r:22} {len(ids):2} tokens  {tok.convert_ids_to_tokens(ids)}")</code></pre>
 <p>Notice that non-English text and code whitespace take more tokens per character. Try a different tokenizer (for example <code>"Qwen/Qwen2.5-0.5B"</code>) and compare counts for the same strings.</p></div>
+</section>
+
+<section class="tp tp-math" id="c1-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Fitting a request into the context window.</b> A support assistant with a 128,000-token window sends, with every question:</p>
+<div class="tw"><table>
+<tr><th>Part</th><th>Tokens</th></tr>
+<tr><td>Instructions</td><td>2,000</td></tr>
+<tr><td>8 retrieved passages of 800 tokens</td><td>6,400</td></tr>
+<tr><td>20 earlier turns of 150 tokens</td><td>3,000</td></tr>
+<tr><td>Room for the answer</td><td>1,000</td></tr>
+<tr><td><b>Total</b></td><td><b>12,400</b></td></tr>
+</table></div>
+<p>That fits easily, but the window is not the only limit: every one of those 12,400 tokens is paid for on every question, and more input means a slower first token.</p>
+<p><b>Parameters take memory.</b> An 8-billion-parameter model at 2 bytes per parameter is 16 GB. Its embedding table alone, 128,256 tokens × 4,096 numbers, is about 525 million parameters.</p>
+</section>
+
+<section class="tp tp-code" id="c1-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program estimates tokens per message for each language in your example project’s messages using the two English rules of thumb, shows the byte count that limits a byte-level tokenizer, then works out a monthly cost and the size of an embedding table. Change the prices, <code>PROMPT_TOKENS</code> or <code>MESSAGES_PER_MONTH</code> and run it again.</p>
+<figure class="fig live" id="snip-tokens"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tokens"}'></div></div>
+<figcaption><b>Tokens, cost and parameters, in real Python.</b> The prices are illustrative, and the token counts are estimates, not a real tokenizer’s.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c1-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://huggingface.co/docs/transformers/tokenizer_summary">Hugging Face: Summary of the tokenizers</a> <small>How BPE, WordPiece and SentencePiece split text.</small></li>
+<li><a href="https://huggingface.co/docs/transformers/llm_tutorial">Hugging Face: Generation with LLMs</a> <small>The inference loop from token ids to generated text, in code.</small></li>
+<li><a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky and Martin, Speech and Language Processing (3rd edition draft)</a> <small>The chapters on embeddings and transformers explain each step of the flow above.</small></li>
+<li><a href="https://arxiv.org/abs/2407.21783">Llama Team (2024), The Llama 3 Herd of Models</a> <small>Real figures for vocabulary size, parameters, context length and training tokens.</small></li>
+</ol>
+</section>

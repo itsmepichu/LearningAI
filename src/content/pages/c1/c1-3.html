@@ -1,9 +1,47 @@
-<p>A <dfn>language model</dfn> assigns probabilities to sequences of text. Modern ones do this one step at a time: given all the text so far, output a probability for <b>every possible next token</b>. Generating text means repeatedly picking a token from that distribution and appending it.</p>
+<section class="tp tp-intuition" id="c1-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A language model is a very well-read autocomplete. Give it the start of some text and it tells you, for every word piece it knows, how likely that piece is to come next. To write an answer, it picks one, adds it to the text, and asks itself the same question again, hundreds of times.</p>
+<p>It never looks anything up. "Canberra" comes after "the capital of Australia is" because that pattern was common in what it read, not because it checked a fact. That is why it can sound sure and still be wrong.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c1-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A <dfn><a class="gl" href="#gl-language-model">language model</a></dfn> assigns probabilities to sequences of text. Modern ones do this one step at a time: given all the text so far, output a probability for <b>every possible next token</b>. Generating text means repeatedly picking a token from that distribution and appending it.</p>
 <p>That is the whole core mechanism. Answering a question, writing code and summarising a document are all the same operation: continue the text in a way that is likely given everything before it. Instruction-tuned models have been trained so that the likely continuation of "a user question" is "a helpful answer", but they are still predicting continuations.</p>
-<p>A model is called a <dfn>large language model (LLM)</dfn> when it combines three things: a transformer architecture; a large number of learned parameters (there is no agreed cut-off; today the term usually means billions, and frontier models are far larger, but parameter count alone does not measure quality: data, training objectives, adaptation and the task matter as much); and pretraining on a very large, broad text corpus (trillions of tokens). The "large" matters because many abilities, such as following instructions in a new format or translating between rare language pairs, only become reliable above a certain scale.</p>
+<p>A model is called a <dfn><a class="gl" href="#gl-llm">large language model (LLM)</a></dfn> when it combines three things: a transformer architecture; a large number of learned parameters (there is no agreed cut-off; today the term usually means billions, and frontier models are far larger, but parameter count alone does not measure quality: data, training objectives, adaptation and the task matter as much); and pretraining on a very large, broad text corpus (trillions of tokens). The "large" matters because many abilities, such as following instructions in a new format or translating between rare language pairs, only become reliable above a certain scale.</p>
 <figure class="fig"><div class="stage">
 <p style="font-family:var(--f-mono);font-size:.9rem;margin-bottom:10px">Context: <b>"The invoice is due on the 15th of"</b> → next-token distribution</p>
 <div class="bars" data-unit="%"><div data-v="34">␣March</div><div data-v="21">␣each</div><div data-v="12">␣every</div><div data-v="9">␣next</div><div data-v="7">␣the</div><div data-v="4" data-c="s">␣April</div><div data-v="13" data-c="v">… 100,000+ other tokens</div></div>
 </div><figcaption><b>Illustrative distribution.</b> The model outputs a probability for every token in its vocabulary; these sum to 100%. Note that "March" wins because it is common, not because the model knows which invoice you mean. That gap between "likely" and "true" is the root of hallucination (1.5).</figcaption></figure>
 <div class="box example"><h5>Example: a "question" is just a prefix</h5><p>Input: <code>Q: What is the capital of Australia?\nA:</code>. The model computes that "␣Canberra" is the most likely next token, then that "." is likely after it, then an end-of-answer token. Nothing in the model is a database row labelled "capital of Australia"; the association is spread across billions of weights.</p></div>
+</section>
+
+<section class="tp tp-math" id="c1-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>One answer is many small guesses.</b> If the model gives "␣Canberra" a chance of 0.92 and then "." a chance of 0.80, the two-step answer "Canberra." has a chance of 0.92 × 0.80 ≈ 0.74. Every token of an answer is one more step, and at each step the model scores its whole vocabulary: a 500-token answer is 500 choices, each among about 128,000 tokens.</p>
+<p><b>How large is large.</b></p>
+<ul>
+<li>An 8-billion-parameter model stored at 2 bytes per parameter needs 8 × 2 = 16 GB of memory just for its weights.</li>
+<li>Llama 3 was trained on about 15 trillion tokens. At about 0.75 words per token that is roughly 11 trillion words. A person reading 250 words a minute for 8 hours a day reads 120,000 words a day, so it would take them about 11,000,000,000,000 ÷ 120,000 ≈ 92 million days: around 250,000 years.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c1-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds the simplest language model: a table of which word followed each pair of words in your example project’s messages. It prints the chances for one context, checks they add up to 1, and generates three messages by picking word after word. Change <code>random.seed(1)</code> to another number to get different messages.</p>
+<figure class="fig live" id="snip-next-word"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"next-word"}'></div></div>
+<figcaption><b>Next-word prediction from counts, in real Python.</b> A count table sees only two words back; an LLM uses a neural network and the whole context.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c1-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky and Martin, Speech and Language Processing (3rd edition draft)</a> <small>The chapter on n-gram language models builds the same count table as the code.</small></li>
+<li><a href="https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf">Bengio et al. (2003), A Neural Probabilistic Language Model</a> <small>The first neural network language model.</small></li>
+<li><a href="https://arxiv.org/abs/2001.08361">Kaplan et al. (2020), Scaling Laws for Neural Language Models</a> <small>How quality improves with parameters, data and compute.</small></li>
+<li><a href="https://arxiv.org/abs/2206.07682">Wei et al. (2022), Emergent Abilities of Large Language Models</a> <small>Abilities that appear only above a certain scale.</small></li>
+<li><a href="https://arxiv.org/abs/2304.15004">Schaeffer, Miranda and Koyejo (2023), Are Emergent Abilities of Large Language Models a Mirage?</a> <small>The counter-argument: some "emergence" comes from how it is measured.</small></li>
+</ol>
+</section>

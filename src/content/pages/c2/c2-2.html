@@ -1,11 +1,19 @@
+<section class="tp tp-intuition" id="c2-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Probability is about counting what usually happens. The trap is forgetting how rare something is to begin with. If one transaction in two hundred is fraud, then even a very good fraud alarm will ring mostly for honest customers, simply because there are so many more of them.</p>
+<p>The second trap is trusting small tests. Toss a coin ten times and you might get seven heads; that does not make it unfair. A score measured on a hundred test cases wobbles the same way, so two prompts that score 82% and 86% might be equally good.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c2-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Probability distribution</b>: how likely each possible outcome is; the probabilities sum to 1. An LLM's output at each step is a distribution over its vocabulary.</div>
 <div><b>Conditional probability</b> P(A | B): probability of A given that B is true. Language modelling is P(next token | previous tokens).</div>
 <div><b>Bayes' theorem</b>: P(A | B) = P(B | A)·P(A) / P(B). It flips a conditional around and forces you to account for the <b>base rate</b> P(A).</div>
 <div><b>Sampling</b>: drawing outcomes at random according to a distribution. Generation samples tokens; evaluation samples test cases from all possible inputs.</div>
-<div><b>Confidence interval (CI)</b>: a range that, under the method's assumptions, would contain the true value in (say) 95% of repeated experiments. It expresses how much your measurement could be off because you only tested a sample.</div>
+<div><b><a class="gl" href="#gl-confidence-interval">Confidence interval (CI)</a></b>: a range that, under the method's assumptions, would contain the true value in (say) 95% of repeated experiments. It expresses how much your measurement could be off because you only tested a sample.</div>
 </div>
-<p>Two places this bites engineers. First, <b>base rates</b>: a fraud model with 95% recall and a 2% false positive rate sounds excellent, but if only 0.5% of transactions are fraudulent, most flagged transactions are still legitimate. Second, <b>small evaluation sets</b>: "our new prompt scores 86% vs 82%" on 100 test cases is within noise. The 95% CI for 86/100 is roughly 78%–91%.</p>
+<p>Two places this bites engineers. First, <b><a class="gl" href="#gl-base-rate">base rates</a></b>: a fraud model with 95% recall and a 2% false positive rate sounds excellent, but if only 0.5% of transactions are fraudulent, most flagged transactions are still legitimate. Second, <b>small evaluation sets</b>: "our new prompt scores 86% vs 82%" on 100 test cases is within noise. The 95% CI for 86/100 is roughly 78%–91%.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2"><label for="bPrior">Base rate (fraud) <input type="range" id="bPrior" min="1" max="200" value="10"><span id="bPriorO"></span></label>
 <label for="bSens">Recall (true positive rate) <input type="range" id="bSens" min="50" max="100" value="95"><span id="bSensO"></span></label>
@@ -19,4 +27,34 @@
 <svg id="ciSvg" viewBox="0 0 600 90"></svg><div class="out" id="ciOut"></div></div></div>
 <figcaption><b>Wilson 95% confidence interval</b> for a pass rate. Halving the interval width needs about four times as many test cases. Use this before claiming one prompt or model is better than another.</figcaption></figure>
 <div class="box example"><h5>Example: is the new model better?</h5><p>Model A passes 412/500 cases (82.4%), model B 431/500 (86.2%). Their 95% intervals are about 78.8–85.5% and 82.9–88.9%, which overlap. Because both models ran on the <em>same</em> cases, a paired test (count cases where only A passed vs only B passed, then a sign/McNemar test) is more powerful and is the right next step (8.3).</p></div>
+</section>
+
+<section class="tp tp-math" id="c2-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Bayes by counting.</b> 10,000 transactions, 0.5% of them fraud, and a detector that catches 95% of fraud and wrongly flags 2% of honest transactions:</p>
+<ul>
+<li>Fraud: 10,000 × 0.5% = 50 transactions. Caught: 50 × 95% ≈ 48.</li>
+<li>Honest: 9,950 transactions. Wrongly flagged: 9,950 × 2% = 199.</li>
+<li>Flagged in total: 48 + 199 = 247, and only 48 of them are fraud: 48 ÷ 247 ≈ 19%.</li>
+</ul>
+<p>Four out of five alarms are false, even though the detector sounds excellent.</p>
+<p><b>How much a score wobbles.</b> A prompt passes 86 of 100 test cases. The 95% confidence interval is roughly 78% to 91%: the true pass rate could be anywhere in there. With 400 cases and the same 86%, it narrows to about 82% to 89%. Four times the cases halves the width.</p>
+</section>
+
+<section class="tp tp-code" id="c2-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program measures how often an event happens in your example project’s data, counts how many alarms from a 95%-recall detector would be real at that rate, and then measures the rate on 100 random rows a thousand times to show how much it wobbles. Change <code>RECALL</code>, <code>FALSE_ALARMS</code> or <code>SAMPLE</code> and run it again.</p>
+<figure class="fig live" id="snip-base-rates"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"base-rates"}'></div></div>
+<figcaption><b>Base rates and sampling, in real Python.</b> The detector is imaginary: its recall and false-alarm rate are set by hand.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c2-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.deeplearningbook.org/contents/prob.html">Goodfellow, Bengio and Courville, Deep Learning, chapter 3</a> <small>Probability, conditional probability and Bayes’ rule for machine learning.</small></li>
+<li><a href="https://www.openintro.org/book/os/">OpenIntro Statistics (free textbook)</a> <small>Sampling, confidence intervals and tests, explained for beginners.</small></li>
+<li><a href="https://arxiv.org/abs/2411.00640">Miller (2024), Adding Error Bars to Evals</a> <small>How to put confidence intervals on LLM evaluation scores.</small></li>
+</ol>
+</section>

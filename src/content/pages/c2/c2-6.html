@@ -1,12 +1,20 @@
+<section class="tp tp-intuition" id="c2-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A CPU is like a few brilliant chefs who can cook anything; a GPU is like thousands of kitchen helpers who can each only chop, but all at the same time. AI is mostly the same simple arithmetic repeated on huge tables of numbers, so the thousands of helpers win.</p>
+<p>The catch is feeding them. Every time a model writes a token, it has to read all of its weights from memory. So the size of the model in bytes, and how fast memory can deliver those bytes, often decide the speed. Storing each number in fewer bytes makes the model smaller and faster, at some cost in precision.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c2-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Tensor</b>: an n-dimensional array (a scalar is 0-D, a vector 1-D, a matrix 2-D; a batch of token embeddings is 3-D: batch × sequence × dimension). Frameworks run tensor operations on CPU or GPU.</div>
+<div><b><a class="gl" href="#gl-tensor">Tensor</a></b>: an n-dimensional array (a scalar is 0-D, a vector 1-D, a matrix 2-D; a batch of token embeddings is 3-D: batch × sequence × dimension). Frameworks run tensor operations on CPU or GPU.</div>
 <div><b>CPU</b>: a few to a few dozen powerful cores, optimised for branching, sequential logic. <b>GPU</b>: thousands of simpler cores plus specialised matrix units (Tensor Cores), optimised for doing the same arithmetic on huge arrays.</div>
-<div><b>FLOPs</b>: floating-point operations; a measure of compute. <b>Memory bandwidth</b>: bytes per second that can be read from memory. Many AI workloads are limited by bandwidth, not FLOPs.</div>
+<div><b>FLOPs</b>: floating-point operations; a measure of compute. <b><a class="gl" href="#gl-memory-bandwidth">Memory bandwidth</a></b>: bytes per second that can be read from memory. Many AI workloads are limited by bandwidth, not FLOPs.</div>
 <div><b>Precision</b>: bits per number. FP32 (4 bytes), FP16/BF16 (2 bytes), FP8 and INT8 (1 byte), INT4 (0.5 byte). Fewer bits = less memory and faster, with some accuracy loss.</div>
 </div>
 <p>A rule of thumb you will use constantly: <b>model memory ≈ parameters × bytes per parameter</b>. An 8B model needs about 16 GB in BF16, 8 GB in INT8 and 4–5 GB in 4-bit. Your laptop's RAM bounds which models you can run; a GPU's VRAM bounds what it can serve, and inference needs extra memory for the KV cache (14.1).</p>
 <p>Why GPUs are faster for AI: generating one token from an 8B model needs ~16 GB of weights read from memory. A laptop with ~60–100 GB/s memory bandwidth can do that at most ~4–6 times a second at BF16; a datacentre GPU with several TB/s of HBM bandwidth can do it hundreds of times a second. Quantising to 4-bit reads a quarter of the bytes, which is why quantised models run usefully on laptops.</p>
-<p><b>FP16 vs BF16.</b> Both use 2 bytes. FP16 has more precision (10-bit mantissa) but a small range (largest value ≈ 65,504), so large activations overflow and training needs loss scaling. BF16 keeps FP32's 8-bit exponent, so it has the same range as FP32 with less precision (7-bit mantissa). That is why most LLM training and serving use BF16. <b>Units:</b> this manual writes GB = 10⁹ bytes and GiB = 2³⁰ bytes (≈ 1.074 GB); per-token KV sizes are given in KiB (1,024 bytes). Mixing the two silently introduces a 7% error at GB scale.</p>
+<p><b>FP16 vs BF16.</b> Both use 2 bytes. FP16 has more precision (10-bit mantissa) but a small range (largest value ≈ 65,504), so large activations overflow and training needs loss scaling. BF16 keeps FP32's 8-bit exponent, so it has the same range as FP32 with less precision (7-bit mantissa). That is why most LLM training and serving use <a class="gl" href="#gl-bf16">BF16</a>. <b>Units:</b> this manual writes GB = 10⁹ bytes and GiB = 2³⁰ bytes (≈ 1.074 GB); per-token KV sizes are given in KiB (1,024 bytes). Mixing the two silently introduces a 7% error at GB scale.</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 220" role="img" aria-label="CPU few large cores versus GPU many small cores">
 <text x="20" y="22" class="lg">CPU</text><text x="20" y="40" class="xs mut">8–24 complex cores · large caches</text>
@@ -39,4 +47,38 @@ print(f"~{a.nbytes/dt/1e9:.1f} GB/s effective read bandwidth")
 # tokens/sec upper bound for a model of size M GB ≈ bandwidth / M
 for m in (0.8, 2.0, 4.5): print(f"{m} GB model → ≤ {a.nbytes/dt/1e9/m:.0f} tok/s")</code></pre>
 <p>This single-threaded NumPy read underestimates true bandwidth, but it shows why model size in bytes, not parameter count alone, sets your CPU generation speed.</p></div>
+</section>
+
+<section class="tp tp-math" id="c2-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Memory = parameters × bytes per parameter.</b> For an 8-billion-parameter model:</p>
+<div class="tw"><table>
+<tr><th>Format</th><th>Bytes per parameter</th><th>Weights</th></tr>
+<tr><td>FP32</td><td>4</td><td>32 GB</td></tr>
+<tr><td>BF16</td><td>2</td><td>16 GB</td></tr>
+<tr><td>INT8</td><td>1</td><td>8 GB</td></tr>
+<tr><td>4-bit</td><td>0.5 (a little more with scales)</td><td>4 to 4.5 GB</td></tr>
+</table></div>
+<p>Training needs about 16 bytes per parameter for the weights, gradients and optimiser state together: 8 × 16 = 128 GB, far more than one consumer GPU has.</p>
+<p><b>Speed limit from bandwidth.</b> Each new token reads all 16 GB of a BF16 8B model. A laptop reading 100 GB per second can do that at most 100 ÷ 16 ≈ 6 times a second. A datacentre GPU reading about 3,350 GB per second can do it about 210 times a second. At 4-bit, the laptop’s limit rises to about 100 ÷ 4.5 ≈ 22 tokens per second.</p>
+</section>
+
+<section class="tp tp-code" id="c2-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program stores the same numbers as float32, float16 and bfloat16 to show what each format keeps and loses, then prints the memory of 1B, 8B and 70B models in each format and the speed limit of an 8B model. Change <code>BANDWIDTH</code> to your own machine’s figure and run it again.</p>
+<figure class="fig live" id="snip-precision"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"precision"}'></div></div>
+<figcaption><b>Number formats and model memory, in real Python.</b> The memory figures are weights only, and the speed is a ceiling, not a measurement.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c2-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.nvidia.com/deeplearning/performance/mixed-precision-training/index.html">NVIDIA: Train With Mixed Precision</a> <small>FP16, BF16 and loss scaling in practice.</small></li>
+<li><a href="https://arxiv.org/abs/1710.03740">Micikevicius et al. (2017), Mixed Precision Training</a> <small>Why training in 16-bit works, and where it fails.</small></li>
+<li><a href="https://arxiv.org/abs/1905.12322">Kalamkar et al. (2019), A Study of BFLOAT16 for Deep Learning Training</a> <small>Why BF16’s wide range made it the default.</small></li>
+<li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 product page</a> <small>Memory and bandwidth figures for a current datacentre GPU.</small></li>
+<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> <small>Runs quantised models on laptops; its documentation lists memory per format.</small></li>
+</ol>
+</section>

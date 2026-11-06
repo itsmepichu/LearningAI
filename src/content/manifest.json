@@ -78,27 +78,27 @@
      "tn": "1.1",
      "title": "AI vs machine learning vs deep learning vs generative AI",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 496
+     "figures": 2,
+     "interactive": 1,
+     "words": 863
     },
     {
      "id": "c1-2",
      "tn": "1.2",
      "title": "Evolution: from rules to foundation models and agents",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 504
+     "figures": 2,
+     "interactive": 2,
+     "words": 856
     },
     {
      "id": "c1-3",
      "tn": "1.3",
      "title": "What language models predict, and what makes a model an LLM",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 395
+     "figures": 2,
+     "interactive": 1,
+     "words": 749
     },
     {
      "id": "c1-4",
@@ -107,27 +107,27 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 878
+     "figures": 4,
+     "interactive": 3,
+     "words": 1097
     },
     {
      "id": "c1-5",
      "tn": "1.5",
      "title": "Capabilities and limitations: hallucination, stale knowledge, bias and unreliable confidence",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 441
+     "figures": 2,
+     "interactive": 1,
+     "words": 822
     },
     {
      "id": "c1-6",
      "tn": "1.6",
      "title": "AI problem selection: rules, search, traditional ML or an LLM",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 346
+     "figures": 2,
+     "interactive": 1,
+     "words": 638
     }
    ],
    "hasIntro": false,
@@ -154,18 +154,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 455
+     "figures": 3,
+     "interactive": 3,
+     "words": 784
     },
     {
      "id": "c2-2",
      "tn": "2.2",
      "title": "Probability and statistics: distributions, conditional probability, Bayes, sampling and confidence intervals",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 409
+     "figures": 3,
+     "interactive": 3,
+     "words": 705
     },
     {
      "id": "c2-3",
@@ -174,18 +174,18 @@
      "tags": [
       "real"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 427
+     "figures": 4,
+     "interactive": 4,
+     "words": 818
     },
     {
      "id": "c2-4",
      "tn": "2.4",
      "title": "Information theory: entropy, cross-entropy and KL divergence",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 329
+     "figures": 2,
+     "interactive": 2,
+     "words": 649
     },
     {
      "id": "c2-5",
@@ -194,9 +194,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 465
+     "figures": 3,
+     "interactive": 3,
+     "words": 777
     },
     {
      "id": "c2-6",
@@ -205,9 +205,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 1,
-     "words": 832
+     "figures": 4,
+     "interactive": 2,
+     "words": 1166
     }
    ],
    "hasIntro": false,
@@ -232,9 +232,9 @@
      "tn": "3.1",
      "title": "Supervised, unsupervised and reinforcement learning",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 247
+     "figures": 2,
+     "interactive": 1,
+     "words": 564
     },
     {
      "id": "c3-2",
@@ -243,36 +243,36 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 449
+     "figures": 4,
+     "interactive": 3,
+     "words": 836
     },
     {
      "id": "c3-3",
      "tn": "3.3",
      "title": "Data cleaning, labelling, feature engineering and class imbalance",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 563
+     "figures": 4,
+     "interactive": 3,
+     "words": 874
     },
     {
      "id": "c3-4",
      "tn": "3.4",
      "title": "Train/validation/test splits, leakage, overfitting, regularisation and generalisation",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 392
+     "figures": 3,
+     "interactive": 2,
+     "words": 719
     },
     {
      "id": "c3-5",
      "tn": "3.5",
      "title": "Metrics: precision, recall, F1, ROC/PR curves and probability calibration",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 332
+     "figures": 4,
+     "interactive": 3,
+     "words": 679
     },
     {
      "id": "c3-6",
@@ -281,9 +281,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 453
+     "figures": 3,
+     "interactive": 2,
+     "words": 780
     }
    ],
    "hasIntro": false,

@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c1-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Think of four boxes, one inside the other. The biggest box, AI, holds every way of making a computer act smart, including rules a programmer types in by hand. Inside it, machine learning is the part where the computer learns the rules from examples instead. Inside that, deep learning learns with large neural networks. And inside that, generative AI uses those networks to create new text, images or code.</p>
+<p>A cooking comparison: a recipe card is rules, a cook who learns by tasting many dishes is machine learning, and a cook who can invent a new dish in the same style is generative AI.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c1-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>These four terms describe nested sets. Each inner one is a particular way of doing the outer one.</p>
 <div class="terms">
-<div><b>Artificial intelligence (AI)</b>: any technique that makes a computer perform a task we would call intelligent if a person did it, such as planning, recognising, deciding or conversing. Hand-written rules count.</div>
-<div><b>Machine learning (ML)</b>: AI where behaviour is <em>learned from data</em> instead of written by hand. You supply examples; an algorithm fits a function to them.</div>
-<div><b>Deep learning (DL)</b>: ML using <em>neural networks</em> with many layers. Layers learn their own intermediate features, so you do not hand-design them.</div>
-<div><b>Generative AI (GenAI)</b>: models that produce new content (text, images, audio, code) by learning the distribution of their training data and sampling from it. Today almost all GenAI is deep learning.</div>
+<div><b><a class="gl" href="#gl-artificial-intelligence">Artificial intelligence (AI)</a></b>: any technique that makes a computer perform a task we would call intelligent if a person did it, such as planning, recognising, deciding or conversing. Hand-written rules count.</div>
+<div><b><a class="gl" href="#gl-machine-learning">Machine learning (ML)</a></b>: AI where behaviour is <em>learned from data</em> instead of written by hand. You supply examples; an algorithm fits a function to them.</div>
+<div><b><a class="gl" href="#gl-deep-learning">Deep learning (DL)</a></b>: ML using <em>neural networks</em> with many layers. Layers learn their own intermediate features, so you do not hand-design them.</div>
+<div><b><a class="gl" href="#gl-generative-ai">Generative AI (GenAI)</a></b>: models that produce new content (text, images, audio, code) by learning the distribution of their training data and sampling from it. Today almost all GenAI is deep learning.</div>
 </div>
 <p>The practical difference is <b>where the knowledge comes from</b>. In rule-based AI it comes from the programmer. In classical ML it comes from labelled examples plus features the engineer chose. In deep learning it comes from large amounts of data, and the model chooses the features. In generative AI the model has learned enough about the data to create plausible new samples.</p>
 <p>A second difference is the <b>output type</b>. Classical ML typically outputs a number or a label from a fixed set ("fraud: 0.93"). Generative models output open-ended content ("Dear customer, we noticed…"). Open-ended output is more flexible and much harder to verify, which is why evaluation (chapter 8) is so central to GenAI work.</p>
@@ -29,4 +37,34 @@
 <li><b>Classical ML:</b> TF-IDF word features + logistic regression trained on 20,000 labelled emails. Cheap, fast, accurate on common categories.</li>
 <li><b>Deep learning:</b> fine-tuned BERT-style encoder. Handles paraphrase and context better; needs more compute.</li>
 <li><b>Generative AI:</b> prompt an LLM with the team descriptions and ask for a label plus a one-line reason. Zero training data needed to start; higher cost per email; must validate that the label is one of the allowed values.</li></ul></div>
+</section>
+
+<section class="tp tp-math" id="c1-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What each approach needs before it can start</b>, for the email-routing example above. The prices and times are illustrative.</p>
+<ul>
+<li><b>Rules:</b> no data, but someone must write and keep updating every keyword. Twenty rules might take a day to write.</li>
+<li><b>Classical ML:</b> labelled examples. Labelling 20,000 emails at 30 seconds each is 20,000 × 30 = 600,000 seconds, about 167 hours of work.</li>
+<li><b>Generative AI:</b> no labelled data to start, but every email costs money. With 500 tokens in and 20 tokens out, at $1 per million input tokens and $4 per million output tokens, one email costs 500 × 1 ÷ 1,000,000 + 20 × 4 ÷ 1,000,000 ≈ $0.0006. A million emails a month is about $580.</li>
+</ul>
+<p>Running a trained classical model on the same million emails costs only a few dollars of computer time. That gap is why many teams start with an LLM to learn the task and later switch high-volume, stable tasks to a cheaper model.</p>
+</section>
+
+<section class="tp tp-code" id="c1-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program sorts your example project’s labelled text twice: first with a short list of hand-written keyword rules, then with a classifier that learns which words go with which label. It tests both on rows the classifier has not seen. Add a keyword to a rule, run it again, and see the rules’ score change.</p>
+<figure class="fig live" id="snip-rules-vs-learned"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"rules-vs-learned"}'></div></div>
+<figcaption><b>Rules against learning, in real Python.</b> It runs in your browser after you opt in to the Python download. The data is synthetic, so the scores are not what you would get on real text.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c1-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://aima.cs.berkeley.edu/">Russell and Norvig, Artificial Intelligence: A Modern Approach</a> <small>The standard textbook; chapter 1 defines AI and its approaches.</small></li>
+<li><a href="https://www.deeplearningbook.org/contents/intro.html">Goodfellow, Bengio and Courville (2016), Deep Learning, chapter 1</a> <small>How deep learning relates to machine learning and AI, with the same nested-sets picture.</small></li>
+<li><a href="https://arxiv.org/abs/2108.07258">Bommasani et al. (2021), On the Opportunities and Risks of Foundation Models</a> <small>Where generative models sit today and why they changed how AI is built.</small></li>
+<li><a href="https://scikit-learn.org/stable/modules/naive_bayes.html">scikit-learn: Naive Bayes</a> <small>The classifier used in the code, in a production library.</small></li>
+</ol>
+</section>

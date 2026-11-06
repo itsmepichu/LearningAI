@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c3-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Imagine a smoke alarm. Precision asks: when it beeps, how often is there really a fire? Recall asks: when there is a fire, how often does it beep? Make it more sensitive and it catches every fire but also beeps at toast; make it less sensitive and it stays quiet at breakfast but may miss a real fire.</p>
+<p>The sensitivity knob is the threshold, and no setting is right for everyone. The best setting depends on what a missed fire costs compared with a false alarm.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c3-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Confusion matrix</b>: counts of true positives (TP), false positives (FP), true negatives (TN), false negatives (FN).</div>
-<div><b>Precision</b> = TP/(TP+FP): of everything flagged, how much was right. <b>Recall</b> = TP/(TP+FN): of everything that should be flagged, how much we caught.</div>
-<div><b>F1</b> = 2·P·R/(P+R): harmonic mean, high only if both are high.</div>
+<div><b><a class="gl" href="#gl-precision-recall">Precision</a></b> = TP/(TP+FP): of everything flagged, how much was right. <b>Recall</b> = TP/(TP+FN): of everything that should be flagged, how much we caught.</div>
+<div><b><a class="gl" href="#gl-f1">F1</a></b> = 2·P·R/(P+R): harmonic mean, high only if both are high.</div>
 <div><b>ROC curve</b>: true positive rate vs false positive rate across all thresholds; <b>AUC</b> summarises it (0.5 = random, 1 = perfect). <b>PR curve</b>: precision vs recall across thresholds; more informative when positives are rare.</div>
-<div><b>Calibration</b>: a model is calibrated if, among cases it scores 0.8, about 80% are positive. Shown with a reliability diagram; summarised by expected calibration error (ECE).</div>
+<div><b><a class="gl" href="#gl-calibration">Calibration</a></b>: a model is calibrated if, among cases it scores 0.8, about 80% are positive. Shown with a reliability diagram; summarised by expected calibration error (ECE).</div>
 </div>
 <figure class="fig live"><div class="stage"><div data-widget="threshold-roc"></div></div>
 <figcaption><b>Move the threshold.</b> 400 synthetic cases (80 positive) with overlapping score distributions. The dot on each curve is your current threshold. Lowering it raises recall and lowers precision. The curves are computed from the same scores.</figcaption></figure>
@@ -12,4 +20,34 @@
 <div class="box example"><h5>Example: choosing the threshold from costs</h5><p>A missed fraud costs $400; a false alarm costs $5 of analyst time. Expected cost = 400·FN + 5·FP. Sweep thresholds on validation data and pick the minimum; with these costs it will sit at a low threshold (high recall). If false alarms instead block customers' cards (cost $60 in churn), the optimum moves up. Metrics serve a business cost function, not the other way round.</p></div>
 <figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"metrics"}'></div></div>
 <figcaption><b>Lab, in real Python if you opt in: precision and recall by hand.</b> Score a simple rule over your example project's data, with the zero cases handled, then compare its accuracy with always answering no.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c3-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Precision and recall from counts.</b> 1,000 cases, 50 really positive. The model flags 60, and 40 of those are really positive.</p>
+<ul>
+<li>Precision: 40 right out of 60 flagged = 67%.</li>
+<li>Recall: 40 caught out of 50 real = 80%.</li>
+</ul>
+<p><b>Why F1 is not a plain average.</b> A model with 90% precision and 30% recall averages 60%, but its F1 is only 45%: F1 stays close to the weaker of the two, so a model cannot hide a bad recall behind a good precision.</p>
+<p><b>Choosing the threshold by cost.</b> A missed fraud costs $400 and a false alarm $5. Threshold A misses 10 frauds and raises 40 false alarms: 10 × 400 + 40 × 5 = $4,200. Threshold B misses 4 and raises 150 false alarms: 4 × 400 + 150 × 5 = $2,350. B is cheaper, even though it is wrong more often.</p>
+</section>
+
+<section class="tp tp-code" id="c3-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program scores the test rows of your example project’s table and shows precision, recall and F1 at five thresholds, picks the cheapest threshold for a given cost of misses and false alarms, and checks whether the scores behave like real chances. Change <code>MISS_COST</code> and <code>ALARM_COST</code> and see the best threshold move.</p>
+<figure class="fig live" id="snip-metrics"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"metrics"}'></div></div>
+<figcaption><b>Thresholds, costs and calibration, in real Python.</b> The costs are illustrative, and this model’s scores are not calibrated chances.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c3-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn: Metrics and scoring</a> <small>Every metric on this page, with definitions and code.</small></li>
+<li><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118432">Saito and Rehmsmeier (2015), The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets</a> <small>Why PR curves matter when positives are rare.</small></li>
+<li><a href="https://arxiv.org/abs/1706.04599">Guo et al. (2017), On Calibration of Modern Neural Networks</a> <small>Modern models are often overconfident, and how to fix it.</small></li>
+<li><a href="https://scikit-learn.org/stable/modules/calibration.html">scikit-learn: Probability calibration</a> <small>Reliability diagrams, Platt scaling and isotonic regression.</small></li>
+</ol>
+</section>

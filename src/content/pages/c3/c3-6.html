@@ -1,6 +1,14 @@
-<p><b>Error analysis</b> means reading failures and grouping them. Pull 100 errors, tag each with a cause ("short text", "non-English", "label wrong", "new product"), and count. The biggest bucket tells you what to fix next. Also compute metrics per <dfn>slice</dfn> (segment of the data); an average can hide a group where the model fails badly.</p>
-<p><b>Hyperparameters</b> are settings chosen before training (learning rate, tree depth, regularisation strength). Tune them on the validation set only, using grid search, random search (usually better per trial), or Bayesian optimisation (Optuna). Use cross-validation when data is small. Touch the test set once.</p>
-<p><b>Distribution shift</b> is when production data differs from training data. <dfn>Covariate shift</dfn>: inputs change (new customer region). <dfn>Label/prior shift</dfn>: class balance changes (fraud spikes). <dfn>Concept drift</dfn>: the relationship itself changes (new fraud tactics). Detect it by monitoring input statistics and, when labels arrive, performance (17.7).</p>
+<section class="tp tp-intuition" id="c3-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When a model makes mistakes, read them before changing anything. Like a teacher marking a stack of tests, sort the wrong answers into piles: "misread the question", "never learned this topic", "answer key was wrong". The biggest pile tells you what to fix first.</p>
+<p>The world also moves on. New customers, new products and new tricks mean the data a model sees next month is not quite the data it learned from. That is distribution shift, and the only defence is to keep watching the data and the results.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c3-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><b><a class="gl" href="#gl-error-analysis">Error analysis</a></b> means reading failures and grouping them. Pull 100 errors, tag each with a cause ("short text", "non-English", "label wrong", "new product"), and count. The biggest bucket tells you what to fix next. Also compute metrics per <dfn>slice</dfn> (segment of the data); an average can hide a group where the model fails badly.</p>
+<p><b><a class="gl" href="#gl-hyperparameter">Hyperparameters</a></b> are settings chosen before training (learning rate, tree depth, regularisation strength). Tune them on the validation set only, using grid search, random search (usually better per trial), or Bayesian optimisation (Optuna). Use cross-validation when data is small. Touch the test set once.</p>
+<p><b><a class="gl" href="#gl-distribution-shift">Distribution shift</a></b> is when production data differs from training data. <dfn>Covariate shift</dfn>: inputs change (new customer region). <dfn>Label/prior shift</dfn>: class balance changes (fraud spikes). <dfn>Concept drift</dfn>: the relationship itself changes (new fraud tactics). Detect it by monitoring input statistics and, when labels arrive, performance (17.7).</p>
 <figure class="fig"><div class="stage">
 <div class="cols2"><div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Accuracy by slice (illustrative)</p>
 <div class="bars" data-unit="%" data-max="100"><div data-v="94">English, long</div><div data-v="92">English, short</div><div data-v="81" data-c="s">Spanish</div><div data-v="63" data-c="b">Mixed-language</div><div data-v="58" data-c="b">New product line</div></div></div>
@@ -28,4 +36,38 @@ def objective(t):
     return cross_val_score(m, X, y, cv=5, scoring="f1").mean()
 study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=0))
 study.optimize(objective, n_trials=30); print(study.best_params, round(study.best_value, 4))</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c3-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Counting causes.</b> 100 wrong answers, each tagged with one cause:</p>
+<div class="tw"><table>
+<tr><th>Cause</th><th>Errors</th></tr>
+<tr><td>Scanned PDFs with noisy text</td><td>45</td></tr>
+<tr><td>Not in English</td><td>25</td></tr>
+<tr><td>The label itself was wrong</td><td>20</td></tr>
+<tr><td>Other</td><td>10</td></tr>
+</table></div>
+<p>Fixing scanned PDFs could remove up to 45% of the errors; a bigger model might remove a few of each.</p>
+<p><b>Grid against random search.</b> Trying 5 learning rates × 5 tree depths is 25 training runs, but tests only 5 different values of each setting. 25 random combinations test 25 different values of each, which is why random search usually finds a better setting for the same cost.</p>
+<p><b>Shift, in numbers.</b> In the example below, scanned PDFs went from 5% to 30% of incoming documents. If the model is 92% right on clean documents and 65% right on scanned ones, its overall accuracy falls from about 91% to about 84% without anything in the model changing.</p>
+</section>
+
+<section class="tp tp-code" id="c3-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program breaks the results on your example project’s table down by one column, to find where the model is weakest, then compares the first and last three months of data to look for drift. Change which months are compared (<code>order[:3]</code> and <code>order[-3:]</code>) and run it again.</p>
+<figure class="fig live" id="snip-slices"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"slices"}'></div></div>
+<figcaption><b>Slices and drift, in real Python.</b> The synthetic data has little real drift, so small changes here do not prove a real dataset is stable.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c3-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.jmlr.org/papers/v13/bergstra12a.html">Bergstra and Bengio (2012), Random Search for Hyper-Parameter Optimization</a> <small>Why random search beats grid search.</small></li>
+<li><a href="https://optuna.readthedocs.io/">Optuna documentation</a> <small>The tuning library used in the laptop lab.</small></li>
+<li><a href="https://arxiv.org/abs/1810.11953">Rabanser, Günnemann and Lipton (2019), Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift</a> <small>Ways to detect that incoming data has changed.</small></li>
+<li><a href="https://developers.google.com/machine-learning/guides/rules-of-ml">Google: Rules of Machine Learning</a> <small>Practical advice on monitoring, slices and fixing what the errors show.</small></li>
+</ol>
+</section>

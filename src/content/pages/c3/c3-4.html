@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c3-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A student who memorises last year’s exam answers will ace last year’s exam and fail this year’s. A model can do the same: learn its training examples so exactly that it fails on anything new. That is overfitting, and the only way to catch it is to test on data the model has never seen.</p>
+<p>Leakage is the sneakier version: the exam answers slipped into the study notes. A column that is only known after the event, or the same customer in both training and test data, makes the score look great until the model meets real life.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c3-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Training set</b>: data the model learns from. <b>Validation set</b>: data used to choose settings and compare variants. <b>Test set</b>: held back until the end, used once to estimate real-world performance.</div>
+<div><b><a class="gl" href="#gl-train-validation-test">Training set</a></b>: data the model learns from. <b>Validation set</b>: data used to choose settings and compare variants. <b>Test set</b>: held back until the end, used once to estimate real-world performance.</div>
 <div><b>Generalisation</b>: performing well on new data, not just training data. It is the only thing that matters.</div>
-<div><b>Overfitting</b>: memorising training noise, so training error is low but new-data error is high. <b>Underfitting</b>: too simple to capture the pattern.</div>
-<div><b>Regularisation</b>: techniques that discourage overly complex fits: penalties on weight size (L2/ridge, L1/lasso), limiting tree depth, dropout (4.3), early stopping.</div>
-<div><b>Leakage</b>: information in training or features that would not be available at prediction time, making results look better than they will be in production.</div>
+<div><b><a class="gl" href="#gl-overfitting">Overfitting</a></b>: memorising training noise, so training error is low but new-data error is high. <b>Underfitting</b>: too simple to capture the pattern.</div>
+<div><b><a class="gl" href="#gl-regularisation">Regularisation</a></b>: techniques that discourage overly complex fits: penalties on weight size (L2/ridge, L1/lasso), limiting tree depth, dropout (4.3), early stopping.</div>
+<div><b><a class="gl" href="#gl-data-leakage">Leakage</a></b>: information in training or features that would not be available at prediction time, making results look better than they will be in production.</div>
 </div>
 <p>Common leakage patterns: a feature computed from the future ("total refunds this month" used to predict a refund on day 3); the same customer in both train and test; duplicate or near-duplicate documents across splits; normalising with statistics computed over the full dataset; and, for LLMs, benchmark questions that appeared in pretraining data (<dfn>contamination</dfn>, 8.6). For time-dependent data, split by time: train on the past, test on the future.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
@@ -21,4 +29,30 @@
 <text x="10" y="145" class="xs mut">time →</text>
 </svg></div><figcaption><b>Choose the split that matches deployment.</b> A random split on time-series or user-level data leaks the future or the same user into training.</figcaption></figure>
 <div class="box example"><h5>Example: a leak that reached production</h5><p>A churn model used <code>days_since_last_login</code> computed at data-extraction time. For churned customers this was always large because they had already left. Offline AUC was 0.97; in production, scored on active customers before they churned, it was 0.68. Fix: compute features "as of" the prediction date (a <dfn>point-in-time join</dfn>).</p></div>
+</section>
+
+<section class="tp tp-math" id="c3-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A typical split.</b> 10,000 rows split 70/15/15: 7,000 to learn from, 1,500 to compare settings, 1,500 kept back for one final check. For data that changes over time, the split follows the calendar: January to August for training, September and October for validation, November and December for the test.</p>
+<p><b>Spotting overfitting.</b> A model that gets 2% wrong on its training rows and 18% wrong on validation rows has learned the training rows, not the pattern. If both were 10%, it would be a simpler model that generalises; if both were 25%, it would be too simple.</p>
+<p><b>A leak, in numbers.</b> The churn model in the example below scored 0.97 offline and 0.68 in use. The gap, 0.29, is the size of the leak: everything the model learned from a column it would not have when making a real prediction.</p>
+</section>
+
+<section class="tp tp-code" id="c3-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program splits your example project’s table by month, trains on the past and tests on the future, then adds one column that is only known after the outcome. Compare the two blocks of results, then move the cut-off date (the <code>0.75</code>) earlier or later and run it again.</p>
+<figure class="fig live" id="snip-leakage"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"leakage"}'></div></div>
+<figcaption><b>A leak, caught, in real Python.</b> The code cannot tell which columns leak; that depends on when each value becomes known.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c3-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://scikit-learn.org/stable/common_pitfalls.html">scikit-learn: Common pitfalls and recommended practices</a> <small>Data leakage, with examples of how it creeps in.</small></li>
+<li><a href="https://dl.acm.org/doi/10.1145/2382577.2382579">Kaufman et al. (2012), Leakage in Data Mining: Formulation, Detection, and Avoidance</a> <small>The standard paper on leakage and how to find it.</small></li>
+<li><a href="https://scikit-learn.org/stable/modules/cross_validation.html">scikit-learn: Cross-validation</a> <small>Splitting data fairly when it is small.</small></li>
+<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">scikit-learn: TimeSeriesSplit</a> <small>Splitting by time so the test always comes after the training data.</small></li>
+</ol>
+</section>
