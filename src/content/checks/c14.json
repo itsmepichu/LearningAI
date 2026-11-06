@@ -5,51 +5,57 @@
     "id": "c14-2-m01",
     "q": "Decode at small batch is usually limited by…",
     "options": [
-     "FLOPs",
+     "Compute (FLOPs) available",
      "Memory bandwidth",
      "Disk speed",
      "Network"
     ],
     "answer": 1,
     "why": "Each step reads all weights for little arithmetic, so bandwidth dominates.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Small batches do little maths per weight read.",
+     "",
+     "Weights are already in GPU memory, not read from disk.",
+     "The network is not on the per-token path."
+    ]
    },
    {
     "id": "c14-2-m02",
     "q": "Why is prefill compute-bound?",
     "options": [
-     "It waits for the network",
-     "All prompt tokens are processed in one parallel pass, with lots of maths per weight read",
-     "It runs on the CPU",
-     "It reads weights once per token"
+     "It waits for the network between each of the prompt tokens",
+     "All prompt tokens go in one pass, with lots of maths per weight read",
+     "It runs on the CPU, which is much slower at matrix maths",
+     "It reads the full weights once again for every prompt token"
     ],
     "answer": 1,
     "why": "Many tokens share each weight read, so the GPU runs near its FLOP limit.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
+     "Prefill is pure GPU work.",
      "",
      "It runs on the GPU.",
-     "That describes decode."
+     "It reads them once for the whole prompt."
     ]
    },
    {
     "id": "c14-2-m03",
     "q": "What makes up time to first token (TTFT)?",
     "options": [
-     "Network time only",
-     "Queueing plus prefill time",
-     "Decode time only",
-     "Output length × ITL"
+     "Network time to the server only",
+     "Queueing plus prefill",
+     "Decode time for the whole answer",
+     "Output length × inter-token latency"
     ],
     "answer": 1,
     "why": "TTFT grows with prompt length.",
     "kind": "concept",
     "distractors": [
-     "Network is only part of it.",
+     "Prefill and queueing dominate.",
      "",
-     "Decode comes after the first token.",
-     "That is the rest of the response."
+     "That comes after the first token.",
+     "That is the rest of the answer."
     ]
    },
    {
@@ -132,38 +138,38 @@
     "id": "c14-2-m08",
     "q": "In the laptop lab, why is the second TTFT lower when you rerun the same prompt?",
     "options": [
-     "The model got smaller",
-     "Decode was faster",
-     "Ollama reuses the cached prompt prefix",
-     "The CPU warmed up the disk"
+     "The model got smaller after loading",
+     "Decode ran faster the second time",
+     "Ollama reused the cached prompt prefix",
+     "The CPU warmed the disk cache for it"
     ],
     "answer": 2,
     "why": "Prefix caching skips prefill for the repeated part (14.3).",
     "kind": "concept",
     "distractors": [
-     "No change in model.",
-     "TTFT is about prefill.",
+     "The model is unchanged.",
+     "Decode affects later tokens, not TTFT.",
      "",
-     "Not the main reason."
+     "Weights are already in memory."
     ]
    },
    {
     "id": "c14-2-m09",
     "q": "Why is dividing total tokens by total time a poor metric for a chat service?",
     "options": [
-     "It needs a GPU",
-     "It hides whether the wait was before or during generation",
-     "It is always zero",
-     "It overstates TTFT"
+     "It needs a GPU profiler to be computed",
+     "It hides whether the wait was before or during output",
+     "It always comes out close to zero for chat",
+     "It overstates the time to the first token"
     ],
     "answer": 1,
     "why": "Users perceive TTFT and ITL separately.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
+     "It is simple arithmetic.",
      "",
-     "Not true.",
-     "It does not measure TTFT."
+     "It does not.",
+     "It does not measure TTFT at all."
     ]
    },
    {
@@ -184,6 +190,44 @@
      "",
      "Not visible."
     ]
+   },
+   {
+    "id": "c14-2-m11",
+    "q": "A chat reply has TTFT of 0.3 s and an inter-token latency of 20 ms, and it is 200 tokens long. Roughly what is the end-to-end latency?",
+    "options": [
+     "About 0.3 s",
+     "About 40 s",
+     "About 4.0 s",
+     "About 4.3 s"
+    ],
+    "answer": 3,
+    "why": "TTFT + (n − 1) × ITL = 0.3 + 199 × 0.02 ≈ 4.3 s.",
+    "kind": "calculation",
+    "distractors": [
+     "That is only the time to the first token.",
+     "That reads 20 ms as 200 ms.",
+     "That counts the decode tokens but leaves out TTFT.",
+     ""
+    ]
+   },
+   {
+    "id": "c14-2-m12",
+    "q": "An 8,000-token prompt waits 200 ms in the queue, and prefill runs at an illustrative 10,000 tokens/s. Roughly what is the TTFT?",
+    "options": [
+     "About 0.8 s",
+     "About 1.0 s",
+     "About 0.2 s",
+     "About 2.2 minutes"
+    ],
+    "answer": 1,
+    "why": "8,000 ÷ 10,000 = 0.8 s of prefill, plus 0.2 s of queueing.",
+    "kind": "calculation",
+    "distractors": [
+     "That leaves out the queue wait.",
+     "",
+     "That is only the queue wait.",
+     "That uses a decode rate of about 60 tokens/s for prefill."
+    ]
    }
   ],
   "interview": [
@@ -195,7 +239,8 @@
      "prefill parallel, compute-bound",
      "decode one token per step, bandwidth-bound",
      "batching"
-    ]
+    ],
+    "followUp": "How does batching change each phase?"
    },
    {
     "id": "c14-2-i02",
@@ -205,7 +250,8 @@
      "queue + prefill",
      "time between tokens",
      "TTFT + (n−1) × ITL"
-    ]
+    ],
+    "followUp": "Work it out for TTFT 0.5 s, ITL 25 ms and 300 tokens."
    },
    {
     "id": "c14-2-i03",
@@ -214,7 +260,8 @@
     "covers": [
      "prefill vs decode",
      "TTFT vs total time"
-    ]
+    ],
+    "followUp": "Which one would you shorten for a chat product, and how?"
    },
    {
     "id": "c14-2-i04",
@@ -237,7 +284,8 @@
      "timestamps per token",
      "vary prompt and output separately",
      "repeat runs"
-    ]
+    ],
+    "followUp": "What would you change between runs to separate prefill from decode?"
    },
    {
     "id": "c14-2-i06",
@@ -248,7 +296,8 @@
      "TTFT for chats",
      "total time for summaries",
      "prefill vs decode share"
-    ]
+    ],
+    "followUp": "Which metric would alert first if summaries slowed chat down?"
    },
    {
     "id": "c14-2-i07",
@@ -273,7 +322,8 @@
      "prefill",
      "decode",
      "tools"
-    ]
+    ],
+    "followUp": "Where does the budget usually break first?"
    }
   ]
  },
@@ -283,42 +333,48 @@
     "id": "c14-3-m01",
     "q": "What does paged attention mainly fix?",
     "options": [
-     "Attention accuracy",
-     "KV-cache memory fragmentation and waste",
-     "Tokenisation",
-     "Model size"
+     "Attention accuracy on long inputs",
+     "KV-cache memory waste",
+     "Tokenisation speed for long prompts",
+     "Model size on disk and in memory"
     ],
     "answer": 1,
     "why": "Fixed-size blocks allocated on demand avoid reserving max-length contiguous memory.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Paging changes memory layout, not attention results.",
+     "",
+     "Tokenisation is unrelated.",
+     "The weights are unchanged."
+    ]
    },
    {
     "id": "c14-3-m02",
     "q": "What is the main problem with static batching?",
     "options": [
-     "It cannot run on GPUs",
-     "Short requests wait for the longest one, and new arrivals wait for the whole batch",
-     "It uses too little memory",
-     "It changes the output"
+     "It cannot run on GPUs, so batches must run on CPU servers",
+     "Short requests wait for the longest; newcomers wait for the batch",
+     "It uses too little GPU memory for the KV cache to be efficient",
+     "It changes the model's outputs for long and short requests alike"
     ],
     "answer": 1,
     "why": "Slots sit idle while the longest request finishes.",
     "kind": "concept",
     "distractors": [
-     "It runs on GPUs.",
+     "It runs; it wastes slots.",
      "",
-     "Memory is not the issue.",
-     "Outputs are the same."
+     "The problem is idle time.",
+     "Outputs are unchanged."
     ]
    },
    {
     "id": "c14-3-m03",
     "q": "What does continuous batching do?",
     "options": [
-     "Re-forms the batch every decode step: finished sequences leave and waiting ones join",
-     "Runs one request at a time",
-     "Waits for N requests",
-     "Batches only prefill"
+     "Re-forms the batch each step: finished leave, waiting join",
+     "Runs one request at a time, strictly in order",
+     "Waits for N requests, then runs them together",
+     "Batches only the prefill step of each request"
     ],
     "answer": 0,
     "why": "This typically multiplies throughput several-fold.",
@@ -327,23 +383,23 @@
      "",
      "That is no batching.",
      "That is static batching.",
-     "It covers decode too."
+     "It batches decode steps."
     ]
    },
    {
     "id": "c14-3-m04",
     "q": "What is chunked prefill for?",
     "options": [
-     "Making prompts shorter",
-     "Quantising weights",
-     "Splitting a new request's prefill so it does not stall decoding of others",
-     "Caching prefixes"
+     "Making prompts shorter before prefill",
+     "Quantising weights during prefill",
+     "Splitting a new prefill so decoding is not stalled",
+     "Caching shared prefixes across requests"
     ],
     "answer": 2,
     "why": "Long prefills are inserted in pieces between decode steps.",
     "kind": "concept",
     "distractors": [
-     "Prompts are unchanged.",
+     "Prompts stay the same.",
      "Unrelated.",
      "",
      "That is prefix caching."
@@ -353,18 +409,18 @@
     "id": "c14-3-m05",
     "q": "How does paged attention store the KV cache?",
     "options": [
-     "On disk",
-     "In CPU memory only",
-     "In one contiguous max-length buffer per sequence",
-     "In fixed-size blocks allocated on demand and mapped by a per-sequence block table"
+     "On disk, loaded block by block",
+     "In CPU memory only, for safety",
+     "In one max-length buffer per sequence",
+     "In fixed-size blocks, mapped by a block table"
     ],
     "answer": 3,
     "why": "Like virtual memory pages; blocks can be shared.",
     "kind": "concept",
     "distractors": [
-     "Not disk.",
-     "GPU memory.",
-     "That is the waste it fixes.",
+     "Far too slow.",
+     "It lives in GPU memory.",
+     "That is the waste it removes.",
      ""
     ]
    },
@@ -375,15 +431,15 @@
      "6,800",
      "6,000",
      "0",
-     "About 800"
+     "800"
     ],
     "answer": 3,
     "why": "Only the unique part is prefilled on a hit.",
     "kind": "calculation",
     "distractors": [
-     "That is a miss.",
-     "That is the cached part.",
-     "The unique tokens still need prefill.",
+     "That ignores the cache hit.",
+     "That is the shared prefix, which is cached.",
+     "The unique part still needs prefill.",
      ""
     ]
    },
@@ -410,18 +466,18 @@
     "id": "c14-3-m08",
     "q": "How should prompts be structured to benefit from prefix caching?",
     "options": [
-     "Dynamic content first",
-     "Randomise the order",
-     "It does not matter",
-     "Stable content first (system prompt, tools), dynamic content after"
+     "Dynamic content first, then stable",
+     "Randomise the order on every call",
+     "It does not matter for caching",
+     "Stable content first; dynamic content after"
     ],
     "answer": 3,
     "why": "The cache matches from the start of the prompt (7.2).",
     "kind": "concept",
     "distractors": [
-     "That breaks the shared prefix.",
-     "That breaks reuse.",
-     "Order matters.",
+     "Changing the start breaks the shared prefix.",
+     "That prevents any reuse.",
+     "Prefixes must match exactly.",
      ""
     ]
    },
@@ -429,9 +485,9 @@
     "id": "c14-3-m09",
     "q": "Does prefix caching reduce decode cost?",
     "options": [
-     "No; it skips part of prefill only",
-     "Yes, by the same factor",
-     "Yes, it removes decode",
+     "No: it skips part of prefill only",
+     "Yes, by the same factor as prefill",
+     "Yes, it removes decode entirely",
      "Only for long outputs"
     ],
     "answer": 0,
@@ -439,28 +495,47 @@
     "kind": "concept",
     "distractors": [
      "",
-     "Decode is unaffected.",
-     "Decode remains.",
-     "Same for any output."
+     "Decode still runs for every output token.",
+     "Decode still generates the answer.",
+     "Output length is unaffected."
     ]
    },
    {
     "id": "c14-3-m10",
     "q": "Is sharing prefix-cache blocks across tenants automatically safe?",
     "options": [
-     "Yes, caches are always safe",
-     "No; decide what may be shared and keep tenant-specific text isolated",
-     "Only on hosted APIs",
-     "Yes, if the model is the same"
+     "Yes, caches are always safe to share between tenants",
+     "No: decide what may be shared; isolate tenant text",
+     "Only when the model is served by a hosted API",
+     "Yes, as long as every tenant uses the same model"
     ],
     "answer": 1,
     "why": "Shared caches can leak information through timing or content if not designed carefully.",
     "kind": "scenario",
     "distractors": [
-     "Not automatically.",
+     "Shared blocks can expose tenant text.",
      "",
-     "Applies everywhere.",
-     "Same model does not mean same trust."
+     "The same care applies anywhere.",
+     "The prefix content still matters."
+    ]
+   },
+   {
+    "id": "c14-3-m11",
+    "q": "Chat users see their streams pause whenever someone submits a long document, because its prefill blocks the decode steps of everyone else. Which engine feature addresses this?",
+    "options": [
+     "Prefix caching of the long document for every user",
+     "Paged attention, which removes the cost of prefill",
+     "Chunked prefill, so the long prefill is split between decode steps",
+     "Static batching, so the document waits for the next batch"
+    ],
+    "answer": 2,
+    "why": "It inserts prefill in pieces so decoding continues.",
+    "kind": "scenario",
+    "distractors": [
+     "Each document is new, so there is nothing cached.",
+     "Paging stores the KV cache; it does not shorten prefill.",
+     "",
+     "That adds waiting and idle slots."
     ]
    }
   ],
@@ -474,7 +549,8 @@
      "per-step batch reform",
      "throughput gain",
      "chunked prefill"
-    ]
+    ],
+    "followUp": "Why does chunked prefill matter with continuous batching?"
    },
    {
     "id": "c14-3-i02",
@@ -485,7 +561,8 @@
      "blocks on demand",
      "block tables",
      "sharing"
-    ]
+    ],
+    "followUp": "How does block size affect waste and overhead?"
    },
    {
     "id": "c14-3-i03",
@@ -496,7 +573,8 @@
      "lower TTFT",
      "discounted cached input",
      "stable content first"
-    ]
+    ],
+    "followUp": "How would you measure the cache hit rate?"
    },
    {
     "id": "c14-3-i04",
@@ -519,7 +597,8 @@
      "hit rate",
      "discount",
      "worked numbers"
-    ]
+    ],
+    "followUp": "Work it through for a 6,000-token shared prefix at a 90% hit rate."
    },
    {
     "id": "c14-3-i06",
@@ -530,7 +609,8 @@
      "customer-specific text",
      "trust boundaries",
      "separate pools"
-    ]
+    ],
+    "followUp": "How would you isolate tenants and still share a common system prompt?"
    },
    {
     "id": "c14-3-i07",
@@ -555,7 +635,8 @@
      "chunked prefill",
      "routing",
      "cache isolation"
-    ]
+    ],
+    "followUp": "Which of these gives the biggest win for that workload, and why?"
    }
   ]
  },
@@ -572,16 +653,22 @@
     ],
     "answer": 1,
     "why": "The tensor-parallel group serves as one unit; losing any GPU stops it.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "The four GPUs fail together as one unit.",
+     "",
+     "TP=4 is one unit, not two.",
+     "Eight would be two units of TP=4."
+    ]
    },
    {
     "id": "c14-5-m02",
     "q": "What does tensor parallelism split?",
     "options": [
-     "Each layer's matrices across GPUs in one node",
-     "Requests across replicas",
-     "Layers across nodes",
-     "Experts across GPUs"
+     "Each layer's matrices across GPUs in a node",
+     "Requests across separate replicas",
+     "Layers across nodes in order",
+     "Experts across GPUs in a MoE model"
     ],
     "answer": 0,
     "why": "TP communicates every layer, usually over NVLink.",
@@ -597,18 +684,18 @@
     "id": "c14-5-m03",
     "q": "What is the main way to scale throughput?",
     "options": [
-     "Higher tensor parallelism",
-     "Pipeline parallelism",
-     "Longer context",
-     "Data parallelism: independent replicas behind a load balancer"
+     "Higher tensor parallelism per replica",
+     "Pipeline parallelism across nodes",
+     "Longer context windows per request",
+     "Independent replicas behind a load balancer"
     ],
     "answer": 3,
     "why": "Replicas add capacity; TP is for fit and latency.",
     "kind": "concept",
     "distractors": [
-     "TP mainly helps fit and per-token latency.",
-     "Mainly for very large models.",
-     "Unrelated.",
+     "TP lowers latency and fits big models.",
+     "PP fits very large models.",
+     "Context length reduces capacity.",
      ""
     ]
    },
@@ -616,29 +703,29 @@
     "id": "c14-5-m04",
     "q": "What does prefix-aware routing do?",
     "options": [
-     "Splits prompts across replicas",
-     "Routes by user name",
-     "Sends requests with the same prefix to the same replica to hit its cache",
-     "Sends requests to the least loaded GPU only"
+     "Splits each prompt across replicas",
+     "Routes requests by the user's name",
+     "Sends same-prefix requests to the same replica",
+     "Sends each request to the least loaded GPU"
     ],
     "answer": 2,
     "why": "Each replica's prefix cache is local.",
     "kind": "concept",
     "distractors": [
-     "Not the method.",
-     "Not the method.",
+     "Prompts are not split.",
+     "Names do not predict prefixes.",
      "",
-     "Ignores cache locality."
+     "That ignores cache hits."
     ]
    },
    {
     "id": "c14-5-m05",
     "q": "What is disaggregated serving?",
     "options": [
-     "Running prefill and decode on separate GPU pools, transferring the KV cache",
-     "Running each layer on a different node",
-     "Serving without a KV cache",
-     "Running experts on CPUs"
+     "Prefill and decode on separate pools, moving the KV cache",
+     "Running each layer on a different node in turn",
+     "Serving without any KV cache to save memory",
+     "Running the MoE experts on CPUs instead of GPUs"
     ],
     "answer": 0,
     "why": "Each pool can be sized for its workload.",
@@ -646,8 +733,8 @@
     "distractors": [
      "",
      "That is pipeline parallelism.",
-     "KV cache is transferred.",
-     "Not the method."
+     "The KV cache moves between pools.",
+     "Unrelated."
     ]
    },
    {
@@ -744,6 +831,25 @@
      "The other unit still serves.",
      "The broken unit stops."
     ]
+   },
+   {
+    "id": "c14-5-m11",
+    "q": "A 70B model runs as TP=4 units. Peak traffic needs 3 units, and the service must survive the loss of one GPU. How many GPUs do you need?",
+    "options": [
+     "13: three units plus one spare GPU",
+     "12: three units, since failures are rare",
+     "16: four units of four GPUs (N+1 units)",
+     "20: five units, two spare for safety"
+    ],
+    "answer": 2,
+    "why": "Losing any GPU stops its whole unit, so redundancy is a spare unit, not a spare GPU.",
+    "kind": "calculation",
+    "distractors": [
+     "One spare GPU cannot replace a failed 4-GPU unit.",
+     "That has no redundancy.",
+     "",
+     "N+1 is enough for one failure."
+    ]
    }
   ],
   "interview": [
@@ -756,7 +862,8 @@
      "split layers",
      "split experts",
      "replicas"
-    ]
+    ],
+    "followUp": "Which would you use first to serve more users of the same model?"
    },
    {
     "id": "c14-5-i02",
@@ -765,7 +872,8 @@
     "covers": [
      "any GPU failure stops it",
      "N+1 units"
-    ]
+    ],
+    "followUp": "How many GPUs for three units plus redundancy at TP=4?"
    },
    {
     "id": "c14-5-i03",
@@ -775,7 +883,8 @@
      "prefill and decode pools",
      "KV transfer",
      "independent sizing"
-    ]
+    ],
+    "followUp": "What does it cost to move the KV cache between pools?"
    },
    {
     "id": "c14-5-i04",
@@ -799,7 +908,8 @@
      "latency",
      "KV room",
      "units per GPU count"
-    ]
+    ],
+    "followUp": "What would you measure to choose between them?"
    },
    {
     "id": "c14-5-i06",
@@ -809,7 +919,8 @@
      "prefix-aware routing",
      "load balance trade-off",
      "hot prefixes"
-    ]
+    ],
+    "followUp": "One prefix is very hot. What happens to that replica?"
    },
    {
     "id": "c14-5-i07",
@@ -833,7 +944,8 @@
      "all-to-all cost",
      "replicas",
      "disaggregation"
-    ]
+    ],
+    "followUp": "What does all-to-all traffic do to your network design?"
    }
   ]
  },
@@ -938,19 +1050,19 @@
     "id": "c14-1-m06",
     "q": "How do serving engines typically allocate memory for the KV cache?",
     "options": [
-     "Allocate per request from scratch with no reserve",
-     "Reserve a fraction (e.g. 90%) of GPU memory and use what remains after weights",
-     "Use CPU memory only",
-     "Allocate exactly the model size"
+     "Allocate memory per request from scratch, with no reserve held back",
+     "Reserve a share of GPU memory (e.g. 90%), using what is left after weights",
+     "Use CPU memory only for the cache, to keep the GPU free for weights",
+     "Allocate exactly the size of the model's weights again for the cache"
     ],
     "answer": 1,
     "why": "The KV pool is what is left after weights and overhead.",
     "kind": "concept",
     "distractors": [
-     "Engines pre-reserve a pool.",
+     "That fragments memory and fails under load.",
      "",
-     "GPU memory is used.",
-     "That leaves no KV cache."
+     "The cache lives in GPU memory.",
+     "The cache is separate from weights."
     ]
    },
    {
@@ -1019,16 +1131,16 @@
     "q": "Why do providers price long context higher or cap concurrency?",
     "options": [
      "Long prompts are harder to tokenise",
-     "Long context needs a new model",
-     "KV cache memory grows with context length and concurrent sequences",
-     "Weights grow with context"
+     "Long context needs a separate model",
+     "KV memory grows with context and users",
+     "Weights grow with longer context"
     ],
     "answer": 2,
     "why": "That arithmetic drives context pricing and concurrency limits.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
-     "Same model.",
+     "Tokenisation is cheap.",
+     "The same model serves it.",
      "",
      "Weights are fixed."
     ]
@@ -1044,7 +1156,8 @@
      "KV cache formula",
      "activations and overhead",
      "concurrency × context"
-    ]
+    ],
+    "followUp": "Do it for an 8B model with 8 KV heads at 8k tokens and 32 users."
    },
    {
     "id": "c14-1-i02",
@@ -1054,7 +1167,8 @@
      "per token per layer",
      "grows with context and users",
      "remaining memory after weights"
-    ]
+    ],
+    "followUp": "Which lever frees the most memory for more users?"
    },
    {
     "id": "c14-1-i03",
@@ -1064,7 +1178,8 @@
      "shared KV heads",
      "4× smaller cache example",
      "more users per GPU"
-    ]
+    ],
+    "followUp": "What does GQA trade away, if anything?"
    },
    {
     "id": "c14-1-i04",
@@ -1087,7 +1202,8 @@
      "fewer users per GPU",
      "context caps",
      "separate long-context pool"
-    ]
+    ],
+    "followUp": "What would you offer instead of 128k for everyone?"
    },
    {
     "id": "c14-1-i06",
@@ -1098,7 +1214,8 @@
      "context length distribution",
      "queueing",
      "preemptions"
-    ]
+    ],
+    "followUp": "Preemptions are rising. What does that tell you?"
    },
    {
     "id": "c14-1-i07",
@@ -1122,7 +1239,8 @@
      "context caps",
      "KV sizing per pool",
      "routing"
-    ]
+    ],
+    "followUp": "How do you route a request to the right pool?"
    }
   ]
  },
@@ -1133,9 +1251,9 @@
     "q": "Why does quantising weights speed up decode?",
     "options": [
      "Fewer bytes are read per token",
-     "It reduces prompt length",
-     "It removes the KV cache",
-     "It adds more GPUs"
+     "It reduces the length of each prompt",
+     "It removes the need for a KV cache",
+     "It spreads the model over more GPUs"
     ],
     "answer": 0,
     "why": "Decode is memory-bandwidth-bound.",
@@ -1143,46 +1261,46 @@
     "distractors": [
      "",
      "Prompts are unchanged.",
-     "KV cache remains.",
-     "No change in hardware."
+     "The cache remains.",
+     "It uses fewer bytes, not more GPUs."
     ]
    },
    {
     "id": "c14-4-m02",
     "q": "Which capabilities often degrade first under aggressive quantisation?",
     "options": [
-     "Greeting messages",
-     "Tokenisation",
-     "Long-context, maths, code and non-English",
-     "Short English chat"
+     "Greeting messages and small talk",
+     "Tokenisation of the input text",
+     "Long context, maths, code, non-English",
+     "Short English chat replies"
     ],
     "answer": 2,
     "why": "Always evaluate on your task suite.",
     "kind": "concept",
     "distractors": [
-     "Usually robust.",
-     "Unrelated.",
+     "Simple chat holds up best.",
+     "The tokenizer is unchanged.",
      "",
-     "These are usually more robust."
+     "These degrade last."
     ]
    },
    {
     "id": "c14-4-m03",
     "q": "How should you judge a quantised model?",
     "options": [
-     "By the vendor's claims",
-     "By perplexity alone",
-     "On your own task suite, not just perplexity",
-     "By file size"
+     "By the vendor's published claims",
+     "By perplexity on general text alone",
+     "On your own task suite",
+     "By the size of the model file"
     ],
     "answer": 2,
     "why": "Perplexity can hide task-specific losses.",
     "kind": "concept",
     "distractors": [
-     "Measure yourself.",
-     "Not enough.",
+     "Claims are not your task.",
+     "Perplexity can hide task losses.",
      "",
-     "Size says nothing about quality."
+     "Size is not quality."
     ]
    },
    {
@@ -1208,81 +1326,81 @@
     "id": "c14-4-m05",
     "q": "Does speculative decoding change the output distribution?",
     "options": [
-     "No; it is mathematically the same as the target model's",
-     "Only at temperature 0",
-     "Yes, it is always lower quality",
-     "Yes, it follows the draft model"
+     "No: it matches the target model exactly",
+     "Only at temperature 0, not when sampling",
+     "Yes, it is always of lower quality",
+     "Yes, it follows the draft model's choices"
     ],
     "answer": 0,
     "why": "The target verifies drafts and accepts only the correct prefix.",
     "kind": "concept",
     "distractors": [
      "",
-     "At any temperature.",
-     "Distribution is preserved.",
-     "The target decides."
+     "It is exact when sampling too.",
+     "Verification preserves quality.",
+     "The target model decides."
     ]
    },
    {
     "id": "c14-4-m06",
     "q": "When does speculative decoding help most?",
     "options": [
-     "Low acceptance and large batches",
-     "Only on CPUs",
-     "High acceptance (predictable text, code) and small batch sizes",
-     "Only for prefill"
+     "Low acceptance rates and large batches",
+     "Only when running on CPUs",
+     "High acceptance and small batches",
+     "Only during prefill of the prompt"
     ],
     "answer": 2,
     "why": "At large batches the GPU is already busy.",
     "kind": "concept",
     "distractors": [
-     "Gains shrink.",
-     "Any hardware.",
+     "Both erode the gain.",
+     "It is mainly a GPU technique.",
      "",
-     "It speeds up decode."
+     "It speeds decode."
     ]
    },
    {
     "id": "c14-4-m07",
     "q": "Does a 4-bit model always have lower latency than FP8?",
     "options": [
-     "No; it depends on kernel support, hardware and batch size",
-     "Yes, always",
-     "Yes, on any GPU",
-     "Only on CPUs"
+     "No: kernels, hardware and batch decide",
+     "Yes, always, on any hardware",
+     "Yes, on any GPU with enough memory",
+     "Only on CPUs, never on GPUs"
     ],
     "answer": 0,
     "why": "A format without fast kernels can be slower.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not always.",
-     "Kernel support varies.",
-     "Not that simple."
+     "Kernels and batch size decide.",
+     "Without fast kernels it can be slower.",
+     "It depends on many factors."
     ]
    },
    {
     "id": "c14-4-m08",
     "q": "Why is a 4-bit 8B model about 4.5–5 GB rather than exactly 4 GB?",
     "options": [
-     "It is stored twice",
-     "Scales and other tensors add more than 0.5 bytes per parameter",
-     "The tokenizer is large",
-     "4-bit means 1 byte"
+     "The weights are stored twice",
+     "Scales and other tensors add extra bytes",
+     "The tokenizer is very large",
+     "4-bit actually means 1 byte each"
     ],
     "answer": 1,
     "why": "Quantisation scales and unquantised layers add overhead.",
     "kind": "concept",
     "distractors": [
-     "Not stored twice.",
+     "They are stored once.",
      "",
-     "Tokenizer is small.",
+     "The tokenizer is small.",
      "4 bits is half a byte."
     ]
    },
    {
     "id": "c14-4-m09",
-    "q": "Choose all the compression methods besides quantisation that the chapter lists.",
+    "q": "An 8B model must get cheaper to serve, and quantisation alone is not enough. Which of these could also help? Choose all that apply.",
     "options": [
      "Distillation into smaller models",
      "Pruning",
@@ -1295,7 +1413,7 @@
      3
     ],
     "why": "Adding layers makes models bigger.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
      "",
@@ -1307,19 +1425,57 @@
     "id": "c14-4-m10",
     "q": "An 8B model's weights shrink from 16 GB (BF16) to 8 GB (FP8). The chapter's table shows decode speed of about 1.6–1.9×, not 2×. Why?",
     "options": [
-     "The table is wrong",
-     "Dequantisation work and non-weight memory traffic (such as the KV cache) do not shrink",
-     "FP8 is computed on the CPU",
-     "FP8 has more parameters"
+     "The chapter's table must simply be wrong",
+     "Dequantisation and KV traffic do not shrink",
+     "FP8 maths is done on the CPU, not the GPU",
+     "FP8 models have more parameters than BF16"
     ],
     "answer": 1,
     "why": "Speedups are below the ideal byte ratio.",
     "kind": "concept",
     "distractors": [
-     "The gap is expected.",
+     "The gap has real causes.",
      "",
      "It runs on the GPU.",
-     "Same parameter count."
+     "The parameter count is the same."
+    ]
+   },
+   {
+    "id": "c14-4-m11",
+    "q": "Speculative decoding drafts k = 4 tokens, and each is accepted with probability a = 0.8. Using (1 − aᵏ⁺¹) ÷ (1 − a), how many tokens does each target pass produce on average?",
+    "options": [
+     "About 3.4",
+     "About 3.2",
+     "About 5.0",
+     "About 1.0"
+    ],
+    "answer": 0,
+    "why": "(1 − 0.8⁵) ÷ 0.2 = (1 − 0.328) ÷ 0.2 ≈ 3.36.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is k × a, which ignores where the first rejection falls.",
+     "That assumes every draft token is accepted, plus one.",
+     "That is decoding without speculation."
+    ]
+   },
+   {
+    "id": "c14-4-m12",
+    "q": "A team quantises an 8B model to 4-bit. Perplexity barely changes, but Tamil extraction accuracy on their own suite drops 9 points. What should they conclude?",
+    "options": [
+     "Trust perplexity, which shows the model is essentially unchanged overall",
+     "The suite must be flawed, since perplexity stayed stable after quantising",
+     "Trust the suite: non-English degrades first; try 8-bit or keep the larger model",
+     "Ship it anyway, since Tamil is only a small share of all the traffic"
+    ],
+    "answer": 2,
+    "why": "Perplexity hides task losses, and non-English text often degrades first.",
+    "kind": "scenario",
+    "distractors": [
+     "Perplexity is not your task.",
+     "The suite measures what matters.",
+     "",
+     "A 9-point drop is a real regression for those users."
     ]
    }
   ],
@@ -1333,7 +1489,8 @@
      "memory and speed",
      "quality cost",
      "kernels"
-    ]
+    ],
+    "followUp": "Which format would you try first on a recent datacentre GPU?"
    },
    {
     "id": "c14-4-i02",
@@ -1344,7 +1501,8 @@
      "target verifies in one pass",
      "same distribution",
      "acceptance rate"
-    ]
+    ],
+    "followUp": "How do you choose the draft model?"
    },
    {
     "id": "c14-4-i03",
@@ -1354,7 +1512,8 @@
      "FP8, INT8",
      "AWQ/GPTQ",
      "GGUF k-quants"
-    ]
+    ],
+    "followUp": "Why might AWQ beat plain INT4 rounding?"
    },
    {
     "id": "c14-4-i04",
@@ -1377,7 +1536,8 @@
      "large batches",
      "draft model cost",
      "measure acceptance"
-    ]
+    ],
+    "followUp": "How would you measure the acceptance rate?"
    },
    {
     "id": "c14-4-i06",
@@ -1388,7 +1548,8 @@
      "own 20-case task",
      "error counts",
      "memory"
-    ]
+    ],
+    "followUp": "Which errors would you count?"
    },
    {
     "id": "c14-4-i07",
@@ -1412,7 +1573,8 @@
      "critical slices",
      "latency on target hardware",
      "sign-off"
-    ]
+    ],
+    "followUp": "Which slice would most likely block a 4-bit model?"
    }
   ]
  },
@@ -1441,18 +1603,18 @@
     "id": "c14-6-m02",
     "q": "What is TGI's status according to the chapter?",
     "options": [
-     "The fastest engine",
-     "Required for Hugging Face models",
-     "Deprecated and removed",
-     "In maintenance mode; Hugging Face recommends vLLM or SGLang for new deployments"
+     "The fastest engine for every kind of workload",
+     "Required for serving all Hugging Face models",
+     "Deprecated and removed from GitHub last year",
+     "In maintenance mode; vLLM or SGLang are recommended"
     ],
     "answer": 3,
     "why": "Check its README for the current status.",
     "kind": "concept",
     "distractors": [
-     "Not claimed.",
+     "Not its status.",
      "Not required.",
-     "Maintenance, not removed.",
+     "It is in maintenance mode.",
      ""
     ]
    },
@@ -1483,18 +1645,18 @@
     "id": "c14-6-m04",
     "q": "Why is GPU utilisation a poor autoscaling signal?",
     "options": [
-     "It is too expensive to read",
-     "It lags and does not show waiting work; queue depth, KV usage and TTFT are better",
-     "It is always zero",
-     "It measures CPU"
+     "It is too expensive to read often",
+     "It lags and misses waiting work",
+     "It is always zero during inference",
+     "It measures the CPU, not the GPU"
     ],
     "answer": 1,
     "why": "Leading signals react before users wait.",
     "kind": "concept",
     "distractors": [
-     "Cheap to read.",
+     "It is cheap to read.",
      "",
-     "Not true.",
+     "It is not.",
      "It measures the GPU."
     ]
    },
@@ -1502,18 +1664,18 @@
     "id": "c14-6-m05",
     "q": "When should a replica be marked ready?",
     "options": [
-     "When the container starts",
-     "When the image is pulled",
-     "When the port opens",
-     "After the model and tokenizer load and a small validation inference succeeds"
+     "When the container process starts",
+     "When the image has been pulled",
+     "When the server's port opens",
+     "After loading and a validation inference"
     ],
     "answer": 3,
     "why": "Readiness means a real answer.",
     "kind": "concept",
     "distractors": [
-     "Too early.",
-     "Too early.",
-     "Too early.",
+     "The model is not loaded yet.",
+     "Nothing is loaded.",
+     "The model may still be loading.",
      ""
     ]
    },
@@ -1521,18 +1683,18 @@
     "id": "c14-6-m06",
     "q": "Why send warm-up requests before marking a replica ready?",
     "options": [
-     "To train the model",
-     "To test the network only",
-     "To fill the logs",
-     "So real users do not pay compilation and cache-allocation costs"
+     "To train the model further on typical requests",
+     "To test the network path to the replica only",
+     "To fill the logs with test entries for later",
+     "So users do not pay compile and allocation costs"
     ],
     "answer": 3,
     "why": "Typical shapes warm the kernels and caches.",
     "kind": "concept",
     "distractors": [
-     "No training.",
-     "Not the purpose.",
-     "Not the purpose.",
+     "Warm-up does not train.",
+     "It warms the engine itself.",
+     "Logs are a side effect.",
      ""
     ]
    },
@@ -1540,24 +1702,24 @@
     "id": "c14-6-m07",
     "q": "Cold start is 8 minutes and traffic ramps over 5 minutes. What fixes the SLO violations in the figure?",
     "options": [
-     "Removing readiness checks",
-     "A larger warm pool or scheduled pre-scaling",
-     "Scale-to-zero",
+     "Removing the readiness checks",
+     "A bigger warm pool or pre-scaling",
+     "Scale-to-zero overnight",
      "Scaling on GPU utilisation"
     ],
     "answer": 1,
     "why": "Reactive scaling cannot start replicas faster than the ramp.",
     "kind": "scenario",
     "distractors": [
-     "That sends traffic to unready replicas.",
+     "That sends users to unready replicas.",
      "",
-     "That makes it worse.",
-     "That reacts later."
+     "That makes cold starts worse.",
+     "That lags."
     ]
    },
    {
     "id": "c14-6-m08",
-    "q": "What conflicts with tight first-request latency targets?",
+    "q": "To save money, a team runs no replicas overnight. The first requests each morning badly miss the latency target. Which policy causes this?",
     "options": [
      "Validation inference",
      "Scale-to-zero",
@@ -1566,7 +1728,7 @@
     ],
     "answer": 1,
     "why": "The first request after zero pays the full cold start.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "That ensures readiness.",
      "",
@@ -1578,9 +1740,9 @@
     "id": "c14-6-m09",
     "q": "How should engine configuration such as TP size and max model length be managed?",
     "options": [
-     "As versioned config with a pinned engine version",
-     "Left to defaults",
-     "Changed live in production without records",
+     "Versioned config, pinned engine",
+     "Left to the engine's defaults",
+     "Changed live, without records",
      "Typed by hand on each server"
     ],
     "answer": 0,
@@ -1588,17 +1750,17 @@
     "kind": "concept",
     "distractors": [
      "",
-     "Defaults may not fit.",
-     "Unsafe.",
-     "Not reproducible."
+     "Defaults may not match the model.",
+     "Changes become untraceable.",
+     "Servers drift apart."
     ]
    },
    {
     "id": "c14-6-m10",
     "q": "Which engine is aimed at laptops, Apple silicon and consumer GPUs with GGUF quantisation?",
     "options": [
-     "SGLang",
-     "vLLM",
+     "SGLang with RadixAttention",
+     "vLLM with paged attention",
      "llama.cpp / Ollama",
      "TensorRT-LLM"
     ],
@@ -1606,10 +1768,48 @@
     "why": "It is the course's laptop testbed.",
     "kind": "concept",
     "distractors": [
-     "High-throughput GPU serving.",
-     "GPU serving engine (a slow CPU backend exists for experiments).",
+     "A GPU serving engine.",
+     "A GPU serving engine.",
      "",
-     "NVIDIA datacentre performance."
+     "NVIDIA GPUs."
+    ]
+   },
+   {
+    "id": "c14-6-m11",
+    "q": "A replica is marked ready as soon as its port opens. For the first minute, requests sent to it fail while weights are still loading. What should readiness mean?",
+    "options": [
+     "Model and tokenizer loaded, and a small validation inference passed",
+     "The GPU shows high utilisation on nvidia-smi",
+     "The container has started and its image has been pulled",
+     "The port has been open for at least ten seconds"
+    ],
+    "answer": 0,
+    "why": "Readiness means a real answer, not an open port.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Utilisation says nothing about readiness.",
+     "The model is not loaded yet.",
+     "Time does not prove the model is loaded."
+    ]
+   },
+   {
+    "id": "c14-6-m12",
+    "q": "An autoscaler adds replicas when GPU utilisation exceeds 80%. During a surge the queue grows and TTFT breaks its SLO while utilisation reads 60%. What should it scale on?",
+    "options": [
+     "Disk throughput on the model store during loads",
+     "CPU usage on the host machines running the pods",
+     "Queue depth, KV-cache usage and TTFT against the SLO",
+     "GPU utilisation, with a lower 50% threshold"
+    ],
+    "answer": 2,
+    "why": "Those show waiting work; utilisation lags and misleads.",
+    "kind": "scenario",
+    "distractors": [
+     "Not on the request path.",
+     "Not the bottleneck.",
+     "",
+     "The signal itself is poor."
     ]
    }
   ],
@@ -1623,7 +1823,8 @@
      "SGLang prefix caching and structured output",
      "TensorRT-LLM NVIDIA performance",
      "llama.cpp laptops"
-    ]
+    ],
+    "followUp": "Which would you pick for an agent workload with many shared prefixes?"
    },
    {
     "id": "c14-6-i02",
@@ -1635,7 +1836,8 @@
      "weight load",
      "KV allocation",
      "minutes"
-    ]
+    ],
+    "followUp": "Which part of a cold start can you shorten most?"
    },
    {
     "id": "c14-6-i03",
@@ -1646,7 +1848,8 @@
      "KV usage",
      "TTFT vs SLO",
      "not GPU utilisation"
-    ]
+    ],
+    "followUp": "How fast should it scale down, and why?"
    },
    {
     "id": "c14-6-i04",
@@ -1669,7 +1872,8 @@
      "weights from registry",
      "versioned config",
      "health and readiness"
-    ]
+    ],
+    "followUp": "Where should the weights come from at start-up?"
    },
    {
     "id": "c14-6-i06",
@@ -1680,7 +1884,8 @@
      "warm pool",
      "leading signals",
      "faster cold start"
-    ]
+    ],
+    "followUp": "How would you size the warm pool?"
    },
    {
     "id": "c14-6-i07",
@@ -1705,7 +1910,8 @@
      "autoscaler signals",
      "min pool",
      "scale down slowly"
-    ]
+    ],
+    "followUp": "How do you keep the first request fast after scaling up?"
    }
   ]
  },
@@ -1715,46 +1921,46 @@
     "id": "c14-7-m01",
     "q": "As batch size grows, what happens to throughput and per-user latency?",
     "options": [
-     "Throughput falls; latency falls",
-     "Both stay constant",
-     "Throughput rises then plateaus; latency keeps rising",
-     "Both fall"
+     "Throughput falls while latency also falls",
+     "Both stay about constant as batches grow",
+     "Throughput rises, then plateaus; latency rises",
+     "Both fall steadily as the batch grows"
     ],
     "answer": 2,
     "why": "Shared weight reads raise throughput until compute-bound.",
     "kind": "concept",
     "distractors": [
-     "Reversed.",
-     "They change.",
+     "Batching raises throughput.",
+     "Both change with batch size.",
      "",
-     "Not the behaviour."
+     "Latency rises."
     ]
    },
    {
     "id": "c14-7-m02",
     "q": "How should the operating point be chosen?",
     "options": [
-     "By the SLO: maximise throughput subject to latency targets",
-     "By GPU utilisation",
-     "At maximum throughput",
-     "At batch size 1"
+     "Maximise throughput within latency SLOs",
+     "By GPU utilisation from nvidia-smi",
+     "At the maximum possible throughput",
+     "At batch size 1, for lowest latency"
     ],
     "answer": 0,
     "why": "e.g. maximise tokens/s subject to p95 ITL ≤ 50 ms.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not a good signal.",
-     "Tail latency explodes near saturation.",
-     "Wastes capacity."
+     "A poor signal.",
+     "That breaks latency targets.",
+     "That wastes the GPU."
     ]
    },
    {
     "id": "c14-7-m03",
     "q": "What does nvidia-smi's “GPU utilisation 100%” mean?",
     "options": [
-     "Memory is full",
-     "A kernel was running, not that compute units were busy",
+     "GPU memory is completely full",
+     "A kernel was running, not full use",
      "All compute units were fully busy",
      "The GPU is overheating"
     ],
@@ -1762,10 +1968,10 @@
     "why": "Prefer tokens/s, MFU, bandwidth utilisation and KV usage.",
     "kind": "concept",
     "distractors": [
-     "Different metric.",
+     "That is a different metric.",
      "",
-     "That is the misconception.",
-     "Unrelated."
+     "It does not mean that.",
+     "That is temperature."
     ]
    },
    {
@@ -1816,8 +2022,8 @@
     "options": [
      "Model FLOPs utilisation",
      "Memory-bandwidth utilisation",
-     "CPU usage",
-     "Disk throughput"
+     "CPU usage on the host",
+     "Disk read throughput"
     ],
     "answer": 1,
     "why": "Decode is bandwidth-bound; MFU suits prefill.",
@@ -1825,27 +2031,27 @@
     "distractors": [
      "That suits prefill.",
      "",
-     "Unrelated.",
-     "Unrelated."
+     "Not the bottleneck.",
+     "Not on the token path."
     ]
    },
    {
     "id": "c14-7-m07",
     "q": "In the figure, ITL crosses 50 ms at batch 48. What batch cap should you choose?",
     "options": [
-     "48 × 2",
-     "256",
-     "Just below 48, the largest batch under the SLO",
-     "1"
+     "48 × 2 = 96",
+     "256, the engine maximum",
+     "Just under 48",
+     "1, for safety"
     ],
     "answer": 2,
     "why": "The best batch is the largest one under the SLO line.",
     "kind": "scenario",
     "distractors": [
-     "Breaks the SLO.",
-     "Breaks the SLO.",
+     "That breaks the SLO.",
+     "Far over the SLO.",
      "",
-     "Wastes throughput."
+     "Wastes the GPU."
     ]
    },
    {
@@ -1904,6 +2110,44 @@
      "It will miss its deadline.",
      "That harms another user."
     ]
+   },
+   {
+    "id": "c14-7-m11",
+    "q": "At a batch of 32, each decode step takes 40 ms. What is the replica's decode throughput?",
+    "options": [
+     "About 1,280 tokens/s",
+     "About 32 tokens/s",
+     "About 800 tokens/s",
+     "About 25 tokens/s"
+    ],
+    "answer": 2,
+    "why": "Each step makes one token per sequence: 32 ÷ 0.04 s = 800 tokens/s.",
+    "kind": "calculation",
+    "distractors": [
+     "That multiplies 32 by 40.",
+     "That counts one step per second.",
+     "",
+     "That is one sequence's rate."
+    ]
+   },
+   {
+    "id": "c14-7-m12",
+    "q": "Nightly batch jobs run on the same pool as chat, and when they overrun into the morning, chat inter-token latency breaks its SLO. Which fix follows the chapter's admission-control guidance?",
+    "options": [
+     "Scale on GPU utilisation so that more replicas start sooner",
+     "Prioritise interactive traffic, capping or pausing batch work when queues grow",
+     "Remove the queue entirely so that every request starts at once",
+     "Raise the batch size cap so both workloads fit into the pool"
+    ],
+    "answer": 1,
+    "why": "Admission control protects the operating point and favours interactive users.",
+    "kind": "scenario",
+    "distractors": [
+     "A lagging signal, and batch work fills any pool.",
+     "",
+     "Unbounded admission breaks the SLO.",
+     "Larger batches raise per-user latency."
+    ]
    }
   ],
   "interview": [
@@ -1916,7 +2160,8 @@
      "latency rises",
      "plateau",
      "SLO picks the point"
-    ]
+    ],
+    "followUp": "What decides where the curve plateaus?"
    },
    {
     "id": "c14-7-i02",
@@ -1927,7 +2172,8 @@
      "bounded queue",
      "reject by deadline",
      "priorities"
-    ]
+    ],
+    "followUp": "What should a rejected request see?"
    },
    {
     "id": "c14-7-i03",
@@ -1938,7 +2184,8 @@
      "MFU",
      "bandwidth",
      "tokens/s"
-    ]
+    ],
+    "followUp": "Which metric would you put on the main dashboard instead?"
    },
    {
     "id": "c14-7-i04",
@@ -1961,7 +2208,8 @@
      "separate pools",
      "pause batch on queue growth",
      "reserved slots"
-    ]
+    ],
+    "followUp": "How would you reserve capacity for chat?"
    },
    {
     "id": "c14-7-i06",
@@ -1972,7 +2220,8 @@
      "GuideLLM",
      "latency percentiles",
      "real prompt mix"
-    ]
+    ],
+    "followUp": "How long should each load level run?"
    },
    {
     "id": "c14-7-i07",
@@ -1996,7 +2245,8 @@
      "priority classes",
      "pools",
      "SLO monitoring"
-    ]
+    ],
+    "followUp": "How do you stop one tenant from using all the batch slots?"
    }
   ]
  },
@@ -2006,19 +2256,19 @@
     "id": "c14-8-m01",
     "q": "Why is self-hosting cost mostly fixed?",
     "options": [
-     "GPUs are free",
-     "Electricity is free",
-     "You pay for GPU-hours whether or not they are busy",
+     "GPUs are free once bought",
+     "Electricity is free in data centres",
+     "You pay for GPU-hours, busy or idle",
      "Tokens are billed per use"
     ],
     "answer": 2,
     "why": "API cost is variable; self-hosting is fixed capacity.",
     "kind": "concept",
     "distractors": [
-     "Not true.",
-     "Not true.",
+     "They cost money whether busy or not.",
+     "It is not.",
      "",
-     "That is API billing."
+     "That is the API model."
     ]
    },
    {
@@ -2086,9 +2336,9 @@
     "id": "c14-8-m05",
     "q": "Where should the throughput input in the calculator come from?",
     "options": [
-     "A blog post",
-     "The model card",
-     "Your own benchmark at your SLO with your prompt and output mix",
+     "A blog post about the model",
+     "The model card's figures",
+     "Your own benchmark at your SLO",
      "The vendor's peak number"
     ],
     "answer": 2,
@@ -2096,47 +2346,47 @@
     "kind": "concept",
     "distractors": [
      "Not your workload.",
-     "Not a serving benchmark.",
+     "Not your SLO or mix.",
      "",
-     "Overstated."
+     "Peak numbers overstate it."
     ]
    },
    {
     "id": "c14-8-m06",
     "q": "Which costs belong in a self-hosted total?",
     "options": [
-     "Model licence only",
-     "GPUs with redundancy, engineers and on-call, networking, storage, observability and idle capacity",
-     "Electricity only",
-     "GPU hourly price only"
+     "The model licence fee, which is the largest single cost",
+     "GPUs with redundancy, people, network, storage, monitoring, idle time",
+     "Electricity for the GPUs, at the data centre's rate",
+     "The GPU hourly price, multiplied by the GPU count"
     ],
     "answer": 1,
     "why": "The full cost is much more than GPUs.",
     "kind": "concept",
     "distractors": [
-     "Misses most costs.",
+     "Far from the full cost.",
      "",
-     "Misses most costs.",
-     "Misses most costs."
+     "Far from the full cost.",
+     "Far from the full cost."
     ]
    },
    {
     "id": "c14-8-m07",
     "q": "Harbor compares options by…",
     "options": [
-     "Dollars per token",
-     "Dollars per resolved question at the same quality bar",
-     "Model size",
-     "GPU count"
+     "Dollars per million tokens served",
+     "Dollars per resolved question at equal quality",
+     "The size of each candidate model",
+     "The number of GPUs each option needs"
     ],
     "answer": 1,
     "why": "A cheap token is not cheap if the task needs many calls or human fixes.",
     "kind": "concept",
     "distractors": [
-     "Ignores quality and retries.",
+     "Tokens per task vary.",
      "",
-     "Not a cost measure.",
-     "Not a cost measure."
+     "Size is not cost.",
+     "GPUs are an input."
     ]
    },
    {
@@ -2162,10 +2412,10 @@
     "id": "c14-8-m09",
     "q": "What is an opportunity cost of self-hosting?",
     "options": [
-     "Not using newer hosted models",
-     "Data control",
-     "Lower latency",
-     "Fixed cost"
+     "Missing newer hosted models",
+     "Data control over prompts",
+     "Lower latency per token",
+     "A fixed monthly cost"
     ],
     "answer": 0,
     "why": "Hosted providers ship new models you may not be able to run.",
@@ -2174,7 +2424,7 @@
      "",
      "That is a benefit.",
      "That is a possible benefit.",
-     "That is a direct cost."
+     "That is a cost shape."
     ]
    },
    {
@@ -2195,6 +2445,25 @@
      "",
      "Rounding down leaves demand unserved."
     ]
+   },
+   {
+    "id": "c14-8-m11",
+    "q": "Using the chapter's example figures (one GPU ≈ 2.96B tokens a month at 45% utilisation, about $1,830 per GPU-month, $15,000 a month of ops), compare self-hosting with an API at $0.60 per million tokens for 40B tokens a month.",
+    "options": [
+     "14 GPUs ≈ $40,600 against $24,000 for the API: the API is cheaper",
+     "14 GPUs ≈ $40,600 against $2,400: the API wins by far",
+     "7 GPUs ≈ $27,800 against $24,000: nearly even",
+     "14 GPUs ≈ $25,600 against $24,000: nearly even"
+    ],
+    "answer": 0,
+    "why": "40 ÷ 2.96 ≈ 13.5, so 14 GPUs ≈ $25,600, plus $15,000 ops; the API costs 40,000 × $0.60.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "40B tokens at $0.60 per million is $24,000.",
+     "7 GPUs serve only about 20B tokens.",
+     "That leaves out the $15,000 of ops."
+    ]
    }
   ],
   "interview": [
@@ -2207,7 +2476,8 @@
      "smaller model meets bar",
      "data control",
      "full cost"
-    ]
+    ],
+    "followUp": "Give a volume at which self-hosting might win, and why."
    },
    {
     "id": "c14-8-i02",
@@ -2218,7 +2488,8 @@
      "redundancy",
      "idle capacity",
      "observability"
-    ]
+    ],
+    "followUp": "Which of these is usually the largest?"
    },
    {
     "id": "c14-8-i03",
@@ -2228,7 +2499,8 @@
      "retries and calls per task",
      "quality",
      "human fixes"
-    ]
+    ],
+    "followUp": "How would you count human fixes in the cost?"
    },
    {
     "id": "c14-8-i04",
@@ -2252,7 +2524,8 @@
      "your prompt mix",
      "percentiles",
      "utilisation"
-    ]
+    ],
+    "followUp": "What prompt and output mix would you use?"
    },
    {
     "id": "c14-8-i06",
@@ -2263,7 +2536,8 @@
      "low average utilisation",
      "hybrid hosting",
      "burst to API"
-    ]
+    ],
+    "followUp": "How would you use the API for the peaks?"
    },
    {
     "id": "c14-8-i07",
@@ -2287,7 +2561,8 @@
      "burst routing",
      "quality parity",
      "cost monitoring"
-    ]
+    ],
+    "followUp": "How do you keep quality the same on both paths?"
    }
   ]
  }
