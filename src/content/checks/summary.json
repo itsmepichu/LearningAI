@@ -1,6 +1,6 @@
 {
  "totals": {
-  "mcq": 1390,
+  "mcq": 1405,
   "interview": 1080
  },
  "chapters": {
@@ -341,39 +341,39 @@
    }
   },
   "c11": {
-   "mcq": 80,
+   "mcq": 95,
    "interview": 64,
    "sections": {
     "c11-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-4": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c11-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-8": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
