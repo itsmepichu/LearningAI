@@ -5,48 +5,54 @@
     "id": "c6-1-m01",
     "q": "Which stage usually uses the most compute?",
     "options": [
-     "SFT",
-     "DPO",
+     "Supervised fine-tuning (SFT)",
+     "Preference tuning (DPO)",
      "Pretraining",
-     "Evaluation"
+     "Evaluation of the final model"
     ],
     "answer": 2,
     "why": "Pretraining over trillions of tokens dominates total compute by orders of magnitude.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "SFT uses orders of magnitude less compute than pretraining.",
+     "DPO runs on comparison pairs after SFT, a small fraction of the compute.",
+     "",
+     "Evaluation is small next to training."
+    ]
    },
    {
     "id": "c6-1-m02",
     "q": "What does a base model (after pretraining only) usually do?",
     "options": [
-     "Refuses all requests",
-     "Calls tools",
-     "Continues text, but does not reliably follow instructions",
-     "Answers every question helpfully"
+     "Refuses every request it receives, by default",
+     "Calls tools to look up answers it does not know",
+     "Continues text, not reliably following instructions",
+     "Answers every question helpfully, as a chat model does"
     ],
     "answer": 2,
     "why": "Pretraining teaches continuation; SFT and preference tuning make an assistant.",
     "kind": "concept",
     "distractors": [
-     "Refusal behaviour is also learned later.",
-     "Tool use is trained later.",
+     "A base model has learned no refusal behaviour.",
+     "Tool use is taught later and wired up by an application.",
      "",
-     "That needs instruction tuning."
+     "Helpful answering comes from instruction tuning."
     ]
    },
    {
     "id": "c6-1-m03",
     "q": "What is continued pretraining?",
     "options": [
-     "Training only the output layer",
-     "Prompt engineering",
-     "Training on preference pairs",
-     "More next-token training on domain text, such as legal, code or a new language"
+     "Training only the output layer on labelled examples",
+     "Prompt engineering with longer domain examples",
+     "Training on preference pairs from domain experts",
+     "More next-token training on domain text, such as legal or code"
     ],
     "answer": 3,
     "why": "It shifts knowledge and vocabulary use, with a risk of forgetting general skills.",
     "kind": "concept",
     "distractors": [
-     "It trains the whole model.",
+     "That is a form of fine-tuning a head, not continued pretraining.",
      "Prompting changes no weights.",
      "That is preference optimisation.",
      ""
@@ -56,36 +62,36 @@
     "id": "c6-1-m04",
     "q": "What does supervised fine-tuning (SFT) train on?",
     "options": [
-     "Curated (instruction, response) conversations",
-     "Only unit tests",
-     "Pairs of better and worse answers",
-     "Random web pages"
+     "Curated instruction–response conversations",
+     "Only unit tests and their pass or fail results",
+     "Pairs of better and worse answers to a prompt",
+     "Random web pages for next-token prediction"
     ],
     "answer": 0,
     "why": "It teaches the conversation format and helpful behaviour from examples of ideal answers.",
     "kind": "concept",
     "distractors": [
      "",
-     "That is a verifiable reward source.",
+     "That is a verifiable reward, used in RL.",
      "That is preference data.",
-     "That is pretraining data."
+     "That is pretraining."
     ]
    },
    {
     "id": "c6-1-m05",
     "q": "Preference optimisation trains a model on…",
     "options": [
-     "Hand-written rules",
-     "Image labels",
-     "Comparisons of responses, or automatically verifiable rewards",
-     "Next-token prediction only"
+     "Hand-written rules that score each answer",
+     "Image labels from a classification dataset",
+     "Response comparisons, or checkable rewards",
+     "Next-token prediction on web text alone"
     ],
     "answer": 2,
     "why": "RLHF and DPO use preferences; RL with verifiable rewards uses checks such as tests.",
     "kind": "concept",
     "distractors": [
-     "Rules are not training data here.",
-     "Unrelated.",
+     "Rules may verify, but training uses comparisons or rewards.",
+     "Unrelated to language-model preference tuning.",
      "",
      "That is pretraining."
     ]
@@ -94,18 +100,18 @@
     "id": "c6-1-m06",
     "q": "Asked “Write a haiku about Kubernetes”, a base model replies “Write a haiku about Docker. Write a haiku about…”. Why?",
     "options": [
-     "It refuses poems",
-     "It is broken",
-     "It has no vocabulary for Kubernetes",
-     "Lists of prompts are common online, so continuing the list is likely"
+     "It refuses to write poems about technical topics",
+     "It is broken and needs to be retrained from scratch",
+     "It has no vocabulary for the word Kubernetes",
+     "Lists of prompts are common online, so continuing one is likely"
     ],
     "answer": 3,
     "why": "A base model continues text; it was not trained to treat the text as an instruction.",
     "kind": "scenario",
     "distractors": [
-     "It is not refusing.",
-     "It is behaving as trained.",
-     "Vocabulary is not the issue.",
+     "It did not refuse; it continued the text.",
+     "A base model doing this is behaving as trained.",
+     "It wrote the prompt fine; it just did not answer it.",
      ""
     ]
    },
@@ -113,75 +119,113 @@
     "id": "c6-1-m07",
     "q": "Which starting checkpoint fits each job?",
     "options": [
-     "Fine-tuning from the base model only",
-     "Narrow-format fine-tuning from the instruct model; continued pretraining from the base model",
-     "Both from random weights",
-     "Both from the instruct model"
+     "Both from the base model, so no instruct behaviour is lost",
+     "Format fine-tunes from instruct; continued pretraining from base",
+     "Both from random weights, to avoid inherited behaviour",
+     "Both from the instruct model, since it already follows instructions"
     ],
     "answer": 1,
     "why": "Format tuning builds on assistant behaviour; continued pretraining extends the base model's knowledge.",
     "kind": "concept",
     "distractors": [
-     "Format tuning usually starts from the instruct model.",
+     "A narrow-format fine-tune from base must re-teach instruction following.",
      "",
-     "Starting from scratch wastes all prior training.",
-     "Continued pretraining normally starts from the base."
+     "That would mean pretraining from scratch.",
+     "Continued pretraining on raw text fits the base model."
     ]
    },
    {
     "id": "c6-1-m08",
     "q": "Facts that change weekly and depend on who is asking are needed by an assistant. What should you use?",
     "options": [
-     "Continued pretraining",
-     "Retrieval from a permission-aware store, not fine-tuning",
-     "A larger base model",
-     "Fine-tune weekly"
+     "Continued pretraining on the facts every week",
+     "Permission-aware retrieval, not fine-tuning",
+     "A larger base model with more general knowledge",
+     "Fine-tuning weekly on the newest facts"
     ],
     "answer": 1,
     "why": "Weights cannot enforce permissions and go stale; retrieval stays current.",
     "kind": "scenario",
     "distractors": [
-     "Same problem, at greater cost.",
+     "Weights cannot hold per-user permissions, and weekly training is costly.",
      "",
-     "Size does not add your facts.",
-     "Weekly fine-tunes are slow, costly and still unpermissioned."
+     "Your facts were never in its training data.",
+     "Fine-tuning is slow to update and ignores who is asking."
     ]
    },
    {
     "id": "c6-1-m09",
     "q": "What is the main risk of continued pretraining?",
     "options": [
-     "It costs nothing",
-     "Forgetting general skills if the data mix is not balanced",
-     "It always improves every task",
-     "It removes the tokenizer"
+     "It costs nothing beyond the original pretraining",
+     "Forgetting general skills if the data mix is unbalanced",
+     "It always improves every task the model knew",
+     "It removes the tokenizer's general vocabulary"
     ],
     "answer": 1,
     "why": "Mixing in general data helps keep earlier abilities.",
     "kind": "concept",
     "distractors": [
-     "It costs real compute.",
+     "It costs real compute and data work.",
      "",
-     "It can hurt other tasks.",
-     "The tokenizer is unchanged."
+     "It can make other tasks worse.",
+     "The tokenizer stays the same."
     ]
    },
    {
     "id": "c6-1-m10",
     "q": "Why is customising an existing model affordable for most organisations?",
     "options": [
-     "Fine-tuning needs no data",
-     "Pretraining is cheap",
-     "Models customise themselves",
-     "Compute after pretraining is orders of magnitude smaller"
+     "Fine-tuning needs no data at all, only prompts",
+     "Pretraining has become cheap enough for most teams",
+     "Models customise themselves while they are used",
+     "Later stages need orders of magnitude less compute"
     ],
     "answer": 3,
     "why": "Pretraining uses most of the compute; adaptation reuses it (chapter 13).",
     "kind": "concept",
     "distractors": [
-     "Fine-tuning needs good data.",
-     "Pretraining is the expensive part.",
-     "Customisation is deliberate work.",
+     "Fine-tuning needs data; it just needs far less compute.",
+     "Pretraining remains very expensive.",
+     "Using a model does not change its weights.",
+     ""
+    ]
+   },
+   {
+    "id": "c6-1-m11",
+    "q": "A legal-tech team has 5 GB of unlabelled contracts, and an instruct model that mishandles their clause vocabulary. They also need answers in a fixed JSON format. Which plan matches the training stages?",
+    "options": [
+     "DPO on the contracts, choosing each one over a random web page",
+     "Pretraining a new model from random weights on the 5 GB",
+     "SFT on the raw contracts, treating each one as an assistant reply",
+     "Continued pretraining from the base model, then SFT for the format"
+    ],
+    "answer": 3,
+    "why": "Unlabelled domain text suits continued pretraining from base; the format is a behaviour taught by SFT on examples.",
+    "kind": "scenario",
+    "distractors": [
+     "Preference pairs teach which reply is better, not domain language.",
+     "Far too little data for pretraining, and it discards the existing model.",
+     "Raw contracts are not instruction–response pairs.",
+     ""
+    ]
+   },
+   {
+    "id": "c6-1-m12",
+    "q": "The topic says pretraining uses over 95% of total compute. If pretraining took 1,000,000 GPU-hours, at most roughly how many GPU-hours did all later stages use together?",
+    "options": [
+     "About 5,000",
+     "About 1,050,000",
+     "About 950,000",
+     "About 50,000"
+    ],
+    "answer": 3,
+    "why": "If pretraining is at least 95%, the rest is at most 5% of the total: 1,000,000 ÷ 0.95 × 0.05 ≈ 52,600.",
+    "kind": "calculation",
+    "distractors": [
+     "That is 0.5%, a factor of ten too small.",
+     "That adds 5% on top; it is the total, not the remainder.",
+     "That is 95% of pretraining's own figure, not the later stages.",
      ""
     ]
    }
@@ -197,7 +241,8 @@
      "SFT on demonstrations",
      "Preference or RL tuning",
      "Compute drops sharply after pretraining"
-    ]
+    ],
+    "followUp": "Where does each stage's data come from, and which is hardest to get?"
    },
    {
     "id": "c6-1-i02",
@@ -208,7 +253,8 @@
      "Instruct follows instructions and conversation format",
      "Which to start from for which job",
      "Most applications use instruct"
-    ]
+    ],
+    "followUp": "When would you fine-tune from a base model rather than an instruct one?"
    },
    {
     "id": "c6-1-i03",
@@ -219,7 +265,8 @@
      "Lots of unlabelled domain text",
      "Evaluation shows a domain gap",
      "Risk of forgetting, so mix data"
-    ]
+    ],
+    "followUp": "How would you detect that continued pretraining made general skills worse?"
    },
    {
     "id": "c6-1-i04",
@@ -242,7 +289,8 @@
      "Copying past mistakes",
      "Consent and licence constraints",
      "Scrub, filter and evaluate before training"
-    ]
+    ],
+    "followUp": "How would you find personal data in the conversations before training?"
    },
    {
     "id": "c6-1-i06",
@@ -254,7 +302,8 @@
      "Retrieval for account facts",
      "Test sets for refusals and format compliance"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "Which of these would you enforce at runtime as well, and why?"
    },
    {
     "id": "c6-1-i07",
@@ -266,7 +315,8 @@
      "Preference tuning for tone and policy",
      "Evaluation gates between steps",
      "Cost and maintenance of each"
-    ]
+    ],
+    "followUp": "What result would make you stop at prompting and retrieval?"
    },
    {
     "id": "c6-1-i08",
@@ -277,7 +327,8 @@
      "Expertise and time",
      "Adapting open models covers most needs",
      "Where money is better spent: data, evaluation, retrieval"
-    ]
+    ],
+    "followUp": "Leadership asks what the same money could buy instead. What do you say?"
    }
   ]
  },
@@ -294,7 +345,13 @@
     ],
     "answer": 1,
     "why": "About 2ND for the forward pass and 4ND for the backward pass.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "2ND is the forward pass alone; training adds about 4ND for the backward pass.",
+     "",
+     "Compute grows linearly in parameters, not with their square.",
+     "The 6 multiplies; it does not divide."
+    ]
    },
    {
     "id": "c6-3-m02",
@@ -338,17 +395,17 @@
     "id": "c6-3-m04",
     "q": "Why are modern models trained on far more tokens per parameter than Chinchilla-optimal?",
     "options": [
-     "Tokens are free",
-     "Chinchilla was wrong about everything",
-     "A smaller model trained longer is cheaper to serve, and serving dominates lifetime cost",
-     "More tokens reduce training cost"
+     "Tokens cost nothing to collect, so more is always free",
+     "The Chinchilla result was wrong about compute-optimal training",
+     "A smaller model trained longer is cheaper to serve, and serving dominates",
+     "More tokens reduce the training cost of a given model"
     ],
     "answer": 2,
     "why": "Chinchilla minimises loss for a training budget; total cost includes inference.",
     "kind": "concept",
     "distractors": [
-     "Tokens cost compute.",
-     "Its result holds for its question.",
+     "Good data is scarce and costly.",
+     "It holds for a fixed training budget; the goal changed.",
      "",
      "More tokens raise training cost."
     ]
@@ -357,19 +414,19 @@
     "id": "c6-3-m05",
     "q": "What is MFU (model FLOPs utilisation)?",
     "options": [
-     "The memory used per GPU",
-     "The fraction of the hardware's peak FLOPs actually achieved",
-     "The model's accuracy",
-     "The share of parameters used per token"
+     "The memory used on each GPU during training",
+     "The share of peak hardware FLOPs actually achieved",
+     "The model's accuracy on its validation set",
+     "The share of parameters active for each token"
     ],
     "answer": 1,
     "why": "35–50% is typical for well-tuned large runs.",
     "kind": "concept",
     "distractors": [
-     "That is memory, not compute.",
+     "MFU measures compute, not memory.",
      "",
-     "Unrelated.",
-     "That describes MoE active parameters."
+     "It measures hardware efficiency.",
+     "That describes MoE routing."
     ]
    },
    {
@@ -414,37 +471,37 @@
     "id": "c6-3-m08",
     "q": "What is “annealing” in a data mixture?",
     "options": [
-     "Shuffling the data each epoch",
-     "Training at a high temperature",
-     "Upweighting a higher-quality slice near the end of training",
-     "Removing all code data"
+     "Shuffling the whole dataset again at each epoch",
+     "Training at a high temperature to explore more",
+     "Upweighting high-quality data near the end",
+     "Removing all code data near the end of training"
     ],
     "answer": 2,
     "why": "Mixtures are tuned with small experiments; quality data late in training helps.",
     "kind": "concept",
     "distractors": [
-     "Shuffling is routine, not annealing.",
-     "Temperature is a decoding setting.",
+     "Shuffling changes order, not proportions.",
+     "Temperature is a sampling setting, not a data mix.",
      "",
-     "Code is usually kept."
+     "Annealing upweights quality data; it does not drop a type."
     ]
    },
    {
     "id": "c6-3-m09",
     "q": "A team repeats a small corpus many times to reach a large token count. What should they expect?",
     "options": [
-     "Better generalisation",
-     "The same results as a larger corpus",
-     "Lower compute cost",
-     "Not the diversity of a larger corpus; repetition adds little and raises memorisation"
+     "Better generalisation from seeing each example often",
+     "The same results as a corpus of that many unique tokens",
+     "Lower compute cost for the same number of tokens",
+     "Less than new data would give, and more memorisation"
     ],
     "answer": 3,
     "why": "Tokens seen again carry little new information.",
     "kind": "scenario",
     "distractors": [
-     "Memorisation rises instead.",
-     "Repeated tokens are not new data.",
-     "Compute is the same per token.",
+     "Repetition mostly increases memorisation.",
+     "Repeated tokens add less than new ones.",
+     "Compute depends on tokens processed, repeated or not.",
      ""
     ]
    },
@@ -452,19 +509,19 @@
     "id": "c6-3-m10",
     "q": "What do scaling laws describe?",
     "options": [
-     "Exact accuracy on every task",
-     "The best prompt for a task",
-     "Loss falling smoothly as a power law in parameters, tokens and compute",
-     "How tokenizers are trained"
+     "Exact accuracy on every downstream task, ahead of time",
+     "The best prompt to use for each task at a given size",
+     "Loss falling as a power law in size, data and compute",
+     "How tokenizers should be trained on a growing corpus"
     ],
     "answer": 2,
     "why": "They are empirical relationships used to plan runs.",
     "kind": "concept",
     "distractors": [
-     "They predict loss, not task accuracy exactly.",
-     "Unrelated.",
+     "They describe loss, not task accuracy.",
+     "Prompting is unrelated.",
      "",
-     "Unrelated."
+     "Tokenizer training is unrelated."
     ]
    }
   ],
@@ -478,7 +535,8 @@
      "About 4 for backward",
      "Multiply by parameters and tokens",
      "Order-of-magnitude planning"
-    ]
+    ],
+    "followUp": "Use it: how much compute does an 8B model on 15T tokens need?"
    },
    {
     "id": "c6-3-i02",
@@ -489,7 +547,8 @@
      "Serving cost favours smaller models trained longer",
      "Total lifetime cost decides",
      "Data availability limits"
-    ]
+    ],
+    "followUp": "What limits training a small model on ever more tokens?"
    },
    {
     "id": "c6-3-i03",
@@ -500,7 +559,8 @@
      "Tuned with small experiments",
      "Annealing on quality data",
      "Under-represented areas stay weak"
-    ]
+    ],
+    "followUp": "How would you test whether adding more code data helps reasoning?"
    },
    {
     "id": "c6-3-i04",
@@ -524,7 +584,8 @@
      "Data sufficiency and quality",
      "Expected quality versus existing models",
      "Maintenance burden"
-    ]
+    ],
+    "followUp": "What result would make you approve it?"
    },
    {
     "id": "c6-3-i06",
@@ -536,7 +597,8 @@
      "Collect more labelled Tamil data",
      "Re-evaluate by language after each change"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "Oversampling Tamil hurt English slightly. How do you decide whether that is acceptable?"
    },
    {
     "id": "c6-3-i07",
@@ -548,7 +610,8 @@
      "Evaluation compute",
      "Headroom",
      "Use scaling fits to choose the final size"
-    ]
+    ],
+    "followUp": "What share of the budget would you hold back for failures and reruns?"
    },
    {
     "id": "c6-3-i08",
@@ -559,7 +622,8 @@
      "Cost per token at each size",
      "Quality on your evaluation set",
      "Smaller model trained longer or distilled"
-    ]
+    ],
+    "followUp": "Volume triples next year. Does your answer change?"
    }
   ]
  },
@@ -569,32 +633,38 @@
     "id": "c6-4-m01",
     "q": "Why mask user and system tokens during SFT?",
     "options": [
-     "To save memory",
-     "So the model learns to produce answers, not to predict prompts",
-     "To speed up tokenisation",
-     "It is required by PyTorch"
+     "To save GPU memory during training",
+     "So the model learns answers, not prompts",
+     "To speed up tokenisation of each record",
+     "Because PyTorch requires it for chat data"
     ],
     "answer": 1,
     "why": "Loss on assistant tokens teaches the desired behaviour; predicting the user's words is not the goal.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Masking does not reduce memory; every token still goes through the model.",
+     "",
+     "Tokenisation is unchanged.",
+     "It is a choice about what the model learns."
+    ]
    },
    {
     "id": "c6-4-m02",
     "q": "What does a chat template do?",
     "options": [
-     "Compresses the conversation",
-     "Converts a list of messages into the exact token sequence the model was trained on, with role markers",
-     "Removes system prompts",
-     "Translates messages"
+     "Compresses the conversation to fit the window",
+     "Turns messages into the exact tokens the model was trained on",
+     "Removes the system prompt from each request",
+     "Translates messages into the model's language"
     ],
     "answer": 1,
     "why": "Each model family has its own format; libraries apply it with apply_chat_template.",
     "kind": "concept",
     "distractors": [
-     "It formats, not compresses.",
+     "Templates add role markers; they do not compress.",
      "",
-     "System prompts are included.",
-     "No translation."
+     "The system prompt is kept and marked.",
+     "Templates format; they do not translate."
     ]
    },
    {
@@ -620,18 +690,18 @@
     "id": "c6-4-m04",
     "q": "In Hugging Face and PyTorch, what does the label −100 mean during SFT?",
     "options": [
-     "A negative example",
-     "The end of the sequence",
-     "A padding token ID",
-     "The position is ignored by the cross-entropy loss"
+     "A negative example the model should avoid",
+     "The end of the training sequence",
+     "A padding token ID added by the tokenizer",
+     "Position ignored by the loss"
     ],
     "answer": 3,
     "why": "Masked positions, such as the user's words, do not contribute to the loss.",
     "kind": "concept",
     "distractors": [
-     "There are no negative labels in SFT.",
-     "End tokens are normal tokens.",
-     "It is a label value, not a token ID.",
+     "−100 is not a preference signal.",
+     "End tokens are real token IDs.",
+     "Padding positions are often set to −100, but −100 means “ignore”, not padding.",
      ""
     ]
    },
@@ -639,18 +709,18 @@
     "id": "c6-4-m05",
     "q": "Which is a common source of instruction data that needs a licence check?",
     "options": [
-     "Random noise",
-     "Empty conversations",
+     "Random noise added for robustness",
+     "Empty conversations used as padding",
      "Your own handwritten demonstrations",
-     "Synthetic data generated by a stronger model"
+     "Synthetic data from a stronger model"
     ],
     "answer": 3,
     "why": "Some model licences restrict using their outputs to train other models.",
     "kind": "concept",
     "distractors": [
-     "Not a data source.",
-     "Not useful data.",
-     "Your own writing is yours to use.",
+     "Noise is not instruction data.",
+     "Empty records teach nothing.",
+     "You own those.",
      ""
     ]
    },
@@ -677,18 +747,18 @@
     "id": "c6-4-m07",
     "q": "What does a distillation loss do?",
     "options": [
-     "Trains on rewards",
-     "Deduplicates the data",
+     "Trains the model on reward scores",
+     "Deduplicates the training data",
      "Removes layers from the model",
-     "Matches a teacher model's probability distribution via KL divergence"
+     "Matches a teacher's distribution via KL"
     ],
     "answer": 3,
     "why": "The student learns from the teacher's full distribution, not just the right token.",
     "kind": "concept",
     "distractors": [
      "That is RL.",
-     "Unrelated.",
-     "Pruning removes layers; distillation trains a student.",
+     "Deduplication is data work, not a loss.",
+     "That is pruning.",
      ""
     ]
    },
@@ -698,16 +768,16 @@
     "options": [
      "The assistant's final reply",
      "The assistant's tool-call arguments",
-     "Nothing",
-     "The tool results returned by the system"
+     "Nothing; every token is trained",
+     "The tool results"
     ],
     "answer": 3,
     "why": "The model should learn to write calls and replies, not to predict what tools return.",
     "kind": "scenario",
     "distractors": [
-     "The reply is trained.",
-     "The arguments are exactly what the model must learn.",
-     "User and tool content are usually masked.",
+     "The final reply is what the model must learn.",
+     "The model must learn to produce correct arguments.",
+     "Training on tool results teaches the model to imitate the system.",
      ""
     ]
    },
@@ -715,17 +785,17 @@
     "id": "c6-4-m09",
     "q": "Which function renders messages into a model's chat format in Hugging Face transformers?",
     "options": [
-     "model.generate(messages)",
+     "model.generate(messages, chat=True)",
      "datasets.load_dataset(messages)",
      "tokenizer.apply_chat_template(messages)",
-     "tokenizer.decode(messages)"
+     "tokenizer.decode(messages, roles=True)"
     ],
     "answer": 2,
     "why": "It applies the template stored with the tokenizer.",
     "kind": "concept",
     "distractors": [
-     "generate produces tokens from inputs.",
-     "That loads datasets.",
+     "generate produces text; it does not format the input.",
+     "It loads datasets; it does not render templates.",
      "",
      "decode turns IDs into text."
     ]
@@ -734,19 +804,38 @@
     "id": "c6-4-m10",
     "q": "What should you check before launching an SFT run?",
     "options": [
-     "That the GPU is on",
-     "Render one example with the template and confirm only assistant tokens carry labels",
-     "Nothing; training will reveal problems",
-     "That the loss is zero"
+     "That the GPU is on and has enough free memory for the run",
+     "Render one example; confirm only assistant tokens have labels",
+     "Nothing; training itself will reveal any problems quickly",
+     "That the loss starts at exactly zero on the first batch"
     ],
     "answer": 1,
     "why": "A wrong template or mask trains silently on the wrong tokens.",
     "kind": "scenario",
     "distractors": [
-     "Necessary, but not the content check.",
+     "Necessary, but it does not catch silent data bugs.",
      "",
-     "It may train for hours on the wrong objective.",
-     "The loss starts high."
+     "Wrong masks train without errors and only show up as bad behaviour.",
+     "A zero starting loss would itself signal a bug."
+    ]
+   },
+   {
+    "id": "c6-4-m11",
+    "q": "After an SFT run, the assistant starts its replies by repeating the user's question and sometimes writes the system prompt back. What is the most likely data bug?",
+    "options": [
+     "The chat template marked roles correctly but the data was too small",
+     "The tokenizer split the user's words differently from training",
+     "The learning rate was too low for the model to learn answers",
+     "The loss covered user and system tokens, not only the assistant's"
+    ],
+    "answer": 3,
+    "why": "Without masking, the model learns to predict the prompts too, so it reproduces them.",
+    "kind": "scenario",
+    "distractors": [
+     "A small dataset gives weak answers, not echoed prompts.",
+     "Tokenisation does not make a model copy the prompt.",
+     "A low rate weakens learning; it does not teach the model to echo prompts.",
+     ""
     ]
    }
   ],
@@ -760,7 +849,8 @@
      "Per-model formats",
      "Silent degradation when wrong",
      "apply_chat_template"
-    ]
+    ],
+    "followUp": "What happens if you fine-tune with one template and serve with another?"
    },
    {
     "id": "c6-4-i02",
@@ -771,7 +861,8 @@
      "Multi-token prediction",
      "Distillation with KL",
      "Preference losses (6.5)"
-    ]
+    ],
+    "followUp": "Which of these would you use to make a smaller model imitate a larger one?"
    },
    {
     "id": "c6-4-i03",
@@ -795,7 +886,8 @@
      "Personal data in prompts",
      "Record provenance",
      "Mix with human-written data"
-    ]
+    ],
+    "followUp": "How would you record provenance so an audit can trace any training example?"
    },
    {
     "id": "c6-4-i05",
@@ -807,7 +899,8 @@
      "Cover edge cases: dates, passengers, refundability",
      "Evaluate argument accuracy separately"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "How would you check that argument accuracy actually improved?"
    },
    {
     "id": "c6-4-i06",
@@ -819,7 +912,8 @@
      "Validation of tool-call schemas",
      "Deduplication and evaluation split",
      "Versioned dataset"
-    ]
+    ],
+    "followUp": "How would you catch a record whose tool call does not match the schema?"
    },
    {
     "id": "c6-4-i07",
@@ -830,7 +924,8 @@
      "Unit test on a tiny example",
      "Compare loss with a hand computation",
      "Overfit one batch and inspect outputs"
-    ]
+    ],
+    "followUp": "The library's mask covers the assistant's end token. Does that matter?"
    },
    {
     "id": "c6-4-i08",
@@ -841,7 +936,8 @@
      "User, system and tool-result tokens get label -100",
      "The model learns to answer, not to predict prompts",
      "Render and inspect one example before training"
-    ]
+    ],
+    "followUp": "What changes for multi-turn conversations with several assistant turns?"
    }
   ]
  },
@@ -870,38 +966,38 @@
     "id": "c6-2-m02",
     "q": "What did datasets such as FineWeb-Edu show?",
     "options": [
-     "Only code data matters",
+     "Only code data matters for capability",
      "More tokens always beat better tokens",
-     "Quality filtering can significantly improve models at the same token count",
-     "Filtering never matters"
+     "Quality filtering helps at the same token count",
+     "Filtering never changes model quality"
     ],
     "answer": 2,
     "why": "Small quality classifiers scoring “educational” text raised model quality without more data.",
     "kind": "concept",
     "distractors": [
-     "Many sources matter.",
-     "Quality can matter as much as quantity.",
+     "The result was about filtering web text for quality.",
+     "Better tokens beat more tokens at the same count.",
      "",
-     "It matters a lot."
+     "It showed the opposite."
     ]
    },
    {
     "id": "c6-2-m03",
     "q": "How are exact and near-duplicate documents usually found?",
     "options": [
-     "Exact: hashes; near: MinHash with locality-sensitive hashing over word n-grams",
-     "By embedding similarity only",
-     "Exact: MinHash; near: hashes",
-     "By reading every pair manually"
+     "Exact: hashes; near: MinHash with LSH",
+     "By embedding similarity only, for both kinds",
+     "Exact: MinHash; near: hashes of the full text",
+     "By reading every pair of documents by hand"
     ],
     "answer": 0,
     "why": "Hashes catch identical text; MinHash and LSH scale near-duplicate detection to billions of documents.",
     "kind": "concept",
     "distractors": [
      "",
-     "Embeddings can help, but the topic's method is MinHash and LSH.",
-     "That swaps them.",
-     "Impossible at scale."
+     "Embeddings are costly at this scale and not how exact copies are found.",
+     "That swaps the two methods.",
+     "Impossible at corpus scale."
     ]
    },
    {
@@ -927,54 +1023,54 @@
     "id": "c6-2-m05",
     "q": "How does MinHash estimate Jaccard similarity?",
     "options": [
-     "The fraction of hash functions whose minimum values match",
-     "By comparing document lengths",
-     "By counting all shared words",
-     "By embedding both documents"
+     "The share of hash functions whose minima match",
+     "By comparing the lengths of the two documents",
+     "By counting every word the two documents share",
+     "By embedding both documents and comparing vectors"
     ],
     "answer": 0,
     "why": "It avoids comparing full n-gram sets.",
     "kind": "concept",
     "distractors": [
      "",
-     "Length is not similarity.",
-     "That compares full sets, which is what MinHash avoids.",
-     "That is a different method."
+     "Length says little about overlap.",
+     "That is an exact count, which MinHash avoids.",
+     "MinHash uses hashes, not embeddings."
     ]
    },
    {
     "id": "c6-2-m06",
     "q": "What do LSH bands achieve?",
     "options": [
-     "They translate documents",
-     "Only documents sharing a band are compared, avoiding all-pairs comparison",
-     "They remove stop words",
-     "They compress documents"
+     "They translate documents into one language",
+     "Only documents sharing a band get compared",
+     "They remove stop words before hashing",
+     "They compress documents to save storage"
     ],
     "answer": 1,
     "why": "Comparing billions of documents pairwise is impossible; bucketing makes it feasible.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
+     "Bands are parts of the signature.",
      "",
-     "Unrelated.",
-     "No compression of text."
+     "Stop-word removal is preprocessing.",
+     "They group candidates; compression is not the goal."
     ]
    },
    {
     "id": "c6-2-m07",
     "q": "What is contamination?",
     "options": [
-     "Toxic content in training data",
-     "Personal data in logs",
-     "Duplicate documents",
-     "Benchmark test questions leaking into training data, making scores meaningless"
+     "Toxic content left in the training data",
+     "Personal data left in training logs",
+     "Duplicate documents in the training set",
+     "Benchmark questions leaking into training"
     ],
     "answer": 3,
     "why": "It is detected by searching for n-gram overlap with test sets (8.6).",
     "kind": "concept",
     "distractors": [
-     "That is a filtering issue.",
+     "That is a safety filtering issue.",
      "That is a privacy issue.",
      "That is duplication.",
      ""
@@ -984,38 +1080,38 @@
     "id": "c6-2-m08",
     "q": "You find 40 of 500 internal benchmark questions verbatim in your fine-tuning data. What should you do?",
     "options": [
-     "Remove them from the benchmark or the training data, and recompute the score",
-     "Train longer",
-     "Delete the whole benchmark",
-     "Report the score anyway"
+     "Remove the overlap and recompute the score",
+     "Train longer so the model generalises past them",
+     "Delete the whole benchmark and start over",
+     "Report the score as it is, with a footnote"
     ],
     "answer": 0,
     "why": "Those 40 measure memorisation, not ability.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Training longer makes memorisation worse.",
-     "The other 460 are still useful.",
-     "The score would be inflated."
+     "The overlap still inflates the score.",
+     "Removing the overlap is enough.",
+     "A contaminated score misleads."
     ]
    },
    {
     "id": "c6-2-m09",
     "q": "A team assumes publicly reachable web text may be used for any training. What is wrong?",
     "options": [
-     "Nothing",
-     "Only images are restricted",
-     "Copyright, terms of service, robots preferences and data-protection laws still apply",
-     "Public text is always licensed"
+     "Nothing; anything on the public web is free to train on",
+     "Only images on the web are restricted, not the text",
+     "Copyright, terms, robots preferences and privacy laws still apply",
+     "Public text is always openly licensed once it is posted"
     ],
     "answer": 2,
     "why": "Licensing and consent are an active legal area; read a model's data documentation (16.6).",
     "kind": "scenario",
     "distractors": [
-     "Reachable is not licensed.",
-     "Text has restrictions too.",
+     "Rights and laws still apply.",
+     "Text is covered by copyright too.",
      "",
-     "Public access does not grant a licence."
+     "Most web text has no open licence."
     ]
    },
    {
@@ -1023,18 +1119,37 @@
     "q": "Why deduplicate training data?",
     "options": [
      "Duplicates improve generalisation",
-     "It speeds up inference",
-     "Duplicates waste compute and increase memorisation",
-     "It is required by tokenizers"
+     "It speeds up inference afterwards",
+     "Duplicates waste compute and aid memorisation",
+     "It is required by the tokenizer"
     ],
     "answer": 2,
     "why": "Repeated text is learned verbatim and adds nothing new.",
     "kind": "concept",
     "distractors": [
-     "They tend to hurt it.",
-     "Inference is unaffected.",
+     "They encourage memorisation instead.",
+     "Training data does not affect inference speed.",
      "",
-     "Tokenizers do not require it."
+     "Tokenizers do not need it."
+    ]
+   },
+   {
+    "id": "c6-2-m11",
+    "q": "Two documents have 128-hash MinHash signatures, and 96 of the minima match. What is their estimated Jaccard similarity?",
+    "options": [
+     "About 0.75",
+     "About 0.25",
+     "About 1.33",
+     "About 0.96"
+    ],
+    "answer": 0,
+    "why": "The fraction of matching minima estimates Jaccard similarity: 96 ÷ 128 = 0.75.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the fraction that do not match.",
+     "That divides the wrong way; Jaccard similarity cannot exceed 1.",
+     "That reads the count of matches as a percentage."
     ]
    }
   ],
@@ -1049,7 +1164,8 @@
      "Quality and safety filters, PII scrubbing",
      "Deduplication",
      "Mixture decisions"
-    ]
+    ],
+    "followUp": "Which step removes the most data, and which matters most for quality?"
    },
    {
     "id": "c6-2-i02",
@@ -1060,7 +1176,8 @@
      "MinHash signatures estimate Jaccard",
      "Bands bucket candidates",
      "Compare only within buckets"
-    ]
+    ],
+    "followUp": "How do you choose the number of bands and rows?"
    },
    {
     "id": "c6-2-i03",
@@ -1071,7 +1188,8 @@
      "n-gram overlap search",
      "Remove and recompute",
      "Report the check"
-    ]
+    ],
+    "followUp": "What would you do if you found contamination after publishing a score?"
    },
    {
     "id": "c6-2-i04",
@@ -1095,7 +1213,8 @@
      "Check dates of benchmark release versus training data",
      "Test on your own fresh cases",
      "Look for verbatim recall"
-    ]
+    ],
+    "followUp": "Your own fresh cases score far lower. What do you tell the buyer?"
    },
    {
     "id": "c6-2-i06",
@@ -1108,7 +1227,8 @@
      "Evaluation split removed by overlap",
      "Manifest with source and licence"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "How would you measure the PII scrubber's recall?"
    },
    {
     "id": "c6-2-i07",
@@ -1120,7 +1240,8 @@
      "Filters applied and outcomes",
      "Splits and exclusions",
      "Versioning"
-    ]
+    ],
+    "followUp": "A data owner withdraws consent. How does the manifest help?"
    },
    {
     "id": "c6-2-i08",
@@ -1132,7 +1253,8 @@
      "Choosing shingle size and threshold",
      "Sampling to validate precision",
      "Keep one copy per cluster with rules"
-    ]
+    ],
+    "followUp": "How would you check that you did not remove too much?"
    }
   ]
  },
@@ -1142,37 +1264,37 @@
     "id": "c6-5-m01",
     "q": "What is preference data?",
     "options": [
-     "Model weights",
-     "Unlabelled web text",
-     "For one prompt, two or more responses and a judgement of which is better",
-     "A list of correct answers only"
+     "The model weights from each training run",
+     "Unlabelled web text used for pretraining",
+     "Two or more responses to a prompt, and which is better",
+     "A list of correct answers for each prompt"
     ],
     "answer": 2,
     "why": "Judgements come from humans or from a model.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "That is pretraining data.",
+     "Weights are not data about preferences.",
+     "That has no judgements.",
      "",
-     "That is SFT data."
+     "That is demonstration data for SFT."
     ]
    },
    {
     "id": "c6-5-m02",
     "q": "What does a reward model output?",
     "options": [
-     "A token probability",
-     "A scalar score for a (prompt, response) pair",
-     "A chat template",
-     "A new response"
+     "A probability for the next token",
+     "A score for a prompt–response pair",
+     "A chat template for the prompt",
+     "A new, better response to it"
     ],
     "answer": 1,
     "why": "It is trained on preference data and used to score responses in RLHF.",
     "kind": "concept",
     "distractors": [
-     "That is the language model.",
+     "The LLM outputs those.",
      "",
-     "Unrelated.",
+     "Templates format inputs.",
      "The policy generates responses."
     ]
    },
@@ -1180,37 +1302,37 @@
     "id": "c6-5-m03",
     "q": "In RLHF, why is a KL penalty to the original model used?",
     "options": [
-     "To make training faster",
-     "So the policy does not drift into exploiting the reward model",
-     "To increase output length",
-     "To remove the reward model"
+     "To make each training step run faster",
+     "So the policy does not exploit the reward model",
+     "To increase the length of the outputs",
+     "To remove the need for a reward model"
     ],
     "answer": 1,
     "why": "Staying close to the reference limits reward hacking.",
     "kind": "concept",
     "distractors": [
-     "It adds a constraint, not speed.",
+     "The KL term adds compute.",
      "",
-     "Length is a known reward-hacking symptom, not the goal.",
-     "RLHF keeps the reward model."
+     "Length is not the target.",
+     "RLHF keeps its reward model."
     ]
    },
    {
     "id": "c6-5-m04",
     "q": "What does DPO remove compared with RLHF?",
     "options": [
-     "The separate reward model and the RL sampling loop",
-     "The policy",
-     "The reference model",
-     "The preference data"
+     "The reward model and RL loop",
+     "The policy model being trained",
+     "The frozen reference model",
+     "The preference pairs themselves"
     ],
     "answer": 0,
     "why": "A closed-form loss raises the preferred response's probability relative to a frozen reference.",
     "kind": "concept",
     "distractors": [
      "",
-     "The policy is what is trained.",
-     "DPO keeps a frozen reference model.",
+     "DPO trains the policy directly.",
+     "DPO keeps the reference.",
      "DPO trains on preference pairs."
     ]
    },
@@ -1218,18 +1340,18 @@
     "id": "c6-5-m05",
     "q": "When is RL with verifiable rewards (RLVR) possible?",
     "options": [
-     "Only for image models",
-     "Never for language models",
-     "Only with human raters",
-     "When correctness can be checked automatically, such as unit tests or maths answers"
+     "Only for image models with labelled data",
+     "Never for language models, only for games",
+     "Only when human raters score every output",
+     "When an automatic check can verify correctness"
     ],
     "answer": 3,
     "why": "This is how reasoning models learn long chains of thought.",
     "kind": "concept",
     "distractors": [
-     "It is used for language models.",
-     "It is widely used for them.",
-     "Automatic checks replace raters.",
+     "Code and maths are typical cases.",
+     "Reasoning models are trained this way.",
+     "Human scores are preferences, not verifiable rewards.",
      ""
     ]
    },
@@ -1256,19 +1378,19 @@
     "id": "c6-5-m07",
     "q": "What is reward hacking?",
     "options": [
-     "The model learns to game the scorer, such as writing longer answers a reward model favours",
-     "Stealing the reward model",
-     "Training without rewards",
-     "A security attack on GPUs"
+     "The model games the scorer, e.g. longer answers",
+     "Stealing the reward model's weights",
+     "Training the model without any rewards",
+     "A security attack on the training GPUs"
     ],
     "answer": 0,
     "why": "Verifiers and reward models must be robust to it.",
     "kind": "concept",
     "distractors": [
      "",
-     "It is a training failure, not theft.",
-     "Unrelated.",
-     "Unrelated."
+     "That is a security issue, not reward hacking.",
+     "That is not hacking.",
+     "Unrelated to rewards."
     ]
    },
    {
@@ -1294,37 +1416,56 @@
     "id": "c6-5-m09",
     "q": "A DPO pair for a refund request outside the policy window: which response should be “chosen”?",
     "options": [
-     "An empty reply",
-     "A polite explanation of the policy plus the escalation option",
+     "An empty reply, so nothing wrong is promised",
+     "The policy, politely, plus escalation",
      "“Sure, refund processed!”",
-     "A refusal with no explanation"
+     "A refusal with no explanation or next step"
     ],
     "answer": 1,
     "why": "Pairs teach the organisation's preferred, policy-compliant behaviour.",
     "kind": "scenario",
     "distractors": [
-     "Unhelpful.",
+     "Saying nothing does not help the customer.",
      "",
-     "That violates the policy.",
-     "Unhelpful."
+     "It breaks the policy.",
+     "It is unhelpful and gives no option."
     ]
    },
    {
     "id": "c6-5-m10",
     "q": "Which statement about reward score, human preference, correctness and policy compliance is right?",
     "options": [
-     "Reward score proves correctness",
-     "Correctness implies compliance",
-     "They are always the same",
-     "They are different measurements and can disagree"
+     "A high reward score proves the answer is correct",
+     "Correctness implies compliance with policy",
+     "They are always the same measurement",
+     "They are different, and can disagree"
     ],
     "answer": 3,
     "why": "Measure each separately.",
     "kind": "concept",
     "distractors": [
-     "Rewards can be gamed.",
+     "Reward models can be gamed.",
      "A correct answer can break policy.",
-     "They often diverge.",
+     "They measure different things.",
+     ""
+    ]
+   },
+   {
+    "id": "c6-5-m11",
+    "q": "After RLHF, the assistant's replies keep getting longer and the reward-model score rises, but human raters prefer the older, shorter replies. What is happening, and what helps?",
+    "options": [
+     "DPO was used by mistake, and DPO always makes replies longer and longer",
+     "The KL penalty is too strong, which forces the model to pad out its replies",
+     "The model is improving, and human raters simply lag behind the reward model",
+     "Reward hacking of a length bias; strengthen the KL penalty and fix the reward"
+    ],
+    "answer": 3,
+    "why": "The policy found what the reward model over-rewards. A stronger KL term and a better reward or verifier limit it.",
+    "kind": "scenario",
+    "distractors": [
+     "The run used RLHF, and DPO does not always lengthen replies.",
+     "A strong KL keeps the model close to the original; it does not cause padding.",
+     "The reward model is the proxy; human preference is the target.",
      ""
     ]
    }
@@ -1339,7 +1480,8 @@
      "DPO: direct preference loss with a reference",
      "RLVR: automatic correctness checks",
      "Trade-offs in stability and data"
-    ]
+    ],
+    "followUp": "Which would you use to improve code generation, and why?"
    },
    {
     "id": "c6-5-i02",
@@ -1351,7 +1493,8 @@
      "Robust verifiers",
      "KL penalty",
      "Human spot checks"
-    ]
+    ],
+    "followUp": "Give an example of a verifier that can be gamed, and how you would harden it."
    },
    {
     "id": "c6-5-i03",
@@ -1362,7 +1505,8 @@
      "Prevents drifting too far",
      "Stabilises training",
      "Part of the loss"
-    ]
+    ],
+    "followUp": "What happens if the KL weight is too small?"
    },
    {
     "id": "c6-5-i04",
@@ -1385,7 +1529,8 @@
      "Chosen versus rejected per policy",
      "Rater guidelines and agreement",
      "Cover edge cases and refusals"
-    ]
+    ],
+    "followUp": "Raters disagree on 30% of pairs. What do you do?"
    },
    {
     "id": "c6-5-i06",
@@ -1397,7 +1542,8 @@
      "Evaluation set of tricky cases",
      "Runtime checks as well as training"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "How would you measure that the tuned model really stopped promising refunds?"
    },
    {
     "id": "c6-5-i07",
@@ -1409,7 +1555,8 @@
      "Penalties for extra or wrong actions",
      "Traps for shortcuts",
      "Offline evaluation before deployment"
-    ]
+    ],
+    "followUp": "How would you stop the agent from finding a shortcut in the sandbox?"
    },
    {
     "id": "c6-5-i08",
@@ -1420,7 +1567,8 @@
      "Task correctness and policy compliance separately",
      "Human evaluation samples",
      "Regression checks on general skills"
-    ]
+    ],
+    "followUp": "Preference win rate rose but task accuracy fell. What do you conclude?"
    }
   ]
  },
@@ -1449,10 +1597,10 @@
     "id": "c6-6-m02",
     "q": "In data parallelism, what happens each step?",
     "options": [
-     "Each GPU holds half of each matrix",
-     "Every GPU holds a full copy, processes different data, and gradients are averaged with an all-reduce",
-     "Each GPU holds different layers",
-     "Only one GPU trains"
+     "Each GPU holds half of every weight matrix and its gradients",
+     "Each GPU has a full copy and its own data; gradients are averaged",
+     "Each GPU holds a different block of layers and passes activations",
+     "Only one GPU trains while the others wait as hot spares"
     ],
     "answer": 1,
     "why": "The averaged update keeps all copies identical.",
@@ -1468,17 +1616,17 @@
     "id": "c6-6-m03",
     "q": "What do ZeRO and FSDP do?",
     "options": [
-     "Remove the optimiser",
-     "Compress the dataset",
-     "Shard optimiser states, gradients and even weights across data-parallel GPUs",
-     "Speed up inference"
+     "Remove the optimiser to save memory",
+     "Compress the dataset before training",
+     "Shard optimiser state, gradients and weights",
+     "Speed up inference on many GPUs"
     ],
     "answer": 2,
     "why": "Sharding removes the memory redundancy of plain data parallelism.",
     "kind": "concept",
     "distractors": [
-     "The optimiser is kept, sharded.",
-     "Unrelated.",
+     "Training still needs the optimiser.",
+     "They shard training state, not data.",
      "",
      "They are training techniques."
     ]
@@ -1487,18 +1635,18 @@
     "id": "c6-6-m04",
     "q": "Why is tensor parallelism usually kept inside one node?",
     "options": [
-     "Nodes cannot run it",
-     "It needs no GPUs",
-     "It uses no communication",
-     "It needs very fast interconnect such as NVLink"
+     "Separate nodes cannot run it at all",
+     "It needs no GPUs, only CPU memory",
+     "It uses no communication between GPUs",
+     "It needs fast links such as NVLink"
     ],
     "answer": 3,
     "why": "Splitting matrices requires communication within every layer.",
     "kind": "concept",
     "distractors": [
-     "It can, but slow links make it inefficient.",
-     "It runs on GPUs.",
-     "It communicates heavily.",
+     "They can, just too slowly.",
+     "It splits GPU matrix operations.",
+     "It communicates at every layer.",
      ""
     ]
    },
@@ -1506,18 +1654,18 @@
     "id": "c6-6-m05",
     "q": "What does pipeline parallelism create?",
     "options": [
-     "Idle “bubbles” while micro-batches fill and drain the pipeline",
-     "Larger matrices",
-     "No communication",
-     "Duplicate copies of the model"
+     "Idle “bubbles” as micro-batches fill and drain",
+     "Larger matrices on each of the GPUs",
+     "No communication between the stages",
+     "Duplicate copies of the whole model"
     ],
     "answer": 0,
     "why": "More micro-batches shrink the bubble.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "Activations pass between stages.",
+     "Pipelining splits layers, not matrices.",
+     "Stages pass activations.",
      "That is data parallelism."
     ]
    },
@@ -1563,19 +1711,19 @@
     "id": "c6-6-m08",
     "q": "A full fine-tune of a 70B model needs about 1.1 TB of state. On 8 GPUs of 80 GB (640 GB), what happens?",
     "options": [
-     "It does not fit even with full sharding, before activations",
-     "It fits easily",
-     "It fits with stage 1",
-     "It needs no GPUs"
+     "It does not fit, even fully sharded",
+     "It fits easily across the eight GPUs",
+     "It fits once ZeRO stage 1 is turned on",
+     "It needs no GPUs once it is sharded"
     ],
     "answer": 0,
     "why": "Options: more nodes, CPU offloading, or parameter-efficient fine-tuning (13.3).",
     "kind": "scenario",
     "distractors": [
      "",
-     "1.1 TB exceeds 640 GB.",
-     "Stage 1 shards only optimiser state.",
-     "It needs many GPUs."
+     "1.1 TB is more than 640 GB.",
+     "Stage 1 shards only optimiser state, and even full sharding is not enough.",
+     "Sharding spreads state; it does not remove it."
     ]
    },
    {
@@ -1601,18 +1749,18 @@
     "id": "c6-6-m10",
     "q": "What can QLoRA do that full fine-tuning cannot on modest hardware?",
     "options": [
-     "Train without gradients",
-     "Remove the need for data",
+     "Train without computing any gradients",
+     "Remove the need for training data",
      "Pretrain a 70B model on a laptop",
-     "Fine-tune a 70B model on a single 80 GB GPU"
+     "Fine-tune 70B on one 80 GB GPU"
     ],
     "answer": 3,
     "why": "It trains small adapters on a 4-bit quantised base model (13.3).",
     "kind": "concept",
     "distractors": [
-     "Gradients still flow into the adapters.",
-     "Data is still needed.",
-     "Pretraining needs vast compute.",
+     "QLoRA still uses gradients.",
+     "It still needs data.",
+     "QLoRA is fine-tuning, not pretraining.",
      ""
     ]
    }
@@ -1627,7 +1775,8 @@
      "TP: split matrices, fast links within a node",
      "PP: layers across GPUs, bubbles",
      "Combined as 3D parallelism"
-    ]
+    ],
+    "followUp": "Which would you combine for a 70B model, and why?"
    },
    {
     "id": "c6-6-i02",
@@ -1638,7 +1787,8 @@
      "Stage 2: plus gradients",
      "Stage 3: plus weights",
      "Memory per GPU formulas"
-    ]
+    ],
+    "followUp": "Which stage would you pick for a 7B full fine-tune on 8 GPUs?"
    },
    {
     "id": "c6-6-i03",
@@ -1649,7 +1799,8 @@
      "2 bytes gradients",
      "12 bytes FP32 master weights and Adam moments",
      "Activations on top"
-    ]
+    ],
+    "followUp": "What does that give for a 13B model, and what else needs memory?"
    },
    {
     "id": "c6-6-i04",
@@ -1673,7 +1824,8 @@
      "Interconnect bandwidth",
      "Batch size per GPU",
      "Measure step time breakdown"
-    ]
+    ],
+    "followUp": "Profiling shows 30% of step time in all-reduce. What do you try?"
    },
    {
     "id": "c6-6-i06",
@@ -1685,7 +1837,8 @@
      "Or a smaller model with better data",
      "Evaluate quality per option"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "QLoRA's quality falls short. What are the next options?"
    },
    {
     "id": "c6-6-i07",
@@ -1697,7 +1850,8 @@
      "Sharded data parallel across all",
      "Micro-batches to shrink bubbles",
      "Checkpointing and failure recovery"
-    ]
+    ],
+    "followUp": "One node fails mid-run. What happens, and how do you recover?"
    },
    {
     "id": "c6-6-i08",
@@ -1708,7 +1862,8 @@
      "Check interconnect and topology",
      "Overlap communication with compute",
      "Tune micro-batch and bucket sizes"
-    ]
+    ],
+    "followUp": "Overlap is already on. What next?"
    }
   ]
  },
@@ -1719,8 +1874,8 @@
     "q": "What does a character-level bigram model predict?",
     "options": [
      "The next character from the current one",
-     "A label for the text",
-     "The next sentence",
+     "A label for the whole text",
+     "The next sentence of the text",
      "The next word from the whole sentence"
     ],
     "answer": 0,
@@ -1728,28 +1883,28 @@
     "kind": "concept",
     "distractors": [
      "",
-     "It is a language model, not a classifier.",
-     "Far beyond a bigram.",
-     "That needs a wider context."
+     "That is classification.",
+     "It predicts one character.",
+     "It uses one character, not the sentence."
     ]
    },
    {
     "id": "c6-7-m02",
     "q": "What are the bigram model's parameters?",
     "options": [
-     "One vocabulary × vocabulary matrix of logits",
-     "A transformer stack",
-     "Only a bias term",
-     "A list of words"
+     "A vocab × vocab table of logits",
+     "A full transformer stack",
+     "Only a single bias term",
+     "A list of words and their counts"
     ],
     "answer": 0,
     "why": "Row i holds the logits for the character after character i.",
     "kind": "concept",
     "distractors": [
      "",
-     "No attention layers.",
-     "It needs the full matrix.",
-     "It works on characters."
+     "A bigram model has no layers.",
+     "It needs one score per character pair.",
+     "It works on characters with learned logits."
     ]
    },
    {
@@ -1775,17 +1930,17 @@
     "id": "c6-7-m04",
     "q": "Training the bigram model, what does the loss fall towards?",
     "options": [
-     "It does not fall",
-     "Exactly zero",
-     "The bigram entropy of the text, not zero",
-     "ln(vocabulary size)"
+     "It does not fall at all",
+     "Exactly zero, given enough steps",
+     "The bigram entropy, not zero",
+     "ln(vocabulary size), the uniform level"
     ],
     "answer": 2,
     "why": "One character of context limits how predictable the next character can be.",
     "kind": "concept",
     "distractors": [
-     "It falls with training.",
-     "Zero would need perfect prediction.",
+     "It falls quickly from the uniform level.",
+     "One character of context cannot predict the next perfectly.",
      "",
      "That is where it starts."
     ]
@@ -1794,56 +1949,56 @@
     "id": "c6-7-m05",
     "q": "Why can a bigram model not learn more?",
     "options": [
-     "It has too many parameters",
-     "It cannot be trained",
-     "It only sees one character of context",
-     "It uses the wrong loss"
+     "It has too many parameters to train well",
+     "It cannot be trained with gradients",
+     "It sees only one character of context",
+     "It uses the wrong loss for language"
     ],
     "answer": 2,
     "why": "Transformers fix exactly that limitation.",
     "kind": "concept",
     "distractors": [
-     "Its size is not the issue.",
+     "It has very few.",
      "It trains with gradient descent.",
      "",
-     "Cross-entropy is right."
+     "Cross-entropy is the right loss."
     ]
    },
    {
     "id": "c6-7-m06",
     "q": "You sample from the trained bigram model at a high temperature. What happens?",
     "options": [
-     "Training restarts",
-     "Samples become more random and less word-like",
-     "The vocabulary shrinks",
-     "Samples become identical"
+     "Training restarts with the new temperature",
+     "Samples get more random, less word-like",
+     "The vocabulary shrinks to the likely letters",
+     "Samples become identical to each other"
     ],
     "answer": 1,
     "why": "Temperature flattens the distribution (5.6).",
     "kind": "scenario",
     "distractors": [
-     "Sampling does not train.",
+     "Temperature affects sampling only.",
      "",
-     "Vocabulary is fixed.",
-     "That is low temperature."
+     "The vocabulary is fixed.",
+     "That is what very low temperature does."
     ]
    },
    {
     "id": "c6-7-m07",
     "q": "According to nanoGPT's README, its CPU character-level Shakespeare recipe takes about how long and reaches what validation loss?",
     "options": [
-     "About 3 seconds, loss about 4.2",
-     "About 3 days, loss about 1.0",
-     "About 3 hours, loss about 0.1",
+     "About 3 seconds, with loss about 4.2",
+     "About 3 days, with loss about 1.0",
+     "About 3 hours, with loss about 0.1",
      "About 3 minutes, validation loss about 1.88"
     ],
     "answer": 3,
     "why": "The output is Shakespeare-like but garbled.",
     "kind": "concept",
     "distractors": [
-     "Too fast; 4.2 is near uniform.",
-     "Far too long.",
-     "Far too long and too low.",
+     "The README describes minutes, and 4.2 is near the uniform start.",
+     "Days and loss 1.0 are not the README's figures for this recipe.",
+     "0.1 would suggest memorisation, not this recipe's result.",
      ""
     ]
    },
@@ -1851,37 +2006,37 @@
     "id": "c6-7-m08",
     "q": "A tiny model trained on a small, repetitive corpus produces fluent samples. What does that show?",
     "options": [
-     "Possibly memorisation; it is not evidence of generalisation",
-     "That the corpus was large",
-     "That it understands the domain",
-     "That it is ready for production"
+     "Maybe memorisation, not generalisation",
+     "That the corpus was large and varied",
+     "That it understands the domain well",
+     "That it is ready to deploy to production"
     ],
     "answer": 0,
     "why": "Check held-out loss against a baseline instead.",
     "kind": "scenario",
     "distractors": [
      "",
-     "The corpus was small.",
-     "Fluency is not understanding.",
-     "A toy model is not production-ready."
+     "The corpus was small and repetitive.",
+     "Fluency can come from memorising.",
+     "Nothing was tested on held-out data."
     ]
    },
    {
     "id": "c6-7-m09",
     "q": "What does the Appendix A lab include besides training?",
     "options": [
-     "Only a loss curve",
-     "Separate splits, a baseline, checkpoint selection, a save-and-reload check and a JSON report",
-     "A GPU cluster setup",
-     "Only sampling"
+     "Only a loss curve from the training run, plotted once",
+     "Splits, a baseline, checkpoint choice, a reload check and a report",
+     "A GPU cluster set up for distributed training at scale",
+     "Only sampling text from the trained model at the end"
     ],
     "answer": 1,
     "why": "It runs the whole lifecycle on CPU in under a second.",
     "kind": "concept",
     "distractors": [
-     "It includes much more.",
+     "It includes far more than a curve.",
      "",
-     "It needs no GPU.",
+     "It runs on a laptop CPU.",
      "Sampling is one part."
     ]
    },
@@ -1889,19 +2044,19 @@
     "id": "c6-7-m10",
     "q": "In Appendix A's run, the bigram test loss is 2.271 and the unigram baseline 2.850. What does that mean?",
     "options": [
-     "The bigram model predicts held-out text about 0.58 nats per character better than the baseline",
-     "The test set leaked",
-     "Both are at the uniform-guess level",
-     "The bigram model is worse"
+     "Bigram beats the baseline by about 0.58 nats a character",
+     "The test set leaked into training, so the gap is fake",
+     "Both models are still at the uniform-guess level",
+     "The bigram model is worse, since its number is smaller"
     ],
     "answer": 0,
     "why": "Lower loss is better; 2.850 − 2.271 ≈ 0.58 nats.",
     "kind": "calculation",
     "distractors": [
      "",
-     "Nothing suggests leakage.",
-     "Uniform for 30 characters is ln 30 ≈ 3.40.",
-     "Lower is better, so it is better."
+     "A gap to the baseline does not show leakage.",
+     "The uniform level would be about ln(vocabulary size).",
+     "Lower loss is better."
     ]
    }
   ],
@@ -1916,7 +2071,8 @@
      "Cross-entropy and the uniform baseline",
      "Gradients and the learning rate",
      "Sampling and temperature"
-    ]
+    ],
+    "followUp": "Which of these concepts carry over unchanged to a transformer?"
    },
    {
     "id": "c6-7-i02",
@@ -1927,7 +2083,8 @@
      "Loss approaches the bigram entropy",
      "More context needs a richer model",
      "Transformers address that"
-    ]
+    ],
+    "followUp": "How much would a trigram model improve, and what would it cost?"
    },
    {
     "id": "c6-7-i03",
@@ -1939,7 +2096,8 @@
      "Checkpoint selection on validation",
      "Save and reload check",
      "Report of results and limits"
-    ]
+    ],
+    "followUp": "Which step would you skip under time pressure, and what is the risk?"
    },
    {
     "id": "c6-7-i04",
@@ -1962,7 +2120,8 @@
      "Watch the train–validation gap",
      "Fewer training characters",
      "Checkpoint at best validation"
-    ]
+    ],
+    "followUp": "What would the loss curves look like when it overfits?"
    },
    {
     "id": "c6-7-i06",
@@ -1974,7 +2133,8 @@
      "Compare against each corpus's own baseline",
      "Per-character versus per-token units"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "How would you compare the three runs fairly?"
    },
    {
     "id": "c6-7-i07",
@@ -1986,7 +2146,8 @@
      "Deliberate bugs to find",
      "A written model card",
      "Discussion of limits"
-    ]
+    ],
+    "followUp": "Which deliberate bug teaches the most, and why?"
    },
    {
     "id": "c6-7-i08",
@@ -1998,7 +2159,8 @@
      "Reload tests on real checkpoints",
      "Evaluation gates",
      "Reproducible data manifest"
-    ]
+    ],
+    "followUp": "What would you add that the toy lab does not need?"
    }
   ]
  }

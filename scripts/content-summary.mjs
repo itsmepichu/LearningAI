@@ -11,6 +11,17 @@ const topicIds = new Set(manifest.chapters.flatMap((c) => c.topics.map((t) => t.
 const errors = []
 const warnings = []
 const err = (where, msg) => errors.push(`${where}: ${msg}`)
+// Quality rules from the pilot review (November 2026), enforced as errors since phase 6b fixed the whole bank.
+const QUALITY = {
+  followup: 'interview question without a likely follow-up',
+  distractors: 'choose-the-answer question without an explanation for each wrong option',
+  longest: 'right answer is the longest option by far (at least 1.4 times the wrong options’ average length), which gives it away',
+  'concept-heavy': 'section with fewer than 4 scenario or calculation questions out of its choose-the-answer questions',
+  'duplicate-text': 'question text that repeats another question’s, in this section or another',
+}
+const flag = (rule, where) => err(where, QUALITY[rule])
+const norm = (t) => t.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim()
+const texts = new Map()
 
 // ---- practice notes
 const FITS = new Set(['best', 'good', 'limited'])
@@ -55,6 +66,12 @@ for (const c of manifest.chapters) {
       if (!q.why) err(w, 'missing why')
       if (q.kind && !KINDS.has(q.kind)) err(w, `bad kind ${q.kind}`)
       if (q.distractors && q.distractors.length !== q.options.length) err(w, 'distractors must align with options (use "" for the right answer)')
+      if (!q.distractors) flag('distractors', w)
+      if (Number.isInteger(q.answer) && q.options.length > 1) {
+        const others = q.options.filter((_, i) => i !== q.answer).map((o) => o.length)
+        const mean = others.reduce((a, b) => a + b, 0) / others.length
+        if (q.options[q.answer].length > Math.max(...others) && q.options[q.answer].length >= 1.4 * mean) flag('longest', w)
+      }
     }
     for (const q of sec.interview ?? []) {
       const w = `${c.id}.json ${q.id}`
@@ -64,7 +81,15 @@ for (const c of manifest.chapters) {
       if (!q.q || !Array.isArray(q.covers) || q.covers.length < 2) err(w, 'needs q and at least 2 covers points')
       if (!LEVELS.has(q.level)) err(w, `bad level ${q.level}`)
       if (q.project && !projects.includes(q.project)) err(w, `unknown project ${q.project}`)
+      if (!q.followUp) flag('followup', w)
     }
+    for (const q of [...(sec.mcq ?? []), ...(sec.interview ?? [])]) {
+      const key = norm(q.q ?? '')
+      if (texts.has(key)) flag('duplicate-text', `${c.id}.json ${q.id} (same as ${texts.get(key)})`)
+      else texts.set(key, q.id)
+    }
+    const applied = (sec.mcq ?? []).filter((q) => q.kind === 'scenario' || q.kind === 'calculation').length
+    if ((sec.mcq ?? []).length && applied < 4) flag('concept-heavy', `${c.id}.json ${tid} (${applied} of ${(sec.mcq ?? []).length})`)
     // warn when the right answer sits in the same position too often (readers learn to pick it)
     const pos = (sec.mcq ?? []).filter((q) => Number.isInteger(q.answer)).map((q) => q.answer)
     if (pos.length >= 6) {

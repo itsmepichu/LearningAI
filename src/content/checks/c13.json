@@ -5,32 +5,38 @@
     "id": "c13-1-m01",
     "q": "The model knows the policy but formats answers wrongly despite examples. Try…",
     "options": [
-     "Continued pretraining",
-     "RAG",
+     "Continued pretraining on policy text",
+     "RAG over the policy documents",
      "SFT (often LoRA)",
-     "A larger context window"
+     "A larger context window for more examples"
     ],
     "answer": 2,
     "why": "Behaviour/format gaps are what supervised fine-tuning addresses.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "The model already knows the policy; this is a behaviour gap.",
+     "Retrieval supplies facts, which are not missing.",
+     "",
+     "Examples already failed to fix the format."
+    ]
    },
    {
     "id": "c13-1-m02",
     "q": "What is the rule for moving up the adaptation ladder?",
     "options": [
-     "Start with fine-tuning to get the best result",
-     "Move up only when evaluation shows the current rung cannot meet the acceptance criteria",
-     "Always try continued pretraining first",
-     "Move up whenever a new model is released"
+     "Start with fine-tuning to get the best result early",
+     "Move up only when evaluation shows the current rung falls short",
+     "Always try continued pretraining as the first step",
+     "Move up whenever a new model version is released"
     ],
     "answer": 1,
     "why": "Each rung roughly multiplies cost, data needs and maintenance.",
     "kind": "concept",
     "distractors": [
-     "Fine-tuning before trying prompts wastes effort.",
+     "Fine-tuning is costly; cheaper rungs often suffice.",
      "",
      "That is the most expensive rung.",
-     "Model releases are not evidence about your task."
+     "Releases are not evidence of a gap."
     ]
    },
    {
@@ -56,19 +62,19 @@
     "id": "c13-1-m04",
     "q": "A large model does the task well but is too slow and expensive at your volume. What fits?",
     "options": [
-     "Retrieval",
-     "Distillation into a small model",
-     "A longer prompt",
-     "Continued pretraining"
+     "Retrieval of more context",
+     "Distilling into a small model",
+     "A longer, more detailed prompt",
+     "Continued pretraining on the task"
     ],
     "answer": 1,
     "why": "Generate verified teacher outputs on real inputs and fine-tune a small student.",
     "kind": "concept",
     "distractors": [
-     "Retrieval adds facts, not speed.",
+     "Facts are not the problem.",
      "",
-     "That adds cost.",
-     "That addresses domain language, not cost."
+     "That adds cost and latency.",
+     "Far more costly, and not the gap."
     ]
    },
    {
@@ -94,18 +100,18 @@
     "id": "c13-1-m06",
     "q": "Before distilling from a large model, what must you check?",
     "options": [
-     "That the teacher model's licence permits it",
-     "That the teacher is open source",
-     "That the student is larger",
-     "That no human checks the outputs"
+     "That the teacher's licence permits it",
+     "That the teacher model is open source",
+     "That the student model is larger",
+     "That no human checks the teacher's outputs"
     ],
     "answer": 0,
     "why": "Some licences restrict using outputs to train other models.",
     "kind": "concept",
     "distractors": [
      "",
-     "Hosted models can be teachers if the terms allow.",
-     "The student is smaller by design.",
+     "Licences matter, open or not.",
+     "Students are smaller by design.",
      "Outputs should be verified."
     ]
    },
@@ -113,37 +119,37 @@
     "id": "c13-1-m07",
     "q": "When is continued pretraining justified?",
     "options": [
-     "When facts change weekly",
-     "When the domain's language is far from general text and you have millions to billions of domain tokens",
-     "When answers are in the wrong format",
-     "When cost per call is too high"
+     "When the facts the assistant needs change every single week",
+     "When domain language is far from general text and data is huge",
+     "When answers keep coming out in the wrong format or style",
+     "When the cost per call is too high at the volume you serve"
     ],
     "answer": 1,
     "why": "It is costly and needs SFT afterwards to restore instruction following.",
     "kind": "concept",
     "distractors": [
-     "That is retrieval.",
+     "That is a retrieval problem.",
      "",
-     "That is SFT.",
-     "That is distillation."
+     "That is a fine-tuning problem.",
+     "That is a distillation problem."
     ]
    },
    {
     "id": "c13-1-m08",
     "q": "A prompt needs 4,000 tokens of rules on every call. What does the chapter suggest?",
     "options": [
-     "Add more rules",
-     "Use retrieval for the rules",
-     "Continued pretraining",
-     "Fine-tune the rules in and keep a short prompt"
+     "Add more rules to cover the gaps",
+     "Use retrieval to fetch the rules",
+     "Continued pretraining on the rules",
+     "Fine-tune the rules in; keep a short prompt"
     ],
     "answer": 3,
     "why": "Fine-tuning can move stable behaviour into the model and cut prompt tokens.",
     "kind": "concept",
     "distractors": [
-     "That makes it worse.",
-     "Retrieval suits facts, not fixed behaviour.",
-     "Overkill for rules.",
+     "The prompt grows further.",
+     "Rules are behaviour, needed on every call.",
+     "Far too costly for this.",
      ""
     ]
    },
@@ -151,38 +157,76 @@
     "id": "c13-1-m09",
     "q": "Retrieval misses domain synonyms and codes. What is the likely remedy?",
     "options": [
-     "Use a bigger LLM",
-     "Fine-tune the embedding model or reranker",
-     "Fine-tune the LLM",
-     "Distillation"
+     "Use a bigger LLM to write answers",
+     "Fine-tune the embedder or reranker",
+     "Fine-tune the LLM on domain answers",
+     "Distil the LLM into a smaller one"
     ],
     "answer": 1,
     "why": "The miss is in the retriever, so adapt the retriever (13.5).",
     "kind": "concept",
     "distractors": [
-     "Same problem.",
+     "The LLM never sees the missed passages.",
      "",
-     "The generator cannot use evidence it never receives.",
-     "Not about retrieval."
+     "Retrieval is the failing stage.",
+     "Unrelated to retrieval misses."
     ]
    },
    {
     "id": "c13-1-m10",
     "q": "In the distillation case, the student was 1 point less accurate. Why was it accepted?",
     "options": [
-     "The teacher was wrong",
-     "The team checked the drop was not concentrated on critical exception types",
-     "Accuracy does not matter",
-     "The student was always right on new data"
+     "The teacher model had been wrong all along",
+     "The drop was not on critical exception types",
+     "Accuracy does not matter for this task",
+     "The student was right on all new data"
     ],
     "answer": 1,
     "why": "An average drop is acceptable only if critical segments are not hurt.",
     "kind": "scenario",
     "distractors": [
-     "The teacher was 94% accurate.",
+     "The teacher was the reference.",
      "",
-     "It matters; it was checked.",
-     "No such claim."
+     "It matters; the drop was checked.",
+     "Nothing is always right."
+    ]
+   },
+   {
+    "id": "c13-1-m11",
+    "q": "An assistant gets last week's price changes wrong but answers in the right format and tone. Which rung of the ladder addresses this?",
+    "options": [
+     "Fine-tuning on the new price list",
+     "Distilling into a smaller, cheaper model",
+     "Continued pretraining on price documents",
+     "Retrieval of the current prices at question time"
+    ],
+    "answer": 3,
+    "why": "Missing or changing facts are a retrieval gap; fine-tuning would go stale again.",
+    "kind": "scenario",
+    "distractors": [
+     "Prices change; the weights would be stale again.",
+     "Cost is not the problem.",
+     "Far too costly for changing facts.",
+     ""
+    ]
+   },
+   {
+    "id": "c13-1-m12",
+    "q": "Illustratively, a hosted teacher costs $0.012 per request and a distilled self-hosted student $0.0015. At 2 million requests a month, roughly how much does distillation save each month?",
+    "options": [
+     "About $24,000",
+     "About $3,000",
+     "About $21,000",
+     "About $2,100"
+    ],
+    "answer": 2,
+    "why": "(0.012 − 0.0015) × 2,000,000 = $21,000, before the cost of building and evaluating the student.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the teacher's whole cost, ignoring the student's.",
+     "That is the student's cost, not the saving.",
+     "",
+     "That drops a factor of ten."
     ]
    }
   ],
@@ -198,7 +242,8 @@
      "distillation",
      "continued pretraining",
      "evaluation decides"
-    ]
+    ],
+    "followUp": "Which rung do teams most often skip to too early?"
    },
    {
     "id": "c13-1-i02",
@@ -208,7 +253,8 @@
      "wrong facts vs wrong format",
      "error analysis",
      "symptom table"
-    ]
+    ],
+    "followUp": "Give a symptom that could be either, and how you would tell."
    },
    {
     "id": "c13-1-i03",
@@ -219,7 +265,8 @@
      "verified outputs",
      "volume and latency",
      "licence check"
-    ]
+    ],
+    "followUp": "How would you verify the teacher's outputs before training?"
    },
    {
     "id": "c13-1-i04",
@@ -242,7 +289,8 @@
      "accuracy by segment",
      "serving cost",
      "maintenance"
-    ]
+    ],
+    "followUp": "What would make the case fail?"
    },
    {
     "id": "c13-1-i06",
@@ -253,7 +301,8 @@
      "retraining cost",
      "hard to cite",
      "retrieval keeps them current"
-    ]
+    ],
+    "followUp": "Give a case where fine-tuning facts is acceptable."
    },
    {
     "id": "c13-1-i07",
@@ -277,7 +326,8 @@
      "baseline first",
      "cost and maintenance",
      "release gates"
-    ]
+    ],
+    "followUp": "Who approves a move up the ladder?"
    }
   ]
  },
@@ -294,24 +344,30 @@
     ],
     "answer": 0,
     "why": "r × (d_in + d_out) = 8 × 8,192 = 65,536.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "",
+     "16.8M is the full matrix, 4096 × 4096.",
+     "8,192 is d_in + d_out, before multiplying by the rank 8.",
+     "4,096 is one dimension, not the parameter count."
+    ]
    },
    {
     "id": "c13-3-m02",
     "q": "What does LoRA train?",
     "options": [
-     "Two small matrices B and A whose product is added to a frozen weight matrix",
-     "Only the embedding layer",
-     "A new tokenizer",
-     "All weights of the model"
+     "Two small matrices B and A added to a frozen W",
+     "Only the embedding layer of the model",
+     "A new tokenizer for the domain",
+     "All weights of the model at once"
     ],
     "answer": 0,
     "why": "The layer computes W·x + (α/r)·B·A·x with W frozen.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not the method.",
-     "Unrelated.",
+     "LoRA adapts weight matrices inside layers.",
+     "The tokenizer is unchanged.",
      "That is full fine-tuning."
     ]
    },
@@ -376,18 +432,18 @@
     "id": "c13-3-m06",
     "q": "What does QLoRA change compared with LoRA?",
     "options": [
-     "The frozen base is stored in 4-bit (NF4); adapters train in higher precision",
-     "It removes the adapters",
-     "Adapters are trained in 4-bit",
-     "The base model is unfrozen"
+     "The frozen base is 4-bit (NF4); adapters train in higher precision",
+     "It removes the adapters and trains the base model directly",
+     "The adapters are trained in 4-bit precision on a BF16 base",
+     "The base model is unfrozen and quantised to 4-bit while training"
     ],
     "answer": 0,
     "why": "This lets large models fit on a single GPU, at some speed cost.",
     "kind": "concept",
     "distractors": [
      "",
-     "Adapters are the trained part.",
-     "Adapters stay in higher precision.",
+     "Adapters stay.",
+     "The base is 4-bit; adapters are not.",
      "The base stays frozen."
     ]
    },
@@ -395,18 +451,18 @@
     "id": "c13-3-m07",
     "q": "After training, what can you do with B·A?",
     "options": [
-     "Nothing; it must stay separate",
-     "Retrain the base with it",
-     "Only discard it",
-     "Merge it into W for no inference overhead, or keep it as a swappable adapter"
+     "Nothing; it must stay a separate file",
+     "Retrain the base model with it",
+     "Only discard it after evaluation",
+     "Merge it into W, or keep it as an adapter"
     ],
     "answer": 3,
     "why": "Both options are available.",
     "kind": "concept",
     "distractors": [
      "Merging is possible.",
-     "Not needed.",
-     "Then training is wasted.",
+     "No retraining is needed.",
+     "It is the trained result.",
      ""
     ]
    },
@@ -415,56 +471,94 @@
     "q": "Where does most of LoRA's memory saving come from?",
     "options": [
      "Gradients are not computed at all",
-     "Optimiser state is needed only for A and B",
-     "Activations disappear",
-     "The base model is deleted"
+     "Optimiser state only for A and B",
+     "Activations no longer need memory",
+     "The base model is deleted after loading"
     ],
     "answer": 1,
     "why": "The frozen base needs no optimiser state or weight gradients.",
     "kind": "concept",
     "distractors": [
-     "Gradients flow through the base to A and B.",
+     "Gradients flow through the base.",
      "",
      "Activations remain.",
-     "The base is still loaded."
+     "The base is needed."
     ]
    },
    {
     "id": "c13-3-m09",
     "q": "Few trainable parameters means low compute. True?",
     "options": [
-     "Only on CPUs",
-     "No; the frozen base still runs forward and backward on every step",
-     "Yes, always",
-     "Yes, with QLoRA"
+     "Only on CPUs, where compute is cheaper",
+     "No: the base still runs forward and backward",
+     "Yes, always, with any kind of adapter",
+     "Yes, as long as QLoRA is the method used"
     ],
     "answer": 1,
     "why": "Compute scales with the full model's forward and backward passes.",
     "kind": "concept",
     "distractors": [
-     "Same on any hardware.",
+     "Hardware does not change it.",
      "",
-     "Compute is dominated by the base.",
-     "QLoRA can be slower."
+     "The base still runs.",
+     "QLoRA adds dequantisation work."
     ]
    },
    {
     "id": "c13-3-m10",
     "q": "In the LoRA calculator, how does moving from q, v to all linear modules at the same rank change the trainable parameters?",
     "options": [
-     "It decreases them",
-     "It doubles the rank",
-     "It increases them, because more matrices get adapters",
-     "No change"
+     "It decreases them, as ranks are shared",
+     "It doubles the rank of each adapter",
+     "It increases them: more matrices get adapters",
+     "No change, since the rank is the same"
     ],
     "answer": 2,
     "why": "Parameters are summed over targeted matrices; all linear includes the large MLP matrices.",
     "kind": "concept",
     "distractors": [
-     "More targets means more parameters.",
-     "Rank is a separate setting.",
+     "Each matrix gets its own adapter.",
+     "The rank is unchanged.",
      "",
-     "Targets change the sum."
+     "More matrices means more parameters."
+    ]
+   },
+   {
+    "id": "c13-3-m11",
+    "q": "LoRA at rank 16 targets q (4096 → 4096) and v (4096 → 1024) in all 32 layers of an 8B-shaped model. Roughly how many trainable parameters is that?",
+    "options": [
+     "About 8.4M",
+     "About 0.2M",
+     "About 6.8M",
+     "About 3.4M"
+    ],
+    "answer": 2,
+    "why": "q: 16 × (4096 + 4096) = 131,072; v: 16 × (4096 + 1024) = 81,920; × 32 layers ≈ 6.8M.",
+    "kind": "calculation",
+    "distractors": [
+     "That treats v as 4096 × 4096; with 8 KV heads it is 1024 wide.",
+     "That is one layer.",
+     "",
+     "That uses rank 8."
+    ]
+   },
+   {
+    "id": "c13-3-m12",
+    "q": "A team has one 24 GB GPU and wants to fine-tune an 8B model for a format task. Which approach fits?",
+    "options": [
+     "QLoRA: a 4-bit base with LoRA adapters",
+     "LoRA on a BF16 base with a large batch",
+     "Continued pretraining on the whole model",
+     "Full fine-tuning in mixed precision"
+    ],
+    "answer": 0,
+    "why": "QLoRA on an 8B model fits a single 16–24 GB GPU.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Tight at best, and large batches add activation memory.",
+     "Costly, and the wrong rung for a format task.",
+     "That needs about 16 bytes per parameter, far beyond 24 GB."
     ]
    }
   ],
@@ -478,7 +572,8 @@
      "B and A low rank",
      "r·(d_in + d_out)",
      "merge or swap"
-    ]
+    ],
+    "followUp": "Work it out for rank 8 on one 4096 × 1024 matrix."
    },
    {
     "id": "c13-3-i02",
@@ -489,7 +584,8 @@
      "flexibility",
      "single-GPU feasibility",
      "speed"
-    ]
+    ],
+    "followUp": "Which would you choose with one 24 GB GPU and an 8B model?"
    },
    {
     "id": "c13-3-i03",
@@ -499,7 +595,8 @@
      "no optimiser state for base",
      "base still runs",
      "activations"
-    ]
+    ],
+    "followUp": "What else limits memory besides parameters?"
    },
    {
     "id": "c13-3-i04",
@@ -522,7 +619,8 @@
      "BF16 base + small adapter",
      "4-bit base",
      "activations extra"
-    ]
+    ],
+    "followUp": "How do longer sequences change those numbers?"
    },
    {
     "id": "c13-3-i06",
@@ -533,7 +631,8 @@
      "keep for many tasks on one base",
      "hot-swapping",
      "versioning"
-    ]
+    ],
+    "followUp": "How do you serve 20 adapters on one base?"
    },
    {
     "id": "c13-3-i07",
@@ -557,7 +656,8 @@
      "quotas",
      "tracking and registry",
      "evaluation gates"
-    ]
+    ],
+    "followUp": "How do you stop one team's run from starving another's?"
    }
   ]
  },
@@ -567,14 +667,20 @@
     "id": "c13-6-m01",
     "q": "After fine-tuning, multilingual accuracy fell 7 points. You should…",
     "options": [
-     "Ship; domain improved",
-     "Treat it as a regression gate failure and retrain with mixed data",
-     "Ignore non-English",
-     "Lower temperature"
+     "Ship, since the domain score improved",
+     "Treat it as a failed gate; retrain with mixed data",
+     "Ignore it; non-English traffic is small",
+     "Lower the temperature and re-test"
     ],
     "answer": 1,
     "why": "General-capability regressions are release blockers when they breach the gate.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "A gate failed.",
+     "",
+     "It is a regression for those users.",
+     "Decoding does not undo forgetting."
+    ]
    },
    {
     "id": "c13-6-m02",
@@ -583,34 +689,34 @@
      "The previous fine-tune only",
      "The base model with your best prompt",
      "The base model with a weak prompt",
-     "A random baseline"
+     "A random-guess baseline"
     ],
     "answer": 1,
     "why": "A weak baseline exaggerates the gain.",
     "kind": "concept",
     "distractors": [
-     "Also compare with the base.",
+     "That ignores what prompting achieves.",
      "",
-     "That inflates gains.",
-     "Too weak to be useful."
+     "That flatters the fine-tune.",
+     "Far too weak to be honest."
     ]
    },
    {
     "id": "c13-6-m03",
     "q": "What is catastrophic forgetting?",
     "options": [
-     "A failed training run",
-     "Forgetting the training data",
-     "Losing the adapter file",
-     "Loss of general capabilities after fine-tuning"
+     "A training run that failed partway",
+     "Forgetting the training data itself",
+     "Losing the adapter file on disk",
+     "Losing general skills after fine-tuning"
     ],
     "answer": 3,
     "why": "Run general suites before and after; LoRA forgets less, but not nothing.",
     "kind": "concept",
     "distractors": [
-     "Not the meaning.",
-     "The opposite of memorisation, not forgetting.",
-     "Not the meaning.",
+     "That is a failed run.",
+     "The issue is general skills.",
+     "That is an operations mistake.",
      ""
     ]
    },
@@ -618,48 +724,48 @@
     "id": "c13-6-m04",
     "q": "How can you test for memorisation?",
     "options": [
-     "Prompt with prefixes of training records and check for verbatim completions; plant and probe canaries",
-     "Check training loss",
-     "Measure latency",
-     "Ask the model if it memorised data"
+     "Prefix probes for verbatim completions, plus planted canaries",
+     "Check that the final training loss is not too low",
+     "Measure latency on long prompts built from training data",
+     "Ask the model directly whether it memorised any records"
     ],
     "answer": 0,
     "why": "Probes and canaries test extraction.",
     "kind": "concept",
     "distractors": [
      "",
-     "Loss does not show extraction.",
+     "Loss does not reveal regurgitation.",
      "Unrelated.",
-     "Self-reports are not evidence."
+     "It cannot answer reliably."
     ]
    },
    {
     "id": "c13-6-m05",
     "q": "Can fine-tuning on benign data weaken refusal behaviour?",
     "options": [
-     "Only for full fine-tuning",
-     "Only for small models",
-     "Yes; re-run safety and red-team suites on every fine-tuned model",
+     "Only for full fine-tuning, not LoRA",
+     "Only for small models, not large ones",
+     "Yes; rerun safety suites on every model",
      "No, only harmful data does that"
     ],
     "answer": 2,
     "why": "Safety regressions are a known effect of fine-tuning.",
     "kind": "concept",
     "distractors": [
-     "LoRA can do it too.",
-     "Any size.",
+     "LoRA can weaken it too.",
+     "Size does not protect it.",
      "",
-     "Benign data can do it too."
+     "Benign data can weaken refusals."
     ]
    },
    {
     "id": "c13-6-m06",
     "q": "In the scorecard, which gates fail?",
     "options": [
-     "Multilingual and harmful-request refusal",
+     "Multilingual and refusal",
      "Domain extraction and canaries",
      "Instruction following and fabrication",
-     "None"
+     "None of the six gates fail"
     ],
     "answer": 0,
     "why": "Multilingual fell 7.3 points (limit 3) and refusal fell to 91.5% (gate 97%).",
@@ -668,62 +774,62 @@
      "",
      "Both pass.",
      "Both pass.",
-     "Two gates fail."
+     "Two fail."
     ]
    },
    {
     "id": "c13-6-m07",
     "q": "General instruction following fell from 81.0% to 78.5%. With a gate of “drop ≤ 3 points”, does it pass?",
     "options": [
-     "Cannot tell",
-     "Yes; the drop is 2.5 points",
+     "Cannot tell from these numbers",
+     "Yes: a 2.5-point drop",
      "No; it fell below 80%",
-     "No; any drop fails"
+     "No; any drop at all fails"
     ],
     "answer": 1,
     "why": "81.0 − 78.5 = 2.5 points ≤ 3.",
     "kind": "calculation",
     "distractors": [
-     "The numbers are given.",
+     "The drop can be computed.",
      "",
      "The gate is a drop, not a floor.",
-     "The gate allows up to 3 points."
+     "The gate allows 3 points."
     ]
    },
    {
     "id": "c13-6-m08",
     "q": "Two gates fail on the scorecard. What does the chapter recommend?",
     "options": [
-     "Add multilingual and safety examples to the training mix and retrain",
-     "Ship and monitor",
-     "Lower the gates",
-     "Ship to English users only without telling anyone"
+     "Add those examples to the mix and retrain",
+     "Ship it and monitor the gaps",
+     "Lower the two failing gates",
+     "Ship to English users only, quietly"
     ],
     "answer": 0,
     "why": "Fix the regressions, do not ship and hope.",
     "kind": "concept",
     "distractors": [
      "",
-     "Ship-and-hope is what the gates prevent.",
-     "Moving gates defeats them.",
-     "Hidden restrictions are not a fix."
+     "Known failures should not ship.",
+     "That hides the regressions.",
+     "Hiding a regression is not a fix."
     ]
    },
    {
     "id": "c13-6-m09",
     "q": "A few privacy probes find nothing. What does that prove?",
     "options": [
-     "No data can be extracted",
-     "Canaries are unnecessary",
-     "The model is safe to release with PII",
-     "Only that those probes found nothing; it is not proof no data can be extracted"
+     "That no data can be extracted at all",
+     "That canaries are not needed next time",
+     "That it is safe to release with PII",
+     "Only that those probes found nothing"
     ],
     "answer": 3,
     "why": "Absence of evidence from a few probes is weak; minimise PII in training data in the first place.",
     "kind": "scenario",
     "distractors": [
-     "Probes have limited coverage.",
-     "Canaries strengthen the test.",
+     "Absence of evidence is not proof.",
+     "Canaries are a key probe.",
      "PII should be minimised regardless.",
      ""
     ]
@@ -732,19 +838,38 @@
     "id": "c13-6-m10",
     "q": "An adapter raises average field accuracy but begins inventing plausible IDs for missing fields. What should happen?",
     "options": [
-     "Remove the fabrication test",
-     "Block release; the fabrication gate matters more than the average",
-     "Lower the fabrication gate",
-     "Ship; the average improved"
+     "Remove the fabrication test from the suite",
+     "Block release: the fabrication gate wins",
+     "Lower the fabrication gate to let it pass",
+     "Ship, since the average accuracy improved"
     ],
     "answer": 1,
     "why": "A higher average does not excuse a critical failure mode.",
     "kind": "scenario",
     "distractors": [
-     "Removing the test hides the problem.",
+     "That hides the failure.",
      "",
-     "Moving the gate defeats it.",
+     "That accepts invented IDs.",
      "Averages hide critical failures."
+    ]
+   },
+   {
+    "id": "c13-6-m11",
+    "q": "A fine-tuned model scores 8 points above the base model with a weak prompt, but only 1 point above the base model with the team's best prompt. What should the report say?",
+    "options": [
+     "The gain is 4.5 points, the average of the two",
+     "The gain is 8 points, since that is the measured difference",
+     "The real gain is about 1 point, against the best-prompt baseline",
+     "There is no gain, since prompting works almost as well"
+    ],
+    "answer": 2,
+    "why": "The honest baseline is the base model with your best prompt.",
+    "kind": "scenario",
+    "distractors": [
+     "Averaging does not make a baseline honest.",
+     "A weak prompt flatters the fine-tune.",
+     "",
+     "One point may matter; report it honestly."
     ]
    }
   ],
@@ -758,7 +883,8 @@
      "general regressions",
      "memorisation",
      "safety regressions"
-    ]
+    ],
+    "followUp": "Which of these is most often skipped?"
    },
    {
     "id": "c13-6-i02",
@@ -768,7 +894,8 @@
      "general capabilities drop",
      "before/after suites",
      "LoRA reduces but does not remove"
-    ]
+    ],
+    "followUp": "Which general suites would you pick?"
    },
    {
     "id": "c13-6-i03",
@@ -779,7 +906,8 @@
      "canaries",
      "minimise PII",
      "limits of probes"
-    ]
+    ],
+    "followUp": "How many canaries, and where do you put them?"
    },
    {
     "id": "c13-6-i04",
@@ -802,7 +930,8 @@
      "per suite",
      "absolute and relative",
      "owners"
-    ]
+    ],
+    "followUp": "Who can change a gate after training?"
    },
    {
     "id": "c13-6-i06",
@@ -813,7 +942,8 @@
      "safety examples in mix",
      "red-team suite",
      "gate"
-    ]
+    ],
+    "followUp": "How would you rebalance the training mix?"
    },
    {
     "id": "c13-6-i07",
@@ -837,7 +967,8 @@
      "gates",
      "scorecard to registry",
      "block promotion"
-    ]
+    ],
+    "followUp": "Where does the scorecard live, and who reads it?"
    }
   ]
  },
@@ -866,19 +997,19 @@
     "id": "c13-2-m02",
     "q": "What should a labelling guideline include?",
     "options": [
-     "Only the output schema",
-     "The model's prompt",
-     "Task definition, output schema, decision rules, worked examples, edge cases and what to do when unsure",
-     "Only examples"
+     "Only the output schema that each label has to fill in",
+     "The model's system prompt for the task, copied as it is",
+     "Task, schema, rules, examples, edge cases and what to do if unsure",
+     "Only a set of worked examples, without written rules"
     ],
     "answer": 2,
     "why": "A versioned guideline makes labels consistent.",
     "kind": "concept",
     "distractors": [
-     "A schema says what, not how to decide.",
-     "The prompt is not a labelling guide.",
+     "Schemas alone leave decisions unclear.",
+     "The guideline is for people.",
      "",
-     "Examples without rules leave gaps."
+     "Rules and edge cases are needed too."
     ]
    },
    {
@@ -942,18 +1073,18 @@
     "id": "c13-2-m06",
     "q": "How did the team in the example detect rubber-stamping in future?",
     "options": [
-     "Fired the annotator",
-     "Raised the acceptance target",
-     "Stopped using model drafts",
-     "Hid the model draft for 10% of items (a blind check)"
+     "Fired the annotator who accepted drafts",
+     "Raised the acceptance target for drafts",
+     "Stopped using model drafts altogether",
+     "Hid the draft on 10% of items (blind check)"
     ],
     "answer": 3,
     "why": "Blind items show whether an annotator really reads.",
     "kind": "concept",
     "distractors": [
-     "The fix was to the process.",
+     "Firing does not detect future cases.",
      "That encourages rubber-stamping.",
-     "Drafts still save time.",
+     "Drafts are useful; they need checks.",
      ""
     ]
    },
@@ -961,19 +1092,19 @@
     "id": "c13-2-m07",
     "q": "When should the test set be split off?",
     "options": [
-     "Never; use the training data",
-     "First, before training, by customer or time if leakage is possible",
-     "After training",
-     "Whenever the model looks good"
+     "Never; test on the training data you have",
+     "First, by customer or time if leakage is possible",
+     "After training, from whatever data is left",
+     "Whenever the model looks good enough to test"
     ],
     "answer": 1,
     "why": "Hold out the test set first and never train on it.",
     "kind": "concept",
     "distractors": [
-     "Training data overstates quality.",
+     "That overstates quality.",
      "",
-     "Too late to prevent leakage.",
-     "That biases the evaluation."
+     "Too late to avoid leakage.",
+     "That invites cherry-picking."
     ]
    },
    {
@@ -1003,38 +1134,76 @@
     "id": "c13-2-m09",
     "q": "What goes in a dataset's datasheet?",
     "options": [
-     "The model's accuracy",
-     "Sources, guideline version, annotator pool and known gaps",
-     "Annotators' personal details",
-     "Only the row count"
+     "The model's accuracy when trained on it",
+     "Sources, guideline version, annotators, gaps",
+     "The annotators' names and personal details",
+     "Only the number of rows and columns"
     ],
     "answer": 1,
     "why": "The datasheet documents how the data was made.",
     "kind": "concept",
     "distractors": [
-     "Model results go elsewhere.",
+     "That belongs to the model card.",
      "",
-     "Personal details do not belong there.",
-     "Row count alone is not enough."
+     "Never needed, and a privacy risk.",
+     "Too little to judge the data."
     ]
    },
    {
     "id": "c13-2-m10",
     "q": "Where should inputs for a training set come from?",
     "options": [
-     "Only the easiest examples",
-     "Only synthetic prompts",
-     "Real production traffic, privacy-reviewed, covering the real distribution plus hard cases",
-     "Public benchmarks"
+     "Only the easiest examples, for clean labels",
+     "Only synthetic prompts written by a model",
+     "Real, privacy-reviewed traffic, including hard cases",
+     "Public benchmarks for the same kind of task"
     ],
     "answer": 2,
     "why": "Real inputs match what the model will see.",
     "kind": "concept",
     "distractors": [
-     "Easy cases do not teach the hard ones.",
-     "Synthetic inputs can miss real patterns.",
+     "The model must learn hard cases.",
+     "They miss real patterns.",
      "",
-     "Benchmarks may not match your task."
+     "They rarely match your traffic."
+    ]
+   },
+   {
+    "id": "c13-2-m11",
+    "q": "Two annotators agree on 85% of a pilot's items, and the agreement expected by chance is 50%. What is Cohen's κ?",
+    "options": [
+     "0.50",
+     "0.70",
+     "0.85",
+     "0.35"
+    ],
+    "answer": 1,
+    "why": "κ = (0.85 − 0.50) ÷ (1 − 0.50) = 0.70.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the chance agreement.",
+     "",
+     "That is raw agreement, not corrected for chance.",
+     "That is the numerator only, not divided by (1 − chance)."
+    ]
+   },
+   {
+    "id": "c13-2-m12",
+    "q": "Annotators accept 99% of model-drafted labels without edits, but a blind check finds many of those labels wrong. What is happening, and what helps?",
+    "options": [
+     "The guideline is perfect, so annotators have nothing to add",
+     "Rubber-stamping: track edit rates and keep blind checks",
+     "Annotators need faster tools to keep up with the drafts",
+     "The model is excellent, so remove the human review step"
+    ],
+    "answer": 1,
+    "why": "Model drafts speed work, but annotators can stop reading; edit rates and blind items reveal it.",
+    "kind": "scenario",
+    "distractors": [
+     "Low edits plus errors point to inattention.",
+     "",
+     "Speed is not the problem.",
+     "The blind check shows the drafts are often wrong."
     ]
    }
   ],
@@ -1049,7 +1218,8 @@
      "drafts and expert review",
      "QC",
      "held-out test set"
-    ]
+    ],
+    "followUp": "How many examples would you aim for, and why?"
    },
    {
     "id": "c13-2-i02",
@@ -1059,7 +1229,8 @@
      "kappa",
      "unclear guideline",
      "fix rules"
-    ]
+    ],
+    "followUp": "κ is 0.5. What do you do?"
    },
    {
     "id": "c13-2-i03",
@@ -1070,7 +1241,8 @@
      "copying model errors",
      "track edit rates",
      "blind checks"
-    ]
+    ],
+    "followUp": "How would you set up a blind check?"
    },
    {
     "id": "c13-2-i04",
@@ -1093,7 +1265,8 @@
      "per-annotator audits",
      "edit rates",
      "agreement over time"
-    ]
+    ],
+    "followUp": "One annotator disagrees with everyone. What do you do?"
    },
    {
     "id": "c13-2-i06",
@@ -1104,7 +1277,8 @@
      "edge cases covered",
      "pilot results",
      "versioning"
-    ]
+    ],
+    "followUp": "How do you version changes to the guideline?"
    },
    {
     "id": "c13-2-i07",
@@ -1129,7 +1303,8 @@
      "agreement tracking",
      "versioning and datasheets",
      "privacy controls"
-    ]
+    ],
+    "followUp": "How do you keep personal data out of the labelled sets?"
    }
   ]
  },
@@ -1139,56 +1314,56 @@
     "id": "c13-4-m01",
     "q": "In extraction training data, why include many examples where a field is absent?",
     "options": [
-     "Because absent fields are easier",
-     "Otherwise the model learns to always fill fields",
-     "To make the data smaller",
-     "To improve speed"
+     "Because absent fields are easier to label",
+     "Otherwise it learns to always fill fields",
+     "To make the training set smaller",
+     "To make extraction run faster"
     ],
     "answer": 1,
     "why": "Without null examples, the model fabricates values.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
+     "Ease is not the reason.",
      "",
-     "Not about size.",
-     "Not the reason."
+     "They add examples.",
+     "Speed is unrelated."
     ]
    },
    {
     "id": "c13-4-m02",
     "q": "In the contract example, only 2% of training examples had the termination clause absent. What happened?",
     "options": [
-     "The model ignored the clause",
-     "The model invented a clause 31% of the time when none existed",
-     "Accuracy dropped to 50%",
-     "Nothing; 2% was enough"
+     "The model ignored the clause entirely",
+     "It invented a clause 31% of the time",
+     "Accuracy dropped to 50% across fields",
+     "Nothing; 2% was plenty of examples"
     ],
     "answer": 1,
     "why": "Adding 600 absent-field examples brought fabrication to 2%.",
     "kind": "concept",
     "distractors": [
-     "It fabricated rather than ignored.",
+     "It did the opposite.",
      "",
      "Overall accuracy was 97%.",
-     "It was not enough."
+     "It caused fabrication."
     ]
    },
    {
     "id": "c13-4-m03",
     "q": "For classification, what is often cheaper and as good as an LLM?",
     "options": [
-     "A larger LLM",
-     "Continued pretraining",
-     "A longer prompt",
-     "A small fine-tuned encoder (BERT-style)"
+     "A larger LLM with better prompts",
+     "Continued pretraining on labels",
+     "A longer prompt with more classes",
+     "A small fine-tuned encoder"
     ],
     "answer": 3,
     "why": "Small encoders classify well at a fraction of the cost.",
     "kind": "concept",
     "distractors": [
-     "More cost, not needed.",
-     "Overkill.",
-     "More cost per call.",
+     "Larger is costlier.",
+     "Far more costly.",
+     "Prompts cost tokens per call.",
      ""
     ]
    },
@@ -1196,37 +1371,37 @@
     "id": "c13-4-m04",
     "q": "Which domain-language adaptation has the highest regression risk?",
     "options": [
-     "Continued pretraining on domain text, then SFT",
-     "Constrained decoding",
-     "Few-shot prompting",
-     "Retrieval"
+     "Continued pretraining, then SFT",
+     "Constrained decoding of the output",
+     "Few-shot prompting with domain terms",
+     "Retrieval over domain documents"
     ],
     "answer": 0,
     "why": "Mix in general data (e.g. 10–30%) to reduce forgetting.",
     "kind": "concept",
     "distractors": [
      "",
-     "No weights change.",
-     "No weights change.",
-     "No weights change."
+     "It changes no weights.",
+     "It changes no weights.",
+     "It changes no weights."
     ]
    },
    {
     "id": "c13-4-m05",
     "q": "When might constrained decoding be enough without training?",
     "options": [
-     "For classification calibration",
-     "For tool-use decisions",
-     "For domain vocabulary",
-     "For structured output in an exact format"
+     "For calibrating classification scores",
+     "For deciding when to call a tool",
+     "For learning domain vocabulary",
+     "For output in an exact format"
     ],
     "answer": 3,
     "why": "Constrained decoding (7.4) enforces the schema at generation time.",
     "kind": "concept",
     "distractors": [
-     "It does not calibrate.",
-     "It does not teach which tool to choose.",
-     "It does not teach vocabulary.",
+     "Calibration is a separate step.",
+     "That is a behaviour.",
+     "That needs training.",
      ""
     ]
    },
@@ -1234,18 +1409,18 @@
     "id": "c13-4-m06",
     "q": "Why do tool-use training records include the tool result turn?",
     "options": [
-     "To hide the tool output",
-     "So the model learns to use results, not only to call tools",
-     "Because the chat template requires it",
-     "To make records longer"
+     "To hide the tool output from the model",
+     "So it learns to use results, not just call tools",
+     "Because every chat template requires it",
+     "To make the records longer for training"
     ],
     "answer": 1,
     "why": "The model must learn the whole loop.",
     "kind": "concept",
     "distractors": [
-     "Results are shown, not hidden.",
+     "The model must see it.",
      "",
-     "The reason is learning to use results.",
+     "It is a learning choice.",
      "Length is not the goal."
     ]
    },
@@ -1274,7 +1449,7 @@
    },
    {
     "id": "c13-4-m08",
-    "q": "What should tool-use training data include besides tool calls?",
+    "q": "After tool-use fine-tuning, the assistant calls search_orders even when a user just writes “thanks, bye”. What was missing from the training data?",
     "options": [
      "Only failed calls",
      "Random tool calls",
@@ -1283,7 +1458,7 @@
     ],
     "answer": 3,
     "why": "Otherwise the model learns to call tools for everything.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Failures alone teach the wrong thing.",
      "Random calls teach noise.",
@@ -1295,38 +1470,76 @@
     "id": "c13-4-m09",
     "q": "A fine-tuned model produces valid tool calls in the right format. Does that authorise execution?",
     "options": [
-     "Yes, if confidence is high",
-     "Only for read tools",
-     "No; authorisation and policy checks still apply",
-     "Yes, the format proves it"
+     "Yes, if the model's confidence is high",
+     "Only for read-only tools, not writes",
+     "No: authorisation and policy still apply",
+     "Yes, since a valid format proves intent"
     ],
     "answer": 2,
     "why": "Training shapes behaviour; the runtime still checks every call (11.3).",
     "kind": "scenario",
     "distractors": [
-     "Confidence is not authority.",
-     "All calls pass checks.",
+     "Confidence is not authorisation.",
+     "Reads need authorisation too.",
      "",
-     "Format is not authority."
+     "Format says nothing about permission."
     ]
    },
    {
     "id": "c13-4-m10",
     "q": "Which chat template should tool-use fine-tuning use?",
     "options": [
-     "Plain text without roles",
+     "Plain text with no role markers",
      "The template of a different model",
-     "The model's native tool-calling chat template",
-     "Any custom template"
+     "The model's own tool-calling template",
+     "Any custom template the team likes"
     ],
     "answer": 2,
     "why": "Matching the native template keeps the format the model and serving stack expect.",
     "kind": "concept",
     "distractors": [
-     "Roles matter for tool calls.",
-     "A different model's template does not match.",
+     "The model was trained with roles.",
+     "Templates differ per model.",
      "",
-     "A custom template may break serving."
+     "Mismatched templates degrade quality."
+    ]
+   },
+   {
+    "id": "c13-4-m11",
+    "q": "An extraction training set has 30,000 records, 600 of them with the field absent (2%). Roughly how many absent-field examples must you add for absent cases to make up 10% of the set?",
+    "options": [
+     "About 2,700",
+     "About 2,400",
+     "About 600",
+     "About 3,000"
+    ],
+    "answer": 0,
+    "why": "(600 + x) ÷ (30,000 + x) = 0.10 gives x ≈ 2,667.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That forgets that the set grows as you add examples.",
+     "That only doubles the share to about 4%.",
+     "That is 10% of the original 30,000, not the number to add."
+    ]
+   },
+   {
+    "id": "c13-4-m12",
+    "q": "A team needs output in an exact house JSON format. The model gets the content right, and the team has few labelled examples. What should it try first?",
+    "options": [
+     "A larger model with a longer prompt full of rules",
+     "Full fine-tuning on the few examples the team has",
+     "Constrained decoding against the schema, before any fine-tuning",
+     "Continued pretraining on a large set of JSON documents"
+    ],
+    "answer": 2,
+    "why": "When only the format is wrong, constrained decoding may be enough without training.",
+    "kind": "scenario",
+    "distractors": [
+     "That adds cost without enforcing the format.",
+     "Few examples risk overfitting, and training may be unnecessary.",
+     "",
+     "Far too costly for a format gap."
     ]
    }
   ],
@@ -1339,7 +1552,8 @@
      "document → JSON with nulls",
      "text → label",
      "multi-turn traces with results"
-    ]
+    ],
+    "followUp": "Which needs the most examples, and why?"
    },
    {
     "id": "c13-4-i02",
@@ -1350,7 +1564,8 @@
      "accuracy",
      "calibration",
      "per-class metrics"
-    ]
+    ],
+    "followUp": "How would you compare them fairly?"
    },
    {
     "id": "c13-4-i03",
@@ -1360,7 +1575,8 @@
      "fabrication of absent fields",
      "need null examples",
      "hallucinated-field rate"
-    ]
+    ],
+    "followUp": "How do you measure the hallucinated-field rate?"
    },
    {
     "id": "c13-4-i04",
@@ -1383,7 +1599,8 @@
      "full traces with results",
      "no-tool cases",
      "evaluation of final state"
-    ]
+    ],
+    "followUp": "How do you include error cases in the traces?"
    },
    {
     "id": "c13-4-i06",
@@ -1394,7 +1611,8 @@
      "no training data",
      "schema enforcement",
      "combine both"
-    ]
+    ],
+    "followUp": "What if the content is also wrong?"
    },
    {
     "id": "c13-4-i07",
@@ -1418,7 +1636,8 @@
      "include no-tool and error cases",
      "evaluate tool choice and final state",
      "runtime checks remain"
-    ]
+    ],
+    "followUp": "What runtime checks stay after fine-tuning?"
    }
   ]
  },
@@ -1428,48 +1647,48 @@
     "id": "c13-5-m01",
     "q": "Why is fine-tuning the retriever often the highest-return adaptation in a RAG system?",
     "options": [
-     "General embedding models miss domain meaning, and retriever tuning is cheaper than LLM tuning",
-     "Retrievers never need evaluation",
-     "It removes the need for a reranker",
-     "LLMs cannot be fine-tuned"
+     "Embedders miss domain meaning, and tuning them is cheap",
+     "Retrievers never need to be evaluated afterwards",
+     "It removes the need for a reranker in the pipeline",
+     "LLMs cannot be fine-tuned for retrieval tasks at all"
     ],
     "answer": 0,
     "why": "Codenames, part numbers and terms of art are common misses.",
     "kind": "concept",
     "distractors": [
      "",
-     "They do need evaluation.",
-     "Rerankers can still help.",
-     "LLMs can be fine-tuned."
+     "They need it like anything else.",
+     "Both can help.",
+     "They can; it is costlier."
     ]
    },
    {
     "id": "c13-5-m02",
     "q": "What are hard negatives?",
     "options": [
-     "Duplicate positives",
-     "Queries with no answer",
-     "Passages that look relevant but are not, mined from the current model's top results",
-     "Random passages"
+     "Duplicate copies of the positive passage",
+     "Queries in the logs that have no answer",
+     "Near-misses mined from the current model's top results",
+     "Random passages drawn from across the corpus"
     ],
     "answer": 2,
     "why": "They teach fine distinctions and matter more than more easy pairs.",
     "kind": "concept",
     "distractors": [
-     "Positives are not negatives.",
-     "Not the definition.",
+     "Duplicates are not negatives.",
+     "Those are unanswerable queries.",
      "",
-     "Random passages are easy negatives."
+     "Random negatives are easy."
     ]
    },
    {
     "id": "c13-5-m03",
     "q": "Why is a new reranker an easier first step than a new embedding model?",
     "options": [
-     "Embedding models cannot be fine-tuned",
-     "Rerankers are always more accurate",
-     "Rerankers need no training data",
-     "A reranker does not touch the index; a new embedding model needs a full re-index"
+     "Embedding models cannot be fine-tuned at all",
+     "Rerankers are always more accurate than embedders",
+     "Rerankers need no labelled training data",
+     "A reranker needs no re-index; a new embedder does"
     ],
     "answer": 3,
     "why": "Re-embedding means a blue/green migration (10.7).",
@@ -1477,7 +1696,7 @@
     "distractors": [
      "They can.",
      "Not always.",
-     "They need data too.",
+     "They need labelled pairs.",
      ""
     ]
    },
@@ -1487,17 +1706,17 @@
     "options": [
      "Cross-entropy over the vocabulary",
      "Mean squared error on token IDs",
-     "Contrastive loss with in-batch negatives (MultipleNegativesRankingLoss / InfoNCE)",
-     "Hinge loss on labels"
+     "Contrastive loss with in-batch negatives",
+     "Hinge loss on class labels"
     ],
     "answer": 2,
     "why": "It pulls queries and positives together and pushes negatives apart (4.4).",
     "kind": "concept",
     "distractors": [
-     "That is language modelling.",
-     "Not the method.",
+     "That is language-model training.",
+     "Not meaningful for embeddings.",
      "",
-     "Not the method described."
+     "There are no class labels."
     ]
    },
    {
@@ -1505,61 +1724,61 @@
     "q": "Where should you evaluate a fine-tuned retriever?",
     "options": [
      "On a general benchmark only",
-     "On real human queries with labels, not the synthetic ones you trained on",
+     "On real labelled queries, not synthetic ones",
      "On the synthetic training queries",
-     "On the training passages"
+     "On the training passages themselves"
     ],
     "answer": 1,
     "why": "Synthetic training queries overstate gains.",
     "kind": "concept",
     "distractors": [
-     "It misses your domain.",
+     "It may not reflect your domain.",
      "",
-     "That measures memorisation.",
-     "Not an evaluation set."
+     "They flatter the model.",
+     "That is contamination."
     ]
    },
    {
     "id": "c13-5-m06",
     "q": "A mined hard negative is actually a valid answer. What happens if you train on it?",
     "options": [
-     "Nothing",
-     "The model learns to reject good evidence",
-     "Recall improves",
-     "The index shrinks"
+     "Nothing changes in the model",
+     "It learns to reject good evidence",
+     "Recall improves on those queries",
+     "The index shrinks in size"
     ],
     "answer": 1,
     "why": "Check mined negatives before training.",
     "kind": "scenario",
     "distractors": [
-     "It teaches the wrong distinction.",
+     "It learns from the label.",
      "",
-     "It hurts recall on similar queries.",
-     "Unrelated."
+     "It falls.",
+     "Training does not change the index size."
     ]
    },
    {
     "id": "c13-5-m07",
     "q": "In the synthetic pipeline, why filter generated questions?",
     "options": [
-     "To make questions shorter",
-     "To speed up training",
-     "To drop questions the chunk does not actually answer",
-     "To remove typos"
+     "To make the generated questions shorter",
+     "To speed up the training runs that follow",
+     "To drop questions the chunk cannot answer",
+     "To remove typos from the generated questions"
     ],
     "answer": 2,
     "why": "A judge or round-trip check removes bad pairs.",
     "kind": "concept",
     "distractors": [
-     "Length is not the goal.",
-     "Not the reason.",
+     "Length is not the aim.",
+     "It adds a step.",
      "",
-     "Typos are useful variety."
+     "Typos are wanted for realism."
     ]
    },
    {
     "id": "c13-5-m08",
-    "q": "Choose all the sources of (query, relevant passage) pairs the chapter lists.",
+    "q": "A team wants to fine-tune its retriever but has no labelled (query, passage) pairs. Which of these could supply them? Choose all that apply.",
     "options": [
      "Random pairs from the corpus",
      "LLM-generated questions per chunk, filtered",
@@ -1572,7 +1791,7 @@
      3
     ],
     "why": "Human labelling is another source.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Random pairs are not relevant pairs.",
      "",
@@ -1584,38 +1803,76 @@
     "id": "c13-5-m09",
     "q": "After fine-tuning embeddings for jargon, what should you also check?",
     "options": [
-     "Only training loss",
-     "Nothing else",
-     "Losses on general queries (13.6)",
-     "Only index size"
+     "Only the final training loss",
+     "Nothing else; jargon is the goal",
+     "Regressions on general queries",
+     "Only the size of the new index"
     ],
     "answer": 2,
     "why": "Gains on jargon can come with losses elsewhere.",
     "kind": "concept",
     "distractors": [
-     "Training loss is not quality.",
-     "Regressions are possible.",
+     "Loss does not show regressions.",
+     "General queries can regress.",
      "",
-     "Not the concern."
+     "Size is not quality."
     ]
    },
    {
     "id": "c13-5-m10",
     "q": "How are rerankers (cross-encoders) typically trained?",
     "options": [
-     "With unlabelled text only",
-     "By clustering passages",
-     "With next-token prediction",
-     "As binary or listwise classifiers over (query, passage)"
+     "With unlabelled domain text only",
+     "By clustering passages by topic",
+     "With next-token prediction on text",
+     "As classifiers over query–passage pairs"
     ],
     "answer": 3,
     "why": "They score each query–passage pair.",
     "kind": "concept",
     "distractors": [
-     "They need relevance labels.",
-     "Not the method.",
-     "That is language modelling.",
+     "They need labels.",
+     "Clustering is not ranking.",
+     "That is LM training.",
      ""
+    ]
+   },
+   {
+    "id": "c13-5-m11",
+    "q": "A fine-tuned retriever reaches Recall@10 of 0.95 on its synthetic questions but 0.71 on real labelled user queries. What should the team conclude?",
+    "options": [
+     "Average the two and report 0.83 as the retriever's recall",
+     "The real-query score is the true measure; the synthetic set flatters it",
+     "Train longer on the synthetic set until real recall catches up",
+     "The real queries must be mislabelled, since synthetic recall is high"
+    ],
+    "answer": 1,
+    "why": "Evaluate on real human queries, not on synthetic ones like those you trained on.",
+    "kind": "scenario",
+    "distractors": [
+     "An average hides the real gap.",
+     "",
+     "That fits the synthetic style even more.",
+     "Real queries are the reference."
+    ]
+   },
+   {
+    "id": "c13-5-m12",
+    "q": "Embeddings miss internal codenames such as “Project Kestrel”, but the team cannot afford a full re-index this quarter. What is the sensible first step?",
+    "options": [
+     "Fine-tune the embedder and swap it in place today",
+     "Remove codenames from the documents",
+     "Fine-tune a reranker, which needs no re-index",
+     "Fine-tune the answer LLM on codenames"
+    ],
+    "answer": 2,
+    "why": "A reranker re-scores candidates without touching the index; a new embedder needs a full re-index.",
+    "kind": "scenario",
+    "distractors": [
+     "A new embedder needs a full blue/green re-index.",
+     "That loses meaning users search for.",
+     "",
+     "The LLM never sees the missed passages."
     ]
    }
   ],
@@ -1629,7 +1886,8 @@
      "cheaper",
      "retrieval is the bottleneck",
      "measurable with Recall@k"
-    ]
+    ],
+    "followUp": "How would you show retrieval is the bottleneck?"
    },
    {
     "id": "c13-5-i02",
@@ -1640,7 +1898,8 @@
      "top results of current model",
      "exclude true positives",
      "check them"
-    ]
+    ],
+    "followUp": "How many hard negatives per query?"
    },
    {
     "id": "c13-5-i03",
@@ -1652,7 +1911,8 @@
      "mine negatives",
      "train",
      "evaluate on real queries"
-    ]
+    ],
+    "followUp": "How do you keep synthetic questions realistic?"
    },
    {
     "id": "c13-5-i04",
@@ -1675,7 +1935,8 @@
      "faster to ship",
      "latency cost",
      "combine both"
-    ]
+    ],
+    "followUp": "What latency does the reranker add?"
    },
    {
     "id": "c13-5-i06",
@@ -1685,7 +1946,8 @@
      "human or judge check",
      "exclude near-duplicates",
      "measure label noise"
-    ]
+    ],
+    "followUp": "What share of mined negatives would you check by hand?"
    },
    {
     "id": "c13-5-i07",
@@ -1710,7 +1972,8 @@
      "retrain cadence",
      "re-index migration",
      "gates"
-    ]
+    ],
+    "followUp": "How do you avoid training on biased clicks?"
    }
   ]
  },
@@ -1720,57 +1983,57 @@
     "id": "c13-7-m01",
     "q": "What should every training run log?",
     "options": [
-     "Only the model file",
-     "Only the final accuracy",
-     "Config, code commit, dataset version, base model revision, hyperparameters, metrics and artefacts",
-     "The annotators' names"
+     "Only the trained model file, saved at the end of the run",
+     "Only the final accuracy number on the validation set",
+     "Config, commit, data and base versions, hyperparameters, metrics, artefacts",
+     "The annotators' names and the shifts they worked on the data"
     ],
     "answer": 2,
     "why": "Everything needed to rerun and trace it.",
     "kind": "concept",
     "distractors": [
+     "Not enough to rerun.",
      "Not enough to trace.",
-     "Not enough to reproduce.",
      "",
-     "Not needed for reproducibility."
+     "Not run metadata."
     ]
    },
    {
     "id": "c13-7-m02",
     "q": "Why is exact bitwise reproduction often impossible on GPUs?",
     "options": [
-     "GPUs lose data",
-     "Python is not deterministic",
-     "Non-deterministic GPU operations; aim for the same metrics within tolerance",
-     "Seeds do not work"
+     "GPUs lose some data between training steps",
+     "Python itself is not a deterministic language",
+     "GPU kernels vary; aim for metrics within tolerance",
+     "Random seeds do not work at all on GPUs"
     ],
     "answer": 2,
     "why": "Pin environments and seeds, record hardware, and compare within tolerance.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
-     "Not the main reason.",
+     "They do not.",
+     "The non-determinism is in GPU kernels.",
      "",
-     "Seeds help but do not guarantee bitwise results."
+     "Seeds help; some kernels still vary."
     ]
    },
    {
     "id": "c13-7-m03",
     "q": "What does a model registry provide?",
     "options": [
-     "Training compute",
-     "A tokenizer",
-     "Immutable versions and stages such as staging and production",
-     "Annotation tools"
+     "Training compute for each team",
+     "A tokenizer for each model",
+     "Immutable versions and stages",
+     "Annotation tools for datasets"
     ],
     "answer": 2,
     "why": "Each version is traceable to its data and code.",
     "kind": "concept",
     "distractors": [
-     "Not its role.",
-     "Not its role.",
+     "A registry stores, not computes.",
+     "Unrelated.",
      "",
-     "Not its role."
+     "Unrelated."
     ]
    },
    {
@@ -1800,66 +2063,66 @@
     "id": "c13-7-m05",
     "q": "What goes in a model card?",
     "options": [
-     "Intended use, training data summary, evaluation results, limitations and licence",
-     "Only the model name",
-     "The training code",
-     "The GPU type only"
+     "Intended use, data summary, evaluation, limits, licence",
+     "Only the model's name, version and owner",
+     "The full training code and its config files",
+     "Only the GPU type and hours used for training"
     ],
     "answer": 0,
     "why": "It documents what the model is for and how it performed.",
     "kind": "concept",
     "distractors": [
      "",
-     "A name says nothing about use or limits.",
-     "Code is linked, not the card.",
-     "Hardware is a detail."
+     "Far too little.",
+     "Code lives in the repository.",
+     "Not useful to readers."
     ]
    },
    {
     "id": "c13-7-m06",
     "q": "An adapter was tested on base revision A. Can it be deployed on base revision B without re-testing?",
     "options": [
-     "No; a different base revision requires re-testing",
-     "Yes, if the names match",
+     "No: a new base needs re-testing",
+     "Yes, if the base names match",
      "Yes, adapters are portable",
-     "Only if B is newer"
+     "Only if revision B is newer"
     ],
     "answer": 0,
     "why": "The adapter's behaviour depends on the exact base weights.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Names are not revisions.",
-     "Behaviour can change.",
-     "Newer is not the same."
+     "Names can point to new weights.",
+     "They are tied to the base weights.",
+     "Newer is not tested."
     ]
    },
    {
     "id": "c13-7-m07",
     "q": "Which tools version datasets?",
     "options": [
-     "DVC, lakeFS or Hugging Face dataset revisions",
-     "Label Studio",
-     "MLflow model registry only",
-     "TRL"
+     "DVC, lakeFS or HF dataset revisions",
+     "Label Studio annotation projects",
+     "The MLflow model registry only",
+     "TRL training scripts and configs"
     ],
     "answer": 0,
     "why": "Datasets need versions as models do.",
     "kind": "concept",
     "distractors": [
      "",
-     "That labels data.",
-     "That registers models.",
-     "That trains models."
+     "Label Studio is for annotation.",
+     "MLflow registers models, not datasets.",
+     "TRL trains models."
     ]
    },
    {
     "id": "c13-7-m08",
     "q": "Why record a model by immutable revision rather than by name?",
     "options": [
-     "Registries require numbers",
-     "Names are too long",
-     "Names can point to different weights over time",
+     "Registries require numeric IDs",
+     "Names are too long to store",
+     "Names can point to new weights",
      "Revisions are faster to load"
     ],
     "answer": 2,
@@ -1867,14 +2130,14 @@
     "kind": "concept",
     "distractors": [
      "Not the reason.",
-     "Length is not the issue.",
+     "Not the reason.",
      "",
-     "Not about speed."
+     "Speed is unrelated."
     ]
    },
    {
     "id": "c13-7-m09",
-    "q": "What should happen to the previous model version after promotion?",
+    "q": "A fine-tuned model was promoted to production on Monday. On Wednesday it shows a regression. What should have happened to the previous version at promotion?",
     "options": [
      "Be renamed to the new version",
      "Be retrained",
@@ -1883,7 +2146,7 @@
     ],
     "answer": 3,
     "why": "Rollback needs the previous version (18.4).",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "That breaks lineage.",
      "Not needed.",
@@ -1895,18 +2158,56 @@
     "id": "c13-7-m10",
     "q": "Which pins the software environment of a run most precisely?",
     "options": [
-     "The OS name",
-     "The Python version",
-     "The image tag 'latest'",
-     "The container image digest"
+     "The operating system's name",
+     "The Python version number",
+     "The image tag “latest”",
+     "The image digest"
     ],
     "answer": 3,
     "why": "A digest is immutable; tags can move.",
     "kind": "concept",
     "distractors": [
+     "Far too coarse.",
      "Too coarse.",
-     "Too coarse.",
-     "Tags can be reassigned.",
+     "Tags move.",
+     ""
+    ]
+   },
+   {
+    "id": "c13-7-m11",
+    "q": "Six months after launch, an auditor asks which data trained the production model. The team only knows it is called “support-model-final”. What was missing?",
+    "options": [
+     "A larger GPU for the training run so it is easier to repeat",
+     "Keeping a copy of the training data in the model's folder",
+     "A registry of immutable versions linked to the run and dataset version",
+     "A longer and more descriptive model name with the date in it"
+    ],
+    "answer": 2,
+    "why": "Lineage traces a model version to exactly the data and code that made it.",
+    "kind": "scenario",
+    "distractors": [
+     "Hardware is unrelated to lineage.",
+     "Files without versions and links do not prove lineage.",
+     "",
+     "Names do not identify weights or data."
+    ]
+   },
+   {
+    "id": "c13-7-m12",
+    "q": "Rerunning a fine-tuning job with the same config, data and seed gives an accuracy 0.3 points different on the same test set. What does the chapter say?",
+    "options": [
+     "The seed was ignored, so seeds should be removed",
+     "The dataset must have changed silently between runs",
+     "The run is broken and must be debugged until bitwise equal",
+     "Expected: aim for the same metrics within tolerance, not bitwise equality"
+    ],
+    "answer": 3,
+    "why": "Non-deterministic GPU operations make exact reproduction hard.",
+    "kind": "scenario",
+    "distractors": [
+     "Seeds help; some kernels still vary.",
+     "A small difference is expected with fixed data.",
+     "Bitwise equality is often impossible on GPUs.",
      ""
     ]
    }
@@ -1922,7 +2223,8 @@
      "base revision",
      "config and seed",
      "environment digest"
-    ]
+    ],
+    "followUp": "Which item do teams most often forget?"
    },
    {
     "id": "c13-7-i02",
@@ -1934,7 +2236,8 @@
      "evaluation",
      "limitations",
      "licence"
-    ]
+    ],
+    "followUp": "Who writes it, and when?"
    },
    {
     "id": "c13-7-i03",
@@ -1945,7 +2248,8 @@
      "run tracking",
      "dataset versions",
      "immutable revisions"
-    ]
+    ],
+    "followUp": "What breaks the trace most often?"
    },
    {
     "id": "c13-7-i04",
@@ -1970,7 +2274,8 @@
      "gates",
      "approval",
      "canary"
-    ]
+    ],
+    "followUp": "Where does a human sign off?"
    },
    {
     "id": "c13-7-i06",
@@ -1981,7 +2286,8 @@
      "retrain if needed",
      "registry records base",
      "compatibility checks"
-    ]
+    ],
+    "followUp": "How would you detect that the base changed?"
    },
    {
     "id": "c13-7-i07",
@@ -2007,7 +2313,8 @@
      "registry with stages",
      "automated gates",
      "access control"
-    ]
+    ],
+    "followUp": "How do you control who can promote to production?"
    }
   ]
  }

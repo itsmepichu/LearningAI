@@ -132,3 +132,33 @@ def topic_text(chapter, topic):
     s = re.sub(r"</(p|li|h4|h5|div|figcaption|tr)>", "\n", s)
     s = h.unescape(re.sub(r"<[^>]+>", " ", s))
     return re.sub(r"\n\s*\n+", "\n", re.sub(r"[ \t]+", " ", s)).strip()
+
+
+REVISABLE = {"q", "options", "why", "distractors", "kind", "followUp", "covers"}
+
+
+def revise_checks(chapter, edits):
+    """Edit published questions in place, by id: {"c1-2-m03": {"options": [...], "distractors": [...]}, "c1-2-i04": {"followUp": "..."}}.
+
+    Saved answers and Practice history are keyed by id and option index, so this refuses any change that would move
+    them: the number of options stays the same and the answer is never edited. Reword options in place, keeping each
+    option's meaning (the right one stays right). Returns how many questions changed.
+    """
+    path = os.path.join(ROOT, "checks", f"{chapter}.json")
+    data = json.load(open(path, encoding="utf-8"))
+    byid = {q["id"]: q for sec in data.values() for key in ("mcq", "interview") for q in sec.get(key, [])}
+    for qid, change in edits.items():
+        assert qid in byid, f"unknown question {qid}"
+        bad = set(change) - REVISABLE
+        assert not bad, f"{qid}: cannot revise {sorted(bad)} (ids, answers and levels stay as published)"
+        q = byid[qid]
+        if "options" in change:
+            assert len(change["options"]) == len(q["options"]), f"{qid}: the number of options must not change"
+        q.update(change)
+        if "distractors" in q:
+            right = set(q["answer"] if isinstance(q["answer"], list) else [q["answer"]])
+            assert len(q["distractors"]) == len(q["options"]), f"{qid}: distractors must align with options"
+            for i, d in enumerate(q["distractors"]):
+                assert (i in right) == (d == ""), f"{qid}: distractor misaligned at option {i}"
+    json.dump(data, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return len(edits)

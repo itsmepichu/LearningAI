@@ -1,11 +1,11 @@
 {
  "totals": {
-  "mcq": 1353,
+  "mcq": 1504,
   "interview": 1080
  },
  "chapters": {
   "c1": {
-   "mcq": 60,
+   "mcq": 65,
    "interview": 48,
    "sections": {
     "c1-6": {
@@ -13,7 +13,7 @@
      "interview": 8
     },
     "c1-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c1-4": {
@@ -21,11 +21,11 @@
      "interview": 8
     },
     "c1-1": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c1-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c1-5": {
@@ -95,19 +95,19 @@
    }
   },
   "c4": {
-   "mcq": 60,
+   "mcq": 67,
    "interview": 48,
    "sections": {
     "c4-1": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c4-6": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c4-3": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c4-2": {
@@ -115,25 +115,25 @@
      "interview": 8
     },
     "c4-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c4-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
   },
   "c5": {
-   "mcq": 71,
+   "mcq": 73,
    "interview": 56,
    "sections": {
     "c5-4": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c5-2": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c5-7": {
@@ -159,11 +159,11 @@
    }
   },
   "c6": {
-   "mcq": 70,
+   "mcq": 75,
    "interview": 56,
    "sections": {
     "c6-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c6-3": {
@@ -171,15 +171,15 @@
      "interview": 8
     },
     "c6-4": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c6-2": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c6-5": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c6-6": {
@@ -193,11 +193,11 @@
    }
   },
   "c7": {
-   "mcq": 70,
+   "mcq": 74,
    "interview": 56,
    "sections": {
     "c7-7": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c7-6": {
@@ -205,11 +205,11 @@
      "interview": 8
     },
     "c7-1": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c7-2": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c7-3": {
@@ -221,7 +221,7 @@
      "interview": 8
     },
     "c7-5": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     }
    }
@@ -265,15 +265,15 @@
    }
   },
   "c9": {
-   "mcq": 70,
+   "mcq": 74,
    "interview": 56,
    "sections": {
     "c9-3": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c9-5": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c9-1": {
@@ -281,7 +281,7 @@
      "interview": 8
     },
     "c9-2": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c9-4": {
@@ -289,7 +289,7 @@
      "interview": 8
     },
     "c9-6": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c9-7": {
@@ -299,19 +299,19 @@
    }
   },
   "c10": {
-   "mcq": 90,
+   "mcq": 100,
    "interview": 72,
    "sections": {
     "c10-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c10-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c10-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c10-1": {
@@ -323,11 +323,11 @@
      "interview": 8
     },
     "c10-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c10-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c10-8": {
@@ -341,73 +341,73 @@
    }
   },
   "c11": {
-   "mcq": 80,
+   "mcq": 95,
    "interview": 64,
    "sections": {
     "c11-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-4": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c11-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c11-8": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
   },
   "c12": {
-   "mcq": 80,
+   "mcq": 91,
    "interview": 64,
    "sections": {
     "c12-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c12-6": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c12-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c12-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c12-3": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c12-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c12-5": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c12-8": {
@@ -417,53 +417,53 @@
    }
   },
   "c13": {
-   "mcq": 70,
+   "mcq": 83,
    "interview": 56,
    "sections": {
     "c13-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c13-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c13-6": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c13-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c13-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c13-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c13-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
   },
   "c14": {
-   "mcq": 80,
+   "mcq": 91,
    "interview": 64,
    "sections": {
     "c14-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c14-3": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c14-5": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c14-1": {
@@ -471,121 +471,121 @@
      "interview": 8
     },
     "c14-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c14-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c14-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c14-8": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     }
    }
   },
   "c15": {
-   "mcq": 100,
+   "mcq": 117,
    "interview": 80,
    "sections": {
     "c15-1": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c15-9": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c15-2": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c15-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c15-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c15-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c15-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c15-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c15-8": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c15-10": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
   },
   "c16": {
-   "mcq": 80,
+   "mcq": 96,
    "interview": 64,
    "sections": {
     "c16-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c16-8": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
   },
   "c17": {
-   "mcq": 100,
+   "mcq": 118,
    "interview": 80,
    "sections": {
     "c17-1": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-8": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-2": {
@@ -593,61 +593,61 @@
      "interview": 8
     },
     "c17-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-9": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c17-10": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }
   },
   "c18": {
-   "mcq": 71,
+   "mcq": 84,
    "interview": 56,
    "sections": {
     "c18-1": {
-     "mcq": 11,
+     "mcq": 12,
      "interview": 8
     },
     "c18-4": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c18-3": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c18-2": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c18-5": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c18-6": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     },
     "c18-7": {
-     "mcq": 10,
+     "mcq": 12,
      "interview": 8
     }
    }

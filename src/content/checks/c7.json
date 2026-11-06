@@ -5,102 +5,114 @@
     "id": "c7-7-m01",
     "q": "The model proposes refund(order_id, amount). What decides the amount?",
     "options": [
-     "The model",
+     "The model, from what it read in the order",
      "Deterministic code from the order record and policy",
-     "The user's message",
-     "The prompt"
+     "The amount the user asks for in the message",
+     "The refund rules written into the prompt"
     ],
     "answer": 1,
     "why": "The model proposes; code computes amounts and enforces limits.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "The model proposes; it must not compute money.",
+     "",
+     "Users can ask for anything; the record and policy decide.",
+     "Prompted rules are applied probabilistically."
+    ]
    },
    {
     "id": "c7-7-m02",
     "q": "Where should a tenant ID for a tool call come from?",
     "options": [
-     "The model's arguments",
+     "The tenant ID in the model's call arguments",
      "The authenticated session",
      "The retrieved document",
-     "The system prompt"
+     "The tenant named in the system prompt text"
     ],
     "answer": 1,
     "why": "Identity and tenant come from trusted context, never from model output.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "The model can be wrong or manipulated; never trust it for identity.",
+     "",
+     "A retrieved document is data, and could even be planted.",
+     "Prompts are not an authorisation mechanism."
+    ]
    },
    {
     "id": "c7-7-m03",
     "q": "What is the core pattern for combining a model with business rules?",
     "options": [
-     "The model interprets and proposes; deterministic code validates, decides and executes",
-     "Rules are written into the prompt",
-     "The model decides everything",
-     "Code only formats the output"
+     "The model interprets and proposes; code validates, decides, executes",
+     "Rules are written into the prompt, which the model follows exactly",
+     "The model decides everything, and code just records the result",
+     "Code only formats the output after the model has decided"
     ],
     "answer": 0,
     "why": "Rules must be exact, auditable and identical every time.",
     "kind": "concept",
     "distractors": [
      "",
-     "Prompted rules are applied inconsistently.",
-     "Model output is a suggestion from a distribution.",
-     "Code makes the decisions."
+     "Prompted rules are probabilistic, not exact.",
+     "Decisions with exact rules belong in code.",
+     "Code must validate and decide, not just format."
     ]
    },
    {
     "id": "c7-7-m04",
     "q": "Which jobs suit the model?",
     "options": [
-     "Enforcing permissions",
-     "Understanding intent, extracting fields, drafting wording, ranking options",
-     "Choosing workflow state transitions",
-     "Computing refund amounts"
+     "Enforcing permissions on every tool call",
+     "Intent, field extraction, wording, ranking",
+     "Choosing the next workflow state transition",
+     "Computing refund amounts from the policy"
     ],
     "answer": 1,
     "why": "Fuzzy tasks go to the model; exact ones to code.",
     "kind": "concept",
     "distractors": [
-     "Permissions must be enforced in code.",
+     "Permissions must be exact: code.",
      "",
-     "State transitions are deterministic logic.",
-     "Amounts must be exact."
+     "State transitions must be deterministic: code.",
+     "Money must be exact: code."
     ]
    },
    {
     "id": "c7-7-m05",
     "q": "Which jobs belong in code?",
     "options": [
-     "Drafting a friendly reply",
-     "Amounts, limits, permissions, state transitions and legal text",
-     "Ranking search results by relevance",
-     "Understanding a free-text request"
+     "Drafting a friendly reply to the customer",
+     "Amounts, limits, permissions, state, legal text",
+     "Ranking search results by their relevance",
+     "Understanding what a free-text request means"
     ],
     "answer": 1,
     "why": "These must be exact and auditable.",
     "kind": "concept",
     "distractors": [
-     "Drafting is fuzzy.",
+     "Wording is fuzzy work the model does well.",
      "",
-     "Ranking can use models.",
-     "Interpretation is fuzzy."
+     "Ranking is a model strength.",
+     "Understanding intent is the model's job."
     ]
    },
    {
     "id": "c7-7-m06",
     "q": "A prompt says “apply a 10% discount for customers over 2 years, max $500”. In production some customers get 15%. What is the fix?",
     "options": [
-     "Move the rule into code; the model only extracts that the customer requests a discount",
-     "Make the prompt longer",
-     "Add “please be careful”",
-     "Use a higher temperature"
+     "Move the rule into code; the model only extracts the request",
+     "Make the prompt longer, spelling out every edge case",
+     "Add “please be careful with discounts” to the prompt",
+     "Use a higher temperature so the outputs vary less"
     ],
     "answer": 0,
     "why": "Exact, testable and auditable behaviour needs code.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Prompted rules stay probabilistic.",
-     "Instructions do not make rules exact.",
-     "That makes it worse."
+     "More words still leave the rule probabilistic.",
+     "Pleading does not make sampling exact.",
+     "Higher temperature makes outputs vary more."
     ]
    },
    {
@@ -126,18 +138,18 @@
     "id": "c7-7-m08",
     "q": "What should the boundary between model and rules look like?",
     "options": [
-     "Hidden inside the prompt",
-     "Free text passed to the database",
-     "Decided by the user",
-     "A typed proposal that code accepts, modifies or rejects, with the reason logged"
+     "Hidden inside the prompt, so the model applies it",
+     "Free text passed straight to the database",
+     "Decided by the user each time they ask",
+     "A typed proposal that code accepts or rejects, logging why"
     ],
     "answer": 3,
     "why": "Explicit boundaries make behaviour auditable.",
     "kind": "concept",
     "distractors": [
-     "Prompts are not enforcement.",
-     "Free text is not safe to act on.",
-     "Code enforces policy.",
+     "A prompt is not an enforceable boundary.",
+     "Free text cannot be validated reliably.",
+     "Users cannot be the authority on rules.",
      ""
     ]
    },
@@ -145,19 +157,19 @@
     "id": "c7-7-m09",
     "q": "The model extracts “2 seats” when the account has 5. What catches it?",
     "options": [
-     "Validation against the account record",
-     "The model's confidence",
-     "A longer prompt",
-     "Nothing can catch it"
+     "Checking against the account record",
+     "The model's own confidence score",
+     "A longer, more detailed prompt",
+     "Nothing; extraction errors are unavoidable"
     ],
     "answer": 0,
     "why": "Check extracted values against systems of record.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Confidence is not validation.",
-     "Prompt length does not validate.",
-     "Validation can."
+     "Confidence does not track correctness.",
+     "Prompts cannot check facts.",
+     "Validation against records catches them."
     ]
    },
    {
@@ -167,16 +179,35 @@
      "Outlines",
      "LiteLLM",
      "DSPy",
-     "MLflow"
+     "MLflow Tracking"
     ],
     "answer": 0,
     "why": "Instructor, by contrast, validates and re-asks on failure.",
     "kind": "concept",
     "distractors": [
      "",
-     "LiteLLM is a unified API and gateway.",
-     "DSPy optimises prompts against a metric.",
-     "MLflow tracks experiments."
+     "LiteLLM is a gateway across providers; it does not mask tokens.",
+     "DSPy optimises prompts and pipelines; it does not constrain decoding.",
+     "MLflow tracks experiments and models."
+    ]
+   },
+   {
+    "id": "c7-7-m11",
+    "q": "A model-written reply says “Your refund of ₹2,400 has been processed”, but the refund API call failed. Which design rule was broken?",
+    "options": [
+     "The model should have computed the amount more carefully",
+     "The prompt should have told the model to be accurate",
+     "The temperature was too high for a financial message",
+     "Users must see the outcome read from the system, not the model's claim"
+    ],
+    "answer": 3,
+    "why": "The model should explain the real result returned by the refund service, which was a failure.",
+    "kind": "scenario",
+    "distractors": [
+     "The amount is not the problem; the action failed.",
+     "A prompt cannot make the model know the API's result.",
+     "Sampling settings cannot reveal a failed call.",
+     ""
     ]
    }
   ],
@@ -190,7 +221,8 @@
      "Code for exact rules",
      "Typed proposals",
      "Logged decisions"
-    ]
+    ],
+    "followUp": "Give an example where the model's proposal must be modified, not just accepted or rejected."
    },
    {
     "id": "c7-7-i02",
@@ -201,7 +233,8 @@
      "Code: eligibility, amount, cap",
      "API enforces the cap again",
      "Model explains the real result"
-    ]
+    ],
+    "followUp": "The customer disputes the amount. What do you show them, and from where?"
    },
    {
     "id": "c7-7-i03",
@@ -212,7 +245,8 @@
      "Persuasion and edge cases",
      "Hard to test exhaustively",
      "No audit trail of the rule"
-    ]
+    ],
+    "followUp": "The rule works in every test. Why is that still not enough?"
    },
    {
     "id": "c7-7-i04",
@@ -236,7 +270,8 @@
      "Never trust model claims of success",
      "Handle partial failures",
      "Confirmations from records"
-    ]
+    ],
+    "followUp": "The action partly succeeded. What does the user see?"
    },
    {
     "id": "c7-7-i06",
@@ -249,7 +284,8 @@
      "Decision log with rule version",
      "Human review for exceptions"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "How would you show an auditor why a specific waiver was granted?"
    },
    {
     "id": "c7-7-i07",
@@ -261,7 +297,8 @@
      "Deterministic decision services",
      "Execution with results checked",
      "Audit and evaluation"
-    ]
+    ],
+    "followUp": "How would you test the boundary?"
    },
    {
     "id": "c7-7-i08",
@@ -274,7 +311,8 @@
      "Model explains",
      "Traveller confirms before any charge"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "The supplier's fee differs from your computed fee. Which wins, and what does the traveller see?"
    }
   ]
  },
@@ -284,32 +322,38 @@
     "id": "c7-6-m01",
     "q": "Which errors are worth retrying?",
     "options": [
-     "400 Bad Request",
-     "429 and 5xx with backoff and jitter",
-     "Schema validation failures",
-     "All errors immediately"
+     "400 Bad Request, after a short pause",
+     "429 and 5xx, with backoff and jitter",
+     "Schema validation failures on the output",
+     "All errors, immediately and as often as needed"
     ],
     "answer": 1,
     "why": "Rate limits and transient server errors can succeed later; a 400 is your bug.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "The request is malformed; retrying repeats the failure.",
+     "",
+     "Retrying may help once, but it is a validation issue, not a transient error.",
+     "Blind immediate retries amplify load."
+    ]
    },
    {
     "id": "c7-6-m02",
     "q": "Which timeouts should an LLM call have?",
     "options": [
-     "Only a timeout on the response body size",
-     "A connect timeout, a total deadline and, for streaming, an idle timeout between tokens",
-     "None",
-     "Only a connect timeout"
+     "Only a limit on the size of the response body",
+     "Connect, total deadline, and an idle timeout for streams",
+     "None, since the provider manages its own timeouts",
+     "Only a connect timeout on the first request"
     ],
     "answer": 1,
     "why": "LLM latency has a long tail; without deadlines, connections pile up.",
     "kind": "concept",
     "distractors": [
-     "Size is not time.",
+     "Size limits do not bound time.",
      "",
-     "Calls can hang.",
-     "Not enough on its own."
+     "Without your own timeouts, calls can hang.",
+     "A slow response can still hang after connecting."
     ]
    },
    {
@@ -335,18 +379,18 @@
     "id": "c7-6-m04",
     "q": "Why add jitter to retries?",
     "options": [
-     "To make retries faster",
-     "To reduce the number of attempts",
-     "To change the error code",
-     "To spread retries out so clients do not retry in synchronised spikes"
+     "To make each retry happen sooner",
+     "To reduce the number of attempts allowed",
+     "To change the error code the server returns",
+     "To spread retries so clients do not spike together"
     ],
     "answer": 3,
     "why": "Synchronised retries can knock a recovering service over again.",
     "kind": "concept",
     "distractors": [
-     "It randomises timing, not speed.",
-     "Attempt caps are separate.",
-     "Unrelated.",
+     "Jitter adds random delay.",
+     "The retry cap does that.",
+     "Clients cannot change error codes.",
      ""
     ]
    },
@@ -354,57 +398,57 @@
     "id": "c7-6-m05",
     "q": "A provider returns 429 with a Retry-After header. What should the client do?",
     "options": [
-     "Retry immediately",
-     "Wait at least the time it asks for",
-     "Ignore the header",
-     "Switch off retries forever"
+     "Retry immediately, before others do",
+     "Wait at least as long as it asks",
+     "Ignore the header and use a fixed delay",
+     "Switch off retries for that provider forever"
     ],
     "answer": 1,
     "why": "Respect the server's guidance.",
     "kind": "scenario",
     "distractors": [
-     "Immediate retries worsen rate limiting.",
+     "That ignores the server's request and adds load.",
      "",
-     "It carries the server's request.",
-     "Retries are still useful."
+     "The header tells you when capacity returns.",
+     "429 is temporary."
     ]
    },
    {
     "id": "c7-6-m06",
     "q": "What is a client-side token bucket for?",
     "options": [
-     "Tracking request and token rate limits so you queue rather than get rejected",
-     "Caching answers",
-     "Counting users",
-     "Storing API keys"
+     "Tracking rate limits, so you queue instead of being rejected",
+     "Caching answers to repeated questions to save tokens",
+     "Counting the number of active users in each region",
+     "Storing the API keys for each provider securely"
     ],
     "answer": 0,
     "why": "Providers limit requests and tokens per minute.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "Unrelated.",
-     "Unrelated."
+     "That is a response cache.",
+     "Users are not what the limits count.",
+     "Keys belong in a secret store."
     ]
    },
    {
     "id": "c7-6-m07",
     "q": "Why must fallback models be evaluated too?",
     "options": [
-     "Their output quality and format may differ",
-     "They are never used",
-     "They are always better",
-     "They need no prompts"
+     "Their quality and format may differ",
+     "They are never used in practice",
+     "They are always better than the primary",
+     "They need no prompts of their own"
     ],
     "answer": 0,
     "why": "A fallback that breaks the format causes new failures.",
     "kind": "concept",
     "distractors": [
      "",
-     "They are used in incidents.",
-     "Usually cheaper or weaker.",
-     "They need prompts."
+     "Outages make them run in production.",
+     "They are often weaker or different.",
+     "Prompts may need adapting per model."
     ]
    },
    {
@@ -434,18 +478,18 @@
     "id": "c7-6-m09",
     "q": "Retrying without a retry budget or admission control during a slowdown tends to…",
     "options": [
-     "Fix the slowdown",
-     "Reduce load",
-     "Have no effect",
-     "Turn the slowdown into an outage"
+     "Fix the slowdown by sending more requests",
+     "Reduce the load on the struggling service",
+     "Have no effect on the provider's health",
+     "Turn a slowdown into an outage"
     ],
     "answer": 3,
     "why": "Retries add load exactly when capacity is short.",
     "kind": "scenario",
     "distractors": [
-     "They add load.",
-     "They increase it.",
-     "They add load.",
+     "More requests add load to a struggling service.",
+     "Retries add load.",
+     "Retries multiply traffic.",
      ""
     ]
    },
@@ -455,17 +499,17 @@
     "options": [
      "Up to 400",
      "Up to 6,000",
-     "Up to 1,200 requests per second",
+     "Up to 1,200",
      "Up to 600"
     ],
     "answer": 2,
     "why": "400 failures × 3 retries = 1,200 more requests per second at worst.",
     "kind": "calculation",
     "distractors": [
-     "That counts one retry each.",
-     "That retries every request.",
+     "That is the failures only, retried once.",
+     "That multiplies all requests by 3, not just the failures.",
      "",
-     "That is 30%."
+     "That is three retries for 10% of traffic; 20% of 2,000 is 400 failures, × 3 = 1,200."
     ]
    }
   ],
@@ -479,7 +523,8 @@
      "Exponential backoff with jitter",
      "Respect Retry-After",
      "Cap attempts and total time"
-    ]
+    ],
+    "followUp": "A 500 came back from a call that charges money. Do you retry?"
    },
    {
     "id": "c7-6-i02",
@@ -490,7 +535,8 @@
      "Total deadline",
      "Streaming idle",
      "Why the long tail matters"
-    ]
+    ],
+    "followUp": "How would you choose the values for each?"
    },
    {
     "id": "c7-6-i03",
@@ -500,7 +546,8 @@
      "Synchronised retries spike load",
      "Jitter spreads them",
      "Protects recovering services"
-    ]
+    ],
+    "followUp": "How would you pick the jitter range?"
    },
    {
     "id": "c7-6-i04",
@@ -525,7 +572,8 @@
      "Fallback for simple requests",
      "Raise limits with the provider",
      "Do not raise retry counts"
-    ]
+    ],
+    "followUp": "The provider will not raise your limits. What next?"
    },
    {
     "id": "c7-6-i06",
@@ -537,7 +585,8 @@
      "Retry only if not applied",
      "Alert if uncertain"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "The status check also times out. What do you do?"
    },
    {
     "id": "c7-6-i07",
@@ -549,7 +598,8 @@
      "Graceful messages",
      "Circuit breakers (15.6)",
      "Retry budgets"
-    ]
+    ],
+    "followUp": "How would you test the fallback before a real outage?"
    },
    {
     "id": "c7-6-i08",
@@ -562,7 +612,8 @@
      "Load shedding for low-priority requests",
      "Dashboards and alerts"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "Which requests would you shed first, and why?"
    }
   ]
  },
@@ -572,37 +623,37 @@
     "id": "c7-1-m01",
     "q": "How does the cost shape of a hosted API differ from self-hosting?",
     "options": [
-     "Hosted is per token and scales to zero; self-hosted is per GPU-hour and cheap only at high, steady utilisation",
-     "Hosted is always cheaper",
-     "They cost the same",
-     "Self-hosted is always cheaper"
+     "Hosted: per token, scales to zero. Self-hosted: per GPU-hour, cheap only if busy",
+     "Hosted is always cheaper, whatever the volume or utilisation",
+     "They cost about the same once a team is running at a large scale",
+     "Self-hosted is always cheaper, since there is no per-token fee to pay"
     ],
     "answer": 0,
     "why": "Idle GPUs still cost money; hosted APIs charge only for use (14.8).",
     "kind": "concept",
     "distractors": [
      "",
-     "At very high steady volume self-hosting can win.",
-     "Their cost structures differ.",
-     "At low or spiky volume it usually loses."
+     "At high, steady volume self-hosting can be cheaper.",
+     "Their cost shapes differ fundamentally.",
+     "Idle GPUs still cost money."
     ]
    },
    {
     "id": "c7-1-m02",
     "q": "Which option gives full control over data, including air-gapped operation?",
     "options": [
-     "Any hosted API by default",
-     "Prompt caching",
-     "Public leaderboards",
+     "Any hosted API with its default settings",
+     "Prompt caching on a hosted provider",
+     "Public leaderboards for open models",
      "Self-hosting open-weight models"
     ],
     "answer": 3,
     "why": "Hosted data control depends on contract, region and retention settings.",
     "kind": "concept",
     "distractors": [
-     "It depends on the contract.",
-     "Unrelated.",
-     "Unrelated.",
+     "Data control depends on contract, region and retention.",
+     "Caching is a cost feature, not data control.",
+     "Leaderboards rank models; they host nothing.",
      ""
     ]
    },
@@ -610,16 +661,16 @@
     "id": "c7-1-m03",
     "q": "Why are public leaderboards a weak basis for choosing a model?",
     "options": [
-     "They only test speed",
-     "They are private",
-     "They measure general skills on public data, which may be contaminated and rarely matches your task",
-     "They are always wrong"
+     "They only measure speed and latency, not answer quality",
+     "They are private, so their results cannot be checked",
+     "General skills on public, possibly contaminated data",
+     "They are always wrong about how models really rank"
     ],
     "answer": 2,
     "why": "Build a task-specific evaluation set instead.",
     "kind": "concept",
     "distractors": [
-     "They measure quality.",
+     "They measure many skills.",
      "They are public.",
      "",
      "They are informative, just not about your task."
@@ -629,19 +680,19 @@
     "id": "c7-1-m04",
     "q": "How large should a first task-specific evaluation set be, according to the topic?",
     "options": [
-     "At least 100,000 examples",
-     "About 50–200 real examples with expected outcomes",
-     "Only synthetic examples",
-     "One example"
+     "At least 100,000 labelled examples",
+     "About 50–200 real examples with outcomes",
+     "Only synthetic examples from a model",
+     "One example per category is enough"
     ],
     "answer": 1,
     "why": "Small enough to build quickly, large enough to compare 3–5 candidates.",
     "kind": "concept",
     "distractors": [
-     "Far more than needed to start.",
+     "That is far more than a first set needs.",
      "",
-     "Real examples are the point.",
-     "Far too few."
+     "Real examples show your real task.",
+     "Too few to measure anything."
     ]
    },
    {
@@ -668,36 +719,36 @@
     "q": "What should a model comparison measure together?",
     "options": [
      "Quality, latency and cost",
-     "Only quality",
-     "Only cost",
-     "Only the context length"
+     "Only answer quality, on the test set",
+     "Only the cost per million tokens",
+     "Only the advertised context length"
     ],
     "answer": 0,
     "why": "A model that is accurate but too slow or expensive fails the product.",
     "kind": "concept",
     "distractors": [
      "",
-     "Latency and cost matter too.",
-     "Quality must meet the bar.",
-     "An advertised length is not evidence."
+     "Cost and latency decide feasibility.",
+     "A cheap model may fail the task.",
+     "Context length alone says little."
     ]
    },
    {
     "id": "c7-1-m07",
     "q": "150 tickets are labelled by two people, and the 140 they agree on are kept with a short scoring script. What does this become?",
     "options": [
-     "Production traffic",
-     "A leaderboard submission",
-     "A training set for pretraining",
-     "Your baseline, model-selection tool and first regression test"
+     "Production traffic for the new model",
+     "A submission to a public leaderboard",
+     "A training set for pretraining a model",
+     "Baseline, selection tool and first regression test"
     ],
     "answer": 3,
     "why": "Chapter 8 grows it into a full evaluation practice.",
     "kind": "scenario",
     "distractors": [
-     "It is an offline set.",
-     "It is private and task-specific.",
-     "Far too small and the wrong purpose.",
+     "It is a curated test set, not live traffic.",
+     "It is internal and task-specific.",
+     "140 examples are for evaluation.",
      ""
     ]
    },
@@ -705,38 +756,38 @@
     "id": "c7-1-m08",
     "q": "Which is an operational risk specific to hosted APIs?",
     "options": [
-     "Your own capacity planning",
-     "GPU failures in your data centre",
-     "Provider outages, rate limits and model deprecations",
-     "Driver updates on your servers"
+     "Your own capacity planning and on-call",
+     "GPU failures in your own data centre",
+     "Outages, rate limits and deprecations",
+     "Driver updates on your own servers"
     ],
     "answer": 2,
     "why": "Self-hosting swaps these for your own on-call and capacity work.",
     "kind": "concept",
     "distractors": [
-     "That is a self-hosting task.",
-     "That is a self-hosting risk.",
+     "Those are self-hosting risks.",
+     "Self-hosting risk.",
      "",
-     "That is a self-hosting task."
+     "Self-hosting risk."
     ]
    },
    {
     "id": "c7-1-m09",
     "q": "A team picks a model because it advertises a 1M-token context. What is wrong?",
     "options": [
-     "Nothing",
-     "An advertised capability is not task evidence; measure on your own cases",
-     "Long contexts are always used well",
-     "Context length decides cost alone"
+     "Nothing; long context means better answers",
+     "An advertised feature is not evidence; test it",
+     "Long contexts are always used well by models",
+     "Context length alone decides the model's cost"
     ],
     "answer": 1,
     "why": "Choose with your own data (5.3, 5.7).",
     "kind": "scenario",
     "distractors": [
-     "It skips measurement.",
+     "Advertised length is not evidence of quality.",
      "",
-     "They often are not.",
-     "Cost depends on tokens used."
+     "Middle positions are often used less reliably.",
+     "Cost depends on tokens used and price."
     ]
    },
    {
@@ -757,6 +808,25 @@
      "",
      "Too narrow."
     ]
+   },
+   {
+    "id": "c7-1-m11",
+    "q": "Three models pass a ticket task's acceptance bar of 90% accuracy: A scores 96% at $12 per 1,000 tickets, B 92% at $3, and C 90.5% at $1.50 with latency above target. Which should you choose?",
+    "options": [
+     "None: no model reached 100% on the evaluation set",
+     "C: it is the cheapest of the three that passes on accuracy",
+     "A: it scores highest, so it is the safest choice",
+     "B: the cheapest that meets both the quality bar and the latency target"
+    ],
+    "answer": 3,
+    "why": "C fails the latency target, and A costs four times B for accuracy the bar does not need.",
+    "kind": "calculation",
+    "distractors": [
+     "The bar is 90%, not perfection.",
+     "It misses the latency target, which is part of the bar.",
+     "The rule is the cheapest model that meets the bar, not the best scorer.",
+     ""
+    ]
    }
   ],
   "interview": [
@@ -770,7 +840,8 @@
      "Cost shape",
      "Data control",
      "Customisation and operational risk"
-    ]
+    ],
+    "followUp": "Which would you choose for a pilot, and when would you revisit that choice?"
    },
    {
     "id": "c7-1-i02",
@@ -781,7 +852,8 @@
      "Possible contamination",
      "Your task differs",
      "Use your own evaluation set"
-    ]
+    ],
+    "followUp": "A new model tops the leaderboard. What do you do?"
    },
    {
     "id": "c7-1-i03",
@@ -792,7 +864,8 @@
      "Measure quality, latency, cost",
      "Pick the cheapest passing option",
      "Revisit as prices change"
-    ]
+    ],
+    "followUp": "How do you set the bar without bias towards a favourite model?"
    },
    {
     "id": "c7-1-i04",
@@ -815,7 +888,8 @@
      "Self-hosting where data is sensitive",
      "Split features by data sensitivity",
      "Evaluate both paths"
-    ]
+    ],
+    "followUp": "The best model is only available in another region. What are your options?"
    },
    {
     "id": "c7-1-i06",
@@ -828,7 +902,8 @@
      "A routing mix: mid-size default, frontier for escalation",
      "Re-run when prices change"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "Tamil quality is below the bar on every affordable model. What do you do?"
    },
    {
     "id": "c7-1-i07",
@@ -840,7 +915,8 @@
      "Quality, latency, cost per feature",
      "Decision rule and sign-off",
      "Rollout through gates (18.3)"
-    ]
+    ],
+    "followUp": "A new model is released mid-quarter. Do you wait?"
    },
    {
     "id": "c7-1-i08",
@@ -852,7 +928,8 @@
      "Cost per completed booking",
      "Fallbacks and their evaluation"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "How would you measure cost per completed booking?"
    }
   ]
  },
@@ -862,55 +939,55 @@
     "id": "c7-2-m01",
     "q": "Which message roles does a typical chat API use?",
     "options": [
-     "Query and key",
-     "Admin, guest and bot",
-     "System, user, assistant and tool",
-     "Input and output only"
+     "Query, key and value roles",
+     "Admin, guest and bot roles",
+     "System, user, assistant, tool",
+     "Input and output messages only"
     ],
     "answer": 2,
     "why": "System holds the developer's persistent instructions; tool holds results of tool calls.",
     "kind": "concept",
     "distractors": [
-     "Those are attention vectors.",
-     "Not the API's roles.",
+     "Those are attention vectors, not message roles.",
+     "Not the standard roles.",
      "",
-     "Too coarse."
+     "Chat APIs have more roles."
     ]
    },
    {
     "id": "c7-2-m02",
     "q": "Why put the stable parts of a prompt first?",
     "options": [
-     "It reduces the vocabulary",
-     "They can be prompt-cached, and variable parts go last",
-     "It is required by JSON",
-     "Models ignore the end of prompts"
+     "It reduces the vocabulary the model uses",
+     "Stable parts can be prompt-cached",
+     "It is required by the JSON message format",
+     "Models ignore the end of long prompts"
     ],
     "answer": 1,
     "why": "A stable prefix can be reused across requests (14.3).",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
+     "Order does not change the vocabulary.",
      "",
-     "Unrelated.",
-     "Models read the whole prompt."
+     "JSON does not care about order.",
+     "The end is often read well; the input goes last."
     ]
    },
    {
     "id": "c7-2-m03",
     "q": "Why delimit retrieved context clearly, for example with XML-style tags?",
     "options": [
-     "To speed up decoding",
+     "To speed up decoding of the answer",
      "Because models cannot read plain text",
-     "So the model can tell data from instructions, which also matters for security",
-     "To make the prompt shorter"
+     "To separate data from instructions, for safety",
+     "To make the prompt shorter overall"
     ],
     "answer": 2,
     "why": "It helps against instructions hidden in documents (16.2).",
     "kind": "concept",
     "distractors": [
-     "No speed effect.",
-     "They read plain text.",
+     "Tags do not make decoding faster.",
+     "They can; tags mark what is data.",
      "",
      "Tags add a few tokens."
     ]
@@ -919,18 +996,18 @@
     "id": "c7-2-m04",
     "q": "How many few-shot examples does the topic suggest, and what kind?",
     "options": [
-     "Exactly one",
-     "50 identical examples",
-     "None, ever",
-     "2–5 diverse input→output pairs showing format and edge cases"
+     "Exactly one example of the output",
+     "50 near-identical examples",
+     "None ever, since they confuse models",
+     "2–5 diverse pairs with edge cases"
     ],
     "answer": 3,
     "why": "Examples are strong signals; diversity stops the model copying surface details.",
     "kind": "concept",
     "distractors": [
      "One example invites copying.",
-     "Identical examples teach surface features.",
-     "Examples help format and edge cases.",
+     "Identical examples teach surface details.",
+     "Few-shot examples are strong signals.",
      ""
     ]
    },
@@ -938,37 +1015,37 @@
     "id": "c7-2-m05",
     "q": "All your few-shot examples use the same customer name and product. What risk does this create?",
     "options": [
-     "The prompt becomes invalid",
-     "The model copies those surface details into unrelated answers",
-     "Nothing",
-     "The model refuses to answer"
+     "The prompt becomes invalid and is rejected",
+     "The model copies those details into other answers",
+     "Nothing, as long as the format is correct",
+     "The model refuses to answer other customers"
     ],
     "answer": 1,
     "why": "Vary the examples' surface features.",
     "kind": "scenario",
     "distractors": [
-     "It is valid.",
+     "The API accepts it.",
      "",
-     "It biases outputs.",
-     "It still answers."
+     "Examples are strong signals, including details.",
+     "It answers, but leaks the details."
     ]
    },
    {
     "id": "c7-2-m06",
     "q": "How should instructions be written?",
     "options": [
-     "Only as prohibitions",
-     "As vague as possible",
-     "In capital letters",
-     "Specific and positive, with the reason when it helps the model generalise"
+     "Only as prohibitions of what not to do",
+     "As vague as possible to allow flexibility",
+     "In capital letters to stress importance",
+     "Specific and positive, with reasons where useful"
     ],
     "answer": 3,
     "why": "For example: “answer in under 80 words”.",
     "kind": "concept",
     "distractors": [
-     "Positive instructions work better than lists of don'ts.",
+     "Positive instructions work better.",
      "Vague instructions give vague behaviour.",
-     "Shouting is not structure.",
+     "Capitals are not a substitute for clarity.",
      ""
     ]
    },
@@ -976,18 +1053,18 @@
     "id": "c7-2-m07",
     "q": "What does prompt versioning involve?",
     "options": [
-     "Saving prompts in a chat history",
-     "Changing prompts directly in production",
-     "Using the newest model",
-     "An ID and version, review, evaluation on every change, and the version logged with each request"
+     "Saving every prompt in the chat history of the session",
+     "Editing prompts directly in production when issues appear",
+     "Always switching to the newest model version on release",
+     "ID and version, review, evals, and the version logged per request"
     ],
     "answer": 3,
     "why": "Treat prompts as code (18.1).",
     "kind": "concept",
     "distractors": [
-     "Not versioned or reviewed.",
-     "No trace or review.",
-     "Unrelated.",
+     "History is not versioned or reviewed.",
+     "Unreviewed edits cause untraceable regressions.",
+     "Model choice is separate.",
      ""
     ]
    },
@@ -995,19 +1072,19 @@
     "id": "c7-2-m08",
     "q": "A team keeps adding instructions without re-running the regression suite. What tends to happen?",
     "options": [
-     "New rules conflict with old ones, and regressions go unnoticed",
-     "Nothing",
-     "Quality always rises",
-     "The prompt gets cheaper"
+     "Rules conflict and regressions go unnoticed",
+     "Nothing, as long as each rule is clear",
+     "Quality always rises with more rules",
+     "The prompt gets cheaper with each rule"
     ],
     "answer": 0,
     "why": "Every change needs the evaluation set.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Behaviour changes.",
-     "Not without measuring.",
-     "Longer prompts cost more."
+     "Rules interact; untested changes regress.",
+     "More rules often conflict.",
+     "More tokens cost more."
     ]
    },
    {
@@ -1033,19 +1110,38 @@
     "id": "c7-2-m10",
     "q": "A customer complains about one specific answer. What lets you trace exactly which instructions produced it?",
     "options": [
-     "The model's name alone",
-     "The prompt version logged with that request",
-     "The current prompt in the repository",
-     "The user's browser"
+     "The model's name alone, from the logs",
+     "The prompt version logged with the request",
+     "The prompt currently in the repository",
+     "The user's browser history for that day"
     ],
     "answer": 1,
     "why": "The current prompt may have changed since then.",
     "kind": "scenario",
     "distractors": [
-     "The model alone does not identify the prompt.",
+     "The prompt may have changed since.",
      "",
-     "It may differ from what was used.",
-     "Unrelated."
+     "The current prompt may differ from what ran.",
+     "The browser has no prompt."
+    ]
+   },
+   {
+    "id": "c7-2-m11",
+    "q": "A support prompt says “Do not mention competitors”, and the model keeps naming them when asked for comparisons. Which rewrite follows the topic's advice?",
+    "options": [
+     "“Compare only our plans; if asked about others, say you can help with ours”",
+     "“NEVER, EVER mention competitors under any circumstances”",
+     "“Avoid anything that might be a problem for the business”",
+     "Remove the instruction and rely on the model's judgement"
+    ],
+    "answer": 0,
+    "why": "Specific, positive instructions with a clear alternative generalise better than bare prohibitions.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Capitals and repetition do not add clarity.",
+     "Vague instructions give vague behaviour.",
+     "That gives no guidance at all."
     ]
    }
   ],
@@ -1060,7 +1156,8 @@
      "Delimited context",
      "Examples",
      "Output format, input last"
-    ]
+    ],
+    "followUp": "Which part would you change first if outputs had the wrong format?"
    },
    {
     "id": "c7-2-i02",
@@ -1071,7 +1168,8 @@
      "Strong signal",
      "Copying surface details",
      "Keep them diverse"
-    ]
+    ],
+    "followUp": "Your examples all show short answers. What happens on long questions?"
    },
    {
     "id": "c7-2-i03",
@@ -1082,7 +1180,8 @@
      "Evaluation on every change",
      "Traceability per request",
      "Changelogs linked to cases"
-    ]
+    ],
+    "followUp": "What goes into a prompt changelog entry?"
    },
    {
     "id": "c7-2-i04",
@@ -1105,7 +1204,8 @@
      "State that they are not instructions",
      "Never rely on the prompt alone (16.2)",
      "Validate actions in code"
-    ]
+    ],
+    "followUp": "Why is delimiting not enough on its own?"
    },
    {
     "id": "c7-2-i06",
@@ -1118,7 +1218,8 @@
      "Version logged per message",
      "Rollback by version"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "Compliance wants to approve faster. What can you automate without losing control?"
    },
    {
     "id": "c7-2-i07",
@@ -1130,7 +1231,8 @@
      "Evaluation suites per prompt",
      "Version logged with each request",
      "Staged rollout"
-    ]
+    ],
+    "followUp": "How would you roll back a bad prompt in minutes?"
    },
    {
     "id": "c7-2-i08",
@@ -1143,7 +1245,8 @@
      "Test set with field-level scoring",
      "Edge cases: relative dates, multi-city"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "Relative dates like “next Friday” fail. How do you fix them?"
    }
   ]
  },
@@ -1153,18 +1256,18 @@
     "id": "c7-3-m01",
     "q": "What is context engineering?",
     "options": [
-     "Training a model on context",
-     "Writing the system prompt once",
-     "Choosing a GPU",
-     "Deciding, for every call, exactly which tokens go into the window"
+     "Training a model on extra context",
+     "Writing the system prompt once at launch",
+     "Choosing the GPU that serves the model",
+     "Deciding which tokens go into each call"
     ],
     "answer": 3,
     "why": "The window is a budget shared by instructions, tools, history, documents and output.",
     "kind": "concept",
     "distractors": [
-     "No training is involved.",
-     "Context is assembled per call.",
-     "Unrelated.",
+     "Context engineering changes inputs, not weights.",
+     "It is a per-call decision.",
+     "Hardware is unrelated.",
      ""
     ]
    },
@@ -1172,38 +1275,38 @@
     "id": "c7-3-m02",
     "q": "What happens when you include too much context?",
     "options": [
-     "The model ignores the extra",
-     "Calls get slower and costlier, and the model is distracted by irrelevant material",
-     "Answers always improve",
-     "Nothing"
+     "The model simply ignores the extra material it does not need",
+     "Calls get slower and costlier, and the model is distracted",
+     "Answers always improve, because the model has more to go on",
+     "Nothing changes, apart from a few more tokens being used"
     ],
     "answer": 1,
     "why": "Too little and it guesses; too much and quality and cost suffer.",
     "kind": "concept",
     "distractors": [
-     "It is processed and can distract.",
+     "Extra material can distract it.",
      "",
-     "More is not always better.",
-     "Cost and latency rise."
+     "More context can hurt.",
+     "It costs time, money and quality."
     ]
    },
    {
     "id": "c7-3-m03",
     "q": "How do context assemblers usually prioritise?",
     "options": [
-     "Randomly",
-     "Instructions and the current question first, then by relevance; drop the lowest first",
-     "Alphabetically",
-     "Newest document first only"
+     "Randomly, so that no source is ever favoured",
+     "Instructions and question first, then relevance",
+     "Alphabetically by the name of each source",
+     "Newest document first, and nothing else matters"
     ],
     "answer": 1,
     "why": "Greedy inclusion by priority within the budget.",
     "kind": "concept",
     "distractors": [
-     "Random selection loses key items.",
+     "Random order wastes the budget.",
      "",
-     "Order should reflect necessity.",
-     "Recency is one factor at most."
+     "Alphabetical order ignores relevance.",
+     "Recency alone ignores relevance."
     ]
    },
    {
@@ -1233,18 +1336,18 @@
     "id": "c7-3-m05",
     "q": "Where should the most important material go in a long context?",
     "options": [
-     "Spread evenly",
-     "It does not matter",
-     "Exactly in the middle",
+     "Spread evenly through the context",
+     "It does not matter where it goes",
+     "Exactly in the middle of the context",
      "Near the start or the end"
     ],
     "answer": 3,
     "why": "Models attend less reliably to the middle of very long contexts.",
     "kind": "concept",
     "distractors": [
-     "Placement matters.",
-     "It does.",
-     "The middle is the least reliable place.",
+     "Even spread puts much in the middle.",
+     "Position affects how reliably it is used.",
+     "The middle is used least reliably.",
      ""
     ]
    },
@@ -1290,18 +1393,18 @@
     "id": "c7-3-m08",
     "q": "Compression shortened a policy clause and the answer became wrong. What was likely lost?",
     "options": [
-     "Nothing important",
-     "The output reserve",
-     "The tokenizer",
-     "An exception clause or effective date the answer depended on"
+     "Nothing important, only filler words",
+     "The output reserve for the answer",
+     "The tokenizer used by the model",
+     "An exception or effective date"
     ],
     "answer": 3,
     "why": "Mark decision-critical text as never-summarise.",
     "kind": "scenario",
     "distractors": [
-     "The answer changed.",
-     "Unrelated.",
-     "Unrelated.",
+     "The answer changed, so something mattered.",
+     "The reserve is separate from the clause text.",
+     "Compression changes text, not the tokenizer.",
      ""
     ]
    },
@@ -1309,19 +1412,19 @@
     "id": "c7-3-m09",
     "q": "Why must the budget include the output reserve?",
     "options": [
-     "Output is free",
-     "Output tokens share the same context window",
-     "The reserve is for logging",
-     "Providers require it"
+     "Output is free, so it needs no space",
+     "Output shares the same window",
+     "The reserve is for logging the request",
+     "Providers require it by contract"
     ],
     "answer": 1,
     "why": "Otherwise a long answer is cut off.",
     "kind": "concept",
     "distractors": [
-     "Output costs tokens and window space.",
+     "Output tokens use the window and cost money.",
      "",
-     "It is for the model's answer.",
-     "It is a design rule, not a provider rule."
+     "Logs are outside the context.",
+     "It is about how the window works."
     ]
    },
    {
@@ -1354,7 +1457,8 @@
      "A budget shared by many sources",
      "Too little: guessing; too much: cost and distraction",
      "Deliberate per-call decisions"
-    ]
+    ],
+    "followUp": "Which source would you cut first when over budget?"
    },
    {
     "id": "c7-3-i02",
@@ -1366,7 +1470,8 @@
      "Compress",
      "Order",
      "Reserve output"
-    ]
+    ],
+    "followUp": "Which of these steps is most often skipped, and what breaks?"
    },
    {
     "id": "c7-3-i03",
@@ -1376,7 +1481,8 @@
      "Middle of long contexts used less reliably",
      "Important items near start or end",
      "Measure on your task"
-    ]
+    ],
+    "followUp": "How would you measure the effect on your own task?"
    },
    {
     "id": "c7-3-i04",
@@ -1400,7 +1506,8 @@
      "Compare answers with and without compression",
      "Mark never-summarise content",
      "Monitor failures in production"
-    ]
+    ],
+    "followUp": "What would you mark as never-summarise?"
    },
    {
     "id": "c7-3-i06",
@@ -1412,7 +1519,8 @@
      "Amounts and deadlines verbatim",
      "Nothing else from history"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "How would you check the summary kept every amount?"
    },
    {
     "id": "c7-3-i07",
@@ -1424,7 +1532,8 @@
      "Compression policies per source",
      "Logging of what was included",
      "Evaluation of each recipe"
-    ]
+    ],
+    "followUp": "How do you let each assistant tune its recipe safely?"
    },
    {
     "id": "c7-3-i08",
@@ -1435,7 +1544,8 @@
      "Cost and latency",
      "Ablations removing each source",
      "Failure analysis on dropped items"
-    ]
+    ],
+    "followUp": "Which ablation would you run first?"
    }
   ]
  },
@@ -1445,19 +1555,19 @@
     "id": "c7-4-m01",
     "q": "What is structured output?",
     "options": [
-     "Any text with headings",
-     "A streamed response",
-     "The model returns data in a declared format, usually JSON matching a JSON Schema",
-     "A tool result"
+     "Any text with clear headings and lists",
+     "A streamed response shown token by token",
+     "Data in a declared format, such as JSON Schema",
+     "A tool result returned to the model"
     ],
     "answer": 2,
     "why": "It makes model output usable by code.",
     "kind": "concept",
     "distractors": [
-     "Headings are not a schema.",
-     "Streaming is about delivery, not format.",
+     "Formatting is not a machine-readable contract.",
+     "Streaming is about delivery.",
      "",
-     "Tool results come from your code."
+     "Tool results are inputs."
     ]
    },
    {
@@ -1465,36 +1575,36 @@
     "q": "What does constrained decoding guarantee?",
     "options": [
      "The output is factually correct",
-     "The output is short",
-     "The output parses against the schema",
-     "The model is faster"
+     "The output stays short",
+     "It parses against the schema",
+     "The model runs faster"
     ],
     "answer": 2,
     "why": "It masks tokens that would break the schema; it guarantees shape, not truth.",
     "kind": "concept",
     "distractors": [
-     "Valid JSON can contain a wrong amount.",
-     "Length is separate.",
+     "Shape is not truth.",
+     "Length is a separate limit.",
      "",
-     "Not a speed technique."
+     "Masking adds a little work."
     ]
    },
    {
     "id": "c7-4-m03",
     "q": "The model returns valid JSON with the wrong refund amount. What was missing?",
     "options": [
-     "Streaming",
+     "Streaming of the output",
      "A higher temperature",
-     "A larger model",
-     "Semantic checks in code against the source data"
+     "A larger, stronger model",
+     "Checks against the source data"
     ],
     "answer": 3,
     "why": "Validate values, not only shape.",
     "kind": "scenario",
     "distractors": [
-     "Unrelated.",
-     "That adds errors.",
-     "Any model can err.",
+     "Streaming does not check values.",
+     "Randomness would not fix values.",
+     "Any model can err; code must check.",
      ""
     ]
    },
@@ -1503,17 +1613,17 @@
     "q": "In tool calling, what does the model actually do?",
     "options": [
      "It writes the function's code",
-     "It skips your application",
-     "It executes the function itself",
-     "It asks for a call with arguments; your code decides whether to execute it"
+     "It bypasses your application",
+     "It runs the function itself",
+     "It requests a call; your code decides"
     ],
     "answer": 3,
     "why": "The model proposes; deterministic code disposes.",
     "kind": "concept",
     "distractors": [
-     "It uses your descriptions.",
-     "Your code runs every step.",
-     "It cannot execute anything.",
+     "It requests calls to existing tools.",
+     "Your code mediates every call.",
+     "The model cannot execute anything.",
      ""
     ]
    },
@@ -1521,57 +1631,57 @@
     "id": "c7-4-m05",
     "q": "The model requests get_order(id=\"A-1043\"). Who checks that this user may access that order?",
     "options": [
-     "Your application code, using the authenticated session",
-     "Nobody; IDs are safe",
-     "The tool's JSON schema",
-     "The model"
+     "Your code, using the authenticated session",
+     "Nobody, since order IDs are hard to guess",
+     "The tool's JSON schema, which checks the ID",
+     "The model, which knows the user from the chat"
     ],
     "answer": 0,
     "why": "Never trust model-supplied IDs for authorisation (16.3).",
     "kind": "scenario",
     "distractors": [
      "",
-     "IDs can belong to someone else.",
+     "IDs are not authorisation.",
      "Schemas check shape, not permission.",
-     "The model cannot enforce permissions."
+     "The model cannot authorise."
     ]
    },
    {
     "id": "c7-4-m06",
     "q": "What does streaming improve?",
     "options": [
-     "Perceived latency: users see the first words sooner",
-     "Accuracy",
+     "Time to first token",
+     "Answer accuracy",
      "Total generation time",
-     "Token cost"
+     "Token cost per answer"
     ],
     "answer": 0,
     "why": "Both versions finish at the same time.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unaffected.",
-     "Total time is the same.",
-     "Unaffected."
+     "Streaming does not change content.",
+     "The full answer takes as long.",
+     "The same tokens are sent."
     ]
    },
    {
     "id": "c7-4-m07",
     "q": "You stream JSON to the UI. When should your code act on it?",
     "options": [
-     "Before the model starts",
-     "Never",
-     "Only after validating the complete object",
+     "Before the model starts writing",
+     "Never, if the output is streamed",
+     "After validating the whole object",
      "As soon as the first field arrives"
     ],
     "answer": 2,
     "why": "Partial JSON may be incomplete or invalid.",
     "kind": "scenario",
     "distractors": [
-     "Nothing exists yet.",
-     "You can act after validation.",
+     "There is nothing to act on yet.",
+     "Act after full validation.",
      "",
-     "Partial data can mislead."
+     "Partial objects may change or be invalid."
     ]
    },
    {
@@ -1597,19 +1707,19 @@
     "id": "c7-4-m09",
     "q": "Small local models make more tool-call mistakes. Why is that useful in a lab?",
     "options": [
-     "It is not useful",
-     "They are always wrong",
-     "You see the failure modes your validation must handle",
-     "It proves big models are perfect"
+     "It is not useful for learning anything",
+     "They are wrong on every single call",
+     "You see the failures validation must handle",
+     "It proves large models are perfect"
     ],
     "answer": 2,
     "why": "Wrong arguments and unnecessary calls are what validation is for.",
     "kind": "scenario",
     "distractors": [
-     "It is useful practice.",
-     "They often succeed.",
+     "Seeing failures is the point.",
+     "They are often right; errors just show up more.",
      "",
-     "Large models also err."
+     "Large models also err, less often."
     ]
    },
    {
@@ -1617,18 +1727,18 @@
     "q": "A create_ticket tool needs a customer ID. Where should it come from?",
     "options": [
      "The authenticated session",
-     "A random value",
-     "The model's arguments",
-     "The ticket text"
+     "A random value generated per call",
+     "The model's tool-call arguments",
+     "The text of the ticket itself"
     ],
     "answer": 0,
     "why": "The model may supply someone else's ID.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Not a real option.",
-     "Model output is not authorisation.",
-     "Text can be manipulated."
+     "A random ID is meaningless.",
+     "The model can be wrong or manipulated.",
+     "Text can claim any identity."
     ]
    }
   ],
@@ -1642,7 +1752,8 @@
      "Token masking guarantees shape",
      "Validation in code",
      "Shape is not truth"
-    ]
+    ],
+    "followUp": "Constrained decoding is not available. What do you do instead?"
    },
    {
     "id": "c7-4-i02",
@@ -1654,7 +1765,8 @@
      "Validate arguments and permissions",
      "Execute with timeouts",
      "Return the result, model continues"
-    ]
+    ],
+    "followUp": "The model calls a tool that does not exist. What happens?"
    },
    {
     "id": "c7-4-i03",
@@ -1665,7 +1777,8 @@
      "Validation of partial output",
      "Error handling mid-stream",
      "Act only on complete validated objects"
-    ]
+    ],
+    "followUp": "The stream breaks halfway. What does the user see?"
    },
    {
     "id": "c7-4-i04",
@@ -1688,7 +1801,8 @@
      "Range and consistency checks",
      "Cross-field rules",
      "Reject and re-ask or escalate"
-    ]
+    ],
+    "followUp": "The amount matches the ledger but the date does not. What do you do?"
    },
    {
     "id": "c7-4-i06",
@@ -1700,7 +1814,8 @@
      "Confirm only after the traveller agrees",
      "Check supplier responses, not model claims"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "The hold succeeds but confirm fails. What happens next?"
    },
    {
     "id": "c7-4-i07",
@@ -1712,7 +1827,8 @@
      "Timeouts and result trimming",
      "Audit logging",
      "Testing with small models"
-    ]
+    ],
+    "followUp": "How would you test it against a small local model?"
    },
    {
     "id": "c7-4-i08",
@@ -1725,7 +1841,8 @@
      "Human review on mismatch",
      "Audit trail"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "The ledger is briefly unavailable. What happens to extraction?"
    }
   ]
  },
@@ -1735,75 +1852,75 @@
     "id": "c7-5-m01",
     "q": "Why must an application resend conversation history?",
     "options": [
-     "Models forget only on weekends",
-     "It speeds up calls",
-     "Model APIs are stateless: each call must include everything the model should know",
-     "History is required by tokenizers"
+     "Models forget everything between user sessions",
+     "It makes each call faster to process on the GPU",
+     "APIs are stateless: each call carries everything",
+     "Tokenizers require the full history to work"
     ],
     "answer": 2,
     "why": "“Memory” is something your application builds.",
     "kind": "concept",
     "distractors": [
-     "Statelessness is by design.",
-     "It makes calls longer.",
+     "Every call is independent, not just sessions.",
+     "Resending history makes calls slower.",
      "",
-     "Unrelated."
+     "Tokenizers process whatever is sent."
     ]
    },
    {
     "id": "c7-5-m02",
     "q": "What is the weakness of a sliding window over recent turns?",
     "options": [
-     "It is complicated",
-     "It needs a database",
-     "It forgets facts stated early, such as an account ID",
-     "It keeps too much"
+     "It is complicated to build",
+     "It needs a separate database",
+     "It forgets early facts, such as an ID",
+     "It keeps far too much text"
     ],
     "answer": 2,
     "why": "Simple, but early facts fall out.",
     "kind": "concept",
     "distractors": [
-     "It is simple.",
-     "It does not.",
+     "It is the simplest strategy.",
+     "It only keeps recent turns.",
      "",
-     "It keeps only recent turns."
+     "It drops older text."
     ]
    },
    {
     "id": "c7-5-m03",
     "q": "What does “summarise and window” keep?",
     "options": [
-     "A running summary of older turns plus recent turns verbatim",
-     "Only the summary",
-     "Only the first turn",
-     "Everything verbatim"
+     "A summary of old turns plus recent turns",
+     "Only a single summary of all the turns",
+     "Only the first turn, kept word for word",
+     "Every turn word for word, for ever"
     ],
     "answer": 0,
     "why": "Summaries keep the gist but can drop exact values.",
     "kind": "concept",
     "distractors": [
      "",
-     "Recent turns are kept verbatim.",
-     "It keeps more than that.",
-     "That would overflow the window."
+     "Recent turns stay verbatim.",
+     "The summary covers older turns.",
+     "That has no compaction."
     ]
    },
    {
     "id": "c7-5-m04",
     "q": "What does fact extraction add?",
     "options": [
-     "A new model",
-     "A random sample of turns",
-     "A bigger window",
-     "Durable facts in a structured store, injected as needed"
+     "A new fine-tuned model for each user",
+     "A random sample of the past turns",
+     "A bigger context window for long chats",
+     "Durable facts in a store, injected as needed"
     ],
     "answer": 3,
     "why": "Structured values cannot be lost in a later summary.",
     "kind": "concept",
     "distractors": [
-     "No new model needed.",
-     "It is targeted, not random.",
-     "No change to the window.",
+     "Facts are data, not models.",
+     "Facts are chosen, not sampled.",
+     "The window stays the same.",
      ""
     ]
    },
@@ -1811,37 +1928,37 @@
     "id": "c7-5-m05",
     "q": "What must persistent memory across sessions include?",
     "options": [
-     "User visibility and deletion controls",
-     "Storing everything forever",
-     "No database",
-     "Hidden storage"
+     "Visibility and deletion for users",
+     "Storing everything about the user forever",
+     "No database, only the model's weights",
+     "Hidden storage the user cannot see"
     ],
     "answer": 0,
     "why": "Remembered facts are personal data (11.4, 16.5).",
     "kind": "concept",
     "distractors": [
      "",
-     "Retention must be controlled.",
-     "It needs storage.",
-     "Users should see what is remembered."
+     "Memory needs retention limits.",
+     "Memory lives in storage.",
+     "Users must see and delete memory."
     ]
    },
    {
     "id": "c7-5-m06",
     "q": "What is the system of record for a conversation?",
     "options": [
-     "The provider's logs",
+     "The provider's request logs",
      "The model's context window",
-     "The user's browser",
-     "The full transcript in your own database"
+     "The user's browser storage",
+     "Your own full transcript store"
     ],
     "answer": 3,
     "why": "The context is a working view.",
     "kind": "concept",
     "distractors": [
-     "You need your own records for audit.",
-     "It is a temporary view.",
-     "Not reliable or complete.",
+     "Provider logs are not yours to rely on.",
+     "Context is a working view.",
+     "Browsers lose data.",
      ""
     ]
    },
@@ -1850,18 +1967,18 @@
     "q": "A user says at turn 3 they are on an EU data-residency plan and asks at turn 40 about a US-only feature. A pure sliding window answers “yes”. What fixes it?",
     "options": [
      "Extract the plan as a fact and let a rule block the feature",
-     "A higher temperature",
-     "Asking the user again every turn",
-     "A longer answer"
+     "A higher temperature so the model reconsiders the plan",
+     "Asking the user to restate their plan on every turn",
+     "A longer answer that lists every feature's conditions"
     ],
     "answer": 0,
     "why": "Structured facts plus a deterministic rule (7.7).",
     "kind": "scenario",
     "distractors": [
      "",
-     "Randomness does not help.",
-     "Annoying and unreliable.",
-     "Length does not restore the fact."
+     "Randomness cannot recover a forgotten fact.",
+     "That harms the experience and still trusts the model.",
+     "The fact is missing from context."
     ]
    },
    {
@@ -1887,18 +2004,18 @@
     "id": "c7-5-m09",
     "q": "A client sends a conversation ID. Can your service treat it as proof the user may read that conversation?",
     "options": [
-     "Yes, IDs are secret",
-     "Yes, if it is long",
-     "Only on weekdays",
-     "No: check that the authenticated user owns it"
+     "Yes, because IDs are long and secret",
+     "Yes, if the ID was issued by your service",
+     "Only during the same browser session",
+     "No: check the authenticated user owns it"
     ],
     "answer": 3,
     "why": "IDs are identifiers, not authorisation.",
     "kind": "scenario",
     "distractors": [
-     "IDs leak and can be guessed.",
-     "Length is not authorisation.",
-     "Not a real rule.",
+     "IDs can leak or be guessed.",
+     "Possession is not ownership.",
+     "Sessions do not prove ownership.",
      ""
     ]
    },
@@ -1906,19 +2023,38 @@
     "id": "c7-5-m10",
     "q": "What do summaries tend to lose?",
     "options": [
-     "Exact values such as IDs, amounts and dates",
-     "The gist",
-     "Nothing",
-     "Everything"
+     "Exact values: IDs, amounts, dates",
+     "The overall gist of the turns",
+     "Nothing, if the model is good",
+     "Everything said before the summary"
     ],
     "answer": 0,
     "why": "Use fact extraction for values that must survive.",
     "kind": "concept",
     "distractors": [
      "",
-     "They keep the gist.",
-     "They drop details.",
-     "They keep the overall meaning."
+     "Gist is what summaries keep.",
+     "Exact values still get lost.",
+     "They keep the gist."
+    ]
+   },
+   {
+    "id": "c7-5-m11",
+    "q": "An app compacts history when it exceeds 40% of a 32,000-token window. Each turn adds about 450 tokens. Roughly after how many turns does the first compaction happen?",
+    "options": [
+     "About 40 turns",
+     "About 28 turns",
+     "About 11 turns",
+     "About 71 turns"
+    ],
+    "answer": 1,
+    "why": "40% of 32,000 is 12,800 tokens, and 12,800 ÷ 450 ≈ 28.",
+    "kind": "calculation",
+    "distractors": [
+     "That reads 40% as a number of turns.",
+     "",
+     "That divides 4,000 by 450, a misplaced zero.",
+     "That uses the full window: 32,000 ÷ 450."
     ]
    }
   ],
@@ -1932,7 +2068,8 @@
      "Memory is built by the application",
      "History grows and costs more",
      "Strategies needed near limits"
-    ]
+    ],
+    "followUp": "How does server-side conversation state change this?"
    },
    {
     "id": "c7-5-i02",
@@ -1943,7 +2080,8 @@
      "Summaries keep gist, lose values",
      "Facts keep structured values",
      "Combine them"
-    ]
+    ],
+    "followUp": "Which would you use for a booking assistant, and why?"
    },
    {
     "id": "c7-5-i03",
@@ -1954,7 +2092,8 @@
      "Audit and evaluation",
      "Context is a working view",
      "Provider state is not enough"
-    ]
+    ],
+    "followUp": "Why is provider-side state not enough for audit?"
    },
    {
     "id": "c7-5-i04",
@@ -1978,7 +2117,8 @@
      "Consent for sensitive facts",
      "Retention limits",
      "Access control"
-    ]
+    ],
+    "followUp": "A user asks what you remember about them. What do you show?"
    },
    {
     "id": "c7-5-i06",
@@ -1990,7 +2130,8 @@
      "Every booking step reads the record",
      "Confirmation before booking"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "How would you test that it cannot happen again?"
    },
    {
     "id": "c7-5-i07",
@@ -2002,7 +2143,8 @@
      "Summaries and facts versioned",
      "Ownership checks on reads",
      "Retention and deletion"
-    ]
+    ],
+    "followUp": "How would you delete a user's data across all stores?"
    },
    {
     "id": "c7-5-i08",
@@ -2013,7 +2155,8 @@
      "Questions late in the conversation",
      "Compare strategies",
      "Track losses per fact type"
-    ]
+    ],
+    "followUp": "Which fact types are lost most often, and why?"
    }
   ]
  }

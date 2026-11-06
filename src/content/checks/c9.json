@@ -12,24 +12,30 @@
     ],
     "answer": 1,
     "why": "Exact identifiers and codes favour lexical matching.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Paraphrased complaints are where dense retrieval's meaning-matching helps.",
+     "",
+     "A vague, emotional query suits dense retrieval better.",
+     "There are no exact terms to match; dense retrieval does better here."
+    ]
    },
    {
     "id": "c9-3-m02",
     "q": "What is an inverted index?",
     "options": [
-     "A reversed copy of each document",
-     "A list of documents sorted by length",
-     "A vector store",
-     "A map from each term to the list of documents containing it"
+     "A reversed copy of each document, read from the end",
+     "A list of all documents, sorted by their length",
+     "A vector store holding one embedding per document",
+     "A map from each term to the documents containing it"
     ],
     "answer": 3,
     "why": "Finding “refund” means reading one posting list.",
     "kind": "concept",
     "distractors": [
-     "Not what inverted means here.",
-     "Unrelated.",
-     "That stores vectors.",
+     "Nothing is reversed; terms point to documents.",
+     "Sorting by length does not find terms.",
+     "That is a dense index.",
      ""
     ]
    },
@@ -37,10 +43,10 @@
     "id": "c9-3-m03",
     "q": "How do TF-IDF and BM25 score a document?",
     "options": [
-     "By how often query terms occur in it, weighted by how rare each term is in the collection",
-     "By embedding similarity",
-     "By document length only",
-     "By the document's date"
+     "By query-term frequency, weighted by how rare each term is",
+     "By embedding similarity between the query and each document",
+     "By document length, so shorter documents rank higher",
+     "By the document's date, so newer documents rank higher"
     ],
     "answer": 0,
     "why": "Rare terms carry more weight than common ones.",
@@ -48,26 +54,26 @@
     "distractors": [
      "",
      "That is dense retrieval.",
-     "Length is a correction, not the score.",
-     "Unrelated."
+     "Length is only a normalisation factor.",
+     "Dates are metadata, not BM25 scoring."
     ]
    },
    {
     "id": "c9-3-m04",
     "q": "What does BM25's saturation parameter k₁ do?",
     "options": [
-     "Penalises long documents",
-     "Makes extra occurrences of a term add less and less",
-     "Controls the embedding size",
-     "Sets the number of results"
+     "Penalises long documents for their length",
+     "Makes each extra occurrence add less",
+     "Controls the size of the embedding vectors",
+     "Sets the number of results that are returned"
     ],
     "answer": 1,
     "why": "The tenth occurrence adds little.",
     "kind": "concept",
     "distractors": [
-     "That is b.",
+     "That is b's job.",
      "",
-     "Unrelated.",
+     "BM25 has no embeddings.",
      "That is k in top-k."
     ]
    },
@@ -75,19 +81,19 @@
     "id": "c9-3-m05",
     "q": "What does BM25's parameter b do?",
     "options": [
-     "Controls term saturation",
-     "Sets the vocabulary size",
-     "Normalises for document length, so long documents are not favoured just for being long",
-     "Boosts recent documents"
+     "Controls how quickly repeated terms saturate",
+     "Sets the vocabulary size of the inverted index",
+     "Normalises for length, so long documents are not favoured",
+     "Boosts recent documents in the ranking"
     ],
     "answer": 2,
     "why": "Typically b ≈ 0.75.",
     "kind": "concept",
     "distractors": [
      "That is k₁.",
-     "Unrelated.",
+     "BM25 has no vocabulary-size parameter.",
      "",
-     "Unrelated."
+     "Recency is not part of BM25."
     ]
    },
    {
@@ -113,56 +119,56 @@
     "id": "c9-3-m07",
     "q": "BM25 finds nothing for “can't log in” because the documents say “login” and “sign in”. What is this called, and what helps?",
     "options": [
-     "Overfitting; more data helps",
+     "Overfitting; more training data helps",
      "Vocabulary mismatch; dense retrieval helps",
-     "Latency; caching helps",
+     "Latency; caching the results helps",
      "Contamination; deduplication helps"
     ],
     "answer": 1,
     "why": "Dense retrieval matches meaning across different words.",
     "kind": "scenario",
     "distractors": [
-     "Unrelated.",
+     "BM25 is not trained.",
      "",
-     "Unrelated.",
-     "Unrelated."
+     "The failure is about matching words.",
+     "Nothing leaked."
     ]
    },
    {
     "id": "c9-3-m08",
     "q": "What is learned sparse retrieval (for example SPLADE)?",
     "options": [
-     "BM25 without IDF",
-     "A model assigns weights to vocabulary terms, including related ones, stored in an inverted index",
-     "Dense vectors stored on disk",
-     "A reranker"
+     "BM25 run without the IDF weighting, to make indexing faster",
+     "A model weights vocabulary terms, related ones too, in an inverted index",
+     "Dense vectors stored on disk instead of in memory, to save RAM",
+     "A cross-encoder reranker run over the keyword search results"
     ],
     "answer": 1,
     "why": "It combines keyword-index efficiency with some semantic matching.",
     "kind": "concept",
     "distractors": [
-     "It is learned.",
+     "It is a learned model, not a BM25 variant.",
      "",
-     "It is sparse, not dense.",
-     "Rerankers score pairs."
+     "SPLADE weights vocabulary terms; it is sparse.",
+     "Rerankers re-score; SPLADE builds the index."
     ]
    },
    {
     "id": "c9-3-m09",
     "q": "A team assumes their vector database chose a good embedding model. What is wrong?",
     "options": [
-     "Embedding models are all the same",
-     "Vector databases train models",
-     "Nothing",
-     "A vector database only stores and searches vectors; choosing and evaluating the model is your job"
+     "Embedding models are all the same, so any choice works",
+     "Vector databases train the embedding model on your data",
+     "Nothing; the database vendor tests models for each corpus",
+     "A vector DB only stores and searches; the model is your choice"
     ],
     "answer": 3,
     "why": "Evaluate embedding models on your queries.",
     "kind": "scenario",
     "distractors": [
-     "They differ a lot.",
-     "They do not.",
-     "It skips a key decision.",
+     "Models differ greatly by domain and language.",
+     "They store and search vectors only.",
+     "Only your own evaluation shows fit.",
      ""
     ]
    },
@@ -170,19 +176,38 @@
     "id": "c9-3-m10",
     "q": "Why does BM25 need no training?",
     "options": [
-     "It uses an LLM",
-     "It uses term statistics from the corpus itself",
+     "It uses an LLM to score terms",
+     "It uses corpus term statistics",
      "It is pretrained by its vendor",
-     "It learns from clicks"
+     "It learns weights from clicks"
     ],
     "answer": 1,
     "why": "Counts and document frequencies are all it needs.",
     "kind": "concept",
     "distractors": [
-     "No model is involved.",
+     "BM25 uses counts.",
      "",
-     "No model is involved.",
-     "That is learning to rank."
+     "It is a formula, not a model.",
+     "Click learning is learning to rank."
+    ]
+   },
+   {
+    "id": "c9-3-m11",
+    "q": "In a 10,000-document corpus, “refund” appears in 9,000 documents and “E-4012” in 3. Using BM25's IDF = ln(1 + (N − n + 0.5)/(n + 0.5)), which term weighs more, and roughly by how much?",
+    "options": [
+     "“E-4012”: IDF about 7.9 against about 0.1 for “refund”",
+     "“E-4012”: about 3 against 9,000, by raw document counts",
+     "“refund”: it appears far more often, so it weighs more",
+     "They weigh the same, since IDF ignores how common terms are"
+    ],
+    "answer": 0,
+    "why": "ln(1 + 9,997.5/3.5) ≈ 7.96; ln(1 + 1,000.5/9,000.5) ≈ 0.11. Rare terms dominate the score.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "IDF uses the log of an inverse ratio, not raw counts.",
+     "IDF rewards rarity; common terms weigh little.",
+     "IDF is exactly about how common a term is."
     ]
    }
   ],
@@ -196,7 +221,8 @@
      "Inverse document frequency",
      "Saturation with k₁",
      "Length normalisation with b"
-    ]
+    ],
+    "followUp": "Why does BM25 need length normalisation at all?"
    },
    {
     "id": "c9-3-i02",
@@ -207,7 +233,8 @@
      "Vocabulary mismatch",
      "No training versus an embedding model",
      "Combine them (9.5)"
-    ]
+    ],
+    "followUp": "Give a query where each one wins."
    },
    {
     "id": "c9-3-i03",
@@ -218,7 +245,8 @@
      "Read only relevant lists",
      "No full scan",
      "Scales to large corpora"
-    ]
+    ],
+    "followUp": "What does an update to a document cost in an inverted index?"
    },
    {
     "id": "c9-3-i04",
@@ -241,7 +269,8 @@
      "Check tokenisation of codes",
      "Hybrid fusion",
      "Measure per query type"
-    ]
+    ],
+    "followUp": "How would you check how the tokenizer splits codes?"
    },
    {
     "id": "c9-3-i06",
@@ -253,7 +282,8 @@
      "Hybrid fusion",
      "Test sets for each"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "How would you test each leg separately?"
    },
    {
     "id": "c9-3-i07",
@@ -265,7 +295,8 @@
      "Metadata filters",
      "Length normalisation",
      "Per-type evaluation"
-    ]
+    ],
+    "followUp": "How would you stop long policies from crowding out listings?"
    },
    {
     "id": "c9-3-i08",
@@ -276,7 +307,8 @@
      "Inverted-index infrastructure",
      "Evaluate against hybrid BM25 plus dense",
      "Cost and update trade-offs"
-    ]
+    ],
+    "followUp": "What would make you choose it over hybrid search?"
    }
   ]
  },
@@ -287,26 +319,38 @@
     "q": "Why use reciprocal rank fusion?",
     "options": [
      "It needs no normalisation of different score scales",
-     "It is the most accurate reranker",
-     "It replaces embeddings",
-     "It reduces index size"
+     "It is the most accurate reranker for the top results",
+     "It replaces the embedding model in dense retrieval",
+     "It reduces the size of both the vector and keyword indexes"
     ],
     "answer": 0,
     "why": "RRF uses ranks only, so BM25 and cosine scores need not share a scale.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Accuracy comes from rerankers; RRF fuses lists.",
+     "RRF fuses rankings that still come from embeddings and keywords.",
+     "Fusion happens at query time and does not change the index."
+    ]
    },
    {
     "id": "c9-5-m02",
     "q": "Where must permission filtering happen?",
     "options": [
-     "In the prompt",
-     "After generation",
+     "In the prompt, by telling the model what not to use",
+     "After generation, by checking the answer for leaks",
      "In retrieval, before content reaches the model",
-     "In the UI"
+     "In the UI, by hiding results the user may not see"
     ],
     "answer": 2,
     "why": "Once the model has seen restricted text, the leak has already happened.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "A prompt instruction cannot stop leaked content from being read.",
+     "After generation the content has already reached the model.",
+     "",
+     "Hiding content in the UI still leaves it in the model's answer."
+    ]
    },
    {
     "id": "c9-5-m03",
@@ -331,37 +375,37 @@
     "id": "c9-5-m04",
     "q": "What does a cross-encoder reranker do?",
     "options": [
-     "Embeds documents separately",
-     "Filters by permissions",
-     "Reads query and passage together and scores relevance, re-scoring the top 50–200 candidates",
-     "Generates the answer"
+     "Embeds each document separately for fast search",
+     "Filters the results by the user's permissions",
+     "Reads query and passage together; re-scores the top 50–200",
+     "Generates the final answer from the passages"
     ],
     "answer": 2,
     "why": "Much more accurate than separate embeddings, but too slow for the whole corpus.",
     "kind": "concept",
     "distractors": [
      "That is a bi-encoder.",
-     "Filtering is separate.",
+     "Filters run before or during retrieval.",
      "",
-     "Generation is separate."
+     "Generation is the LLM's job."
     ]
    },
    {
     "id": "c9-5-m05",
     "q": "What is the difference between pre-filtering and post-filtering?",
     "options": [
-     "Post-filtering is faster always",
-     "They are the same",
-     "Pre-filtering is done by the user",
-     "Pre-filtering applies the filter during search; post-filtering removes results afterwards"
+     "Post-filtering is always faster, since search runs once",
+     "They are the same, just applied by different services",
+     "Pre-filtering is done by the user in the search box",
+     "Pre-filtering filters during search; post-filtering removes results after"
     ],
     "answer": 3,
     "why": "Selective post-filters can leave too few results.",
     "kind": "concept",
     "distractors": [
-     "Not necessarily.",
-     "They differ in when the filter applies.",
-     "Both are system operations.",
+     "Speed depends; selectivity is the key issue.",
+     "When the filter runs changes the results.",
+     "Both are system-side.",
      ""
     ]
    },
@@ -369,29 +413,29 @@
     "id": "c9-5-m06",
     "q": "A highly selective filter is applied after retrieving the top 20. What can happen?",
     "options": [
-     "Results improve",
+     "Results improve in relevance",
      "Too few results remain",
-     "Nothing",
-     "The index grows"
+     "Nothing happens to the results",
+     "The index grows to compensate"
     ],
     "answer": 1,
     "why": "Apply selective filters inside the search.",
     "kind": "scenario",
     "distractors": [
-     "Fewer, not better.",
+     "Removing results does not improve the rest.",
      "",
-     "It removes results.",
-     "Unrelated."
+     "A selective filter removes most of them.",
+     "Filters do not change the index."
     ]
    },
    {
     "id": "c9-5-m07",
     "q": "Which steps belong to context assembly?",
     "options": [
-     "Embed the query",
-     "Train the reranker",
-     "Choose the GPU",
-     "Deduplicate, merge adjacent chunks, order, label with citation IDs, fit the token budget"
+     "Embed the query and search the index",
+     "Train the reranker on click data",
+     "Choose the GPU for serving the model",
+     "Dedupe, merge, order, label, fit the budget"
     ],
     "answer": 3,
     "why": "Assembly prepares what the model sees (7.3).",
@@ -399,7 +443,7 @@
     "distractors": [
      "That is retrieval.",
      "Training is offline.",
-     "Unrelated.",
+     "Infrastructure is separate.",
      ""
     ]
    },
@@ -407,57 +451,76 @@
     "id": "c9-5-m08",
     "q": "A team adds raw BM25 scores to cosine similarities to rank results. What is wrong?",
     "options": [
-     "Cosine scores are always larger",
-     "The scores have different scales and meanings; fuse by rank (RRF) or normalise carefully",
-     "Nothing",
-     "BM25 scores are probabilities"
+     "Cosine scores are always larger, so they dominate",
+     "Different scales: fuse by rank (RRF) or normalise carefully",
+     "Nothing, as long as both scores are positive",
+     "BM25 scores are probabilities, so they can be added"
     ],
     "answer": 1,
     "why": "RRF needs no score normalisation because it uses ranks.",
     "kind": "scenario",
     "distractors": [
-     "Not necessarily.",
+     "BM25 scores are usually larger; the issue is scale.",
      "",
-     "It mixes incomparable numbers.",
-     "They are not probabilities."
+     "Sums of unrelated scales mislead.",
+     "BM25 scores are unbounded."
     ]
    },
    {
     "id": "c9-5-m09",
     "q": "What is a typical latency budget for filters plus retrieval, and for reranking on GPU?",
     "options": [
-     "Retrieval 5 s; reranking 10 s",
-     "Both under 1 ms",
+     "Retrieval about 5 s; reranking about 10 s",
+     "Both well under 1 ms on any hardware",
      "Retrieval 30–80 ms; reranking 50–200 ms",
-     "Retrieval 1 hour"
+     "Retrieval about 1 s; reranking about 1 hour"
     ],
     "answer": 2,
     "why": "Reranking is slower on CPU.",
     "kind": "concept",
     "distractors": [
-     "Far too slow.",
-     "Too optimistic.",
+     "Far too slow for interactive use.",
+     "Reranking a list takes tens of milliseconds.",
      "",
-     "Not real."
+     "Neither fits an interactive budget."
     ]
    },
    {
     "id": "c9-5-m10",
     "q": "In RRF, what does a small k do?",
     "options": [
-     "Emphasises the top ranks more strongly",
-     "Flattens differences between ranks",
-     "Changes the retrievers",
-     "Removes documents"
+     "Emphasises the top ranks more",
+     "Flattens the differences between ranks",
+     "Changes which retrievers are used",
+     "Removes documents from the fused list"
     ],
     "answer": 0,
     "why": "Large k flattens differences.",
     "kind": "concept",
     "distractors": [
      "",
-     "That is large k.",
-     "Unrelated.",
-     "No documents are removed."
+     "That is a large k.",
+     "k only weights ranks.",
+     "Nothing is removed."
+    ]
+   },
+   {
+    "id": "c9-5-m11",
+    "q": "With RRF and k = 60, document X is ranked 1st by BM25 and 30th by dense search; Y is 5th by both. Which ranks higher after fusion?",
+    "options": [
+     "X: about 0.0328 against about 0.0154 for Y",
+     "Y: about 0.0308 against about 0.0275 for X",
+     "X, because a first place always wins in fusion",
+     "They tie, because their average ranks are equal"
+    ],
+    "answer": 1,
+    "why": "X: 1/61 + 1/90 ≈ 0.0275. Y: 2 × 1/65 ≈ 0.0308. Being found well by both lists beats one first place.",
+    "kind": "calculation",
+    "distractors": [
+     "That counts X's first place twice and Y's fifth place once.",
+     "",
+     "RRF sums contributions; a weak second rank pulls X down.",
+     "RRF sums reciprocal ranks, not average ranks."
     ]
    }
   ],
@@ -471,7 +534,8 @@
      "Fuse by rank",
      "Formula with k ≈ 60",
      "No score normalisation"
-    ]
+    ],
+    "followUp": "Why does RRF not need score normalisation?"
    },
    {
     "id": "c9-5-i02",
@@ -482,7 +546,8 @@
      "Too slow for the whole corpus",
      "Top 50–200 candidates",
      "Keep the best few"
-    ]
+    ],
+    "followUp": "How many candidates would you rerank, and why?"
    },
    {
     "id": "c9-5-i03",
@@ -493,7 +558,8 @@
      "Never best-effort",
      "Filter from the user's identity",
      "Test with probes"
-    ]
+    ],
+    "followUp": "How would you probe for a permission leak?"
    },
    {
     "id": "c9-5-i04",
@@ -517,7 +583,8 @@
      "Partition by tenant or field",
      "Retrieve more candidates",
      "Monitor empty-result rates"
-    ]
+    ],
+    "followUp": "Partitioning by tenant has a cost. What is it?"
    },
    {
     "id": "c9-5-i06",
@@ -529,7 +596,8 @@
      "Rerank on clicks",
      "Freshness of stock data"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "Stock data lags by minutes. What happens, and how do you handle it?"
    },
    {
     "id": "c9-5-i07",
@@ -541,7 +609,8 @@
      "Stable citation labels",
      "Budget-aware truncation",
      "Never-cut items"
-    ]
+    ],
+    "followUp": "What should never be cut from the context?"
    },
    {
     "id": "c9-5-i08",
@@ -552,7 +621,8 @@
      "End-to-end answer quality",
      "Latency at p95",
      "Cost per query"
-    ]
+    ],
+    "followUp": "The reranker adds 150 ms. What would justify it?"
    }
   ]
  },
@@ -581,19 +651,19 @@
     "id": "c9-1-m02",
     "q": "Why is fine-tuning a poor way to inject facts?",
     "options": [
-     "It is too cheap",
-     "It always forgets the format",
-     "Expensive to update, hard to delete, no citations, and recall of tuned facts is unreliable",
-     "It needs no data"
+     "It is too cheap, so teams overuse it and skip retrieval",
+     "It always makes the model forget the required output format",
+     "Costly to update, hard to delete, no citations, unreliable recall",
+     "It needs no data, so the facts it adds may well be wrong"
     ],
     "answer": 2,
     "why": "Facts belong in retrievable, citable, deletable sources.",
     "kind": "concept",
     "distractors": [
-     "Cost is one of its problems.",
-     "Format is what it does well.",
+     "It is relatively expensive to repeat.",
+     "Format is what fine-tuning teaches well.",
      "",
-     "It needs data."
+     "It needs data, and that is not the problem."
     ]
    },
    {
@@ -619,38 +689,38 @@
     "id": "c9-1-m04",
     "q": "Answers are correct but not in the mandated format, and few-shot prompting costs too many tokens. What fits?",
     "options": [
-     "A small fine-tune for the format, keeping RAG for facts",
-     "A bigger model only",
-     "Removing RAG",
-     "Continued pretraining"
+     "A small format fine-tune, keeping RAG",
+     "A bigger model, with the same prompt",
+     "Removing RAG and relying on the model",
+     "Continued pretraining on the formats"
     ],
     "answer": 0,
     "why": "A behaviour gap that prompting cannot close cheaply.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Size may not fix format cheaply.",
-     "Facts still need retrieval.",
-     "Overkill for format."
+     "Size does not enforce a format.",
+     "That loses the facts.",
+     "That is for domain language, not a format."
     ]
    },
    {
     "id": "c9-1-m05",
     "q": "What should you always start with?",
     "options": [
-     "An agent framework",
-     "Pretraining",
-     "Prompting plus RAG, fine-tuning only when evaluation shows a behaviour gap",
-     "Fine-tuning"
+     "An agent framework with tool calls",
+     "Pretraining a model on company data",
+     "Prompting plus RAG; fine-tune for measured gaps",
+     "Fine-tuning on past conversations"
     ],
     "answer": 2,
     "why": "Fine-tune when evidence says prompting cannot close the gap (13.1).",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "Far too expensive.",
+     "Agents add complexity before it is needed.",
+     "Far too costly as a start.",
      "",
-     "Fine-tuning is a later step."
+     "Fine-tune only for a measured gap."
     ]
    },
    {
@@ -695,28 +765,28 @@
     "id": "c9-1-m08",
     "q": "The model lacks long-tail facts about your niche products. What helps most?",
     "options": [
-     "Removing the system prompt",
-     "Shorter answers",
-     "Retrieval of those facts at question time",
-     "Raising the temperature"
+     "Removing the system prompt to free tokens",
+     "Shorter answers with fewer claims",
+     "Retrieving those facts at question time",
+     "Raising the temperature for variety"
     ],
     "answer": 2,
     "why": "Long-tail facts are a knowledge gap.",
     "kind": "scenario",
     "distractors": [
-     "Unrelated.",
-     "Unrelated.",
+     "The facts are still missing.",
+     "Shorter answers do not supply facts.",
      "",
-     "Randomness adds errors."
+     "Randomness does not supply facts."
     ]
    },
    {
     "id": "c9-1-m09",
     "q": "Which statement describes using both approaches together?",
     "options": [
-     "RAG supplies the facts; a fine-tune shapes the format or behaviour",
-     "Fine-tuning supplies facts; RAG supplies format",
-     "They cannot be combined",
+     "RAG supplies facts; a fine-tune shapes format",
+     "Fine-tuning supplies facts; RAG supplies the format",
+     "They cannot be combined in one system",
      "Using both removes the need for evaluation"
     ],
     "answer": 0,
@@ -724,28 +794,28 @@
     "kind": "concept",
     "distractors": [
      "",
-     "That reverses them.",
-     "They combine well.",
-     "Evaluation is still needed."
+     "That swaps their strengths.",
+     "They often are.",
+     "Both still need evaluation."
     ]
    },
    {
     "id": "c9-1-m10",
     "q": "Why might a team fine-tune for format instead of using few-shot examples?",
     "options": [
-     "Fine-tuning is always cheaper",
-     "Prompts cannot be versioned",
-     "Few-shot examples cost too many tokens on every call",
-     "Few-shot examples cannot show format"
+     "Fine-tuning is always cheaper than prompting",
+     "Prompts cannot be versioned or reviewed",
+     "Few-shot examples cost tokens on every call",
+     "Few-shot examples cannot show a format"
     ],
     "answer": 2,
     "why": "Repeated examples add cost and latency to every request.",
     "kind": "concept",
     "distractors": [
-     "Training has its own cost.",
-     "Prompts can be versioned.",
+     "It has its own costs.",
+     "They can and should be.",
      "",
-     "They can show format."
+     "They can; they are just costly."
     ]
    }
   ],
@@ -759,7 +829,8 @@
      "Fine-tuning for behaviour gaps",
      "Both when facts and format both matter",
      "Start with prompting plus RAG"
-    ]
+    ],
+    "followUp": "Give an example where you would use both."
    },
    {
     "id": "c9-1-i02",
@@ -771,7 +842,8 @@
      "No citations",
      "Unreliable recall",
      "No permissions"
-    ]
+    ],
+    "followUp": "A team insists fine-tuning will be faster. How do you respond?"
    },
    {
     "id": "c9-1-i03",
@@ -782,7 +854,8 @@
      "Citations per claim",
      "Verification in code",
      "Links to the source"
-    ]
+    ],
+    "followUp": "How do you verify that a citation supports the claim?"
    },
    {
     "id": "c9-1-i04",
@@ -805,7 +878,8 @@
      "Output schema",
      "Measure cost of few-shot",
      "Small fine-tune if needed"
-    ]
+    ],
+    "followUp": "The fine-tune fixes format but hurts accuracy. What do you do?"
    },
    {
     "id": "c9-1-i06",
@@ -817,7 +891,8 @@
      "Small fine-tune or prompt for style",
      "Evaluate both separately"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "A price changes mid-conversation. Which answer does the shopper see?"
    },
    {
     "id": "c9-1-i07",
@@ -829,7 +904,8 @@
      "Hybrid retrieval with permission filters",
      "Citations and abstention",
      "Format via prompt or small fine-tune"
-    ]
+    ],
+    "followUp": "How do you keep the index current when policies change weekly?"
    },
    {
     "id": "c9-1-i08",
@@ -840,7 +916,8 @@
      "Track what data went into each fine-tune",
      "Retrain or retire models if needed",
      "Policies before training"
-    ]
+    ],
+    "followUp": "How would you track which data went into each fine-tune?"
    }
   ]
  },
@@ -850,19 +927,19 @@
     "id": "c9-2-m01",
     "q": "Which RAG stages run offline, and which online?",
     "options": [
-     "Ingest, parse, clean, chunk, embed and index offline; retrieve and generate per question",
-     "All online",
-     "All offline",
-     "Only generation offline"
+     "Ingest to index offline; retrieve and generate per question",
+     "All stages run online, once for every new question",
+     "All stages run offline, before any question is asked",
+     "Only generation runs offline, in nightly batches of answers"
     ],
     "answer": 0,
     "why": "Offline stages run continuously at scale (chapter 10).",
     "kind": "concept",
     "distractors": [
      "",
-     "Preparing documents per question would be too slow.",
-     "Answers need the user's question.",
-     "Generation needs the question."
+     "Parsing and embedding a corpus per question is far too slow.",
+     "Retrieval needs the question.",
+     "Generation answers each question."
     ]
    },
    {
@@ -888,18 +965,18 @@
     "id": "c9-2-m03",
     "q": "What is a typical chunk size, and how should chunks be split?",
     "options": [
-     "Exactly 4,096 characters",
-     "A whole document each",
-     "One sentence each",
-     "About 200–800 tokens, split on headings and paragraphs with small overlaps"
+     "Exactly 4,096 characters each, cut wherever the limit falls",
+     "A whole document each, however long the document is",
+     "One sentence each, with no headings or other context",
+     "~200–800 tokens, on headings and paragraphs, small overlaps"
     ],
     "answer": 3,
     "why": "Small enough to be specific, large enough to be self-contained.",
     "kind": "concept",
     "distractors": [
-     "Arbitrary size ignores structure.",
-     "Too unspecific.",
-     "Too little context.",
+     "Fixed cuts break sentences and rules.",
+     "Whole documents are too coarse.",
+     "Sentences lose surrounding context.",
      ""
     ]
    },
@@ -907,37 +984,37 @@
     "id": "c9-2-m04",
     "q": "Why prepend a header such as the document title and section path to each chunk?",
     "options": [
-     "To speed up the model",
-     "To hide the content",
-     "So the chunk makes sense on its own for embedding, retrieval and citation",
-     "To make chunks longer"
+     "To speed up the model at query time",
+     "To hide the chunk's content from search",
+     "So each chunk makes sense on its own",
+     "To make every chunk the same length"
     ],
     "answer": 2,
     "why": "“The limit is 5 days per year” becomes unambiguous with its section path.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "It adds context.",
+     "Headers add tokens.",
+     "Headers add context; they hide nothing.",
      "",
-     "Not the goal."
+     "Length is not the goal."
     ]
    },
    {
     "id": "c9-2-m05",
     "q": "What does chunk overlap do?",
     "options": [
-     "Reduces storage",
-     "Removes duplicates",
-     "Speeds up retrieval",
-     "Protects sentences that straddle a boundary, at the cost of extra storage"
+     "Reduces the storage the index needs",
+     "Removes duplicate chunks from the index",
+     "Speeds up retrieval at query time",
+     "Keeps boundary sentences whole, costing storage"
     ],
     "answer": 3,
     "why": "Overlapping text appears in two chunks.",
     "kind": "concept",
     "distractors": [
-     "It increases storage.",
-     "It creates some duplication.",
-     "Unrelated.",
+     "Overlap adds storage.",
+     "It creates some repetition.",
+     "It does not affect speed much.",
      ""
     ]
    },
@@ -945,57 +1022,57 @@
     "id": "c9-2-m06",
     "q": "Why record the embedding model's name and version with each vector?",
     "options": [
-     "For decoration",
-     "Changing the model requires re-embedding everything (10.7)",
-     "To speed up search",
-     "Because vectors are text"
+     "For decoration in the admin interface",
+     "A new model means re-embedding everything",
+     "To speed up search across the index",
+     "Because vectors are stored as text"
     ],
     "answer": 1,
     "why": "Vectors from different models are not comparable.",
     "kind": "concept",
     "distractors": [
-     "It matters operationally.",
+     "It is operational information.",
      "",
-     "Unrelated.",
-     "They are numbers."
+     "It does not affect speed.",
+     "Vectors are numbers."
     ]
    },
    {
     "id": "c9-2-m07",
     "q": "What does the index store?",
     "options": [
-     "Vectors in an ANN index, text in a keyword index, and metadata for filtering",
-     "Only the original PDFs",
-     "Only vectors",
-     "Only metadata"
+     "Vectors (ANN), text (keyword) and metadata",
+     "Only the original PDFs, for re-parsing",
+     "Only the vectors, for semantic search",
+     "Only the metadata, for filtering"
     ],
     "answer": 0,
     "why": "Hybrid search and permission filters need all three.",
     "kind": "concept",
     "distractors": [
      "",
-     "Search needs processed forms.",
+     "Search needs indexes, not files.",
      "Keyword search and filters need more.",
-     "Search needs content."
+     "Text and vectors are needed too."
     ]
    },
    {
     "id": "c9-2-m08",
     "q": "Fixed-size chunks cut a rule away from its exception. What fixes it?",
     "options": [
-     "A bigger answer model",
-     "Removing overlap",
-     "Paragraph- or structure-aware chunking that keeps sections intact",
-     "Smaller chunks"
+     "A bigger, stronger model to write the answers",
+     "Removing the overlap between neighbouring chunks",
+     "Structure-aware chunking that keeps sections whole",
+     "Smaller chunks of a fixed size, with more of them"
     ],
     "answer": 2,
     "why": "The chunking figure shows this directly.",
     "kind": "scenario",
     "distractors": [
-     "The model never sees the exception.",
-     "Overlap helps, not hurts.",
+     "The model never sees both together.",
+     "Less overlap makes it worse.",
      "",
-     "Smaller chunks cut more often."
+     "Smaller cuts separate more rules."
     ]
    },
    {
@@ -1003,18 +1080,18 @@
     "q": "PDF parsing is poor and answers are wrong. A team switches to a stronger answer model. What is likely?",
     "options": [
      "Retrieval improves automatically",
-     "Costs fall",
-     "Little improvement: fix parsing first",
-     "Answers become correct"
+     "Costs fall with the stronger model",
+     "Little gain: fix parsing first",
+     "Answers become correct at last"
     ],
     "answer": 2,
     "why": "The model cannot use text that parsing lost.",
     "kind": "scenario",
     "distractors": [
-     "Retrieval is unaffected.",
-     "Costs usually rise.",
+     "The parsed text is still broken.",
+     "Stronger models usually cost more.",
      "",
-     "The model still lacks correct text."
+     "Bad input stays bad."
     ]
    },
    {
@@ -1035,6 +1112,25 @@
      "",
      "Ten times too many."
     ]
+   },
+   {
+    "id": "c9-2-m11",
+    "q": "A refund policy chunk reads “Refunds are allowed within 30 days” with no title or section. A query about “electronics returns” misses it, though the section was about electronics. What fix does the topic suggest?",
+    "options": [
+     "Raise top-k until the chunk appears somewhere in the results",
+     "Remove the overlap between chunks to keep them distinct",
+     "Use smaller chunks so each one holds a single short sentence",
+     "Prepend the document title and section path to each chunk before embedding"
+    ],
+    "answer": 3,
+    "why": "The header gives the chunk context it lacks, so it can be retrieved and cited on its own.",
+    "kind": "scenario",
+    "distractors": [
+     "That adds noise without fixing the chunk.",
+     "Overlap is not why the context is missing.",
+     "Smaller chunks lose even more context.",
+     ""
+    ]
    }
   ],
   "interview": [
@@ -1048,7 +1144,8 @@
      "Chunk with headers",
      "Embed and index",
      "Retrieve, filter, rerank, generate with citations"
-    ]
+    ],
+    "followUp": "Which stage would you check first when answers degrade?"
    },
    {
     "id": "c9-2-i02",
@@ -1060,7 +1157,8 @@
      "Overlap",
      "Headers for context",
      "Evaluate on real queries"
-    ]
+    ],
+    "followUp": "How do you chunk tables?"
    },
    {
     "id": "c9-2-i03",
@@ -1071,7 +1169,8 @@
      "Tables and layout",
      "Scanned documents and OCR",
      "Measure parsing directly"
-    ]
+    ],
+    "followUp": "How would you measure parsing quality directly?"
    },
    {
     "id": "c9-2-i04",
@@ -1095,7 +1194,8 @@
      "Permissions",
      "Language",
      "Embedding model version"
-    ]
+    ],
+    "followUp": "Which of these fields must never be missing?"
    },
    {
     "id": "c9-2-i06",
@@ -1107,7 +1207,8 @@
      "Header with product and fare family",
      "Tests for rule–exception pairs"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "How would you test that no fee is separated from its exception?"
    },
    {
     "id": "c9-2-i07",
@@ -1119,7 +1220,8 @@
      "Cleaning and deduplication",
      "Structure-aware chunking",
      "Versioned embeddings and indexes"
-    ]
+    ],
+    "followUp": "How do you handle a document deleted at its source?"
    },
    {
     "id": "c9-2-i08",
@@ -1130,7 +1232,8 @@
      "End-to-end answer evaluation",
      "Cost and latency",
      "Per-document-type results"
-    ]
+    ],
+    "followUp": "Which document types are most sensitive to chunk size?"
    }
   ]
  },
@@ -1159,18 +1262,18 @@
     "id": "c9-4-m02",
     "q": "What do approximate nearest-neighbour (ANN) indexes trade?",
     "options": [
-     "Nothing",
-     "Speed for exactness",
-     "Accuracy for storage only",
-     "A little recall for orders-of-magnitude speed"
+     "Nothing; results are identical",
+     "Speed in exchange for exactness",
+     "Accuracy for smaller storage only",
+     "A little recall for much more speed"
     ],
     "answer": 3,
     "why": "Exact search is fine for thousands of vectors, too slow for millions at high query rates.",
     "kind": "concept",
     "distractors": [
-     "There is a trade-off.",
-     "That reverses it.",
-     "They mainly trade recall for speed.",
+     "ANN can miss some neighbours.",
+     "It is the other way round.",
+     "Speed is the main gain.",
      ""
     ]
    },
@@ -1178,10 +1281,10 @@
     "id": "c9-4-m03",
     "q": "How does HNSW search work?",
     "options": [
-     "Compare with every vector",
-     "Hash vectors into buckets only",
-     "Start at a sparse top layer, greedily move closer to the query, drop a layer, and repeat",
-     "Cluster vectors and search one cluster"
+     "Compare the query with every vector in turn",
+     "Hash the vectors into buckets and scan one",
+     "Start at a sparse top layer and descend greedily",
+     "Cluster the vectors and search one cluster"
     ],
     "answer": 2,
     "why": "Upper layers act as express lanes with long links.",
@@ -1216,10 +1319,10 @@
     "id": "c9-4-m05",
     "q": "How does an IVF index search?",
     "options": [
-     "Walk a layered graph",
-     "Cluster vectors with k-means and search only the nprobe nearest clusters",
-     "Use an inverted keyword index",
-     "Scan everything"
+     "Walk a layered graph from a sparse top layer downwards",
+     "Cluster with k-means; search the nearest nprobe clusters",
+     "Use an inverted index from terms to documents",
+     "Scan every vector in the index and keep the closest"
     ],
     "answer": 1,
     "why": "More probes raise recall and cost.",
@@ -1273,37 +1376,37 @@
     "id": "c9-4-m08",
     "q": "What is the common pattern for searching quantised vectors?",
     "options": [
-     "Never use full precision again",
-     "Search the compressed vectors, then re-score the top candidates with full-precision vectors",
-     "Delete the original vectors",
-     "Quantise only the query"
+     "Never use the full-precision vectors again",
+     "Search compressed vectors, re-score with full ones",
+     "Delete the original vectors to save space",
+     "Quantise only the query, not the stored vectors"
     ],
     "answer": 1,
     "why": "Re-scoring recovers most of the lost recall.",
     "kind": "concept",
     "distractors": [
-     "Re-scoring needs them.",
+     "Full precision is used to re-score.",
      "",
      "They are needed for re-scoring.",
-     "Both sides are compared."
+     "The stored vectors are what shrink."
     ]
    },
    {
     "id": "c9-4-m09",
     "q": "efSearch 40 gives Recall@10 0.91 at 2 ms; efSearch 200 gives 0.985 at 7 ms. How should you choose?",
     "options": [
-     "Randomly",
-     "Always the highest recall",
-     "Always the fastest",
-     "By how much a missed chunk costs versus the latency budget, measured on your own data"
+     "Randomly, since the difference is small",
+     "Always the highest recall available",
+     "Always the fastest setting available",
+     "By the cost of a miss versus the latency budget"
     ],
     "answer": 3,
     "why": "The right point depends on the application.",
     "kind": "scenario",
     "distractors": [
-     "Not a method.",
-     "Latency budgets matter.",
-     "Too many misses may be unacceptable.",
+     "The gap matters for some uses.",
+     "Latency budgets matter too.",
+     "A missed chunk can be costly.",
      ""
     ]
    },
@@ -1311,19 +1414,19 @@
     "id": "c9-4-m10",
     "q": "Retrieved passages are the wrong ones, though ANN recall against exact search is 0.99. What will raising ANN recall do?",
     "options": [
-     "Little: the representation ranks the wrong passages close; fix the embeddings or retrieval method",
-     "Fix it completely",
-     "Make it worse",
-     "Change the passages' text"
+     "Little: the embeddings rank the wrong passages close",
+     "Fix it completely, since higher recall finds better passages",
+     "Make it worse, because a slower search returns fewer results",
+     "Change the passages' text so they match the query better"
     ],
     "answer": 0,
     "why": "ANN recall measures agreement with exact search, not relevance.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Exact search would return the same wrong passages.",
-     "It would slightly improve agreement, not relevance.",
-     "Unrelated."
+     "ANN recall measures agreement with exact search.",
+     "It would barely change the passages.",
+     "ANN settings do not change text."
     ]
    }
   ],
@@ -1337,7 +1440,8 @@
      "ANN trades a little recall for speed",
      "Fine to use exact search for small corpora",
      "Measure ANN recall"
-    ]
+    ],
+    "followUp": "At what corpus size would you switch from exact to ANN search?"
    },
    {
     "id": "c9-4-i02",
@@ -1349,7 +1453,8 @@
      "M: links per node",
      "efConstruction: build quality",
      "efSearch: query-time candidates"
-    ]
+    ],
+    "followUp": "Which of these can you change without rebuilding the index?"
    },
    {
     "id": "c9-4-i03",
@@ -1360,7 +1465,8 @@
      "PQ: codebooks, 16–64× smaller",
      "Binary: 32× smaller",
      "Re-score with full vectors"
-    ]
+    ],
+    "followUp": "How do you know quantisation is not hurting results?"
    },
    {
     "id": "c9-4-i04",
@@ -1384,7 +1490,8 @@
      "Recall against exact search",
      "Latency at load",
      "Choose by cost of misses"
-    ]
+    ],
+    "followUp": "Recall is fine at idle but drops under load. Why might that be?"
    },
    {
     "id": "c9-4-i06",
@@ -1397,7 +1504,8 @@
      "efSearch tuned on shopper queries",
      "Monitoring ANN recall"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "How would you add new listings without slowing search?"
    },
    {
     "id": "c9-4-i07",
@@ -1408,7 +1516,8 @@
      "Retrieval quality: relevance to labels",
      "Measure both separately",
      "Fix each with different tools"
-    ]
+    ],
+    "followUp": "Which would you fix first if both look poor?"
    },
    {
     "id": "c9-4-i08",
@@ -1419,7 +1528,8 @@
      "SSD latency trade-offs",
      "Cost versus memory",
      "Benchmark on your data"
-    ]
+    ],
+    "followUp": "What latency would you expect, and how would you verify it?"
    }
   ]
  },
@@ -1429,37 +1539,37 @@
     "id": "c9-6-m01",
     "q": "What does query rewriting do?",
     "options": [
-     "Turns short or conversational questions into standalone search queries using history",
-     "Translates documents",
-     "Removes citations",
-     "Compresses the answer"
+     "Turns follow-ups into standalone search queries",
+     "Translates the documents into the user's language",
+     "Removes citations from the generated answer",
+     "Compresses the answer to fit the window"
     ],
     "answer": 0,
     "why": "“What about for contractors?” needs the earlier context.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "Unrelated.",
-     "Unrelated."
+     "It rewrites the query, not documents.",
+     "Unrelated to citations.",
+     "It acts before retrieval."
     ]
    },
    {
     "id": "c9-6-m02",
     "q": "What is HyDE?",
     "options": [
-     "A reranker",
-     "A chunking method",
-     "A vector database",
-     "Generating a hypothetical answer and embedding that instead of the question"
+     "A cross-encoder reranker for the top results",
+     "A chunking method that splits long documents",
+     "A vector database built for hybrid search",
+     "Embedding a generated answer instead of the question"
     ],
     "answer": 3,
     "why": "The hypothetical answer may sit closer to relevant passages in embedding space.",
     "kind": "concept",
     "distractors": [
-     "Rerankers score pairs.",
-     "Unrelated.",
-     "It is a query technique.",
+     "HyDE changes the query.",
+     "HyDE is about queries.",
+     "HyDE is a query technique.",
      ""
     ]
    },
@@ -1467,75 +1577,75 @@
     "id": "c9-6-m03",
     "q": "What is decomposition?",
     "options": [
-     "Splitting documents into sentences",
-     "Lowering precision",
-     "Splitting a compound question into sub-queries, retrieving for each, then synthesising",
-     "Deleting old chunks"
+     "Splitting documents into single sentences",
+     "Lowering the numeric precision of vectors",
+     "Splitting a compound question into sub-queries",
+     "Deleting old chunks from the index"
     ],
     "answer": 2,
     "why": "For example, comparing policies in two countries.",
     "kind": "concept",
     "distractors": [
      "That is chunking.",
-     "Unrelated.",
+     "That is quantisation.",
      "",
-     "Unrelated."
+     "That is index maintenance."
     ]
    },
    {
     "id": "c9-6-m04",
     "q": "What is multi-hop retrieval?",
     "options": [
-     "A chain of searches where each uses a fact found by the previous one",
-     "Using two embedding models",
-     "Retrieving twice for redundancy",
-     "Searching two indexes at once"
+     "A chain of searches, each using the last one's fact",
+     "Using two embedding models in parallel and fusing them",
+     "Retrieving the same query twice for redundancy",
+     "Searching a keyword and a vector index at once"
     ],
     "answer": 0,
     "why": "It is an iterative loop, effectively a small agent.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "Not a chain.",
-     "That is hybrid retrieval."
+     "That is an ensemble, not a chain.",
+     "Repeats do not use new facts.",
+     "That is hybrid search."
     ]
    },
    {
     "id": "c9-6-m05",
     "q": "What keeps multi-hop retrieval from searching endlessly?",
     "options": [
-     "More chunks",
+     "More chunks retrieved per hop",
      "A hop limit and an abstain path",
-     "A higher temperature",
-     "A bigger model"
+     "A higher sampling temperature",
+     "A bigger, smarter planner model"
     ],
     "answer": 1,
     "why": "For example, at most 3 hops, then abstain.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
+     "More chunks do not stop a loop.",
      "",
-     "Unrelated.",
-     "Unrelated."
+     "Randomness does not bound hops.",
+     "Size does not bound the loop."
     ]
    },
    {
     "id": "c9-6-m06",
     "q": "How should citations be verified?",
     "options": [
-     "Count them",
-     "Check they are formatted as links",
-     "Trust the model",
-     "In code: each cited label exists, and the cited chunk supports the sentence (judge or overlap)"
+     "Count them and require at least one per answer",
+     "Check they are formatted as clickable links",
+     "Trust the model, which chose the sources",
+     "In code: labels exist and the chunk supports the claim"
     ],
     "answer": 3,
     "why": "Then render citations as links to the source.",
     "kind": "concept",
     "distractors": [
-     "Counts are not support.",
-     "Formatting is not support.",
-     "Models can cite unsupported text.",
+     "Counting does not check support.",
+     "Format is not support.",
+     "Models attach unsupported citations.",
      ""
     ]
    },
@@ -1543,76 +1653,95 @@
     "id": "c9-6-m07",
     "q": "Retrieval scores are low and nothing supports an answer. What should the assistant do?",
     "options": [
-     "Guess politely",
-     "Retry forever",
-     "Abstain, say it was not found and offer a next step",
-     "Answer confidently"
+     "Guess politely and add a disclaimer",
+     "Retry retrieval until something is found",
+     "Abstain and offer a next step",
+     "Answer confidently from general knowledge"
     ],
     "answer": 2,
     "why": "A confident wrong answer is worse than an honest “not found”.",
     "kind": "scenario",
     "distractors": [
-     "Still a guess.",
-     "Unbounded retries cost time and money.",
+     "Guesses mislead even with caveats.",
+     "Endless retries waste time.",
      "",
-     "That risks a wrong answer."
+     "That risks a confident wrong answer."
     ]
    },
    {
     "id": "c9-6-m08",
     "q": "A user asks “what about for contractors?” after a question about leave. What must happen before retrieval?",
     "options": [
-     "Rewrite it into a standalone query, for example “parental leave policy for contractors”",
-     "Search the words as typed",
-     "Refuse",
-     "Ask the model to guess"
+     "Rewrite it as a standalone query using history",
+     "Search the words exactly as typed",
+     "Refuse until the user rephrases it",
+     "Ask the model to guess the topic"
     ],
     "answer": 0,
     "why": "The follow-up alone is ambiguous.",
     "kind": "scenario",
     "distractors": [
      "",
-     "It will retrieve poorly.",
-     "It is answerable.",
-     "Guessing is not retrieval."
+     "“What about for contractors?” retrieves nothing useful.",
+     "The history makes it answerable.",
+     "Rewriting uses the history explicitly."
     ]
    },
    {
     "id": "c9-6-m09",
     "q": "An answer cites a whole 80-page document. What is the problem?",
     "options": [
-     "Nothing",
-     "The citation does not point to the clause the answer depends on",
-     "The document is too short",
-     "Citations must be dates"
+     "Nothing, as long as the link works",
+     "It does not point to the clause relied on",
+     "The document is too short to be cited",
+     "Citations must point to dates, not documents"
     ],
     "answer": 1,
     "why": "Cite the specific chunk.",
     "kind": "scenario",
     "distractors": [
-     "It is hard to verify.",
+     "The reader cannot find the supporting clause.",
      "",
-     "Length is not the issue.",
-     "Unrelated."
+     "It is 80 pages.",
+     "They must point to the supporting passage."
     ]
    },
    {
     "id": "c9-6-m10",
     "q": "When should you add multi-hop retrieval?",
     "options": [
-     "When evaluation shows single-shot retrieval fails on such questions",
-     "Only for short questions",
-     "Always",
-     "Never"
+     "When evaluation shows single-shot fails",
+     "Only for short, simple questions",
+     "Always, for every question asked",
+     "Never; single-shot retrieval is enough"
     ],
     "answer": 0,
     "why": "Each hop adds latency and a chance of error.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "It has costs.",
-     "It helps some questions."
+     "Short questions rarely need chains.",
+     "It adds cost and latency.",
+     "Some questions need chains."
+    ]
+   },
+   {
+    "id": "c9-6-m11",
+    "q": "“Compare parental leave in Germany and the UK” retrieves only German policy chunks. Which technique addresses this?",
+    "options": [
+     "Raise the reranker's threshold so that fewer, better chunks pass",
+     "Decompose it into one sub-query per country, retrieve for each, then synthesise",
+     "HyDE: embed a hypothetical answer instead of the original question",
+     "A hop limit with an abstain path for whatever results are missing"
+    ],
+    "answer": 1,
+    "why": "A compound question needs a retrieval per part; one query favours whichever part matches best.",
+    "kind": "scenario",
+    "distractors": [
+     "Fewer chunks make the gap worse.",
+     "",
+     "One hypothetical answer may still lean towards one country.",
+     "Abstaining does not fetch the missing UK policy."
     ]
    }
   ],
@@ -1626,7 +1755,8 @@
      "Sub-queries for compound questions",
      "Chains using found facts",
      "Costs and limits"
-    ]
+    ],
+    "followUp": "Which of these adds the most latency, and how do you bound it?"
    },
    {
     "id": "c9-6-i02",
@@ -1638,7 +1768,8 @@
      "Verify in code",
      "Check support",
      "Link to sources"
-    ]
+    ],
+    "followUp": "A citation is valid but supports only part of the sentence. What happens?"
    },
    {
     "id": "c9-6-i03",
@@ -1649,7 +1780,8 @@
      "No support found",
      "Conflicting sources",
      "Offer a next step"
-    ]
+    ],
+    "followUp": "How do you set the abstention threshold?"
    },
    {
     "id": "c9-6-i04",
@@ -1672,7 +1804,8 @@
      "Evaluate rewrites",
      "Fallback to clarifying questions",
      "Track follow-up failures"
-    ]
+    ],
+    "followUp": "How would you evaluate the rewrites themselves?"
    },
    {
     "id": "c9-6-i06",
@@ -1685,7 +1818,8 @@
      "Abstain if a hop fails",
      "Hop limit"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "The booking is found but no rule matches its fare family. What does the user see?"
    },
    {
     "id": "c9-6-i07",
@@ -1696,7 +1830,8 @@
      "Clear “not found” wording",
      "Next steps such as escalation",
      "Track should-answer refusals (8.4)"
-    ]
+    ],
+    "followUp": "Users complain about too many “not found” replies. What do you check?"
    },
    {
     "id": "c9-6-i08",
@@ -1708,7 +1843,8 @@
      "End-to-end correctness",
      "Latency per hop",
      "Abstention when chains break"
-    ]
+    ],
+    "followUp": "Which hop fails most often in practice, and why?"
    }
   ]
  },
@@ -1718,38 +1854,38 @@
     "id": "c9-7-m01",
     "q": "What are relevance labels (qrels)?",
     "options": [
-     "The model's confidence scores",
-     "Document lengths",
-     "For each test query, which items are relevant, binary or graded",
-     "User clicks only"
+     "The model's confidence scores per query",
+     "The lengths of the documents in the corpus",
+     "Which items are relevant to each test query",
+     "User clicks recorded in production only"
     ],
     "answer": 2,
     "why": "Every retrieval metric depends on them.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "Unrelated.",
+     "Confidence is not ground truth.",
+     "Lengths are not relevance.",
      "",
-     "Clicks are a noisy proxy."
+     "Clicks are biased signals."
     ]
    },
    {
     "id": "c9-7-m02",
     "q": "Why is Recall@k the key RAG metric?",
     "options": [
-     "It measures answer fluency",
-     "It is the easiest to compute",
-     "If the answer chunk is not retrieved, the model cannot use it",
-     "It measures latency"
+     "It measures how fluent the answer is",
+     "It is the easiest metric to compute",
+     "Unretrieved chunks cannot be used",
+     "It measures the latency of retrieval"
     ],
     "answer": 2,
     "why": "Missing evidence caps answer quality.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "Not the reason.",
+     "That is answer quality.",
+     "Ease is not why it matters.",
      "",
-     "Unrelated."
+     "Latency is separate."
     ]
    },
    {
@@ -1758,17 +1894,17 @@
     "options": [
      "0.6",
      "1.0",
-     "About 0.67",
+     "0.67",
      "0.4"
     ],
     "answer": 2,
     "why": "2 ÷ 3 ≈ 0.67.",
     "kind": "calculation",
     "distractors": [
-     "That is 3/5.",
-     "One relevant chunk was missed.",
+     "That divides 3 by 5.",
+     "One relevant chunk is missing.",
      "",
-     "That is Precision@5."
+     "That is 2 out of 5 results, which is Precision@5."
     ]
    },
    {
@@ -1832,37 +1968,37 @@
     "id": "c9-7-m07",
     "q": "What does the exponential gain (2^rel − 1) do compared with the linear gain?",
     "options": [
-     "Penalises relevant items",
-     "Makes nDCG exceed 1",
-     "Rewards the most relevant items far more",
-     "Ignores grades"
+     "Penalises the most relevant items",
+     "Makes nDCG exceed 1 for good rankings",
+     "Rewards top-graded items far more",
+     "Ignores the relevance grades entirely"
     ],
     "answer": 2,
     "why": "Always state which convention you report.",
     "kind": "concept",
     "distractors": [
      "It rewards them.",
-     "nDCG is normalised to at most 1.",
+     "Normalisation keeps it at most 1.",
      "",
-     "It depends on grades."
+     "It amplifies them."
     ]
    },
    {
     "id": "c9-7-m08",
     "q": "A new retriever finds relevant passages that were never labelled. How do its metrics look?",
     "options": [
-     "Undefined",
-     "Better than they should",
-     "Unaffected",
-     "Worse than they should: unlabelled relevant results count as misses"
+     "Undefined, since labels are missing",
+     "Better than they should be",
+     "Unaffected by the missing labels",
+     "Worse: unlabelled hits count as misses"
     ],
     "answer": 3,
     "why": "Pool results from several retrievers before labelling.",
     "kind": "scenario",
     "distractors": [
-     "They are computed, just biased.",
-     "Misses lower the scores.",
-     "Labels drive the metrics.",
+     "Metrics are computed; they are just biased.",
+     "Missing labels count against it.",
+     "Unlabelled hits are scored as misses.",
      ""
     ]
    },
@@ -1870,19 +2006,19 @@
     "id": "c9-7-m09",
     "q": "Retrieval metrics improved. Does that prove answers are better supported?",
     "options": [
-     "Only above 0.9",
-     "No: retrieval metrics do not measure whether the answer used the evidence",
-     "Yes, always",
-     "Only for nDCG"
+     "Only if every metric is above 0.9 on the test set",
+     "No: they do not show the answer used the evidence",
+     "Yes, always, since the evidence was retrieved",
+     "Only if nDCG improved as well as recall"
     ],
     "answer": 1,
     "why": "Evaluate answers separately (8.5).",
     "kind": "scenario",
     "distractors": [
-     "Same limitation.",
+     "No threshold proves usage.",
      "",
-     "They measure retrieval only.",
-     "Same limitation."
+     "Retrieval does not show the answer used it.",
+     "Ranking metrics do not show usage either."
     ]
    },
    {
@@ -1890,18 +2026,18 @@
     "q": "What does an nDCG of 1.0 mean?",
     "options": [
      "Every result is relevant",
-     "Recall is 1.0",
-     "The ranking matches the ideal ordering",
-     "The query was easy"
+     "Recall is also 1.0",
+     "Ranking matches the ideal order",
+     "The query was an easy one"
     ],
     "answer": 2,
     "why": "DCG is divided by the ideal DCG.",
     "kind": "concept",
     "distractors": [
-     "Not necessarily: ordering matters.",
-     "Different metric.",
+     "nDCG compares to the ideal order.",
+     "Recall is a separate measure.",
      "",
-     "Unrelated."
+     "Difficulty is not measured."
     ]
    }
   ],
@@ -1916,7 +2052,8 @@
      "MRR: first relevant rank",
      "nDCG: graded, position-discounted",
      "Gain conventions"
-    ]
+    ],
+    "followUp": "Which would you report to a product team, and why?"
    },
    {
     "id": "c9-7-i02",
@@ -1926,7 +2063,8 @@
      "Unretrieved evidence cannot be used",
      "Precision matters for context cost",
      "Choose k from the context budget"
-    ]
+    ],
+    "followUp": "How does k relate to the context budget?"
    },
    {
     "id": "c9-7-i03",
@@ -1937,7 +2075,8 @@
      "New retrievers penalised",
      "Pooling across retrievers",
      "Periodic relabelling"
-    ]
+    ],
+    "followUp": "How would you pool results to reduce the bias?"
    },
    {
     "id": "c9-7-i04",
@@ -1961,7 +2100,8 @@
      "Different but relevant results",
      "Pool and relabel",
      "Check answer-level metrics"
-    ]
+    ],
+    "followUp": "How would you settle which retriever is better?"
    },
    {
     "id": "c9-7-i06",
@@ -1973,7 +2113,8 @@
      "Recall at the context size",
      "Tie metrics to how evidence is used"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "Would MRR alone be enough? Why not?"
    },
    {
     "id": "c9-7-i07",
@@ -1985,7 +2126,8 @@
      "Per-query regressions",
      "Intervals",
      "Answer-level metrics alongside"
-    ]
+    ],
+    "followUp": "How do you present per-query regressions without flooding reviewers?"
    },
    {
     "id": "c9-7-i08",
@@ -1996,7 +2138,8 @@
      "Report a small k for ranking quality",
      "Context budget",
      "Consistency across releases"
-    ]
+    ],
+    "followUp": "Two releases used different k. Can you compare them?"
    }
   ]
  }
