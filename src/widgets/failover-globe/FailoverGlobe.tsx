@@ -1,15 +1,19 @@
 import { useMemo, useState } from 'react'
-import { StepPlayer, Widget, useProject } from '../kit'
+import { DataSource, StepPlayer, Widget, useProject } from '../kit'
 import { Scene3D } from '../scene3d/Scene3D'
 import { globeSteps } from './regions'
 
 /** 15.7: a regional failover on a globe, for the selected project: latency, capacity and residency. */
 export default function FailoverGlobe() {
-  const project = useProject().id
+  const p = useProject()
+  const project = p.id
   const [step, setStep] = useState(0)
   const steps = useMemo(() => globeSteps(project), [project])
   return (
     <Widget name="failover-globe">
+      <DataSource project={p} files={[]}>
+        Illustrative regions and user cities for this company, not from its dataset.
+      </DataSource>
       <StepPlayer count={steps.length} step={step} onStep={setStep} noun="Step" intervalMs={3200} />
       <Scene3D
         steps={steps}
