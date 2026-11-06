@@ -403,15 +403,6 @@ Done (6 November 2026), one commit per chapter:
 - Annotated walkthroughs of about 10 key papers.
 - A glossary with hover cards, and flashcards with spaced repetition (FSRS), fed from the check pages.
 
-### Phase 8 — Learning system and hardening
-
-- A prerequisite map (2D/3D graph of topics), filtered by project.
-- A sandbox for your project that grows chapter by chapter.
-- Spaced-repetition scheduling on the Practice page: missed questions come back after increasing intervals (FSRS).
-- Export and import of progress (project choice, studied topics, check scores).
-- PWA offline mode for the course itself. Opt-in runtimes and models work offline only if already cached, and Colab guides always need a connection.
-- Accessibility audit (WCAG 2.1 AA) and performance budgets, including 3D scenes on integrated graphics. CI does not run e2e and it runs only on request, so decide what enforces these.
-
 ---
 
 ## Change checklist (phase 2) ✅
