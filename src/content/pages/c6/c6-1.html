@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c6-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Making an assistant happens in stages, like training a doctor. First comes years of general reading (pretraining): the model reads a huge slice of the internet and learns language, facts and patterns, but it only knows how to continue text. Then comes residency (supervised fine-tuning): it studies thousands of example conversations and learns to answer like an assistant. Last comes feedback from supervisors (preference tuning): it learns which of its own answers people prefer.</p>
+<p>The first stage takes almost all the effort. Everything after it is small by comparison, which is why companies can adapt an existing model instead of building one.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c6-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Pretraining</b>: next-token prediction on a huge general corpus. Produces a <b>base model</b> that continues text but does not reliably follow instructions. This stage uses &gt;95% of total compute.</div>
-<div><b>Continued pretraining</b> (domain-adaptive pretraining): more next-token training on domain text (legal, medical, code, a new language) to shift knowledge and vocabulary use.</div>
-<div><b>Supervised fine-tuning (SFT)</b> / instruction tuning: train on curated (instruction, response) conversations so the model learns to act as an assistant.</div>
+<div><b><a class="gl" href="#gl-pretraining">Pretraining</a></b>: next-token prediction on a huge general corpus. Produces a <b><a class="gl" href="#gl-base-model">base model</a></b> that continues text but does not reliably follow instructions. This stage uses &gt;95% of total compute.</div>
+<div><b><a class="gl" href="#gl-continued-pretraining">Continued pretraining</a></b> (domain-adaptive pretraining): more next-token training on domain text (legal, medical, code, a new language) to shift knowledge and vocabulary use.</div>
+<div><b><a class="gl" href="#gl-sft">Supervised fine-tuning (SFT)</a></b> / instruction tuning: train on curated (instruction, response) conversations so the model learns to act as an assistant.</div>
 <div><b>Preference optimisation</b>: train on comparisons ("response A is better than B") via RLHF or DPO, and increasingly on verifiable rewards (tests pass, maths answer correct) to improve helpfulness, safety and reasoning.</div>
 </div>
 <figure class="fig flow"><div class="stage">
@@ -9,4 +17,35 @@
 <ol class="steps"><li data-n="0">Weights start random; the model outputs gibberish (loss ≈ ln(vocab size)).</li><li data-n="1">Months on thousands of GPUs predicting the next token of web pages, books, code and papers. The model absorbs grammar, facts, reasoning patterns.</li><li data-n="2">A base model asked "What is the capital of France?" may continue with more quiz questions instead of answering.</li><li data-n="3">Optional: extend with domain or recent data; risk of forgetting general skills if the mix is not balanced.</li><li data-n="4">SFT teaches the conversation format and helpful behaviour from examples of ideal answers.</li><li data-n="5">Preference and RL stages shape tone, refusal behaviour, honesty and multi-step reasoning beyond what demonstrations can teach.</li><li data-n="6">The released "instruct" or "chat" model. Most applications use this, not the base model.</li></ol></div>
 <figcaption><b>The training pipeline.</b> Each stage starts from the previous checkpoint. Compute drops by orders of magnitude after pretraining, which is why customisation (chapter 13) is affordable.</figcaption></figure>
 <div class="box example"><h5>Example: base vs instruct</h5><p>Prompt "Write a haiku about Kubernetes". A base model may continue: "Write a haiku about Docker. Write a haiku about…" because lists of prompts are common online. The instruct model writes the haiku. Fine-tuning for a narrow format usually starts from the instruct model; continued pretraining usually starts from the base model.</p></div>
+</section>
+
+<section class="tp tp-math" id="c6-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How lopsided the stages are</b> for an 8-billion-parameter model (illustrative token counts):</p>
+<div class="tw"><table>
+<tr><th>Stage</th><th>Training tokens</th></tr>
+<tr><td>Pretraining</td><td>15 trillion</td></tr>
+<tr><td>Supervised fine-tuning: 100,000 conversations × 600 tokens</td><td>60 million</td></tr>
+<tr><td>Preference tuning: 50,000 pairs</td><td>a few hundred million, counting the extra passes</td></tr>
+</table></div>
+<p>15 trillion ÷ 60 million = 250,000: pretraining reads a quarter of a million times more text than fine-tuning. At about 500,000 GPU-hours, pretraining costs millions of dollars; fine-tuning the same model can take a few GPU-hours.</p>
+</section>
+
+<section class="tp tp-code" id="c6-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program works out the GPU-hours of each training stage for an 8B model and each stage’s share of the total compute. Change the token counts in <code>STAGES</code>, for example a much bigger fine-tuning set, and run it again.</p>
+<figure class="fig live" id="snip-stage-compute"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"stage-compute"}'></div></div>
+<figcaption><b>Where the training compute goes, in real Python.</b> The token counts and GPU speed are illustrative.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c6-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2203.02155">Ouyang et al. (2022), Training language models to follow instructions with human feedback</a> <small>The SFT then preference-tuning recipe behind chat assistants.</small></li>
+<li><a href="https://arxiv.org/abs/2004.10964">Gururangan et al. (2020), Don’t Stop Pretraining</a> <small>Continued pretraining on domain text, and when it helps.</small></li>
+<li><a href="https://arxiv.org/abs/2407.21783">Llama Team (2024), The Llama 3 Herd of Models</a> <small>A full account of every stage for a modern open model.</small></li>
+<li><a href="https://arxiv.org/abs/2411.15124">Lambert et al. (2024), Tülu 3: Pushing Frontiers in Open Language Model Post-Training</a> <small>An open, reproducible post-training recipe with its data.</small></li>
+</ol>
+</section>

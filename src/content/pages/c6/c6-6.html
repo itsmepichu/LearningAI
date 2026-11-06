@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c6-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Training a big model is like moving a house with a team of trucks: no single truck can carry it all. You can give every truck a full copy of the plans and split the boxes (data parallelism), stop storing duplicate copies of the bulky items on every truck (sharding), saw the biggest pieces of furniture in half across two trucks (tensor parallelism), or have each truck carry one floor of the house in a convoy (pipeline parallelism).</p>
+<p>Each way trades memory against waiting for the others, so real runs combine all of them.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c6-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Training memory per parameter with mixed-precision Adam is about <b>16 bytes</b>: 2 (BF16 weights) + 2 (BF16 gradients) + 12 (FP32 master weights, Adam first and second moments). An 8B model needs ~128 GB before counting activations, more than any single GPU. Work is therefore split in several ways, usually combined ("3D parallelism"):</p>
 <ul>
-<li><b>Data parallelism (DP)</b>: every GPU holds a full model copy and processes different batches; gradients are averaged with an <b>all-reduce</b> each step. Simple; limited by per-GPU memory.</li>
-<li><b>Sharding (ZeRO / FSDP)</b>: data parallelism where optimiser states, gradients and even weights are split across GPUs and gathered just in time. Removes the memory redundancy of plain DP.</li>
-<li><b>Tensor parallelism (TP)</b>: split individual weight matrices across GPUs (e.g. half the columns each). Needs very fast interconnect (NVLink), so used within a node.</li>
-<li><b>Pipeline parallelism (PP)</b>: assign consecutive layers to different GPUs; micro-batches flow through like an assembly line. Creates idle "bubbles".</li>
+<li><b><a class="gl" href="#gl-data-parallelism">Data parallelism (DP)</a></b>: every GPU holds a full model copy and processes different batches; gradients are averaged with an <b>all-reduce</b> each step. Simple; limited by per-GPU memory.</li>
+<li><b><a class="gl" href="#gl-zero-fsdp">Sharding (ZeRO / FSDP)</a></b>: data parallelism where optimiser states, gradients and even weights are split across GPUs and gathered just in time. Removes the memory redundancy of plain DP.</li>
+<li><b><a class="gl" href="#gl-tensor-parallelism">Tensor parallelism (TP)</a></b>: split individual weight matrices across GPUs (e.g. half the columns each). Needs very fast interconnect (NVLink), so used within a node.</li>
+<li><b><a class="gl" href="#gl-pipeline-parallelism">Pipeline parallelism (PP)</a></b>: assign consecutive layers to different GPUs; micro-batches flow through like an assembly line. Creates idle "bubbles".</li>
 <li>Also: <b>sequence/context parallelism</b> (split long sequences) and <b>expert parallelism</b> (place MoE experts on different GPUs).</li>
 </ul>
 <figure class="fig"><div class="stage">
@@ -42,4 +50,36 @@
 <figure class="fig live" id="scene-zero"><div class="stage"><div data-widget="zero-sharding"></div></div>
 <figcaption><b>The same memory, per GPU, stage by stage.</b> GPUs go across, the ZeRO stage is the third axis and height is memory per GPU, split into weights, gradients and optimiser state, with the same formula as the figure above. Under plain data parallelism every GPU holds a full copy; each stage then keeps only 1/N of one more part on each GPU. The red line is the GPU's memory. Activations, which also need room, are not included.</figcaption></figure>
 <div class="box example"><h5>Example: fitting a 70B fine-tune</h5><p>Full fine-tuning 70B × 16 bytes ≈ 1.1 TB of state. On 8 × 80 GB GPUs (640 GB) it does not fit even with full sharding, before activations. Options: more nodes with FSDP, CPU offloading (slow), or parameter-efficient fine-tuning, where only small adapter matrices are trained (13.3). QLoRA can fine-tune a 70B model on a single 80 GB GPU.</p></div>
+</section>
+
+<section class="tp tp-math" id="c6-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Memory per GPU</b> for training an 8-billion-parameter model on 8 GPUs of 80 GB, at 16 bytes per parameter (activations not included):</p>
+<div class="tw"><table>
+<tr><th>Method</th><th>Per GPU</th><th>Fits?</th></tr>
+<tr><td>Plain data parallel: a full copy each</td><td>8 × 16 = 128 GB</td><td>No</td></tr>
+<tr><td>ZeRO-1: optimiser state split 8 ways</td><td>2 + 2 + 12 ÷ 8 per parameter: 44 GB</td><td>Yes</td></tr>
+<tr><td>ZeRO-3 / FSDP: everything split 8 ways</td><td>128 ÷ 8 = 16 GB</td><td>Yes</td></tr>
+</table></div>
+<p><b>The pipeline bubble.</b> With 4 pipeline stages and only 1 micro-batch, each GPU waits 3 of every 4 time slots: 75% idle. With 16 micro-batches, the waiting shrinks to 3 ÷ 19 ≈ 16%.</p>
+</section>
+
+<section class="tp tp-code" id="c6-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program works out the memory each GPU needs to train an 8B model with plain data parallelism and the three ZeRO stages, and how long pipeline GPUs sit idle. Change <code>PARAMS</code> to 70e9 or <code>GPUS</code> to 64 and run it again.</p>
+<figure class="fig live" id="snip-parallel-memory"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"parallel-memory"}'></div></div>
+<figcaption><b>Memory per GPU, in real Python.</b> Activations and buffers are not included, so a real run needs more.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c6-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1910.02054">Rajbhandari et al. (2019), ZeRO: Memory Optimizations Toward Training Trillion Parameter Models</a> <small>The three ZeRO stages and their memory savings.</small></li>
+<li><a href="https://arxiv.org/abs/1909.08053">Shoeybi et al. (2019), Megatron-LM</a> <small>Tensor parallelism inside transformer layers.</small></li>
+<li><a href="https://arxiv.org/abs/1811.06965">Huang et al. (2018), GPipe</a> <small>Pipeline parallelism with micro-batches, and the bubble.</small></li>
+<li><a href="https://docs.pytorch.org/docs/stable/fsdp.html">PyTorch: FullyShardedDataParallel</a> <small>FSDP in code.</small></li>
+<li><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook">Hugging Face: The Ultra-Scale Playbook</a> <small>A practical guide to combining every kind of parallelism.</small></li>
+</ol>
+</section>

@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c4-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A deep network is like a long chain of people passing a message by whisper. If everyone speaks a little too quietly, the message fades to nothing by the end; a little too loudly, and it becomes a shout. Gradients passing back through dozens of layers have the same problem.</p>
+<p>The fixes are simple habits: start the weights at the right size, re-level the volume at every layer (normalisation), give the message a direct line around each person (residual connections), and cap any sudden shout (gradient clipping). Dropout is a different trick: randomly silencing some people during practice, so the team does not depend on any one of them.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c4-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Initialisation</b>: weights start as small random numbers with a variance scaled to layer width (Xavier/Glorot, He/Kaiming). Too large and activations explode through the layers; too small and they shrink to zero. All-zero initialisation makes every neuron identical, so they never learn different things.</li>
-<li><b>Vanishing / exploding gradients</b>: backprop multiplies many factors. If they are mostly below 1, gradients vanish in early layers (they stop learning); above 1, they explode. Deep networks stay trainable thanks to residual connections (5.3), normalisation and careful initialisation.</li>
-<li><b>Normalisation</b>: rescale activations to a stable range. <b>BatchNorm</b> normalises each feature across the batch (common in CNNs). <b>LayerNorm</b> normalises across features within one example (used in transformers because it does not depend on batch size). <b>RMSNorm</b> is a cheaper LayerNorm variant used by many current LLMs.</li>
-<li><b>Dropout</b>: during training, randomly zero a fraction of activations (e.g. 10%) so the network cannot rely on any single path. It is turned off at inference.</li>
-<li><b>Gradient clipping</b>: if the gradient norm exceeds a limit (often 1.0), scale it down. A cheap guard against loss spikes.</li>
+<li><b><a class="gl" href="#gl-vanishing-gradients">Vanishing / exploding gradients</a></b>: backprop multiplies many factors. If they are mostly below 1, gradients vanish in early layers (they stop learning); above 1, they explode. Deep networks stay trainable thanks to residual connections (5.3), normalisation and careful initialisation.</li>
+<li><b><a class="gl" href="#gl-normalisation">Normalisation</a></b>: rescale activations to a stable range. <b>BatchNorm</b> normalises each feature across the batch (common in CNNs). <b>LayerNorm</b> normalises across features within one example (used in transformers because it does not depend on batch size). <b>RMSNorm</b> is a cheaper LayerNorm variant used by many current LLMs.</li>
+<li><b><a class="gl" href="#gl-dropout">Dropout</a></b>: during training, randomly zero a fraction of activations (e.g. 10%) so the network cannot rely on any single path. It is turned off at inference.</li>
+<li><b><a class="gl" href="#gl-gradient-clipping">Gradient clipping</a></b>: if the gradient norm exceeds a limit (often 1.0), scale it down. A cheap guard against loss spikes.</li>
 </ul>
 <figure class="fig"><div class="stage">
 <div class="cols2"><div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Gradient size reaching each layer (illustrative)</p>
@@ -11,4 +19,32 @@
 <div><svg viewBox="0 0 300 200" role="img" aria-label="Dropout: random neurons disabled"><g id="dropViz"></g><text x="150" y="195" text-anchor="middle" class="xs mut">training: a new random 30% dropped each step</text></svg></div></div>
 </div><figcaption><b>Two stability tools.</b> Left: without residual paths, the gradient shrinks layer by layer and early layers barely learn. Right: dropout disables different neurons at each training step (animated).</figcaption></figure>
 <div class="box example"><h5>Example: reading a loss spike</h5><p>Training loss falls smoothly to 2.1, then jumps to 7.8 at step 14,200 and goes NaN. Likely causes: learning rate too high for this phase, a corrupted batch (e.g. extremely long or garbage sequence), or FP16 overflow. Remedies: gradient clipping, lower peak LR, BF16 instead of FP16, skip or inspect the offending batch, resume from the last checkpoint.</p></div>
+</section>
+
+<section class="tp tp-math" id="c4-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How fast it fades or explodes.</b> If each of 30 layers shrinks the gradient to 0.7 of its size, the first layer receives 0.7 multiplied by itself 30 times: about 0.00002 of the original. If each layer grows it to 1.3, it arrives about 2,600 times bigger. Small differences per layer become huge over depth.</p>
+<p><b>The right starting size.</b> He initialisation for ReLU layers 256 wide draws weights with a spread of about 0.09 (the square root of 2 ÷ 256). That keeps the signal roughly the same size from layer to layer.</p>
+<p><b>Dropout keeps the average.</b> Dropping 10% of values and multiplying the other 90% by 1 ÷ 0.9 ≈ 1.11 leaves the average unchanged, so nothing needs adjusting when dropout is turned off for real use.</p>
+<p><b>Clipping.</b> If the gradient’s overall size is 5.0 and the limit is 1.0, every number in it is multiplied by 1.0 ÷ 5.0 = 0.2. The direction stays the same; only the step gets smaller.</p>
+</section>
+
+<section class="tp tp-code" id="c4-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program sends a batch of data through 50 random ReLU layers with weights that are too small, too big and correctly scaled, then through too-big layers with residual connections and normalisation, and checks that dropout keeps the average. Change <code>DEPTH</code> or the scales and run it again.</p>
+<figure class="fig live" id="snip-stability"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"stability"}'></div></div>
+<figcaption><b>Signals through 50 layers, in real Python.</b> The layers are random and untrained, so this shows the forward signal only.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c4-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://proceedings.mlr.press/v9/glorot10a.html">Glorot and Bengio (2010), Understanding the difficulty of training deep feedforward neural networks</a> <small>Why initial weight scale matters, and Xavier initialisation.</small></li>
+<li><a href="https://arxiv.org/abs/1502.01852">He et al. (2015), Delving Deep into Rectifiers</a> <small>He initialisation for ReLU networks.</small></li>
+<li><a href="https://arxiv.org/abs/1607.06450">Ba, Kiros and Hinton (2016), Layer Normalization</a> <small>The normalisation transformers use.</small></li>
+<li><a href="https://jmlr.org/papers/v15/srivastava14a.html">Srivastava et al. (2014), Dropout: A Simple Way to Prevent Neural Networks from Overfitting</a> <small>The dropout paper.</small></li>
+<li><a href="https://arxiv.org/abs/1211.5063">Pascanu, Mikolov and Bengio (2013), On the difficulty of training Recurrent Neural Networks</a> <small>Exploding gradients and gradient clipping.</small></li>
+</ol>
+</section>

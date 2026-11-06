@@ -1,5 +1,13 @@
+<section class="tp tp-intuition" id="c7-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Using a model through a provider’s API is like taking a taxi: you start in minutes, pay per trip and never think about maintenance. Running an open model yourself is like buying a car: more work up front and more responsibility, but cheaper if you drive a lot, and nobody else sees where you go.</p>
+<p>Whichever you pick, do not choose a model by its fame or a public leaderboard. Test a few on a hundred or so of your own real cases and pick the cheapest one that is good enough, the way you would test-drive cars on the roads you actually use.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c7-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="tw"><table>
-<tr><th>Factor</th><th>Hosted API (provider runs the model)</th><th>Self-hosted (you run open-weight models)</th></tr>
+<tr><th>Factor</th><th>Hosted API (provider runs the model)</th><th>Self-hosted (you run <a class="gl" href="#gl-open-weights">open-weight models</a>)</th></tr>
 <tr><td><b>Quality ceiling</b></td><td>Access to frontier models</td><td>Strong open models, usually behind the frontier on hardest tasks</td></tr>
 <tr><td><b>Time to start</b></td><td>Minutes</td><td>Days to weeks (GPUs, serving engine, ops)</td></tr>
 <tr><td><b>Cost shape</b></td><td>Per token; scales to zero</td><td>Per GPU-hour; cheap only at high, steady utilisation (14.8)</td></tr>
@@ -22,4 +30,33 @@
 <text x="25" y="140" class="sm" transform="rotate(-90 25 140)" text-anchor="middle">task success on your eval set</text>
 </svg></div><figcaption><b>Choose with your own data</b> (illustrative positions). The frontier model is best, but the mid-size model meets the bar at a fraction of the cost. Re-run this when models or prices change (18.5).</figcaption></figure>
 <div class="box example"><h5>Your first evaluation set (start of chapter 8)</h5><p>For a ticket-classification feature: export 150 real tickets, have two people label category and urgency, keep the 140 they agree on, and write a 20-line script that runs a model over them and reports accuracy per category plus median latency and cost. This is your baseline, your model-selection tool and your first regression test. Chapter 8 grows it into a full evaluation practice.</p></div>
+</section>
+
+<section class="tp tp-math" id="c7-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>When self-hosting pays</b> (illustrative prices). A hosted call with 1,500 tokens in and 200 out, at $1 and $4 per million tokens, costs $0.0023. One rented GPU at $2.50 an hour costs about $2.50 × 730 hours = $1,825 a month.</p>
+<ul>
+<li>Break-even: $1,825 ÷ $0.0023 ≈ 790,000 requests a month, if that one GPU can serve them all.</li>
+<li>Below that, the hosted API is cheaper; above it, self-hosting can be, before counting the people who run it.</li>
+</ul>
+<p><b>How sure is an evaluation?</b> A model that gets 138 of 150 cases right scores 92%, but with only 150 cases the true figure could be anywhere from about 87% to 96%. Two models scoring 91% and 92% on 150 cases are a tie.</p>
+</section>
+
+<section class="tp tp-code" id="c7-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program draws 150 evaluation cases from your example project’s labelled data and scores three simulated candidate models on them, with a range on each accuracy, latency and price, then picks the cheapest whose whole range clears the quality bar. Change <code>CANDIDATES</code> or <code>QUALITY_BAR</code> and run it again.</p>
+<figure class="fig live" id="snip-model-choice"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"model-choice"}'></div></div>
+<figcaption><b>Choosing a model on your own cases, in real Python.</b> The candidate models are simulated, so the winner says nothing about real models.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c7-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://platform.claude.com/docs/en/test-and-evaluate/define-success">Anthropic: Define your success criteria</a> <small>Turning a feature into measurable criteria before choosing a model.</small></li>
+<li><a href="https://crfm.stanford.edu/helm/">Stanford HELM</a> <small>Broad public benchmarks, and how they are run.</small></li>
+<li><a href="https://arxiv.org/abs/2403.04132">Chiang et al. (2024), Chatbot Arena</a> <small>How a popular leaderboard ranks models, and what it does not measure.</small></li>
+<li><a href="https://docs.vllm.ai/">vLLM documentation</a> <small>The usual engine for self-hosting open-weight models (chapter 14).</small></li>
+</ol>
+</section>

@@ -1,4 +1,12 @@
-<p>A model's output is a <em>suggestion</em> drawn from a distribution. Business rules (pricing, eligibility, permissions, compliance limits, workflow state) must be exact, auditable and identical every time. The core design pattern is: <b>the model interprets and proposes; deterministic code validates, decides and executes.</b></p>
+<section class="tp tp-intuition" id="c7-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Let the model do what people are good at and code do what calculators are good at. A model is great at understanding a messy message: "I’ve been with you since 2021 and the last order was a disaster". It is not reliable at applying a discount rule exactly the same way every time, because its answers are drawn from probabilities and it can be talked round.</p>
+<p>So the model reads and proposes, and plain code checks the facts, applies the rule and records why. Same input, same decision, every time, and an audit trail you can show anyone.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c7-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A model's output is a <em>suggestion</em> drawn from a distribution. Business rules (pricing, eligibility, permissions, compliance limits, workflow state) must be exact, auditable and identical every time. The core design pattern is: <b>the model interprets and proposes; deterministic code validates, decides and executes</b> (a <a class="gl" href="#gl-deterministic-boundary">deterministic boundary</a>).</p>
 <ul>
 <li>Let the model do what is fuzzy: understand intent, extract fields from free text, draft wording, rank options.</li>
 <li>Let code do what is exact: compute amounts, check limits, enforce permissions, choose state transitions, format legal text.</li>
@@ -21,7 +29,7 @@
 <text x="555" y="218" text-anchor="middle" class="xs">LLM may then draft the reply using the decided outcome</text></g>
 </svg></div><figcaption><b>The model never computes the refund amount or decides eligibility.</b> If it extracts "2 seats" wrongly, validation against the account catches it; if policy says no, the reply explains the real policy.</figcaption></figure>
 <div class="box example"><h5>Example: what goes wrong otherwise</h5><p>A team prompts "Apply a 10% discount for customers over 2 years, max $500". In testing it works. In production, the model sometimes gives 15% to persuasive customers, rounds differently, and once applies it to a 1-year customer who claimed otherwise. Moving the rule into code with the model only extracting "customer requests loyalty discount" makes the behaviour exact, testable and auditable.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for LLM applications</h3>
 <div class="cols3">
@@ -32,3 +40,32 @@
 <div class="card"><h5><a href="https://github.com/dottxt-ai/outlines">Outlines</a></h5><span class="meta">constrained generation</span><p>Guarantees output matches a regex, JSON Schema or grammar for local models via token masking.</p></div>
 <div class="card"><h5><a href="https://dspy.ai/">DSPy</a></h5><span class="meta">programmatic prompting</span><p>Write LLM pipelines as modules and let optimisers tune prompts and examples against your metric. Use after you have an eval set.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c7-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The discount rule in numbers.</b> 10% off for customers of more than 2 years, at most 500:</p>
+<ul>
+<li>An order of 4,000 gets 400. An order of 8,000 would get 800, so the cap applies and it gets 500. The cap starts mattering above 5,000.</li>
+<li>If a persuasive customer talks the model into 15% on a 4,000 order, the model proposes 600: 200 too much.</li>
+<li>In the simulation in the code, 5% of the model’s proposals are wrong in one of those ways, and over 1,000 orders the extra discount adds up to about 16,000. Code that recomputes the rule gives that back, and logs each override.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c7-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program applies the discount rule to 1,000 orders, where a simulated model sometimes proposes 15% or forgets the cap, and counts how often the rule in code overrides it and how much over-payment that prevents. Change the error rates (0.03 and 0.02) and run it again.</p>
+<figure class="fig live" id="snip-rules-in-code"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"rules-in-code"}'></div></div>
+<figcaption><b>The model proposes, code decides, in real Python.</b> The model’s error rates are illustrative and simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c7-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a> <small>Excessive agency and insecure output handling: the risks of letting model output decide directly.</small></li>
+<li><a href="https://docs.pydantic.dev/latest/concepts/validators/">Pydantic: Validators</a> <small>Turning a model’s typed proposal into checked data.</small></li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a> <small>Keeping deterministic steps in code around model calls.</small></li>
+</ol>
+</section>

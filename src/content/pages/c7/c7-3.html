@@ -1,4 +1,12 @@
-<p><dfn>Context engineering</dfn> is deciding, for every model call, exactly which tokens go into the window. The model only knows what is in context, and the window is a budget shared by instructions, tools, history, retrieved documents and the output. Too little context and the model guesses; too much and it gets slower, costlier and more distracted by irrelevant material.</p>
+<section class="tp tp-intuition" id="c7-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The context window is a suitcase with a weight limit. Everything the model needs for this one answer has to go in: the instructions, the tools, the customer’s details, the relevant documents, the recent conversation, and room for the answer itself. Packing it is a skill.</p>
+<p>Pack the essentials first, then the most useful extras, and fold big items smaller (summaries, trimmed passages) when space runs out. Overpacking hurts too: a stuffed suitcase is slow, expensive, and makes it harder to find what matters.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c7-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><dfn><a class="gl" href="#gl-context-engineering">Context engineering</a></dfn> is deciding, for every model call, exactly which tokens go into the window. The model only knows what is in context, and the window is a budget shared by instructions, tools, history, retrieved documents and the output. Too little context and the model guesses; too much and it gets slower, costlier and more distracted by irrelevant material.</p>
 <ul>
 <li><b>Assemble</b> from sources: system prompt, tool definitions, user profile, conversation history, retrieved chunks, scratchpad/agent state.</li>
 <li><b>Prioritise</b>: rank pieces by necessity (instructions, current question) and relevance score; drop lowest first.</li>
@@ -9,4 +17,36 @@
 <figure class="fig live"><div class="stage"><div data-widget="context-assembler"></div></div>
 <figcaption><b>A context assembler</b> using the same greedy algorithm many systems use: sort candidates by priority, include each if it fits, and optionally compress lower-priority items. The assembly runs live on your example project's items; their sizes are illustrative. Shrink the budget and watch what gets dropped first, and reserve more than the window holds to see even must-have items fall out.</figcaption></figure>
 <div class="box example"><h5>Example: a support assistant's context recipe</h5><p>System prompt (900 tokens, always) → tool schemas (600, always) → customer's plan and open incidents (200, always) → top 5 reranked help-centre chunks (≈ 2,500, drop from the bottom if needed) → summary of conversation so far (300) → last 4 turns verbatim (≈ 800) → current question. Output reserve 800 tokens. Total ≈ 6,100 of a 16k window: faster and cheaper than filling it.</p></div>
+</section>
+
+<section class="tp tp-math" id="c7-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The support assistant’s recipe, added up</b> (from the example above):</p>
+<div class="tw"><table>
+<tr><th>Part</th><th>Tokens</th></tr>
+<tr><td>System prompt + tool schemas + customer details</td><td>900 + 600 + 200 = 1,700</td></tr>
+<tr><td>Five help-centre passages</td><td>about 2,500</td></tr>
+<tr><td>Summary + last 4 turns + question</td><td>300 + 800 + 100 = 1,200</td></tr>
+<tr><td>Reserved for the answer</td><td>1,000</td></tr>
+<tr><td><b>Total</b></td><td><b>6,400</b></td></tr>
+</table></div>
+<p>At $1 per million input tokens, the 5,400 input tokens cost about half a cent per question. Sending the whole 40-turn conversation and 20 passages instead could easily triple that, and make the answer slower and less focused.</p>
+</section>
+
+<section class="tp tp-code" id="c7-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program ranks your example project’s documents against one question, then fills a token budget greedily by priority: essentials first, then documents in order of relevance, trimming or dropping what does not fit. Change <code>WINDOW</code> or <code>RESERVE_FOR_ANSWER</code> and watch what gets dropped.</p>
+<figure class="fig live" id="snip-context-budget"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"context-budget"}'></div></div>
+<figcaption><b>Assembling context within a budget, in real Python.</b> Token counts are estimated and documents are ranked by shared words, not by a real retriever.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c7-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a> <small>Context as a limited budget, and how to spend it.</small></li>
+<li><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023), Lost in the Middle</a> <small>Why the position of information in a long context matters.</small></li>
+<li><a href="https://arxiv.org/abs/2310.05736">Jiang et al. (2023), LLMLingua: Compressing Prompts for Accelerated Inference</a> <small>Shrinking context while keeping what matters.</small></li>
+</ol>
+</section>

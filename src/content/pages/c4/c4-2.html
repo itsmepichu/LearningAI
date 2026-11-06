@@ -1,10 +1,18 @@
+<section class="tp tp-intuition" id="c4-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Training is walking downhill in the dark, and the optimiser is your walking style. Plain gradient descent takes each step based only on the slope under your feet. Momentum is like a rolling ball: it builds up speed in a steady direction and is not thrown off by small bumps. Adam adjusts the step size for every direction separately, so it takes careful steps where the ground is steep and bigger ones where it is flat.</p>
+<p>The schedule is the pace: start gently while you get your bearings (warm-up), walk briskly, then slow down as you get close so you do not overshoot the bottom.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c4-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Batch</b>: the group of examples used for one gradient estimate. <b>Step</b> (iteration): one weight update. <b>Epoch</b>: one full pass over the training data.</div>
+<div><b><a class="gl" href="#gl-epoch">Batch</a></b>: the group of examples used for one gradient estimate. <b>Step</b> (iteration): one weight update. <b>Epoch</b>: one full pass over the training data.</div>
 <div><b>SGD</b>: plain stochastic gradient descent on mini-batches. <b>Momentum</b>: keep a running average of gradients so steps accelerate in consistent directions.</div>
-<div><b>Adam / AdamW</b>: adapts the step size per parameter using running averages of the gradient (first moment) and squared gradient (second moment). AdamW decouples weight decay. It is the default for transformers. It stores two extra numbers per parameter, which matters for memory (6.6).</div>
-<div><b>Schedule</b>: changing the learning rate over training. Standard for LLMs: linear <b>warm-up</b> from near zero for the first few hundred or thousand steps, then <b>cosine decay</b> to a small final value.</div>
+<div><b><a class="gl" href="#gl-adamw">Adam / AdamW</a></b>: adapts the step size per parameter using running averages of the gradient (first moment) and squared gradient (second moment). AdamW decouples weight decay. It is the default for transformers. It stores two extra numbers per parameter, which matters for memory (6.6).</div>
+<div><b><a class="gl" href="#gl-lr-schedule">Schedule</a></b>: changing the learning rate over training. Standard for LLMs: linear <b>warm-up</b> from near zero for the first few hundred or thousand steps, then <b>cosine decay</b> to a small final value.</div>
 </div>
-<p>Batch size trades noise for cost. Small batches give noisy gradients (which can help escape poor regions) but use hardware poorly. Large batches give smoother gradients and better throughput but may need a larger learning rate and warm-up. When memory limits the batch, <dfn>gradient accumulation</dfn> sums gradients over several small batches before one update, simulating a larger batch.</p>
+<p>Batch size trades noise for cost. Small batches give noisy gradients (which can help escape poor regions) but use hardware poorly. Large batches give smoother gradients and better throughput but may need a larger learning rate and warm-up. When memory limits the batch, <dfn><a class="gl" href="#gl-gradient-accumulation">gradient accumulation</a></dfn> sums gradients over several small batches before one update, simulating a larger batch.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2"><label for="lrPeak">Peak LR (×10⁻⁴) <input type="range" id="lrPeak" min="1" max="30" value="6"><span id="lrPeakO"></span></label>
 <label for="lrWarm">Warm-up % <input type="range" id="lrWarm" min="0" max="30" value="5"><span id="lrWarmO"></span></label>
@@ -17,4 +25,32 @@
 <text x="10" y="112" class="xs mut">10,000 examples · batch 1,000 → 10 steps per epoch · 3 epochs = 30 updates. Highlighted batch = the one being processed.</text>
 </svg></div><figcaption><b>Steps, batches and epochs.</b> The highlight walks through batches; each completed batch is one optimiser step.</figcaption></figure>
 <div class="box example"><h5>Example: LoRA fine-tuning settings</h5><p>A typical small fine-tuning run: AdamW, peak learning rate 2×10⁻⁴, 3% warm-up, cosine decay, effective batch 32 (batch 4 × 8 accumulation steps), 2–3 epochs over 5,000 examples. If validation loss starts rising in epoch 3 while training loss keeps falling, stop at epoch 2 (early stopping).</p></div>
+</section>
+
+<section class="tp tp-math" id="c4-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Steps per epoch.</b> 10,000 examples in batches of 32 is 10,000 ÷ 32 ≈ 313 steps per epoch. Three epochs is about 940 updates.</p>
+<p><b>Gradient accumulation.</b> If only 4 examples fit on the GPU, adding up the gradients of 8 small batches before each update acts like one batch of 4 × 8 = 32.</p>
+<p><b>Adam’s memory.</b> Adam keeps two extra numbers for every parameter. For an 8-billion-parameter model stored in 4-byte numbers, that is 8 billion × 2 × 4 bytes = 64 GB, on top of the weights and gradients.</p>
+<p><b>Warm-up, in numbers.</b> With a peak learning rate of 0.0003 and 100 warm-up steps, step 50 uses half the peak (0.00015), step 100 reaches the peak, and from there a cosine curve slowly lowers it towards a small final value.</p>
+</section>
+
+<section class="tp tp-code" id="c4-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs plain gradient descent, momentum and Adam for 60 steps down a long, narrow valley and prints how close each one gets to the bottom, then prints the learning rate of a warm-up and cosine schedule. Try a plain SGD learning rate of 0.08, or change <code>WARMUP</code>, and run it again.</p>
+<figure class="fig live" id="snip-optimisers"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"optimisers"}'></div></div>
+<figcaption><b>Optimisers and a schedule, in real Python.</b> A two-number valley is not a real model’s loss surface, so the ranking may differ in practice.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c4-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1412.6980">Kingma and Ba (2014), Adam: A Method for Stochastic Optimization</a> <small>The Adam optimiser.</small></li>
+<li><a href="https://arxiv.org/abs/1711.05101">Loshchilov and Hutter (2017), Decoupled Weight Decay Regularization</a> <small>AdamW, the version transformers use.</small></li>
+<li><a href="https://arxiv.org/abs/1706.02677">Goyal et al. (2017), Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour</a> <small>Warm-up and scaling the learning rate with the batch size.</small></li>
+<li><a href="https://arxiv.org/abs/1608.03983">Loshchilov and Hutter (2016), SGDR: Stochastic Gradient Descent with Warm Restarts</a> <small>The cosine schedule.</small></li>
+<li><a href="https://pytorch.org/docs/stable/optim.html">PyTorch: torch.optim</a> <small>Optimisers and learning-rate schedulers in code.</small></li>
+</ol>
+</section>

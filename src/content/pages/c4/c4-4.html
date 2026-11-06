@@ -1,5 +1,13 @@
-<p>A <dfn>representation</dfn> is the internal vector a network builds for an input. <dfn>Representation learning</dfn> means the network learns useful representations as a by-product of its training task. If a model must predict the next word, it is forced to encode meaning, syntax and facts in its vectors.</p>
-<p>An <b>embedding</b> is a representation designed to be used directly. Word embeddings (word2vec, 2013) showed that vector arithmetic can capture relations: vec("Paris") − vec("France") + vec("Italy") ≈ vec("Rome"). Today's <b>text embedding models</b> map whole sentences or passages to one vector, trained with <dfn>contrastive learning</dfn>: pull matching pairs (question, answering passage) together and push non-matching pairs apart.</p>
+<section class="tp tp-intuition" id="c4-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An embedding gives every piece of text an address in a "meaning space", so that texts about the same thing live in the same neighbourhood. "My bill is wrong" and "invoice error" end up next door, even though they share no words; "giraffe" lives far away.</p>
+<p>Nobody draws this map by hand. A network learns it as a side effect of doing some other task well, like predicting missing words or matching questions to their answers. You are known by the company you keep, and so are words.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c4-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A <dfn>representation</dfn> is the internal vector a network builds for an input. <dfn><a class="gl" href="#gl-representation-learning">Representation learning</a></dfn> means the network learns useful representations as a by-product of its training task. If a model must predict the next word, it is forced to encode meaning, syntax and facts in its vectors.</p>
+<p>An <b><a class="gl" href="#gl-embedding">embedding</a></b> is a representation designed to be used directly. Word embeddings (word2vec, 2013) showed that vector arithmetic can capture relations: vec("Paris") − vec("France") + vec("Italy") ≈ vec("Rome"). Today's <b>text embedding models</b> map whole sentences or passages to one vector, trained with <dfn><a class="gl" href="#gl-contrastive-learning">contrastive learning</a></dfn>: pull matching pairs (question, answering passage) together and push non-matching pairs apart.</p>
 <p>Two kinds of embedding are easy to confuse. <b>Token embeddings</b> are the input lookup table inside an LLM (one vector per vocabulary entry). <b>Sentence/document embeddings</b> come from a separate embedding model and are what you store in a vector database for RAG (chapter 9).</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 700 300" role="img" aria-label="2D projection of embeddings with semantic clusters">
@@ -17,6 +25,20 @@
 <div class="nodes"><div class="nd">Query<small>"reset my 2FA"</small></div><div class="nd">Positive passage<small>2FA reset guide</small></div><div class="nd">Negatives<small>other passages in batch</small></div><div class="nd">Encode all</div><div class="nd">Similarities</div><div class="nd">Contrastive loss<small>positive should win</small></div></div>
 <ol class="steps"><li data-n="0">Take a query from training pairs.</li><li data-n="1">Its matching passage is the positive.</li><li data-n="2">The other passages in the same batch serve as negatives ("in-batch negatives"); hard negatives (similar but wrong) help most.</li><li data-n="3">The same encoder turns each text into a vector.</li><li data-n="4">Compute cosine similarity of the query with every passage.</li><li data-n="5">Treat it as classification: softmax over similarities, cross-entropy with the positive as the correct class (InfoNCE loss). Training moves vectors so positives score highest.</li></ol></div>
 <figcaption><b>How embedding models are trained.</b> You will reuse this when adapting embeddings to your domain (13.5).</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c4-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Storage.</b> One million passages, each embedded as 384 numbers of 4 bytes, take 1,000,000 × 384 × 4 = about 1.5 GB. At 1,024 numbers each, it is about 4.1 GB, which is why embedding size matters for a vector database (9.4).</p>
+<p><b>Free negatives.</b> In contrastive training with a batch of 256 question–passage pairs, each question has 1 right passage and 255 wrong ones already in the batch, so every step teaches 256 small "pick the right one out of 256" lessons at no extra cost.</p>
+<p><b>Reading a similarity.</b> If "invoice" and "bill" score 0.82 and "invoice" and "giraffe" score 0.05 (illustrative), a search for "invoice" will rank bill-related passages first. The exact values depend on the model, so compare scores within one model, never across models.</p>
+</section>
+
+<section class="tp tp-code" id="c4-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program learns word vectors from your example project’s English messages: it counts which words appear near each other, squashes the counts into 16 numbers per word, and lists each word’s nearest neighbours. Change <code>DIM</code> to 4 or 32, or the window of 3 words, and run it again.</p>
+<figure class="fig live" id="snip-word-vectors"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"word-vectors"}'></div></div>
+<figcaption><b>Word vectors from your messages, in real Python.</b> A few hundred synthetic messages give rough neighbours; real embedding models learn from billions of sentences.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: embed and cluster <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code>from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
@@ -26,4 +48,17 @@ m = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")   # ~90 MB, fa
 E = m.encode(texts, normalize_embeddings=True)
 print(E.shape)                                     # (9, 384)
 for t, c in zip(texts, KMeans(3, n_init=10, random_state=0).fit_predict(E)): print(c, t)</code></pre></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c4-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1301.3781">Mikolov et al. (2013), Efficient Estimation of Word Representations in Vector Space (word2vec)</a> <small>Word vectors and their arithmetic.</small></li>
+<li><a href="https://arxiv.org/abs/1908.10084">Reimers and Gurevych (2019), Sentence-BERT</a> <small>Sentence embeddings trained to be compared with cosine similarity.</small></li>
+<li><a href="https://arxiv.org/abs/1807.03748">van den Oord, Li and Vinyals (2018), Representation Learning with Contrastive Predictive Coding</a> <small>The contrastive (InfoNCE) loss behind most embedding training.</small></li>
+<li><a href="https://www.sbert.net/">Sentence Transformers documentation</a> <small>The library used in the laptop lab, with model choices and training guides.</small></li>
+<li><a href="https://arxiv.org/abs/2210.07316">Muennighoff et al. (2022), MTEB: Massive Text Embedding Benchmark</a> <small>How embedding models are compared across tasks.</small></li>
+</ol>
+</section>

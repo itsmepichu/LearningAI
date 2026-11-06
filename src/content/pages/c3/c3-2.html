@@ -31,20 +31,6 @@
 <text x="250" y="70" class="xs mut">yes</text><text x="440" y="70" class="xs mut">no</text><text x="110" y="152" class="xs mut">yes</text><text x="250" y="152" class="xs mut">no</text><text x="450" y="152" class="xs mut">yes</text><text x="590" y="152" class="xs mut">no</text></g>
 </svg></div><figcaption><b>A small decision tree</b> (illustrative numbers). A random forest averages hundreds of trees like this; gradient boosting stacks them so each fixes the residual errors of the ones before.</figcaption></figure>
 <div class="box example"><h5>Example: baselines keep you honest</h5><p>A ticket classifier reports 91% accuracy. But 88% of tickets are "general", so always predicting "general" scores 88%. The real gain is 3 points, and recall on the rare "security incident" class might be terrible. Report per-class metrics (3.5) and the baseline.</p></div>
-<div class="box lab"><h5>Laptop lab: baseline vs model <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code>from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
-from sklearn.dummy import DummyClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-X, y = load_breast_cancer(return_X_y=True)
-Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.25, stratify=y, random_state=0)
-for name, m in [("baseline", DummyClassifier(strategy="most_frequent")),
-                ("logistic", make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))),
-                ("boosting", HistGradientBoostingClassifier(random_state=0))]:
-    print(f"{name:9} accuracy = {m.fit(Xtr, ytr).score(Xte, yte):.3f}")</code></pre></div>
 <figure class="fig live"><div class="stage"><div data-widget="text-classifier"></div></div>
 <figcaption><b>A small classifier, trained on your device if you opt in.</b> Your example project's labelled text goes through a small open <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">embedding model</a>, then a softmax layer learns from a seeded, stratified split and is scored on the rows it never saw, beside the majority-class baseline. The text is synthetic and comes from a few templates, so this shows the method and how to read its results, not what the method would score on real messages.</figcaption></figure>
 </section>
@@ -66,6 +52,20 @@ for name, m in [("baseline", DummyClassifier(strategy="most_frequent")),
 <p>The program predicts a rare yes/no outcome in your example project’s table, first with a baseline that always gives the most common answer, then with a logistic regression trained on a few columns, and prints the weight it learned for each column. Remove a column from the data, or change the 0.5 threshold, and run it again.</p>
 <figure class="fig live" id="snip-baselines"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"baselines"}'></div></div>
 <figcaption><b>A model against its baseline, in real Python.</b> The data is synthetic and the features are few, so the numbers do not predict real performance.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: baseline vs model <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+X, y = load_breast_cancer(return_X_y=True)
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.25, stratify=y, random_state=0)
+for name, m in [("baseline", DummyClassifier(strategy="most_frequent")),
+                ("logistic", make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))),
+                ("boosting", HistGradientBoostingClassifier(random_state=0))]:
+    print(f"{name:9} accuracy = {m.fit(Xtr, ytr).score(Xte, yte):.3f}")</code></pre></div>
 </section>
 
 <div data-slot="practice"></div>

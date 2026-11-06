@@ -1,8 +1,44 @@
-<p><b>PyTorch</b> gives you tensors that can live on CPU or GPU and <dfn>autograd</dfn>: every operation on a tensor with <code>requires_grad=True</code> is recorded in a computation graph, and <code>loss.backward()</code> runs backpropagation through it, filling each parameter's <code>.grad</code>. You write the forward computation; PyTorch derives the backward pass.</p>
+<section class="tp tp-intuition" id="c4-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>PyTorch is a calculator that remembers how it got every answer. You write the forward calculation, and because it kept notes, it can work out all the gradients for you when you ask. That frees you to think about the model and the data instead of the calculus.</p>
+<p>Every training loop, however fancy the library wrapped around it, is the same short routine: get a batch, make predictions, measure the loss, clear the old gradients, work out new ones, take a step, and now and then check progress and save your work.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c4-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><b>PyTorch</b> gives you tensors that can live on CPU or GPU and <dfn><a class="gl" href="#gl-autograd">autograd</a></dfn>: every operation on a tensor with <code>requires_grad=True</code> is recorded in a computation graph, and <code>loss.backward()</code> runs backpropagation through it, filling each parameter's <code>.grad</code>. You write the forward computation; PyTorch derives the backward pass.</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Load batch<small>DataLoader</small></div><div class="nd">Forward<small>model(x)</small></div><div class="nd">Loss<small>loss_fn(ŷ, y)</small></div><div class="nd">Zero grads<small>opt.zero_grad()</small></div><div class="nd">Backward<small>loss.backward()</small></div><div class="nd">Clip &amp; step<small>opt.step()</small></div><div class="nd">Schedule<small>sched.step()</small></div><div class="nd">Eval &amp; checkpoint<small>every N steps</small></div></div>
 <ol class="steps"><li data-n="0">Fetch the next mini-batch, move it to the device (CPU here).</li><li data-n="1">Run the model to get predictions; the autograd graph is recorded.</li><li data-n="2">Compute a scalar loss.</li><li data-n="3">Clear gradients from the previous step, because PyTorch accumulates them by default (forgetting this is a classic bug).</li><li data-n="4">Backpropagate: every parameter's <code>.grad</code> is filled.</li><li data-n="5">Optionally clip gradient norm, then let the optimiser update weights.</li><li data-n="6">Advance the learning-rate schedule.</li><li data-n="7">Periodically switch to <code>model.eval()</code> with <code>torch.no_grad()</code>, compute validation loss, and save a checkpoint containing model <em>and</em> optimiser state so training can resume exactly.</li></ol></div>
 <figcaption><b>The training loop.</b> Libraries like Hugging Face Trainer and TRL wrap this loop, but it is always these steps underneath.</figcaption></figure>
+<div class="box pit"><h5>Debugging checklist</h5><ul>
+<li><b>Overfit one batch first.</b> If the model cannot drive loss near zero on 8 examples, there is a bug (wrong labels, wrong loss, frozen weights).</li>
+<li><b>Check the initial loss</b> against ln(number of classes) (2.4).</li>
+<li><b>Shapes</b>: print tensor shapes at each step; silent broadcasting causes wrong but runnable code.</li>
+<li><b>Train/eval mode</b>: dropout and normalisation behave differently; forgetting <code>model.eval()</code> gives noisy validation numbers.</li>
+<li><b>NaN</b>: enable <code>torch.autograd.set_detect_anomaly(True)</code> briefly to find the operation; lower LR; clip gradients.</li>
+<li><b>no_grad is not eval mode</b>: <code>torch.no_grad()</code> stops gradient recording but does not disable dropout or switch normalisation to inference behaviour; call <code>model.eval()</code> as well, and <code>model.train()</code> before resuming training.</li>
+<li><b>Watch gradient norms</b> per layer; zeros mean a disconnected graph or dead ReLUs.</li>
+</ul></div>
+<p>A <a class="gl" href="#gl-checkpoint">checkpoint</a> saves the weights, the optimiser state and the step number together, so a run can resume exactly where it stopped.</p>
+</section>
+
+<section class="tp tp-math" id="c4-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The laptop lab, in numbers.</b></p>
+<ul>
+<li>Parameters: 64 × 128 + 128 for the first layer and 128 × 10 + 10 for the second, 9,610 in total.</li>
+<li>Steps: 80% of 1,797 images is about 1,437; in batches of 64 that is 23 steps per epoch, and 40 epochs is 920 steps.</li>
+<li>Starting loss: with 10 classes and random guesses, it should be close to the natural log of 10, about 2.30. A starting loss of 15 means something is wrong before training begins.</li>
+<li>Checkpoint size: 9,610 parameters × 4 bytes is about 38 KB; AdamW’s two extra numbers per parameter bring the saved file to about 115 KB.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c4-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program writes out the training loop in NumPy so nothing is hidden. It first overfits 8 rows to prove the code can learn, then trains a small network on your example project’s table in mini-batches, with gradient clipping, a validation check every epoch and the best checkpoint saved and reloaded. Change the learning rate 0.1 or the number of epochs and run it again.</p>
+<figure class="fig live" id="snip-training-loop"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"training-loop"}'></div></div>
+<figcaption><b>A training loop with checkpoints, in real Python.</b> It mirrors what PyTorch does; it does not show GPUs or automatic gradients.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: a complete training loop <span class="tag cpu">Laptop · CPU · ~1 minute</span></h5>
 <pre><code>import torch, torch.nn as nn
 from sklearn.datasets import load_digits
@@ -28,13 +64,16 @@ for epoch in range(40):
         acc = (model(Xva).argmax(1) == yva).float().mean()
     if epoch % 10 == 9: print(f"epoch {epoch+1} loss {loss.item():.3f} val_acc {acc:.3f}")
 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "epoch": epoch}, "ckpt.pt")</code></pre></div>
-<div class="box pit"><h5>Debugging checklist</h5><ul>
-<li><b>Overfit one batch first.</b> If the model cannot drive loss near zero on 8 examples, there is a bug (wrong labels, wrong loss, frozen weights).</li>
-<li><b>Check the initial loss</b> against ln(number of classes) (2.4).</li>
-<li><b>Shapes</b>: print tensor shapes at each step; silent broadcasting causes wrong but runnable code.</li>
-<li><b>Train/eval mode</b>: dropout and normalisation behave differently; forgetting <code>model.eval()</code> gives noisy validation numbers.</li>
-<li><b>NaN</b>: enable <code>torch.autograd.set_detect_anomaly(True)</code> briefly to find the operation; lower LR; clip gradients.</li>
-<li><b>no_grad is not eval mode</b>: <code>torch.no_grad()</code> stops gradient recording but does not disable dropout or switch normalisation to inference behaviour; call <code>model.eval()</code> as well, and <code>model.train()</code> before resuming training.</li>
-<li><b>Watch gradient norms</b> per layer; zeros mean a disconnected graph or dead ReLUs.</li>
-</ul></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c4-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://pytorch.org/tutorials/beginner/basics/intro.html">PyTorch: Learn the Basics</a> <small>Tensors, datasets, models, autograd and the training loop, step by step.</small></li>
+<li><a href="https://pytorch.org/docs/stable/notes/autograd.html">PyTorch: Autograd mechanics</a> <small>How the computation graph is recorded and used.</small></li>
+<li><a href="https://pytorch.org/tutorials/beginner/saving_loading_models.html">PyTorch: Saving and Loading Models</a> <small>Checkpoints that can resume training.</small></li>
+<li><a href="https://karpathy.github.io/2019/04/25/recipe/">Karpathy (2019), A Recipe for Training Neural Networks</a> <small>The debugging habits in the checklist above, explained.</small></li>
+</ol>
+</section>

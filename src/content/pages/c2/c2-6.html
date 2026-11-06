@@ -39,14 +39,6 @@
 </div><div id="lfBar" style="display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--rule)"></div><div class="kpis" id="lfK"></div></div></div>
 <figcaption><b>Will it fit on my laptop?</b> Weights = parameters × bytes per parameter (quantised formats include their scales). KV cache assumes FP16 cache values, as llama.cpp uses by default. The speed ceiling is bandwidth ÷ bytes read per token; real speeds are lower. Apple-silicon and recent laptops reach 100–400 GB/s; typical x86 laptops 50–100 GB/s.</figcaption></figure>
 <div class="box example"><h5>Example: will it run on my laptop?</h5><p>A 16 GB laptop. Operating system and apps use ~5 GB, leaving ~11 GB. A 3B model at 4-bit ≈ 2 GB: comfortable. An 8B model at 4-bit ≈ 5 GB: works, a few tokens per second. A 70B model at 4-bit ≈ 40 GB: does not fit. Use a hosted API or rented GPU for that.</p></div>
-<div class="box lab"><h5>Laptop lab: measure your bandwidth ceiling <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code>import numpy as np, time
-a = np.ones(500_000_000 // 8)        # ~500 MB of float64
-t = time.perf_counter(); s = a.sum(); dt = time.perf_counter() - t
-print(f"~{a.nbytes/dt/1e9:.1f} GB/s effective read bandwidth")
-# tokens/sec upper bound for a model of size M GB ≈ bandwidth / M
-for m in (0.8, 2.0, 4.5): print(f"{m} GB model → ≤ {a.nbytes/dt/1e9/m:.0f} tok/s")</code></pre>
-<p>This single-threaded NumPy read underestimates true bandwidth, but it shows why model size in bytes, not parameter count alone, sets your CPU generation speed.</p></div>
 </section>
 
 <section class="tp tp-math" id="c2-6-math">
@@ -68,6 +60,14 @@ for m in (0.8, 2.0, 4.5): print(f"{m} GB model → ≤ {a.nbytes/dt/1e9/m:.0f} t
 <p>The program stores the same numbers as float32, float16 and bfloat16 to show what each format keeps and loses, then prints the memory of 1B, 8B and 70B models in each format and the speed limit of an 8B model. Change <code>BANDWIDTH</code> to your own machine’s figure and run it again.</p>
 <figure class="fig live" id="snip-precision"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"precision"}'></div></div>
 <figcaption><b>Number formats and model memory, in real Python.</b> The memory figures are weights only, and the speed is a ceiling, not a measurement.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: measure your bandwidth ceiling <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>import numpy as np, time
+a = np.ones(500_000_000 // 8)        # ~500 MB of float64
+t = time.perf_counter(); s = a.sum(); dt = time.perf_counter() - t
+print(f"~{a.nbytes/dt/1e9:.1f} GB/s effective read bandwidth")
+# tokens/sec upper bound for a model of size M GB ≈ bandwidth / M
+for m in (0.8, 2.0, 4.5): print(f"{m} GB model → ≤ {a.nbytes/dt/1e9/m:.0f} tok/s")</code></pre>
+<p>This single-threaded NumPy read underestimates true bandwidth, but it shows why model size in bytes, not parameter count alone, sets your CPU generation speed.</p></div>
 </section>
 
 <div data-slot="practice"></div>

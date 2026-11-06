@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c4-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A neuron is a tiny voting machine. It looks at its inputs, gives each one a weight for how much it matters, adds them up, and then decides how strongly to "fire". A network is many of these in layers, each layer building on what the one below noticed.</p>
+<p>Learning means fixing the weights after every mistake. Backpropagation is the blame game run backwards: start at the wrong answer and work back through the layers, telling each weight how much it contributed to the error and which way to move.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c4-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Neuron</b>: computes a weighted sum of inputs plus a bias, z = w·x + b, then applies an <b>activation function</b> a = f(z).</div>
+<div><b><a class="gl" href="#gl-neuron">Neuron</a></b>: computes a weighted sum of inputs plus a bias, z = w·x + b, then applies an <b><a class="gl" href="#gl-activation-function">activation function</a></b> a = f(z).</div>
 <div><b>Activation</b>: a non-linear function. Without it, stacking layers would collapse into one linear function. Common: ReLU max(0,z); GELU and SiLU (smooth ReLU variants used in transformers); sigmoid and tanh (older, saturate).</div>
 <div><b>Layer</b>: many neurons in parallel, computed as one matrix multiply. A network stacks layers: input → hidden layers → output.</div>
 <div><b>Loss function</b>: mean squared error for regression; cross-entropy for classification and language modelling.</div>
-<div><b>Backpropagation</b>: computes the gradient of the loss with respect to every weight by applying the chain rule backward through the layers, reusing intermediate results.</div>
+<div><b><a class="gl" href="#gl-backpropagation">Backpropagation</a></b>: computes the gradient of the loss with respect to every weight by applying the chain rule backward through the layers, reusing intermediate results.</div>
 </div>
 <p><b>Logits in, softmax inside.</b> Classification losses such as PyTorch's <code>CrossEntropyLoss</code> expect raw logits and apply (log-)softmax internally in a numerically stable way. Applying softmax yourself first is a common bug: training still runs, but gradients shrink and the model learns slowly.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
@@ -33,4 +41,35 @@
 <div class="ctl"><button class="btn primary" type="button" id="nnRun">Train</button><button class="btn" type="button" id="nnReset">Reset weights</button><span class="count" id="nnInfo"></span></div></div></div>
 <figcaption><b>Neural-network playground, trained live.</b> A 2-layer network (2 → H → H → 1) learns by real backpropagation with momentum, full batch, in your browser. The background shows the predicted probability; points are the training data. Try "linear (no activation)" on circles: it can only draw a straight line, which is the non-linearity argument from this section made visible.</figcaption></figure>
 <div class="box example"><h5>Example: why non-linearity matters</h5><p>Two linear layers W₂(W₁x) equal one layer (W₂W₁)x. No matter how deep, a purely linear network can only draw straight decision boundaries. Insert ReLU between them and the network can bend boundaries, which is how it separates, say, a spiral of fraudulent transactions from normal ones.</p></div>
+</section>
+
+<section class="tp tp-math" id="c4-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>One neuron, by hand.</b> Inputs 1.0 and 0.5, weights 0.8 and −0.5, bias 0.1:</p>
+<ul>
+<li>Weighted sum: 1.0 × 0.8 + 0.5 × (−0.5) + 0.1 = 0.8 − 0.25 + 0.1 = 0.65.</li>
+<li>ReLU keeps positive numbers and turns negatives into 0, so the output is 0.65.</li>
+<li>If the sum had been −0.3, the output would be 0, and so would the gradient: that neuron learns nothing from this example.</li>
+</ul>
+<p><b>Counting weights.</b> A layer from 784 inputs to 128 neurons has 784 × 128 = 100,352 weights plus 128 biases: 100,480 parameters in one small layer.</p>
+<p><b>What a training step costs.</b> The backward pass does about twice the work of the forward pass, so one training step costs about three times as much as just running the model.</p>
+</section>
+
+<section class="tp tp-code" id="c4-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program trains a two-layer network on XOR, the classic problem no straight line can solve, with every step of backpropagation written out. It runs once without an activation and once with tanh. Change <code>HIDDEN</code> to 2 or 8, or the learning rate, and run it again.</p>
+<figure class="fig live" id="snip-tiny-net"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tiny-net"}'></div></div>
+<figcaption><b>A neural network with backpropagation by hand, in real Python.</b> Four data points are a toy; frameworks do the same steps at scale.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c4-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.deeplearningbook.org/contents/mlp.html">Goodfellow, Bengio and Courville, Deep Learning, chapter 6</a> <small>Feed-forward networks, activations, losses and backpropagation.</small></li>
+<li><a href="https://cs231n.github.io/optimization-2/">Stanford CS231n: Backpropagation, Intuitions</a> <small>Backprop worked through on small examples, like the figure above.</small></li>
+<li><a href="https://github.com/karpathy/micrograd">Karpathy, micrograd</a> <small>A complete autograd engine in about 100 lines of Python.</small></li>
+<li><a href="https://www.nature.com/articles/323533a0">Rumelhart, Hinton and Williams (1986), Learning representations by back-propagating errors</a> <small>The paper that made backpropagation the standard.</small></li>
+</ol>
+</section>

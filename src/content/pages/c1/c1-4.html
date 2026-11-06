@@ -45,13 +45,6 @@
 <figure class="fig live"><div class="stage"><div data-widget="token-estimator"></div></div>
 <figcaption><b>Token, cost and latency estimator.</b> The text estimate is a rough heuristic (about 4 characters per token for English prose, fewer for code, digits and non-Latin scripts); always confirm with the model's real tokenizer. Latency assumes prefill at 10,000 tokens/s and the decode speed you set. Prices are illustrative inputs.</figcaption></figure>
 <div class="box example"><h5>Example: estimating cost before writing code</h5><p>A summariser receives 3,000-word documents (≈ 4,000 tokens) and writes 200-word summaries (≈ 270 tokens). At an illustrative price of $1 per million input tokens and $4 per million output tokens, one summary costs 4,000 × 1/10⁶ + 270 × 4/10⁶ ≈ <b>$0.005</b>. 100,000 documents a month ≈ $500. Output tokens are usually priced higher and generated much more slowly than input tokens are read, which is why output length dominates latency.</p></div>
-<div class="box lab"><h5>Laptop lab: see tokens <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code>from transformers import AutoTokenizer
-tok = AutoTokenizer.from_pretrained("gpt2")          # small download, no model weights
-for s in ["Refund my order", "Unbelievably", "Rückerstattung", "退款", "    def f(x):"]:
-    ids = tok.encode(s)
-    print(f"{s!r:22} {len(ids):2} tokens  {tok.convert_ids_to_tokens(ids)}")</code></pre>
-<p>Notice that non-English text and code whitespace take more tokens per character. Try a different tokenizer (for example <code>"Qwen/Qwen2.5-0.5B"</code>) and compare counts for the same strings.</p></div>
 </section>
 
 <section class="tp tp-math" id="c1-4-math">
@@ -74,6 +67,13 @@ for s in ["Refund my order", "Unbelievably", "Rückerstattung", "退款", "    d
 <p>The program estimates tokens per message for each language in your example project’s messages using the two English rules of thumb, shows the byte count that limits a byte-level tokenizer, then works out a monthly cost and the size of an embedding table. Change the prices, <code>PROMPT_TOKENS</code> or <code>MESSAGES_PER_MONTH</code> and run it again.</p>
 <figure class="fig live" id="snip-tokens"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"tokens"}'></div></div>
 <figcaption><b>Tokens, cost and parameters, in real Python.</b> The prices are illustrative, and the token counts are estimates, not a real tokenizer’s.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: see tokens <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code>from transformers import AutoTokenizer
+tok = AutoTokenizer.from_pretrained("gpt2")          # small download, no model weights
+for s in ["Refund my order", "Unbelievably", "Rückerstattung", "退款", "    def f(x):"]:
+    ids = tok.encode(s)
+    print(f"{s!r:22} {len(ids):2} tokens  {tok.convert_ids_to_tokens(ids)}")</code></pre>
+<p>Notice that non-English text and code whitespace take more tokens per character. Try a different tokenizer (for example <code>"Qwen/Qwen2.5-0.5B"</code>) and compare counts for the same strings.</p></div>
 </section>
 
 <div data-slot="practice"></div>
