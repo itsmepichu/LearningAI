@@ -48,6 +48,10 @@ const KIT_WIDGETS = [
   ['attention', '/c5/c5-2', 'neutral'],
   ['multihead', '/c5/c5-2', 'neutral'],
   ['transformer-block', '/c5/c5-3', 'neutral'],
+  ['embedding-space', '/c9/c9-3'],
+  ['hnsw-layers', '/c9/c9-4', 'neutral'],
+  ['zero-sharding', '/c6/c6-6', 'neutral'],
+  ['paged-kv-3d', '/c14/c14-3', 'neutral'],
   ['colab-guide', '/c6/c6-7', 'neutral'],
   ['hnsw', '/c9/c9-4', 'neutral'],
   ['gradient-descent', '/c2/c2-3', 'neutral'],
@@ -670,7 +674,7 @@ const PROJECTS = require('../src/content/projects.json').projects
   if (!/^Step 0:/.test(await page.textContent(`${kitSel('gradient-descent')} .count`))) fails.push('gradient descent: Reset should return to the start')
 
   // 3D scenes: mount near the viewport, step through, turn with the keyboard, and show the same step in 2D
-  for (const [name, route, steps] of [['multihead', '/c5/c5-2', 6], ['transformer-block', '/c5/c5-3', 8]]) {
+  for (const [name, route] of [['multihead', '/c5/c5-2'], ['transformer-block', '/c5/c5-3'], ['hnsw-layers', '/c9/c9-4'], ['zero-sharding', '/c6/c6-6'], ['paged-kv-3d', '/c14/c14-3'], ['embedding-space', '/c9/c9-3']]) {
     const sel = kitSel(name)
     await page.goto(BASE + route, { waitUntil: 'networkidle' })
     await page.locator(sel).scrollIntoViewIfNeeded()
@@ -680,14 +684,23 @@ const PROJECTS = require('../src/content/projects.json').projects
       continue
     }
     const first = await page.textContent(`${sel} .s3-text`)
-    for (let i = 1; i < steps; i++) await page.click(`${sel} .wk-player .btn.primary`)
+    let steps = 1
+    if (await page.$(`${sel} .wk-player`)) {
+      while (!(await page.isDisabled(`${sel} .wk-player .btn.primary`)) && steps < 40) {
+        await page.click(`${sel} .wk-player .btn.primary`)
+        steps++
+      }
+    } else {
+      // embedding-space has two views instead of a player
+      await page.click(`${sel} [role=radio]:has-text("All points")`)
+      steps = 2
+    }
     if (first === (await page.textContent(`${sel} .s3-text`))) fails.push(`${name}: stepping should change the description`)
-    if (!(await page.isDisabled(`${sel} .wk-player .btn.primary`))) fails.push(`${name}: expected ${steps} steps`)
-    if ((await page.$$eval(`${sel} .s3-all li`, (l) => l.length)) !== steps) fails.push(`${name}: the description in words should cover every step`)
+    if ((await page.$$eval(`${sel} .s3-all li`, (l) => l.length)) !== steps) fails.push(`${name}: the description in words should cover all ${steps} steps`)
     await page.focus(`${sel} .s3-canvas`)
     for (const key of ['ArrowRight', 'ArrowUp', '+', '0']) await page.keyboard.press(key)
     await page.click(`${sel} [role=radio]:has-text("2D view")`)
-    if (!(await page.$$eval(`${sel} .s3-grid`, (g) => g.length))) fails.push(`${name}: the 2D view shows no matrices`)
+    if (!(await page.$$eval(`${sel} :is(.s3-grid, .s3-map, .s3-table table)`, (g) => g.length))) fails.push(`${name}: the 2D view shows nothing`)
     if (await page.$(`${sel} canvas`)) fails.push(`${name}: the 2D view should replace the 3D canvas`)
     await page.click(`${sel} [role=radio]:has-text("3D view")`)
     await page.waitForSelector(`${sel} .s3-canvas canvas`, { timeout: 15000 }).catch(() => fails.push(`${name}: the 3D view did not come back`))

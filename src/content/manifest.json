@@ -516,8 +516,8 @@
      "tn": "6.6",
      "title": "Distributed training: data, tensor and pipeline parallelism, plus sharding",
      "tags": [],
-     "figures": 4,
-     "interactive": 3,
+     "figures": 5,
+     "interactive": 4,
      "words": 563
     },
     {
@@ -748,8 +748,8 @@
      "tn": "9.3",
      "title": "Keyword search, inverted indexes, BM25, dense embeddings and sparse retrieval",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
+     "figures": 3,
+     "interactive": 3,
      "words": 389
     },
     {
@@ -757,8 +757,8 @@
      "tn": "9.4",
      "title": "Vector similarity, approximate nearest-neighbour search, HNSW and quantisation",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
+     "figures": 4,
+     "interactive": 3,
      "words": 420
     },
     {
@@ -1211,8 +1211,8 @@
      "tn": "14.3",
      "title": "Continuous batching, prefix caching and paged attention",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
+     "figures": 4,
+     "interactive": 4,
      "words": 480
     },
     {

@@ -12,7 +12,7 @@ import { RotateCcw, RotateCw, Undo2, ZoomIn, ZoomOut } from 'lucide-react'
 import { useTheme } from '../../store/theme'
 import { onRovingKeyDown } from '../../components/common'
 import { useNearViewport, useReducedMotion } from '../kit'
-import { CELL, type Mat, type SceneStep, type TensorView, type Vec3 } from './tensor'
+import { CELL, type BarView, type Mat, type PointView, type SceneStep, type Segments, type TensorView, type Tone, type Vec3 } from './tensor'
 import './scene3d.css'
 
 // ---- WebGL --------------------------------------------------------------------------------------------------------
@@ -47,6 +47,10 @@ export interface Palette {
   pos: THREE.Color
   neg: THREE.Color
   weight: THREE.Color
+  ok: THREE.Color
+  bad: THREE.Color
+  inkColor: THREE.Color
+  mutedColor: THREE.Color
   ink: string
   rule: string
   dark: boolean
@@ -61,6 +65,10 @@ function usePalette(): Palette {
       pos: new THREE.Color(token('--accent', '#0B7285')),
       neg: new THREE.Color(token('--signal', '#9C5000')),
       weight: new THREE.Color(token('--sim', '#6741D9')),
+      ok: new THREE.Color(token('--ok', '#1F7330')),
+      bad: new THREE.Color(token('--bad', '#C92A2A')),
+      inkColor: new THREE.Color(token('--ink', '#0F1B2A')),
+      mutedColor: new THREE.Color(token('--muted', '#5b6675')),
       ink: token('--ink', '#0F1B2A'),
       rule: token('--muted', '#5b6675'),
       dark: resolved === 'dark',
@@ -78,6 +86,20 @@ export function cellColor(p: Palette, kind: TensorView['kind'], v: number, scale
 }
 
 const css = (c: THREE.Color) => `#${c.getHexString()}`
+
+/** The six categorical tones, in order, for things told apart only by kind. */
+const SERIES_TONES = ['accent', 'signal', 'sim', 'ok', 'bad', 'ink'] as const
+export const seriesTone = (i: number): Tone => `series${(i % 6) as 0 | 1 | 2 | 3 | 4 | 5}`
+
+export function toneColor(p: Palette, tone: Tone): THREE.Color {
+  const t = tone.startsWith('series') ? SERIES_TONES[+tone.slice(6)] : tone
+  return { accent: p.pos, signal: p.neg, sim: p.weight, ok: p.ok, bad: p.bad, ink: p.inkColor, muted: p.mutedColor }[t as (typeof SERIES_TONES)[number] | 'muted']
+}
+/** The CSS colour of a tone, for the 2D view and legends. */
+export function toneVar(tone: Tone): string {
+  const t = tone.startsWith('series') ? SERIES_TONES[+tone.slice(6)] : tone
+  return `var(--${t})`
+}
 
 // ---- 3D -----------------------------------------------------------------------------------------------------------
 
@@ -173,6 +195,78 @@ function TensorMesh({ t, palette, reduced }: { t: TensorView; palette: Palette; 
   )
 }
 
+/** Points as one instanced set of balls; they glide when a step moves them. */
+function PointsMesh({ points, palette, reduced }: { points: PointView[]; palette: Palette; reduced: boolean }) {
+  const ref = useRef<THREE.InstancedMesh>(null)
+  const { invalidate } = useThree()
+  const current = useRef<Float32Array | null>(null)
+  const goal = useMemo(() => Float32Array.from(points.flatMap((p) => p.at)), [points])
+  const matrix = useMemo(() => new THREE.Matrix4(), [])
+  useEffect(() => {
+    const mesh = ref.current
+    if (!mesh) return
+    const c = new THREE.Color()
+    points.forEach((p, i) => {
+      c.copy(toneColor(palette, p.tone))
+      if (p.faded) c.lerp(palette.base, 0.7)
+      mesh.setColorAt(i, c)
+    })
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true
+    if (!current.current || current.current.length !== goal.length || reduced) current.current = Float32Array.from(goal)
+    invalidate()
+  }, [points, palette, goal, reduced, invalidate])
+  useFrame(() => {
+    const mesh = ref.current
+    const pos = current.current
+    if (!mesh || !pos) return
+    let moving = false
+    for (let i = 0; i < pos.length; i++) {
+      const d = goal[i] - pos[i]
+      if (Math.abs(d) > 0.001) {
+        pos[i] += d * 0.16
+        moving = true
+      } else pos[i] = goal[i]
+    }
+    points.forEach((p, i) => {
+      const r = p.r ?? 0.06
+      matrix.makeScale(r, r, r).setPosition(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2])
+      mesh.setMatrixAt(i, matrix)
+    })
+    mesh.instanceMatrix.needsUpdate = true
+    if (moving) invalidate()
+  })
+  return (
+    <instancedMesh ref={ref} args={[undefined, undefined, points.length]} frustumCulled={false}>
+      <sphereGeometry args={[1, 12, 8]} />
+      <meshLambertMaterial />
+    </instancedMesh>
+  )
+}
+
+function Bar({ b, palette }: { b: BarView; palette: Palette }) {
+  const color = useMemo(() => toneColor(palette, b.tone).clone(), [palette, b.tone])
+  return (
+    <mesh position={[b.at[0], b.at[1] + b.size[1] / 2, b.at[2]]}>
+      <boxGeometry args={b.size} />
+      <meshLambertMaterial color={color} transparent opacity={b.faded ? 0.25 : 1} depthWrite={!b.faded} />
+    </mesh>
+  )
+}
+
+function SegmentLines({ s, palette }: { s: Segments; palette: Palette }) {
+  const geometry = useMemo(() => {
+    const g = new THREE.BufferGeometry()
+    g.setAttribute('position', new THREE.Float32BufferAttribute(s.pairs.flatMap(([a, b]) => [...a, ...b]), 3))
+    return g
+  }, [s.pairs])
+  useEffect(() => () => geometry.dispose(), [geometry])
+  return (
+    <lineSegments geometry={geometry}>
+      <lineBasicMaterial color={toneColor(palette, s.tone)} transparent opacity={s.faded ? 0.25 : 0.7} />
+    </lineSegments>
+  )
+}
+
 /** Labels attach to `overlay`, an element React owns, so they come away cleanly when the canvas unmounts. */
 function Scene({ step, palette, view, reduced, overlay }: { step: SceneStep; palette: Palette; view: View; reduced: boolean; overlay: RefObject<HTMLDivElement | null> }) {
   const portal = overlay as RefObject<HTMLElement>
@@ -194,11 +288,35 @@ function Scene({ step, palette, view, reduced, overlay }: { step: SceneStep; pal
       ))}
       {step.paths?.map((p) => (
         <group key={p.id}>
-          <Line points={p.points} color={palette.rule} lineWidth={2} dashed dashSize={0.18} gapSize={0.12} />
-          <Html position={p.points.reduce((hi, q) => (q[1] > hi[1] ? q : hi), p.points[0])} className="s3-label s3-path" zIndexRange={[20, 0]} portal={portal} aria-hidden>
+          <Line
+            points={p.points}
+            color={p.tone ? css(toneColor(palette, p.tone)) : palette.rule}
+            lineWidth={p.width ?? 2}
+            dashed={!p.solid}
+            dashSize={0.18}
+            gapSize={0.12}
+          />
+          {p.label && (
+            <Html position={p.points.reduce((hi, q) => (q[1] > hi[1] ? q : hi), p.points[0])} className="s3-label s3-path" zIndexRange={[20, 0]} portal={portal} aria-hidden>
+              {p.label}
+            </Html>
+          )}
+        </group>
+      ))}
+      {step.segments?.map((sg) => <SegmentLines key={sg.id} s={sg} palette={palette} />)}
+      {step.points && step.points.length > 0 && <PointsMesh key={`points-${step.points.length}`} points={step.points} palette={palette} reduced={reduced} />}
+      {step.points
+        ?.filter((p) => p.label && !p.faded)
+        .map((p) => (
+          <Html key={`pl-${p.id}`} position={[p.at[0], p.at[1] + (p.r ?? 0.06) + 0.08, p.at[2]]} className="s3-label s3-pt" zIndexRange={[20, 0]} portal={portal} aria-hidden>
             {p.label}
           </Html>
-        </group>
+        ))}
+      {step.bars?.map((b) => <Bar key={b.id} b={b} palette={palette} />)}
+      {step.notes?.map((n) => (
+        <Html key={n.id} position={n.at} className="s3-label s3-note" zIndexRange={[20, 0]} portal={portal} aria-hidden>
+          {n.text}
+        </Html>
       ))}
     </>
   )
@@ -216,7 +334,68 @@ function Grid({ m, t, palette, title }: { m: Mat; t: TensorView; palette: Palett
   )
 }
 
+/** Points seen from above, x across and z down, with their segments: the 2D view of a point scene. */
+function MapView({ step }: { step: SceneStep }) {
+  const pts = step.points ?? []
+  const all = [...pts.map((p) => p.at), ...(step.segments ?? []).flatMap((s) => s.pairs.flat()), ...(step.paths ?? []).flatMap((p) => p.points)]
+  const xs = all.map((a) => a[0])
+  const zs = all.map((a) => a[2])
+  const [x0, x1, z0, z1] = [Math.min(...xs), Math.max(...xs), Math.min(...zs), Math.max(...zs)]
+  const W = 520
+  const k = (W - 40) / Math.max(1e-6, x1 - x0, z1 - z0)
+  const H = Math.max(120, (z1 - z0) * k + 40)
+  const X = (v: number) => 20 + (v - x0) * k
+  const Z = (v: number) => 20 + (v - z0) * k
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="s3-map" role="img" aria-label={`${step.title}: the points seen from above`}>
+      {step.segments?.map((s) =>
+        s.pairs.map(([a, b], i) => (
+          <line key={`${s.id}-${i}`} x1={X(a[0])} y1={Z(a[2])} x2={X(b[0])} y2={Z(b[2])} stroke={toneVar(s.tone)} strokeOpacity={s.faded ? 0.2 : 0.5} strokeWidth={1} />
+        )),
+      )}
+      {step.paths?.map((p) => (
+        <polyline key={p.id} points={p.points.map((q) => `${X(q[0])},${Z(q[2])}`).join(' ')} fill="none" stroke={p.tone ? toneVar(p.tone) : 'var(--muted)'} strokeWidth={2} strokeDasharray={p.solid ? undefined : '5 4'} />
+      ))}
+      {pts.map((p) => (
+        <circle key={p.id} cx={X(p.at[0])} cy={Z(p.at[2])} r={Math.max(2.5, (p.r ?? 0.06) * k * 0.8)} fill={toneVar(p.tone)} fillOpacity={p.faded ? 0.3 : 1} />
+      ))}
+      {pts
+        .filter((p) => p.label && !p.faded)
+        .map((p) => (
+          <text key={`t-${p.id}`} x={X(p.at[0]) + 6} y={Z(p.at[2]) - 6} className="s3-maptext">
+            {p.label}
+          </text>
+        ))}
+    </svg>
+  )
+}
+
+function DataTableView({ table }: { table: NonNullable<SceneStep['table']> }) {
+  return (
+    <div className="tw s3-table">
+      <table>
+        <caption>{table.caption}</caption>
+        <thead>
+          <tr>{table.head.map((h) => <th key={h} scope="col">{h}</th>)}</tr>
+        </thead>
+        <tbody>
+          {table.rows.map((r, i) => (
+            <tr key={i}>{r.map((c, j) => (j === 0 ? <th key={j} scope="row">{c}</th> : <td key={j}>{c}</td>))}</tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function Flat({ step, palette }: { step: SceneStep; palette: Palette }) {
+  if (!step.tensors.length)
+    return (
+      <div className="s3-flat s3-flat-col">
+        {step.map && <MapView step={step} />}
+        {step.table && <DataTableView table={step.table} />}
+      </div>
+    )
   return (
     <div className="s3-flat">
       {step.tensors.map((t) => (
