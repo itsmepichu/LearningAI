@@ -12,7 +12,13 @@
     ],
     "answer": 2,
     "why": "Cosine normalises by length, so scaling one vector leaves it unchanged.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "The dot product scales with length, so doubling one vector doubles it.",
+     "The distance between the vectors' tips grows when one of them gets longer.",
+     "",
+     "One norm doubles; only the angle between the vectors is unchanged."
+    ]
    },
    {
     "id": "c2-1-m02",
@@ -75,18 +81,18 @@
     "id": "c2-1-m05",
     "q": "Why do vector databases usually normalise embeddings to length 1?",
     "options": [
-     "So the embedding model can be changed freely",
-     "So vectors take less disk space",
-     "So every score is positive",
+     "So the embedding model can be swapped without re-embedding documents",
+     "So each vector takes less disk space once its length is fixed",
+     "So every similarity score comes out positive and easy to rank",
      "So cosine similarity equals the cheaper dot product"
     ],
     "answer": 3,
     "why": "For unit vectors, a·b = cos θ, so ranking by dot product gives cosine ranking at lower cost.",
     "kind": "concept",
     "distractors": [
-     "Vectors from different models are not comparable, normalised or not.",
-     "Normalised vectors have the same number of entries.",
-     "Cosine can still be negative.",
+     "Vectors from another model live in a different space; normalising does not make them comparable.",
+     "A unit vector has as many dimensions, and bytes, as before.",
+     "Unit vectors can still point apart: cosine still ranges from −1 to 1.",
      ""
     ]
    },
@@ -113,18 +119,18 @@
     "id": "c2-1-m07",
     "q": "A cosine similarity of 0 means the two vectors are…",
     "options": [
-     "Identical",
-     "Opposite",
-     "Both zero vectors",
+     "Identical, pointing the same way with equal length",
+     "Opposite, pointing in exactly reverse directions",
+     "Both zero vectors, since they share nothing",
      "Perpendicular, so unrelated in that space"
     ],
     "answer": 3,
     "why": "Cosine 1 means same direction, 0 perpendicular, −1 opposite.",
     "kind": "concept",
     "distractors": [
-     "Identical directions give 1.",
-     "Opposite directions give −1.",
-     "Cosine of a zero vector is undefined, not 0.",
+     "Vectors pointing the same way have cosine 1.",
+     "Opposite directions give cosine −1.",
+     "Cosine with a zero vector is undefined, not 0.",
      ""
     ]
    },
@@ -133,37 +139,37 @@
     "q": "Multiplying one token's vector by a 4096 × 4096 weight matrix takes about how many multiply-adds?",
     "options": [
      "About 67 million",
-     "8,192",
+     "About 8.2 thousand",
      "About 16.7 million",
-     "4,096"
+     "About 4.1 thousand"
     ],
     "answer": 2,
     "why": "Each of the 4,096 outputs is a dot product of length 4,096: 4,096² ≈ 16.7 million multiply-adds.",
     "kind": "calculation",
     "distractors": [
-     "That is four times too many.",
-     "That adds the dimensions instead of multiplying them.",
+     "Four times too many: there is one multiply-add per weight, 4096 × 4096 ≈ 16.7 million.",
+     "8,192 is 4096 + 4096: it adds the dimensions instead of multiplying them.",
      "",
-     "That is one row's worth."
+     "4,096 is one output's dot product; there are 4,096 outputs, each needing 4,096 multiply-adds."
     ]
    },
    {
     "id": "c2-1-m09",
     "q": "An embedding call failed and your code stored a zero vector. What happens when you compute its cosine similarity?",
     "options": [
-     "It is 1",
-     "It is −1",
+     "It is 1, because a zero vector matches every direction equally",
+     "It is −1, because the zero vector points away from every document",
      "It is undefined (division by zero), so NaN scores can reach ranking",
-     "It is 0, which is safe"
+     "It is 0, which ranks the document last and is therefore safe"
     ],
     "answer": 2,
     "why": "Cosine divides by both norms; a zero norm makes it undefined. Detect failed or empty embeddings explicitly.",
     "kind": "scenario",
     "distractors": [
-     "Nothing makes it 1.",
-     "Nothing makes it −1.",
+     "Cosine divides by both norms; a zero norm makes it undefined, not 1.",
+     "A zero vector has no direction, so it cannot point away from anything.",
      "",
-     "It is not 0; the formula breaks."
+     "0/0 is undefined; libraries return NaN, which can break sorting and ranking."
     ]
    },
    {
@@ -197,7 +203,8 @@
      "Cosine is the angle only, from 1 to −1",
      "Cosine compares meaning when length is irrelevant",
      "For unit vectors, cosine equals the dot product"
-    ]
+    ],
+    "followUp": "Your embeddings are not normalised. Which of the three would you use for retrieval, and why?"
    },
    {
     "id": "c2-1-i02",
@@ -208,7 +215,8 @@
      "Layers are matrix multiplications",
      "Huge numbers of identical operations parallelise well",
      "GPUs and their matrix units are built for this"
-    ]
+    ],
+    "followUp": "How many multiply-adds does one 4096 × 4096 layer take for a single token?"
    },
    {
     "id": "c2-1-i03",
@@ -219,7 +227,8 @@
      "Cosine then equals the dot product",
      "Cheaper ranking",
      "Removes length effects that do not carry meaning"
-    ]
+    ],
+    "followUp": "What goes wrong if only some vectors in the store are normalised?"
    },
    {
     "id": "c2-1-i04",
@@ -231,7 +240,8 @@
      "Wrong data types or corrupted values",
      "Mismatched dimensions or model versions",
      "Validation at write time"
-    ]
+    ],
+    "followUp": "How would you stop zero vectors from reaching the store in the first place?"
    },
    {
     "id": "c2-1-i05",
@@ -242,7 +252,8 @@
      "Equivalence for normalised vectors",
      "Whether magnitude carries information",
      "What the index supports efficiently"
-    ]
+    ],
+    "followUp": "The model card says it was trained with dot product on unnormalised vectors. Does that change your choice?"
    },
    {
     "id": "c2-1-i06",
@@ -254,7 +265,8 @@
      "Inspect the cosine values of the nearest neighbours",
      "Set a minimum similarity before showing anything"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "What minimum similarity would you set, and how would you choose it?"
    },
    {
     "id": "c2-1-i07",
@@ -279,7 +291,8 @@
      "Lower dimensions or quantised vectors",
      "Batch queries",
      "Measure recall against exact search"
-    ]
+    ],
+    "followUp": "How would you know the approximate index is not missing good results?"
    }
   ]
  },
@@ -296,7 +309,13 @@
     ],
     "answer": 1,
     "why": "With a 0.1% base rate, false alarms from the 99.9% negatives vastly outnumber true detections (Bayes).",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "With a 0.1% base rate there are about 10 false alerts for every true one.",
+     "",
+     "Recall, the false-positive rate and the base rate are enough to count both kinds of alert.",
+     "Per 100,000 cases: about 95 true alerts and about 1,000 false ones, nowhere near half."
+    ]
    },
    {
     "id": "c2-2-m02",
@@ -397,57 +416,57 @@
     "id": "c2-2-m07",
     "q": "Why is a paired comparison more powerful when two models ran on the same test cases?",
     "options": [
-     "It doubles the sample size",
+     "It doubles the sample size, because each case is counted once per model",
      "It compares per-case differences, so the variation in case difficulty cancels out",
-     "It makes both models score higher",
-     "It removes the need for any test cases"
+     "It lifts both models' scores, because each case is scored twice",
+     "It removes the need for a test set, since the models check each other"
     ],
     "answer": 1,
     "why": "Counting cases where only one model passed (a sign or McNemar test) focuses on the actual differences between them.",
     "kind": "concept",
     "distractors": [
-     "The number of cases is unchanged.",
+     "The number of independent cases is the same; pairing removes noise, it does not add cases.",
      "",
-     "The test does not change either model's score.",
-     "You still need test cases."
+     "Pairing changes the analysis, not the scores.",
+     "You still need test cases; pairing is how you compare results on them."
     ]
    },
    {
     "id": "c2-2-m08",
     "q": "You compute a tight confidence interval from a sample of only English tickets and report it for all traffic. What is the problem?",
     "options": [
-     "Confidence intervals only work for English",
+     "Confidence intervals are valid only for English text, not other languages",
      "The sample is biased, so the interval can be precisely wrong about real traffic",
-     "The interval is too wide",
-     "Nothing; the interval is valid for all traffic"
+     "The interval is too wide to use, because English tickets vary so much",
+     "Nothing: a tight interval holds for all traffic once the sample is large"
     ],
     "answer": 1,
     "why": "An interval reflects sampling noise, not bias. A sample that does not represent traffic gives a confident wrong answer.",
     "kind": "scenario",
     "distractors": [
-     "Intervals are not language-specific.",
+     "The maths does not depend on language; the problem is which cases were sampled.",
      "",
-     "Width is not the issue; representativeness is.",
-     "It is only valid for the population sampled."
+     "The interval was tight; a tight interval around a biased estimate is the danger.",
+     "An interval covers sampling noise, not bias from an unrepresentative sample."
     ]
    },
    {
     "id": "c2-2-m09",
     "q": "Under the method's assumptions, a 95% confidence interval is a range that…",
     "options": [
-     "Contains 95% of the data points",
+     "Contains 95% of the individual data points in the sample",
      "Would contain the true value in about 95% of repeated experiments",
-     "Has a 95% chance of being wrong",
-     "Is always centred on the true value"
+     "Has a 95% chance of being wrong about the true value",
+     "Is always centred on the true value, give or take a little"
     ],
     "answer": 1,
     "why": "It quantifies how far the estimate could be off because you only tested a sample.",
     "kind": "concept",
     "distractors": [
-     "That describes the spread of data, not uncertainty in the estimate.",
+     "That describes the spread of the data, not the uncertainty of an estimate.",
      "",
-     "That inverts the meaning.",
-     "The interval is centred on the estimate, which may differ from the truth."
+     "The other way round: about 95% of such intervals cover the true value.",
+     "It is centred on the estimate; the true value is unknown."
     ]
    },
    {
@@ -455,18 +474,18 @@
     "q": "In evaluation, what is being sampled?",
     "options": [
      "Test cases drawn from all possible inputs",
-     "Model weights",
-     "Random seeds",
-     "Tokens from the vocabulary"
+     "The model's weights, drawn fresh for each run",
+     "Random seeds, one for each evaluation run",
+     "Tokens drawn from the model's vocabulary"
     ],
     "answer": 0,
     "why": "An evaluation set is a sample of possible inputs, which is why results carry uncertainty.",
     "kind": "concept",
     "distractors": [
      "",
-     "Weights are fixed during evaluation.",
-     "Seeds control randomness; they are not the sample.",
-     "Sampling tokens happens during generation."
+     "Weights are fixed during an evaluation.",
+     "Seeds affect decoding; the sample that sets an interval's width is the test cases.",
+     "Picking tokens is decoding, not the evaluation sample."
     ]
    }
   ],
@@ -480,7 +499,8 @@
      "The base rate P(A) matters",
      "Counting example with real numbers",
      "Precision can be low even with high recall"
-    ]
+    ],
+    "followUp": "How would you explain to a manager why a 99%-accurate detector raises mostly false alarms?"
    },
    {
     "id": "c2-2-i02",
@@ -491,7 +511,8 @@
      "Width shrinks with √n",
      "Does not cover bias or an unrepresentative sample",
      "Not the probability the true value lies in this specific interval"
-    ]
+    ],
+    "followUp": "How would you make the interval half as wide?"
    },
    {
     "id": "c2-2-i03",
@@ -502,7 +523,8 @@
      "Recall alone hides that",
      "Precision depends on prevalence",
      "Operational load follows from alerts per day"
-    ]
+    ],
+    "followUp": "The team can review only 200 alerts a day. How do you set the threshold?"
    },
    {
     "id": "c2-2-i04",
@@ -525,7 +547,8 @@
      "Paired tests need fewer cases",
      "Rough power calculation or simulation",
      "Trade-off against labelling cost"
-    ]
+    ],
+    "followUp": "Labelling is expensive. How would you get the same power from fewer labelled cases?"
    },
    {
     "id": "c2-2-i06",
@@ -538,7 +561,8 @@
      "Analysts needed follows from minutes per alert",
      "Set the threshold to an alert budget instead"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "The team can review 2,000 alerts a day. What do you change?"
    },
    {
     "id": "c2-2-i07",
@@ -550,7 +574,8 @@
      "Results by slice",
      "Decision rule agreed in advance",
      "Known limitations stated"
-    ]
+    ],
+    "followUp": "The new model wins overall but loses on one slice. What do you recommend?"
    },
    {
     "id": "c2-2-i08",
@@ -562,7 +587,8 @@
      "Two-stage detection: cheap filter then precise check",
      "Threshold from review capacity",
      "Measure and tune with labelled outcomes"
-    ]
+    ],
+    "followUp": "How would you measure whether the redesign helped?"
    }
   ]
  },
@@ -579,7 +605,13 @@
     ],
     "answer": 2,
     "why": "Loss = −ln(0.1) ≈ 2.30 nats.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "0.1 is the probability itself, not its negative log.",
+     "0.69 nats is −ln 0.5, the loss at probability 0.5.",
+     "",
+     "10 nats would mean a probability of about 0.00005."
+    ]
    },
    {
     "id": "c2-4-m02",
@@ -604,19 +636,19 @@
     "id": "c2-4-m03",
     "q": "For a language model with a 50,000-token vocabulary, what should the first training-step loss be near?",
     "options": [
-     "About 1",
+     "About 1 nat",
      "About 10.8 nats",
-     "50,000",
+     "About 50,000 nats",
      "About 4.7 nats"
     ],
     "answer": 1,
     "why": "An untrained model is close to uniform, so the loss is ln(50,000) ≈ 10.8.",
     "kind": "calculation",
     "distractors": [
-     "A loss near 1 would mean it already predicts well.",
+     "A loss of 1 means probability about 0.37 on the real token, far better than a random start.",
      "",
-     "The loss is a logarithm, not a count.",
-     "4.7 is log₁₀(50,000); training logs use natural logs."
+     "50,000 is the vocabulary size; the loss is its log, ln 50,000 ≈ 10.8.",
+     "4.7 is log base 10 of 50,000; losses use the natural log."
     ]
    },
    {
@@ -626,54 +658,54 @@
      "log q(real token)",
      "The entropy of q",
      "−log q(real token)",
-     "Zero"
+     "Zero, since p is certain"
     ],
     "answer": 2,
     "why": "With p = 1 on the real token, H(p, q) = −log q(real token).",
     "kind": "concept",
     "distractors": [
-     "That has the wrong sign; the loss is positive.",
-     "The entropy of q ignores the real token.",
+     "Without the minus sign the loss would be negative; −log q(real) is positive.",
+     "The entropy of q ignores which token was real.",
      "",
-     "It is zero only if q gives the real token probability 1."
+     "The entropy of p is zero, but cross-entropy is −log q(real token), zero only if q gives that token probability 1."
     ]
    },
    {
     "id": "c2-4-m05",
     "q": "Which statement about KL divergence KL(p‖q) is correct?",
     "options": [
-     "It equals cross-entropy",
-     "It is symmetric in p and q",
+     "It equals the cross-entropy H(p,q), including the entropy of p",
+     "It is symmetric, so KL(p‖q) always equals KL(q‖p)",
      "It is H(p,q) − H(p), never negative, and zero only when q = p",
-     "It can be negative"
+     "It can be negative when q fits the data better than p"
     ],
     "answer": 2,
     "why": "KL is the extra surprise from using q instead of p.",
     "kind": "concept",
     "distractors": [
-     "Cross-entropy includes H(p); KL subtracts it.",
-     "KL(p‖q) and KL(q‖p) usually differ.",
+     "KL is cross-entropy minus the entropy of p.",
+     "KL is asymmetric; swapping p and q gives a different value.",
      "",
-     "KL is always ≥ 0."
+     "KL is never negative, and zero only when the distributions match."
     ]
    },
    {
     "id": "c2-4-m06",
     "q": "Where is KL divergence used when tuning LLMs?",
     "options": [
-     "To pick the tokenizer",
+     "To choose the tokenizer that gives the lowest loss on a corpus",
      "To keep a tuned model close to its original in RLHF and DPO",
-     "To set the context window",
-     "To compress weights"
+     "To set the context window from the length of the training data",
+     "To measure how far apart two embeddings are in a vector store"
     ],
     "answer": 1,
     "why": "A KL term penalises drifting too far from the reference model while optimising rewards or preferences (6.5).",
     "kind": "concept",
     "distractors": [
-     "Tokenizers are trained separately.",
+     "Tokenizers are built from merge rules on a corpus, not chosen by KL.",
      "",
-     "Context length is an architecture choice.",
-     "Compression is a different topic."
+     "Context length is an architecture and training choice.",
+     "Vector stores use cosine or dot product between vectors; KL compares probability distributions."
     ]
    },
    {
@@ -700,18 +732,18 @@
     "q": "A model gives the correct answer only 1% probability. What is its loss on that example?",
     "options": [
      "About 4.6 nats",
-     "0.01",
-     "1",
-     "46"
+     "About 0.01 nats",
+     "About 1 nat",
+     "About 46 nats"
     ],
     "answer": 0,
     "why": "−ln 0.01 ≈ 4.6. Being confidently wrong is expensive.",
     "kind": "calculation",
     "distractors": [
      "",
-     "That is the probability, not the loss.",
-     "That would be a probability near 37%.",
-     "That is ten times too large."
+     "0.01 is the probability; the loss is −ln 0.01.",
+     "A loss of 1 corresponds to probability about 0.37.",
+     "ln 100 is 4.6, not 46: a misplaced decimal point."
     ]
    },
    {
@@ -719,18 +751,18 @@
     "q": "A model improves perplexity but fails critical extraction cases. What should you conclude?",
     "options": [
      "Lower token loss does not guarantee task success; evaluate the task directly",
-     "The model is now strictly better",
-     "The extraction tests are wrong",
-     "Perplexity is the only metric that matters"
+     "The model is now strictly better, since perplexity improved overall",
+     "The extraction tests must be wrong, because perplexity says it improved",
+     "Perplexity is the only metric that matters for a language model's quality"
     ],
     "answer": 0,
     "why": "Perplexity measures average next-token prediction; specific tasks need their own evaluation.",
     "kind": "scenario",
     "distractors": [
      "",
-     "It may be better on average and worse where it counts.",
-     "Task tests measure what users need.",
-     "Task metrics matter at least as much."
+     "Average token loss can improve while the tokens that matter for the task get worse.",
+     "The tests measure the task; perplexity measures next-token prediction in general.",
+     "Perplexity is a training signal; usefulness is measured on the task."
     ]
    },
    {
@@ -763,7 +795,8 @@
      "Cross-entropy: surprise when predicting with q",
      "KL: the extra surprise from using q instead of p",
      "KL is never negative and zero only when they match"
-    ]
+    ],
+    "followUp": "Why is KL divergence not a distance, and when does that matter?"
    },
    {
     "id": "c2-4-i02",
@@ -774,7 +807,8 @@
      "It reduces to −log q(real token)",
      "Punishes confident mistakes heavily",
      "Matches maximum-likelihood training"
-    ]
+    ],
+    "followUp": "What happens to the loss when the model puts almost zero probability on the real token?"
    },
    {
     "id": "c2-4-i03",
@@ -785,7 +819,8 @@
      "Roughly the number of choices the model is hedging between",
      "Lower is better",
      "Only comparable with the same tokenizer and data"
-    ]
+    ],
+    "followUp": "A model's perplexity is 8. What does that tell you, and what does it not?"
    },
    {
     "id": "c2-4-i04",
@@ -808,7 +843,8 @@
      "Per-token loss depends on token size",
      "Task metrics decide usefulness",
      "Normalise per character or byte if needed"
-    ]
+    ],
+    "followUp": "How would you compare them fairly if their tokenizers differ?"
    },
    {
     "id": "c2-4-i06",
@@ -821,7 +857,8 @@
      "Set thresholds and alert",
      "Check the forecast models when it fires"
     ],
-    "project": "travel"
+    "project": "travel",
+    "followUp": "The alert fires every December. How do you stop that from being a false alarm?"
    },
    {
     "id": "c2-4-i07",
@@ -833,7 +870,8 @@
      "Smoothing for empty bins",
      "Seasonal baselines",
      "An action when it fires: measure performance, not retrain blindly"
-    ]
+    ],
+    "followUp": "The check fires but accuracy has not dropped. What do you do?"
    },
    {
     "id": "c2-4-i08",
@@ -844,7 +882,8 @@
      "KL to a reference model limits the drift",
      "Its weight trades reward against staying close",
      "Without it: degenerate or unsafe outputs"
-    ]
+    ],
+    "followUp": "How would you choose the weight of the KL penalty?"
    }
   ]
  },
@@ -855,18 +894,18 @@
     "q": "In gradient descent, why do we step against the gradient?",
     "options": [
      "The gradient points in the direction of steepest increase",
-     "It makes the learning rate larger",
-     "The gradient points to the minimum",
-     "The gradient is always negative"
+     "Stepping against it makes the effective learning rate larger",
+     "The gradient points towards the minimum along the shortest path",
+     "The gradient is always negative, so subtracting it moves weights up"
     ],
     "answer": 0,
     "why": "∇L points uphill, so θ ← θ − η·∇L moves downhill.",
     "kind": "concept",
     "distractors": [
      "",
-     "The learning rate is set separately.",
-     "It points uphill locally, not at the minimum.",
-     "Its sign depends on the slope."
+     "The learning rate is set separately; the sign only chooses the direction.",
+     "It points to the steepest local increase, away from lower loss.",
+     "Its sign varies by parameter and by position on the surface."
     ]
    },
    {
@@ -930,18 +969,18 @@
     "id": "c2-3-m05",
     "q": "What happens when the learning rate is too large?",
     "options": [
-     "The model stops using gradients",
-     "Training becomes slower but always converges",
-     "Nothing changes",
+     "The model stops using gradients and falls back to random steps",
+     "Training gets slower but always converges in the end",
+     "Nothing changes, because the optimiser rescales every step anyway",
      "Steps overshoot: the loss oscillates or explodes, often to NaN"
     ],
     "answer": 3,
     "why": "Too large a step jumps past the minimum and can grow each time.",
     "kind": "concept",
     "distractors": [
-     "Gradients are still used, just badly scaled.",
-     "A too-large rate can prevent convergence entirely.",
-     "The rate changes every step size.",
+     "It still follows gradients; the steps are just too big.",
+     "Too-large steps can make the loss oscillate or diverge.",
+     "Plain SGD does not rescale steps, and even Adam diverges with a large enough rate.",
      ""
     ]
    },
@@ -950,74 +989,74 @@
     "q": "Backpropagation is…",
     "options": [
      "The chain rule applied through every layer",
-     "A way to pick the learning rate",
-     "A data-cleaning step",
-     "A decoding strategy"
+     "A method for picking the learning rate of each layer",
+     "A data-cleaning step that removes noisy labels",
+     "A decoding strategy that revisits earlier tokens"
     ],
     "answer": 0,
     "why": "Each operation only needs its local derivative; the framework multiplies them on the way back.",
     "kind": "concept",
     "distractors": [
      "",
-     "Learning-rate choice is separate.",
-     "Data cleaning happens before training.",
-     "Decoding happens at inference."
+     "Learning rates come from tuning and schedules.",
+     "Backpropagation computes gradients; it does not touch the data.",
+     "Decoding is inference; backpropagation is part of training."
     ]
    },
    {
     "id": "c2-3-m07",
     "q": "Training loss falls steadily while validation loss rises. What does that show?",
     "options": [
-     "Training is working perfectly",
-     "The learning rate is too small",
+     "Training is working well, since training loss is what matters",
+     "The learning rate is too small to make progress on new data",
      "The model is overfitting: it is not generalising",
-     "The validation set is too big"
+     "The validation set is too big for the model to learn in time"
     ],
     "answer": 2,
     "why": "Falling training loss alone is not proof of learning; validation loss shows generalisation.",
     "kind": "scenario",
     "distractors": [
-     "Rising validation loss is a warning, not success.",
-     "A small rate would slow both curves.",
+     "Validation loss is what shows whether the model generalises.",
+     "A small rate slows the training loss too; this pattern is overfitting.",
      "",
-     "Validation size does not cause divergence between the curves."
+     "The model never trains on the validation set."
     ]
    },
    {
     "id": "c2-3-m08",
     "q": "In the 3D figure, why can momentum roll through a small dip that stops plain SGD?",
     "options": [
-     "It uses a larger loss",
-     "It ignores the gradient",
+     "It uses a larger loss value to push past the dip",
+     "It ignores the gradient while it is inside a small dip",
      "It keeps a running velocity from earlier steps",
-     "It sees the whole surface"
+     "It sees the whole surface and skips over local dips"
     ],
     "answer": 2,
     "why": "Momentum accumulates past gradients, so it keeps moving across small flat or uphill stretches.",
     "kind": "concept",
     "distractors": [
-     "All three optimisers see the same loss.",
-     "It still uses gradients, accumulated.",
+     "Momentum does not change the loss.",
+     "It still uses the gradient, adding it to its velocity.",
      "",
-     "No optimiser sees the whole surface; each sees only local gradients."
+     "Optimisers only see the local gradient."
     ]
    },
    {
     "id": "c2-3-m09",
     "q": "What does Adam do differently from plain SGD?",
     "options": [
-     "Computes exact second derivatives",
-     "Only updates one parameter per step",
-     "Uses no learning rate",
+     "Computes exact second derivatives for every parameter at each step",
+     "Updates only one randomly chosen parameter per step to save memory",
+     "Uses no learning rate, since it estimates the best step size itself",
      "Scales each parameter's step by a running estimate of its gradient size"
     ],
     "answer": 3,
     "why": "Dividing by the running gradient size gives each parameter a similar pace, whatever its slope.",
     "kind": "concept",
     "distractors": [
-     "It approximates scale from first-moment statistics, not exact second derivatives.",
-     "It updates all parameters each step.",
-     "Adam has a learning rate.",
+     "Adam keeps running averages of gradients and squared gradients, not exact second derivatives.",
+     "Adam updates every parameter at each step.",
+     "Adam still has a learning rate; it scales it per parameter.",
      ""
     ]
    },
@@ -1025,19 +1064,19 @@
     "id": "c2-3-m10",
     "q": "For L(w) = (w − 3)² with learning rate 1.1, starting at w = 1, what happens?",
     "options": [
-     "It converges smoothly",
-     "It stops at w = 1",
+     "It converges smoothly to 3, just more slowly than with 0.1",
+     "It stays at w = 1, because the gradient there is too small",
      "It oscillates around 3 with growing amplitude and diverges",
-     "It reaches 3 in one step"
+     "It reaches 3 in one step, since 1.1 is close to the ideal rate"
     ],
     "answer": 2,
     "why": "Each step multiplies the distance from 3 by (1 − 2η) = −1.2: 1, 5.4, 0.12… the error grows and flips sign.",
     "kind": "calculation",
     "distractors": [
-     "Convergence needs |1 − 2η| < 1, i.e. η < 1.",
-     "The gradient at w = 1 is not zero.",
+     "Each step multiplies the distance from 3 by (1 − 2·1.1) = −1.2, so it grows.",
+     "The gradient at w = 1 is 2(1 − 3) = −4, which is not small.",
      "",
-     "Only η = 0.5 reaches 3 in one step."
+     "The one-step rate is 0.5; 1.1 jumps to w = 5.4."
     ]
    }
   ],
@@ -1051,7 +1090,8 @@
      "Learning rate sets step size",
      "Too small crawls, too large overshoots or diverges",
      "Checked on validation loss"
-    ]
+    ],
+    "followUp": "How would you tell from the loss curves that the learning rate is too high?"
    },
    {
     "id": "c2-3-i02",
@@ -1062,7 +1102,8 @@
      "Forward pass records operations",
      "Backward pass multiplies local derivatives",
      "Frameworks do it automatically (autograd)"
-    ]
+    ],
+    "followUp": "Why can gradients vanish in a deep network, in terms of the chain rule?"
    },
    {
     "id": "c2-3-i03",
@@ -1073,7 +1114,8 @@
      "Metrics are what the business cares about",
      "They can disagree",
      "Choose the threshold and model with metrics"
-    ]
+    ],
+    "followUp": "Give an example where the loss improved but the metric got worse."
    },
    {
     "id": "c2-3-i04",
@@ -1097,7 +1139,8 @@
      "Use a schedule or warm-up",
      "Check batch size and shuffling",
      "Check data quality for noisy labels"
-    ]
+    ],
+    "followUp": "Lowering the learning rate did not help. What next?"
    },
    {
     "id": "c2-3-i06",
@@ -1109,7 +1152,8 @@
      "Standardise or log-transform amounts",
      "Confirm with loss curves before and after"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "Why might a log transform help more than standardising for amounts like these?"
    },
    {
     "id": "c2-3-i07",
@@ -1121,7 +1165,8 @@
      "Warm-up and a decay schedule",
      "Checkpoints and early stopping",
      "Decide the stopping rule in advance"
-    ]
+    ],
+    "followUp": "Validation loss starts rising at step 800 of 2,000. What do you do?"
    },
    {
     "id": "c2-3-i08",
@@ -1132,7 +1177,8 @@
      "Momentum smooths with velocity",
      "Adam adapts per-parameter steps",
      "Trade-offs: extra memory and hyperparameters"
-    ]
+    ],
+    "followUp": "What does Adam cost in memory compared with plain SGD, per parameter?"
    }
   ]
  },
@@ -1142,18 +1188,18 @@
     "id": "c2-5-m01",
     "q": "What does vectorisation mean in NumPy?",
     "options": [
-     "Running code on a GPU only",
-     "Splitting data into vectors by hand",
-     "Converting text to embeddings",
+     "Running the same Python code on a GPU instead of on the CPU",
+     "Splitting the data into small vectors by hand before each loop",
+     "Converting text into embedding vectors before any computation",
      "Expressing computation as whole-array operations instead of Python loops"
     ],
     "answer": 3,
     "why": "Whole-array operations run in fast compiled code; Python loops are typically hundreds of times slower.",
     "kind": "concept",
     "distractors": [
-     "Vectorised NumPy runs on the CPU.",
-     "It is about how you write computation, not splitting data.",
-     "Embeddings are a different meaning of “vector”.",
+     "NumPy runs on the CPU; vectorising means array operations in compiled code.",
+     "Splitting by hand keeps the slow Python loop.",
+     "That is embedding, not vectorised computation.",
      ""
     ]
    },
@@ -1161,38 +1207,38 @@
     "id": "c2-5-m02",
     "q": "What is broadcasting?",
     "options": [
-     "Sending data to several GPUs",
-     "Printing an array",
+     "Sending the same array to several GPUs at once for training",
+     "Printing an array's contents in a readable, aligned layout",
      "Combining arrays of different shapes by stretching size-1 axes",
-     "Shuffling rows"
+     "Shuffling the rows of an array before each training epoch"
     ],
     "answer": 2,
     "why": "For example, adding a (3, 1) array to a (1, 4) array gives a (3, 4) result.",
     "kind": "concept",
     "distractors": [
-     "That is data parallelism.",
-     "Printing is unrelated.",
+     "That is replicating data across devices.",
+     "Printing has nothing to do with combining shapes.",
      "",
-     "Shuffling is unrelated."
+     "Shuffling reorders rows; it does not combine arrays."
     ]
    },
    {
     "id": "c2-5-m03",
     "q": "Why move code out of notebooks once it stabilises?",
     "options": [
-     "Notebooks cannot plot",
+     "Notebooks cannot draw plots once the dataset grows past memory",
      "Notebooks hide execution order, so results can depend on cells run out of order",
-     "Notebooks cannot run Python",
-     "Modules are always faster"
+     "Notebooks cannot import packages that were installed with pip",
+     "Modules always run faster than the same code in a notebook cell"
     ],
     "answer": 1,
     "why": "Hidden state makes notebooks fragile; versioned modules run the same way each time.",
     "kind": "concept",
     "distractors": [
-     "Notebooks plot well.",
+     "Notebooks plot fine; the risk is hidden state.",
      "",
-     "Notebooks run Python.",
-     "Speed is not the main reason."
+     "They can; that is not why code moves out.",
+     "Speed is the same; the reason is reproducibility."
     ]
    },
    {
@@ -1223,18 +1269,18 @@
     "q": "Your dataset version is recorded as “data.csv”. What is wrong with that?",
     "options": [
      "A file name is not a version; record a content hash or use a versioning tool",
-     "The name is too short",
-     "Nothing",
-     "CSV cannot store data"
+     "The name is too short to be unique across the team's projects",
+     "Nothing, as long as the file stays next to the code in the repo",
+     "CSV cannot store typed data, so the version is lost when loaded"
     ],
     "answer": 0,
     "why": "The file can change under the same name; a hash or a tool such as DVC pins the exact content.",
     "kind": "scenario",
     "distractors": [
      "",
-     "Length is not the issue.",
-     "It will not let anyone rebuild the result.",
-     "CSV is a fine format."
+     "A longer name is still not a version: the content can change under it.",
+     "The file can change while its name stays the same.",
+     "The format is not the problem; the name does not identify the content."
     ]
    },
    {
@@ -1260,18 +1306,18 @@
     "id": "c2-5-m07",
     "q": "You fit a normalisation (mean and standard deviation) on the full dataset and then split it. What is the problem?",
     "options": [
-     "It changes the labels",
-     "It is slower",
-     "Nothing",
+     "It changes the labels of the test rows",
+     "It is slower than normalising after the split",
+     "Nothing, as long as the split is random",
      "Test-set statistics leak into training"
     ],
     "answer": 3,
     "why": "Fit preprocessing on the training split only, then apply it to validation and test.",
     "kind": "scenario",
     "distractors": [
-     "Labels are untouched.",
-     "Speed is not the issue.",
-     "It inflates scores.",
+     "Normalising features does not touch the labels.",
+     "Speed is not the problem; leakage is.",
+     "A random split after fitting still leaks test statistics.",
      ""
     ]
    },
@@ -1280,37 +1326,37 @@
     "q": "What is pandas mainly used for?",
     "options": [
      "Tables with named columns: loading, cleaning, joining and grouping",
-     "Drawing 3D graphics",
-     "Serving models",
-     "Training neural networks"
+     "Drawing interactive 3D graphics of model internals",
+     "Serving trained models behind a low-latency HTTP API",
+     "Training neural networks on GPUs with automatic gradients"
     ],
     "answer": 0,
     "why": "DataFrames hold datasets and evaluation results.",
     "kind": "concept",
     "distractors": [
      "",
-     "Plotting libraries draw charts.",
-     "Serving uses other tools.",
-     "Frameworks such as PyTorch train networks."
+     "That is a plotting library's job.",
+     "Serving is a job for a web framework or serving engine.",
+     "That is PyTorch or JAX."
     ]
    },
    {
     "id": "c2-5-m09",
     "q": "A decision between two runs should cite…",
     "options": [
-     "What the team remembers",
-     "The newest notebook",
+     "What the team remembers from the review",
+     "The newest notebook in the shared folder",
      "Run IDs from the experiment tracker",
-     "The fastest run"
+     "Whichever run finished the fastest"
     ],
     "answer": 2,
     "why": "Tracked runs record config, commit, metrics and artefacts, so the decision can be checked.",
     "kind": "scenario",
     "distractors": [
-     "Memory is unreliable.",
-     "The newest notebook may not match the run.",
+     "Memory cannot be checked or reproduced.",
+     "Notebooks change and hide state; they do not identify a run.",
      "",
-     "Speed is not quality."
+     "Speed says nothing about quality or reproducibility."
     ]
    },
    {
@@ -1318,18 +1364,18 @@
     "q": "A NumPy dot product over a million numbers takes about 1 ms. A plain Python loop is hundreds of times slower. Roughly how long might the loop take?",
     "options": [
      "About 0.1 to 0.5 seconds",
-     "About 1 millisecond",
-     "About an hour",
-     "About 1 microsecond"
+     "About 1 to 2 milliseconds",
+     "About one to two hours",
+     "About 1 to 5 microseconds"
     ],
     "answer": 0,
     "why": "Hundreds of times 1 ms is a few hundred milliseconds.",
     "kind": "calculation",
     "distractors": [
      "",
-     "That is the vectorised time.",
-     "That is far too slow.",
-     "That is faster than NumPy."
+     "That is the vectorised time; the loop is hundreds of times slower.",
+     "Hundreds of times 1 ms is a fraction of a second, not hours.",
+     "That would be faster than NumPy; a Python loop is slower."
     ]
    }
   ],
@@ -1343,7 +1389,8 @@
      "Python loops are slow",
      "Broadcasting",
      "Memory and dtype awareness"
-    ]
+    ],
+    "followUp": "Give an example where broadcasting silently gives the wrong result."
    },
    {
     "id": "c2-5-i02",
@@ -1355,7 +1402,8 @@
      "Seeds and library versions",
      "Model and prompt versions",
      "Hardware notes and tolerance"
-    ]
+    ],
+    "followUp": "Two runs with the same config give slightly different scores. What could explain it?"
    },
    {
     "id": "c2-5-i03",
@@ -1366,7 +1414,8 @@
      "Packages for anything rerun or shared",
      "Hidden state risk",
      "Tests and CI for packaged code"
-    ]
+    ],
+    "followUp": "What would you check in CI for the packaged code?"
    },
    {
     "id": "c2-5-i04",
@@ -1390,7 +1439,8 @@
      "Data types and memory",
      "Vectorised and groupby operations",
      "Chunking or a faster engine"
-    ]
+    ],
+    "followUp": "The data no longer fits in memory. What are your options?"
    },
    {
     "id": "c2-5-i06",
@@ -1403,7 +1453,8 @@
      "Seeds for any sampling",
      "Record the run ID with the report"
     ],
-    "project": "store"
+    "project": "store",
+    "followUp": "Six months later finance reruns the report and the numbers differ. How do you find out why?"
    },
    {
     "id": "c2-5-i07",
@@ -1415,7 +1466,8 @@
      "Data versioning",
      "Artefacts and comparisons",
      "A habit: decisions cite run IDs"
-    ]
+    ],
+    "followUp": "How would you get the team to actually use it?"
    },
    {
     "id": "c2-5-i08",
@@ -1427,7 +1479,8 @@
      "Cache responses",
      "Run repeats and report variance",
      "Re-baseline when the provider changes"
-    ]
+    ],
+    "followUp": "The provider retires the model version you pinned. What do you do?"
    }
   ]
  },
@@ -1495,18 +1548,18 @@
     "q": "Why do most LLM training and serving stacks use BF16 rather than FP16?",
     "options": [
      "BF16 keeps FP32's exponent range, so large values do not overflow",
-     "BF16 uses 1 byte",
-     "FP16 is not supported anywhere",
-     "BF16 is more precise than FP16"
+     "BF16 uses 1 byte per number, half the memory of FP16",
+     "FP16 is not supported by current GPUs, so BF16 is the only option",
+     "BF16 is more precise than FP16 because it has more mantissa bits"
     ],
     "answer": 0,
     "why": "FP16's largest value is about 65,504, so large activations overflow; BF16 trades precision for FP32's range.",
     "kind": "concept",
     "distractors": [
      "",
-     "Both use 2 bytes.",
+     "BF16 uses 2 bytes, like FP16.",
      "FP16 is widely supported.",
-     "BF16 has less mantissa precision (7 bits versus 10)."
+     "BF16 has fewer mantissa bits; it trades precision for range."
     ]
    },
    {
@@ -1532,19 +1585,19 @@
     "id": "c2-6-m06",
     "q": "A 16 GB laptop has about 11 GB free. A 70B model at 4-bit needs about 40 GB. What happens?",
     "options": [
-     "It fits with room to spare",
+     "It fits with room to spare once the weights are 4-bit",
      "It does not fit; use a hosted API or a rented GPU",
-     "It runs at full speed from disk",
-     "It fits if you close the browser"
+     "It runs at full speed by streaming the weights from disk",
+     "It fits once you close the browser and other apps"
     ],
     "answer": 1,
     "why": "40 GB of weights exceeds 11 GB of free memory by far.",
     "kind": "scenario",
     "distractors": [
-     "It needs almost four times the free memory.",
+     "40 GB is far more than the 11 GB free.",
      "",
-     "Running from disk is impractically slow.",
-     "Closing apps frees a few GB, not 29."
+     "Reading weights from disk is far slower than from memory.",
+     "Freeing a few GB does not close a gap of about 29 GB."
     ]
    },
    {
@@ -1552,18 +1605,18 @@
     "q": "A batch of token embeddings is a tensor of what shape?",
     "options": [
      "3-D: batch × sequence × dimension",
-     "2-D: rows × columns only",
-     "0-D",
-     "1-D"
+     "2-D: rows × columns, one row per token",
+     "1-D: one long vector of all the numbers",
+     "4-D: batch × heads × sequence × dimension"
     ],
     "answer": 0,
     "why": "Each sequence has one vector per token, and there are several sequences in a batch.",
     "kind": "concept",
     "distractors": [
      "",
-     "One sequence of vectors is 2-D; a batch adds a dimension.",
-     "A scalar is 0-D.",
-     "A single vector is 1-D."
+     "That is one sequence; a batch adds an axis.",
+     "Flattening loses which number belongs to which token.",
+     "That is the shape inside attention after splitting into heads, not the embeddings."
     ]
    },
    {
@@ -1589,19 +1642,19 @@
     "id": "c2-6-m09",
     "q": "You download an “8 GB model file” for a laptop with 8 GB of RAM. What will happen?",
     "options": [
-     "The file shrinks when loaded",
-     "It runs faster than on a GPU",
+     "The file shrinks when loaded, leaving memory for everything else",
+     "It runs faster than on a GPU, because laptop RAM is shared with the CPU",
      "It will not run well: the KV cache, runtime and operating system also need memory",
-     "It runs perfectly"
+     "It runs perfectly, since the file size is exactly the memory it needs"
     ],
     "answer": 2,
     "why": "Weights are only part of memory use; the OS, the runtime and the KV cache need room too.",
     "kind": "scenario",
     "distractors": [
-     "Loading does not shrink the weights.",
-     "Laptops have less bandwidth than GPUs.",
+     "Loaded weights take at least the file's size.",
+     "A laptop has far less memory bandwidth than a GPU.",
      "",
-     "There is no headroom for anything else."
+     "The KV cache, runtime and operating system need memory too."
     ]
    },
    {
@@ -1634,7 +1687,8 @@
      "Same operation on huge arrays",
      "Much higher memory bandwidth",
      "CPUs suit branching, sequential logic"
-    ]
+    ],
+    "followUp": "When would you still run a model on a CPU?"
    },
    {
     "id": "c2-6-i02",
@@ -1645,7 +1699,8 @@
      "Range versus precision (FP16 vs BF16)",
      "Quantisation saves memory and bandwidth",
      "Accuracy loss must be measured"
-    ]
+    ],
+    "followUp": "How would you check that quantising to INT4 did not hurt your task?"
    },
    {
     "id": "c2-6-i03",
@@ -1656,7 +1711,8 @@
      "Plus the KV cache, which grows with context and concurrency",
      "Plus runtime overhead",
      "Plus the OS on a laptop"
-    ]
+    ],
+    "followUp": "How does the estimate change with 20 concurrent users at 8,000 tokens each?"
    },
    {
     "id": "c2-6-i04",
@@ -1668,7 +1724,8 @@
      "KV cache for the context length",
      "Speed ceiling from bandwidth",
      "Conclusion and caveats"
-    ]
+    ],
+    "followUp": "Roughly how many tokens per second would you expect, and what limits it?"
    },
    {
     "id": "c2-6-i05",
@@ -1679,7 +1736,8 @@
      "Fewer bytes read per token",
      "Ceiling rises roughly in proportion",
      "Check quality on your tasks"
-    ]
+    ],
+    "followUp": "When would quantisation not make generation faster?"
    },
    {
     "id": "c2-6-i06",
@@ -1692,7 +1750,8 @@
      "Redundancy",
      "Re-evaluate accuracy after quantising"
     ],
-    "project": "bank"
+    "project": "bank",
+    "followUp": "Case files double in length. Which part of the estimate changes, and how?"
    },
    {
     "id": "c2-6-i07",
@@ -1716,7 +1775,8 @@
      "Sharding across GPUs (ZeRO, FSDP)",
      "Gradient checkpointing",
      "Rent hardware for the run"
-    ]
+    ],
+    "followUp": "Roughly how much memory would QLoRA need for the same model?"
    }
   ]
  }
