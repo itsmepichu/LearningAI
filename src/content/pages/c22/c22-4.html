@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c22-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A good assistant hands you a draft letter to sign; it does not post it for you. <a class="gl" href="#gl-draft-review-commit">Draft, review, commit</a> keeps people in control: the AI prepares, a person checks and edits, and only then does anything leave the building.</p>
+<p>Where acting directly is worth it, an undo button with a clear time window gives people a way back. But undo has limits: a sent message or a transferred payment cannot be pulled back, so those stay behind a review.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c22-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Pattern</th><th>How it works</th><th>Use for</th></tr><tr><td>Suggestion chips</td><td>one click accepts, ignoring is free</td><td>replies, tags, next steps</td></tr><tr><td>Editable draft</td><td>the person edits freely before sending</td><td>messages, letters, documents</td></tr><tr><td>Diff view</td><td>shows exactly what will change</td><td>edits to records, code, documents</td></tr><tr><td>Approval with exact parameters</td><td>shows the action, amount, target and evidence (11.7)</td><td>payments, bookings, permissions</td></tr><tr><td>Undo window</td><td>action happens, reversible for N minutes</td><td>reversible actions: labels, moves, drafts saved</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">AI proposes<small>draft or action</small></div><div class="nd">Show<small>diff, evidence, impact</small></div><div class="nd">Person edits<small>or approves</small></div><div class="nd">Commit<small>logged with who approved</small></div><div class="nd">Undo or reconcile<small>within the window, or after</small></div></div>
+<ol class="steps"><li data-n="0">The AI prepares the text or action with its reasons.</li><li data-n="1">Show what will change, the evidence and the consequences.</li><li data-n="2">The person edits or approves; edits are good feedback (18.6).</li><li data-n="3">The approved version, and only that version, is executed and logged.</li><li data-n="4">Reversible actions offer undo; irreversible ones need a reconciliation process instead.</li></ol></div>
+<figcaption><b>Keeping people in control.</b></figcaption></figure>
+<div class="box pit"><h5>Rubber-stamping</h5><p>If reviewers approve 99% of drafts without changes, review has become a click. Watch edit rates and blind-check a sample (13.2), and design the review screen so the important parameters cannot be missed.</p></div>
+</section>
+
+<section class="tp tp-math" id="c22-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Layers of protection</b> (illustrative). 150 proposed actions, 6% wrong: about 9 mistakes.</p>
+<ul>
+<li>Reviewers see the large ones and catch 80% of the mistakes they see.</li>
+<li>Half of what slips through is noticed and undone within the window.</li>
+<li>If 6 of the 9 reach a reviewer: about 5 caught; of the remaining 4, about 2 undone; about 2 slip through and need reconciliation.</li>
+</ul>
+<p>Each layer catches a share of what the previous one missed; none is enough alone.</p>
+</section>
+
+<section class="tp tp-code" id="c22-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program takes your project’s proposed money-moving actions, sends the large ones to a reviewer, offers an undo window, and counts the mistakes and money caught at each layer. Change <code>REVIEW_CATCH</code> or <code>UNDO_USED</code> and see what slips through.</p>
+<figure class="fig live" id="snip-review-undo"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"review-undo"}'></div></div>
+<figcaption><b>Review and undo, layer by layer, in real Python.</b> Error and catch rates are simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c22-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.nngroup.com/articles/user-control-and-freedom/">Nielsen Norman Group: User Control and Freedom</a> <small>Undo and clearly marked exits.</small></li>
+<li><a href="https://www.microsoft.com/en-us/haxtoolkit/ai-guidelines/">Microsoft: Guidelines for Human-AI Interaction</a> <small>Efficient correction and dismissal of AI output.</small></li>
+<li><a href="https://pair.withgoogle.com/guidebook/chapters">Google PAIR guidebook: Feedback and control</a> <small>Giving users control over AI behaviour.</small></li>
+</ol>
+</section>

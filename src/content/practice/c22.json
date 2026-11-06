@@ -1,0 +1,196 @@
+{
+ "c22-1": {
+  "harbor": {
+   "practice": "Harbor drafts answers and tickets but never closes a ticket or grants access on its own. Mapping each feature by error cost and checking time kept automation where mistakes are cheap and review where they are not.",
+   "failure": "Letting the assistant grant system access on its own because drafting answers had gone well.",
+   "tryIt": "Run the snippet and add \"grant access to a shared drive\" with your own scores. Compare its verdict with \"summarise long ticket threads\" and write down why they differ.",
+   "fit": "good",
+   "fitNote": "clear split of draft and action"
+  },
+  "store": {
+   "practice": "{assistant} answers product questions on its own, because errors are cheap and visible, but refund amounts come from code and large refunds need a person. Each feature was placed on the automation scale before it was built.",
+   "failure": "Letting the assistant decide refund amounts itself instead of computing them in code.",
+   "tryIt": "Run the snippet, add \"recommend products while browsing\" and \"cancel an order\", score them for the store, and compare the verdicts with the refund features already listed.",
+   "fit": "good",
+   "fitNote": "mixed risk across features"
+  },
+  "bank": {
+   "practice": "{company} keeps {assistant} at the \"draft for review\" level for anything touching money or customer status, and at \"suggest\" for staff tools. Acting alone is limited to formatting and routing, where errors are cheap.",
+   "failure": "Raising the automation level for dispute decisions because a pilot looked accurate on easy cases.",
+   "tryIt": "Run the snippet and add \"decide a dispute outcome\" with low error tolerance. Confirm the verdict, then list which parts of that task could still be drafted by AI.",
+   "fit": "best",
+   "fitNote": "strict levels for money decisions"
+  },
+  "travel": {
+   "practice": "{assistant} acts with undo for seat preferences and meal requests, but changes and cancellations show the exact new itinerary and price and wait for the traveller to confirm.",
+   "failure": "Changing a booking directly from a chat message without showing the new itinerary and price first.",
+   "tryIt": "Run the snippet and add \"change a flight date\" and \"add a meal preference\" with your own scores. Compare the two verdicts and the automation level each deserves.",
+   "fit": "good",
+   "fitNote": "reversible versus irreversible changes"
+  }
+ },
+ "c22-2": {
+  "harbor": {
+   "practice": "Harbor puts a numbered citation after each policy statement, opening the exact paragraph. Sentences with no supporting passage are removed before the answer is shown, and \"I couldn’t find this in the policies\" is a normal answer.",
+   "failure": "Showing a citation to a real policy that does not actually say what the sentence claims.",
+   "tryIt": "Run the snippet with policies.json and lower the threshold in cite() to 0.1. See whether the invented sentence now gets a citation, and decide on a safe threshold.",
+   "fit": "best",
+   "fitNote": "policy answers need sources"
+  },
+  "store": {
+   "practice": "{assistant} cites the listing or review behind each product claim. Claims drawn from reviews are labelled as shoppers’ opinions, so shoppers can tell a listed fact from what other people said.",
+   "failure": "Presenting a reviewer’s opinion about battery life as if it were the listed specification.",
+   "tryIt": "Run the snippet with products.csv and change the invented sentence to a product claim. Check whether it gets flagged, and think about how to label review-based claims.",
+   "fit": "good",
+   "fitNote": "facts versus opinions"
+  },
+  "bank": {
+   "practice": "{assistant} shows the policy clause behind every answer about dispute timelines. Confidence labels were only added after calibration showed that \"high\" answers were right 94% of the time.",
+   "failure": "Showing \"high confidence\" labels from raw model scores that were never calibrated.",
+   "tryIt": "Run the snippet with policies.json and add more score values to the label loop. Decide which thresholds you would use, and what evidence you would need before showing them.",
+   "fit": "good",
+   "fitNote": "calibrated labels on policy answers"
+  },
+  "travel": {
+   "practice": "{assistant} cites the fare rule for every fee it mentions and marks prices as \"checked at\" a time, because fares change. Unsupported statements about refunds are removed before the answer is shown.",
+   "failure": "Quoting a cancellation fee with no fare rule cited and no time it was checked.",
+   "tryIt": "Run the snippet with fare_rules.json and replace the invented sentence with a fee claim. See whether it gets a citation, and how you would show when a price was checked.",
+   "fit": "good",
+   "fitNote": "fees with sources and times"
+  }
+ },
+ "c22-3": {
+  "harbor": {
+   "practice": "Harbor streams answers and shows search steps (\"searching policies\", \"found 3 passages\"). Long report requests run in the background and arrive by email, so nobody watches a spinner for a minute.",
+   "failure": "Holding a long report request open in the chat window until it times out.",
+   "tryIt": "Run the snippet with TOTAL set to 30 and TTFT to 2. Compare the share who give up for each design, and decide which requests should move to the background.",
+   "fit": "good",
+   "fitNote": "streaming and background reports"
+  },
+  "store": {
+   "practice": "{assistant} shows an instant acknowledgement and streams answers, but holds back order actions until they are validated. During sales, when first tokens slow down, a short status line appears within 300 ms.",
+   "failure": "Streaming an order action before it is validated, so shoppers see a change that never happened.",
+   "tryIt": "Run the snippet with TTFT set to 3.0 for a busy sale and compare streaming with an instant progress step. Note how many more users would give up without the status line.",
+   "fit": "best",
+   "fitNote": "latency under sale traffic"
+  },
+  "bank": {
+   "practice": "{assistant} streams explanations but never streams figures that are still being checked. Balances and amounts appear only after the core system confirms them, with a short \"checking your account\" status first.",
+   "failure": "Streaming an account balance before it has been confirmed by the core banking system.",
+   "tryIt": "Run the snippet with TOTAL set to 6 and add a design that shows a status at 0.3 s and the figures at 2 s. Compare the share who give up.",
+   "fit": "good",
+   "fitNote": "confirmed figures only"
+  },
+  "travel": {
+   "practice": "{assistant}’s rebooking agent lists finished steps as it works. During disruptions this cut duplicate requests from travellers who refreshed the page, which had been creating double holds on seats.",
+   "failure": "Showing only a spinner for a 20-second rebooking, so travellers refresh and create duplicate holds.",
+   "tryIt": "Run the snippet and change the agent loop to 8 steps of 3 seconds. Compare the longest silent gap with and without step updates, and the share who give up.",
+   "fit": "best",
+   "fitNote": "long agent tasks"
+  }
+ },
+ "c22-4": {
+  "harbor": {
+   "practice": "Harbor drafts replies that agents edit before sending, and shows a diff when it proposes changes to a ticket. Edit rates are tracked per agent, so rubber-stamping shows up as a near-zero edit rate.",
+   "failure": "Accepting a review step where agents approve 99% of drafts unchanged without checking.",
+   "tryIt": "Run the snippet with tickets.csv and set REVIEW_CATCH to 0.4 for tired reviewers. Count what slips through and decide what the review screen should highlight.",
+   "fit": "good",
+   "fitNote": "drafts edited by agents"
+  },
+  "store": {
+   "practice": "{assistant} applies small actions such as saving a wishlist with a ten-minute undo, but refunds show the order, amount and reason and wait for confirmation. Refunds cannot be undone once paid, so they are reconciled instead.",
+   "failure": "Offering an \"undo\" for a refund that has already been paid out.",
+   "tryIt": "Run the snippet with orders.csv and set UNDO_USED to 0.9. See how much the undo window recovers, and note which mistakes still need reconciliation because the money has gone.",
+   "fit": "good",
+   "fitNote": "undo for small actions only"
+  },
+  "bank": {
+   "practice": "{company} shows reviewers the exact credit, account and evidence for every proposed provisional credit. Approvals record who approved which version, and any edit after approval needs a new approval.",
+   "failure": "Letting an amount change after approval without a new approval of the exact action.",
+   "tryIt": "Run the snippet with disputes.csv and transactions.csv and set the threshold so every action is reviewed. Compare the money that slips through with the original setting.",
+   "fit": "best",
+   "fitNote": "exact approvals for money"
+  },
+  "travel": {
+   "practice": "{assistant} shows the new itinerary, fare difference and fees side by side with the old one before any change. Travellers confirm; the agent then books, and a failed step is undone through the saga (11.6).",
+   "failure": "Booking a change before the traveller has seen the new itinerary and the total cost.",
+   "tryIt": "Run the snippet with bookings.csv and raise WRONG to 0.12 for a disruption day. Count the mistakes caught at each layer and the refunds that would need reconciling.",
+   "fit": "good",
+   "fitNote": "confirm before booking"
+  }
+ },
+ "c22-5": {
+  "harbor": {
+   "practice": "Harbor asks for a thumbs rating after each answer and offers three reason chips after a thumbs down. Feedback is stored with the trace, and the weekly review turns the worst reasons into evaluation cases.",
+   "failure": "Reading the thumbs-down share as if it were the true rate of bad answers.",
+   "tryIt": "Run the snippet and change CLICK_IF_GOOD to 0.06. See how the thumbs-down share changes while the true unhelpful rate stays at 12%, and explain why in one sentence.",
+   "fit": "good",
+   "fitNote": "thumbs with reasons"
+  },
+  "store": {
+   "practice": "{company} learned most from shopper behaviour rather than clicks: asking again in other words, abandoning the cart after an answer, and returns. Thumbs ratings are used only as a pointer to traces worth reading.",
+   "failure": "Judging a prompt change by thumbs-down rates with too few sessions to see a difference.",
+   "tryIt": "Run the snippet and work out how many sessions per version you need to see a 20% fall. Compare that with your daily sessions during a sale.",
+   "fit": "good",
+   "fitNote": "behaviour signals at scale"
+  },
+  "bank": {
+   "practice": "{company} collects reviewers’ edits to dispute letters as the main feedback signal. Each edit is labelled with a reason, and letters with large edits become evaluation cases for the next prompt change.",
+   "failure": "Ignoring reviewer edits and relying only on rare thumbs ratings from customers.",
+   "tryIt": "Run the snippet and set CLICK_IF_BAD to 0.02 for customers who rarely click. Note how few signals arrive and why edits are the better source.",
+   "fit": "good",
+   "fitNote": "edits as feedback"
+  },
+  "travel": {
+   "practice": "{assistant} asks one question after a completed change: \"Did this solve your problem?\" Answers are joined later to whether the traveller called support, which validates the quick signal against the real outcome.",
+   "failure": "Trusting a quick satisfaction click without checking it against later support calls.",
+   "tryIt": "Run the snippet and change BAD_RATE to 0.25 for a disruption week. See how the thumbs-down share and the reasons change, and what you would act on first.",
+   "fit": "good",
+   "fitNote": "quick signal validated by outcomes"
+  }
+ },
+ "c22-6": {
+  "harbor": {
+   "practice": "Harbor’s first screen lists what it can do with three example questions. When it cannot find a policy it says so, links the policy index and offers to open a ticket, instead of a generic error.",
+   "failure": "Opening with \"Ask me anything\" and then failing on questions outside the policy library.",
+   "tryIt": "Run the snippet with tickets.csv and rewrite the out-of-scope and low-confidence messages for Harbor. Count how many users would have hit a dead end before.",
+   "fit": "good",
+   "fitNote": "clear scope and handover"
+  },
+  "store": {
+   "practice": "{assistant} tells shoppers it can find products, answer questions from listings and track orders. If the order system is down, it saves the request and promises a notification, and a human chat link is always visible.",
+   "failure": "Showing \"Something went wrong\" when the order system is down, with no way forward.",
+   "tryIt": "Run the snippet with reviews.json and chats.json and raise the timeout share to 0.15 for a sale day. Count the users who would need a designed next step.",
+   "fit": "good",
+   "fitNote": "failures during sale peaks"
+  },
+  "bank": {
+   "practice": "{assistant} says plainly what it cannot do, such as approving a dispute, and hands over to a person with the case summary. Every failure message includes a way to reach the bank that does not rely on the assistant.",
+   "failure": "Leaving a customer in a loop with the assistant when they need a person to decide.",
+   "tryIt": "Run the snippet with disputes.csv and add a failure type \"needs a decision\" with its own message. Count how many users it would apply to.",
+   "fit": "good",
+   "fitNote": "handover to people"
+  },
+  "travel": {
+   "practice": "During disruptions, {assistant} opens by saying which flights are affected and what it can do right now. If rebooking fails, it saves the request, holds the traveller’s place in the queue and gives the expected wait.",
+   "failure": "Telling disrupted travellers only that \"something went wrong\", so they rebook twice by phone.",
+   "tryIt": "Run the snippet with requests.csv and raise \"tool failed\" to 0.2 for a disruption day. Rewrite that message with the expected wait and a callback option.",
+   "fit": "best",
+   "fitNote": "failures at the worst moment"
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Design Harbor’s policy answer screen: citations to exact paragraphs, removal of unsupported sentences, a \"couldn’t find it\" answer and a ticket handover. Test with five colleagues and record which answers they trusted wrongly.</p>"
+  },
+  "store": {
+   "scenario": "<p>Design {assistant}’s product answer and refund flow: cited facts versus labelled opinions, streaming with an instant status, confirmation for refunds, and a failure message for each sale-day failure. Test with five people.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Design the reviewer screen for {assistant}’s proposed credits: exact parameters, evidence, approval of one version and edit tracking. Run five reviewers through 20 cases, including three wrong ones, and record what they caught.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Design {assistant}’s rebooking flow during a disruption: opening message, progress steps, side-by-side confirmation and failure messages with expected waits. Test with five people and count refreshes and dead ends.</p>"
+  }
+ }
+}

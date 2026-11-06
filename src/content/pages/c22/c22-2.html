@@ -1,0 +1,43 @@
+<section class="tp tp-intuition" id="c22-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A good expert says "I’m not sure, but…" when they are not sure, and shows where they read something. An AI interface should do the same: show the sources behind an answer, mark statements it could not support, and say in plain words how far to trust it. That is <a class="gl" href="#gl-uncertainty-display">showing uncertainty</a>.</p>
+<p>The danger runs both ways. Confident wrong answers teach users to trust too much; warnings on every answer teach them to ignore warnings.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c22-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Pattern</th><th>What users see</th><th>Needs</th></tr><tr><td>Inline citations</td><td>a numbered source after each claim, opening the passage</td><td>retrieval with source ids (9.6)</td></tr><tr><td>Unsupported marking</td><td>a sentence flagged "no source found"</td><td>a support check per sentence</td></tr><tr><td>Plain-language confidence</td><td>"likely", "check this", not "0.73"</td><td>calibrated scores (3.5)</td></tr><tr><td>Show the evidence</td><td>the passage or image region used</td><td>stored spans and page links</td></tr><tr><td>Abstain</td><td>"I couldn’t find this in your documents"</td><td>an abstention rule (9.6)</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Answer<small>sentences</small></div><div class="nd">Match sources<small>per sentence</small></div><div class="nd">Check support<small>enough overlap or a judge</small></div><div class="nd">Label<small>cited, unverified, removed</small></div><div class="nd">Render<small>citations and notes</small></div></div>
+<ol class="steps"><li data-n="0">The model drafts an answer with source ids.</li><li data-n="1">Each sentence is matched to the passages it relies on.</li><li data-n="2">A check decides whether the passage really supports it.</li><li data-n="3">Supported sentences get citations; unsupported ones are flagged or removed.</li><li data-n="4">The interface shows citations users can open, and plain-language notes.</li></ol></div>
+<figcaption><b>From an answer to a trustworthy display.</b></figcaption></figure>
+<div class="box pit"><h5>Citations can mislead too</h5><p>A citation to a real document that does not actually say what the sentence claims is worse than no citation, because it looks verified. Check support, not only the presence of a source id.</p></div>
+</section>
+
+<section class="tp tp-math" id="c22-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Calibration before labels</b> (illustrative). On 1,000 held-out answers, those the model scored above 0.85 were right 93% of the time; those between 0.6 and 0.85, 78%; below 0.6, 51%.</p>
+<ul>
+<li>Labels "high", "medium" and "check this" then mean something users can learn.</li>
+<li>If uncalibrated scores above 0.85 were right only 70% of the time, "high" would mislead 3 users in 10.</li>
+</ul>
+<p><b>Too many warnings.</b> If 40% of answers carry a warning, users see one every few answers and stop reading them. Aim the warning at the slice that needs it.</p>
+</section>
+
+<section class="tp tp-code" id="c22-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds an answer from two of your project’s documents plus one invented sentence, attaches a citation to each sentence by word overlap, flags the unsupported one, and maps scores to plain-language labels. Lower the overlap threshold and see the invented sentence get a citation it does not deserve.</p>
+<figure class="fig live" id="snip-citations-display"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"citations-display"}'></div></div>
+<figcaption><b>Citations and unsupported sentences, in real Python.</b> Word overlap is a weak support check.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c22-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://pair.withgoogle.com/guidebook/chapters">Google PAIR guidebook: Explainability and trust</a> <small>Showing confidence and sources in AI products.</small></li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/citations">Anthropic: Citations</a> <small>Model answers with citations to exact passages.</small></li>
+<li><a href="https://arxiv.org/abs/1706.04599">Guo et al. (2017), On Calibration of Modern Neural Networks</a> <small>Why raw scores need calibrating before users see them.</small></li>
+</ol>
+</section>

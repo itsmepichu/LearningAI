@@ -1,0 +1,43 @@
+<section class="tp tp-intuition" id="c22-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A comments box at a restaurant mostly collects complaints: happy diners rarely bother. Thumbs buttons on AI answers work the same way, so their numbers carry <a class="gl" href="#gl-feedback-bias">feedback bias</a>: the thumbs-down share is not the share of bad answers.</p>
+<p>Feedback is still valuable when it is cheap to give, asks one useful follow-up question, is tied to the exact trace, and is combined with signals users give without trying, such as edits and rephrasing (17.4).</p>
+</section>
+
+<section class="tp tp-mechanism" id="c22-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Signal</th><th>Strength</th><th>Weakness</th></tr><tr><td>Thumbs up or down</td><td>cheap, tied to one answer</td><td>few people click; unhappy users click more</td></tr><tr><td>Reason chips after thumbs down</td><td>tells you what to fix</td><td>one more click: fewer responses</td></tr><tr><td>Edits to drafts</td><td>exact correction, plenty of it</td><td>only where users edit</td></tr><tr><td>Rephrasing, copying, escalating</td><td>collected for everyone</td><td>indirect; validate against outcomes</td></tr><tr><td>Outcomes (resolved, returned, overturned)</td><td>the real goal</td><td>arrives late (17.7)</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Ask<small>one click, at the right moment</small></div><div class="nd">Follow up<small>reason chips</small></div><div class="nd">Link<small>to the trace</small></div><div class="nd">Triage<small>sample and label</small></div><div class="nd">Act<small>eval cases, fixes, tell users</small></div></div>
+<ol class="steps"><li data-n="0">Ask right after the answer, without blocking the user.</li><li data-n="1">Offer a few reasons: wrong, out of date, not what I asked.</li><li data-n="2">Store feedback with the trace id, prompt and model version.</li><li data-n="3">Review a sample each week and label root causes (17.9).</li><li data-n="4">Turn findings into eval cases and fixes, and close the loop with users where you can.</li></ol></div>
+<figcaption><b>A feedback loop that leads to changes.</b></figcaption></figure>
+<div class="box example"><h5>Example: measuring a prompt change</h5><p>A team ships a new prompt and the thumbs-down rate falls from 1.0% to 0.9%. With 20,000 sessions per version, that difference is well within noise. They instead compare edit rates on drafts, collected on every session, and see a clear drop from 34% to 19%.</p></div>
+</section>
+
+<section class="tp tp-math" id="c22-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Biased clicks</b> (illustrative). 12% of answers are unhelpful. Unhappy users click thumbs down 8% of the time; happy users click thumbs up 2% of the time.</p>
+<ul>
+<li>Per 10,000 sessions: 1,200 × 0.08 ≈ 96 downs and 8,800 × 0.02 = 176 ups.</li>
+<li>Thumbs down is 96 ÷ 272 ≈ 35% of feedback, although only 12% of answers were bad.</li>
+</ul>
+<p><b>Sample size.</b> Seeing a thumbs-down rate fall from 1.0% to 0.8% needs on the order of 35,000 sessions per version, which is why rare clicks make slow experiments (8.7).</p>
+</section>
+
+<section class="tp tp-code" id="c22-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates 50,000 sessions where unhappy users click more often, compares the thumbs-down share with the true unhelpful rate, counts reasons, and estimates the sessions needed to see an improvement. Change the click rates and see how the bias moves.</p>
+<figure class="fig live" id="snip-feedback-bias"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"feedback-bias"}'></div></div>
+<figcaption><b>Feedback bias and sample size, in real Python.</b> Click rates are invented.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c22-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://pair.withgoogle.com/guidebook/chapters">Google PAIR guidebook: Feedback and control</a> <small>Designing feedback that improves the product.</small></li>
+<li><a href="https://langfuse.com/docs/scores/overview">Langfuse: Scores</a> <small>Linking user feedback to traces.</small></li>
+<li><a href="https://experimentguide.com/">Kohavi, Tang and Xu, Trustworthy Online Controlled Experiments</a> <small>Sample sizes and pitfalls when testing changes.</small></li>
+</ol>
+</section>

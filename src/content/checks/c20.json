@@ -1,0 +1,1786 @@
+{
+ "c20-1": {
+  "mcq": [
+   {
+    "id": "c20-1-m01",
+    "q": "Which task is a small model most likely to handle as well as a large one?",
+    "options": [
+     "Answering open questions on rare topics",
+     "Writing new code across a large codebase",
+     "Planning a multi-step research project",
+     "Routing messages into twelve fixed queues"
+    ],
+    "answer": 3,
+    "why": "A fixed label set with many examples suits small models.",
+    "kind": "concept",
+    "distractors": [
+     "Rare topics need knowledge small models lack.",
+     "Large code changes need broad knowledge.",
+     "Open-ended planning needs broad reasoning.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-1-m02",
+    "q": "A large model costs 0.004 dollars per message at 1 million messages a month. Its monthly cost is…",
+    "options": [
+     "4 dollars",
+     "4,000 dollars",
+     "40,000 dollars",
+     "400 dollars"
+    ],
+    "answer": 1,
+    "why": "1,000,000 × 0.004 = 4,000.",
+    "kind": "calculation",
+    "distractors": [
+     "Off by a thousand.",
+     "",
+     "Ten times too large.",
+     "Ten times too small."
+    ]
+   },
+   {
+    "id": "c20-1-m03",
+    "q": "The fairest baseline for judging a small model is…",
+    "options": [
+     "A large model with your best prompt, same test set",
+     "The small model’s own training accuracy",
+     "Published benchmark scores for both",
+     "A large model with a minimal prompt"
+    ],
+    "answer": 0,
+    "why": "Compare against the strongest simple alternative on your own held-out data.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Training accuracy overstates.",
+     "Benchmarks may not match your task.",
+     "A weak prompt flatters the small model."
+    ]
+   },
+   {
+    "id": "c20-1-m04",
+    "q": "Accuracy falls from 95% to 94% on 1 million messages a month. How many more errors a month?",
+    "options": [
+     "10,000",
+     "1,000",
+     "100,000",
+     "940,000"
+    ],
+    "answer": 0,
+    "why": "1% of 1,000,000 = 10,000.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too few.",
+     "Ten times too many.",
+     "That is the number right."
+    ]
+   },
+   {
+    "id": "c20-1-m05",
+    "q": "A team switches to a small model because it is 1 point worse overall. Users of one rare queue complain. What did they skip?",
+    "options": [
+     "Quantising the small model",
+     "Checking accuracy per slice",
+     "Training on more common cases",
+     "Measuring the cost difference"
+    ],
+    "answer": 1,
+    "why": "Averages hide slices where the small model is much worse.",
+    "kind": "scenario",
+    "distractors": [
+     "Quantisation is unrelated.",
+     "",
+     "More common cases do not help the rare queue.",
+     "Cost was the reason for switching."
+    ]
+   },
+   {
+    "id": "c20-1-m06",
+    "q": "At 10,000 requests a month, why might a hosted large model be cheaper overall?",
+    "options": [
+     "Small models cost more per token than hosted ones",
+     "Training, serving and upkeep of a small model cost more",
+     "Small models need larger GPUs than hosted models use",
+     "Hosted models are free below a monthly threshold"
+    ],
+    "answer": 1,
+    "why": "At low volume the fixed costs of owning a model dominate (13.1).",
+    "kind": "scenario",
+    "distractors": [
+     "Per-token cost is lower.",
+     "",
+     "Small models need smaller hardware.",
+     "Usually not free."
+    ]
+   },
+   {
+    "id": "c20-1-m07",
+    "q": "Which hidden cost comes with a small self-trained model?",
+    "options": [
+     "Losing access when a provider changes terms",
+     "Waiting for the provider’s rate limits",
+     "Paying per token to the provider",
+     "Retraining and monitoring as inputs drift"
+    ],
+    "answer": 3,
+    "why": "You own its upkeep (18.6).",
+    "kind": "concept",
+    "distractors": [
+     "A hosted risk, not a self-trained one.",
+     "Self-hosted avoids provider limits.",
+     "That is a hosted-model cost.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-1-m08",
+    "q": "A small model answers in 20 ms and a large one in 900 ms. For a type-ahead feature, the latency difference matters because…",
+    "options": [
+     "Latency changes the model’s accuracy",
+     "Small models use more memory per token",
+     "Users type faster than the large model responds",
+     "Large models cannot stream tokens"
+    ],
+    "answer": 2,
+    "why": "Interactive features need answers within keystrokes.",
+    "kind": "scenario",
+    "distractors": [
+     "Latency is separate from accuracy.",
+     "They use less.",
+     "",
+     "They can stream, but the first token is still slow."
+    ]
+   },
+   {
+    "id": "c20-1-m09",
+    "q": "Misrouted messages each cost 2 minutes of agent time. 10,000 extra misroutes cost about…",
+    "options": [
+     "33 hours",
+     "333 hours",
+     "20 hours",
+     "3,333 hours"
+    ],
+    "answer": 1,
+    "why": "10,000 × 2 = 20,000 minutes ÷ 60 ≈ 333 hours.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too few.",
+     "",
+     "Confuses minutes and hours.",
+     "Ten times too many."
+    ]
+   },
+   {
+    "id": "c20-1-m10",
+    "q": "What usually decides whether a small model is \"good enough\"?",
+    "options": [
+     "Its parameter count compared with others",
+     "Its position on a public leaderboard",
+     "A pre-agreed metric on held-out data",
+     "How fluent its answers sound"
+    ],
+    "answer": 2,
+    "why": "Acceptance criteria are written before testing (8.1).",
+    "kind": "concept",
+    "distractors": [
+     "Size says little about task fit.",
+     "Leaderboards measure other tasks.",
+     "",
+     "Fluency is not correctness."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c20-1-i01",
+    "q": "When is a small model enough, and when is it not?",
+    "level": "fundamentals",
+    "covers": [
+     "narrow tasks",
+     "labels",
+     "open-ended reasoning",
+     "languages",
+     "volume"
+    ],
+    "followUp": "How would you prove it on your data?"
+   },
+   {
+    "id": "c20-1-i02",
+    "q": "What does a small model cost beyond inference?",
+    "level": "fundamentals",
+    "covers": [
+     "training",
+     "serving",
+     "monitoring",
+     "retraining",
+     "people"
+    ],
+    "followUp": "At what volume does it pay off?"
+   },
+   {
+    "id": "c20-1-i03",
+    "q": "How do you compare a small model with a large one fairly?",
+    "level": "fundamentals",
+    "covers": [
+     "same test set",
+     "best prompt baseline",
+     "slices",
+     "cost per success"
+    ],
+    "followUp": "Which slice would you check first?"
+   },
+   {
+    "id": "c20-1-i04",
+    "q": "The small model is 1 point worse overall. How do you decide?",
+    "level": "applied",
+    "covers": [
+     "where the errors are",
+     "cost of errors",
+     "cost saved",
+     "fallback"
+    ],
+    "followUp": "What if the errors are in a high-risk slice?"
+   },
+   {
+    "id": "c20-1-i05",
+    "q": "A team wants to replace the large model with a small one everywhere. What do you ask?",
+    "level": "applied",
+    "covers": [
+     "tasks",
+     "volume",
+     "evaluation",
+     "upkeep",
+     "rollback"
+    ],
+    "followUp": "What would make you say no?"
+   },
+   {
+    "id": "c20-1-i06",
+    "q": "How would you use small models to keep data inside the organisation?",
+    "level": "applied",
+    "covers": [
+     "on-premises serving",
+     "which tasks",
+     "quality gap",
+     "audit"
+    ],
+    "followUp": "What still needs the large model?",
+    "project": "bank"
+   },
+   {
+    "id": "c20-1-i07",
+    "q": "Design the model mix for a feature with a million requests a day.",
+    "level": "system-design",
+    "covers": [
+     "task split",
+     "small and large models",
+     "routing",
+     "cost",
+     "monitoring"
+    ],
+    "followUp": "How would you rebalance it as volume grows?"
+   },
+   {
+    "id": "c20-1-i08",
+    "q": "Plan the lifecycle of a small task model in production.",
+    "level": "system-design",
+    "covers": [
+     "data",
+     "training",
+     "evaluation gates",
+     "drift",
+     "retraining",
+     "ownership"
+    ],
+    "followUp": "Who owns retraining?"
+   }
+  ]
+ },
+ "c20-2": {
+  "mcq": [
+   {
+    "id": "c20-2-m01",
+    "q": "In distillation, the teacher is…",
+    "options": [
+     "The evaluation suite used for the release gates",
+     "The smaller model that is being trained",
+     "The large model whose outputs train the student",
+     "The human who labels the held-out test set"
+    ],
+    "answer": 2,
+    "why": "The teacher produces the labels or outputs the student learns from.",
+    "kind": "concept",
+    "distractors": [
+     "That is the evaluation.",
+     "That is the student.",
+     "",
+     "Humans write the test labels, not teacher outputs."
+    ]
+   },
+   {
+    "id": "c20-2-m02",
+    "q": "Why must the test set be labelled by people, not by the teacher?",
+    "options": [
+     "The teacher refuses to label test data",
+     "Otherwise you measure agreement with the teacher",
+     "The student cannot read teacher labels",
+     "People are faster than the teacher"
+    ],
+    "answer": 1,
+    "why": "Teacher-labelled tests hide the teacher’s own mistakes.",
+    "kind": "concept",
+    "distractors": [
+     "No such refusal.",
+     "",
+     "The format is the same.",
+     "Speed is not the reason."
+    ]
+   },
+   {
+    "id": "c20-2-m03",
+    "q": "The teacher labels 10,000 inputs and is wrong on 12%. How many bad labels?",
+    "options": [
+     "12,000",
+     "120",
+     "8,800",
+     "1,200"
+    ],
+    "answer": 3,
+    "why": "10,000 × 0.12 = 1,200.",
+    "kind": "calculation",
+    "distractors": [
+     "More than the total.",
+     "Ten times too few.",
+     "That is the number right.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-2-m04",
+    "q": "Asking the teacher twice and keeping only agreeing labels mainly removes…",
+    "options": [
+     "Unstable answers the teacher is unsure of",
+     "Every hard example that appears in the data",
+     "Duplicate inputs that appear in the pool",
+     "Personal data contained in the inputs"
+    ],
+    "answer": 0,
+    "why": "Disagreement between samples signals uncertainty.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Some hard but stable cases remain.",
+     "Deduplication is separate.",
+     "Redaction is separate."
+    ]
+   },
+   {
+    "id": "c20-2-m05",
+    "q": "After filtering by confidence, a rare category has only 3 examples left. The best response is…",
+    "options": [
+     "Oversample rare cases before labelling, then refilter",
+     "Lower every threshold for all categories",
+     "Ignore it, since rare categories rarely matter",
+     "Copy the three examples a hundred times"
+    ],
+    "answer": 0,
+    "why": "Get more real examples of the rare category, then filter.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Lowering all thresholds adds noise everywhere.",
+     "Rare categories often matter most.",
+     "Copies add no new information."
+    ]
+   },
+   {
+    "id": "c20-2-m06",
+    "q": "Two teacher calls per input at 0.004 dollars for 10,000 inputs cost…",
+    "options": [
+     "80 dollars",
+     "8 dollars",
+     "800 dollars",
+     "40 dollars"
+    ],
+    "answer": 0,
+    "why": "10,000 × 2 × 0.004 = 80.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too few.",
+     "Ten times too many.",
+     "One call only."
+    ]
+   },
+   {
+    "id": "c20-2-m07",
+    "q": "A provider’s terms forbid using outputs to train competing models. Before distilling you should…",
+    "options": [
+     "Check the terms and record the decision",
+     "Distil anyway since outputs are yours",
+     "Use the outputs only for evaluation",
+     "Hide which teacher was used"
+    ],
+    "answer": 0,
+    "why": "Licence review is part of data provenance (16.6).",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Terms may restrict this use.",
+     "Still requires checking the terms.",
+     "Hiding provenance is a governance failure."
+    ]
+   },
+   {
+    "id": "c20-2-m08",
+    "q": "A human reviews 100 kept labels and finds 3 wrong. The estimated error rate of the kept set is about…",
+    "options": [
+     "0.3%",
+     "97%",
+     "30%",
+     "3%"
+    ],
+    "answer": 3,
+    "why": "3 ÷ 100.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too low.",
+     "That is the share right.",
+     "Ten times too high.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-2-m09",
+    "q": "Which inputs should a teacher-data pipeline oversample?",
+    "options": [
+     "Duplicates of common cases",
+     "Rare and hard real cases",
+     "Synthetic text unlike real traffic",
+     "Inputs the teacher finds easy"
+    ],
+    "answer": 1,
+    "why": "The student needs coverage where it will struggle.",
+    "kind": "scenario",
+    "distractors": [
+     "Duplicates add little.",
+     "",
+     "Unrealistic inputs teach the wrong distribution.",
+     "Easy cases are already common."
+    ]
+   },
+   {
+    "id": "c20-2-m10",
+    "q": "Agreement in Hinglish is much lower than in English. The sensible action is…",
+    "options": [
+     "Translate Hinglish into English first",
+     "Trust Hinglish labels like the others",
+     "Drop Hinglish from the student entirely",
+     "Add human spot-checks for Hinglish labels"
+    ],
+    "answer": 3,
+    "why": "Low agreement signals a weaker teacher there; review more.",
+    "kind": "scenario",
+    "distractors": [
+     "Translation adds its own errors.",
+     "Ignores the warning sign.",
+     "Leaves those users unserved.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c20-2-i01",
+    "q": "How do you build a training set from a teacher model?",
+    "level": "fundamentals",
+    "covers": [
+     "real inputs",
+     "teacher outputs",
+     "filters",
+     "spot-checks",
+     "versioning"
+    ],
+    "followUp": "Which filter would you start with?"
+   },
+   {
+    "id": "c20-2-i02",
+    "q": "Why must evaluation labels come from people?",
+    "level": "fundamentals",
+    "covers": [
+     "teacher errors",
+     "independence",
+     "trust",
+     "gold set"
+    ],
+    "followUp": "How large should that set be?"
+   },
+   {
+    "id": "c20-2-i03",
+    "q": "Which filters would you apply to teacher outputs?",
+    "level": "fundamentals",
+    "covers": [
+     "confidence",
+     "agreement",
+     "schemas",
+     "judges",
+     "human sample"
+    ],
+    "followUp": "What does each one miss?"
+   },
+   {
+    "id": "c20-2-i04",
+    "q": "Filtering removed most rare-category examples. What do you do?",
+    "level": "applied",
+    "covers": [
+     "oversample",
+     "per-class counts",
+     "targeted labelling",
+     "class weights"
+    ],
+    "followUp": "How would you check the fix?"
+   },
+   {
+    "id": "c20-2-i05",
+    "q": "How would you handle the licence question for a teacher model?",
+    "level": "applied",
+    "covers": [
+     "terms of use",
+     "legal review",
+     "records",
+     "open-weight alternatives"
+    ],
+    "followUp": "What would you do if the terms forbid it?"
+   },
+   {
+    "id": "c20-2-i06",
+    "q": "The teacher is weaker in some languages. How do you adapt the pipeline?",
+    "level": "applied",
+    "covers": [
+     "per-language agreement",
+     "review",
+     "other teachers",
+     "targets per language"
+    ],
+    "followUp": "How would you measure the improvement?",
+    "project": "travel"
+   },
+   {
+    "id": "c20-2-i07",
+    "q": "Design a teacher-data pipeline that produces 50,000 training examples a quarter.",
+    "level": "system-design",
+    "covers": [
+     "sampling",
+     "teacher calls",
+     "filters",
+     "review capacity",
+     "lineage",
+     "cost"
+    ],
+    "followUp": "Where is the bottleneck?"
+   },
+   {
+    "id": "c20-2-i08",
+    "q": "How do you keep distilled data trustworthy over time?",
+    "level": "system-design",
+    "covers": [
+     "teacher versions",
+     "drift",
+     "refresh",
+     "audits",
+     "contamination with test"
+    ],
+    "followUp": "What triggers a refresh?"
+   }
+  ]
+ },
+ "c20-3": {
+  "mcq": [
+   {
+    "id": "c20-3-m01",
+    "q": "Soft targets are…",
+    "options": [
+     "Answers with all of their punctuation removed",
+     "Targets that are changed at every epoch",
+     "The teacher’s full probability spread over answers",
+     "Labels that the student writes for itself"
+    ],
+    "answer": 2,
+    "why": "The student learns from the whole distribution, not only the top answer.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated to punctuation.",
+     "They are fixed teacher outputs.",
+     "",
+     "The student does not label itself here."
+    ]
+   },
+   {
+    "id": "c20-3-m02",
+    "q": "Raising the temperature above 1 before the softmax…",
+    "options": [
+     "Makes the top answer more certain",
+     "Removes the wrong answers entirely",
+     "Flattens the probabilities, showing near misses",
+     "Changes which answer is ranked first"
+    ],
+    "answer": 2,
+    "why": "Dividing scores by a larger number shrinks gaps between them.",
+    "kind": "concept",
+    "distractors": [
+     "That is a temperature below 1.",
+     "All answers keep some probability.",
+     "",
+     "The order is unchanged."
+    ]
+   },
+   {
+    "id": "c20-3-m03",
+    "q": "Teacher scores 6.0, 3.5, 0.5, −1.0 at temperature 4 become which scores before the softmax?",
+    "options": [
+     "6.0, 3.5, 0.5, −1.0 (unchanged)",
+     "1.5, 0.875, 0.125, −0.25",
+     "24.0, 14.0, 2.0, −4.0",
+     "1.5, 3.5, 0.5, −1.0"
+    ],
+    "answer": 1,
+    "why": "Each score is divided by 4.",
+    "kind": "calculation",
+    "distractors": [
+     "That is temperature 1.",
+     "",
+     "That multiplies by 4.",
+     "Only the first was divided."
+    ]
+   },
+   {
+    "id": "c20-3-m04",
+    "q": "You distil from a hosted API that returns only text. Which method is available?",
+    "options": [
+     "Logit distillation on its probabilities",
+     "Sequence-level distillation on its outputs",
+     "Copying the teacher’s weights",
+     "Pruning the teacher model"
+    ],
+    "answer": 1,
+    "why": "Without probabilities, train on generated outputs.",
+    "kind": "scenario",
+    "distractors": [
+     "Needs probabilities the API does not give.",
+     "",
+     "Weights are not available.",
+     "You cannot prune a hosted model."
+    ]
+   },
+   {
+    "id": "c20-3-m05",
+    "q": "Why can soft targets reach the same accuracy with fewer examples?",
+    "options": [
+     "They skip the training loop entirely",
+     "Each example carries more information",
+     "They remove the need for a test set",
+     "They make the student model larger"
+    ],
+    "answer": 1,
+    "why": "The probabilities say how wrong each wrong answer is.",
+    "kind": "concept",
+    "distractors": [
+     "Training still happens.",
+     "",
+     "You still need a test set.",
+     "Model size is unchanged."
+    ]
+   },
+   {
+    "id": "c20-3-m06",
+    "q": "A student is trained on a teacher’s step-by-step explanations. What must you check?",
+    "options": [
+     "That the explanations are correct",
+     "That the teacher used a high temperature",
+     "That the explanations are short",
+     "That the student copies them word for word"
+    ],
+    "answer": 0,
+    "why": "A student learns wrong reasoning as easily as right.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Temperature is not the issue.",
+     "Length is secondary.",
+     "Copying is not the goal; correctness is."
+    ]
+   },
+   {
+    "id": "c20-3-m07",
+    "q": "At temperature 1, teacher probabilities are 0.92, 0.08, 0.004, 0.001. Compared with a hard label, the student additionally learns that…",
+    "options": [
+     "The last answer is the safest choice",
+     "The second answer is a plausible near miss",
+     "All four answers are equally likely",
+     "The first answer is always wrong"
+    ],
+    "answer": 1,
+    "why": "The 0.08 marks the second answer as close.",
+    "kind": "calculation",
+    "distractors": [
+     "It is the least likely.",
+     "",
+     "They are far from equal.",
+     "The first is most likely."
+    ]
+   },
+   {
+    "id": "c20-3-m08",
+    "q": "Hard labels lose what information compared with soft targets?",
+    "options": [
+     "The order in which training examples appear",
+     "How many classes the task has in total",
+     "Which wrong answers the teacher found close",
+     "Which answer the teacher picked in the end"
+    ],
+    "answer": 2,
+    "why": "A hard label keeps only the winner.",
+    "kind": "concept",
+    "distractors": [
+     "Order is unaffected.",
+     "The class count is known.",
+     "",
+     "The pick is kept."
+    ]
+   },
+   {
+    "id": "c20-3-m09",
+    "q": "With 20,000 examples, hard labels give 91% and soft targets at T = 2 give 93%. Errors per 10,000 requests fall by…",
+    "options": [
+     "200",
+     "93",
+     "2,000",
+     "20"
+    ],
+    "answer": 0,
+    "why": "9% − 7% = 2 points of 10,000 = 200.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Confuses accuracy with errors.",
+     "Ten times too many.",
+     "Ten times too few."
+    ]
+   },
+   {
+    "id": "c20-3-m10",
+    "q": "Logit distillation is easiest when…",
+    "options": [
+     "The teacher is a closed API",
+     "Teacher and student share a vocabulary",
+     "The student is larger than the teacher",
+     "There are no labelled examples at all"
+    ],
+    "answer": 1,
+    "why": "Matching distributions token by token needs the same tokens.",
+    "kind": "scenario",
+    "distractors": [
+     "APIs rarely expose full distributions.",
+     "",
+     "Then it is not distillation.",
+     "You still need inputs."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c20-3-i01",
+    "q": "Explain knowledge distillation and soft targets.",
+    "level": "fundamentals",
+    "covers": [
+     "teacher",
+     "student",
+     "probabilities",
+     "temperature",
+     "why it helps"
+    ],
+    "followUp": "When would hard labels be enough?"
+   },
+   {
+    "id": "c20-3-i02",
+    "q": "What does temperature do in distillation?",
+    "level": "fundamentals",
+    "covers": [
+     "flattens",
+     "near misses",
+     "mixing with true labels",
+     "tuning"
+    ],
+    "followUp": "How would you choose it?"
+   },
+   {
+    "id": "c20-3-i03",
+    "q": "Compare logit distillation with sequence-level distillation.",
+    "level": "fundamentals",
+    "covers": [
+     "access to probabilities",
+     "APIs",
+     "vocabulary",
+     "fine-tuning on outputs"
+    ],
+    "followUp": "Which would you use with a hosted teacher?"
+   },
+   {
+    "id": "c20-3-i04",
+    "q": "Your student trained on teacher reasoning traces makes confident wrong steps. What happened?",
+    "level": "applied",
+    "covers": [
+     "wrong traces",
+     "unchecked data",
+     "filtering",
+     "evaluation of reasoning"
+    ],
+    "followUp": "How would you check traces at scale?"
+   },
+   {
+    "id": "c20-3-i05",
+    "q": "How would you distil a classifier that confuses two similar classes?",
+    "level": "applied",
+    "covers": [
+     "soft targets",
+     "confusion matrix",
+     "more examples",
+     "evaluation per class"
+    ],
+    "followUp": "How do you know it worked?",
+    "project": "bank"
+   },
+   {
+    "id": "c20-3-i06",
+    "q": "How do you know whether distillation improved on plain fine-tuning?",
+    "level": "applied",
+    "covers": [
+     "same data",
+     "held-out set",
+     "ablation",
+     "interval"
+    ],
+    "followUp": "What is a meaningful gain?"
+   },
+   {
+    "id": "c20-3-i07",
+    "q": "Design a distillation pipeline from an open-weight teacher to a 300M-parameter student.",
+    "level": "system-design",
+    "covers": [
+     "data",
+     "soft targets",
+     "temperature",
+     "training",
+     "gates",
+     "serving"
+    ],
+    "followUp": "Where would you spend the most effort?"
+   },
+   {
+    "id": "c20-3-i08",
+    "q": "Design distillation from a hosted model whose terms allow it.",
+    "level": "system-design",
+    "covers": [
+     "sequence-level",
+     "filters",
+     "licence records",
+     "evaluation",
+     "refresh"
+    ],
+    "followUp": "How do you handle teacher model updates?"
+   }
+  ]
+ },
+ "c20-4": {
+  "mcq": [
+   {
+    "id": "c20-4-m01",
+    "q": "Structured pruning removes…",
+    "options": [
+     "Individual small weights only",
+     "Tokens from the vocabulary",
+     "Whole heads, neurons or layers",
+     "Examples from the training set"
+    ],
+    "answer": 2,
+    "why": "Removing whole units makes matrices smaller, so it speeds things up.",
+    "kind": "concept",
+    "distractors": [
+     "That is unstructured pruning.",
+     "Vocabulary is unrelated.",
+     "",
+     "That is data filtering."
+    ]
+   },
+   {
+    "id": "c20-4-m02",
+    "q": "Why may unstructured pruning give no speed-up?",
+    "options": [
+     "Hardware still multiplies the zeroed weights",
+     "It disables quantisation",
+     "It always makes the model larger",
+     "Pruned weights are restored at load time"
+    ],
+    "answer": 0,
+    "why": "Without sparse support, zeros cost the same as other numbers.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Both can be combined.",
+     "The model gets no larger.",
+     "They are not restored."
+    ]
+   },
+   {
+    "id": "c20-4-m03",
+    "q": "A 3B model in 16-bit takes 6 GB. Pruned to 2B and quantised to 4-bit at about 0.55 bytes per weight, it takes about…",
+    "options": [
+     "2.2 GB",
+     "0.55 GB",
+     "4 GB",
+     "1.1 GB"
+    ],
+    "answer": 3,
+    "why": "2 billion × 0.55 ≈ 1.1 GB.",
+    "kind": "calculation",
+    "distractors": [
+     "That assumes 8-bit.",
+     "That is 1B in 4-bit.",
+     "That is 2B in 16-bit.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-4-m04",
+    "q": "Decode reads all weights per token. At 80 GB/s, a 1.1 GB model can produce at most about…",
+    "options": [
+     "7 tokens a second",
+     "88 tokens a second",
+     "730 tokens a second",
+     "73 tokens a second"
+    ],
+    "answer": 3,
+    "why": "80 ÷ 1.1 ≈ 73.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too few.",
+     "Multiplies instead of dividing.",
+     "Ten times too many.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-4-m05",
+    "q": "After pruning, quality drops from 90% to 84%. The usual next step is…",
+    "options": [
+     "Ship it, since 84% is close enough to 90%",
+     "Raise the decoding temperature at serving time",
+     "Prune more weights to recover the lost speed",
+     "Retrain briefly with the original as teacher"
+    ],
+    "answer": 3,
+    "why": "Distillation from the original recovers much of the loss.",
+    "kind": "scenario",
+    "distractors": [
+     "Skips recovery and the gate.",
+     "Temperature does not restore weights.",
+     "More pruning loses more.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-4-m06",
+    "q": "A team prunes 50% of weights on a CPU server and sees no speed change. The most likely reason is…",
+    "options": [
+     "The test prompts were too short",
+     "The CPU was too fast already",
+     "The pruning was unstructured",
+     "The model was quantised first"
+    ],
+    "answer": 2,
+    "why": "Scattered zeros do not shrink the computation on ordinary hardware.",
+    "kind": "scenario",
+    "distractors": [
+     "Prompt length would affect both.",
+     "Speed was unchanged, not saturated.",
+     "",
+     "Quantisation does not block savings."
+    ]
+   },
+   {
+    "id": "c20-4-m07",
+    "q": "2:4 sparsity means…",
+    "options": [
+     "Two layers out of every four layers are removed",
+     "Two of every four weights are zero in a fixed pattern",
+     "Weights are stored in two bits or in four bits",
+     "Two GPUs serve every group of four requests"
+    ],
+    "answer": 1,
+    "why": "The pattern lets supported GPUs skip half the multiplications.",
+    "kind": "concept",
+    "distractors": [
+     "That is layer pruning.",
+     "",
+     "That is quantisation.",
+     "Unrelated to serving layout."
+    ]
+   },
+   {
+    "id": "c20-4-m08",
+    "q": "Which suites must be rerun after compressing a model?",
+    "options": [
+     "None, if accuracy looks fine",
+     "Only the task suite",
+     "Only latency benchmarks",
+     "Task, general and safety suites"
+    ],
+    "answer": 3,
+    "why": "Compression can change refusals and general skills too (13.6).",
+    "kind": "scenario",
+    "distractors": [
+     "Unsafe assumption.",
+     "Misses other regressions.",
+     "Misses quality.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-4-m09",
+    "q": "Pruning recovered 4 of 6 lost points after retraining. If the original was 90%, the final accuracy is…",
+    "options": [
+     "88%",
+     "86%",
+     "94%",
+     "84%"
+    ],
+    "answer": 0,
+    "why": "90 − 6 + 4 = 88.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Recovers only 2 points.",
+     "Exceeds the original.",
+     "No recovery at all."
+    ]
+   },
+   {
+    "id": "c20-4-m10",
+    "q": "Compared with pruning, quantisation usually gives a larger decode speed-up because…",
+    "options": [
+     "It reduces the number of tokens generated",
+     "It removes whole layers from the model",
+     "It enables bigger batch sizes for free",
+     "Decoding is limited by bytes read per token"
+    ],
+    "answer": 3,
+    "why": "Fewer bytes per weight means less memory traffic (14.4).",
+    "kind": "concept",
+    "distractors": [
+     "Output length is unchanged.",
+     "That is structured pruning.",
+     "Not its main effect.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c20-4-i01",
+    "q": "Compare pruning and quantisation.",
+    "level": "fundamentals",
+    "covers": [
+     "what is removed",
+     "speed",
+     "quality",
+     "hardware support"
+    ],
+    "followUp": "Which would you try first?"
+   },
+   {
+    "id": "c20-4-i02",
+    "q": "Why does unstructured sparsity often not speed things up?",
+    "level": "fundamentals",
+    "covers": [
+     "zeros still multiplied",
+     "sparse kernels",
+     "2:4 patterns",
+     "measure"
+    ],
+    "followUp": "When does it help?"
+   },
+   {
+    "id": "c20-4-i03",
+    "q": "How do you recover quality after pruning?",
+    "level": "fundamentals",
+    "covers": [
+     "retraining",
+     "distillation from original",
+     "calibration data",
+     "evaluation"
+    ],
+    "followUp": "How much data does recovery need?"
+   },
+   {
+    "id": "c20-4-i04",
+    "q": "Your compressed model passes the task suite but users report odd refusals. What happened?",
+    "level": "applied",
+    "covers": [
+     "safety regression",
+     "suites skipped",
+     "compression effects",
+     "rerun gates"
+    ],
+    "followUp": "How would you prevent this next time?"
+   },
+   {
+    "id": "c20-4-i05",
+    "q": "How do you decide how far to compress?",
+    "level": "applied",
+    "covers": [
+     "quality curve",
+     "size target",
+     "speed measured",
+     "gate"
+    ],
+    "followUp": "What would make you stop?"
+   },
+   {
+    "id": "c20-4-i06",
+    "q": "You must ship a model under 1 GB for a mobile app. Plan it.",
+    "level": "applied",
+    "covers": [
+     "model size",
+     "pruning",
+     "4-bit",
+     "evaluation per language",
+     "download"
+    ],
+    "followUp": "What if quality fails in one language?",
+    "project": "travel"
+   },
+   {
+    "id": "c20-4-i07",
+    "q": "Design a compression pipeline that runs for every new model release.",
+    "level": "system-design",
+    "covers": [
+     "steps",
+     "calibration data",
+     "recovery",
+     "gates",
+     "benchmarks on target hardware"
+    ],
+    "followUp": "Which step is most fragile?"
+   },
+   {
+    "id": "c20-4-i08",
+    "q": "How would you fit a larger model onto existing GPUs instead of buying more?",
+    "level": "system-design",
+    "covers": [
+     "quantisation",
+     "pruning",
+     "memory budget",
+     "quality gates",
+     "throughput"
+    ],
+    "followUp": "What is the risk?"
+   }
+  ]
+ },
+ "c20-5": {
+  "mcq": [
+   {
+    "id": "c20-5-m01",
+    "q": "Which is a main benefit of on-device inference?",
+    "options": [
+     "Live data without a network",
+     "Central logging of every answer",
+     "Unlimited model size on phones",
+     "Data can stay on the user’s device"
+    ],
+    "answer": 3,
+    "why": "Privacy and offline use are key benefits.",
+    "kind": "concept",
+    "distractors": [
+     "Live data still needs the network.",
+     "Logging is harder on devices.",
+     "Devices are tightly limited.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-5-m02",
+    "q": "A 3B model in 4-bit (about 1.7 GB) on a phone reading memory at 50 GB/s can decode at most about…",
+    "options": [
+     "30 tokens a second",
+     "300 tokens a second",
+     "85 tokens a second",
+     "3 tokens a second"
+    ],
+    "answer": 0,
+    "why": "50 ÷ 1.7 ≈ 29.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too many.",
+     "Multiplies instead.",
+     "Ten times too few."
+    ]
+   },
+   {
+    "id": "c20-5-m03",
+    "q": "Why do phones often run slower over a long conversation?",
+    "options": [
+     "The model grows during use",
+     "Batteries add latency at full charge",
+     "Tokens get longer over time",
+     "They throttle when hot"
+    ],
+    "answer": 3,
+    "why": "Sustained heat forces lower clock speeds.",
+    "kind": "concept",
+    "distractors": [
+     "The weights do not grow.",
+     "Not how batteries work.",
+     "Token length is fixed by the tokenizer.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-5-m04",
+    "q": "An offline itinerary assistant is asked to rebook a train. It should…",
+    "options": [
+     "Invent a likely new train time",
+     "Queue the request until the phone is online",
+     "Refuse all questions while offline",
+     "Confirm the rebooking from its own knowledge"
+    ],
+    "answer": 1,
+    "why": "Actions need the live system; the device cannot make them.",
+    "kind": "scenario",
+    "distractors": [
+     "Fabrication.",
+     "",
+     "It can still answer itinerary questions.",
+     "It has no live data or authority."
+    ]
+   },
+   {
+    "id": "c20-5-m05",
+    "q": "An 8B model in 16-bit is about 16 GB. On a laptop with 16 GB where apps can use half, it…",
+    "options": [
+     "Fits with room to spare",
+     "Fits after the first answer",
+     "Does not fit comfortably",
+     "Fits only during the day"
+    ],
+    "answer": 2,
+    "why": "16 GB is more than the 8 GB available.",
+    "kind": "calculation",
+    "distractors": [
+     "It is twice the budget.",
+     "Memory need does not shrink.",
+     "",
+     "Time of day is irrelevant."
+    ]
+   },
+   {
+    "id": "c20-5-m06",
+    "q": "Which is harder for on-device models than for server models?",
+    "options": [
+     "Working with no network connection at all",
+     "Seeing and fixing failures after release",
+     "Keeping the user’s data private and local",
+     "Avoiding per-request fees from a provider"
+    ],
+    "answer": 1,
+    "why": "There is no central place to collect failures, so evaluation must happen before release.",
+    "kind": "concept",
+    "distractors": [
+     "Easier on device.",
+     "",
+     "Easier on device.",
+     "Easier on device."
+    ]
+   },
+   {
+    "id": "c20-5-m07",
+    "q": "A bank considers moving fraud decisions onto phones. The main objection is…",
+    "options": [
+     "Fraud rules change too slowly to need servers",
+     "Decisions must be central and auditable",
+     "Phones cannot run any kind of model at all",
+     "Users prefer slower answers for money matters"
+    ],
+    "answer": 1,
+    "why": "Money decisions need central control and audit.",
+    "kind": "scenario",
+    "distractors": [
+     "They change often, which is worse.",
+     "",
+     "Phones can run small models.",
+     "Not a real objection."
+    ]
+   },
+   {
+    "id": "c20-5-m08",
+    "q": "A model download of 1.2 GB for a mobile app mainly affects…",
+    "options": [
+     "The size of the KV cache for each token",
+     "Server latency for every other user",
+     "The accuracy of the model’s answers",
+     "First-run delay and update costs"
+    ],
+    "answer": 3,
+    "why": "Large downloads slow first use and every update.",
+    "kind": "concept",
+    "distractors": [
+     "Cache depends on architecture.",
+     "It runs locally.",
+     "Size of download does not change accuracy.",
+     ""
+    ]
+   },
+   {
+    "id": "c20-5-m09",
+    "q": "A type-ahead feature needs a suggestion within 100 ms. At 60 tokens a second, the longest suggestion is about…",
+    "options": [
+     "16 tokens",
+     "0.6 tokens",
+     "6 tokens",
+     "60 tokens"
+    ],
+    "answer": 2,
+    "why": "0.1 s × 60 = 6 tokens.",
+    "kind": "calculation",
+    "distractors": [
+     "Takes over a quarter second.",
+     "Ten times too short.",
+     "",
+     "That takes a full second."
+    ]
+   },
+   {
+    "id": "c20-5-m10",
+    "q": "Which runtime format is typical for running quantised models with llama.cpp?",
+    "options": [
+     "CSV",
+     "YAML",
+     "GGUF",
+     "JPEG"
+    ],
+    "answer": 2,
+    "why": "llama.cpp loads GGUF files.",
+    "kind": "concept",
+    "distractors": [
+     "A data format.",
+     "A config format.",
+     "",
+     "An image format."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c20-5-i01",
+    "q": "What limits a model running on a phone or laptop?",
+    "level": "fundamentals",
+    "covers": [
+     "memory",
+     "bandwidth",
+     "heat",
+     "battery",
+     "download size"
+    ],
+    "followUp": "Which limit binds first for a 3B model?"
+   },
+   {
+    "id": "c20-5-i02",
+    "q": "Why would you run a model on the device instead of a server?",
+    "level": "fundamentals",
+    "covers": [
+     "privacy",
+     "offline",
+     "cost",
+     "latency"
+    ],
+    "followUp": "What do you lose?"
+   },
+   {
+    "id": "c20-5-i03",
+    "q": "How do you estimate tokens per second on a device?",
+    "level": "fundamentals",
+    "covers": [
+     "model bytes",
+     "bandwidth",
+     "upper bound",
+     "measure"
+    ],
+    "followUp": "Why is real speed lower?"
+   },
+   {
+    "id": "c20-5-i04",
+    "q": "How would you split work between an on-device model and a server?",
+    "level": "applied",
+    "covers": [
+     "simple local tasks",
+     "live data on server",
+     "consent",
+     "queues"
+    ],
+    "followUp": "How does the app decide?"
+   },
+   {
+    "id": "c20-5-i05",
+    "q": "How do you evaluate an on-device model when you cannot log its failures centrally?",
+    "level": "applied",
+    "covers": [
+     "pre-release suites",
+     "device matrix",
+     "opt-in feedback",
+     "staged rollout"
+    ],
+    "followUp": "What would you ask users for?"
+   },
+   {
+    "id": "c20-5-i06",
+    "q": "Which banking app tasks could safely run on the device?",
+    "level": "applied",
+    "covers": [
+     "formatting",
+     "help text",
+     "no decisions",
+     "audit"
+    ],
+    "followUp": "Where is the line?",
+    "project": "bank"
+   },
+   {
+    "id": "c20-5-i07",
+    "q": "Design an offline assistant for travellers that ships inside the app.",
+    "level": "system-design",
+    "covers": [
+     "model size",
+     "compression",
+     "data on device",
+     "online fallback",
+     "updates"
+    ],
+    "followUp": "How do you ship a model update?",
+    "project": "travel"
+   },
+   {
+    "id": "c20-5-i08",
+    "q": "Plan the release process for a model shipped to millions of devices.",
+    "level": "system-design",
+    "covers": [
+     "device testing",
+     "staged rollout",
+     "rollback",
+     "size",
+     "telemetry with consent"
+    ],
+    "followUp": "What is your rollback?"
+   }
+  ]
+ },
+ "c20-6": {
+  "mcq": [
+   {
+    "id": "c20-6-m01",
+    "q": "In a model cascade, the large model handles…",
+    "options": [
+     "Requests the small model is unsure about or fails",
+     "Requests in random alternation",
+     "Every request, checked by the small model",
+     "Only requests from paying customers"
+    ],
+    "answer": 0,
+    "why": "The small model goes first; the hard minority is escalated.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Random splitting is an A/B test.",
+     "That reverses the cascade.",
+     "Tier routing is a different design."
+    ]
+   },
+   {
+    "id": "c20-6-m02",
+    "q": "Small model 0.00002 dollars, large 0.004; 15% escalated. Cost per request is about…",
+    "options": [
+     "0.0006 dollars",
+     "0.00062 dollars",
+     "0.004 dollars",
+     "0.00002 dollars"
+    ],
+    "answer": 1,
+    "why": "0.00002 + 0.15 × 0.004 = 0.00062.",
+    "kind": "calculation",
+    "distractors": [
+     "Forgets the small model.",
+     "",
+     "Large model alone.",
+     "Small model alone."
+    ]
+   },
+   {
+    "id": "c20-6-m03",
+    "q": "Why calibrate the small model’s confidence before choosing a threshold?",
+    "options": [
+     "Calibration makes the model faster",
+     "It removes the need for escalation",
+     "Raw confidences are often overconfident",
+     "Thresholds only work on calibrated text"
+    ],
+    "answer": 2,
+    "why": "A 90% score should mean 90% right before you rely on it.",
+    "kind": "concept",
+    "distractors": [
+     "No speed effect.",
+     "Escalation is still needed.",
+     "",
+     "Thresholds work on any number."
+    ]
+   },
+   {
+    "id": "c20-6-m04",
+    "q": "85% stay with the small model at 98% right; 15% go to the large model at 85% right. Overall accuracy is about…",
+    "options": [
+     "91%",
+     "85%",
+     "96%",
+     "98%"
+    ],
+    "answer": 2,
+    "why": "0.85 × 98 + 0.15 × 85 ≈ 83.3 + 12.8.",
+    "kind": "calculation",
+    "distractors": [
+     "Simple average of the two.",
+     "Large model only.",
+     "",
+     "Small model only."
+    ]
+   },
+   {
+    "id": "c20-6-m05",
+    "q": "A security ticket is classified confidently by the small model. A good cascade rule is…",
+    "options": [
+     "Trust any confident small-model answer",
+     "Always escalate security tickets by rule",
+     "Drop security tickets from routing",
+     "Escalate only if the user complains"
+    ],
+    "answer": 1,
+    "why": "High-risk categories can be routed by rule regardless of confidence.",
+    "kind": "scenario",
+    "distractors": [
+     "Confidence can be wrong where it matters most.",
+     "",
+     "Ignores them.",
+     "Too late."
+    ]
+   },
+   {
+    "id": "c20-6-m06",
+    "q": "During a sale, the share escalated jumps from 12% to 35%. What should you watch?",
+    "options": [
+     "Only the small model’s latency at the peak",
+     "The number of model versions in the registry",
+     "Cost, and whether new kinds of request appeared",
+     "Nothing, since quality is protected by escalation"
+    ],
+    "answer": 2,
+    "why": "Escalation share drives cost and signals drift.",
+    "kind": "scenario",
+    "distractors": [
+     "Latency is secondary here.",
+     "Unrelated.",
+     "",
+     "Cost can triple."
+    ]
+   },
+   {
+    "id": "c20-6-m07",
+    "q": "Raising the threshold so 30% are escalated instead of 15% roughly…",
+    "options": [
+     "Doubles the large-model cost",
+     "Removes the small-model cost",
+     "Halves the large-model cost",
+     "Leaves cost unchanged"
+    ],
+    "answer": 0,
+    "why": "Twice as many requests go to the expensive model.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Every request still pays the small model.",
+     "Opposite.",
+     "Cost follows escalation."
+    ]
+   },
+   {
+    "id": "c20-6-m08",
+    "q": "Which signal can catch a small model’s visible failure without confidence scores?",
+    "options": [
+     "A schema or rule check on its answer",
+     "The time of day of the request",
+     "The user’s account age",
+     "The length of the user’s message"
+    ],
+    "answer": 0,
+    "why": "Failed checks are a direct reason to escalate.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated to correctness.",
+     "Unrelated to correctness.",
+     "Length is a weak proxy."
+    ]
+   },
+   {
+    "id": "c20-6-m09",
+    "q": "A team uses one threshold for all languages, and Hinglish errors rise. A better design is…",
+    "options": [
+     "Ignoring language in routing",
+     "Removing the large model from the cascade",
+     "Language-specific thresholds or rules",
+     "A higher threshold for English only"
+    ],
+    "answer": 2,
+    "why": "Route by where the small model is weak.",
+    "kind": "scenario",
+    "distractors": [
+     "That is the current mistake.",
+     "Loses the safety net.",
+     "",
+     "English is not the problem."
+    ]
+   },
+   {
+    "id": "c20-6-m10",
+    "q": "How do you pick the threshold?",
+    "options": [
+     "Always 0.5, whatever the task or the model",
+     "Whatever value the model vendor recommends",
+     "From a curve of accuracy against share escalated",
+     "The highest confidence value the model reports"
+    ],
+    "answer": 2,
+    "why": "Choose the point that meets the quality bar at the lowest cost.",
+    "kind": "calculation",
+    "distractors": [
+     "Arbitrary.",
+     "Not your data.",
+     "",
+     "Escalates almost everything."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c20-6-i01",
+    "q": "How does a model cascade work?",
+    "level": "fundamentals",
+    "covers": [
+     "small first",
+     "confidence",
+     "checks",
+     "escalation",
+     "logging"
+    ],
+    "followUp": "How do you choose the threshold?"
+   },
+   {
+    "id": "c20-6-i02",
+    "q": "What routing signals can a cascade use?",
+    "level": "fundamentals",
+    "covers": [
+     "confidence",
+     "trained router",
+     "rules",
+     "answer checks"
+    ],
+    "followUp": "Which is most reliable?"
+   },
+   {
+    "id": "c20-6-i03",
+    "q": "Why does calibration matter for a cascade?",
+    "level": "fundamentals",
+    "covers": [
+     "overconfidence",
+     "meaning of scores",
+     "held-out data",
+     "reliability diagrams"
+    ],
+    "followUp": "How would you calibrate?"
+   },
+   {
+    "id": "c20-6-i04",
+    "q": "Your cascade’s cost tripled in a week. How do you investigate?",
+    "level": "applied",
+    "covers": [
+     "escalation share",
+     "new request types",
+     "drift",
+     "threshold"
+    ],
+    "followUp": "What is the quick fix?",
+    "project": "store"
+   },
+   {
+    "id": "c20-6-i05",
+    "q": "How do you make sure high-risk requests always reach the stronger model?",
+    "level": "applied",
+    "covers": [
+     "rules",
+     "categories",
+     "audit",
+     "evaluation"
+    ],
+    "followUp": "How do you detect a missed one?"
+   },
+   {
+    "id": "c20-6-i06",
+    "q": "How do you compare a cascade with the large model alone?",
+    "level": "applied",
+    "covers": [
+     "same test set",
+     "accuracy",
+     "cost per success",
+     "latency",
+     "slices"
+    ],
+    "followUp": "What would make the large model alone better?"
+   },
+   {
+    "id": "c20-6-i07",
+    "q": "Design a cascade for a support assistant with a million requests a day.",
+    "level": "system-design",
+    "covers": [
+     "models",
+     "routing",
+     "thresholds",
+     "monitoring",
+     "cost budget"
+    ],
+    "followUp": "How does it change at peak?"
+   },
+   {
+    "id": "c20-6-i08",
+    "q": "How do you keep a cascade healthy as traffic changes?",
+    "level": "system-design",
+    "covers": [
+     "escalation share alerts",
+     "recalibration",
+     "retraining",
+     "drift",
+     "ownership"
+    ],
+    "followUp": "What triggers recalibration?"
+   }
+  ]
+ }
+}

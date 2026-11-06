@@ -1,0 +1,42 @@
+<section class="tp tp-intuition" id="c22-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>First impressions set expectations. If an assistant’s first screen promises it can do anything, every gap feels like a failure; if it shows what it is good at with examples, users ask the questions it can answer.</p>
+<p>Failures will happen anyway. <a class="gl" href="#gl-graceful-failure">Graceful failure</a> means each kind of failure has a designed response: a partial answer with a warning, a handover to a person, a saved request to retry, never a bare "Something went wrong".</p>
+</section>
+
+<section class="tp tp-mechanism" id="c22-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Moment</th><th>Pattern</th><th>Example</th></tr><tr><td>First use</td><td>say what it does and does not do; show example prompts</td><td>"I can answer questions about your bookings and our fare rules"</td></tr><tr><td>Low confidence</td><td>give what was found, with sources, and suggest checking</td><td>"Here is what I found, but please check it"</td></tr><tr><td>Out of scope</td><td>say so and point to the right place</td><td>"I can’t do that here; contact support"</td></tr><tr><td>Dependency failure</td><td>save the request, retry, tell the user</td><td>"Saved; I’ll retry and notify you"</td></tr><tr><td>Slow</td><td>offer to wait or get the result later</td><td>"Taking longer than usual: email it to me?"</td></tr><tr><td>Any failure</td><td>a way to reach a person</td><td>a visible human handover</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">List failures<small>per type</small></div><div class="nd">Design response<small>message + next step</small></div><div class="nd">Degrade<small>ladder from 15.6</small></div><div class="nd">Test<small>inject each failure</small></div><div class="nd">Measure<small>dead ends, recoveries</small></div></div>
+<ol class="steps"><li data-n="0">List every way the feature can fail: low confidence, out of scope, tool errors, timeouts, refusals.</li><li data-n="1">Write the message and the next step for each.</li><li data-n="2">Connect them to the degradation ladder so the interface knows which level is active.</li><li data-n="3">Inject each failure in testing and look at what users see.</li><li data-n="4">Track dead ends and how often users recover.</li></ol></div>
+<figcaption><b>Designing failure before it happens.</b></figcaption></figure>
+<div class="box pit"><h5>Over-promising onboarding</h5><p>"Ask me anything" invites questions the system cannot answer. Specific examples set honest expectations and lead users to the questions that work.</p></div>
+</section>
+
+<section class="tp tp-math" id="c22-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Dead ends</b> (illustrative). Of 1,000 conversations, 80% are answered; 7% end with low confidence, 5% out of scope, 4% with a tool failure and 4% with a timeout.</p>
+<ul>
+<li>With one generic error message: 200 users hit a dead end.</li>
+<li>With a designed next step for each and, say, half of those users recovering: about 100 more users get what they came for, with no model change at all.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c22-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program assigns simulated outcomes to your project’s messages and compares a generic error message with a designed message and next step for each kind of failure. Rewrite the messages in <code>NEXT_STEP</code> for your product.</p>
+<figure class="fig live" id="snip-graceful-failure"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"graceful-failure"}'></div></div>
+<figcaption><b>Failure messages with next steps, in real Python.</b> Outcome rates are simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c22-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://pair.withgoogle.com/guidebook/chapters">Google PAIR guidebook: Errors and graceful failure</a> <small>Designing for AI failures.</small></li>
+<li><a href="https://www.nngroup.com/articles/error-message-guidelines/">Nielsen Norman Group: Error-Message Guidelines</a> <small>Messages that explain and offer a next step.</small></li>
+<li><a href="https://www.microsoft.com/en-us/haxtoolkit/ai-guidelines/">Microsoft: Guidelines for Human-AI Interaction</a> <small>"Make clear what the system can do" at the start of use.</small></li>
+</ol>
+</section>

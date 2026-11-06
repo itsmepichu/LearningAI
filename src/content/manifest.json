@@ -47,6 +47,18 @@
    ]
   },
   {
+   "id": "p5",
+   "label": "Part V",
+   "title": "Broaden and govern",
+   "chapters": [
+    "c19",
+    "c20",
+    "c21",
+    "c22",
+    "c23"
+   ]
+  },
+  {
    "id": "res",
    "label": "Field resources",
    "title": "Capstone and appendices",
@@ -1669,6 +1681,357 @@
    "hasLab": true
   },
   {
+   "id": "c19",
+   "num": "19",
+   "title": "Multimodal models",
+   "lede": "Models that read images, documents and speech as well as text: how other media become tokens, what vision-language and speech models cost, how to build document and multimodal retrieval pipelines, and how to evaluate outputs that describe what the model saw or heard.",
+   "kind": "chapter",
+   "part": "p5",
+   "www": {
+    "what": "<p>Multimodal models take more than text: photos, screenshots, scanned pages, charts, audio and video. Encoders turn each medium into vectors the language model can read alongside words, and some models produce speech or images too.</p>",
+    "why": "<p>Much enterprise knowledge is not plain text: scanned contracts, product photos, forms, diagrams and phone calls. These inputs cost far more tokens than text, fail in new ways, and need their own evaluation.</p>",
+    "where": "<p>Document processing, visual product search, support from screenshots, voice assistants and call analytics, and any RAG system whose sources include PDFs, slides or images.</p>"
+   },
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": true,
+   "topics": [
+    {
+     "id": "c19-1",
+     "tn": "19.1",
+     "title": "How images and audio become tokens",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 646
+    },
+    {
+     "id": "c19-2",
+     "tn": "19.2",
+     "title": "Vision-language models: architecture, capabilities and cost",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 591
+    },
+    {
+     "id": "c19-3",
+     "tn": "19.3",
+     "title": "Document AI: OCR pipelines versus sending page images to a model",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 572
+    },
+    {
+     "id": "c19-4",
+     "tn": "19.4",
+     "title": "Speech: speech-to-text, text-to-speech and real-time voice",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 495
+    },
+    {
+     "id": "c19-5",
+     "tn": "19.5",
+     "title": "Multimodal retrieval and RAG over images and documents",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 513
+    },
+    {
+     "id": "c19-6",
+     "tn": "19.6",
+     "title": "Evaluating multimodal outputs and their failure modes",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 519
+    }
+   ]
+  },
+  {
+   "id": "c20",
+   "num": "20",
+   "title": "Distillation and small models",
+   "lede": "How to get large-model quality from small, cheap and fast models: where small models are enough, how to produce and filter teacher data, the main distillation methods, pruning and compression, running on devices and CPUs, and cascades that send only hard cases to a large model.",
+   "kind": "chapter",
+   "part": "p5",
+   "www": {
+    "what": "<p>Small models have from a few hundred million to a few billion parameters. Distillation trains them on the outputs of a larger \"teacher\" model, so they learn a narrow task far better than their size suggests.</p>",
+    "why": "<p>At high volume, a small model can cut cost and latency by ten to a hundred times, run on a laptop or phone, and keep data on premises. The work is in proving it is good enough and in keeping it that way.</p>",
+    "where": "<p>Classification, routing, extraction and short structured answers at scale; offline and on-device features; the first stage of a cascade in front of a large model.</p>"
+   },
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": true,
+   "topics": [
+    {
+     "id": "c20-1",
+     "tn": "20.1",
+     "title": "What small models are good at, and when they are enough",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 517
+    },
+    {
+     "id": "c20-2",
+     "tn": "20.2",
+     "title": "Producing and filtering teacher data",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 420
+    },
+    {
+     "id": "c20-3",
+     "tn": "20.3",
+     "title": "Distillation methods: labels, soft targets and reasoning traces",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 535
+    },
+    {
+     "id": "c20-4",
+     "tn": "20.4",
+     "title": "Pruning, quantisation and other compression",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 470
+    },
+    {
+     "id": "c20-5",
+     "tn": "20.5",
+     "title": "Running models on devices and CPUs",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 467
+    },
+    {
+     "id": "c20-6",
+     "tn": "20.6",
+     "title": "Cascades and routing between small and large models",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 467
+    }
+   ]
+  },
+  {
+   "id": "c21",
+   "num": "21",
+   "title": "Cost engineering and FinOps",
+   "lede": "Making AI features affordable on purpose: the cost model of a feature, cutting tokens without cutting quality, moving work to batch and off-peak, routing requests to the cheapest model that meets the bar, showing and charging costs back to teams, and planning commitments when prices keep changing.",
+   "kind": "chapter",
+   "part": "p5",
+   "www": {
+    "what": "<p>Cost engineering designs a feature so its cost per successful task is known, measured and controlled. FinOps is the practice that makes engineering, finance and product share responsibility for cloud and AI spend.</p>",
+    "why": "<p>AI spend grows with usage, tokens per request and model choice, and it can double after a prompt change with no code deploy. Without unit costs and owners, budgets are discovered after they are spent.</p>",
+    "where": "<p>Every AI feature at scale: pricing a product, choosing models, designing prompts and retrieval, planning capacity and contracts, and reviewing monthly spend with finance.</p>"
+   },
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": true,
+   "topics": [
+    {
+     "id": "c21-1",
+     "tn": "21.1",
+     "title": "The cost model of an AI feature",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 475
+    },
+    {
+     "id": "c21-2",
+     "tn": "21.2",
+     "title": "Spending fewer tokens: prompts, caching and output length",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 455
+    },
+    {
+     "id": "c21-3",
+     "tn": "21.3",
+     "title": "Batch processing and off-peak work",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 468
+    },
+    {
+     "id": "c21-4",
+     "tn": "21.4",
+     "title": "Routing requests to the cheapest model that meets the bar",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 434
+    },
+    {
+     "id": "c21-5",
+     "tn": "21.5",
+     "title": "Budgets, showback and chargeback",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 395
+    },
+    {
+     "id": "c21-6",
+     "tn": "21.6",
+     "title": "Commitments, negotiation and changing prices",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 490
+    }
+   ]
+  },
+  {
+   "id": "c22",
+   "num": "22",
+   "title": "AI product and UX patterns",
+   "lede": "Designing the parts users actually touch: choosing where AI belongs, showing uncertainty and sources, handling latency with streaming and progress, keeping people in control with review, edit and undo, collecting feedback that means something, and failing in ways that still help.",
+   "kind": "chapter",
+   "part": "p5",
+   "www": {
+    "what": "<p>AI product and UX patterns are the design choices around a model: how much it decides on its own, how it shows what it is unsure of, how it behaves while thinking, how users correct it, and what happens when it fails.</p>",
+    "why": "<p>The same model can feel trustworthy or reckless depending on the interface. Most AI product failures are not model failures but design failures: automation where people needed control, confident answers where doubt was due, and dead ends where a next step was possible.</p>",
+    "where": "<p>Every user-facing AI feature: assistants, drafting tools, search, agents acting for users, and internal tools for staff who review AI output.</p>"
+   },
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": true,
+   "topics": [
+    {
+     "id": "c22-1",
+     "tn": "22.1",
+     "title": "Choosing where AI belongs in a product",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 508
+    },
+    {
+     "id": "c22-2",
+     "tn": "22.2",
+     "title": "Showing uncertainty, sources and citations",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 460
+    },
+    {
+     "id": "c22-3",
+     "tn": "22.3",
+     "title": "Streaming, latency and progress in the interface",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 468
+    },
+    {
+     "id": "c22-4",
+     "tn": "22.4",
+     "title": "Human control: review, edit and undo",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 438
+    },
+    {
+     "id": "c22-5",
+     "tn": "22.5",
+     "title": "Feedback loops in the interface",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 463
+    },
+    {
+     "id": "c22-6",
+     "tn": "22.6",
+     "title": "Onboarding, expectations and graceful failure",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 455
+    }
+   ]
+  },
+  {
+   "id": "c23",
+   "num": "23",
+   "title": "Regulation basics for engineers",
+   "lede": "What engineers need to know to build AI systems that can pass legal and audit review: turning obligations into controls and evidence, the roles and risk tiers of a risk-based AI law, privacy rights applied to LLM systems, transparency and record-keeping, and how audits and management-system standards work. Orientation, not legal advice.",
+   "kind": "chapter",
+   "part": "p5",
+   "www": {
+    "what": "<p>AI systems fall under general laws (privacy, consumer protection, sector rules) and, increasingly, AI-specific laws and standards. Most of their requirements become ordinary engineering: logs, approvals, documentation, tests and the ability to delete data.</p>",
+    "why": "<p>Requirements discovered at launch are expensive: missing logs cannot be recreated, and a model trained on data that had to be deleted may need retraining. Engineers who can map a requirement to a control and produce evidence make compliance cheap.</p>",
+    "where": "<p>Any AI feature that touches personal data, makes or supports decisions about people, generates content shown to the public, or operates in a regulated sector such as finance, health or employment. Work with legal and compliance colleagues; this chapter is orientation, not legal advice.</p>"
+   },
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": true,
+   "topics": [
+    {
+     "id": "c23-1",
+     "tn": "23.1",
+     "title": "From obligation to control to evidence",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 491
+    },
+    {
+     "id": "c23-2",
+     "tn": "23.2",
+     "title": "Risk-based AI law: roles, risk tiers and duties (the EU AI Act as an example)",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 512
+    },
+    {
+     "id": "c23-3",
+     "tn": "23.3",
+     "title": "Privacy rights applied to LLM systems",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 483
+    },
+    {
+     "id": "c23-4",
+     "tn": "23.4",
+     "title": "Transparency, labelling and record-keeping",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 487
+    },
+    {
+     "id": "c23-5",
+     "tn": "23.5",
+     "title": "Audits, assurance and management-system standards",
+     "tags": [],
+     "figures": 2,
+     "interactive": 2,
+     "words": 485
+    }
+   ]
+  },
+  {
    "id": "capstone",
    "num": "C",
    "title": "Capstone: an end-to-end system on your laptop",
@@ -1781,7 +2144,7 @@
     {
      "id": "app-d-cov",
      "tn": "D.2",
-     "title": "Coverage checklist: all 135 roadmap topics",
+     "title": "Coverage checklist: all 164 roadmap topics",
      "tags": [],
      "figures": 0,
      "interactive": 0,

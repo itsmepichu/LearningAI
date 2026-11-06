@@ -1,0 +1,43 @@
+<section class="tp tp-intuition" id="c22-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>AI is a good colleague for some jobs and a dangerous one for others. It shines where answers are hard to write as rules, mistakes are cheap, and a person can check the result quickly. It is a poor fit where rules already work, or where one mistake is expensive and hard to spot.</p>
+<p>The design question is also how much to let it decide: the <a class="gl" href="#gl-automation-level">level of automation</a>. Suggesting is safe almost anywhere; acting alone needs low error costs, cheap undo and evidence that it works.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c22-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Level</th><th>The AI…</th><th>A person…</th><th>Fits when</th></tr><tr><td>Suggest</td><td>offers options</td><td>chooses</td><td>errors are cheap; users are experts</td></tr><tr><td>Draft for review</td><td>prepares text or an action</td><td>edits and approves</td><td>checking is faster than doing</td></tr><tr><td>Act with undo</td><td>acts, with a visible undo window</td><td>can reverse</td><td>actions are reversible and errors rare</td></tr><tr><td>Act alone</td><td>decides and acts</td><td>audits samples</td><td>errors are cheap and measured to be rare</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Task<small>what users need</small></div><div class="nd">Rules enough?<small>then use code</small></div><div class="nd">Error cost<small>who is hurt, how much</small></div><div class="nd">Check cost<small>how fast to verify</small></div><div class="nd">Pick a level<small>and measure it</small></div></div>
+<ol class="steps"><li data-n="0">Start from the user’s job, not from the model.</li><li data-n="1">If rules capture it (a refund amount, a date check), write code (7.7).</li><li data-n="2">Estimate the cost of a wrong output and who bears it.</li><li data-n="3">Estimate how long a person needs to check an output.</li><li data-n="4">Choose the lowest level that delivers value, then raise it only with evidence.</li></ol></div>
+<figcaption><b>Deciding where AI belongs, and how much it decides.</b></figcaption></figure>
+<div class="box example"><h5>Example: a refund feature</h5><p>A team planned an assistant that approves refunds on its own. Mapping the task showed three parts: reading the customer’s message (a good fit for AI), calculating the amount (rules), and approving (high error cost). They shipped AI drafting with code computing the amount and a person approving refunds above a threshold (11.7).</p></div>
+</section>
+
+<section class="tp tp-math" id="c22-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>When review pays</b> (illustrative). An agent writes a reply in 6 minutes; checking and editing an AI draft takes 2.</p>
+<ul>
+<li>At 1,000 replies a day: 6,000 minutes by hand against 2,000 with drafts, a saving of 4,000 minutes, about 67 hours a day.</li>
+<li>If drafts are wrong 10% of the time and a wrong draft costs 4 extra minutes: 100 × 4 = 400 minutes, still far less than the saving.</li>
+</ul>
+<p><b>When acting alone does not.</b> If each wrong refund costs 2,000 rupees to recover and 1% of 10,000 daily refunds are wrong: 100 × 2,000 = 200,000 rupees a day.</p>
+</section>
+
+<section class="tp tp-code" id="c22-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program scores five candidate features on error tolerance, ease of checking, whether rules capture the task, volume and data, and suggests AI, AI with a person deciding, or plain code. Add a feature from your own product and score it.</p>
+<figure class="fig live" id="snip-ai-fit"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"ai-fit"}'></div></div>
+<figcaption><b>A fit check for AI features, in real Python.</b> The scores are judgements; test with users.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c22-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://pair.withgoogle.com/guidebook/">Google PAIR: People + AI Guidebook</a> <small>Deciding whether and how to use AI in a product.</small></li>
+<li><a href="https://www.microsoft.com/en-us/haxtoolkit/ai-guidelines/">Microsoft: Guidelines for Human-AI Interaction</a> <small>18 tested guidelines for AI features.</small></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3290605.3300233">Amershi et al. (2019), Guidelines for Human-AI Interaction</a> <small>The study behind the guidelines.</small></li>
+</ol>
+</section>

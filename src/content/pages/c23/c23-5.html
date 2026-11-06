@@ -1,0 +1,45 @@
+<section class="tp tp-intuition" id="c23-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An auditor cannot read every decision a system made, so they check a sample, the way a food inspector tests a few jars from a batch. <a class="gl" href="#gl-audit-sampling">Audit sampling</a> only works if the sample is random and the result is stated with its uncertainty: "no problems in 20 checks" says much less than it sounds.</p>
+<p>Standards such as ISO/IEC 42001 audit the management system around AI, its policies, risk assessments and reviews, and frameworks such as the NIST AI RMF structure that work. Both rely on the evidence the earlier chapters produce.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c23-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Assurance activity</th><th>Who</th><th>Looks at</th></tr><tr><td>Internal review</td><td>your own risk or quality team</td><td>control matrix, evidence freshness, incidents</td></tr><tr><td>Internal audit</td><td>an independent internal function</td><td>samples of decisions and controls</td></tr><tr><td>External audit or certification</td><td>an accredited auditor (for example against ISO/IEC 42001)</td><td>the management system and samples</td></tr><tr><td>Conformity assessment</td><td>self or notified body, for some high-risk systems</td><td>technical documentation, testing</td></tr><tr><td>Red-team and evaluation reports</td><td>internal or external testers (16.7)</td><td>the system’s behaviour</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Define population<small>all decisions in scope</small></div><div class="nd">Random sample<small>size from target precision</small></div><div class="nd">Check<small>against policy</small></div><div class="nd">Estimate<small>rate with an interval</small></div><div class="nd">Act<small>findings, owners, dates</small></div></div>
+<ol class="steps"><li data-n="0">Say exactly which decisions are in scope and over what period.</li><li data-n="1">Draw a random sample large enough for the claim you want to make.</li><li data-n="2">Check each sampled decision against the written policy.</li><li data-n="3">Report the breach rate with its confidence interval.</li><li data-n="4">Record findings with owners and deadlines, and re-test.</li></ol></div>
+<figcaption><b>An audit by sampling.</b></figcaption></figure>
+<div class="box pit"><h5>Cherry-picked samples</h5><p>Letting the team choose which cases the auditor sees makes the result meaningless. Samples must be drawn at random from the full population, by a method the auditor controls.</p></div>
+<p><small>Orientation for engineers, not legal advice. Laws, guidance and application dates change; confirm what applies with your legal and compliance team.</small></p>
+</section>
+
+<section class="tp tp-math" id="c23-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How much a clean sample proves</b>. If you check n random decisions and find no breaches, you can say with 95% confidence that the breach rate is below a limit when n is large enough:</p>
+<ul>
+<li>To claim below 5%: 59 clean checks, because 0.95 multiplied by itself 59 times is just under 0.05.</li>
+<li>To claim below 1%: 299 clean checks.</li>
+<li>20 clean checks only support "below about 14%".</li>
+</ul>
+<p><b>With some breaches.</b> 4 breaches in 60 checks is 6.7%, but the 95% interval runs from about 2.6% to 15.9%: a bigger sample is needed to tell whether a 5% target is met.</p>
+</section>
+
+<section class="tp tp-code" id="c23-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program samples your project’s money-moving decisions with a hidden breach rate, estimates the rate with an interval for three sample sizes, and works out how many clean checks support a claim. Change <code>TRUE_ERROR</code> to 0.01 and see what small samples miss.</p>
+<figure class="fig live" id="snip-audit-sampling"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"audit-sampling"}'></div></div>
+<figcaption><b>Audit sampling, in real Python.</b> Breaches are simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c23-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.iso.org/standard/81230.html">ISO/IEC 42001</a> <small>The certifiable AI management system standard.</small></li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> <small>Measuring and managing AI risk, with a playbook of actions.</small></li>
+<li><a href="https://www.theiia.org/en/standards/">Institute of Internal Auditors: Standards</a> <small>How internal audit plans samples and reports findings.</small></li>
+</ol>
+</section>

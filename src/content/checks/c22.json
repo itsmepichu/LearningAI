@@ -1,0 +1,1775 @@
+{
+ "c22-1": {
+  "mcq": [
+   {
+    "id": "c22-1-m01",
+    "q": "Which feature is the best fit for AI with little risk?",
+    "options": [
+     "Drafting replies that agents edit before sending",
+     "Granting system access on request",
+     "Calculating tax owed from fixed rules",
+     "Approving refunds without anyone checking"
+    ],
+    "answer": 0,
+    "why": "Errors are cheap and a person checks quickly.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "High error cost.",
+     "Rules capture it; use code.",
+     "High error cost, no check."
+    ]
+   },
+   {
+    "id": "c22-1-m02",
+    "q": "If simple rules fully capture a task, the best choice is…",
+    "options": [
+     "Use the largest model available",
+     "Use AI with a person reviewing",
+     "Write code for it",
+     "Use AI acting with undo"
+    ],
+    "answer": 2,
+    "why": "Deterministic code is cheaper, testable and exact (7.7).",
+    "kind": "concept",
+    "distractors": [
+     "Unnecessary cost and risk.",
+     "Adds review where code suffices.",
+     "",
+     "Adds risk where code suffices."
+    ]
+   },
+   {
+    "id": "c22-1-m03",
+    "q": "Drafts cut reply time from 6 to 2 minutes for 1,000 replies a day. Time saved per day is about…",
+    "options": [
+     "6.7 hours",
+     "100 hours",
+     "40 hours",
+     "67 hours"
+    ],
+    "answer": 3,
+    "why": "4 minutes × 1,000 = 4,000 minutes ≈ 67 hours.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too small.",
+     "Too large.",
+     "Uses the wrong per-reply saving.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-1-m04",
+    "q": "Which level of automation suits a reversible, rarely wrong action?",
+    "options": [
+     "Act with an undo window",
+     "Suggest only, never act",
+     "Act alone with no record",
+     "Require two approvers"
+    ],
+    "answer": 0,
+    "why": "Reversible actions with low error rates can act, if undo is easy.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Gives up value.",
+     "No record is never right.",
+     "Too heavy for a low-risk action."
+    ]
+   },
+   {
+    "id": "c22-1-m05",
+    "q": "1% of 10,000 daily refunds are wrong and each costs 2,000 rupees to recover. The daily cost is…",
+    "options": [
+     "2,000,000 rupees",
+     "20,000 rupees",
+     "100 rupees",
+     "200,000 rupees"
+    ],
+    "answer": 3,
+    "why": "100 wrong × 2,000 = 200,000.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too large.",
+     "Ten times too small.",
+     "Counts cases, not money.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-1-m06",
+    "q": "A team wants an assistant that approves refunds alone after a good pilot on easy cases. The main concern is…",
+    "options": [
+     "Users generally dislike chat interfaces",
+     "High error cost and an unrepresentative pilot",
+     "Refunds cannot be drafted by an AI model",
+     "The model is too slow for refund work"
+    ],
+    "answer": 1,
+    "why": "Easy-case pilots overstate accuracy; errors are costly.",
+    "kind": "scenario",
+    "distractors": [
+     "Not the concern.",
+     "",
+     "Drafting is fine.",
+     "Speed is not the issue."
+    ]
+   },
+   {
+    "id": "c22-1-m07",
+    "q": "Two numbers decide the right level of automation most directly:",
+    "options": [
+     "The price per token and the latency",
+     "The model size and the context length",
+     "The number of users and their ages",
+     "The cost of an error and the cost of checking"
+    ],
+    "answer": 3,
+    "why": "Cheap errors and cheap checks allow more automation.",
+    "kind": "concept",
+    "distractors": [
+     "Secondary.",
+     "Technical, not product decisions.",
+     "Not direct drivers.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-1-m08",
+    "q": "A refund feature combines reading the message, computing the amount and approving. A good split is…",
+    "options": [
+     "Code reads, AI computes and AI approves",
+     "People do all three of the steps by hand",
+     "AI reads, code computes, people approve large ones",
+     "AI does all three steps entirely on its own"
+    ],
+    "answer": 2,
+    "why": "Each part goes to what does it best and safest.",
+    "kind": "scenario",
+    "distractors": [
+     "Puts AI where rules work.",
+     "Wastes the AI’s strength.",
+     "",
+     "Risky."
+    ]
+   },
+   {
+    "id": "c22-1-m09",
+    "q": "Drafts are wrong 10% of the time and each wrong draft costs 4 extra minutes. For 1,000 drafts, the extra time is…",
+    "options": [
+     "4,000 minutes",
+     "40 minutes",
+     "400 minutes",
+     "100 minutes"
+    ],
+    "answer": 2,
+    "why": "100 × 4 = 400.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too large.",
+     "Ten times too small.",
+     "",
+     "Counts drafts, not minutes."
+    ]
+   },
+   {
+    "id": "c22-1-m10",
+    "q": "Why start at a lower automation level and raise it later?",
+    "options": [
+     "Evidence from use justifies each step up",
+     "Higher levels are always cheaper later",
+     "Regulators forbid higher levels",
+     "Models get worse over time"
+    ],
+    "answer": 0,
+    "why": "Measured performance earns more autonomy.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not about cost.",
+     "Not generally.",
+     "Not the reason."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c22-1-i01",
+    "q": "How do you decide whether a feature should use AI?",
+    "level": "fundamentals",
+    "covers": [
+     "rules enough?",
+     "error cost",
+     "check cost",
+     "data",
+     "volume"
+    ],
+    "followUp": "Give an example of a feature that should not."
+   },
+   {
+    "id": "c22-1-i02",
+    "q": "Describe the levels of automation for an AI feature.",
+    "level": "fundamentals",
+    "covers": [
+     "suggest",
+     "draft",
+     "act with undo",
+     "act alone"
+    ],
+    "followUp": "What moves a feature up a level?"
+   },
+   {
+    "id": "c22-1-i03",
+    "q": "Why combine AI with code and people in one feature?",
+    "level": "fundamentals",
+    "covers": [
+     "strengths",
+     "deterministic parts",
+     "approval",
+     "safety"
+    ],
+    "followUp": "Where do you draw the lines?"
+   },
+   {
+    "id": "c22-1-i04",
+    "q": "A product manager wants full automation from day one. How do you respond?",
+    "level": "applied",
+    "covers": [
+     "error cost",
+     "pilot evidence",
+     "staged levels",
+     "metrics"
+    ],
+    "followUp": "What evidence would convince you?"
+   },
+   {
+    "id": "c22-1-i05",
+    "q": "How would you split a refund feature between AI, code and people?",
+    "level": "applied",
+    "covers": [
+     "reading",
+     "amount in code",
+     "approval thresholds",
+     "audit"
+    ],
+    "followUp": "Where is the threshold?",
+    "project": "store"
+   },
+   {
+    "id": "c22-1-i06",
+    "q": "How do you measure whether a draft-for-review feature saves time?",
+    "level": "applied",
+    "covers": [
+     "time per task",
+     "edit rate",
+     "errors",
+     "comparison"
+    ],
+    "followUp": "How long would you measure?"
+   },
+   {
+    "id": "c22-1-i07",
+    "q": "Design the automation levels for a customer assistant with ten features.",
+    "level": "system-design",
+    "covers": [
+     "inventory",
+     "error and check costs",
+     "levels",
+     "controls",
+     "review"
+    ],
+    "followUp": "How do you review the choices over time?"
+   },
+   {
+    "id": "c22-1-i08",
+    "q": "Plan how a feature moves from \"draft\" to \"act with undo\".",
+    "level": "system-design",
+    "covers": [
+     "evidence",
+     "error rates",
+     "undo design",
+     "monitoring",
+     "rollback"
+    ],
+    "followUp": "What would make you move it back?"
+   }
+  ]
+ },
+ "c22-2": {
+  "mcq": [
+   {
+    "id": "c22-2-m01",
+    "q": "Why is a citation to a document that does not support the claim dangerous?",
+    "options": [
+     "It looks verified when it is not",
+     "It breaks the prompt cache for others",
+     "It uses too many tokens per answer",
+     "It slows down the whole answer"
+    ],
+    "answer": 0,
+    "why": "Users trust cited sentences more; a false citation misleads.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Not the main problem.",
+     "Speed is not the issue."
+    ]
+   },
+   {
+    "id": "c22-2-m02",
+    "q": "Answers labelled \"high\" are right 93% of the time on held-out data. This means the labels are…",
+    "options": [
+     "Only valid for one user",
+     "Proof every answer is right",
+     "Useless without more training",
+     "Calibrated well enough to show"
+    ],
+    "answer": 3,
+    "why": "A label that matches observed accuracy can be trusted.",
+    "kind": "calculation",
+    "distractors": [
+     "They hold on the measured data.",
+     "7% are wrong.",
+     "They are informative.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-2-m03",
+    "q": "An answer has a sentence with no supporting passage. The safest display is to…",
+    "options": [
+     "Bold it to draw attention",
+     "Show it with a citation anyway",
+     "Hide all citations in the answer",
+     "Remove it or mark it as unverified"
+    ],
+    "answer": 3,
+    "why": "Unsupported claims should not look supported.",
+    "kind": "scenario",
+    "distractors": [
+     "Draws trust to it.",
+     "False citation.",
+     "Removes useful evidence.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-2-m04",
+    "q": "Why say \"likely\" or \"please check this\" rather than \"0.73\"?",
+    "options": [
+     "Regulators require words",
+     "Users cannot read decimals",
+     "Numbers are always wrong",
+     "Plain words are easier to act on"
+    ],
+    "answer": 3,
+    "why": "People interpret words more consistently than raw scores.",
+    "kind": "concept",
+    "distractors": [
+     "Not generally.",
+     "Not the reason.",
+     "Numbers can be accurate.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-2-m05",
+    "q": "40% of answers carry a warning. The likely effect is…",
+    "options": [
+     "Users learn to ignore warnings",
+     "Answers become more accurate",
+     "Users trust the system more",
+     "Fewer users read the answers"
+    ],
+    "answer": 0,
+    "why": "Too many warnings cause warning blindness.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Warnings do not change accuracy.",
+     "Opposite.",
+     "Not the main effect."
+    ]
+   },
+   {
+    "id": "c22-2-m06",
+    "q": "Labels \"high\" were right only 70% of the time. How many users in 10 are misled by \"high\"?",
+    "options": [
+     "3",
+     "0",
+     "1",
+     "7"
+    ],
+    "answer": 0,
+    "why": "30% wrong = 3 in 10.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ignores the errors.",
+     "Underestimates.",
+     "That is how many are right."
+    ]
+   },
+   {
+    "id": "c22-2-m07",
+    "q": "A store answer mixes a listed specification and a reviewer’s opinion. The interface should…",
+    "options": [
+     "Label the opinion as from reviews",
+     "Hide the reviewer’s opinion",
+     "Present both as listed facts",
+     "Cite the review as the listing"
+    ],
+    "answer": 0,
+    "why": "Users need to know the source type.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Removes useful information.",
+     "Misleads.",
+     "Wrong source."
+    ]
+   },
+   {
+    "id": "c22-2-m08",
+    "q": "\"I couldn’t find this in the policies\" is…",
+    "options": [
+     "A legitimate, useful answer",
+     "A reason to raise temperature",
+     "A failure to hide from users",
+     "A sign the index is empty"
+    ],
+    "answer": 0,
+    "why": "Abstaining beats guessing (9.6).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "It is honest and helpful.",
+     "Not necessarily."
+    ]
+   },
+   {
+    "id": "c22-2-m09",
+    "q": "A fee is quoted from a fare rule checked 3 days ago. The display should add…",
+    "options": [
+     "A higher confidence label",
+     "Nothing; fees never change",
+     "A bigger font for the fee",
+     "When the price was checked"
+    ],
+    "answer": 3,
+    "why": "Time-sensitive facts need their check time.",
+    "kind": "scenario",
+    "distractors": [
+     "Confidence is not freshness.",
+     "Fares change.",
+     "Size does not help.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-2-m10",
+    "q": "On 1,000 answers, those scored 0.6–0.85 are right 78% of the time. Of 200 such answers, about how many are wrong?",
+    "options": [
+     "78",
+     "44",
+     "22",
+     "156"
+    ],
+    "answer": 1,
+    "why": "22% × 200 = 44.",
+    "kind": "calculation",
+    "distractors": [
+     "Confuses percent and count.",
+     "",
+     "Half.",
+     "That is right ones."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c22-2-i01",
+    "q": "How should an AI interface show uncertainty?",
+    "level": "fundamentals",
+    "covers": [
+     "citations",
+     "unsupported marking",
+     "plain words",
+     "abstention"
+    ],
+    "followUp": "When would you show a number?"
+   },
+   {
+    "id": "c22-2-i02",
+    "q": "Why must confidence labels be calibrated?",
+    "level": "fundamentals",
+    "covers": [
+     "meaning",
+     "held-out data",
+     "trust",
+     "misleading labels"
+    ],
+    "followUp": "How do you calibrate?"
+   },
+   {
+    "id": "c22-2-i03",
+    "q": "What makes a citation trustworthy?",
+    "level": "fundamentals",
+    "covers": [
+     "real support",
+     "exact passage",
+     "open in one click",
+     "checks"
+    ],
+    "followUp": "How do you check support at scale?"
+   },
+   {
+    "id": "c22-2-i04",
+    "q": "Users trust wrong answers because they look confident. What do you change?",
+    "level": "applied",
+    "covers": [
+     "calibration",
+     "unsupported marking",
+     "evidence display",
+     "abstention"
+    ],
+    "followUp": "How do you measure the change?"
+   },
+   {
+    "id": "c22-2-i05",
+    "q": "How do you avoid warning blindness?",
+    "level": "applied",
+    "covers": [
+     "target slices",
+     "fewer warnings",
+     "clear actions",
+     "measure"
+    ],
+    "followUp": "How do you decide which answers get a warning?"
+   },
+   {
+    "id": "c22-2-i06",
+    "q": "How would you display prices and fees that change often?",
+    "level": "applied",
+    "covers": [
+     "source",
+     "checked time",
+     "refresh",
+     "commitment"
+    ],
+    "followUp": "What if the price changed during the chat?",
+    "project": "travel"
+   },
+   {
+    "id": "c22-2-i07",
+    "q": "Design the answer display for a policy assistant used by 8,000 staff.",
+    "level": "system-design",
+    "covers": [
+     "citations",
+     "support check",
+     "abstain",
+     "feedback",
+     "evaluation"
+    ],
+    "followUp": "What do you log?"
+   },
+   {
+    "id": "c22-2-i08",
+    "q": "Plan how you would test whether users trust answers appropriately.",
+    "level": "system-design",
+    "covers": [
+     "study design",
+     "wrong answers seeded",
+     "measure reliance",
+     "iterate"
+    ],
+    "followUp": "What result would worry you?"
+   }
+  ]
+ },
+ "c22-3": {
+  "mcq": [
+   {
+    "id": "c22-3-m01",
+    "q": "Perceived latency depends most on…",
+    "options": [
+     "Time to the first sign of progress",
+     "The model’s parameter count",
+     "The size of the context window",
+     "The total number of tokens"
+    ],
+    "answer": 0,
+    "why": "Early feedback changes how long a wait feels.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Indirect at most.",
+     "Indirect at most.",
+     "Total time matters less than first feedback."
+    ]
+   },
+   {
+    "id": "c22-3-m02",
+    "q": "The full answer takes 9 seconds and the first token comes at 0.8. Streaming shows something about how many times sooner?",
+    "options": [
+     "0.8",
+     "9",
+     "11",
+     "1.8"
+    ],
+    "answer": 2,
+    "why": "9 ÷ 0.8 ≈ 11.",
+    "kind": "calculation",
+    "distractors": [
+     "That is the first-token time.",
+     "That is the total seconds.",
+     "",
+     "Arithmetic slip."
+    ]
+   },
+   {
+    "id": "c22-3-m03",
+    "q": "Which wait suits running in the background with a notification?",
+    "options": [
+     "Under one second",
+     "Several minutes",
+     "Two to three seconds",
+     "Five to eight seconds"
+    ],
+    "answer": 1,
+    "why": "Nobody watches a screen for minutes.",
+    "kind": "concept",
+    "distractors": [
+     "Just answer.",
+     "",
+     "Stream it.",
+     "Stream with status."
+    ]
+   },
+   {
+    "id": "c22-3-m04",
+    "q": "Why not stream a structured action before it is validated?",
+    "options": [
+     "Actions cannot be streamed to users at all",
+     "Users may see a change that never happens",
+     "It doubles the token cost of each action",
+     "Streaming is much slower for JSON output"
+    ],
+    "answer": 1,
+    "why": "Validate actions first; stream prose.",
+    "kind": "scenario",
+    "distractors": [
+     "They can be, but should not be.",
+     "",
+     "Not true.",
+     "Not about speed."
+    ]
+   },
+   {
+    "id": "c22-3-m05",
+    "q": "An agent has 6 steps of 4 seconds. Showing each finished step keeps the longest silent gap at…",
+    "options": [
+     "6 seconds",
+     "1 second",
+     "24 seconds",
+     "4 seconds"
+    ],
+    "answer": 3,
+    "why": "Each step ends with visible progress.",
+    "kind": "calculation",
+    "distractors": [
+     "Confuses steps and seconds.",
+     "Shorter than a step.",
+     "That is the total.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-3-m06",
+    "q": "A rebooking agent shows only a spinner and users refresh and start second requests. The best fix is…",
+    "options": [
+     "Block refreshing in the browser",
+     "Show finished steps as the agent works",
+     "Make the spinner spin faster",
+     "Hide the request until it finishes"
+    ],
+    "answer": 1,
+    "why": "Visible progress stops users giving up or retrying.",
+    "kind": "scenario",
+    "distractors": [
+     "Hostile and fragile.",
+     "",
+     "No information added.",
+     "Worse."
+    ]
+   },
+   {
+    "id": "c22-3-m07",
+    "q": "An acknowledgement within 0.3 seconds mainly tells the user…",
+    "options": [
+     "The model is the largest one available",
+     "The request was answered from the cache",
+     "The request was received and work has started",
+     "The final answer is going to be correct"
+    ],
+    "answer": 2,
+    "why": "Instant acknowledgement prevents doubt and repeats.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "",
+     "Says nothing about correctness."
+    ]
+   },
+   {
+    "id": "c22-3-m08",
+    "q": "During a sale the first token slows from 0.8 to 3 seconds. A cheap mitigation in the interface is…",
+    "options": [
+     "Ask users to come back later",
+     "Remove the answer area",
+     "Show a short status within 300 ms",
+     "Stop streaming during the sale"
+    ],
+    "answer": 2,
+    "why": "Early status keeps people waiting while tokens arrive.",
+    "kind": "scenario",
+    "distractors": [
+     "Loses users.",
+     "Nonsensical.",
+     "",
+     "Makes waiting worse."
+    ]
+   },
+   {
+    "id": "c22-3-m09",
+    "q": "A report takes 2 minutes. Holding the chat open until it finishes risks…",
+    "options": [
+     "Better quality reports",
+     "Fewer support tickets",
+     "Timeouts and users leaving",
+     "Lower token costs"
+    ],
+    "answer": 2,
+    "why": "Long synchronous waits fail; move them to the background (15.4).",
+    "kind": "scenario",
+    "distractors": [
+     "Unrelated.",
+     "Probably more.",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c22-3-m10",
+    "q": "Which balance figure should a bank assistant stream?",
+    "options": [
+     "The figure from the last session",
+     "Any figure the model predicts",
+     "Only figures confirmed by the core system",
+     "An estimate shown before checking"
+    ],
+    "answer": 2,
+    "why": "Unconfirmed money figures mislead.",
+    "kind": "calculation",
+    "distractors": [
+     "Stale.",
+     "Prediction is not confirmation.",
+     "",
+     "Misleads."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c22-3-i01",
+    "q": "How do you design the waiting experience of an AI feature?",
+    "level": "fundamentals",
+    "covers": [
+     "acknowledge",
+     "stream",
+     "steps",
+     "background"
+    ],
+    "followUp": "Which matters most?"
+   },
+   {
+    "id": "c22-3-i02",
+    "q": "What are the risks of streaming?",
+    "level": "fundamentals",
+    "covers": [
+     "wrong text already read",
+     "validation",
+     "structured actions",
+     "replacement"
+    ],
+    "followUp": "What do you hold back?"
+   },
+   {
+    "id": "c22-3-i03",
+    "q": "Why does time to first feedback matter more than total time?",
+    "level": "fundamentals",
+    "covers": [
+     "perception",
+     "abandonment",
+     "retries",
+     "trust"
+    ],
+    "followUp": "How would you measure it?"
+   },
+   {
+    "id": "c22-3-i04",
+    "q": "Users refresh during long agent tasks, creating duplicates. What do you do?",
+    "level": "applied",
+    "covers": [
+     "progress steps",
+     "idempotency",
+     "background",
+     "measure duplicates"
+    ],
+    "followUp": "Which fix first?",
+    "project": "travel"
+   },
+   {
+    "id": "c22-3-i05",
+    "q": "How do you keep the interface responsive when the model slows at peak?",
+    "level": "applied",
+    "covers": [
+     "status",
+     "degradation",
+     "queues",
+     "messages"
+    ],
+    "followUp": "Where is the line before you degrade?"
+   },
+   {
+    "id": "c22-3-i06",
+    "q": "Which tasks should move to the background?",
+    "level": "applied",
+    "covers": [
+     "duration",
+     "attention",
+     "notifications",
+     "cancel"
+    ],
+    "followUp": "How does the user get the result?"
+   },
+   {
+    "id": "c22-3-i07",
+    "q": "Design the interface for an agent that takes 20–60 seconds.",
+    "level": "system-design",
+    "covers": [
+     "steps",
+     "cancel",
+     "background",
+     "idempotency",
+     "notifications"
+    ],
+    "followUp": "What if a step fails half-way?"
+   },
+   {
+    "id": "c22-3-i08",
+    "q": "Plan latency targets for the interface and back end together.",
+    "level": "system-design",
+    "covers": [
+     "acknowledge time",
+     "first token",
+     "step updates",
+     "total",
+     "SLOs"
+    ],
+    "followUp": "Which do you alert on?"
+   }
+  ]
+ },
+ "c22-4": {
+  "mcq": [
+   {
+    "id": "c22-4-m01",
+    "q": "In draft, review, commit, what is executed?",
+    "options": [
+     "The first draft the AI produced",
+     "Only the version the person approved",
+     "The last version the AI wrote",
+     "Any version saved during the session"
+    ],
+    "answer": 1,
+    "why": "The approved version is the one that runs (11.7).",
+    "kind": "concept",
+    "distractors": [
+     "Not reviewed.",
+     "",
+     "May differ from what was approved.",
+     "Could be unreviewed."
+    ]
+   },
+   {
+    "id": "c22-4-m02",
+    "q": "Which action can an undo window really reverse?",
+    "options": [
+     "An email already delivered",
+     "Saving a draft or moving a label",
+     "A booking already ticketed",
+     "A payment already sent"
+    ],
+    "answer": 1,
+    "why": "Only reversible actions can be undone.",
+    "kind": "concept",
+    "distractors": [
+     "Already delivered.",
+     "",
+     "Needs cancellation, maybe fees.",
+     "Money has moved."
+    ]
+   },
+   {
+    "id": "c22-4-m03",
+    "q": "Reviewers see 6 of 9 mistakes and catch 80% of those. About how many are caught?",
+    "options": [
+     "5",
+     "9",
+     "3",
+     "7"
+    ],
+    "answer": 0,
+    "why": "6 × 0.8 ≈ 5.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "All of them.",
+     "Too few.",
+     "More than seen."
+    ]
+   },
+   {
+    "id": "c22-4-m04",
+    "q": "Reviewers approve 99% of drafts unchanged. This most likely shows…",
+    "options": [
+     "The drafts are always correct",
+     "Rubber-stamping, not perfect drafts",
+     "The review step can be removed",
+     "The reviewers are very experienced"
+    ],
+    "answer": 1,
+    "why": "Near-zero edit rates signal inattentive review (13.2).",
+    "kind": "scenario",
+    "distractors": [
+     "Unlikely given known error rates.",
+     "",
+     "Dangerous conclusion.",
+     "Not shown by this number."
+    ]
+   },
+   {
+    "id": "c22-4-m05",
+    "q": "A diff view is most useful for…",
+    "options": [
+     "Edits to existing records or documents",
+     "Generating a brand-new image from text",
+     "Showing a loading spinner while waiting",
+     "Answering a short factual question"
+    ],
+    "answer": 0,
+    "why": "It shows exactly what will change.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Nothing to compare.",
+     "Unrelated.",
+     "No prior version."
+    ]
+   },
+   {
+    "id": "c22-4-m06",
+    "q": "An amount changes after approval. The right rule is…",
+    "options": [
+     "Keep the old approval since it was close",
+     "A new approval of the exact action",
+     "Notify the reviewer afterwards",
+     "Let the agent decide if it matters"
+    ],
+    "answer": 1,
+    "why": "Approvals apply to one immutable version.",
+    "kind": "scenario",
+    "distractors": [
+     "Approves something else.",
+     "",
+     "Too late.",
+     "Not the agent’s call."
+    ]
+   },
+   {
+    "id": "c22-4-m07",
+    "q": "Undo catches half of the 4 mistakes that slip past review. How many remain for reconciliation?",
+    "options": [
+     "1",
+     "4",
+     "2",
+     "0"
+    ],
+    "answer": 2,
+    "why": "4 − 2 = 2.",
+    "kind": "calculation",
+    "distractors": [
+     "Arithmetic slip.",
+     "Ignores undo.",
+     "",
+     "Ignores what is left."
+    ]
+   },
+   {
+    "id": "c22-4-m08",
+    "q": "A travel change should be shown before confirmation as…",
+    "options": [
+     "Only the fare difference, as a number",
+     "The new itinerary and total cost beside the old",
+     "Only a large confirmation button",
+     "Only the new flight number and time"
+    ],
+    "answer": 1,
+    "why": "People need the full consequence to decide.",
+    "kind": "scenario",
+    "distractors": [
+     "Missing itinerary.",
+     "",
+     "No information.",
+     "Missing cost."
+    ]
+   },
+   {
+    "id": "c22-4-m09",
+    "q": "Why are reviewers’ edits valuable beyond catching errors?",
+    "options": [
+     "They are training and evaluation data",
+     "They make the model respond faster",
+     "They remove the need for any audit",
+     "They reduce the token cost of drafts"
+    ],
+    "answer": 0,
+    "why": "Edits show the preferred output (18.6).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Audit is still needed.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c22-4-m10",
+    "q": "150 actions, 6% wrong. How many mistakes enter the review and undo layers?",
+    "options": [
+     "9",
+     "6",
+     "90",
+     "15"
+    ],
+    "answer": 0,
+    "why": "150 × 0.06 = 9.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "That is the percent.",
+     "Off by ten.",
+     "Ten percent."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c22-4-i01",
+    "q": "Explain the draft, review, commit pattern.",
+    "level": "fundamentals",
+    "covers": [
+     "AI prepares",
+     "person edits",
+     "approved version",
+     "logging"
+    ],
+    "followUp": "When is it too slow?"
+   },
+   {
+    "id": "c22-4-i02",
+    "q": "When is undo enough and when is review needed?",
+    "level": "fundamentals",
+    "covers": [
+     "reversibility",
+     "error cost",
+     "time window",
+     "reconciliation"
+    ],
+    "followUp": "Give an example of each."
+   },
+   {
+    "id": "c22-4-i03",
+    "q": "How do you design a review screen that prevents rubber-stamping?",
+    "level": "fundamentals",
+    "covers": [
+     "key parameters prominent",
+     "evidence",
+     "blind checks",
+     "edit rates"
+    ],
+    "followUp": "How do you measure attention?"
+   },
+   {
+    "id": "c22-4-i04",
+    "q": "Reviewers miss wrong amounts in a busy queue. What do you change?",
+    "level": "applied",
+    "covers": [
+     "highlight",
+     "thresholds",
+     "sampling",
+     "workload"
+    ],
+    "followUp": "How would you test the change?",
+    "project": "bank"
+   },
+   {
+    "id": "c22-4-i05",
+    "q": "How do you handle mistakes that undo cannot reverse?",
+    "level": "applied",
+    "covers": [
+     "reconciliation",
+     "compensation",
+     "customer contact",
+     "audit"
+    ],
+    "followUp": "Who owns it?"
+   },
+   {
+    "id": "c22-4-i06",
+    "q": "How do you use reviewer edits?",
+    "level": "applied",
+    "covers": [
+     "feedback data",
+     "evaluation cases",
+     "prompt changes",
+     "fine-tuning"
+    ],
+    "followUp": "What do you do about privacy?"
+   },
+   {
+    "id": "c22-4-i07",
+    "q": "Design the human-control layer for an agent that changes bookings.",
+    "level": "system-design",
+    "covers": [
+     "confirmation screen",
+     "saga",
+     "undo",
+     "audit",
+     "reconciliation"
+    ],
+    "followUp": "What happens when confirmation times out?"
+   },
+   {
+    "id": "c22-4-i08",
+    "q": "Plan review capacity for a feature with 10,000 proposed actions a day.",
+    "level": "system-design",
+    "covers": [
+     "thresholds",
+     "reviewer time",
+     "sampling",
+     "queues",
+     "SLAs"
+    ],
+    "followUp": "How do you scale it?"
+   }
+  ]
+ },
+ "c22-5": {
+  "mcq": [
+   {
+    "id": "c22-5-m01",
+    "q": "Why is the thumbs-down share not the true rate of bad answers?",
+    "options": [
+     "Each thumb click is counted twice",
+     "Unhappy users click more than happy ones",
+     "Thumbs buttons are not stored anywhere",
+     "Only expert users are able to click"
+    ],
+    "answer": 1,
+    "why": "Feedback is self-selected and biased.",
+    "kind": "concept",
+    "distractors": [
+     "Not the issue.",
+     "",
+     "They are stored.",
+     "Anyone can click."
+    ]
+   },
+   {
+    "id": "c22-5-m02",
+    "q": "Of 10,000 sessions, 1,200 are bad; 8% of those click down and 2% of 8,800 good ones click up. The thumbs-down share is about…",
+    "options": [
+     "12%",
+     "35%",
+     "65%",
+     "8%"
+    ],
+    "answer": 1,
+    "why": "96 ÷ (96 + 176) ≈ 35%.",
+    "kind": "calculation",
+    "distractors": [
+     "The true rate.",
+     "",
+     "The thumbs-up share.",
+     "The click rate."
+    ]
+   },
+   {
+    "id": "c22-5-m03",
+    "q": "Which signal is collected for every session, not only clickers?",
+    "options": [
+     "Rephrasing or editing behaviour",
+     "Thumbs down with a reason",
+     "A star rating on exit",
+     "A survey after the chat"
+    ],
+    "answer": 0,
+    "why": "Behavioural signals come from everyone (17.4).",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Only clickers.",
+     "Only responders.",
+     "Only responders."
+    ]
+   },
+   {
+    "id": "c22-5-m04",
+    "q": "Thumbs-down falls from 1.0% to 0.9% with 20,000 sessions each. The right conclusion is…",
+    "options": [
+     "The new prompt is clearly worse",
+     "The difference is probably noise",
+     "Feedback buttons are broken",
+     "The new prompt is clearly better"
+    ],
+    "answer": 1,
+    "why": "Rare events need far more sessions to detect small changes (8.7).",
+    "kind": "scenario",
+    "distractors": [
+     "Not supported.",
+     "",
+     "No evidence.",
+     "Not supported."
+    ]
+   },
+   {
+    "id": "c22-5-m05",
+    "q": "Reason chips after a thumbs down mainly…",
+    "options": [
+     "Replace the need for review",
+     "Remove feedback bias",
+     "Tell you what to fix",
+     "Increase the number of clicks"
+    ],
+    "answer": 2,
+    "why": "Reasons point to the failure type.",
+    "kind": "concept",
+    "distractors": [
+     "Review still needed.",
+     "Bias remains.",
+     "",
+     "They add a step, so fewer."
+    ]
+   },
+   {
+    "id": "c22-5-m06",
+    "q": "To validate a quick satisfaction click, join it with…",
+    "options": [
+     "The model’s own confidence score",
+     "Later outcomes such as support calls",
+     "The length of the answer in tokens",
+     "The time of day the chat happened"
+    ],
+    "answer": 1,
+    "why": "Outcomes confirm whether the proxy tracks reality (17.7).",
+    "kind": "scenario",
+    "distractors": [
+     "Not an outcome.",
+     "",
+     "Not an outcome.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c22-5-m07",
+    "q": "A prompt change cuts the draft edit rate from 34% to 19%. Compared with thumbs, this signal is…",
+    "options": [
+     "Biased towards unhappy users",
+     "Impossible to compare",
+     "Less reliable than thumbs",
+     "More plentiful and more direct"
+    ],
+    "answer": 3,
+    "why": "Every draft yields an edit rate; it measures the work saved.",
+    "kind": "calculation",
+    "distractors": [
+     "Not self-selected.",
+     "It can be compared.",
+     "It is more reliable here.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-5-m08",
+    "q": "Feedback must be stored with…",
+    "options": [
+     "The trace id, prompt and model versions",
+     "Only the user’s email address",
+     "Nothing else at all, for privacy",
+     "Only the text of the answer"
+    ],
+    "answer": 0,
+    "why": "Links let you reproduce and fix the case.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not needed and sensitive.",
+     "Useless without context.",
+     "Missing context."
+    ]
+   },
+   {
+    "id": "c22-5-m09",
+    "q": "A thumbs-down rate of 1% falling by a fifth needs about 35,000 sessions per version. With 5,000 sessions a day, a test takes about…",
+    "options": [
+     "14 days for two versions",
+     "70 days for two versions",
+     "7 days for one version only",
+     "1 day for two versions"
+    ],
+    "answer": 0,
+    "why": "70,000 sessions ÷ 5,000 = 14 days.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Too long.",
+     "Only one version.",
+     "Far too short."
+    ]
+   },
+   {
+    "id": "c22-5-m10",
+    "q": "What should happen after the weekly feedback review?",
+    "options": [
+     "Findings become eval cases and fixes",
+     "Nothing until the quarter ends",
+     "Feedback is deleted",
+     "The thumbs buttons are removed"
+    ],
+    "answer": 0,
+    "why": "Closing the loop is the point (17.9).",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Too slow.",
+     "Wastes it.",
+     "Loses signal."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c22-5-i01",
+    "q": "What feedback signals can an AI product collect?",
+    "level": "fundamentals",
+    "covers": [
+     "thumbs",
+     "reasons",
+     "edits",
+     "behaviour",
+     "outcomes"
+    ],
+    "followUp": "Which is most reliable?"
+   },
+   {
+    "id": "c22-5-i02",
+    "q": "Why is user feedback biased?",
+    "level": "fundamentals",
+    "covers": [
+     "self-selection",
+     "unhappy users",
+     "context",
+     "rates"
+    ],
+    "followUp": "How do you correct for it?"
+   },
+   {
+    "id": "c22-5-i03",
+    "q": "How do you design a feedback prompt users actually answer?",
+    "level": "fundamentals",
+    "covers": [
+     "one click",
+     "timing",
+     "reasons",
+     "no blocking"
+    ],
+    "followUp": "When would you ask for more?"
+   },
+   {
+    "id": "c22-5-i04",
+    "q": "Your thumbs-down rate barely moved after a big change. How do you judge the change?",
+    "level": "applied",
+    "covers": [
+     "sample size",
+     "other signals",
+     "edits",
+     "outcomes",
+     "eval suite"
+    ],
+    "followUp": "What would you run next?"
+   },
+   {
+    "id": "c22-5-i05",
+    "q": "How do you turn feedback into improvements?",
+    "level": "applied",
+    "covers": [
+     "trace links",
+     "triage",
+     "labels",
+     "eval cases",
+     "fixes"
+    ],
+    "followUp": "Who does the triage?"
+   },
+   {
+    "id": "c22-5-i06",
+    "q": "How would you use reviewer edits as feedback in a regulated workflow?",
+    "level": "applied",
+    "covers": [
+     "edit capture",
+     "reasons",
+     "evaluation",
+     "privacy"
+    ],
+    "followUp": "What would you not store?",
+    "project": "bank"
+   },
+   {
+    "id": "c22-5-i07",
+    "q": "Design the feedback system for an assistant with a million sessions a month.",
+    "level": "system-design",
+    "covers": [
+     "signals",
+     "storage",
+     "sampling",
+     "reviews",
+     "experiments"
+    ],
+    "followUp": "How do you avoid drowning in feedback?"
+   },
+   {
+    "id": "c22-5-i08",
+    "q": "Plan how to validate a proxy signal against real outcomes.",
+    "level": "system-design",
+    "covers": [
+     "delayed outcomes",
+     "joins",
+     "correlation",
+     "thresholds",
+     "review"
+    ],
+    "followUp": "What if they disagree?"
+   }
+  ]
+ },
+ "c22-6": {
+  "mcq": [
+   {
+    "id": "c22-6-m01",
+    "q": "Why is \"Ask me anything\" a weak onboarding message?",
+    "options": [
+     "It is too short for users to read",
+     "It reveals the name of the model",
+     "It invites questions the system cannot answer",
+     "It uses too many tokens in each prompt"
+    ],
+    "answer": 2,
+    "why": "Specific examples set honest expectations.",
+    "kind": "concept",
+    "distractors": [
+     "Length is not the issue.",
+     "Unrelated.",
+     "",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c22-6-m02",
+    "q": "Of 1,000 conversations, 20% fail and a generic error gives no next step. How many dead ends?",
+    "options": [
+     "100",
+     "20",
+     "200",
+     "800"
+    ],
+    "answer": 2,
+    "why": "20% of 1,000.",
+    "kind": "calculation",
+    "distractors": [
+     "Half.",
+     "Ten times too few.",
+     "",
+     "That is the successes."
+    ]
+   },
+   {
+    "id": "c22-6-m03",
+    "q": "The booking system is down. The best message is…",
+    "options": [
+     "Something went wrong; try again",
+     "Saved; we will retry and notify you",
+     "The model is unavailable",
+     "Please contact your bank"
+    ],
+    "answer": 1,
+    "why": "It explains and gives a next step.",
+    "kind": "scenario",
+    "distractors": [
+     "A dead end.",
+     "",
+     "Unhelpful.",
+     "Wrong place."
+    ]
+   },
+   {
+    "id": "c22-6-m04",
+    "q": "For a low-confidence answer, a good pattern is…",
+    "options": [
+     "Hide the answer from the user completely",
+     "Ask the user to rephrase again and again",
+     "Show the answer as if it were certain",
+     "Show what was found with sources and suggest checking"
+    ],
+    "answer": 3,
+    "why": "Partial help with honesty beats nothing.",
+    "kind": "concept",
+    "distractors": [
+     "Loses useful information.",
+     "Frustrates.",
+     "Misleads.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-6-m05",
+    "q": "With designed next steps, half of 200 failing users recover. How many more users succeed?",
+    "options": [
+     "20",
+     "200",
+     "100",
+     "50"
+    ],
+    "answer": 2,
+    "why": "200 × 0.5.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten percent.",
+     "All of them.",
+     "",
+     "A quarter."
+    ]
+   },
+   {
+    "id": "c22-6-m06",
+    "q": "Why include a way to reach a person in every failure message?",
+    "options": [
+     "People are cheaper than models",
+     "Regulators require it everywhere",
+     "It removes all failures",
+     "Some problems need a human decision"
+    ],
+    "answer": 3,
+    "why": "A handover prevents loops and dead ends.",
+    "kind": "scenario",
+    "distractors": [
+     "Not the reason.",
+     "Not universally.",
+     "It does not remove failures.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-6-m07",
+    "q": "How should failure messages be tested?",
+    "options": [
+     "Read the code that prints each message",
+     "Wait for real outages to happen in production",
+     "Ask the model to describe its own messages",
+     "Inject each failure and look at what users see"
+    ],
+    "answer": 3,
+    "why": "Fault injection shows the real experience.",
+    "kind": "concept",
+    "distractors": [
+     "Does not show the experience.",
+     "Too late.",
+     "Unreliable.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-6-m08",
+    "q": "During a disruption, the assistant’s opening message should…",
+    "options": [
+     "Ask the traveller for a rating before anything else",
+     "List every feature the app offers today",
+     "Say which flights are affected and what it can do",
+     "Repeat the usual greeting as on a normal day"
+    ],
+    "answer": 2,
+    "why": "Context and capabilities set expectations at the worst moment.",
+    "kind": "scenario",
+    "distractors": [
+     "Wrong priority.",
+     "Too much.",
+     "",
+     "Ignores the situation."
+    ]
+   },
+   {
+    "id": "c22-6-m09",
+    "q": "A timeout message offers \"keep waiting or get it by email\". This is an example of…",
+    "options": [
+     "A failure hidden from the user",
+     "A generic error message",
+     "A model hallucination about time",
+     "A designed failure with a next step"
+    ],
+    "answer": 3,
+    "why": "It turns a failure into a choice.",
+    "kind": "concept",
+    "distractors": [
+     "It is visible.",
+     "It is specific.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c22-6-m10",
+    "q": "Failure types are 7% low confidence, 5% out of scope, 4% tool failure, 4% timeout. Which share needs a handover or retry message?",
+    "options": [
+     "13%",
+     "7%",
+     "20%",
+     "4%"
+    ],
+    "answer": 2,
+    "why": "7 + 5 + 4 + 4 = 20%.",
+    "kind": "calculation",
+    "distractors": [
+     "Misses some.",
+     "One type.",
+     "",
+     "One type."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c22-6-i01",
+    "q": "How do you set expectations when users first meet an AI feature?",
+    "level": "fundamentals",
+    "covers": [
+     "scope",
+     "examples",
+     "limits",
+     "honesty"
+    ],
+    "followUp": "How do you test it?"
+   },
+   {
+    "id": "c22-6-i02",
+    "q": "What makes a good failure message?",
+    "level": "fundamentals",
+    "covers": [
+     "what happened",
+     "next step",
+     "handover",
+     "tone"
+    ],
+    "followUp": "Give an example."
+   },
+   {
+    "id": "c22-6-i03",
+    "q": "How do failure messages relate to the degradation ladder?",
+    "level": "fundamentals",
+    "covers": [
+     "levels",
+     "states",
+     "UI awareness",
+     "consistency"
+    ],
+    "followUp": "Who keeps them in sync?"
+   },
+   {
+    "id": "c22-6-i04",
+    "q": "Users get stuck in loops with the assistant. What do you change?",
+    "level": "applied",
+    "covers": [
+     "loop detection",
+     "handover",
+     "messages",
+     "measure dead ends"
+    ],
+    "followUp": "When do you hand over?"
+   },
+   {
+    "id": "c22-6-i05",
+    "q": "How do you design messages for dependency outages?",
+    "level": "applied",
+    "covers": [
+     "save request",
+     "retry",
+     "notify",
+     "expected wait"
+    ],
+    "followUp": "What if the outage lasts hours?"
+   },
+   {
+    "id": "c22-6-i06",
+    "q": "How would you handle failures during a disruption spike?",
+    "level": "applied",
+    "covers": [
+     "opening message",
+     "queue position",
+     "callbacks",
+     "capacity"
+    ],
+    "followUp": "What do you tell people about waits?",
+    "project": "travel"
+   },
+   {
+    "id": "c22-6-i07",
+    "q": "Design the full set of failure states for a customer assistant.",
+    "level": "system-design",
+    "covers": [
+     "inventory",
+     "messages",
+     "next steps",
+     "handover",
+     "testing"
+    ],
+    "followUp": "How do you keep them current?"
+   },
+   {
+    "id": "c22-6-i08",
+    "q": "Plan how you would measure and reduce dead ends.",
+    "level": "system-design",
+    "covers": [
+     "definition",
+     "logging",
+     "dashboards",
+     "fixes",
+     "targets"
+    ],
+    "followUp": "What target would you set?"
+   }
+  ]
+ }
+}

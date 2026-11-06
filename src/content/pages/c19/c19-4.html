@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c19-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A voice assistant is three systems in a relay: one listens and writes down what was said (<a class="gl" href="#gl-speech-to-text">speech-to-text</a>), one thinks and answers in text, and one reads the answer aloud (text-to-speech). Some newer models do all three in one, listening and speaking directly.</p>
+<p>In conversation, timing matters as much as accuracy. People notice a pause of more than about a second, and they interrupt. The system has to know when the caller has stopped talking and stop speaking when the caller starts.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c19-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Microphone<small>audio stream</small></div><div class="nd">Turn detection<small>has the caller stopped?</small></div><div class="nd">Speech-to-text<small>transcript</small></div><div class="nd">Language model<small>answer text</small></div><div class="nd">Text-to-speech<small>audio stream</small></div></div>
+<ol class="steps"><li data-n="0">Audio arrives in small chunks over a streaming connection.</li><li data-n="1"><a class="gl" href="#gl-voice-activity-detection">Voice activity detection</a> decides when speech has ended; too eager cuts people off, too slow adds delay.</li><li data-n="2">Speech recognition turns audio into text, ideally streaming partial results.</li><li data-n="3">The model answers; streaming its first tokens matters most (14.2).</li><li data-n="4">Speech synthesis starts speaking the first sentence while the rest is still being generated.</li></ol></div>
+<figcaption><b>A cascaded voice turn.</b> Speech-to-speech models merge some of these steps.</figcaption></figure>
+<p><b>Measuring recognition.</b> <a class="gl" href="#gl-word-error-rate">Word error rate</a> counts the substituted, deleted and inserted words against a human transcript, divided by the words actually spoken. Report it per language, accent and audio channel: phone audio, code-mixed speech such as Hinglish, and names, numbers and product codes are where errors concentrate.</p>
+<p><b>Cascaded or speech-to-speech.</b> A cascade is easier to debug, log and control: every step has text you can check, redact and evaluate. Speech-to-speech models sound more natural and respond faster, but tool calls, logging and evaluation need extra care, and transcripts may still be needed for audit.</p>
+<div class="box pit"><h5>Numbers by voice</h5><p>"Fifteen" and "fifty" sound alike on a bad line. For amounts, dates and account numbers, read them back and ask the caller to confirm before acting.</p></div>
+</section>
+
+<section class="tp tp-math" id="c19-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Word error rate</b>. The caller said "cancel my booking to Chennai" (5 words). The transcript reads "cancel the booking Chennai": one substitution (my → the) and one deletion (to).</p>
+<ul>
+<li>WER = (1 + 1) ÷ 5 = 40%. A WER of 5% means about 1 word in 20 is wrong.</li>
+</ul>
+<p><b>A latency budget</b> (illustrative). End-of-speech detection 300 ms + recognition 250 ms + the model’s first token 450 ms + first audio 200 ms = 1,200 ms before the caller hears anything. Cutting the turn detection to 200 ms saves 100 ms but interrupts slow speakers more often.</p>
+</section>
+
+<section class="tp tp-code" id="c19-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates recognition errors on your project’s messages, computes word error rate per language with an edit distance, and adds up a voice turn’s latency budget. Change the error rates in <code>NOISE</code> or the budget and run it again.</p>
+<figure class="fig live" id="snip-speech-wer"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"speech-wer"}'></div></div>
+<figcaption><b>Word error rate and a latency budget, in real Python.</b> The recognition errors are simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c19-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2212.04356">Radford et al. (2022), Whisper</a> <small>Large-scale speech recognition across many languages.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/realtime">OpenAI: Realtime API</a> <small>Speech-to-speech sessions with turn detection.</small></li>
+<li><a href="https://github.com/snakers4/silero-vad">Silero VAD</a> <small>An open voice activity detector that runs on CPU.</small></li>
+<li><a href="https://github.com/jitsi/jiwer">jiwer</a> <small>A library for computing word error rate.</small></li>
+</ol>
+</section>

@@ -1,0 +1,48 @@
+<section class="tp tp-intuition" id="c19-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A language model only reads tokens. To show it a photo, the photo is cut into small squares, like tiles on a floor, and each tile becomes one vector: an <a class="gl" href="#gl-image-patch">image patch</a>. Sound is cut into short slices of time in the same way, each slice an <a class="gl" href="#gl-audio-frame">audio frame</a>.</p>
+<p>So a picture is not "one input"; it is hundreds or thousands of tokens. That is why images are expensive, why models shrink large images first, and why a long recording can fill a context window faster than a long document.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c19-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>Every modality goes through the same three steps: <b>cut</b> the input into pieces, <b>encode</b> each piece into a vector, and <b>place</b> the vectors in the sequence the language model reads, next to the text tokens.</p>
+<div class="tw"><table><tr><th>Medium</th><th>Unit</th><th>Typical size</th><th>What controls the count</th></tr><tr><td>Text</td><td>subword token</td><td>about 1.3 tokens per English word</td><td>the tokenizer (5.1)</td></tr><tr><td>Image</td><td>patch of 14–16 pixels</td><td>hundreds to a few thousand per image</td><td>resolution, resizing, tiling, merging of neighbouring patches</td></tr><tr><td>Audio</td><td>frame of 20–25 ms</td><td>about 50 per second before merging</td><td>sample rate, frame step, downsampling</td></tr><tr><td>Video</td><td>frames × patches</td><td>images per second × patches per image</td><td>how many frames are sampled</td></tr></table></div>
+<p><b>Resolution decides cost.</b> Models resize large images to a maximum side, and many split big images into tiles plus a small overview, so fine print stays readable. Doubling the width and height of an image roughly quadruples its patches. Providers document how they count image tokens; read it before estimating cost.</p>
+<p><b>Merging.</b> Many models merge each 2 × 2 group of neighbouring patch vectors into one token after encoding, cutting the count four times with little loss.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Photo<small>4032 × 3024</small></div><div class="nd">Resize<small>max side 1024</small></div><div class="nd">Patches<small>14 px squares</small></div><div class="nd">Encode + merge<small>2 × 2</small></div><div class="nd">Tokens<small>about 1,000</small></div></div>
+<ol class="steps"><li data-n="0">A phone photo has 12 million pixels, far more than the model needs.</li><li data-n="1">It is shrunk so its longer side is 1,024 pixels: 1,024 × 768.</li><li data-n="2">It is cut into 14-pixel squares: 74 × 55 ≈ 4,070 patches.</li><li data-n="3">A vision encoder turns each patch into a vector, and neighbours are merged four into one.</li><li data-n="4">About 1,000 tokens join the text tokens in the model’s input.</li></ol></div>
+<figcaption><b>From a photo to tokens</b> (a common recipe; sizes differ by model).</figcaption></figure>
+<div class="box example"><h5>Example: a support screenshot</h5><p>A user sends a 1,920 × 1,080 screenshot of an error. Shrunk to 1,024 wide, it becomes about 780 tokens, more than the user’s whole written question. Cropping the screenshot to the dialog box before sending it cuts that to about 150 tokens and often improves the answer, because the model is not distracted by the rest of the screen.</p></div>
+</section>
+
+<section class="tp tp-math" id="c19-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Counting patches</b> for a 1,024 × 768 image with 14-pixel patches:</p>
+<ul>
+<li>Across: 1,024 ÷ 14 ≈ 74 patches (rounding up). Down: 768 ÷ 14 ≈ 55.</li>
+<li>Patches: 74 × 55 = 4,070. Merged four into one: about 1,018 tokens.</li>
+<li>At an illustrative 3 dollars per million input tokens, 1,000 such images cost about 1,018 × 1,000 × 3 ÷ 1,000,000 ≈ 3 dollars.</li>
+</ul>
+<p><b>Audio.</b> At 50 frames a second, a 10-minute call is 600 × 50 = 30,000 positions before merging. A model that downsamples by 4 still sees 7,500, about as many as a 5,000-word document.</p>
+</section>
+
+<section class="tp tp-code" id="c19-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program resizes four kinds of image, counts patches and merged tokens, prices 1,000 of each, and counts audio positions for three clip lengths. Change <code>PATCH</code>, <code>MERGE</code> or the maximum side and run it again.</p>
+<figure class="fig live" id="snip-image-tokens"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"image-tokens"}'></div></div>
+<figcaption><b>Image and audio token counts, in real Python.</b> Settings vary by model; prices are illustrative.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c19-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2010.11929">Dosovitskiy et al. (2020), An Image is Worth 16x16 Words</a> <small>The vision transformer: images as sequences of patches.</small></li>
+<li><a href="https://arxiv.org/abs/2212.04356">Radford et al. (2022), Whisper</a> <small>How a speech model turns audio into frames and tokens.</small></li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/vision">Anthropic: Vision</a> <small>How one provider sizes and counts image tokens.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/images-vision">OpenAI: Images and vision</a> <small>Another provider’s image token and detail settings.</small></li>
+</ol>
+</section>

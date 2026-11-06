@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c22-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A lift with a floor display feels faster than one without, even when both take the same time. <a class="gl" href="#gl-perceived-latency">Perceived latency</a> depends mostly on how soon users see that something is happening, and whether they can tell how far along it is.</p>
+<p>So AI interfaces stream the answer as it is written, show the steps an agent has finished, and offer to send long results later, rather than leaving a spinner on screen for ten seconds.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c22-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Wait</th><th>Pattern</th><th>Why</th></tr><tr><td>Under 1 second</td><td>just answer</td><td>feels instant</td></tr><tr><td>1–10 seconds</td><td>stream tokens; show a short status</td><td>attention holds if something moves</td></tr><tr><td>10 seconds to a few minutes</td><td>show steps as they finish; allow cancel</td><td>users need to know it is progressing</td></tr><tr><td>Longer</td><td>run in the background; notify when done</td><td>nobody watches a screen for minutes (15.4)</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Request</div><div class="nd">Acknowledge<small>within 0.3 s</small></div><div class="nd">First tokens<small>streaming</small></div><div class="nd">Steps<small>shown as they finish</small></div><div class="nd">Done<small>or "we’ll notify you"</small></div></div>
+<ol class="steps"><li data-n="0">The user sends a question or starts a task.</li><li data-n="1">Show at once that work has started.</li><li data-n="2">Stream the answer; the first words matter most (14.2).</li><li data-n="3">For agents, list finished steps: "found your booking", "checked fare rules".</li><li data-n="4">Finish, or move long work to the background with a notification.</li></ol></div>
+<figcaption><b>Designing the wait.</b></figcaption></figure>
+<p><b>Streaming has costs.</b> Text that later turns out wrong has already been read; validation that needs the whole answer (a JSON schema, a safety check) must run before showing it, or the interface must be able to replace streamed text. Stream prose; hold back structured actions until they are checked.</p>
+<div class="box example"><h5>Example: an agent that explains its progress</h5><p>A rebooking agent takes 20 seconds. Shown as a spinner, many users refreshed the page and started a second request. Shown as steps ("found your booking", "checked three alternative flights", "comparing fares"), almost nobody did, and duplicate requests fell sharply.</p></div>
+</section>
+
+<section class="tp tp-math" id="c22-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>First feedback decides</b> (illustrative). The full answer takes 9 seconds; the first token comes at 0.8.</p>
+<ul>
+<li>Waiting for the full answer: everyone sits 9 seconds with nothing on screen.</li>
+<li>Streaming: something appears at 0.8 seconds, 9 ÷ 0.8 ≈ 11 times sooner, though the answer finishes at the same moment.</li>
+<li>An agent with 6 steps of 4 seconds: 24 seconds in total, but showing each finished step means no silence longer than 4 seconds.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c22-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates 10,000 users’ patience and compares how many give up before seeing anything when the interface waits, shows a progress step, or streams. Change <code>TTFT</code> and <code>TOTAL</code> to your own numbers and run it again.</p>
+<figure class="fig live" id="snip-perceived-wait"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"perceived-wait"}'></div></div>
+<figcaption><b>Perceived waiting time, in real Python.</b> The patience model is invented.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c22-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.nngroup.com/articles/response-times-3-important-limits/">Nielsen Norman Group: Response Times, the 3 Important Limits</a> <small>0.1, 1 and 10 seconds as limits of attention.</small></li>
+<li><a href="https://www.nngroup.com/articles/progress-indicators/">Nielsen Norman Group: Progress Indicators</a> <small>When to show spinners, steps and percentages.</small></li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/streaming">Anthropic: Streaming messages</a> <small>How streamed tokens and events reach the interface.</small></li>
+</ol>
+</section>

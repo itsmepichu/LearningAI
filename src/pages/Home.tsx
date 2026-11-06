@@ -19,7 +19,7 @@ export function Home() {
     <div className="home">
       <section className="hero2">
         <motion.div className="hero-copy" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <span className="eyebrow">18 chapters · fundamentals → production systems</span>
+          <span className="eyebrow">23 chapters · fundamentals → production systems</span>
           <h1>
             Enterprise AI
             <br />

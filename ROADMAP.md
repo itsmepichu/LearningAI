@@ -397,7 +397,7 @@ Progress:
 - [x] Chapters 4, 6 and 7 (20 topics, 19 snippets plus the existing nanoGPT Colab guide in 6.7, 52 more glossary terms). Laptop labs now sit in the Code part in every restructured chapter.
 - [x] Chapters 8–10 (24 topics, 24 snippets, 50 more glossary terms).
 - [x] Chapters 11–18 and the capstone in one pull request (68 topics, 68 snippets plus the existing QLoRA and vLLM Colab guides in 13.3 and 14.7, 94 more glossary terms). All 143 topics now use the structure.
-- [ ] Chapters 19–23.
+- [x] Chapters 19–23 in one pull request: multimodal models (6 topics), distillation and small models (6), cost engineering and FinOps (6), AI product and UX patterns (6) and regulation basics (5), in a new Part V. 29 topics in the five-part structure with 29 snippets, 35 glossary terms, notes and lab scenarios for all four projects, and full chapter checks (290 choose-the-answer, 232 interview questions). Every practical runs on a CPU; Colab guides for a vision-language model (19.2) and logit distillation (20.3) are a possible follow-up.
 - [ ] Paper walkthroughs.
 
 - **Every topic follows one structure:**

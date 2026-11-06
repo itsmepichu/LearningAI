@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c19-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>There are two ways to read a stack of scanned forms. One is to type out every word first (OCR) and then work with the text. The other is to show the page itself to someone who can read it, a vision-language model, and ask the question directly.</p>
+<p><a class="gl" href="#gl-document-ai">Document AI</a> usually mixes both: cheap OCR for plain pages, and a model that sees the page for tables, forms, stamps and handwriting, where typing out the words loses the structure that gives them meaning.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c19-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Approach</th><th>How it works</th><th>Strengths</th><th>Weaknesses</th></tr><tr><td>Digital text extraction</td><td>read the text layer of a born-digital PDF</td><td>free, exact</td><td>reading order, tables and columns often scrambled</td></tr><tr><td>OCR + layout analysis</td><td>detect text lines, then regions (titles, tables, lists)</td><td>cheap, fast, runs on CPU</td><td>tables and handwriting are hard; errors are silent</td></tr><tr><td>Layout-aware document models</td><td>models trained on page images and text positions</td><td>good at forms and tables</td><td>need fine-tuning for unusual layouts</td></tr><tr><td>Page image to a VLM</td><td>send the page as an image with the question</td><td>handles mixed layouts, charts, stamps</td><td>more tokens per page, can invent text, slower</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Classify page<small>text? scan? table?</small></div><div class="nd">Cheap path<small>text layer or OCR</small></div><div class="nd">Hard pages<small>VLM or layout model</small></div><div class="nd">Validate<small>schemas, totals</small></div><div class="nd">Store<small>text + structure + page image</small></div></div>
+<ol class="steps"><li data-n="0">A quick check decides what kind of page this is.</li><li data-n="1">Plain text pages go through the text layer or OCR.</li><li data-n="2">Pages with tables, forms or handwriting go to a model that sees the image.</li><li data-n="3">Extracted fields are checked: types, required fields, totals that add up.</li><li data-n="4">Keep the text, the structure and a link to the page image, so answers can cite the page (9.6).</li></ol></div>
+<figcaption><b>A routed document pipeline.</b> Spend the expensive model only where it adds accuracy.</figcaption></figure>
+<p><b>Validate everything you extract.</b> A model reading an invoice image may produce a plausible total that is not on the page. Check that line items add up to the total, dates parse, and required fields exist; send failures to a person. For RAG, chunk by layout regions (10.3), not by fixed length.</p>
+<div class="box example"><h5>Example: invoice extraction</h5><p>A finance team extracts 40,000 invoices a month. OCR plus rules handles 85% of them; the 15% with handwritten notes or unusual tables go to a VLM with a JSON schema. A check that line items sum to the total catches 2% of VLM outputs, which go to a reviewer.</p></div>
+</section>
+
+<section class="tp tp-math" id="c19-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Routing pays</b> (illustrative). 100,000 pages a month, OCR at 0.0015 dollars a page, a VLM at 0.004.</p>
+<ul>
+<li>All OCR: 100,000 × 0.0015 = 150 dollars. All VLM: 100,000 × 0.004 = 400 dollars.</li>
+<li>Routed, with 15% hard pages: 85,000 × 0.0015 + 15,000 × 0.004 = 127.50 + 60 = 187.50 dollars.</li>
+</ul>
+<p><b>Errors.</b> If 15% of pages have tables and OCR mangles 20% of those, 100,000 × 0.15 × 0.20 = 3,000 broken tables a month; at a 6% error rate the VLM leaves 900.</p>
+</section>
+
+<section class="tp tp-code" id="c19-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program sizes a page count from your project’s documents and compares OCR with page images sent to a VLM on cost, worker-hours, tokens and table errors. Change the error rates or the share of table pages and run it again.</p>
+<figure class="fig live" id="snip-doc-pipeline"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"doc-pipeline"}'></div></div>
+<figcaption><b>OCR against page images, in real Python.</b> All rates are illustrative.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c19-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://tesseract-ocr.github.io/">Tesseract OCR documentation</a> <small>An open-source OCR engine.</small></li>
+<li><a href="https://arxiv.org/abs/2408.09869">Auer et al. (2024), Docling Technical Report</a> <small>Converting PDFs into structured text with layout and tables.</small></li>
+<li><a href="https://arxiv.org/abs/2111.15664">Kim et al. (2021), Donut</a> <small>Reading documents from images without a separate OCR step.</small></li>
+</ol>
+</section>

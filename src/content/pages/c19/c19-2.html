@@ -1,0 +1,50 @@
+<section class="tp tp-intuition" id="c19-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A <a class="gl" href="#gl-vlm">vision-language model</a> is a language model with eyes bolted on. A <a class="gl" href="#gl-vision-encoder">vision encoder</a> looks at the picture and writes down what it sees as vectors, a small adapter translates those vectors into the language model’s "alphabet", and the language model reads them as if they were words.</p>
+<p>It can read text in images, describe scenes, compare pictures and answer questions about charts. It is also confidently wrong in new ways: it misreads small digits, miscounts objects and mixes up left and right.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c19-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><b>Three parts.</b></p>
+<ul>
+<li><b>Vision encoder</b>: usually a vision transformer trained with images and captions (CLIP-style), turning patches into vectors.</li>
+<li><b>Projector</b>: a small network, often one or two layers, that maps those vectors to the language model’s hidden size. Training usually starts by teaching only the projector to align images with captions, then fine-tunes more of the model on image–instruction pairs.</li>
+<li><b>Language model</b>: reads image tokens and text tokens in one sequence, so attention connects words to image regions.</li>
+</ul>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Image<small>pixels</small></div><div class="nd">Vision encoder<small>patch vectors</small></div><div class="nd">Projector<small>to LLM size</small></div><div class="nd">Language model<small>image + text tokens</small></div><div class="nd">Answer<small>text</small></div></div>
+<ol class="steps"><li data-n="0">The image is resized and cut into patches (19.1).</li><li data-n="1">The encoder turns each patch into a vector; neighbours may be merged.</li><li data-n="2">The projector maps each vector into the language model’s space.</li><li data-n="3">The model reads image tokens and the question together; prefill grows with every image.</li><li data-n="4">The answer is generated as text, one token at a time.</li></ol></div>
+<figcaption><b>How a vision-language model reads an image.</b></figcaption></figure>
+<div class="tw"><table><tr><th>Good at</th><th>Weak at</th></tr><tr><td>Reading printed text, labels and screenshots</td><td>Small or blurred digits, dense tables at low resolution</td></tr><tr><td>Describing scenes and products</td><td>Counting many similar objects</td></tr><tr><td>Answering questions about charts</td><td>Exact values read off a chart, spatial relations</td></tr><tr><td>Comparing two images</td><td>Long videos, unless frames are sampled well</td></tr></table></div>
+<p><b>Cost and speed.</b> Image tokens are input tokens: they lengthen prefill and so the time to first token (14.2), and they take KV-cache memory. Sending ten images at full resolution when one cropped image would do is the most common waste.</p>
+<div class="box example"><h5>Example: choosing a resolution</h5><p>A returns team checks photos of damaged parcels. At low detail (about 85 tokens per photo) the model spots crushed boxes but misses torn labels; at high detail (about 1,000 tokens) it catches both. They send low detail first and re-ask at high detail only when the model reports "unsure", which cuts image tokens by about 70%.</p></div>
+</section>
+
+<section class="tp tp-math" id="c19-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>One 448 × 448 image</b> with 14-pixel patches: (448 ÷ 14) × (448 ÷ 14) = 32 × 32 = 1,024 patches; merged 2 × 2, 256 tokens.</p>
+<ul>
+<li>With a 40-token question: 256 + 40 = 296 tokens of prefill.</li>
+<li>16 such images: 16 × 256 + 40 = 4,136 tokens. At 10,000 prefill tokens a second, about 0.4 seconds before the first word, compared with 0.03 seconds for one image.</li>
+<li>KV cache (14.1) at 128 KiB per token: 4,136 × 128 KiB ≈ 0.5 GB for one request.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c19-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program cuts an image into patches with NumPy, passes them through a stand-in encoder, merges neighbours and projects them to the language model’s size, then counts prefill tokens for 1, 4 and 16 images. Change <code>IMG</code> to 896 and see how the counts grow.</p>
+<figure class="fig live" id="snip-vlm-shapes"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"vlm-shapes"}'></div></div>
+<figcaption><b>The shapes inside a VLM, in real Python.</b> Random weights: shapes only, no recognition.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c19-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2103.00020">Radford et al. (2021), CLIP</a> <small>Training image and text encoders into one space.</small></li>
+<li><a href="https://arxiv.org/abs/2304.08485">Liu et al. (2023), Visual Instruction Tuning (LLaVA)</a> <small>Encoder, projector and language model, trained in two stages.</small></li>
+<li><a href="https://arxiv.org/abs/2409.12191">Wang et al. (2024), Qwen2-VL</a> <small>Dynamic resolution and merging neighbouring patches.</small></li>
+</ol>
+</section>

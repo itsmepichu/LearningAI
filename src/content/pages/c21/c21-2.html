@@ -1,0 +1,43 @@
+<section class="tp tp-intuition" id="c21-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Most AI bills are a long list of small, repeated waste: the same long instructions sent with every request, more retrieved text than the answer needs, and answers longer than anyone reads. <a class="gl" href="#gl-token-optimisation">Token optimisation</a> removes the waste one item at a time.</p>
+<p>Each cut must be checked against quality. Fewer retrieved chunks can mean wrong answers, and a wrong answer that a person fixes costs far more than the tokens saved.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c21-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Lever</th><th>Typical saving</th><th>Risk</th></tr><tr><td>Prompt caching: stable instructions first (7.2, 14.3)</td><td>large on input; cached tokens are much cheaper</td><td>one changing character early breaks the cache</td></tr><tr><td>Shorter instructions</td><td>moderate</td><td>dropping a rule the model needed</td></tr><tr><td>Fewer, better chunks (rerank, then keep top 3–5)</td><td>moderate to large</td><td>missing evidence; check recall (9.7)</td></tr><tr><td>Summarising long conversation history (7.5)</td><td>large in long chats</td><td>losing a detail the user set earlier</td></tr><tr><td>Output length limits and format instructions</td><td>large: output tokens cost most</td><td>truncated answers</td></tr><tr><td>Fewer agent steps and retries (11.7)</td><td>large for agents</td><td>giving up too early</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Measure<small>tokens by part</small></div><div class="nd">Biggest part<small>cut it</small></div><div class="nd">Re-run suite<small>quality per slice</small></div><div class="nd">Keep or revert</div><div class="nd">Repeat<small>next part</small></div></div>
+<ol class="steps"><li data-n="0">Break each request’s tokens into instructions, context, history, question and output.</li><li data-n="1">Change the largest part first.</li><li data-n="2">Run the regression suite (8.6) and check the slices, not only the average.</li><li data-n="3">Keep the change only if quality holds within the agreed margin.</li><li data-n="4">Move on to the next largest part.</li></ol></div>
+<figcaption><b>Cutting tokens safely, one lever at a time.</b></figcaption></figure>
+<div class="box pit"><h5>Caching needs a stable prefix</h5><p>Putting the date, a user name or a request id near the start of the prompt makes every request’s prefix different, so nothing is ever served from the cache. Put changing details after the stable instructions.</p></div>
+</section>
+
+<section class="tp tp-math" id="c21-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Output costs most</b> (illustrative prices: input 3, output 15 dollars per million). At 3 million requests a month:</p>
+<ul>
+<li>Cutting answers from 500 to 300 tokens saves 200 × 3,000,000 × 15 ÷ 1,000,000 = 9,000 dollars a month.</li>
+<li>Cutting 200 input tokens saves only 200 × 3,000,000 × 3 ÷ 1,000,000 = 1,800 dollars.</li>
+<li>Caching 2,160 of 2,400 instruction tokens moves them from 3 to 0.30 dollars per million: a saving of 2,160 × 2.70 × 3 = about 17,500 dollars a month.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c21-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program applies five reductions one after another to a feature built on your project’s documents: caching, shorter instructions, fewer chunks and shorter answers, and shows the monthly cost after each. Reorder the steps or change <code>REQUESTS</code> and run it again.</p>
+<figure class="fig live" id="snip-token-diet"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"token-diet"}'></div></div>
+<figcaption><b>Step-by-step token savings, in real Python.</b> Quality is not measured here; measure it after every step.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c21-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Anthropic: Prompt caching</a> <small>How cached prefixes are priced and kept.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI: Prompt caching</a> <small>Automatic caching of repeated prefixes.</small></li>
+<li><a href="https://arxiv.org/abs/2310.05736">Jiang et al. (2023), LLMLingua</a> <small>Compressing prompts while keeping task quality.</small></li>
+</ol>
+</section>

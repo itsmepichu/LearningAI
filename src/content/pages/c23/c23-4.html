@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c23-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>People have a right to know when they are dealing with a machine, and others need to know when content was made by one. <a class="gl" href="#gl-ai-disclosure">AI disclosure and labelling</a> covers both: a clear notice in conversations, and marks on generated content, visible to people and readable by software.</p>
+<p>Behind the scenes, record-keeping makes the system answerable later: who did what, with which model and version, and who approved it.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c23-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Duty (generic)</th><th>Engineering control</th><th>Check</th></tr><tr><td>Tell people they are interacting with AI</td><td>notice at the start of the conversation and on voice calls</td><td>UI test per release</td></tr><tr><td>Mark generated or altered content</td><td>visible label plus machine-readable metadata (content credentials such as C2PA)</td><td>metadata present on every export</td></tr><tr><td>Keep records of operation</td><td>decision logs: time, system and model version, input and output references, operator, reviewer, decision</td><td>field completeness checks</td></tr><tr><td>Retain records for a set period</td><td>retention policy per record type; protected from editing</td><td>retention reports</td></tr><tr><td>Explain decisions to affected people</td><td>store the reasons and evidence shown to the reviewer</td><td>sample review</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Generate<small>text, image, audio</small></div><div class="nd">Label<small>visible notice</small></div><div class="nd">Attach metadata<small>generator, model, time</small></div><div class="nd">Log<small>decision record</small></div><div class="nd">Retain<small>append-only, by policy</small></div></div>
+<ol class="steps"><li data-n="0">The system produces content or a decision.</li><li data-n="1">Users see that it is AI-generated or AI-assisted.</li><li data-n="2">Machine-readable metadata travels with exported content.</li><li data-n="3">A decision record links input, output, versions and people.</li><li data-n="4">Records are kept, unchanged, for the required period, then deleted.</li></ol></div>
+<figcaption><b>Transparency and records in the pipeline.</b></figcaption></figure>
+<div class="box example"><h5>Example: decision records that survive an audit</h5><p>An auditor asks why a claim was rejected eight months ago. The record shows the input reference, the model and prompt versions, the draft the system produced, the reviewer who edited it and the final decision. Without the versions, the team could not have reproduced the draft.</p></div>
+<p><small>Orientation for engineers, not legal advice. Laws, guidance and application dates change; confirm what applies with your legal and compliance team.</small></p>
+</section>
+
+<section class="tp tp-math" id="c23-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Completeness</b> (illustrative). 500 decision records, each with 8 required fields. If any one field goes missing 2% of the time, the chance a record is complete is 0.98 multiplied 8 times ≈ 85%.</p>
+<ul>
+<li>That is about 75 incomplete records in 500, each a hole in the audit trail.</li>
+<li>A completeness check in the pipeline turns that into an alert on the first missing field instead of a finding a year later.</li>
+</ul>
+<p><b>Storage.</b> 1 million decisions a year at 2 KB each is 2 GB a year: record-keeping is cheap; missing records are not.</p>
+</section>
+
+<section class="tp tp-code" id="c23-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks 500 simulated decision records for eight required fields, reports which are missing, and labels a generated text with a visible notice and attached metadata. Add a required field and see completeness fall.</p>
+<figure class="fig live" id="snip-decision-records"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"decision-records"}'></div></div>
+<figcaption><b>Record completeness and labels, in real Python.</b> The field list is an example.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c23-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation (EU) 2024/1689, the AI Act</a> <small>Transparency duties and record-keeping for high-risk systems.</small></li>
+<li><a href="https://c2pa.org/specifications/">C2PA specifications</a> <small>Content credentials: machine-readable provenance for media.</small></li>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/">OpenTelemetry: GenAI semantic conventions</a> <small>Standard fields for recording model calls.</small></li>
+</ol>
+</section>

@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c21-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Not every parcel needs an express courier. <a class="gl" href="#gl-cost-aware-routing">Cost-aware routing</a> sends each kind of request to the cheapest model that still meets its quality bar: a small model for easy classification, a mid-size model for routine answers, the largest only for the hard cases.</p>
+<p>Unlike a cascade (20.6), which decides per request after trying the small model, routing decides up front from the request type, so it needs evaluation per type to know which model is good enough where.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c21-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Request<small>with a type</small></div><div class="nd">Look up<small>type → model</small></div><div class="nd">Call<small>chosen model</small></div><div class="nd">Check<small>schema, rules</small></div><div class="nd">Fallback<small>stronger model if it fails</small></div></div>
+<ol class="steps"><li data-n="0">The gateway (15.5) classifies or receives the request type.</li><li data-n="1">A routing table maps each type to its cheapest model that passed evaluation.</li><li data-n="2">The chosen model answers.</li><li data-n="3">Cheap checks catch visible failures.</li><li data-n="4">Failures go to a stronger model, and the rate is tracked per type.</li></ol></div>
+<figcaption><b>Routing by request type.</b></figcaption></figure>
+<div class="tw"><table><tr><th>Request type</th><th>Volume</th><th>Cheapest model at 90%+</th><th>Why</th></tr><tr><td>How-to questions</td><td>high</td><td>small</td><td>answers come from retrieved text</td></tr><tr><td>Billing questions</td><td>medium</td><td>mid</td><td>needs some reasoning over account data</td></tr><tr><td>Security reports</td><td>low</td><td>large</td><td>high stakes; rare and varied</td></tr></table></div>
+<p><b>Keep the table honest.</b> Re-evaluate each type when models change (18.5), and watch fallback rates: a rising rate means the cheap model no longer meets the bar for that type.</p>
+<div class="box example"><h5>Example: a support mix</h5><p>A support assistant ran everything on its largest model. Evaluation per request type showed the small model met the bar for "how-to" questions (34% of traffic) and the mid model for billing and access. Routing cut the model bill by about 70% with no drop on the regression suite.</p></div>
+</section>
+
+<section class="tp tp-math" id="c21-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Routed cost</b> (illustrative: small 0.0002, mid 0.0015, large 0.006 dollars per request). 1,000 requests: 400 how-to, 450 routine, 150 hard.</p>
+<ul>
+<li>All on the large model: 1,000 × 0.006 = 6 dollars.</li>
+<li>Routed: 400 × 0.0002 + 450 × 0.0015 + 150 × 0.006 = 0.08 + 0.675 + 0.90 = 1.655 dollars, about 28% of the cost.</li>
+<li>If 5% of small-model answers fail a check and fall back to the large model: 20 × 0.006 = 0.12 more.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c21-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program takes the request types and volumes in your project’s labelled data and routes each type to the cheapest model whose illustrative accuracy meets the bar. Raise <code>BAR</code> to 0.94 and watch types move to larger models.</p>
+<figure class="fig live" id="snip-cost-router"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"cost-router"}'></div></div>
+<figcaption><b>Routing by request type, in real Python.</b> Accuracies are invented.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c21-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2406.18665">Ong et al. (2024), RouteLLM</a> <small>Learning which requests need the stronger model.</small></li>
+<li><a href="https://docs.litellm.ai/docs/routing">LiteLLM: Routing</a> <small>Routing and fallbacks across models in a gateway.</small></li>
+<li><a href="https://arxiv.org/abs/2305.05176">Chen et al. (2023), FrugalGPT</a> <small>Model selection to cut cost at equal quality.</small></li>
+</ol>
+</section>
