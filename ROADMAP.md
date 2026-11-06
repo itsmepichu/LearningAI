@@ -361,9 +361,9 @@ Scroll-driven walkthroughs, each told through your selected project:
 - the agent loop
 - a request through the serving stack
 
-### Phase 6b — Fix the question bank (before phase 7)
+### Phase 6b — Fix the question bank (before phase 7) ✅
 
-From the review of phases 1–5 and the pilot review. The content checker counts each problem (`node scripts/content-summary.mjs --quality` lists them); at the start, on 6 November 2026:
+From the review of phases 1–5 and the pilot review. The content checker counted each problem; at the start, on 6 November 2026:
 
 | Rule | Hits | Fix |
 |---|---|---|
@@ -375,6 +375,13 @@ From the review of phases 1–5 and the pilot review. The content checker counts
 
 - Done chapter by chapter, each checked against the quality rules before the next.
 - When every count is zero, the rules become errors, so they cannot come back.
+
+Done (6 November 2026), one commit per chapter:
+- 1,017 published questions have rewritten options, in the same order and with the same right answer, so saved answers still apply. `content_tools.revise_checks` refuses any edit that changes an answer or the number of options.
+- 876 follow-ups and 54 sets of wrong-option explanations added.
+- 151 new scenario and calculation questions (new ids), and 45 concept questions recast as scenarios with their options and answers unchanged. Every section now has at least 4 applied questions.
+- The two repeated questions reworded (`c4-6-i03`, and `c15-6-m01` recast as a scenario).
+- The bank now has 1,504 choose-the-answer and 1,080 interview questions, and the quality rules are errors in `scripts/content-summary.mjs`.
 
 ### Phase 7 — Deeper content and new chapters
 
@@ -478,7 +485,7 @@ Decided:
 - **Pilot review (6 November 2026):** chapters 1–3 against the rollout in chapters 4–18.
   - **Notes:** both lengths are kept. Pilot notes run about 30% longer (In practice: a median of 39 words against 28), and both are concrete and project-specific. The standard is the range they span: about 25–45 words for In practice and Try it, and 12–25 for Failure to avoid.
   - **Question mix:** 10–12 choose-the-answer and 8–10 interview questions per section, with about 3 fundamentals, 3 applied and 2 system design, as built. At least 4 of each section's choose-the-answer questions must be scenario or calculation questions; 75% of the rollout's are plain concept questions.
-  - **Quality:** the question bank is fixed before phase 7, so new chapters follow a clean standard. The checker counts each problem (see the phase below).
+  - **Quality:** the question bank is fixed before phase 7, so new chapters follow a clean standard. Done in phase 6b; the checker now enforces the rules.
 - **Question counts:** 10–12 choose-the-answer and 8–10 interview questions per section.
 - **Practice page:** yes, built in phase 2.
 - **Project choice:** no up-front choice; Harbor by default, switchable at any time.

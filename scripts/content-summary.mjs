@@ -11,8 +11,7 @@ const topicIds = new Set(manifest.chapters.flatMap((c) => c.topics.map((t) => t.
 const errors = []
 const warnings = []
 const err = (where, msg) => errors.push(`${where}: ${msg}`)
-// Quality rules from the pilot review (November 2026). The existing bank does not meet them yet, so they are counted,
-// not failed: `node scripts/content-summary.mjs --quality` lists every hit. Once the bank is fixed, they become errors.
+// Quality rules from the pilot review (November 2026), enforced as errors since phase 6b fixed the whole bank.
 const QUALITY = {
   followup: 'interview question without a likely follow-up',
   distractors: 'choose-the-answer question without an explanation for each wrong option',
@@ -20,8 +19,7 @@ const QUALITY = {
   'concept-heavy': 'section with fewer than 4 scenario or calculation questions out of its choose-the-answer questions',
   'duplicate-text': 'question text that repeats another question’s, in this section or another',
 }
-const quality = Object.fromEntries(Object.keys(QUALITY).map((k) => [k, []]))
-const flag = (rule, where) => quality[rule].push(where)
+const flag = (rule, where) => err(where, QUALITY[rule])
 const norm = (t) => t.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim()
 const texts = new Map()
 
@@ -115,10 +113,5 @@ if (errors.length) {
   process.exit(1)
 }
 if (warnings.length) console.warn('Content warnings:\n- ' + warnings.join('\n- '))
-const hits = Object.entries(quality).filter(([, w]) => w.length)
-if (hits.length) {
-  if (process.argv.includes('--quality')) for (const [rule, ws] of hits) console.warn(`\n${QUALITY[rule]} (${ws.length}):\n- ` + ws.join('\n- '))
-  else console.warn('Quality to fix (run with --quality to list): ' + hits.map(([rule, ws]) => `${rule} ${ws.length}`).join(' · '))
-}
 writeFileSync(join(root, 'checks', 'summary.json'), JSON.stringify(summary, null, 1) + '\n')
 console.log(`content ok · ${summary.totals.mcq} choose-the-answer · ${summary.totals.interview} interview questions`)
