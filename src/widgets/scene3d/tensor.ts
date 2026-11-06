@@ -103,10 +103,58 @@ export interface TensorView {
   scale: number
 }
 
+/**
+ * Colours for points, bars and lines, from the theme's tokens. `series0`… are the categorical chart colours, for things
+ * that are told apart only by kind, such as labels or owners.
+ */
+export type Tone = 'accent' | 'signal' | 'sim' | 'ok' | 'bad' | 'muted' | 'ink' | `series${0 | 1 | 2 | 3 | 4 | 5}`
+
+/** A line through points. `solid` draws it unbroken; otherwise dashed. */
 export interface Path {
   id: string
-  label: string
+  label?: string
   points: Vec3[]
+  tone?: Tone
+  solid?: boolean
+  width?: number
+}
+
+/** Many thin straight segments drawn as one, such as a graph's edges. */
+export interface Segments {
+  id: string
+  pairs: [Vec3, Vec3][]
+  tone: Tone
+  faded?: boolean
+}
+
+/** A point drawn as a ball. Points with the same id keep their place in a list across steps. */
+export interface PointView {
+  id: string
+  at: Vec3
+  tone: Tone
+  /** Radius in world units. */
+  r?: number
+  /** Shown as a label in 3D, and in the 2D view's map. */
+  label?: string
+  faded?: boolean
+}
+
+/** A box resting on its base, such as one segment of a stacked bar. */
+export interface BarView {
+  id: string
+  /** The centre of its base. */
+  at: Vec3
+  size: Vec3
+  tone: Tone
+  label?: string
+  faded?: boolean
+}
+
+/** The 2D view's table: the step's data in rows, for readers who prefer numbers to shapes. */
+export interface DataTable {
+  caption: string
+  head: string[]
+  rows: (string | number)[][]
 }
 
 export interface SceneStep {
@@ -115,6 +163,14 @@ export interface SceneStep {
   text: string
   tensors: TensorView[]
   paths?: Path[]
+  segments?: Segments[]
+  points?: PointView[]
+  bars?: BarView[]
+  /** Labels with no object of their own, such as an axis name. */
+  notes?: { id: string; at: Vec3; text: string }[]
+  table?: DataTable
+  /** For points: the 2D view draws a map from above (x across, z down). */
+  map?: boolean
   /** Where the camera looks, and from how far. */
   target: Vec3
   distance: number
