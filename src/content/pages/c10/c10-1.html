@@ -1,4 +1,12 @@
-<p>Capacity planning starts with a chain of multiplications. Each assumption (pages per document, tokens per page, chunk size, overlap, embedding dimensions, precision, replicas) changes the result several-fold, so measure them on a sample of your real corpus.</p>
+<section class="tp tp-intuition" id="c10-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Before building a search system for millions of documents, do the arithmetic on the back of an envelope. Documents become pages, pages become tokens, tokens become chunks, and every chunk becomes a vector that has to live in memory, usually more than once. Each step multiplies, so a small wrong guess early on becomes a big wrong bill at the end.</p>
+<p>It is like planning a library: count the books, estimate the shelves, then add room for copies, the catalogue and growth.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p><a class="gl" href="#gl-capacity-planning">Capacity planning</a> starts with a chain of multiplications. Each assumption (pages per document, tokens per page, chunk size, overlap, embedding dimensions, precision, replicas) changes the result several-fold, so measure them on a sample of your real corpus.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2">
 <label for="czD">Documents (millions) <input type="range" id="czD" min="0.1" max="50" step="0.1" value="10"><span id="czDO"></span></label>
@@ -14,4 +22,35 @@
 <div class="bars" id="czBars"></div></div></div>
 <figcaption><b>Corpus sizing calculator.</b> Index overhead assumes HNSW with M = 16 (≈ 128 bytes per vector for links). Embedding cost uses an illustrative $0.02 per million tokens for a hosted embedding API; self-hosted GPU throughput assumes ~2,000 chunks/s per GPU for a base-size model. Raw text storage assumes ~4 bytes per token plus metadata.</figcaption></figure>
 <div class="box example"><h5>Example: the default numbers</h5><p>10M documents × 6 pages × 500 tokens = 30B tokens. With 512-token chunks and 10% overlap that is ≈ 65M chunks. At 768 dims in float32 that is 200 GB of vectors; int8 brings it to 50 GB, plus ≈ 8 GB of graph links, ×2 replicas ≈ 116 GB of RAM across the cluster. Embedding the ≈ 33B chunk tokens (overlap included) once costs ≈ $670 at the assumed API price, and every embedding-model change repeats that cost (10.7).</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The default numbers, step by step.</b></p>
+<ul>
+<li>Tokens: 10 million documents × 6 pages × 500 tokens = 30 billion tokens.</li>
+<li>Chunks: each 512-token chunk moves on about 461 tokens (10% overlap), so 30 billion ÷ 461 ≈ 65 million chunks.</li>
+<li>Vectors: 65 million × 768 numbers × 1 byte (int8) ≈ 50 GB. As float32 it would be 200 GB.</li>
+<li>Graph links and metadata: about 8 GB and 20 GB more, so about 78 GB for one copy.</li>
+<li>Two replicas plus 40% headroom for rebuilds: 78 × 2 × 1.4 ≈ 218 GB of memory.</li>
+<li>Embedding the whole corpus once, counting the overlap, at $0.02 per million tokens: about 33 billion × 0.02 ÷ 1,000,000 ≈ $660.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c10-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program multiplies the same assumptions through to chunks, gigabytes and the one-off embedding cost, and shows the vectors in three formats. Change any assumption at the top, for example 1024 dimensions or 4 bytes per number, and run it again.</p>
+<figure class="fig live" id="snip-corpus-sizing"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"corpus-sizing"}'></div></div>
+<figcaption><b>From documents to gigabytes, in real Python.</b> Every input is an illustrative assumption; measure yours on a sample.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index">FAISS: Guidelines to choose an index</a> <small>Memory per vector for each index type.</small></li>
+<li><a href="https://zilliz.com/sizing-tool">Milvus sizing tool (Zilliz)</a> <small>A vendor’s calculator for the same chain of multiplications.</small></li>
+<li><a href="https://arxiv.org/abs/1603.09320">Malkov and Yashunin (2016), HNSW</a> <small>Where the graph’s memory per vector comes from.</small></li>
+</ol>
+</section>

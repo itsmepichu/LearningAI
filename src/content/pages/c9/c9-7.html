@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c9-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Retrieval metrics answer two questions. Did the right passages make it into the shortlist at all? And did they come near the top? A search that puts the answer in position 50 is technically "found", but the model will never see it.</p>
+<p>Each metric weighs these differently: recall asks "did we find them?", precision asks "how much junk came with them?", and MRR and nDCG ask "how high up were they?". None of them works without a list of which passages are relevant for each test question.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c9-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Relevance labels</b> (qrels): for each test query, which chunks/documents are relevant (binary) or how relevant (graded, e.g. 0–3).</div>
-<div><b>Recall@k</b>: fraction of all relevant items that appear in the top k. The key RAG metric: if the answer chunk is not retrieved, the model cannot use it.</div>
+<div><b><a class="gl" href="#gl-recall-at-k">Recall@k</a></b>: fraction of all relevant items that appear in the top k. The key RAG metric: if the answer chunk is not retrieved, the model cannot use it.</div>
 <div><b>Precision@k</b>: fraction of the top k that are relevant. Low precision wastes context tokens and can distract the model.</div>
-<div><b>MRR</b> (mean reciprocal rank): average over queries of 1/(rank of the first relevant result). Rewards putting a relevant item first.</div>
-<div><b>nDCG@k</b> (normalised discounted cumulative gain): DCG = Σ gain(rel<sub>i</sub>)/log₂(i+1) rewards highly relevant items near the top; divided by the ideal DCG so 1.0 is a perfect ranking. Two gain conventions are common: <b>linear</b> (gain = rel) and <b>exponential</b> (gain = 2<sup>rel</sup> − 1, which rewards the most relevant items far more). Always state which one you report; the calculator below shows both.</div>
+<div><b><a class="gl" href="#gl-mrr">MRR</a></b> (mean reciprocal rank): average over queries of 1/(rank of the first relevant result). Rewards putting a relevant item first.</div>
+<div><b><a class="gl" href="#gl-ndcg">nDCG@k</a></b> (normalised discounted cumulative gain): DCG = Σ gain(rel<sub>i</sub>)/log₂(i+1) rewards highly relevant items near the top; divided by the ideal DCG so 1.0 is a perfect ranking. Two gain conventions are common: <b>linear</b> (gain = rel) and <b>exponential</b> (gain = 2<sup>rel</sup> − 1, which rewards the most relevant items far more). Always state which one you report; the calculator below shows both.</div>
 </div>
 <p><b>Labels limit every metric.</b> All four metrics assume the relevance labels are complete. An unlabelled but relevant result counts as a miss, which makes a new retriever that finds different (unlabelled) good results look worse than it is. Pooling results from several retrievers before labelling (example below) reduces this bias.</p>
 <figure class="fig live"><div class="stage"><div data-widget="retrieval-metrics"></div></div>
@@ -11,7 +19,7 @@
 <figure class="fig live"><div class="stage"><div data-widget="retriever-compare"></div></div>
 <figcaption><b>Three retrievers on one query.</b> The lexical ranking is real BM25 over your example project's documents. The dense and hybrid + rerank rankings start as fixed illustrations. Opt in to a download and the dense column becomes a real embedding model running on your device, and the hybrid column becomes real RRF over the two lists, with no reranker; each column's label says which it is. The metrics for all three are computed live, with both nDCG gain conventions. Lexical search tends to find exact wording and miss a paraphrase, dense search finds paraphrases and can bury an exact clause, and hybrid with reranking aims for both. One query proves nothing about a retriever: compare them over a labelled set, as in the example below.</figcaption></figure>
 <div class="box example"><h5>Example: building retrieval labels cheaply</h5><p>Take 200 real user questions. For each, pool the top 20 results from BM25, dense and hybrid retrievers, and have a subject-matter expert mark relevant chunks (or use an LLM judge, calibrated on 50 human-labelled queries). This "pooled" judgement set lets you compare retrievers fairly. Tools like <a href="https://github.com/AmenRa/ranx">ranx</a> and <a href="https://github.com/beir-cellar/beir">BEIR</a> compute the metrics.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for retrieval and RAG</h3>
 <div class="cols3">
@@ -22,3 +30,35 @@
 <div class="card"><h5><a href="https://github.com/pgvector/pgvector">pgvector</a> · <a href="https://docs.opensearch.org/">OpenSearch</a></h5><span class="meta">vectors in existing infrastructure</span><p>Postgres extension for vectors (HNSW, IVFFlat) next to relational data; OpenSearch/Elasticsearch combine BM25 and k-NN in one engine.</p></div>
 <div class="card"><h5><a href="https://docs.llamaindex.ai/">LlamaIndex</a> · <a href="https://docs.haystack.deepset.ai/">Haystack</a> · <a href="https://docs.langchain.com/">LangChain</a></h5><span class="meta">RAG frameworks</span><p>Connectors, chunkers, retrievers and pipelines. Useful for speed; understand the pieces (this chapter) so you can debug them.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c9-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>All four on one query.</b> Two passages are relevant: A (very relevant, grade 3) and B (a little, grade 1). The retriever returns X, A, Y, B, Z.</p>
+<ul>
+<li>Recall@5: both relevant passages are in the top 5: 2 ÷ 2 = 1.0.</li>
+<li>Precision@5: 2 of the 5 results are relevant: 2 ÷ 5 = 0.4.</li>
+<li>Reciprocal rank: the first relevant result is at position 2: 1 ÷ 2 = 0.5.</li>
+<li>nDCG@5: each position counts less the lower it is (position 1 fully, 2 about 63%, 3 half, 4 about 43%, 5 about 39%). This ranking earns 3 × 0.63 + 1 × 0.43 ≈ 2.32; the best possible order, A then B, would earn 3 × 1 + 1 × 0.63 = 3.63. So nDCG is 2.32 ÷ 3.63 ≈ 0.64.</li>
+</ul>
+<p>Moving A to the top would raise the reciprocal rank to 1.0 and nDCG towards 1.0, while recall and precision stay exactly the same.</p>
+</section>
+
+<section class="tp tp-code" id="c9-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds graded relevance labels for queries made from your example project’s document titles, ranks the documents, and computes Recall@5, Precision@5, MRR and nDCG@5. Change <code>K</code> to 1 or 10 and run it again.</p>
+<figure class="fig live" id="snip-ranking-metrics"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"ranking-metrics"}'></div></div>
+<figcaption><b>Recall, precision, MRR and nDCG, in real Python.</b> The labels are made by a rule, not by people.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c9-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-in-information-retrieval-1.html">Manning, Raghavan and Schütze, Introduction to Information Retrieval, chapter 8</a> <small>Recall, precision and ranked evaluation.</small></li>
+<li><a href="https://dl.acm.org/doi/10.1145/582415.582418">Järvelin and Kekäläinen (2002), Cumulated gain-based evaluation of IR techniques</a> <small>The paper that introduced nDCG.</small></li>
+<li><a href="https://arxiv.org/abs/2104.08663">Thakur et al. (2021), BEIR</a> <small>nDCG@10 across many retrieval tasks, and why one benchmark is not enough.</small></li>
+<li><a href="https://github.com/AmenRa/ranx">ranx</a> <small>A Python library that computes these metrics and compares retrievers.</small></li>
+</ol>
+</section>

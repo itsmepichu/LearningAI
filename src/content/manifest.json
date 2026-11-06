@@ -638,63 +638,63 @@
      "tn": "8.1",
      "title": "Task definitions, acceptance criteria, baselines and representative evaluation datasets",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 427
+     "figures": 3,
+     "interactive": 2,
+     "words": 663
     },
     {
      "id": "c8-2",
      "tn": "8.2",
      "title": "Deterministic checks, human evaluation and model-based judges",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 287
+     "figures": 2,
+     "interactive": 1,
+     "words": 500
     },
     {
      "id": "c8-3",
      "tn": "8.3",
      "title": "Judge bias, calibration against humans and evaluation uncertainty",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 441
+     "figures": 3,
+     "interactive": 3,
+     "words": 746
     },
     {
      "id": "c8-4",
      "tn": "8.4",
      "title": "Accuracy, groundedness, completeness, refusal behaviour, latency and cost",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 288
+     "figures": 2,
+     "interactive": 1,
+     "words": 572
     },
     {
      "id": "c8-5",
      "tn": "8.5",
      "title": "Retrieval evaluation vs answer evaluation vs agent task evaluation",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 246
+     "figures": 2,
+     "interactive": 1,
+     "words": 486
     },
     {
      "id": "c8-6",
      "tn": "8.6",
      "title": "Regression suites, adversarial cases, multilingual cases and dataset contamination",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 309
+     "figures": 2,
+     "interactive": 1,
+     "words": 568
     },
     {
      "id": "c8-7",
      "tn": "8.7",
      "title": "Offline experiments, online A/B tests and business outcome measurement",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 354
+     "figures": 3,
+     "interactive": 3,
+     "words": 656
     },
     {
      "id": "c8-8",
@@ -703,9 +703,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 746
+     "figures": 3,
+     "interactive": 3,
+     "words": 1017
     }
    ],
    "hasIntro": false,
@@ -730,36 +730,36 @@
      "tn": "9.1",
      "title": "What RAG solves; when to use RAG, fine-tuning, or both",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 240
+     "figures": 2,
+     "interactive": 2,
+     "words": 585
     },
     {
      "id": "c9-2",
      "tn": "9.2",
      "title": "Ingestion, parsing, cleaning, chunking, embedding, indexing, retrieval and generation",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 398
+     "figures": 3,
+     "interactive": 3,
+     "words": 668
     },
     {
      "id": "c9-3",
      "tn": "9.3",
      "title": "Keyword search, inverted indexes, BM25, dense embeddings and sparse retrieval",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 389
+     "figures": 4,
+     "interactive": 4,
+     "words": 873
     },
     {
      "id": "c9-4",
      "tn": "9.4",
      "title": "Vector similarity, approximate nearest-neighbour search, HNSW and quantisation",
      "tags": [],
-     "figures": 4,
-     "interactive": 3,
-     "words": 420
+     "figures": 5,
+     "interactive": 4,
+     "words": 834
     },
     {
      "id": "c9-5",
@@ -768,27 +768,27 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 584
+     "figures": 3,
+     "interactive": 3,
+     "words": 895
     },
     {
      "id": "c9-6",
      "tn": "9.6",
      "title": "Query rewriting, decomposition, multi-hop retrieval, citations and abstention",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 445
+     "figures": 2,
+     "interactive": 2,
+     "words": 782
     },
     {
      "id": "c9-7",
      "tn": "9.7",
      "title": "Retrieval metrics: Recall@k, Precision@k, MRR and nDCG",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 591
+     "figures": 3,
+     "interactive": 3,
+     "words": 939
     }
    ],
    "hasIntro": false,
@@ -813,18 +813,18 @@
      "tn": "10.1",
      "title": "Corpus sizing: documents → chunks → vectors → storage and memory",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 247
+     "figures": 2,
+     "interactive": 2,
+     "words": 508
     },
     {
      "id": "c10-2",
      "tn": "10.2",
      "title": "Distributed ingestion: queues, checkpoints, backpressure, retries and dead-letter handling",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 516
+     "figures": 3,
+     "interactive": 3,
+     "words": 786
     },
     {
      "id": "c10-3",
@@ -833,45 +833,45 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 548
+     "figures": 2,
+     "interactive": 2,
+     "words": 836
     },
     {
      "id": "c10-4",
      "tn": "10.4",
      "title": "Incremental updates, deletions, deduplication, lineage and freshness guarantees",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 518
+     "figures": 3,
+     "interactive": 2,
+     "words": 805
     },
     {
      "id": "c10-5",
      "tn": "10.5",
      "title": "Index sharding, replication, partitioning, capacity planning and hot tenants",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 348
+     "figures": 2,
+     "interactive": 2,
+     "words": 609
     },
     {
      "id": "c10-6",
      "tn": "10.6",
      "title": "Permission-aware retrieval, tenant isolation and access-control synchronisation",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 529
+     "figures": 3,
+     "interactive": 2,
+     "words": 795
     },
     {
      "id": "c10-7",
      "tn": "10.7",
      "title": "Embedding migrations, reindexing, versioned indexes and rollback",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 401
+     "figures": 3,
+     "interactive": 2,
+     "words": 655
     },
     {
      "id": "c10-8",
@@ -880,18 +880,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 0,
-     "words": 404
+     "figures": 2,
+     "interactive": 1,
+     "words": 628
     },
     {
      "id": "c10-9",
      "tn": "10.9",
      "title": "Advanced retrieval: hierarchical search, late interaction, knowledge graphs and agentic retrieval",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 536
+     "figures": 2,
+     "interactive": 1,
+     "words": 789
     }
    ],
    "hasIntro": false,

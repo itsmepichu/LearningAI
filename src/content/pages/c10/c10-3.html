@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c10-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A PDF is a picture of a page, not a document with structure. Inside, the words may be stored as letters placed at positions, in any order, with columns, headers and page numbers mixed together. Tables are just numbers floating near each other, and scanned pages have no text at all, only an image.</p>
+<p>So before anything can be searched, the page has to be read back the way a person reads it: in the right order, with headings recognised, tables rebuilt as rows and columns, and scans turned into text. When a RAG system "cannot find" something that is clearly in a document, bad parsing is usually why.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Real corpora are messy. A PDF is a page-description format: text may be stored as positioned glyphs with no reading order, columns, headers and footers mixed into the text stream, tables as lines and loose numbers, and scanned pages as images with no text at all.</p>
 <ul>
 <li><b>Born-digital PDFs</b>: extract text with layout analysis (reading order, columns, headings) using tools like PyMuPDF, pdfplumber or Docling.</li>
-<li><b>Scanned documents</b>: need <dfn>OCR</dfn> (optical character recognition: image → text). Classic engines (Tesseract) are CPU-friendly; deep-learning OCR and vision-language models are more accurate on poor scans and handwriting but GPU-hungry. Record OCR confidence; low-confidence pages need review or a better model.</li>
+<li><b>Scanned documents</b>: need <dfn><a class="gl" href="#gl-ocr">OCR</a></dfn> (optical character recognition: image → text). Classic engines (Tesseract) are CPU-friendly; deep-learning OCR and vision-language models are more accurate on poor scans and handwriting but GPU-hungry. Record OCR confidence; low-confidence pages need review or a better model.</li>
 <li><b>Tables</b>: flattening a table to a text line loses which number belongs to which column. Extract tables as structured data (rows × columns), then store them as Markdown/HTML in a chunk, or as one row-as-sentence per chunk ("Plan: Pro; Monthly price: €49; Seats: 10"), and keep the original for display.</li>
 <li><b>Images and diagrams</b>: generate captions/descriptions with a vision-language model, OCR any text in the image, and index those; link back to the image. Multimodal embeddings can index images directly.</li>
 <li><b>Structure</b>: preserve the heading hierarchy, list numbering, page numbers and section IDs as metadata. They improve chunking (9.2), filtering and citations ("Policy 4.2, page 17").</li>
@@ -11,6 +19,19 @@
 <ol class="steps"><li data-n="0">A file and its metadata enter the parse queue.</li><li data-n="1">Check type and whether a PDF page has an extractable text layer (scans often have none or a poor one).</li><li data-n="2">Route to the right parser pool; scanned pages to an OCR pool with its own capacity.</li><li data-n="3">Detect blocks (title, paragraph, list, table, figure, header/footer) and order them.</li><li data-n="4">OCR image-only regions; keep per-page confidence.</li><li data-n="5">Extract tables to rows/columns; caption figures.</li><li data-n="6">Produce a normalised document tree (e.g. JSON or Markdown with headings) for structure-aware chunking.</li><li data-n="7">Reject or flag outputs with almost no text, high non-dictionary-word rates, or low OCR confidence; send to DLQ/review.</li></ol></div>
 <figcaption><b>Format-aware parsing.</b> Parse quality is the single biggest hidden cause of "the RAG system can't find it".</figcaption></figure>
 <div class="box example"><h5>Example: a table that breaks naive extraction</h5><p>A pricing PDF table flattened by naive text extraction reads "Basic Pro Enterprise 19 49 Contact 5 10 Unlimited". The question "how many seats does Pro include?" retrieves it, but the model guesses. Table-aware extraction stores "| Plan | Price | Seats |" rows, and the answer "10 seats" becomes reliable.</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>OCR at scale</b> (illustrative). If a classic OCR engine takes about 1.5 seconds per page on one CPU core, a million scanned pages take 1,500,000 seconds, about 17 days on one core, or about 6.5 hours on 64 cores. GPU-based OCR is faster and more accurate on poor scans, and costs more per hour.</p>
+<p><b>Why tables need rows.</b> The flattened table in the example reads "Basic Pro Enterprise 19 49 Contact 5 10 Unlimited". Nothing in that text links "10" to "Pro" and "seats". Stored as "Plan: Pro; Monthly price: 49; Seats: 10", the answer is in one self-contained sentence.</p>
+</section>
+
+<section class="tp tp-code" id="c10-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares a pricing table flattened by naive extraction with the same table parsed into rows, stores each row as its own sentence, and answers a question from the right row. Change <code>QUESTION</code> to ask about Basic or Enterprise and run it again.</p>
+<figure class="fig live" id="snip-table-chunks"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"table-chunks"}'></div></div>
+<figcaption><b>Keeping a table’s structure, in real Python.</b> The table is typed in, not parsed from a PDF; the laptop lab compares real parsers.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: compare parsers <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code># pip install pymupdf docling
 import fitz                                   # PyMuPDF: fast, born-digital text
@@ -18,4 +39,16 @@ doc = fitz.open("sample.pdf"); print(doc[0].get_text("text")[:800])
 from docling.document_converter import DocumentConverter   # layout + tables (+ OCR); slower, CPU OK
 res = DocumentConverter().convert("sample.pdf"); print(res.document.export_to_markdown()[:1500])</code></pre>
 <p>Use a PDF with a table and two columns. Docling downloads layout models on first run and is much slower than PyMuPDF on CPU; that difference is exactly why production pipelines route documents to different parser pools.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docling-project.github.io/docling/">Docling documentation</a> <small>Layout analysis, reading order and table extraction for PDFs and office files.</small></li>
+<li><a href="https://arxiv.org/abs/2408.09869">Auer et al. (2024), Docling Technical Report</a> <small>How the layout and table models work.</small></li>
+<li><a href="https://tesseract-ocr.github.io/">Tesseract OCR documentation</a> <small>The classic CPU OCR engine.</small></li>
+<li><a href="https://pymupdf.readthedocs.io/">PyMuPDF documentation</a> <small>Fast text and layout extraction from born-digital PDFs.</small></li>
+</ol>
+</section>

@@ -1,6 +1,14 @@
-<p>Known judge biases: <b>position bias</b> (prefers the first or second answer in pairwise comparisons), <b>verbosity bias</b> (prefers longer answers), <b>self-preference</b> (prefers outputs from its own model family), <b>style over substance</b> (confident formatting), and <b>leniency</b> on technical errors it cannot detect. Mitigations: swap positions and average, use claim-level rubrics, control length, use a different model family as judge, and give the judge the reference answer when one exists.</p>
-<p><b>Calibrating a judge</b>: have humans label 100–300 cases, run the judge on the same cases, and measure agreement. Use <dfn>Cohen's κ</dfn> (agreement corrected for chance) rather than raw percent agreement, because if 90% of answers are good, a judge that always says "good" agrees 90% of the time while knowing nothing. Also check the judge's precision and recall for catching <em>bad</em> answers, the cases you care about.</p>
-<p><b>Related cases need grouped resampling.</b> When cases are not independent (several turns of one conversation, several questions about one document, repeated runs of one task, or many requests from one tenant), resample whole groups rather than individual rows: a <dfn>cluster bootstrap</dfn>. Treating correlated rows as independent makes the interval look narrower than it is.</p>
+<section class="tp tp-intuition" id="c8-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A model judge is like a new marker joining a team of teachers: before trusting their grades, you have both mark the same pile of papers and compare. You will find habits, such as giving higher marks to longer essays or to whichever essay they read first.</p>
+<p>And every score is uncertain. A test of 200 questions is a sample, so the score could move a few points with a different 200. Reporting a range, not just a number, stops teams celebrating noise.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c8-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>Known <a class="gl" href="#gl-judge-bias">judge biases</a>: <b>position bias</b> (prefers the first or second answer in pairwise comparisons), <b>verbosity bias</b> (prefers longer answers), <b>self-preference</b> (prefers outputs from its own model family), <b>style over substance</b> (confident formatting), and <b>leniency</b> on technical errors it cannot detect. Mitigations: swap positions and average, use claim-level rubrics, control length, use a different model family as judge, and give the judge the reference answer when one exists.</p>
+<p><b>Calibrating a judge</b>: have humans label 100–300 cases, run the judge on the same cases, and measure agreement. Use <dfn><a class="gl" href="#gl-inter-annotator-agreement">Cohen’s κ</a></dfn> (agreement corrected for chance) rather than raw percent agreement, because if 90% of answers are good, a judge that always says "good" agrees 90% of the time while knowing nothing. Also check the judge's precision and recall for catching <em>bad</em> answers, the cases you care about.</p>
+<p><b>Related cases need grouped resampling.</b> When cases are not independent (several turns of one conversation, several questions about one document, repeated runs of one task, or many requests from one tenant), resample whole groups rather than individual rows: a <dfn><a class="gl" href="#gl-bootstrap">cluster bootstrap</a></dfn>. Treating correlated rows as independent makes the interval look narrower than it is.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <p style="font-size:.9rem">Judge vs human labels on the same cases (edit the counts):</p>
 <div class="tw"><table style="max-width:420px">
@@ -16,4 +24,34 @@
 <canvas id="bsCan" width="640" height="170"></canvas></div></div>
 <figcaption><b>Bootstrap, computed live.</b> 200 paired cases: system B wins 30, A wins 12, ties 158. Each resample draws 200 cases with replacement and records B's accuracy minus A's. If the 95% interval excludes 0 (it does here), the improvement is unlikely to be noise.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>A team switches judges and suddenly "helpfulness" rises from 3.9 to 4.3 with no system change. The new judge is more lenient. Lesson: freeze the judge model and prompt as part of the evaluation suite version, and re-calibrate against humans whenever it changes.</p></div>
+</section>
+
+<section class="tp tp-math" id="c8-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Kappa from the figure’s default counts.</b> Judge and humans agree on 160 + 15 = 175 of 200 cases: 87.5%.</p>
+<ul>
+<li>The judge says "good" 178 times (89%) and humans 167 times (83.5%). Two markers guessing at those rates would agree by chance about 0.89 × 0.835 + 0.11 × 0.165 ≈ 76% of the time.</li>
+<li>The most they could improve on chance is 100 − 76 = 24 points; they achieved 87.5 − 76 = 11.5 of them.</li>
+<li>Kappa is 11.5 ÷ 24 ≈ 0.48: only moderate agreement, despite the impressive 87.5%.</li>
+</ul>
+<p><b>A bootstrap range.</b> Re-drawing the 200 cases 1,000 times and recording the score each time, then taking the middle 95% of those scores, gives the range to report, such as "84% (79% to 88%)".</p>
+</section>
+
+<section class="tp tp-code" id="c8-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates a model judge that mostly follows quality but likes long answers, then measures its raw agreement with human labels, its kappa, how often it passes long bad answers compared with short ones, and a bootstrap range for its pass rate. Set <code>LENGTH_LOVE</code> to 0 and then 0.01 and run it again.</p>
+<figure class="fig live" id="snip-judge-bias"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"judge-bias"}'></div></div>
+<figcaption><b>A judge with a taste for length, in real Python.</b> The judge and the human labels are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c8-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2305.17926">Wang et al. (2023), Large Language Models are not Fair Evaluators</a> <small>Position bias in pairwise judging, and swapping the order to correct it.</small></li>
+<li><a href="https://arxiv.org/abs/2306.05685">Zheng et al. (2023), Judging LLM-as-a-Judge</a> <small>Position, verbosity and self-preference biases measured.</small></li>
+<li><a href="https://arxiv.org/abs/2411.00640">Miller (2024), Adding Error Bars to Evals</a> <small>Confidence intervals, clustered errors and paired comparisons for evaluations.</small></li>
+<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html">scikit-learn: cohen_kappa_score</a> <small>Kappa in code.</small></li>
+</ol>
+</section>

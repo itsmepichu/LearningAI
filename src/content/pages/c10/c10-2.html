@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c10-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Ingesting millions of documents is a factory line. Documents arrive, get parsed, cut up, embedded and stored, and each station works at a different speed. Queues between stations act like conveyor belts with storage, so a slow station does not stop the whole line.</p>
+<p>Good factories also plan for trouble: a broken item is set aside after a few tries instead of jamming the line, the line slows down at the start when it backs up, and every station keeps a note of how far it got, so after a power cut it carries on instead of starting over.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Queue</b> (Kafka, SQS, Pub/Sub, RabbitMQ): a durable buffer of work items between producers (crawlers, change feeds) and consumers (parse/embed workers). Lets each stage scale and fail independently.</div>
+<div><b><a class="gl" href="#gl-message-queue">Queue</a></b> (Kafka, SQS, Pub/Sub, RabbitMQ): a durable buffer of work items between producers (crawlers, change feeds) and consumers (parse/embed workers). Lets each stage scale and fail independently.</div>
 <div><b>Checkpoint</b>: a durable record of progress (e.g. the connector's last sync cursor, or "document X processed at version 7"), so a crashed job resumes instead of restarting.</div>
-<div><b>Backpressure</b>: when a downstream stage is slower (embedding GPUs saturated, vector DB throttling), upstream stages must slow down instead of overflowing memory or the queue. Implemented with bounded queues, consumer-paced pulling, and rate limits.</div>
-<div><b>Dead-letter queue (DLQ)</b>: where items go after exceeding retry limits (corrupt PDF, parser crash), so they do not block the pipeline. Monitor and replay DLQs.</div>
-<div><b>Idempotency</b>: processing the same item twice gives the same result (upsert by chunk ID = hash of doc ID + version + chunk position), so at-least-once delivery is safe.</div>
+<div><b><a class="gl" href="#gl-backpressure">Backpressure</a></b>: when a downstream stage is slower (embedding GPUs saturated, vector DB throttling), upstream stages must slow down instead of overflowing memory or the queue. Implemented with bounded queues, consumer-paced pulling, and rate limits.</div>
+<div><b><a class="gl" href="#gl-dead-letter-queue">Dead-letter queue (DLQ)</a></b>: where items go after exceeding retry limits (corrupt PDF, parser crash), so they do not block the pipeline. Monitor and replay DLQs.</div>
+<div><b><a class="gl" href="#gl-idempotency">Idempotency</a></b>: processing the same item twice gives the same result (upsert by chunk ID = hash of doc ID + version + chunk position), so at-least-once delivery is safe.</div>
 </div>
 <p><b>Out-of-order delivery.</b> Queues redeliver and reorder: an old version's job can finish after a newer one. Guard every write with the source version (<dfn>compare-and-set</dfn>: write only if the incoming version is newer than the stored one) so a stale update can never overwrite fresh content. Acknowledge a message only after its result is durably committed, or after a recoverable outbox record exists.</p>
 <figure class="fig sim"><div class="stage"><div class="wid">
@@ -20,4 +28,30 @@
 <ol class="steps"><li data-n="0">Connector reads changes since its checkpointed cursor and emits (doc_id, version) events.</li><li data-n="1">Durable queue decouples fetching from processing.</li><li data-n="2">Parsing is CPU-bound and scales horizontally; heavy formats (OCR) route to a separate pool.</li><li data-n="3">Chunks are queued for embedding.</li><li data-n="4">Embedding workers pull batches (e.g. 64–256 chunks) to keep GPUs busy; they pull only when ready (natural backpressure).</li><li data-n="5">Writes use deterministic chunk IDs, so a retried batch overwrites rather than duplicates.</li><li data-n="6">The index acknowledges; the per-document checkpoint advances to version N.</li><li data-n="7">Items failing repeatedly go to the DLQ with the error, for alerting and replay after a fix.</li></ol></div>
 <figcaption><b>Stage-separated pipeline.</b> Separate queues let you scale the GPU stage independently of the CPU stage and isolate slow formats.</figcaption></figure>
 <div class="box example"><h5>Example: backfill vs live traffic</h5><p>A new tenant uploads 4M documents while existing tenants edit documents all day. Use two priority lanes: a live lane (edits, deletions; freshness target 5 minutes) and a backfill lane (bulk; best effort). Workers prefer the live lane and fill spare capacity with backfill. Without this, the backfill delays everyone's updates for days.</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A backlog in numbers.</b> 4 workers at 20 documents a second handle 80 a second. If 90 a second arrive, the backlog grows by 10 every second: 36,000 an hour. Either add a fifth worker or accept that the source falls behind.</p>
+<p><b>Dead letters.</b> If 3% of a million documents are corrupt, 30,000 end up in the dead-letter queue. Without one, each would be retried forever and block real work.</p>
+<p><b>Why idempotency matters.</b> A queue that delivers "at least once" may hand the same document over twice. If each chunk’s id is built from the document, version and position, the second write simply replaces the first, and nothing is stored twice.</p>
+</section>
+
+<section class="tp tp-code" id="c10-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates an ingestion queue with workers, retries for temporary failures, a dead-letter queue for documents that always fail, and a queue limit that makes the source wait. Set <code>WORKERS</code> to 5, or <code>QUEUE_LIMIT</code> to <code>None</code>, and run it again.</p>
+<figure class="fig live" id="snip-ingestion-queue"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"ingestion-queue"}'></div></div>
+<figcaption><b>A queue with retries and a dead-letter queue, in real Python.</b> The rates are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://kafka.apache.org/documentation/">Apache Kafka documentation</a> <small>Durable queues, consumer groups and replay.</small></li>
+<li><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html">Amazon SQS: Dead-letter queues</a> <small>How a managed queue parks messages that keep failing.</small></li>
+<li><a href="https://dataintensive.net/">Kleppmann, Designing Data-Intensive Applications</a> <small>Delivery guarantees, idempotency and stream processing in depth.</small></li>
+<li><a href="https://sre.google/sre-book/handling-overload/">Google SRE book: Handling Overload</a> <small>Backpressure and load shedding.</small></li>
+</ol>
+</section>

@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c10-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A knowledge base is never finished. Documents are edited, deleted, copied and moved every day, and the search index has to follow. Rebuilding everything every night is like reprinting a whole encyclopaedia because one page changed; instead, find exactly what changed and update only that.</p>
+<p>Deletions matter most. A document someone deleted, or stopped sharing, must vanish from search quickly, and you need a paper trail for every chunk so you can always answer "where did this come from, and is it still current?".</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Incremental updates</b>: process only what changed. Use source change feeds (webhooks, delta APIs, database CDC) or periodic diffing by content hash. Re-chunk changed documents and replace their chunks atomically (delete old chunk IDs for that document version, insert new).</li>
+<li><b><a class="gl" href="#gl-incremental-indexing">Incremental updates</a></b>: process only what changed. Use source change feeds (webhooks, delta APIs, database CDC) or periodic diffing by content hash. Re-chunk changed documents and replace their chunks atomically (delete old chunk IDs for that document version, insert new).</li>
 <li><b>Deletions</b>: a deleted or unshared source document must disappear from the index, caches and any derived summaries. Many connectors miss deletes unless you reconcile periodically (list all IDs at the source, diff with the index). Deletion speed can be a legal requirement (16.5).</li>
 <li><b>Deduplication</b>: the same file is often copied across sites and versions. Exact duplicates via content hash; near-duplicates via MinHash (6.2). Keep one canonical chunk set but remember all locations, because each copy may have different permissions.</li>
-<li><b>Lineage</b>: for every chunk, record source system, document ID, version, parser version, chunker config, embedding model version and timestamps. Lineage answers "why did the assistant say this?" and "which chunks must be rebuilt after the parser bug fix?".</li>
-<li><b>Freshness guarantee</b>: a measurable target such as "99% of edits searchable within 10 minutes; deletions within 5 minutes". Measure it by tracking <code>indexed_at − source_modified_at</code> per change (17.7).</li>
+<li><b><a class="gl" href="#gl-lineage">Lineage</a></b>: for every chunk, record source system, document ID, version, parser version, chunker config, embedding model version and timestamps. Lineage answers "why did the assistant say this?" and "which chunks must be rebuilt after the parser bug fix?".</li>
+<li><b><a class="gl" href="#gl-freshness">Freshness guarantee</a></b>: a measurable target such as "99% of edits searchable within 10 minutes; deletions within 5 minutes". Measure it by tracking <code>indexed_at − source_modified_at</code> per change (17.7).</li>
 <li><b>Out-of-order events</b>: change events can arrive late, twice or out of sequence. Apply them through the version guard from 10.2 and let periodic reconciliation repair anything a missed event left stale.</li></ul>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 240" role="img" aria-label="Lineage graph for one chunk">
@@ -24,4 +32,30 @@
 <ol class="steps"><li data-n="0">A user edits a policy at t₀ (or deletes it, or removes a group's access).</li><li data-n="1">Webhook or delta poll produces an event; periodic reconciliation catches missed events.</li><li data-n="2">Only the changed document is reprocessed. Deletions skip straight to step 5.</li><li data-n="3">Unchanged chunks (same hash) can reuse existing vectors to save cost.</li><li data-n="4">New version becomes visible and old version disappears in one step, so queries never see both or neither.</li><li data-n="5">Answer caches and semantic caches keyed on affected chunks are purged (15.4).</li><li data-n="6">Record end-to-end lag; alert when the p99 breaches the freshness SLO.</li></ol></div>
 <figcaption><b>Update path with a measured freshness guarantee.</b></figcaption></figure>
 <div class="box example"><h5>Example: the missed deletion</h5><p>A contract is deleted from SharePoint, but the connector only processes "modified" events. Three weeks later the assistant still quotes it. The nightly reconciliation job (list all source IDs, diff with the index) is added; it finds 1,840 orphaned documents on its first run. A deletion-lag metric with a 5-minute SLO now alerts if this regresses.</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The diff against the rebuild.</b> If 1% of 65 million chunks change in a day, an incremental update re-embeds 650,000 chunks. A nightly rebuild would re-embed all 65 million, a hundred times the work, and still leave changes waiting up to a day.</p>
+<p><b>Measuring freshness.</b> For each change, record when it happened at the source and when it became searchable. "99% within 10 minutes" means that out of 10,000 edits, at most 100 took longer, and you can show the list.</p>
+<p><b>A missed deletion.</b> If deletions arrive only as events and 0.1% of events are lost, then out of 50,000 deletions a year about 50 documents stay searchable forever, unless a regular reconciliation compares the full list of source ids with the index.</p>
+</section>
+
+<section class="tp tp-code" id="c10-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program gives every chunk of your example project’s documents an id built from its document, position and content, then edits one document, deletes one and adds one, and works out exactly which chunks to embed and which to delete. Edit a second document in the code and run it again.</p>
+<figure class="fig live" id="snip-incremental"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"incremental"}'></div></div>
+<figcaption><b>Updating only what changed, in real Python.</b> Change feeds, permissions and reconciliation are not shown.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://debezium.io/documentation/">Debezium documentation</a> <small>Change data capture: turning database changes into an event stream.</small></li>
+<li><a href="https://openlineage.io/docs/">OpenLineage documentation</a> <small>An open standard for recording data lineage.</small></li>
+<li><a href="https://arxiv.org/abs/2107.06499">Lee et al. (2021), Deduplicating Training Data Makes Language Models Better</a> <small>Exact and near-duplicate detection at scale.</small></li>
+<li><a href="https://dataintensive.net/">Kleppmann, Designing Data-Intensive Applications</a> <small>Derived data, change streams and keeping indexes in sync.</small></li>
+</ol>
+</section>

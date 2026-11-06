@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c10-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An assistant must never tell someone what they could not read themselves. The model will happily use whatever it is given, so the only safe place to enforce permissions is the search itself: documents a user may not open must never be retrieved for them in the first place.</p>
+<p>Permissions also change: people move teams, documents get unshared. So the index’s copy of "who can see what" has to be kept close to the truth, and urgent removals need a fast path that does not wait for the next sync.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>The assistant must never reveal content the asking user cannot open in the source system. Since the LLM sees whatever is retrieved, <b>enforcement must happen in retrieval</b>, before content reaches the prompt.</p>
 <ul>
-<li><b>Early binding</b> (index-time): store each chunk's allowed principals (user IDs, group IDs) as metadata; at query time, filter by the user's group memberships inside the search. Fast; correctness depends on keeping ACLs in sync.</li>
+<li><b><a class="gl" href="#gl-acl-binding">Early binding</a></b> (index-time): store each chunk's allowed principals (user IDs, group IDs) as metadata; at query time, filter by the user's group memberships inside the search. Fast; correctness depends on keeping ACLs in sync.</li>
 <li><b>Late binding</b> (query-time check): after retrieval, check each candidate against the source system's permission API. Always current; slower and can return too few results, so over-fetch.</li>
 <li>Common practice: early binding for filtering plus a late check for high-sensitivity sources, with short ACL sync intervals and immediate updates on permission-change events.</li>
-<li><b>Tenant isolation</b>: tenant ID is a mandatory, server-set filter on every query (never taken from the prompt or model output), ideally reinforced structurally (separate collections, namespaces or encryption keys for sensitive tenants). Test it with cross-tenant probing cases (16.4).</li>
+<li><b><a class="gl" href="#gl-tenant-isolation">Tenant isolation</a></b>: tenant ID is a mandatory, server-set filter on every query (never taken from the prompt or model output), ideally reinforced structurally (separate collections, namespaces or encryption keys for sensitive tenants). Test it with cross-tenant probing cases (16.4).</li>
 <li><b>ACL sync</b>: group memberships change constantly. Sync group expansions from the identity provider; handle nested groups; treat "unknown ACL" as deny.</li>
 <li><b>Urgent revocation</b>: index-level ACL sync always has some lag. Keep a small deny list (revoked users, groups or documents) checked against the authoritative source on every query until the sync catches up. Cache keys must include the user's access scope and the policy version, so a revocation also invalidates cached answers.</li></ul>
 <figure class="fig"><div class="stage">
@@ -35,4 +43,28 @@
 <svg id="rvSvg" viewBox="0 0 640 150"></svg><div class="out" id="rvOut"></div></div></div>
 <figcaption><b>Revocation exposure window.</b> A user loses access to Finance documents at minute 5 and keeps asking a Finance question every 3 minutes for an hour (the same question was answered and cached at minute 2). Red dots are answers that still exposed Finance content; green are blocked. Index ACLs update only at the next sync; the deny list and late-binding check act immediately; a cache keyed without access scope keeps serving the old answer until its TTL expires.</figcaption></figure>
 <div class="box example"><h5>Example: the stale-ACL incident</h5><p>An employee moves from Finance to Sales at 09:00. The identity provider updates instantly, but the RAG index syncs group expansions nightly. At 14:00 they ask about "Q4 forecast" and receive Finance-only content. Fix: subscribe to group-change events, set an ACL-lag SLO, and add late-binding checks for sources tagged confidential.</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The exposure window.</b> If group memberships sync every 30 minutes and answers are cached for 30 minutes, a person who loses access can keep seeing the content for up to 30 + 30 = 60 minutes. A deny list checked on every query, and cache keys that include the user’s access, bring that close to zero.</p>
+<p><b>Why post-filtering fails.</b> If a user may see 2% of the corpus, filtering after taking the top 50 leaves about 50 × 0.02 = 1 result on average. To expect 5 allowed results that way you would need to fetch about 5 ÷ 0.02 = 250 candidates. Filtering inside the search returns 5 allowed results directly.</p>
+</section>
+
+<section class="tp tp-code" id="c10-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program gives each of your example project’s documents a random access group, searches as a user in two groups, and compares filtering after the top 5, filtering inside the search, and no filter at all. Change <code>USER_GROUPS</code> and run it again.</p>
+<figure class="fig live" id="snip-permissions"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"permissions"}'></div></div>
+<figcaption><b>Filter by permission inside the search, in real Python.</b> The groups are random, not synced from a real identity provider.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a> <small>Sensitive information disclosure, including through retrieval.</small></li>
+<li><a href="https://qdrant.tech/documentation/concepts/filtering/">Qdrant: Filtering</a> <small>Filtering inside a vector search, as early binding needs.</small></li>
+<li><a href="https://csrc.nist.gov/projects/role-based-access-control">NIST: Role-Based Access Control</a> <small>The access-control model most permission systems follow.</small></li>
+</ol>
+</section>

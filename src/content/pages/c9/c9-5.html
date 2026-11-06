@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c9-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Two search methods are like two friends recommending restaurants: one remembers names exactly, the other understands what you are in the mood for. Ask both and favour the places they both mention. That is hybrid search with rank fusion.</p>
+<p>Then a reranker acts as the careful critic who reads each shortlisted menu against your actual request: too slow to read every menu in town, but excellent at ordering the top 50. Filters make sure you only see restaurants you are allowed into.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c9-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Hybrid retrieval</b>: run keyword (BM25) and dense search in parallel and fuse the lists. <dfn>Reciprocal rank fusion (RRF)</dfn> is simple and robust: score(d) = Σ<sub>lists</sub> 1/(k + rank(d)), with k ≈ 60. It needs no score normalisation because it uses ranks only.</li>
-<li><b>Reranking</b>: a <dfn>cross-encoder</dfn> reads query and passage together and outputs a relevance score. Much more accurate than comparing separate embeddings, but too slow to run on the whole corpus, so it re-scores the top 50–200 candidates. LLMs can also rerank (listwise), at higher cost.</li>
-<li><b>Metadata filtering</b>: restrict results by fields like tenant, department, document type, language, date or permissions. <em>Pre-filtering</em> applies the filter during search; <em>post-filtering</em> after, which can leave too few results when the filter is selective. Permission filters must never be post-hoc "best effort" (10.6).</li>
+<li><b><a class="gl" href="#gl-hybrid-retrieval">Hybrid retrieval</a></b>: run keyword (BM25) and dense search in parallel and fuse the lists. <dfn><a class="gl" href="#gl-rrf">Reciprocal rank fusion (RRF)</a></dfn> is simple and robust: score(d) = Σ<sub>lists</sub> 1/(k + rank(d)), with k ≈ 60. It needs no score normalisation because it uses ranks only.</li>
+<li><b>Reranking</b>: a <dfn><a class="gl" href="#gl-reranker">cross-encoder</a></dfn> reads query and passage together and outputs a relevance score. Much more accurate than comparing separate embeddings, but too slow to run on the whole corpus, so it re-scores the top 50–200 candidates. LLMs can also rerank (listwise), at higher cost.</li>
+<li><b><a class="gl" href="#gl-metadata-filtering">Metadata filtering</a></b>: restrict results by fields like tenant, department, document type, language, date or permissions. <em>Pre-filtering</em> applies the filter during search; <em>post-filtering</em> after, which can leave too few results when the filter is selective. Permission filters must never be post-hoc "best effort" (10.6).</li>
 <li><b>Context assembly</b>: deduplicate overlapping chunks, merge adjacent chunks from the same document, order by relevance (or by document position for readability), label each with a citation ID, and fit the token budget (7.3).</li>
 </ul>
 <figure class="fig live"><div class="stage"><div data-widget="rrf"></div></div>
@@ -10,6 +18,19 @@
 <div class="nodes"><div class="nd">Query</div><div class="nd">Permission + metadata filter</div><div class="nd">BM25 top-100 ∥ Dense top-100</div><div class="nd">RRF fuse → top-50</div><div class="nd">Cross-encoder rerank → top-8</div><div class="nd">Dedupe, merge, label [1]…[8]</div><div class="nd">Prompt</div></div>
 <ol class="steps"><li data-n="0">User question arrives with the user's identity.</li><li data-n="1">Build a filter from the user's groups and any query metadata (e.g. "2026 policies only").</li><li data-n="2">Both retrievers run in parallel with the filter applied inside the search.</li><li data-n="3">Fuse ranked lists; keep the top 50.</li><li data-n="4">The reranker scores each (query, chunk) pair; keep the best 8 (or those above a score threshold).</li><li data-n="5">Assemble context with stable citation labels mapped back to document IDs and URLs.</li><li data-n="6">Generation prompt with instructions to cite and abstain (9.6).</li></ol></div>
 <figcaption><b>A production retrieval pipeline.</b> Typical latency budget: filters + retrieval 30–80 ms, reranking 50–200 ms on GPU (longer on CPU), before generation.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c9-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>RRF by hand</b>, with the usual constant of 60. A document ranked 1st by keyword search and 3rd by dense search scores 1 ÷ 61 + 1 ÷ 63 ≈ 0.0164 + 0.0159 = 0.0323. A document ranked 1st by dense search only scores 1 ÷ 61 ≈ 0.0164. The one both methods liked wins, even though neither put it first on its own.</p>
+<p><b>What reranking costs</b> (illustrative). Scoring 100 candidates at about 10 milliseconds each on a CPU takes about a second; batched on a GPU, about 0.1 seconds. That is why rerankers see the top 50 to 200, never the whole collection.</p>
+</section>
+
+<section class="tp tp-code" id="c9-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program ranks your example project’s documents two ways, by shared rare words and by shared word pieces, fuses the rankings with RRF, then filters to the documents one user may see. Change <code>K</code> to 1 or 600 and see how the fused order changes.</p>
+<figure class="fig live" id="snip-hybrid"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"hybrid"}'></div></div>
+<figcaption><b>Hybrid search with reciprocal rank fusion, in real Python.</b> The word-piece ranking stands in for real embeddings.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: hybrid RAG with reranking, end to end <span class="tag cpu">Laptop · CPU</span></h5>
 <pre><code># pip install bm25s sentence-transformers faiss-cpu ollama
 import bm25s, faiss, numpy as np, ollama
@@ -38,4 +59,16 @@ q = "I can't log in"
 ctx = "\n".join(f"[{d}] {docs[d]}" for d in retrieve(q))
 prompt = f"Answer using only the sources. Cite like [n]. If not answerable, say so.\n{ctx}\nQuestion: {q}"
 print(ollama.chat(model="qwen2.5:1.5b", messages=[{"role": "user", "content": prompt}]).message.content)</code></pre></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c9-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf">Cormack, Clarke and Büttcher (2009), Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods</a> <small>The RRF paper.</small></li>
+<li><a href="https://arxiv.org/abs/1901.04085">Nogueira and Cho (2019), Passage Re-ranking with BERT</a> <small>Cross-encoder reranking.</small></li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a> <small>Measured gains from hybrid search plus reranking.</small></li>
+<li><a href="https://sbert.net/">Sentence Transformers documentation</a> <small>Embedding models and cross-encoder rerankers in code.</small></li>
+</ol>
+</section>

@@ -1,11 +1,47 @@
+<section class="tp tp-intuition" id="c10-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Each embedding model has its own private language of numbers. Vectors made by one model mean nothing to another, like trying to find a book with a catalogue written in a code you do not have. So switching models means re-embedding everything and building a new index next to the old one.</p>
+<p>Do it like moving house carefully: set up the new place completely, check it works, move in, and keep the old keys for a while in case you need to go back.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Vectors from different embedding models live in different spaces; you cannot compare a query embedded with model B against documents embedded with model A. Changing the embedding model (or its dimensions, or even the chunker) therefore requires re-embedding the whole corpus, which at scale takes days and real money. Treat it like a database migration with a <dfn>blue/green</dfn> pattern:</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Index v3 live<small>model A</small></div><div class="nd">Build v4 in parallel<small>model B, backfill</small></div><div class="nd">Dual-write<small>new changes → v3 and v4</small></div><div class="nd">Offline eval<small>v4 vs v3</small></div><div class="nd">Shadow / canary reads<small>5% → 50%</small></div><div class="nd">Cut over alias<small>search → v4</small></div><div class="nd">Keep v3 warm<small>rollback window</small></div><div class="nd">Retire v3</div></div>
 <ol class="steps"><li data-n="0">Production queries use index v3, reached through an alias such as <code>kb-search</code>, never a hard-coded index name.</li><li data-n="1">Create v4 with the new model; backfill from the stored chunk text (not by re-parsing, if the chunker did not change), at a throttled rate.</li><li data-n="2">While backfilling, route every new change to both indexes so v4 does not fall behind.</li><li data-n="3">Run the retrieval benchmark (10.8) against both. Proceed only if v4 meets the gates.</li><li data-n="4">Send a share of live queries to v4 and compare metrics (latency, click-through, answer quality samples).</li><li data-n="5">Switch the alias atomically. The query-side embedding model switches at the same moment.</li><li data-n="6">Keep v3 updated for a rollback period (e.g. 2 weeks); rollback = switch the alias back.</li><li data-n="7">Delete v3 and its dual-write path. Record the migration in lineage.</li></ol></div>
-<figcaption><b>Blue/green index migration.</b> Peak cost is double storage during the overlap; budget for it in capacity plans.</figcaption></figure>
+<figcaption><b><a class="gl" href="#gl-blue-green-index">Blue/green index migration</a>.</b> Peak cost is double storage during the overlap; budget for it in capacity plans.</figcaption></figure>
 <figure class="fig sim"><div class="stage"><div class="wid">
 <svg id="bgmSvg" viewBox="0 0 640 170"></svg>
 <div class="ctl" id="bgmBtns"></div><div class="out" id="bgmLog" style="max-height:150px;overflow:auto"></div></div></div>
 <figcaption><b>Run a blue/green index migration yourself.</b> Buttons enforce the safety rules from this section: you cannot cut over before v4 is backfilled, dual-written and evaluated; rollback works only while v3 is kept warm; v3 can be retired only after the rollback window. Try doing things out of order to see why each guard exists.</figcaption></figure>
 <div class="box example"><h5>Example: the version bound together</h5><p>An index is not just vectors: it is (embedding model + version, dimensions, normalisation, chunker config, parser version, ANN parameters). Store these as an index manifest. A query service that loads the manifest and refuses to query an index whose embedding model differs from its own prevents the silent failure where cosine scores look fine but results are random.</p></div>
+</section>
+
+<section class="tp tp-math" id="c10-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What a migration costs</b>, for the 65-million-chunk corpus in 10.1:</p>
+<ul>
+<li>Storage: both indexes live side by side during the change, so 218 GB becomes about 436 GB until the old one is retired.</li>
+<li>Re-embedding: about 33 billion tokens, roughly $660 through an illustrative hosted API, or 65,000,000 ÷ 2,000 chunks a second ≈ 9 hours on one GPU.</li>
+<li>Comparison: run real queries through both and check how much their top results agree before switching. If they share only half of their top 5, look at the differences before trusting the new one.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c10-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program embeds your example project’s documents with two stand-in models, shows that a query embedded with the new model finds little in the old index, and measures how much the two indexes agree on the top 5. Change the vector sizes 64 and 96 and run it again.</p>
+<figure class="fig live" id="snip-embedding-migration"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"embedding-migration"}'></div></div>
+<figcaption><b>Why a new embedding model needs a new index, in real Python.</b> The models are random projections, not real embedding models.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://martinfowler.com/bliki/BlueGreenDeployment.html">Fowler, BlueGreenDeployment</a> <small>The deployment pattern the migration follows.</small></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/aliases.html">Elasticsearch: Aliases</a> <small>Switching queries between indexes with an alias, and switching back.</small></li>
+<li><a href="https://arxiv.org/abs/2210.07316">Muennighoff et al. (2022), MTEB</a> <small>How to compare embedding models before choosing to migrate.</small></li>
+</ol>
+</section>

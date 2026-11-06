@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c8-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>One score cannot describe an answer. A reply can be correct but invent a source, grounded but leave out half of what was asked, or perfectly safe because it refuses almost everything. And a great answer that takes 20 seconds or costs a dollar may still be the wrong choice.</p>
+<p>So measure several things side by side, like a car review that scores speed, comfort, safety and running cost separately instead of giving one number.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c8-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="tw"><table>
 <tr><th>Dimension</th><th>Question it answers</th><th>How to measure</th></tr>
 <tr><td><b>Accuracy / correctness</b></td><td>Is the answer right?</td><td>Exact match or tolerance vs reference; judge with reference answer; expert review</td></tr>
-<tr><td><b>Groundedness / faithfulness</b></td><td>Is every claim supported by the provided sources?</td><td>Claim-level judge against retrieved context (8.2); citation validity checks</td></tr>
+<tr><td><b><a class="gl" href="#gl-groundedness">Groundedness / faithfulness</a></b></td><td>Is every claim supported by the provided sources?</td><td>Claim-level judge against retrieved context (8.2); citation validity checks</td></tr>
 <tr><td><b>Completeness</b></td><td>Did it cover all required points?</td><td>Checklist of required facts per case; recall of key points</td></tr>
 <tr><td><b>Refusal behaviour</b></td><td>Does it decline when it should, and only then?</td><td>Should-refuse set (unsafe, out of scope, no answer in sources) and should-answer set; measure both over-refusal and under-refusal</td></tr>
 <tr><td><b>Latency</b></td><td>Is it fast enough?</td><td>Time to first token, total time; p50, p95, p99 (17.3)</td></tr>
@@ -12,4 +20,30 @@
 <div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Variant B: mid model, 5 reranked chunks</p><div class="bars" data-max="100" data-unit="%"><div data-v="89">Accuracy</div><div data-v="96">Groundedness</div><div data-v="84" data-c="s">Completeness</div><div data-v="95">Correct refusals</div><div data-v="85" data-c="g">Latency score (p95 1.9 s)</div><div data-v="88" data-c="g">Cost score ($0.004)</div></div></div>
 </div></div><figcaption><b>A multi-dimensional scorecard</b> (illustrative). B is slightly less complete but 5× cheaper and much faster. Whether that is acceptable is a product decision made against the acceptance criteria, not by the evaluator alone.</figcaption></figure>
 <div class="box example"><h5>Example: over-refusal is also a failure</h5><p>After adding "only answer from the provided documents", groundedness rises to 98% but the assistant now refuses 22% of answerable questions because relevant information was phrased differently. Track "should-answer refusal rate" next to groundedness so you see both sides of the tradeoff.</p></div>
+<p>Refusing answerable questions is called <a class="gl" href="#gl-over-refusal">over-refusal</a>; measure it next to groundedness, or a stricter prompt can look like an improvement when it is not.</p>
+</section>
+
+<section class="tp tp-math" id="c8-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Groundedness claim by claim.</b> An answer with 5 claims, 4 of them supported by the sources, scores 4 ÷ 5 = 80% supported, and fails a strict "every claim supported" check.</p>
+<p><b>Over-refusal in numbers.</b> In the example below, 22% of answerable questions are refused. Out of 1,000 answerable questions a day, that is 220 customers turned away to make the groundedness score look better.</p>
+<p><b>Cost per successful task.</b> A call costing $0.02 that succeeds 80% of the time costs $0.02 ÷ 0.8 = $0.025 per success. A cheaper call at $0.01 with 50% success costs $0.02 per success, barely cheaper, and leaves twice as many failures.</p>
+</section>
+
+<section class="tp tp-code" id="c8-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program takes sentences from your example project’s documents as answers, makes a version with a changed number and one with an added claim, and checks every claim against the source; then it works out over- and under-refusal from example counts. Change the 0.7 overlap threshold and run it again.</p>
+<figure class="fig live" id="snip-answer-metrics"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"answer-metrics"}'></div></div>
+<figcaption><b>Groundedness, claim by claim, in real Python.</b> Word matching is far cruder than a calibrated judge.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c8-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2309.15217">Es et al. (2023), RAGAS: Automated Evaluation of Retrieval Augmented Generation</a> <small>Faithfulness, answer relevance and context metrics.</small></li>
+<li><a href="https://arxiv.org/abs/2305.14251">Min et al. (2023), FActScore</a> <small>Scoring factual precision claim by claim.</small></li>
+<li><a href="https://arxiv.org/abs/2308.01263">Röttger et al. (2023), XSTest</a> <small>A test set for over-refusal: safe questions that models wrongly refuse.</small></li>
+</ol>
+</section>

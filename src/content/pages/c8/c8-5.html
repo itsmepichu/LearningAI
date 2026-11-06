@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c8-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When a RAG assistant gives a wrong answer, either it was handed the wrong pages, or it was handed the right pages and still got it wrong. Those need completely different fixes, so measure them separately, like checking whether a student had the right textbook before blaming their reading.</p>
+<p>The trick is to give the model the correct pages yourself ("oracle context"). If it answers well then, the problem is finding the pages, not reading them.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c8-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Measure each stage separately so you know <em>where</em> a failure comes from.</p>
 <ul><li><b>Retrieval evaluation</b>: given a query, did the retriever return the relevant chunks? Needs relevance labels per query; metrics Recall@k, MRR, nDCG (9.7). Independent of the LLM.</li>
-<li><b>Answer evaluation</b>: given the retrieved context, is the answer correct, grounded and complete? Evaluate with <em>fixed</em> context too ("oracle context") to separate generation errors from retrieval errors.</li>
+<li><b>Answer evaluation</b>: given the retrieved context, is the answer correct, grounded and complete? Evaluate with <em>fixed</em> context too ("<a class="gl" href="#gl-oracle-context">oracle context</a>") to separate generation errors from retrieval errors.</li>
 <li><b>Agent task evaluation</b>: did the agent achieve the goal in the environment, efficiently and safely? Measured on the trajectory and final state, not just the final message (8.8).</li></ul>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 720 230" role="img" aria-label="Diagnosis matrix for retrieval and answer quality">
@@ -15,4 +23,28 @@
 <text x="545" y="153" text-anchor="middle" class="bad">Retrieval problem</text><text x="545" y="171" text-anchor="middle" class="xs">chunking, embeddings, filters, query rewriting</text></g>
 </svg></div><figcaption><b>Diagnose before fixing.</b> Teams often switch to a bigger LLM when the real issue is that the right chunk never reached it.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>Illustrative numbers. An HR assistant answers 74% of questions correctly. Stage evaluation shows Recall@5 = 79%; with oracle context, answer accuracy is 93%. Most failures are retrieval. Adding hybrid search and a reranker raises Recall@5 to 92% and end-to-end accuracy to 86%, with no LLM change.</p></div>
+</section>
+
+<section class="tp tp-math" id="c8-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Retrieval caps everything after it.</b> In the example below, Recall@5 is 79%: for 21% of questions, the right passage never reaches the model. Even with 93% accuracy when it does get the right passage, end-to-end accuracy is at most about 0.79 × 0.93 ≈ 73%, close to the 74% observed.</p>
+<p><b>The fix, in the same numbers.</b> Raising Recall@5 to 92% lifts the ceiling to 0.92 × 0.93 ≈ 86%, which is the end-to-end result reported, with no change to the model at all.</p>
+</section>
+
+<section class="tp tp-code" id="c8-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds a query from each of your example project’s document titles, measures Recall@1, 3 and 5 for a simple word-overlap retriever, and shows how retrieval caps end-to-end accuracy. Change <code>ANSWER_ACCURACY_WITH_ORACLE</code>, or make the queries harder by dropping two words, and run it again.</p>
+<figure class="fig live" id="snip-stage-eval"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"stage-eval"}'></div></div>
+<figcaption><b>Retrieval first, then answers, in real Python.</b> The queries are made from titles, so this recall is higher than real questions would get.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c8-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2104.08663">Thakur et al. (2021), BEIR</a> <small>A benchmark for evaluating retrieval on its own, across many domains.</small></li>
+<li><a href="https://arxiv.org/abs/2311.09476">Saad-Falcon et al. (2023), ARES: An Automated Evaluation Framework for RAG Systems</a> <small>Separate scores for context relevance, faithfulness and answer relevance.</small></li>
+<li><a href="https://docs.ragas.io/">Ragas documentation</a> <small>Context precision and recall alongside answer metrics.</small></li>
+</ol>
+</section>

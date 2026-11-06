@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c10-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A vendor’s benchmark is a car tested on an empty racetrack. Your system drives in traffic: with permission filters, other customers’ queries, documents being written while people search, and real questions in many languages. Only a test that recreates those conditions tells you what users will experience.</p>
+<p>And look at the slow end, not the average. If one search in a hundred takes three seconds, someone is waiting three seconds every minute.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c10-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Vendor benchmarks use clean public datasets, single tenants, no filters and no writes. Your benchmark must reproduce your conditions:</p>
 <ul>
 <li><b>Realistic queries</b>: sampled from logs (or written by users), with relevance labels (9.7), in the real mix of lengths, languages and filters.</li>
 <li><b>Realistic filters</b>: permission filters that are selective (a user sees 2% of the corpus) behave very differently from no filter in many ANN engines.</li>
 <li><b>Concurrent updates</b>: run the query load while upserts and deletes stream in at production rates; HNSW graphs and segment merges can hurt latency and recall during heavy writes.</li>
-<li><b>Measure together</b>: recall vs exact search, end-to-end Recall@k vs labels, latency percentiles (p50/p95/p99) at target QPS, resource usage, and cost per million queries.</li>
+<li><b>Measure together</b>: recall vs exact search, end-to-end Recall@k vs labels, <a class="gl" href="#gl-latency-percentile">latency percentiles (p50/p95/p99)</a> at target QPS, resource usage, and cost per million queries.</li>
 <li><b>Scale steps</b>: run at 10%, 30%, 100% of the target corpus to see the trend; do not extrapolate from a 1% sample alone.</li>
 </ul>
 <figure class="fig"><div class="stage">
@@ -16,6 +24,25 @@
 <line x1="60" y1="73" x2="600" y2="73" class="ln dash"/><text x="66" y="68" class="xs">target recall 0.95</text>
 <circle cx="230" cy="63" r="5" class="fa"/><circle cx="430" cy="70" r="5" class="fs"/>
 </svg></div><figcaption><b>The same index under three conditions</b> (illustrative shape). Meeting 0.95 recall costs about 10 ms in the clean benchmark but ~25 ms with selective filters, and is not reached at all during heavy writes without tuning. Only the bottom curve predicts production.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c10-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Load against latency</b>, from the simulation in the code (four replicas, 20 milliseconds a query, so about 200 queries a second in total):</p>
+<div class="tw"><table>
+<tr><th>Queries a second</th><th>p99 latency</th></tr>
+<tr><td>50</td><td>about 60 ms</td></tr>
+<tr><td>150</td><td>about 125 ms</td></tr>
+<tr><td>180</td><td>over 1.5 seconds</td></tr>
+</table></div>
+<p>At 90% of capacity, the slowest 1% of queries wait more than twenty times longer than at 25%. Plan for peak traffic at around 60–70% of measured capacity, and test with writes running too: in the simulation, heavy writes alone push p99 from about 70 ms to about 280 ms.</p>
+</section>
+
+<section class="tp tp-code" id="c10-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates queries arriving at random at four rates on four replicas, plus one run during heavy writes, and prints p50, p95 and p99 latency. Change <code>REPLICAS</code> or <code>SERVICE_MS</code> and run it again.</p>
+<figure class="fig live" id="snip-load-test"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"load-test"}'></div></div>
+<figcaption><b>Latency percentiles under load, in real Python.</b> The service times are simulated, not measured from a vector database.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: ANN benchmark at 1M vectors <span class="tag cpu">Laptop · CPU · 16 GB RAM</span></h5>
 <pre><code>import numpy as np, faiss, time
 d, n, nq = 384, 1_000_000, 1_000
@@ -30,4 +57,15 @@ for ef in (16, 32, 64, 128, 256):
     rec = np.mean([len(set(I[i]) &amp; set(gt[i]))/10 for i in range(nq)])
     print(f"efSearch={ef:4}  recall@10={rec:.3f}  {dt:.2f} ms/query")</code></pre>
 <p><b>Limitation:</b> random vectors are harder for ANN than real embeddings (no cluster structure), so recall here is pessimistic, and the test has no filters, writes or network. It does teach the efSearch curve and memory behaviour. Real-quality benchmarks need your embedded corpus.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c10-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://research.google/pubs/the-tail-at-scale/">Dean and Barroso (2013), The Tail at Scale</a> <small>Why tail latency matters and how to reduce it.</small></li>
+<li><a href="https://arxiv.org/abs/1807.05614">Aumüller, Bernhardsson and Faithfull (2018), ANN-Benchmarks</a> <small>How vector indexes are benchmarked, and the limits of that method.</small></li>
+<li><a href="https://ann-benchmarks.com/">ANN-Benchmarks results</a> <small>Recall-against-throughput curves to compare with your own.</small></li>
+</ol>
+</section>

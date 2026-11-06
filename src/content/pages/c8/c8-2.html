@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c8-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>There are three kinds of marker. A machine that checks the format and the numbers is instant, free and never tired, but it cannot judge whether an answer is helpful. A human expert can judge anything, but is slow and expensive, and two experts sometimes disagree. A model acting as judge sits in between: fast and cheap, but with blind spots you have to find first.</p>
+<p>Use the machine for everything it can check, the model judge for volume, and the humans to keep the judge honest.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c8-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Deterministic checks</b> (code): exact match, JSON validity, schema conformance, regex, "contains required citation", numeric tolerance, unit tests for generated code, SQL execution results, banned phrases. Cheap, fast, reproducible. Use them wherever possible.</li>
 <li><b>Human evaluation</b>: experts grade outputs against a rubric. The gold standard for nuanced quality (tone, helpfulness, correctness in specialist domains), but slow, expensive and itself variable. Use for calibration and for high-stakes decisions.</li>
-<li><b>Model-based judges</b> (LLM-as-judge): a model grades outputs using a rubric, either pointwise ("score 1–5 for groundedness") or pairwise ("which answer is better?"). Scales cheaply, but has biases (8.3) and must be validated against humans before you trust it.</li>
+<li><b><a class="gl" href="#gl-llm-judge">Model-based judges</a></b> (LLM-as-judge): a model grades outputs using a rubric, either pointwise ("score 1–5 for groundedness") or pairwise ("which answer is better?"). Scales cheaply, but has biases (8.3) and must be validated against humans before you trust it.</li>
 </ul>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 700 250" role="img" aria-label="Evaluation pyramid">
@@ -17,4 +25,34 @@ NOT_SUPPORTED (absent from sources), or CONTRADICTED.
 Return JSON: {"claims":[{"text":..., "verdict":..., "source_id":...}], "grounded": true|false}
 "grounded" is true only if every claim is SUPPORTED. Ignore style. Do not use outside knowledge.</code></pre>
 <p>Claim-level verdicts make the judge's reasoning inspectable and give a finer score (fraction supported) than a single 1–5 rating.</p></div>
+</section>
+
+<section class="tp tp-math" id="c8-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What each marker costs for 300 cases</b> (illustrative):</p>
+<div class="tw"><table>
+<tr><th>Marker</th><th>Cost</th><th>Time</th></tr>
+<tr><td>Code checks</td><td>almost nothing</td><td>seconds</td></tr>
+<tr><td>Model judge: 300 × 2,000 tokens</td><td>600,000 tokens, a few dollars</td><td>minutes</td></tr>
+<tr><td>Human experts at 2 minutes a case</td><td>300 × 2 = 600 minutes, 10 hours of expert time</td><td>days</td></tr>
+</table></div>
+<p>That is why code checks go first: every case they settle is one the judge and the humans do not need to see.</p>
+</section>
+
+<section class="tp tp-code" id="c8-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs six candidate answers through code checks: valid JSON, a known source, a length limit, banned phrases, and every number appearing in the source. Add an answer of your own to <code>ANSWERS</code> and run it again.</p>
+<figure class="fig live" id="snip-code-checks"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"code-checks"}'></div></div>
+<figcaption><b>Deterministic checks first, in real Python.</b> Code does not judge tone or meaning; that is what judges and humans are for.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c8-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2306.05685">Zheng et al. (2023), Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</a> <small>How well model judges agree with people, and their biases.</small></li>
+<li><a href="https://arxiv.org/abs/2303.16634">Liu et al. (2023), G-Eval</a> <small>Rubric-based scoring with a model judge.</small></li>
+<li><a href="https://www.promptfoo.dev/docs/configuration/expected-outputs/">promptfoo: Assertions and metrics</a> <small>Deterministic and model-graded checks in one test file.</small></li>
+</ol>
+</section>
