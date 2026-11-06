@@ -5,31 +5,37 @@
     "id": "c18-1-m01",
     "q": "A rollback restored the code but not the prompt and index. The missing practice is…",
     "options": [
-     "Feature flags",
-     "A release manifest that versions all behaviour-affecting artefacts",
-     "More tests",
-     "Faster CI"
+     "Feature flags for each prompt, index and model change",
+     "A release manifest versioning everything that changes behaviour",
+     "More tests before each release goes out to production",
+     "Faster CI so that rollbacks finish in a few minutes"
     ],
     "answer": 1,
     "why": "Behaviour depends on code, prompts, models, indexes and config together.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Flags switch versions; they do not record the whole set.",
+     "",
+     "Tests do not restore the old prompt and index.",
+     "Speed does not fix a partial rollback."
+    ]
    },
    {
     "id": "c18-1-m02",
     "q": "What is a release manifest?",
     "options": [
-     "A marketing note",
-     "A list of servers",
-     "A changelog for code only",
-     "One identifier bundling the versions of everything that changes behaviour"
+     "A marketing note announcing the release",
+     "A list of the servers the release runs on",
+     "A changelog that covers the code only",
+     "One ID bundling versions of all that changes behaviour"
     ],
     "answer": 3,
     "why": "Code, prompts, tools, model, embedder, index, config and evaluation suite.",
     "kind": "concept",
     "distractors": [
-     "No.",
-     "Not the meaning.",
-     "Too narrow.",
+     "Not a technical record.",
+     "Infrastructure, not behaviour.",
+     "Prompts, models and indexes change behaviour too.",
      ""
     ]
    },
@@ -37,43 +43,43 @@
     "id": "c18-1-m03",
     "q": "Only the prompt changes. Does the release ID change?",
     "options": [
-     "Yes; any behaviour-affecting input produces a new release ID",
-     "Only for major prompts",
-     "No; code did not change",
-     "Only if tests fail"
+     "Yes: any behaviour-changing input means a new ID",
+     "Only for major changes to the prompt",
+     "No, since none of the code changed",
+     "Only if some of the tests then fail"
     ],
     "answer": 0,
     "why": "Prompts change behaviour.",
     "kind": "concept",
     "distractors": [
      "",
-     "Any change.",
-     "That is the mistake.",
-     "Not the rule."
+     "Any change to behaviour counts.",
+     "Prompts change behaviour.",
+     "The ID tracks change, not test results."
     ]
    },
    {
     "id": "c18-1-m04",
     "q": "Why should traces carry the release ID?",
     "options": [
-     "So any output can be reproduced and any regression bisected",
-     "To save tokens",
-     "It is required by OTel",
-     "For billing"
+     "To reproduce outputs and bisect regressions",
+     "To save tokens on later calls",
+     "Because OTel requires a release ID",
+     "For billing each customer correctly"
     ],
     "answer": 0,
     "why": "Links outputs to the exact system.",
     "kind": "concept",
     "distractors": [
      "",
-     "Unrelated.",
-     "Not required.",
-     "Not the main reason."
+     "Not the reason.",
+     "Not required by OTel.",
+     "Not the reason."
     ]
    },
    {
     "id": "c18-1-m05",
-    "q": "Choose all the artefacts a manifest should version.",
+    "q": "An auditor asks the team to reproduce an answer from last month exactly. Which artefacts must the release manifest have versioned? Choose all that apply.",
     "options": [
      "Model and embedder revisions, and the index",
      "Prompts and tool schemas",
@@ -86,7 +92,7 @@
      3
     ],
     "why": "Everything that can change behaviour.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
      "",
@@ -98,37 +104,37 @@
     "id": "c18-1-m06",
     "q": "A rollback restored the code but left a new prompt and index live. What happens?",
     "options": [
-     "Everything is restored",
-     "The prompt is ignored",
-     "An incompatible combination may keep failing",
-     "The index rolls back itself"
+     "Everything is restored to the old state",
+     "The new prompt is ignored by the old code",
+     "The mismatched combination may keep failing",
+     "The index rolls itself back automatically"
     ],
     "answer": 2,
     "why": "Roll back the whole manifest.",
     "kind": "scenario",
     "distractors": [
-     "Only code was restored.",
-     "It is used.",
+     "Only the code was.",
+     "It is still used.",
      "",
-     "It does not."
+     "Indexes do not roll back on their own."
     ]
    },
    {
     "id": "c18-1-m07",
     "q": "Why version the evaluation suite in the manifest?",
     "options": [
-     "Suites never change",
-     "Results are only comparable when you know which suite produced them",
-     "For licences",
-     "To make releases bigger"
+     "Suites never change once they are written",
+     "Results compare only when you know which suite ran",
+     "For licence tracking of the suite's test data",
+     "To make each release larger and more complete"
     ],
     "answer": 1,
     "why": "Suites grow over time (17.9).",
     "kind": "concept",
     "distractors": [
-     "They change.",
+     "They grow with new cases.",
      "",
-     "Unrelated.",
+     "Not the reason.",
      "Not the reason."
     ]
    },
@@ -136,18 +142,18 @@
     "id": "c18-1-m08",
     "q": "Should an ACL or permissions watermark be part of the manifest, as in Harbor's?",
     "options": [
-     "Only for code",
-     "Only in staging",
-     "Never",
-     "Yes, if it affects which documents the system can use"
+     "Only for code, not data state",
+     "Only in staging, not production",
+     "Never; permissions are not versioned",
+     "Yes, if it changes which documents are used"
     ],
     "answer": 3,
     "why": "Anything that changes behaviour belongs there.",
     "kind": "concept",
     "distractors": [
-     "Not only code.",
-     "Production too.",
-     "It affects answers.",
+     "Data state can change behaviour too.",
+     "Production behaviour depends on it most.",
+     "They affect which documents are used.",
      ""
     ]
    },
@@ -155,57 +161,76 @@
     "id": "c18-1-m09",
     "q": "What makes a manifest useful for audits?",
     "options": [
-     "It is deleted after release",
-     "It is immutable and kept with the traces for the retention period",
-     "It is editable",
-     "It lives in a chat message"
+     "It is deleted after each release goes out to save space",
+     "It is immutable and kept with traces for the retention period",
+     "It can be edited after the release whenever it is needed",
+     "It lives in a chat message to the team, pinned to the channel"
     ],
     "answer": 1,
     "why": "Auditors need to reconstruct the system.",
     "kind": "concept",
     "distractors": [
-     "Must be kept.",
+     "Audits need it later.",
      "",
-     "Must be immutable.",
-     "Not durable."
+     "Editable records cannot prove anything.",
+     "Not durable or searchable."
     ]
    },
    {
     "id": "c18-1-m10",
     "q": "Two releases differ only in index version. What can bisecting show?",
     "options": [
-     "The model's weights",
-     "Network latency",
-     "Whether the index change caused a regression",
-     "Nothing"
+     "The model's weights at the time",
+     "Network latency between regions",
+     "Whether the index change caused it",
+     "Nothing useful about the change"
     ],
     "answer": 2,
     "why": "Manifests let you isolate a single changed input.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
+     "The model did not change.",
      "Unrelated.",
      "",
-     "It can."
+     "It isolates the index."
     ]
    },
    {
     "id": "c18-1-m11",
-    "q": "Which is the best rollback unit?",
+    "q": "At 2 a.m. a release that changed the prompt, the index and some code shows a regression, and the cause is unclear. What should on-call roll back?",
     "options": [
-     "The previous release manifest as a whole",
-     "The prompt only",
-     "Whatever changed last",
-     "The code only"
+     "The whole previous release manifest",
+     "The prompt only, as the likeliest cause",
+     "Whatever changed last in the release",
+     "The code only, as it is easiest to revert"
     ],
     "answer": 0,
     "why": "Restore a coherent, compatible system.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "",
-     "Leaves other parts.",
-     "May not be coherent.",
-     "Leaves other parts."
+     "The other changes stay live.",
+     "Order does not identify the cause.",
+     "Prompt and index stay new."
+    ]
+   },
+   {
+    "id": "c18-1-m12",
+    "q": "A team changes retrieval k from 8 to 20 in a config file without producing a new release ID. A regression appears, but bisecting by release shows no change. What went wrong?",
+    "options": [
+     "Config that changes behaviour must be in the manifest, giving a new release ID",
+     "Bisecting only works for code changes, so it was the wrong tool",
+     "k cannot change behaviour, so the regression lies elsewhere",
+     "The traces should have stored the full prompt instead of the ID"
+    ],
+    "answer": 0,
+    "why": "Any behaviour-affecting input belongs in the manifest; otherwise bisecting cannot find it.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Bisecting works on any versioned input.",
+     "More passages change answers, cost and latency.",
+     "The release ID is what links outputs to versions."
     ]
    }
   ],
@@ -222,7 +247,8 @@
      "embedder and index",
      "config",
      "eval suite"
-    ]
+    ],
+    "followUp": "Which item is most often left out?"
    },
    {
     "id": "c18-1-i02",
@@ -232,7 +258,8 @@
      "reproduce outputs",
      "bisect",
      "audit"
-    ]
+    ],
+    "followUp": "How do you find every trace served by a given release?"
    },
    {
     "id": "c18-1-i03",
@@ -242,7 +269,8 @@
      "prompts and indexes",
      "compatibility",
      "whole manifest"
-    ]
+    ],
+    "followUp": "Give an example of an incompatible combination."
    },
    {
     "id": "c18-1-i04",
@@ -264,7 +292,8 @@
      "hash of contents",
      "immutable",
      "stored with traces"
-    ]
+    ],
+    "followUp": "What goes into the hash, and what does not?"
    },
    {
     "id": "c18-1-i06",
@@ -276,7 +305,8 @@
      "index",
      "eval suite",
      "ACL state"
-    ]
+    ],
+    "followUp": "How would you catch a forgotten artefact automatically?"
    },
    {
     "id": "c18-1-i07",
@@ -300,7 +330,8 @@
      "registry",
      "trace integration",
      "rollback tooling"
-    ]
+    ],
+    "followUp": "How do teams roll back without a platform team's help?"
    }
   ]
  },
@@ -310,37 +341,43 @@
     "id": "c18-4-m01",
     "q": "Shadow deployments must never…",
     "options": [
-     "Read data",
-     "Call write tools",
-     "Use real traffic",
-     "Log traces"
+     "Read data from production stores",
+     "Call tools that write",
+     "Use copies of real user traffic",
+     "Log traces for later comparison"
     ],
     "answer": 1,
     "why": "Shadowing a write creates real duplicate actions.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "Read-only access is how shadowing works.",
+     "",
+     "Shadowing uses copies of real traffic.",
+     "Shadow runs should be traced to compare results."
+    ]
    },
    {
     "id": "c18-4-m02",
     "q": "What is a shadow deployment?",
     "options": [
-     "A backup region",
-     "A hidden feature",
-     "A canary at 50%",
-     "Copies of production requests go to the new version; its outputs are discarded and compared"
+     "A backup region kept warm so traffic can fail over during an outage",
+     "A hidden feature behind a flag that only internal staff can switch on",
+     "A canary that takes half of the live traffic and shows its answers to users",
+     "Copies of real requests go to the new version; its outputs are compared, never shown"
     ],
     "answer": 3,
     "why": "No user risk.",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "Not the meaning.",
-     "Users see canary output.",
+     "That is disaster recovery.",
+     "Flags gate features.",
+     "A canary serves users.",
      ""
     ]
    },
    {
     "id": "c18-4-m03",
-    "q": "What share of traffic does a canary typically get?",
+    "q": "A team wants to expose a new prompt to real users with little risk, comparing it against the baseline before going wider. Roughly what share of traffic should that first step get?",
     "options": [
      "50%",
      "100%",
@@ -349,7 +386,7 @@
     ],
     "answer": 3,
     "why": "Compare with the baseline in the same window.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Too large for a canary.",
      "That is full rollout.",
@@ -361,29 +398,29 @@
     "id": "c18-4-m04",
     "q": "Does rollback undo actions the bad version took?",
     "options": [
-     "No; messages, refunds and tickets stay done, so plan reconciliation",
-     "Only refunds",
-     "Only messages",
-     "Yes, always"
+     "No: past actions stay done; plan reconciliation",
+     "Only refunds, which the system can reverse",
+     "Only messages, which the system can recall",
+     "Yes, always: rollback undoes every action"
     ],
     "answer": 0,
     "why": "Compensation needs its own plan.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not automatic.",
-     "Not automatic.",
-     "Not true."
+     "Nothing is reversed automatically.",
+     "Sent messages stay sent.",
+     "Rollback changes versions, not past actions."
     ]
    },
    {
     "id": "c18-4-m05",
     "q": "What must rollback be?",
     "options": [
-     "One action, in minutes, with the previous version still deployed and compatible",
-     "A weekend project",
-     "A full rebuild",
-     "Optional"
+     "One fast action, with the old version still deployed and compatible",
+     "A weekend project for the platform team to plan and carry out",
+     "A full rebuild of every component from the previous commit",
+     "Optional, as long as the canary looked healthy before promotion"
     ],
     "answer": 0,
     "why": "Practise it.",
@@ -391,8 +428,8 @@
     "distractors": [
      "",
      "Too slow.",
-     "Too slow.",
-     "Required."
+     "Too slow and risky.",
+     "Always needed."
     ]
    },
    {
@@ -400,55 +437,55 @@
     "q": "In the gate-driven rollout figure, what happens if “rollback rehearsed” is unticked?",
     "options": [
      "Promotion is refused",
-     "Nothing",
-     "Rollout continues",
-     "It goes to 100%"
+     "Nothing changes in the rollout",
+     "The rollout continues as before",
+     "It jumps straight to 100%"
     ],
     "answer": 0,
     "why": "Every gate must be ticked to advance.",
     "kind": "concept",
     "distractors": [
      "",
+     "Gates block promotion.",
      "It stops.",
-     "It stops.",
-     "It stops."
+     "The opposite."
     ]
    },
    {
     "id": "c18-4-m07",
     "q": "A controlled rollout by cohort usually starts with…",
     "options": [
-     "Random external users only",
+     "Random external users, chosen evenly",
      "Internal users, then low-risk tenants",
-     "The largest customers",
-     "All users"
+     "The largest customers, for most signal",
+     "All users at once, for a fast result"
     ],
     "answer": 1,
     "why": "Exposure increases in steps.",
     "kind": "concept",
     "distractors": [
-     "Internal first.",
+     "Riskier than internal users.",
      "",
-     "Highest risk.",
-     "No step."
+     "Highest impact if it fails.",
+     "That is no rollout."
     ]
    },
    {
     "id": "c18-4-m08",
     "q": "What happens in automated canary analysis when a metric breaches its bound?",
     "options": [
-     "Traffic doubles",
-     "An email is sent and nothing else",
-     "The baseline is changed",
-     "Traffic returns to 0% automatically and the release is marked failed"
+     "Traffic doubles to collect more data",
+     "An email is sent, and nothing else",
+     "The baseline is changed to match",
+     "Traffic goes back to 0% and the release fails"
     ],
     "answer": 3,
     "why": "Automatic rollback.",
     "kind": "concept",
     "distractors": [
      "The opposite.",
-     "Too slow.",
-     "Hides the breach.",
+     "Too slow to protect users.",
+     "That hides the regression.",
      ""
     ]
    },
@@ -456,24 +493,24 @@
     "id": "c18-4-m09",
     "q": "How should agents be shadowed?",
     "options": [
-     "With real write tools",
-     "Not at all",
-     "Only with side-effect-free (mocked) tools",
-     "Only at night"
+     "With the real write tools enabled, for realism",
+     "Not at all; agents can never be shadowed",
+     "Only with mocked tools that have no side effects",
+     "Only at night, when traffic and risk are low"
     ],
     "answer": 2,
     "why": "Shadow traffic must never reach write tools.",
     "kind": "concept",
     "distractors": [
-     "Duplicates actions.",
+     "That duplicates side effects.",
      "They can be shadowed safely.",
      "",
-     "Time is irrelevant."
+     "Timing does not remove side effects."
     ]
    },
    {
     "id": "c18-4-m10",
-    "q": "For an index change, what does safe rollback require?",
+    "q": "A release swaps the retrieval index for one built with a new embedding model. What must be true for its rollback to be safe?",
     "options": [
      "Nothing",
      "Deleting the old index",
@@ -482,12 +519,50 @@
     ],
     "answer": 2,
     "why": "Rebuilding takes hours.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "It needs preparation.",
      "Then no rollback.",
      "",
      "Too slow."
+    ]
+   },
+   {
+    "id": "c18-4-m11",
+    "q": "A canary takes 5% of 40,000 requests an hour for 2 hours, and a judge scores a 10% sample of the canary's answers. How many answers are judged?",
+    "options": [
+     "4,000",
+     "400",
+     "200",
+     "8,000"
+    ],
+    "answer": 1,
+    "why": "40,000 × 0.05 × 2 = 4,000 canary requests; 10% of them is 400.",
+    "kind": "calculation",
+    "distractors": [
+     "That is all the canary's requests.",
+     "",
+     "That covers one hour only.",
+     "That uses 10% of all traffic."
+    ]
+   },
+   {
+    "id": "c18-4-m12",
+    "q": "A bad prompt sent wrong refund confirmations to 300 customers before it was rolled back. What does the chapter say happens next?",
+    "options": [
+     "Nothing more, because the rollback reverted the messages already sent",
+     "Wait for the customers to complain, then deal with each case as it comes",
+     "Rollback does not undo those messages: find the customers, reconcile and communicate",
+     "Roll back a second time so that the wrong confirmations are recalled"
+    ],
+    "answer": 2,
+    "why": "Past actions stay done; plan reconciliation or compensation.",
+    "kind": "scenario",
+    "distractors": [
+     "Sent messages stay sent.",
+     "That leaves them misinformed.",
+     "",
+     "Rolling back changes versions, not past actions."
     ]
    }
   ],
@@ -501,7 +576,8 @@
      "small share",
      "steps and cohorts",
      "risk"
-    ]
+    ],
+    "followUp": "Which would you use for a new model, and in what order?"
    },
    {
     "id": "c18-4-i02",
@@ -512,7 +588,8 @@
      "compatible",
      "one action",
      "rehearsed"
-    ]
+    ],
+    "followUp": "How often should rollback be rehearsed?"
    },
    {
     "id": "c18-4-i03",
@@ -521,7 +598,8 @@
     "covers": [
      "duplicate side effects",
      "stub tools"
-    ]
+    ],
+    "followUp": "How would you stub the write tools?"
    },
    {
     "id": "c18-4-i04",
@@ -544,7 +622,8 @@
      "reconcile or compensate",
      "communicate",
      "audit"
-    ]
+    ],
+    "followUp": "Who decides how to compensate affected customers?"
    },
    {
     "id": "c18-4-i06",
@@ -555,7 +634,8 @@
      "canary steps",
      "metrics and bounds",
      "automatic rollback"
-    ]
+    ],
+    "followUp": "Which metrics would trigger an automatic rollback?"
    },
    {
     "id": "c18-4-i07",
@@ -581,7 +661,8 @@
      "statistics",
      "automatic rollback",
      "reporting"
-    ]
+    ],
+    "followUp": "How much canary traffic do you need for a reliable comparison?"
    }
   ]
  },
@@ -591,32 +672,38 @@
     "id": "c18-3-m01",
     "q": "A candidate improves average accuracy but fails one cross-tenant case. Decision?",
     "options": [
-     "Ship",
+     "Ship, as the average improved",
      "Block release",
-     "Ship to half the tenants",
-     "Ignore one case"
+     "Ship to half of the tenants",
+     "Ignore one case out of many"
     ],
     "answer": 1,
     "why": "Critical invariants block regardless of average improvements.",
-    "kind": "concept"
+    "kind": "concept",
+    "distractors": [
+     "A critical leak blocks release.",
+     "",
+     "The leak could hit any tenant.",
+     "Critical cases are hard gates."
+    ]
    },
    {
     "id": "c18-3-m02",
     "q": "What is a release gate?",
     "options": [
-     "A feature flag",
-     "A firewall",
-     "An automated check that blocks promotion when a threshold is not met",
-     "A manual approval email"
+     "A feature flag that turns each release on or off",
+     "A firewall rule in front of the production API",
+     "An automated check that blocks promotion below a threshold",
+     "A manual approval email sent to the release owner"
     ],
     "answer": 2,
     "why": "Gates enforce acceptance and release criteria.",
     "kind": "concept",
     "distractors": [
-     "Different tool.",
-     "Unrelated.",
+     "Flags route traffic; gates check.",
+     "Network control, not a release check.",
      "",
-     "Not automated."
+     "Gates are automated."
     ]
    },
    {
@@ -648,15 +735,15 @@
     "options": [
      "Different changes fail different gates",
      "Regulations require exactly four",
-     "One is enough",
-     "To slow releases"
+     "One gate is enough on its own",
+     "To slow releases down on purpose"
     ],
     "answer": 0,
     "why": "e.g. a cheaper model fails quality; a new tool fails security.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not a rule.",
+     "Not a legal number.",
      "Each catches different failures.",
      "Not the aim."
     ]
@@ -665,57 +752,57 @@
     "id": "c18-3-m05",
     "q": "A quality threshold says “overall ≥ baseline − 0.5 points (within CI); no language drops > 2 points”. A candidate is +1 overall but −3 in one language. Does it pass?",
     "options": [
-     "No; the language gate fails",
-     "Yes; within CI",
-     "Yes; overall improved",
-     "Cannot tell"
+     "No: the language gate fails",
+     "Yes, since it is within the CI",
+     "Yes, since overall accuracy improved",
+     "It cannot be told from these numbers"
     ],
     "answer": 0,
     "why": "Per-segment gates block hidden regressions.",
     "kind": "calculation",
     "distractors": [
      "",
-     "Language drop exceeds 2.",
-     "The language rule fails.",
-     "The numbers decide."
+     "The language rule is separate.",
+     "A language dropped too far.",
+     "It can."
     ]
    },
    {
     "id": "c18-3-m06",
     "q": "Cost gate: cost per successful task ≤ +10% unless approved. Current $0.050; candidate $0.057. What happens?",
     "options": [
-     "Blocked: any rise fails",
+     "Blocked: any rise in cost fails",
      "Blocked unless approved: +14%",
-     "Passes: +7%",
-     "Passes: under $0.06"
+     "Passes: the rise is about +7%",
+     "Passes: it is still under $0.06"
     ],
     "answer": 1,
     "why": "0.057 / 0.050 = 1.14.",
     "kind": "calculation",
     "distractors": [
-     "Up to +10% passes.",
+     "Rises up to 10% pass.",
      "",
-     "Wrong arithmetic.",
-     "The gate is relative."
+     "0.057 ÷ 0.050 = +14%, not +7%.",
+     "The gate is relative, not an absolute $0.06."
     ]
    },
    {
     "id": "c18-3-m07",
     "q": "Is a green CI badge proof that every production failure is covered?",
     "options": [
-     "Only for security",
-     "No; gates cover only the cases in the suites",
-     "Yes",
-     "Only for quality"
+     "Only for the security checks, not others",
+     "No: gates cover only what is in the suites",
+     "Yes, as long as every gate shows green",
+     "Only for the quality checks, not others"
     ],
     "answer": 1,
     "why": "Keep adding production failures (17.9).",
     "kind": "concept",
     "distractors": [
-     "Any gate.",
+     "Coverage is limited for every gate.",
      "",
-     "Overclaims.",
-     "Any gate."
+     "Suites cover only known cases.",
+     "Coverage is limited for every gate."
     ]
    },
    {
@@ -741,19 +828,19 @@
     "id": "c18-3-m09",
     "q": "What does the laptop lab's gate.py do?",
     "options": [
-     "Deploys to production",
-     "Computes pass rates overall and on critical cases and exits non-zero below thresholds",
-     "Writes release notes",
-     "Trains a model"
+     "Deploys the build to production once the tests have finished running",
+     "Computes overall and critical pass rates; exits non-zero below thresholds",
+     "Writes the release notes from the results of the evaluation run",
+     "Trains a new model on the failing cases so that the next run passes"
     ],
     "answer": 1,
     "why": "A non-zero exit fails the CI job.",
     "kind": "concept",
     "distractors": [
-     "No.",
+     "It only checks results.",
      "",
-     "No.",
-     "No."
+     "Not its job.",
+     "Not its job."
     ]
    },
    {
@@ -761,18 +848,56 @@
     "q": "Why should judge-based quality metrics include confidence intervals?",
     "options": [
      "Judges are always wrong",
-     "To slow the gate",
-     "To look scientific",
+     "To slow the gate down",
+     "To look more scientific",
      "Small differences may be noise"
     ],
     "answer": 3,
     "why": "Compare within CI.",
     "kind": "concept",
     "distractors": [
-     "Not true.",
-     "Not the reason.",
-     "Not the reason.",
+     "They are useful, if noisy.",
+     "Not the aim.",
+     "Not the aim.",
      ""
+    ]
+   },
+   {
+    "id": "c18-3-m11",
+    "q": "The cost gate allows cost per successful task to rise by up to 10% without approval. The current release costs $0.040 per success, the candidate $0.043. What happens?",
+    "options": [
+     "It passes only because the amounts are under $0.05",
+     "Blocked: the rise is 30%, far over the gate",
+     "It passes: a 7.5% rise is within the 10% gate",
+     "Blocked: any rise in cost needs approval"
+    ],
+    "answer": 2,
+    "why": "0.043 ÷ 0.040 = 1.075.",
+    "kind": "calculation",
+    "distractors": [
+     "The gate is relative.",
+     "3 tenths of a cent on 4 cents is 7.5%.",
+     "",
+     "Rises up to 10% pass."
+    ]
+   },
+   {
+    "id": "c18-3-m12",
+    "q": "Switching to a cheaper model passes the quality and cost gates, but in the load test p99 total time rises to 15 s against a 12 s threshold. What happens?",
+    "options": [
+     "The latency threshold is raised to 15 s for this release",
+     "It ships, since p95 is what matters to users",
+     "The performance gate blocks promotion until latency is fixed",
+     "It ships, since quality and cost both passed"
+    ],
+    "answer": 2,
+    "why": "Each gate must pass; different changes fail different gates.",
+    "kind": "scenario",
+    "distractors": [
+     "Moving the gate hides the regression.",
+     "The threshold is set on p99.",
+     "",
+     "Every gate must pass."
     ]
    }
   ],
@@ -787,7 +912,8 @@
      "performance",
      "cost",
      "thresholds"
-    ]
+    ],
+    "followUp": "Which gate fails most often in practice?"
    },
    {
     "id": "c18-3-i02",
@@ -797,7 +923,8 @@
      "averages hide drops",
      "languages",
      "critical cases block"
-    ]
+    ],
+    "followUp": "How would you choose the per-language threshold?"
    },
    {
     "id": "c18-3-i03",
@@ -807,7 +934,8 @@
      "coverage limited to suites",
      "new failures",
      "production differences"
-    ]
+    ],
+    "followUp": "How do you find the failures the gates miss?"
    },
    {
     "id": "c18-3-i04",
@@ -828,7 +956,8 @@
      "cost per success",
      "relative change",
      "approval path"
-    ]
+    ],
+    "followUp": "Who approves an exception?"
    },
    {
     "id": "c18-3-i06",
@@ -839,7 +968,8 @@
      "critical set first",
      "cache results for unchanged parts",
      "full run before prod"
-    ]
+    ],
+    "followUp": "What can safely run only before production?"
    },
    {
     "id": "c18-3-i07",
@@ -864,7 +994,8 @@
      "team thresholds",
      "reporting",
      "exceptions with audit"
-    ]
+    ],
+    "followUp": "How do you stop teams from loosening thresholds to pass?"
    }
   ]
  },
@@ -874,55 +1005,55 @@
     "id": "c18-2-m01",
     "q": "What does “build once, promote the same artefact” prevent?",
     "options": [
-     "Rollbacks",
-     "Shipping something you never tested",
-     "Fast deploys",
-     "Using staging"
+     "Rollbacks to earlier releases",
+     "Shipping something never tested",
+     "Fast deploys to production",
+     "Using a staging environment"
     ],
     "answer": 1,
     "why": "Rebuilding per environment means you never tested what you shipped.",
     "kind": "concept",
     "distractors": [
-     "It enables them.",
+     "Rollbacks still work.",
      "",
-     "It enables them.",
-     "It uses staging."
+     "It speeds them up.",
+     "Staging is still used."
     ]
    },
    {
     "id": "c18-2-m02",
     "q": "What should differ between staging and production?",
     "options": [
-     "The prompts",
-     "The model",
+     "The prompts used in each environment",
+     "The model version each environment calls",
      "Only configuration such as credentials and capacity",
-     "The image"
+     "The container image digest that is deployed"
     ],
     "answer": 2,
     "why": "Same artefacts, different config.",
     "kind": "concept",
     "distractors": [
-     "Must be the same.",
-     "Must be the same.",
+     "Prompts must match.",
+     "The model must match.",
      "",
-     "Must be the same."
+     "The image must match."
     ]
    },
    {
     "id": "c18-2-m03",
     "q": "What is GitOps?",
     "options": [
-     "A CI vendor",
-     "Using Git for code only",
-     "Desired state lives in a repository, and a controller syncs clusters to it",
-     "Manual console changes"
+     "A CI vendor's hosted service for building images",
+     "Using Git to store the application code only",
+     "Desired state in a repo; a controller syncs clusters to it",
+     "Manual console changes, logged in a shared sheet"
     ],
     "answer": 2,
     "why": "Gives an audit trail and rollback by revert.",
     "kind": "concept",
     "distractors": [
-     "Not a vendor.",
-     "Too narrow.",
+     "It is a practice.",
+     "It covers environments too.",
      "",
      "The opposite."
     ]
@@ -931,18 +1062,18 @@
     "id": "c18-2-m04",
     "q": "A container downloads “latest” model weights at start-up. What is the problem?",
     "options": [
-     "Downloads are slow",
-     "It saves storage",
-     "Nothing",
-     "The release is not reproducible; staging and production may run different models"
+     "Downloads at start-up make the containers slow to become ready",
+     "It saves storage in the image, which is good practice anyway",
+     "Nothing; the latest weights are always the best ones to run",
+     "Not reproducible: staging and production may run different models"
     ],
     "answer": 3,
     "why": "Pin model revisions.",
     "kind": "scenario",
     "distractors": [
-     "Not the main issue.",
-     "Not the issue.",
-     "It is a problem.",
+     "Speed is minor.",
+     "Not the problem.",
+     "It breaks reproducibility.",
      ""
     ]
    },
@@ -992,57 +1123,57 @@
     "id": "c18-2-m07",
     "q": "Why should staging mirror production's shape?",
     "options": [
-     "It does not matter",
-     "So tests are meaningful: same engine, index type and realistic data",
-     "To cost the same",
-     "For marketing"
+     "It does not matter for tests, only for demos",
+     "So tests mean something: same engine, index, data",
+     "To cost the same as production each month",
+     "For marketing screenshots of the product"
     ],
     "answer": 1,
     "why": "Different shapes give misleading results.",
     "kind": "concept",
     "distractors": [
-     "It matters.",
+     "It does.",
      "",
-     "Not the reason.",
-     "No."
+     "Not the goal.",
+     "Irrelevant."
     ]
    },
    {
     "id": "c18-2-m08",
     "q": "Which tools are named for infrastructure as code?",
     "options": [
-     "Jaeger and Loki",
-     "OpenTofu/Terraform, Pulumi, and Kubernetes manifests with Helm/Kustomize",
-     "k6 and Locust",
-     "garak and PyRIT"
+     "Jaeger, Grafana Loki and Prometheus",
+     "OpenTofu/Terraform, Pulumi, Helm/Kustomize",
+     "k6, Locust, JMeter and Gatling tools",
+     "garak, PyRIT and promptfoo red-team"
     ],
     "answer": 1,
     "why": "Observability, red teaming and load testing are other chapters.",
     "kind": "concept",
     "distractors": [
-     "Observability.",
+     "Observability tools.",
      "",
-     "Load testing.",
-     "Red teaming."
+     "Load testers.",
+     "Red-team scanners."
     ]
    },
    {
     "id": "c18-2-m09",
     "q": "A hotfix is applied directly in production, and the next GitOps sync removes it. What should have happened?",
     "options": [
-     "Nothing",
-     "The fix should go through the repository, so the desired state includes it",
-     "Apply it twice",
-     "Disable GitOps"
+     "Nothing; GitOps was right to remove the change",
+     "It should go through the repo, so the state includes it",
+     "Apply the fix twice so that it sticks this time",
+     "Disable GitOps for that service from now on"
     ],
     "answer": 1,
     "why": "The repository is the source of truth.",
     "kind": "scenario",
     "distractors": [
-     "The fix was lost.",
+     "The fix was needed.",
      "",
-     "Still removed.",
-     "Loses the audit trail."
+     "The sync removes it again.",
+     "That loses the audit trail."
     ]
    },
    {
@@ -1063,6 +1194,44 @@
      "Gates are required.",
      ""
     ]
+   },
+   {
+    "id": "c18-2-m11",
+    "q": "Staging rebuilt the image from a commit and passed every gate. Production rebuilt it again from the same commit, pulled a new base layer, and failed. What practice was missing?",
+    "options": [
+     "A longer canary in production to catch the failure sooner",
+     "More tests in production after every deploy finishes",
+     "Build once and promote the same image digest, with base images pinned",
+     "Deploying from developers' laptops instead of from CI"
+    ],
+    "answer": 2,
+    "why": "Rebuilding per environment means you never tested what you shipped.",
+    "kind": "scenario",
+    "distractors": [
+     "It would only catch the failure later.",
+     "The problem is that a different artefact shipped.",
+     "",
+     "That is less reproducible."
+    ]
+   },
+   {
+    "id": "c18-2-m12",
+    "q": "Staging runs a small CPU engine with a flat vector index, while production uses vLLM and HNSW. Staging load tests pass, but production misses its latency SLO. What does the chapter recommend?",
+    "options": [
+     "Make staging mirror production's shape: same engine, index type, realistic data",
+     "Use the same small CPU engine in production as well, so they match",
+     "Load-test in production only from now on, skipping staging entirely",
+     "Raise the production latency SLO so that it matches what staging shows"
+    ],
+    "answer": 0,
+    "why": "Tests mean something only on a production-like environment.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "That changes production, not the test.",
+     "Staging exists to catch problems first.",
+     "That hides the gap."
+    ]
    }
   ],
   "interview": [
@@ -1075,7 +1244,8 @@
      "digests",
      "pinned engines and models",
      "deterministic builds"
-    ]
+    ],
+    "followUp": "Which pin is most often forgotten?"
    },
    {
     "id": "c18-2-i02",
@@ -1085,7 +1255,8 @@
      "build once",
      "dev, staging, prod",
      "config differs only"
-    ]
+    ],
+    "followUp": "What may legitimately differ between environments?"
    },
    {
     "id": "c18-2-i03",
@@ -1096,7 +1267,8 @@
      "controller syncs",
      "audit trail",
      "rollback by revert"
-    ]
+    ],
+    "followUp": "How do you handle an urgent fix with GitOps?"
    },
    {
     "id": "c18-2-i04",
@@ -1119,7 +1291,8 @@
      "reviews",
      "pipelines",
      "drift detection"
-    ]
+    ],
+    "followUp": "How do you detect drift from the code?"
    },
    {
     "id": "c18-2-i06",
@@ -1130,7 +1303,8 @@
      "review process",
      "lock consoles",
      "drift alerts"
-    ]
+    ],
+    "followUp": "What if a console change was needed in an emergency?"
    },
    {
     "id": "c18-2-i07",
@@ -1156,7 +1330,8 @@
      "artefact registry",
      "gates",
      "rollouts"
-    ]
+    ],
+    "followUp": "Which part would you build first?"
    }
   ]
  },
@@ -1166,10 +1341,10 @@
     "id": "c18-5-m01",
     "q": "Why treat a model upgrade as a release?",
     "options": [
-     "Providers require it",
-     "It is faster",
-     "Behaviour changes affect prompts, formats, cost and refusals",
-     "Models never change"
+     "Providers require it in their terms of service",
+     "It is faster than doing a normal library upgrade",
+     "Behaviour changes hit prompts, formats, cost and refusals",
+     "Models never change between versions in practice"
     ],
     "answer": 2,
     "why": "Run the full suite.",
@@ -1178,7 +1353,7 @@
      "Not the reason.",
      "Not the reason.",
      "",
-     "They change often."
+     "They do."
     ]
    },
    {
@@ -1265,19 +1440,19 @@
     "id": "c18-5-m06",
     "q": "A team calls a “latest” alias and the provider moves it. What protects them?",
     "options": [
-     "Nothing",
-     "Pinning dated snapshot versions plus scheduled re-evaluation",
-     "A different SDK",
-     "A larger timeout"
+     "Nothing; aliases are safe to rely on",
+     "Pinned snapshots plus scheduled re-evaluation",
+     "A different SDK for calling the provider",
+     "A larger request timeout on every call"
     ],
     "answer": 1,
     "why": "Aliases can change silently.",
     "kind": "scenario",
     "distractors": [
-     "Pinning helps.",
+     "They move silently.",
      "",
-     "Unrelated.",
-     "Unrelated."
+     "The SDK does not pin models.",
+     "Timeouts do not pin models."
     ]
    },
    {
@@ -1303,17 +1478,17 @@
     "id": "c18-5-m08",
     "q": "A fine-tuned model's base gets a new version. What is needed?",
     "options": [
-     "Only re-tokenising",
-     "Nothing",
-     "Only a smoke test",
-     "Re-run fine-tuning and all of 13.6's checks"
+     "Only re-tokenising the data",
+     "Nothing; adapters carry over",
+     "Only a quick smoke test",
+     "Re-run fine-tuning and 13.6's checks"
     ],
     "answer": 3,
     "why": "Adapters depend on the exact base.",
     "kind": "concept",
     "distractors": [
      "Not enough.",
-     "Behaviour changes.",
+     "They are tied to the base.",
      "Not enough.",
      ""
     ]
@@ -1322,19 +1497,19 @@
     "id": "c18-5-m09",
     "q": "Over-refusal on the should-answer set rose from 1.2% to 3.1%. What should you do?",
     "options": [
-     "Ignore it",
-     "Investigate the categories and adjust the system prompt",
-     "Raise temperature",
-     "Ship; refusals are safe"
+     "Ignore it, since it is within normal noise",
+     "Investigate the categories; adjust the system prompt",
+     "Raise the temperature to vary the answers",
+     "Ship it, since refusing is always the safe choice"
     ],
     "answer": 1,
     "why": "Over-refusal blocks legitimate users.",
     "kind": "concept",
     "distractors": [
-     "It is a regression.",
+     "A tripling is a signal.",
      "",
-     "Unrelated.",
-     "Over-refusal is a failure."
+     "Not a fix.",
+     "Over-refusal fails users."
     ]
    },
    {
@@ -1342,18 +1517,56 @@
     "q": "JSON schema adherence without constrained decoding fell from 99.8% to 99.1% on the new model. What is the report's action?",
     "options": [
      "Enable constrained decoding",
-     "Raise temperature",
-     "Drop JSON output",
-     "Ship as is"
+     "Raise the temperature",
+     "Drop JSON output entirely",
+     "Ship it as it is"
     ],
     "answer": 0,
     "why": "Constrained decoding enforces the schema (7.4).",
     "kind": "concept",
     "distractors": [
      "",
-     "Makes it worse.",
-     "Downstream code needs it.",
-     "Parsers would fail on 0.9%."
+     "Not a fix.",
+     "Not needed.",
+     "A drop needs action."
+    ]
+   },
+   {
+    "id": "c18-5-m11",
+    "q": "A new model's median output length is 38% higher. Output tokens are 60% of the cost per task. Roughly how much does the cost per task rise, and what does the 10% cost gate say?",
+    "options": [
+     "About 38%, the same as the change in output length",
+     "About 23%, so the cost gate fails without length guidance",
+     "About 15%, which passes the cost gate with a warning",
+     "About 6%, which passes the gate comfortably"
+    ],
+    "answer": 1,
+    "why": "0.60 × 38% ≈ 23% more per task.",
+    "kind": "calculation",
+    "distractors": [
+     "Input cost does not change.",
+     "",
+     "0.6 × 38% is about 23%.",
+     "That multiplies 0.6 × 10."
+    ]
+   },
+   {
+    "id": "c18-5-m12",
+    "q": "A provider announces that a model version retires in 90 days. Three features use it, but nobody knows which. What practice was missing?",
+    "options": [
+     "A larger budget for emergency migrations",
+     "Calling the “latest” alias so retirements never matter",
+     "A model inventory and a retirement calendar with owners",
+     "A contract that forbids the provider from retiring models"
+    ],
+    "answer": 2,
+    "why": "Tracking which features use which versions makes deprecations plannable.",
+    "kind": "scenario",
+    "distractors": [
+     "Money does not show what to migrate.",
+     "Aliases move silently.",
+     "",
+     "Retirements will happen."
     ]
    }
   ],
@@ -1368,7 +1581,8 @@
      "re-tune prompts",
      "gates",
      "rollout"
-    ]
+    ],
+    "followUp": "Which check most often finds problems?"
    },
    {
     "id": "c18-5-i02",
@@ -1381,7 +1595,8 @@
      "verbosity",
      "tokenizer",
      "parameters"
-    ]
+    ],
+    "followUp": "Which of these surprised you most in practice?"
    },
    {
     "id": "c18-5-i03",
@@ -1392,7 +1607,8 @@
      "retirement calendar",
      "owners",
      "lead time"
-    ]
+    ],
+    "followUp": "How much lead time do you plan for?"
    },
    {
     "id": "c18-5-i04",
@@ -1415,7 +1631,8 @@
      "version together",
      "re-tune budget",
      "suite per model"
-    ]
+    ],
+    "followUp": "When would you keep two prompt variants long term?"
    },
    {
     "id": "c18-5-i06",
@@ -1426,7 +1643,8 @@
      "blue/green",
      "atomic switch",
      "rollback"
-    ]
+    ],
+    "followUp": "How do you keep queries and documents in step?"
    },
    {
     "id": "c18-5-i07",
@@ -1452,7 +1670,8 @@
      "compatibility testing",
      "rollout",
      "ownership"
-    ]
+    ],
+    "followUp": "Who owns the inventory?"
    }
   ]
  },
@@ -1462,18 +1681,18 @@
     "id": "c18-6-m01",
     "q": "Why is the diff between an AI draft and the sent version valuable?",
     "options": [
-     "It is free storage",
+     "It is free storage for the team's archive of replies",
      "It gives an automatic quality metric and, after review, training data",
-     "It shows the user's typing speed",
-     "It measures latency"
+     "It shows how fast each user types and edits drafts",
+     "It measures the latency of each reply the model writes"
     ],
     "answer": 1,
     "why": "Edit fraction tracks quality per prompt version.",
     "kind": "concept",
     "distractors": [
-     "Not the reason.",
+     "Not the value.",
      "",
-     "Unrelated.",
+     "Irrelevant.",
      "Unrelated."
     ]
    },
@@ -1500,19 +1719,19 @@
     "id": "c18-6-m03",
     "q": "How should new labels be split?",
     "options": [
-     "All into training",
-     "Into held-out evaluation and training pools, never mixed",
-     "Randomly reused in both",
-     "All into evaluation"
+     "All of them into the training pool, for more data",
+     "Held-out evaluation and training pools, never mixed",
+     "Randomly reused in both pools at the same time",
+     "All of them into the evaluation pool, for coverage"
     ],
     "answer": 1,
     "why": "Mixing makes evaluation measure memory.",
     "kind": "concept",
     "distractors": [
-     "Loses evaluation.",
+     "No honest evaluation remains.",
      "",
-     "Leakage.",
-     "Loses training data."
+     "That leaks test data into training.",
+     "Training gets nothing."
     ]
    },
    {
@@ -1542,10 +1761,10 @@
     "id": "c18-6-m05",
     "q": "Why re-run the full suite weekly even without changes?",
     "options": [
-     "To use spare GPUs",
-     "Because tests expire",
-     "It is not needed",
-     "Providers, documents and user behaviour change underneath you"
+     "To use spare GPU capacity at the weekends",
+     "Because test results expire after one week",
+     "It is not needed if nothing in the code changed",
+     "Providers, documents and users change underneath you"
     ],
     "answer": 3,
     "why": "Scheduled re-evaluation catches silent changes.",
@@ -1553,7 +1772,7 @@
     "distractors": [
      "Not the reason.",
      "Not the reason.",
-     "It is needed.",
+     "Things change underneath.",
      ""
     ]
    },
@@ -1561,16 +1780,16 @@
     "id": "c18-6-m06",
     "q": "How often should the evaluation set itself be refreshed?",
     "options": [
-     "Daily",
-     "Only after incidents",
-     "Quarterly, with new production samples",
-     "Never"
+     "Daily, from yesterday's traffic",
+     "Only after an incident",
+     "Quarterly, with new samples",
+     "Never, to keep comparisons fair"
     ],
     "answer": 2,
     "why": "So it does not go stale.",
     "kind": "concept",
     "distractors": [
-     "Too unstable.",
+     "Too churny.",
      "Too rare.",
      "",
      "It goes stale."
@@ -1580,17 +1799,17 @@
     "id": "c18-6-m07",
     "q": "Why not feed user corrections straight into training?",
     "options": [
-     "Training cannot use text",
-     "They are always correct",
-     "They are too small",
+     "Training cannot use text corrections at all",
+     "They are always correct, so no check is needed",
+     "They are too few to matter for training",
      "Some are wrong, malicious or out of scope"
     ],
     "answer": 3,
     "why": "Review them first.",
     "kind": "concept",
     "distractors": [
-     "Not true.",
-     "Not true.",
+     "It can.",
+     "Not always.",
      "Not the reason.",
      ""
     ]
@@ -1599,10 +1818,10 @@
     "id": "c18-6-m08",
     "q": "A recurring failure on a new document type appears. What comes first?",
     "options": [
-     "Fix the parser and add a regression case; add training data only if a gap remains",
-     "Ignore it",
-     "Retrain immediately",
-     "Switch models"
+     "Fix the parser, add a case; train only if a gap remains",
+     "Ignore it, as it is probably a one-off",
+     "Retrain the whole model immediately on it",
+     "Switch to a newer model from another provider"
     ],
     "answer": 0,
     "why": "Fix root causes in the cheapest place.",
@@ -1610,8 +1829,8 @@
     "distractors": [
      "",
      "It recurs.",
-     "Premature.",
-     "Premature."
+     "The cause is the parser.",
+     "Not the cause."
     ]
    },
    {
@@ -1637,19 +1856,57 @@
     "id": "c18-6-m10",
     "q": "What should a met retraining trigger do?",
     "options": [
-     "Retrain and deploy automatically",
-     "Open a work item; retraining still goes through all gates",
-     "Delete the old model",
-     "Nothing"
+     "Retrain and deploy the new model automatically",
+     "Open a work item; retraining still passes every gate",
+     "Delete the old model at once to save storage",
+     "Nothing until the next quarterly planning cycle"
     ],
     "answer": 1,
     "why": "Triggers start work, not releases.",
     "kind": "concept",
     "distractors": [
-     "Skips gates.",
+     "Retraining still needs gates.",
      "",
-     "Rollback needs it.",
-     "The trigger exists to act."
+     "It is needed for rollback.",
+     "Triggers exist to act."
+    ]
+   },
+   {
+    "id": "c18-6-m11",
+    "q": "Of 2,000 AI-drafted replies, 1,500 were sent with light edits, 300 were heavily edited and 200 were discarded. What share were heavily edited or discarded?",
+    "options": [
+     "15%",
+     "25%",
+     "75%",
+     "10%"
+    ],
+    "answer": 1,
+    "why": "(300 + 200) ÷ 2,000 = 0.25.",
+    "kind": "calculation",
+    "distractors": [
+     "That counts only the heavy edits.",
+     "",
+     "That is the lightly edited share.",
+     "That counts only the discards."
+    ]
+   },
+   {
+    "id": "c18-6-m12",
+    "q": "A retraining trigger is set at 2,000 new corrected examples, and 2,300 have arrived. What should happen?",
+    "options": [
+     "All 2,300 examples go into the evaluation set",
+     "The model retrains and deploys automatically tonight",
+     "Nothing until the next quarterly review",
+     "A work item opens; any retrained model still passes every gate"
+    ],
+    "answer": 3,
+    "why": "Triggers start work; they do not bypass gates.",
+    "kind": "scenario",
+    "distractors": [
+     "New labels are split between evaluation and training.",
+     "Retraining still needs gates.",
+     "Triggers exist so the team acts.",
+     ""
     ]
    }
   ],
@@ -1663,7 +1920,8 @@
      "implicit",
      "outcomes",
      "linked to traces"
-    ]
+    ],
+    "followUp": "Which signal is cheapest to start with?"
    },
    {
     "id": "c18-6-i02",
@@ -1673,7 +1931,8 @@
      "defined triggers",
      "work item",
      "gates still apply"
-    ]
+    ],
+    "followUp": "Give an example trigger and what it starts."
    },
    {
     "id": "c18-6-i03",
@@ -1683,7 +1942,8 @@
      "leakage",
      "memorisation",
      "honest measurement"
-    ]
+    ],
+    "followUp": "How do you check that no evaluation case reached training?"
    },
    {
     "id": "c18-6-i04",
@@ -1705,7 +1965,8 @@
      "refresh with production samples",
      "keep old cases",
      "version the suite"
-    ]
+    ],
+    "followUp": "Which old cases do you keep?"
    },
    {
     "id": "c18-6-i06",
@@ -1717,7 +1978,8 @@
      "evaluation pool",
      "training pool",
      "trigger check"
-    ]
+    ],
+    "followUp": "What QC would you run on the batch?"
    },
    {
     "id": "c18-6-i07",
@@ -1743,7 +2005,8 @@
      "triggers",
      "scheduled evaluation",
      "release path"
-    ]
+    ],
+    "followUp": "How do you use proxies while outcomes are delayed?"
    }
   ]
  },
@@ -1753,24 +2016,24 @@
     "id": "c18-7-m01",
     "q": "Who should be accountable for an AI system?",
     "options": [
-     "Everyone",
-     "Nobody in particular",
-     "A named owning team, with owners for each component",
-     "The model provider"
+     "Everyone on the team, sharing it equally",
+     "Nobody in particular; it is shared",
+     "A named team, with an owner per component",
+     "The model provider that serves it"
     ],
     "answer": 2,
     "why": "Quality, cost, incidents and compliance need owners.",
     "kind": "concept",
     "distractors": [
-     "Nobody, in practice.",
-     "Unsafe.",
+     "No one would act.",
+     "No one would act.",
      "",
-     "Not their system."
+     "Providers do not own your system."
     ]
    },
    {
     "id": "c18-7-m02",
-    "q": "In RACI, what does A mean?",
+    "q": "A RACI chart marks the product owner “A” and AI engineering “R” for cost budgets. What does the product owner's “A” mean?",
     "options": [
      "Assisted",
      "Approved",
@@ -1779,7 +2042,7 @@
     ],
     "answer": 2,
     "why": "R = responsible, C = consulted, I = informed.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "Not the term.",
      "Not the term.",
@@ -1789,7 +2052,7 @@
    },
    {
     "id": "c18-7-m03",
-    "q": "Choose all the items an operational readiness review should verify.",
+    "q": "Before an assistant launches, a review must confirm that it can actually be operated. Which items should the review verify? Choose all that apply.",
     "options": [
      "A successful demo only",
      "SLOs, dashboards and alerts live",
@@ -1802,7 +2065,7 @@
      3
     ],
     "why": "Plus security review and cost budgets.",
-    "kind": "concept",
+    "kind": "scenario",
     "distractors": [
      "A demo is not readiness.",
      "",
@@ -1814,18 +2077,18 @@
     "id": "c18-7-m04",
     "q": "What do release notes per manifest include?",
     "options": [
-     "Only the version number",
-     "Nothing",
-     "Marketing copy",
-     "What changed, evaluation results vs previous, known limits, rollout plan and rollback"
+     "Only the version number and the date of the release",
+     "Nothing beyond the release ID and who approved it",
+     "Marketing copy written for the users and customers",
+     "Changes, eval results vs before, limits, rollout and rollback"
     ],
     "answer": 3,
     "why": "Readers can judge the release.",
     "kind": "concept",
     "distractors": [
-     "Not enough.",
-     "Required.",
-     "Not the purpose.",
+     "Too little.",
+     "Too little.",
+     "Not release notes.",
      ""
     ]
    },
@@ -1833,17 +2096,17 @@
     "id": "c18-7-m05",
     "q": "What makes a good service handover?",
     "options": [
-     "Architecture and trace walkthrough, access, runbook drills, shadow on-call and joint ownership",
-     "A demo",
-     "An email",
-     "An architecture diagram"
+     "Walkthroughs, access, drills, shadow on-call and joint ownership",
+     "A demo of the main features for the receiving team",
+     "An email with the repository link and a short summary",
+     "An architecture diagram with the main data flows"
     ],
     "answer": 0,
     "why": "The original team steps back only after joint ownership.",
     "kind": "concept",
     "distractors": [
      "",
-     "Not enough.",
+     "Not enough to operate it.",
      "Not enough.",
      "Not enough."
     ]
@@ -1852,18 +2115,18 @@
     "id": "c18-7-m06",
     "q": "A system card describes…",
     "options": [
-     "The office layout",
-     "Prices",
-     "Only the model's weights",
-     "Intended use, risks and controls of the whole system"
+     "The office layout of the owning team",
+     "The prices charged to each customer",
+     "Only the weights of the model inside it",
+     "Intended use, risks and controls of the system"
     ],
     "answer": 3,
     "why": "Used for governance (16.8).",
     "kind": "concept",
     "distractors": [
-     "Unrelated.",
-     "Unrelated.",
-     "That is part of a model card.",
+     "Irrelevant.",
+     "Not its content.",
+     "Too narrow.",
      ""
     ]
    },
@@ -1871,10 +2134,10 @@
     "id": "c18-7-m07",
     "q": "In the example RACI, who is accountable for threat model and data protection?",
     "options": [
-     "Platform / SRE",
-     "Security and compliance",
-     "Product owner",
-     "AI engineering"
+     "Platform and SRE team",
+     "Security & compliance",
+     "Product owner of it",
+     "AI engineering team"
     ],
     "answer": 1,
     "why": "AI engineering is responsible; security and compliance is accountable.",
@@ -1890,18 +2153,18 @@
     "id": "c18-7-m08",
     "q": "A project team hands over a demo and a diagram and leaves. What is missing?",
     "options": [
-     "More slides",
-     "A bigger model",
-     "Nothing",
-     "Runbooks, access, drills and a joint-ownership period"
+     "More slides for the handover meeting",
+     "A bigger, more capable model for the system",
+     "Nothing; the demo and diagram are enough",
+     "Runbooks, access, drills and joint ownership"
     ],
     "answer": 3,
     "why": "Demos and diagrams are not a handover.",
     "kind": "scenario",
     "distractors": [
-     "Not the gap.",
+     "Not what is missing.",
      "Unrelated.",
-     "Much is missing.",
+     "Operators need more.",
      ""
     ]
    },
@@ -1909,18 +2172,18 @@
     "id": "c18-7-m09",
     "q": "Who owns shared platforms such as the gateway and observability?",
     "options": [
-     "The model provider",
-     "Nobody",
-     "Each product team separately",
-     "Platform owners with clear interfaces"
+     "The model provider that hosts them",
+     "Nobody in particular; they are shared",
+     "Each product team, separately and alone",
+     "Platform owners, clear interfaces"
     ],
     "answer": 3,
     "why": "Shared platforms need their own owners.",
     "kind": "concept",
     "distractors": [
-     "Not theirs.",
-     "Unsafe.",
-     "Duplicates ownership.",
+     "Not your platform.",
+     "Gaps follow.",
+     "Interfaces drift.",
      ""
     ]
    },
@@ -1928,10 +2191,10 @@
     "id": "c18-7-m10",
     "q": "Before launch, the capacity plan should cite…",
     "options": [
-     "Measured numbers with test conditions (15.10)",
-     "Vendor peak numbers",
-     "Last year's guess",
-     "Nothing"
+     "Measured numbers with conditions",
+     "Vendor peak numbers for the GPU",
+     "Last year's estimate, unchanged",
+     "Nothing yet; plan after launch"
     ],
     "answer": 0,
     "why": "Readiness relies on measured capacity.",
@@ -1939,8 +2202,46 @@
     "distractors": [
      "",
      "Overstated.",
-     "Not evidence.",
-     "Required."
+     "Out of date.",
+     "Too late later."
+    ]
+   },
+   {
+    "id": "c18-7-m11",
+    "q": "During an incident, index ingestion broke, and product, AI engineering and platform each assumed another team owned the index. What would have prevented the delay?",
+    "options": [
+     "A named owner for each component, the index included",
+     "A faster ingestion pipeline",
+     "A larger on-call rotation across all three teams",
+     "A shared chat channel for all incidents"
+    ],
+    "answer": 0,
+    "why": "Every component needs an owner, as well as the system as a whole.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Speed does not settle ownership.",
+     "More people do not settle ownership.",
+     "A channel is not an owner."
+    ]
+   },
+   {
+    "id": "c18-7-m12",
+    "q": "At a launch review, SLOs and dashboards exist, but the runbooks have never been tested and nobody is on call yet. Is the system ready?",
+    "options": [
+     "Yes, as long as the launch demo went well for leadership",
+     "No: readiness needs tested runbooks and a staffed, trained on-call",
+     "Yes, since the SLOs and dashboards are already in place",
+     "Yes, because runbooks can be tested in the weeks after launch"
+    ],
+    "answer": 1,
+    "why": "The review checks the system can be operated, not only observed.",
+    "kind": "scenario",
+    "distractors": [
+     "A demo does not show it can be operated.",
+     "",
+     "Someone must be able to act on alerts.",
+     "Untested runbooks fail when needed."
     ]
    }
   ],
@@ -1953,7 +2254,8 @@
      "named team",
      "component owners",
      "accountability for quality, cost, incidents, compliance"
-    ]
+    ],
+    "followUp": "Who owns a shared component used by several systems?"
    },
    {
     "id": "c18-7-i02",
@@ -1968,7 +2270,8 @@
      "DR",
      "security",
      "budgets"
-    ]
+    ],
+    "followUp": "Which item most often blocks a launch?"
    },
    {
     "id": "c18-7-i03",
@@ -1980,7 +2283,8 @@
      "drills",
      "shadow on-call",
      "joint period"
-    ]
+    ],
+    "followUp": "How long should joint ownership last?"
    },
    {
     "id": "c18-7-i04",
@@ -2003,7 +2307,8 @@
      "eval results",
      "limits",
      "rollout and rollback"
-    ]
+    ],
+    "followUp": "Who reads the release notes?"
    },
    {
     "id": "c18-7-i06",
@@ -2014,7 +2319,8 @@
      "product consulted",
      "platform informed",
      "clear approvals"
-    ]
+    ],
+    "followUp": "Who approves a model swap?"
    },
    {
     "id": "c18-7-i07",
@@ -2040,7 +2346,8 @@
      "evidence",
      "handover steps",
      "follow-up"
-    ]
+    ],
+    "followUp": "How do you keep the checklist from becoming a box-ticking exercise?"
    }
   ]
  }
