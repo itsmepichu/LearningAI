@@ -313,9 +313,9 @@ What was built, and the decisions that carry forward:
 
 e2e: a full pass is recorded for phase 5b, on `development` at 8542dfe (5 November 2026). It downloads every guide's notebook and runs the axe check on the new guide pages, with no serious or critical findings.
 
-### Phase 6 — 3D and scroll-driven walkthroughs
+### Phase 6 — 3D and scroll-driven walkthroughs ✅
 
-*In progress, in three batches. Batch 1 is done: the shared scene kit (`src/widgets/scene3d/`), the multi-head attention scene on 5.2 and the exploded transformer block on 5.3. Batch 2 is done: the embedding space (9.3), HNSW layers (9.4), ZeRO sharding (6.6) and the paged KV cache (14.3). Batch 3 is the failover globe and the four walkthroughs.*
+*Delivered in three batches: the shared scene kit (`src/widgets/scene3d/`) and seven 3D scenes (multi-head attention 5.2, the exploded block 5.3, ZeRO sharding 6.6, the embedding space 9.3, HNSW layers 9.4, the paged KV cache 14.3, the failover globe 15.7), and four scroll-driven walkthroughs told through the selected project (a training step 6.4, a RAG request 9.1, the agent loop 11.2, a request through the serving stack 14.2). Every scene and walkthrough was checked in Chromium with software WebGL only, so try them on a laptop with integrated graphics before relying on them there.*
 
 Batch 1, as built:
 - **Scene kit:** a scene is a list of steps, each a set of tensors whose cells have values and 3D positions. One description drives the 3D view, a 2D view of the same matrices and the text, so they cannot disagree. A tensor that is reshaped keeps its cells, which glide to their new places, or jump with reduced motion. The camera turns with a drag, the arrow keys or buttons, and zooms with + and − or buttons; the scroll wheel stays with the page, and on touch only sideways drags turn the scene.
@@ -331,6 +331,15 @@ Batch 2, as built. The kit gained points, bars, graph edges, notes and a data ta
 - **14.3, paged KV cache:** the 2D figure's block pool, drawn once per layer (layers 1, 2 and 32 stand for all), with and without the shared prompt. The point it makes: one block table serves every layer, so each token costs 4 KiB per layer and 128 KiB in all for an 8B-like model with grouped-query attention.
 - **Checks:** unit tests cover the arithmetic (PCA, cosine, neighbour agreement above chance for all four projects, the ZeRO formula against the 2D figure's, KV bytes per token) and that each scene follows its source (the HNSW trace, the pool's blocks, cube for cube). e2e steps through all six scenes, turns them and checks the 2D view. axe found nothing serious in 3D or 2D, in light and dark, at 1280 and 390 px.
 - e2e: a full pass is recorded for batch 2, at f0903e1 (6 November 2026), with no serious or critical axe findings. The scenes were checked with SwiftShader only, so the owner tries them on a laptop with integrated graphics before release.
+
+Batch 3, as built:
+- **15.7, failover globe:** the selected project's regions and user cities at their real latitudes and longitudes, with great-circle routes. Four steps: normal routing to the nearest allowed region; a region failing and its users rerouted; whether the survivors have the capacity, and whether residency lets the overflow spill elsewhere; and the data the standby needs (RPO, RTO, replication). Distances are real; round trips use a stated rule of thumb; shares, regions, headroom and standby sizes are illustrative. Residency differs by project: Harbor's EU tenants stay in EU regions, and the bank cannot fail over abroad. The point the numbers make is that latency barely changes and capacity is what breaks. The kit gained a globe, and `Scene3D` takes a starting view.
+- **Walkthroughs** (`src/widgets/walkthrough/`): a diagram pinned above the steps follows the step in the middle of the screen, and becomes a strip of stage chips on narrow screens. They sit in their own `.walkthru` block rather than a figure, because a figure clips the overflow that pinning needs.
+  - **9.1, one RAG request:** a real BM25 ranking over the project's documents, Harbor's real permission filter (from `access_groups`), the 9.7 figure's hand-made hybrid ranking and grades for reranking, and the assembled prompt with estimated tokens.
+  - **11.2, the agent loop:** the 11.2 figure's scripted task for the project, round the loop of decide, validate, run, observe, check limits and approve, plus what happens when a tool keeps failing.
+  - **14.2, the serving stack:** the project's question and document as the prompt, through gateway, router, queue, prefill and decode, with time to first token cold and with a cached system prompt, at 14.2's illustrative rates.
+  - **6.4, one training step:** one of the project's labelled messages as a supervised fine-tuning example, through the chat template, tokenizing, loss masking, the forward pass, the loss (with real −ln p arithmetic on illustrative probabilities), the backward pass and the update.
+- **Checks:** unit tests cover the globe geometry (known city distances), residency, that shares sum to 1, every story's boxes and arrows for every project, the serving timing formula and the training example. e2e steps through the globe and scrolls each walkthrough to check that its diagram follows and stays pinned. axe found nothing serious in light or dark, at 1280 and 390 px, after scrollable tables were made keyboard-reachable.
 
 3D only where the third axis carries data:
 

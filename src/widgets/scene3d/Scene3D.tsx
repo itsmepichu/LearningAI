@@ -11,7 +11,7 @@ import * as THREE from 'three'
 import { RotateCcw, RotateCw, Undo2, ZoomIn, ZoomOut } from 'lucide-react'
 import { useTheme } from '../../store/theme'
 import { onRovingKeyDown } from '../../components/common'
-import { useNearViewport, useReducedMotion } from '../kit'
+import { ScrollRegion, useNearViewport, useReducedMotion } from '../kit'
 import { CELL, type BarView, type Mat, type PointView, type SceneStep, type Segments, type TensorView, type Tone, type Vec3 } from './tensor'
 import './scene3d.css'
 
@@ -103,7 +103,7 @@ export function toneVar(tone: Tone): string {
 
 // ---- 3D -----------------------------------------------------------------------------------------------------------
 
-interface View {
+export interface View {
   az: number
   el: number
   zoom: number
@@ -303,6 +303,12 @@ function Scene({ step, palette, view, reduced, overlay }: { step: SceneStep; pal
           )}
         </group>
       ))}
+      {step.globe && (
+        <mesh>
+          <sphereGeometry args={[step.globe.r, 48, 32]} />
+          <meshLambertMaterial color={palette.base} />
+        </mesh>
+      )}
       {step.segments?.map((sg) => <SegmentLines key={sg.id} s={sg} palette={palette} />)}
       {step.points && step.points.length > 0 && <PointsMesh key={`points-${step.points.length}`} points={step.points} palette={palette} reduced={reduced} />}
       {step.points
@@ -372,7 +378,7 @@ function MapView({ step }: { step: SceneStep }) {
 
 function DataTableView({ table }: { table: NonNullable<SceneStep['table']> }) {
   return (
-    <div className="tw s3-table">
+    <ScrollRegion label={table.caption} className="tw s3-table">
       <table>
         <caption>{table.caption}</caption>
         <thead>
@@ -384,7 +390,7 @@ function DataTableView({ table }: { table: NonNullable<SceneStep['table']> }) {
           ))}
         </tbody>
       </table>
-    </div>
+    </ScrollRegion>
   )
 }
 
@@ -419,12 +425,12 @@ function Flat({ step, palette }: { step: SceneStep; palette: Palette }) {
 
 // ---- The widget's frame ---------------------------------------------------------------------------------------------
 
-export function Scene3D({ steps, step, label, legend }: { steps: SceneStep[]; step: number; label: string; legend: ReactNode }) {
+export function Scene3D({ steps, step, label, legend, start = START }: { steps: SceneStep[]; step: number; label: string; legend: ReactNode; start?: View }) {
   const palette = usePalette()
   const reduced = useReducedMotion()
   const gl = useMemo(hasWebGL, [])
   const [mode, setMode] = useState<'3d' | '2d'>(gl ? '3d' : '2d')
-  const [view, setView] = useState<View>(START)
+  const [view, setView] = useState<View>(start)
   const [ref, near] = useNearViewport<HTMLDivElement>()
   const drag = useRef<{ x: number; y: number } | null>(null)
   const overlay = useRef<HTMLDivElement>(null)
@@ -436,7 +442,7 @@ export function Scene3D({ steps, step, label, legend }: { steps: SceneStep[]; st
   const onKey = (e: KeyboardEvent) => {
     const map: Record<string, () => void> = {
       ArrowLeft: () => turn(-0.2), ArrowRight: () => turn(0.2), ArrowUp: () => turn(0, 0.12), ArrowDown: () => turn(0, -0.12),
-      '+': () => zoom(1 / 1.15), '=': () => zoom(1 / 1.15), '-': () => zoom(1.15), '0': () => setView(START),
+      '+': () => zoom(1 / 1.15), '=': () => zoom(1 / 1.15), '-': () => zoom(1.15), '0': () => setView(start),
     }
     const f = map[e.key]
     if (f) {
@@ -475,7 +481,7 @@ export function Scene3D({ steps, step, label, legend }: { steps: SceneStep[]; st
             <button type="button" className="btn" aria-label="Turn right" onClick={() => turn(0.3)}><RotateCw aria-hidden="true" /></button>
             <button type="button" className="btn" aria-label="Zoom in" onClick={() => zoom(1 / 1.2)}><ZoomIn aria-hidden="true" /></button>
             <button type="button" className="btn" aria-label="Zoom out" onClick={() => zoom(1.2)}><ZoomOut aria-hidden="true" /></button>
-            <button type="button" className="btn" aria-label="Reset the view" onClick={() => setView(START)}><Undo2 aria-hidden="true" /></button>
+            <button type="button" className="btn" aria-label="Reset the view" onClick={() => setView(start)}><Undo2 aria-hidden="true" /></button>
           </div>
         )}
       </div>

@@ -33,4 +33,5 @@ def run(task, max_steps=6):
     return "ESCALATE: step limit reached"
 print(run("Order A-1043 arrived late. Sort it out."))</code></pre>
 <p>Run it several times: a small model will sometimes compute the credit wrongly or skip the lookup. That is exactly why the credit amount should be computed in code (7.7) and why agents need evaluation over repeated runs (8.8).</p></div>
+<div class="walkthru" id="walk-agent"><p class="walkthru-h"><b>Walkthrough: one agent run, round the loop.</b> A task goes round the action–observation loop: the model decides, code validates, the tool runs, the observation comes back, limits are checked, and an action waits for approval. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"agent"}'></div></div>
 <div data-slot="practice"></div>

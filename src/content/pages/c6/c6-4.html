@@ -12,4 +12,5 @@
   {"role": "user", "content": "Invoice #4471 from Acme GmbH, total EUR 1,240.50, due 2026-12-01"},
   {"role": "assistant", "content": "{\"number\":\"4471\",\"vendor\":\"Acme GmbH\",\"total\":1240.50,\"currency\":\"EUR\",\"due\":\"2026-12-01\"}"}
 ]}</code></pre></div>
+<div class="walkthru" id="walk-training"><p class="walkthru-h"><b>Walkthrough: one training step, from example to updated weights.</b> One supervised fine-tuning example is templated, tokenized and masked, then goes through the forward pass, the loss, the backward pass and the optimiser update. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"training"}'></div></div>
 <div data-slot="practice"></div>

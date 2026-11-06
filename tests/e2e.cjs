@@ -52,6 +52,11 @@ const KIT_WIDGETS = [
   ['hnsw-layers', '/c9/c9-4', 'neutral'],
   ['zero-sharding', '/c6/c6-6', 'neutral'],
   ['paged-kv-3d', '/c14/c14-3', 'neutral'],
+  ['failover-globe', '/c15/c15-7'],
+  ['walkthrough', '/c9/c9-1'],
+  ['walkthrough', '/c11/c11-2'],
+  ['walkthrough', '/c14/c14-2'],
+  ['walkthrough', '/c6/c6-4'],
   ['colab-guide', '/c6/c6-7', 'neutral'],
   ['hnsw', '/c9/c9-4', 'neutral'],
   ['gradient-descent', '/c2/c2-3', 'neutral'],
@@ -674,7 +679,7 @@ const PROJECTS = require('../src/content/projects.json').projects
   if (!/^Step 0:/.test(await page.textContent(`${kitSel('gradient-descent')} .count`))) fails.push('gradient descent: Reset should return to the start')
 
   // 3D scenes: mount near the viewport, step through, turn with the keyboard, and show the same step in 2D
-  for (const [name, route] of [['multihead', '/c5/c5-2'], ['transformer-block', '/c5/c5-3'], ['hnsw-layers', '/c9/c9-4'], ['zero-sharding', '/c6/c6-6'], ['paged-kv-3d', '/c14/c14-3'], ['embedding-space', '/c9/c9-3']]) {
+  for (const [name, route] of [['multihead', '/c5/c5-2'], ['transformer-block', '/c5/c5-3'], ['hnsw-layers', '/c9/c9-4'], ['zero-sharding', '/c6/c6-6'], ['paged-kv-3d', '/c14/c14-3'], ['embedding-space', '/c9/c9-3'], ['failover-globe', '/c15/c15-7']]) {
     const sel = kitSel(name)
     await page.goto(BASE + route, { waitUntil: 'networkidle' })
     await page.locator(sel).scrollIntoViewIfNeeded()
@@ -705,6 +710,23 @@ const PROJECTS = require('../src/content/projects.json').projects
     await page.click(`${sel} [role=radio]:has-text("3D view")`)
     await page.waitForSelector(`${sel} .s3-canvas canvas`, { timeout: 15000 }).catch(() => fails.push(`${name}: the 3D view did not come back`))
     await check(name)
+  }
+
+  // Walkthroughs: the pinned diagram follows the step in the middle of the screen, on every story
+  for (const [route, id] of [['/c9/c9-1', 'rag'], ['/c11/c11-2', 'agent'], ['/c14/c14-2', 'serving'], ['/c6/c6-4', 'training']]) {
+    const sel = `#walk-${id} ${kitSel('walkthrough')}`
+    await page.goto(BASE + route, { waitUntil: 'networkidle' })
+    await page.waitForSelector(`${sel} .wt-steps li`)
+    const n = await page.$$eval(`${sel} .wt-steps li`, (l) => l.length)
+    await page.$eval(`${sel} .wt-steps li:nth-child(4)`, (el) => el.scrollIntoView({ block: 'center' }))
+    await page.waitForFunction((s) => /^Step [3-5] of/.test(document.querySelector(`${s} .wt-now`)?.textContent ?? ''), sel, { timeout: 5000 }).catch(() => {})
+    const now = await page.textContent(`${sel} .wt-now`)
+    if (!/^Step [3-5] of/.test(now)) fails.push(`walkthrough ${id}: scrolling to step 4 should move the diagram there, got "${now}"`)
+    if (!(await page.$(`${sel} .wt-node.on`))) fails.push(`walkthrough ${id}: no stage is highlighted`)
+    if (n < 6) fails.push(`walkthrough ${id}: only ${n} steps`)
+    const top = await page.$eval(`${sel} .wt-fig`, (el) => el.getBoundingClientRect().top)
+    if (top < 0 || top > 120) fails.push(`walkthrough ${id}: the diagram should stay pinned near the top, at ${Math.round(top)}px`)
+    await check(`walkthrough ${id}`)
   }
   await check('hnsw and gradient descent')
 

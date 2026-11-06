@@ -12,7 +12,7 @@
   - evidence tags: `.tag cpu|real|sim|gpu`
 - `HtmlContent` rebuilds heading levels into a valid outline when it renders a fragment, and marks a changed heading with `as-hN`, where N is its level in the file. When you style a content heading, style `hN` and `.as-hN` alike.
 - Write cross-links as `<a href="#c9-3">` or `<a href="#someElementId">`. `HtmlContent` resolves them through `src/content/idmap.json`. Add new link targets to that file.
-- Current state (phase 5b done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
+- Current state (phase 6 done): every chapter and the capstone have notes for all four projects and lab scenarios, and every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions).
 - Write new notes and questions with `scripts/content_tools.py` (`merge_practice`, `merge_checks`): it assigns stable ids, shuffles new options with a fixed seed and checks distractor alignment.
 - `node scripts/content-summary.mjs` (run automatically before `dev` and `build`) validates the practice and check files and writes `src/content/checks/summary.json`. Fix every error it reports; treat its warnings as review items.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
@@ -88,6 +88,10 @@
   - Use 3D only when the third axis carries data.
   - Build tensor scenes on `src/widgets/scene3d/`: describe the scene as `SceneStep`s in a plain module (cells with values and positions, a title and a text for each step, using the arithmetic and layouts in `tensor.ts`), and draw them with `Scene3D`. It mounts near the viewport, renders on demand, turns with a drag, the arrow keys or buttons (never the scroll wheel), offers a 2D view of the same matrices, and shows each step's text plus the whole figure in words. A tensor keeps its id and cell order across steps, so its cells glide when it is reshaped; `scene3d/testing.ts` checks that. A step can also hold `points` (instanced balls), `bars` (boxes, such as stacked memory), `segments` (a graph's edges), `paths`, `notes` and a `table`; the 2D view draws points as a map from above and shows the table, so data that is not a matrix still has a 2D form. Colours are `Tone`s from the theme's tokens, with `series0`–`series5` for categories.
   - Label the numbers honestly: real arithmetic on random weights shows shapes and operations, not what a trained model computes.
+- Scroll-driven walkthroughs (`src/widgets/walkthrough/`): a story is a diagram (nodes in a 640 × 300 frame, arrows) and steps, each naming the boxes and arrows it is about, with a plain-text explanation and an optional detail (a code-like snippet or a table). Write each story as a `Story` module in `walkthrough/stories/` that builds its steps from the selected project's data, and list it in `stories.ts`.
+  - Embed it as `<div class="walkthru" id="walk-<id>">` with a short lead and `<div data-widget="walkthrough" data-props='{"story":"<id>"}'>`, not inside a `figure.fig`, whose overflow would stop the diagram staying pinned. Count it as interactive in the manifest, not as a figure.
+  - The diagram pins above the steps and follows the step in the middle of the screen. Under 700 px it becomes a strip of stage chips, because the diagram's text would fall below 12 px.
+  - Say in the story's `note` which values come from the dataset and which are illustrative.
 - The v3 vanilla widgets live in `src/legacy/widgets.js`. Each block is guarded by an element id, and `src/legacy/runtime.ts` cancels its timers and animation frames on unmount. When you rebuild a widget in React, delete its block there.
 - Do not add Tailwind or another utility framework without a prefix. The legacy SVG and figure classes (`grid`, `row`, `fill`, `box`, `fig`, `out`, …) would clash with it.
 
