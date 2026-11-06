@@ -330,6 +330,7 @@ Batch 2, as built. The kit gained points, bars, graph edges, notes and a data ta
 - **6.6, ZeRO sharding:** GPUs across, the stage as the third axis, memory per GPU as stacked weights, gradients and optimiser state, with the ZeRO paper's formula (the same as the 2D figure) and a line at the GPU's memory. Later stages come towards the viewer, so the taller earlier ones never hide them. The model size, GPU count and memory are adjustable.
 - **14.3, paged KV cache:** the 2D figure's block pool, drawn once per layer (layers 1, 2 and 32 stand for all), with and without the shared prompt. The point it makes: one block table serves every layer, so each token costs 4 KiB per layer and 128 KiB in all for an 8B-like model with grouped-query attention.
 - **Checks:** unit tests cover the arithmetic (PCA, cosine, neighbour agreement above chance for all four projects, the ZeRO formula against the 2D figure's, KV bytes per token) and that each scene follows its source (the HNSW trace, the pool's blocks, cube for cube). e2e steps through all six scenes, turns them and checks the 2D view. axe found nothing serious in 3D or 2D, in light and dark, at 1280 and 390 px.
+- e2e: a full pass is recorded for batch 2, at f0903e1 (6 November 2026), with no serious or critical axe findings. The scenes were checked with SwiftShader only, so the owner tries them on a laptop with integrated graphics before release.
 
 3D only where the third axis carries data:
 
