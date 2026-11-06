@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c21-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A season ticket is cheaper per match than paying at the gate, but only if you go to enough matches. <a class="gl" href="#gl-committed-spend">Committed spend</a> works the same way: promise a provider a fixed amount of usage, or reserve GPUs for a year, and pay a lower rate whether you use it or not.</p>
+<p>Two things make it tricky for AI. Usage is hard to forecast, and prices keep falling as new models arrive. Commit too much and you pay for unused capacity; commit for too long and you are locked into last year’s price.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c21-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Option</th><th>You get</th><th>You risk</th></tr><tr><td>Pay as you go</td><td>flexibility, newest prices</td><td>the highest unit price; rate limits at peaks</td></tr><tr><td>Spend commitment</td><td>a discount on all usage</td><td>paying for usage you do not reach</td></tr><tr><td>Reserved or provisioned throughput</td><td>guaranteed capacity and latency</td><td>paying for idle capacity; tied to one model</td></tr><tr><td>Reserved GPUs (self-hosted)</td><td>a lower hourly rate</td><td>hardware that ages; utilisation risk (14.8)</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Forecast<small>usage with a range</small></div><div class="nd">Base load<small>what you will surely use</small></div><div class="nd">Commit<small>below the base</small></div><div class="nd">Burst<small>on demand</small></div><div class="nd">Review<small>quarterly, at each price change</small></div></div>
+<ol class="steps"><li data-n="0">Forecast usage from actuals and known events (15.10), with a low and high case.</li><li data-n="1">Find the usage you are confident of in the low case.</li><li data-n="2">Commit to about that, not to the average forecast.</li><li data-n="3">Pay on demand above it.</li><li data-n="4">Re-check when prices, models or traffic change; keep terms short where prices fall fast.</li></ol></div>
+<figcaption><b>Sizing a commitment.</b></figcaption></figure>
+<p><b>Negotiating.</b> Ask for model-swap rights (the commitment moves to newer models), price-drop protection, the ability to shift spend between regions, and data-handling terms in the same contract (16.5). Plan for deprecations (18.5): a commitment tied to a model retired in six months is a liability.</p>
+</section>
+
+<section class="tp tp-math" id="c21-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Is the commitment worth it?</b> On-demand costs 1.00 a unit; committed units cost 0.70 each, paid even if unused. Forecast: 100 units a month, give or take 25.</p>
+<ul>
+<li>Commit 100: in a month that uses 75 units you pay 100 × 0.70 = 70, still less than 75 on demand, though 25 paid units sat idle.</li>
+<li>A month with 60 units used: commitment 70 against 60 on demand, a loss of 10.</li>
+<li>Committing a bit below the forecast, about 85, keeps most of the discount and rarely pays for idle units.</li>
+</ul>
+<p><b>Price cuts.</b> If on-demand prices fall 40% halfway through the year, on demand becomes 0.60, below the committed 0.70: a long commitment then costs more than not committing.</p>
+</section>
+
+<section class="tp tp-code" id="c21-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates 5,000 possible years of uncertain usage and compares the expected cost of committing to different monthly amounts, with and without a 40% on-demand price cut from month six. Change <code>DISCOUNT</code> or the spread of usage and run it again.</p>
+<figure class="fig live" id="snip-commitment-sizing"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"commitment-sizing"}'></div></div>
+<figcaption><b>Sizing a commitment under uncertainty, in real Python.</b> Not any provider’s terms.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c21-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.finops.org/framework/capabilities/rate-optimization/">FinOps Framework: Rate optimisation</a> <small>Commitments, discounts and their risks.</small></li>
+<li><a href="https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html">AWS: Savings Plans</a> <small>How a spend commitment works in practice.</small></li>
+<li><a href="https://platform.claude.com/docs/en/about-claude/model-deprecations">Anthropic: Model deprecations</a> <small>Why model lifetimes matter for long commitments.</small></li>
+</ol>
+</section>

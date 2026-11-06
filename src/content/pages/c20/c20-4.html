@@ -1,0 +1,40 @@
+<section class="tp tp-intuition" id="c20-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A trained model has many weights that barely matter, like the rarely used tools in a big toolbox. <a class="gl" href="#gl-pruning">Pruning</a> takes them out; quantisation (14.4) stores the rest with fewer bits. Together they make a model smaller and faster, at some cost in quality.</p>
+<p>Taking things out always hurts a little, so the usual recipe is to prune, then train briefly again, ideally with the original model as a teacher, so the smaller model recovers what it lost.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c20-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Technique</th><th>What is removed or shrunk</th><th>Speed-up in practice</th></tr><tr><td>Unstructured pruning</td><td>individual small weights</td><td>little, unless hardware supports sparse maths</td></tr><tr><td>Structured pruning</td><td>whole heads, neurons or layers</td><td>real: the matrices get smaller</td></tr><tr><td>2:4 sparsity</td><td>two of every four weights, in a pattern GPUs accelerate</td><td>up to about 1.5–2× on supported GPUs</td></tr><tr><td>Quantisation</td><td>bits per weight (16 → 8 → 4)</td><td>large for decoding, which is memory-bound (14.4)</td></tr><tr><td>Prune + distil</td><td>layers or width, then retrain from the original</td><td>smaller models at close to the original quality</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Trained model<small>full size</small></div><div class="nd">Measure importance<small>per weight, head or layer</small></div><div class="nd">Remove<small>least important</small></div><div class="nd">Recover<small>short retraining, teacher = original</small></div><div class="nd">Evaluate<small>task + general suites</small></div></div>
+<ol class="steps"><li data-n="0">Start from a model that already works on your task.</li><li data-n="1">Score parts by size of weights or by the effect of removing them on a calibration set.</li><li data-n="2">Remove a fraction, structured if you want real speed.</li><li data-n="3">Retrain briefly with the original model as teacher to recover quality.</li><li data-n="4">Re-run the task, general and safety suites (13.6).</li></ol></div>
+<figcaption><b>Prune, then recover.</b></figcaption></figure>
+<div class="box pit"><h5>Sparse is not always fast</h5><p>Zeroing half the weights saves nothing if the hardware still multiplies the zeros. Measure speed on your serving stack before counting a saving.</p></div>
+</section>
+
+<section class="tp tp-math" id="c20-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Sizes</b>. A 3-billion-parameter model in 16-bit takes 3 × 2 = 6 GB. Structured pruning to 2 billion parameters: 4 GB. Then 4-bit quantisation (about 0.55 bytes per weight): 2 × 0.55 = 1.1 GB, small enough for a phone.</p>
+<p><b>Decode speed</b> (memory-bound, 14.4). Reading 6 GB per token at 80 GB a second allows at most about 13 tokens a second; reading 1.1 GB allows about 73.</p>
+<p><b>The quality cost</b> (illustrative). If the original scores 90% and the pruned model 84% before recovery and 88% after, recovery won back 4 of the 6 points lost.</p>
+</section>
+
+<section class="tp tp-code" id="c20-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program trains a linear classifier with NumPy, removes 50%, 80% and 95% of its smallest weights, and stores it in 8-bit, measuring accuracy each time. Change the share of inputs that matter in <code>true_W</code> and see how pruning tolerance changes.</p>
+<figure class="fig live" id="snip-prune-quantise"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"prune-quantise"}'></div></div>
+<figcaption><b>Pruning and quantising, in real Python.</b> A linear toy, not a transformer.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c20-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1510.00149">Han et al. (2015), Deep Compression</a> <small>Pruning, quantisation and coding combined.</small></li>
+<li><a href="https://arxiv.org/abs/2301.00774">Frantar and Alistarh (2023), SparseGPT</a> <small>One-shot pruning of large language models.</small></li>
+<li><a href="https://arxiv.org/abs/2407.14679">Muralidharan et al. (2024), Compact Language Models via Pruning and Knowledge Distillation</a> <small>Structured pruning followed by distillation.</small></li>
+</ol>
+</section>

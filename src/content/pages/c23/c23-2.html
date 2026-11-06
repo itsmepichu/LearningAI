@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c23-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Risk-based AI laws work like building codes: a garden shed needs almost nothing, a house needs inspections, a hospital needs far more, and some constructions are simply banned. The EU AI Act is the best-known example: it sorts AI uses into tiers and gives each tier its own duties.</p>
+<p>Duties also depend on your role. The <a class="gl" href="#gl-provider-deployer">provider</a> who builds the system and the deployer who uses it carry different obligations, and a company can be both for different systems.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c23-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Tier (simplified)</th><th>Examples</th><th>Broad consequence</th></tr><tr><td>Prohibited practices</td><td>certain manipulative or social-scoring uses</td><td>not allowed</td></tr><tr><td>High risk</td><td>employment screening, credit scoring, access to essential services</td><td>risk management, data governance, documentation, logging, human oversight, accuracy, conformity assessment</td></tr><tr><td>Transparency duties</td><td>chatbots, generated or manipulated content</td><td>tell people, label content</td></tr><tr><td>Minimal risk</td><td>spam filters, most internal tools</td><td>no specific duties; voluntary codes</td></tr><tr><td>General-purpose AI models</td><td>large foundation models</td><td>documentation and policies for model providers</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Inventory<small>every AI use</small></div><div class="nd">Role<small>provider, deployer or both</small></div><div class="nd">Tier<small>prohibited, high, transparency, minimal</small></div><div class="nd">Duties<small>mapped to controls (23.1)</small></div><div class="nd">Timeline<small>which dates apply</small></div></div>
+<ol class="steps"><li data-n="0">List every AI system and use, including bought-in tools.</li><li data-n="1">Decide your role for each one.</li><li data-n="2">Classify with legal; a <a class="gl" href="#gl-high-risk-ai">high-risk</a> use carries most of the engineering work.</li><li data-n="3">Map duties to controls and evidence.</li><li data-n="4">Obligations apply in phases; check current dates and any amendments.</li></ol></div>
+<figcaption><b>Working out what applies.</b></figcaption></figure>
+<p><b>Other regimes.</b> Many countries regulate AI mainly through existing laws: privacy (the GDPR in Europe, India’s Digital Personal Data Protection Act and Rules), consumer protection, and sector rules for banking, health and hiring. A system can be minimal risk under one law and heavily regulated under another.</p>
+<div class="box example"><h5>Example: two tiers in one company</h5><p>A bank’s internal document summariser is minimal risk; its loan pre-qualification model is high risk, so it needs documented risk management, data governance, logging, human oversight and testing for accuracy and bias before release. Most of these controls already exist in chapters 8, 16 and 18; the work is mapping and evidence.</p></div>
+<p><small>Orientation for engineers, not legal advice. Laws, guidance and application dates change; confirm what applies with your legal and compliance team.</small></p>
+</section>
+
+<section class="tp tp-math" id="c23-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>An inventory</b> (illustrative). 30 AI uses: 1 needs redesign because it is close to a prohibited practice, 3 are high risk, 9 have transparency duties, 17 are minimal.</p>
+<ul>
+<li>If a high-risk system needs about 10 controls with evidence and a transparency-duty system about 2: 3 × 10 + 9 × 2 = 48 rows in the control matrix.</li>
+<li>The 17 minimal-risk uses still need entries in the inventory, so the classification itself can be checked.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c23-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program places four use cases into simplified risk categories and lists sketched duties for the provider or deployer of each. Change a use case’s role or area and run it again.</p>
+<figure class="fig live" id="snip-ai-act-roles"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"ai-act-roles"}'></div></div>
+<figcaption><b>Roles and tiers, simplified, in real Python.</b> Orientation only, not legal advice.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c23-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation (EU) 2024/1689, the AI Act</a> <small>The legal text: tiers, roles and duties.</small></li>
+<li><a href="https://artificialintelligenceact.eu/high-level-summary/">AI Act high-level summary (Future of Life Institute)</a> <small>A plain-language overview of the structure.</small></li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> <small>A voluntary framework used where no AI-specific law applies.</small></li>
+</ol>
+</section>

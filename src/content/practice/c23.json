@@ -1,0 +1,166 @@
+{
+ "c23-1": {
+  "harbor": {
+   "practice": "Harbor’s control matrix maps each internal policy and legal obligation to a control and to evidence the pipeline produces: approval logs, gate results and access reviews. Stale evidence shows up in the weekly governance report.",
+   "failure": "Collecting screenshots for the audit once a year and treating them as proof that controls still work.",
+   "tryIt": "Run the snippet, add a control and evidence for the deletion obligation, and change MAX_AGE_DAYS to 90. Note which rows become stale and who would need to act.",
+   "fit": "good",
+   "fitNote": "internal policies mapped to controls"
+  },
+  "store": {
+   "practice": "{company} maps consumer-protection and privacy obligations to controls in {assistant}: disclosure in chat, refund approvals, deletion jobs and complaint logs. Every release regenerates the evidence for the matrix.",
+   "failure": "Adding a new feature to the assistant without adding its obligations and controls to the matrix.",
+   "tryIt": "Run the snippet and add an obligation for \"handle customer complaints\" with a control and evidence dated last week. Re-run and confirm the matrix has no gaps for it.",
+   "fit": "good",
+   "fitNote": "consumer and privacy duties"
+  },
+  "bank": {
+   "practice": "{company}’s regulators expect evidence for every control around {assistant}: model validation reports, approval records, access logs and incident drills. The control matrix is reviewed monthly by risk and compliance.",
+   "failure": "Relying on a model-validation report from two years ago for a model that has since been changed.",
+   "tryIt": "Run the snippet, set the drill date to last month and MAX_AGE_DAYS to 90, and see which evidence is still stale. Write down who owns each stale row.",
+   "fit": "best",
+   "fitNote": "regulated bank with heavy evidence needs"
+  },
+  "travel": {
+   "practice": "{company} maps consumer and privacy obligations for {assistant}, including clear disclosure on voice calls and refunds handled within set times. Evidence comes from call logs and saga records rather than manual reports.",
+   "failure": "Disclosing the AI in chat but forgetting the voice channel, where travellers cannot see a banner.",
+   "tryIt": "Run the snippet and add an obligation \"disclose the AI on voice calls\" with a control and fresh evidence. Check the output shows it as covered.",
+   "fit": "good",
+   "fitNote": "several channels to cover"
+  }
+ },
+ "c23-2": {
+  "harbor": {
+   "practice": "Tidewell is a deployer of the HR screening tool it buys and a provider of Harbor itself. The inventory records both roles, and the screening tool is treated as high risk because it affects employment decisions.",
+   "failure": "Assuming that buying an AI tool from a vendor moves all obligations to the vendor.",
+   "tryIt": "Run the snippet and add Harbor’s internal policy assistant as a provider with no high-risk area. Compare its duties with the CV screening tool’s. Write down the result and the decision you would take from it.",
+   "fit": "good",
+   "fitNote": "both provider and deployer"
+  },
+  "store": {
+   "practice": "{assistant} talks to shoppers, so it carries transparency duties: shoppers are told they are talking to an AI. Product descriptions it writes are labelled as generated where the law or policy requires it.",
+   "failure": "Treating a customer-facing chatbot as having no duties because it is not high risk.",
+   "tryIt": "Run the snippet and change the support chatbot’s role to provider. Compare the listed duties and note what {company} must do as the builder of {assistant}.",
+   "fit": "good",
+   "fitNote": "transparency duties for a shopping assistant"
+  },
+  "bank": {
+   "practice": "{company} classed its loan pre-qualification model as high risk and its document summariser as minimal. The high-risk system has a risk-management file, logging, human oversight and bias testing mapped into the control matrix.",
+   "failure": "Applying the same light process to a credit model as to an internal summariser.",
+   "tryIt": "Run the snippet and add \"fraud alert triage\" with your own area. Decide with a colleague which tier it falls in and which duties would follow.",
+   "fit": "best",
+   "fitNote": "credit decisions are high risk"
+  },
+  "travel": {
+   "practice": "{company} is mainly a deployer of hosted models in {assistant} and a provider of the agent built on them. Its inventory lists each use, its role and tier, and the application dates that matter for each.",
+   "failure": "Classifying the system once at launch and never re-checking when features or dates change.",
+   "tryIt": "Run the snippet and add \"dynamic pricing suggestions\" as a provider use. Discuss whether it affects access to an essential service and what that would change.",
+   "fit": "good",
+   "fitNote": "deployer of hosted models"
+  }
+ },
+ "c23-3": {
+  "harbor": {
+   "practice": "Harbor’s answers and traces can contain employees’ personal data. Lineage records every chunk, cache entry and trace per person, so an access or deletion request can be answered across all stores within the deadline.",
+   "failure": "Deleting an employee’s record from the HR system but leaving their data in Harbor’s chunks and traces.",
+   "tryIt": "Run the snippet and add a store \"ticket attachments\" with 5 copies. Re-run and check the totals, then decide whether any copy has a reason to be kept.",
+   "fit": "good",
+   "fitNote": "employee data across stores"
+  },
+  "store": {
+   "practice": "{company} answers shoppers’ deletion requests across orders, chat logs, {assistant}’s memories and the review index. Personal details are redacted before chats are logged, which shrinks what has to be found later.",
+   "failure": "Keeping full chat transcripts with addresses and phone numbers in traces that nobody can search by customer.",
+   "tryIt": "Run the snippet and set the traces count to 400 for a heavy shopper. See how much of the work traces now are, and decide whether to redact them at write time.",
+   "fit": "good",
+   "fitNote": "deletion across shopping data"
+  },
+  "bank": {
+   "practice": "{company} must balance deletion requests with legal duties to keep financial records. The deletion job removes data from {assistant}’s caches and memories, and records which records are retained by law and for how long.",
+   "failure": "Deleting transaction records that the bank is legally required to keep, in response to an erasure request.",
+   "tryIt": "Run the snippet and mark \"source records\" as on legal hold. Re-run and write the explanation you would give the customer for the retained records.",
+   "fit": "best",
+   "fitNote": "deletion versus record-keeping duties"
+  },
+  "travel": {
+   "practice": "{company} holds passport details only in the booking system, never in prompts or traces. {assistant} refers to bookings by reference, so a deletion request touches far fewer stores.",
+   "failure": "Copying passport numbers into prompts, where they end up in traces, caches and evaluation sets.",
+   "tryIt": "Run the snippet and remove the fine-tuning and evaluation stores to model minimisation. Compare the number of copies found with the original run. Write down the result and the decision you would take from it.",
+   "fit": "good",
+   "fitNote": "minimising sensitive travel data"
+  }
+ },
+ "c23-4": {
+  "harbor": {
+   "practice": "Harbor tells staff at the start of every conversation that it is an AI assistant and labels drafted emails as AI-drafted. Decision records keep the prompt and model versions so any draft can be reproduced later.",
+   "failure": "Keeping decision records without the model and prompt versions, so a past draft cannot be reproduced.",
+   "tryIt": "Run the snippet and add \"prompt_version\" to REQUIRED. Re-run and see how completeness changes, then decide which pipeline step should add the field. Write down the result and the decision you would take from it.",
+   "fit": "good",
+   "fitNote": "records that reproduce drafts"
+  },
+  "store": {
+   "practice": "{assistant} introduces itself as an AI in chat, and generated product descriptions carry a label and metadata. A completeness check alerts if any decision record about refunds lacks the reviewer field.",
+   "failure": "Labelling generated descriptions on the website but dropping the label in the mobile app.",
+   "tryIt": "Run the snippet and raise the chance of a missing field from 0.02 to 0.05. Note how many incomplete records appear and which field you would alert on first.",
+   "fit": "good",
+   "fitNote": "labels in every channel"
+  },
+  "bank": {
+   "practice": "{company} keeps decision records for every proposed credit: inputs, model and prompt versions, the draft, the reviewer and the final decision, in append-only storage for the required period.",
+   "failure": "Storing decision records in a table that staff can edit, so the audit trail can be changed.",
+   "tryIt": "Run the snippet and add \"evidence_ref\" to REQUIRED. Re-run and decide what completeness you would accept before releasing a change. Write down the result and the decision you would take from it.",
+   "fit": "best",
+   "fitNote": "complete, unchangeable records"
+  },
+  "travel": {
+   "practice": "{assistant} says it is an AI at the start of voice calls, before taking any booking details. Records of each change keep the itinerary before and after, the fare rule cited and the traveller’s confirmation.",
+   "failure": "Starting a voice call with a natural greeting and never saying the caller is talking to an AI.",
+   "tryIt": "Run the snippet and change the label text for a voice call. Then add \"confirmation_ref\" to REQUIRED and check how many records would be incomplete.",
+   "fit": "good",
+   "fitNote": "disclosure on voice calls"
+  }
+ },
+ "c23-5": {
+  "harbor": {
+   "practice": "Harbor’s internal audit draws a random monthly sample of drafted credits and access answers, checks each against policy, and reports the breach rate with its interval rather than a single percentage.",
+   "failure": "Letting the team choose which conversations the auditor reviews, so problems are steered away from the sample.",
+   "tryIt": "Run the snippet with tickets.csv and change the sample sizes to 30 and 100. Compare the width of the intervals and decide which size gives a useful answer.",
+   "fit": "good",
+   "fitNote": "monthly internal audit"
+  },
+  "store": {
+   "practice": "{company} audits a random sample of refunds approved by {assistant} each week. Clean results on 59 checks support a claim of fewer than 5% breaches; anything less is reported as \"not yet shown\".",
+   "failure": "Claiming the refund process is fine after reviewing 15 cases with no breaches.",
+   "tryIt": "Run the snippet with orders.csv and set TRUE_ERROR to 0.01. See how often a sample of 20 finds nothing, and what that would wrongly suggest.",
+   "fit": "good",
+   "fitNote": "weekly refund audits"
+  },
+  "bank": {
+   "practice": "{company}’s auditors sample provisional credits and dispute letters each quarter. Sample sizes are set from the precision regulators expect, and findings go into the control matrix with owners and dates.",
+   "failure": "Reporting \"no issues found\" from a small sample as if it proved the breach rate was near zero.",
+   "tryIt": "Run the snippet with disputes.csv and work out how many clean checks support a claim below 2%. Compare the reviewing time at 5 minutes per check.",
+   "fit": "best",
+   "fitNote": "regulator-grade sampling"
+  },
+  "travel": {
+   "practice": "{company} audits rebookings made by {assistant} during disruptions separately from normal days, because breaches cluster when the system is under pressure. Each sample is drawn at random within its period.",
+   "failure": "Sampling only quiet days, so the audit misses the disruption days when errors concentrate.",
+   "tryIt": "Run the snippet with bookings.csv and set TRUE_ERROR to 0.08 for a disruption week. Compare the intervals with a normal week at 0.02. Write down the result and the decision you would take from it.",
+   "fit": "good",
+   "fitNote": "audits by period"
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Build Harbor’s evidence pack: inventory with roles and tiers, a control matrix with pipeline-produced evidence, a deletion request for a fictional employee across all stores, and a random audit of 60 drafted credits.</p>"
+  },
+  "store": {
+   "scenario": "<p>Build the evidence pack for {assistant}: disclosure in every channel, labelled generated descriptions, deletion of a fictional shopper’s data across stores, and a weekly refund audit with an interval.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Build the evidence pack for the dispute assistant: high-risk mapping for any credit decision, append-only decision records, a deletion request that respects record-keeping duties, and a quarterly audit sample.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Build the evidence pack for {assistant}: voice and chat disclosure, records of changes with fare rules and confirmations, minimised passport handling, and separate audits for disruption and normal weeks.</p>"
+  }
+ }
+}

@@ -1,0 +1,42 @@
+<section class="tp tp-intuition" id="c21-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A shared office electricity bill gets used carelessly; a metered flat gets used carefully. <a class="gl" href="#gl-showback">Showback</a> gives every team its own meter: a regular report of what its features spent. Chargeback goes one step further and takes that spend out of the team’s own budget.</p>
+<p>Budgets then become early warnings instead of surprises: alerts at half, four-fifths and all of a budget, with an agreed action at each.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c21-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Tag<small>team, feature, tenant</small></div><div class="nd">Meter<small>usage per call</small></div><div class="nd">Allocate<small>shared platform costs</small></div><div class="nd">Report<small>showback</small></div><div class="nd">Enforce<small>alerts, limits, chargeback</small></div></div>
+<ol class="steps"><li data-n="0">Every model call carries tags (17.5), set by the gateway, not by goodwill.</li><li data-n="1">Usage records turn into cost with a versioned price table.</li><li data-n="2">Shared costs (gateway, vector database, observability) are split by usage or another agreed key.</li><li data-n="3">Each team sees its spend, trend and unit cost every week.</li><li data-n="4">Budgets alert at 50%, 80% and 100%; at the limit, degrade or block per agreement (15.9).</li></ol></div>
+<figcaption><b>From tags to budgets.</b></figcaption></figure>
+<div class="tw"><table><tr><th>Practice</th><th>What it does</th><th>When</th></tr><tr><td>Showback</td><td>reports spend per team; no money moves</td><td>start here; builds trust in the numbers</td></tr><tr><td>Chargeback</td><td>spend comes out of each team’s budget</td><td>once the numbers are trusted</td></tr><tr><td>Hard limits</td><td>block or degrade at the budget</td><td>for experiments, free tiers, runaway risks</td></tr><tr><td>Soft limits</td><td>alert and review</td><td>for production features</td></tr></table></div>
+<div class="box pit"><h5>Untagged spend</h5><p>Spend without a team tag lands in "shared" and quietly grows. Make the gateway refuse untagged calls, and report the untagged share until it is near zero.</p></div>
+</section>
+
+<section class="tp tp-math" id="c21-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Allocating shared costs by usage</b> (illustrative). Direct model spend: team A 4,000 dollars, team B 3,000, team C 1,000, a total of 8,000. Shared platform costs: 2,000.</p>
+<ul>
+<li>A’s share: 2,000 × 4,000 ÷ 8,000 = 1,000, so A’s total is 5,000. B: 750, total 3,750. C: 250, total 1,250.</li>
+<li>If A’s budget is 6,000, it has used 5,000 ÷ 6,000 ≈ 83%: the 80% alert has fired.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c21-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program splits spend among teams named after a grouping in your project’s data, allocates shared platform costs by usage, and raises budget alerts at 50%, 80% and 100%. Change <code>SHARED</code> or <code>HEADROOM</code> and run it again.</p>
+<figure class="fig live" id="snip-showback"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"showback"}'></div></div>
+<figcaption><b>Showback and budget alerts, in real Python.</b> Spend and budgets are simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c21-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.finops.org/framework/">FinOps Framework</a> <small>Allocation, showback, chargeback and budgeting as capabilities.</small></li>
+<li><a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html">AWS: Cost allocation tags</a> <small>Tagging resources so spend can be split by team.</small></li>
+<li><a href="https://docs.litellm.ai/docs/proxy/users">LiteLLM: Budgets and rate limits</a> <small>Per-team and per-key budgets in a model gateway.</small></li>
+</ol>
+</section>

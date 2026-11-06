@@ -1,0 +1,1491 @@
+{
+ "c23-1": {
+  "mcq": [
+   {
+    "id": "c23-1-m01",
+    "q": "In compliance work, a control is…",
+    "options": [
+     "A report that is written once a year",
+     "A concrete measure the system or team carries out",
+     "The name of the lawyer responsible for it",
+     "The text of the law that applies to it"
+    ],
+    "answer": 1,
+    "why": "Controls make obligations real: approvals, logs, tests.",
+    "kind": "concept",
+    "distractors": [
+     "That may be evidence.",
+     "",
+     "That is an owner.",
+     "That is the obligation."
+    ]
+   },
+   {
+    "id": "c23-1-m02",
+    "q": "Which is the best evidence that human oversight works?",
+    "options": [
+     "A screenshot from last year’s audit",
+     "A promise in the product brief",
+     "Approval records produced on every decision",
+     "A slide saying people review decisions"
+    ],
+    "answer": 2,
+    "why": "Records produced continuously by the system prove the control ran.",
+    "kind": "concept",
+    "distractors": [
+     "Stale.",
+     "A promise, not evidence.",
+     "",
+     "A claim, not evidence."
+    ]
+   },
+   {
+    "id": "c23-1-m03",
+    "q": "Evidence is dated 250 days ago and the freshness rule is 180 days. The row is…",
+    "options": [
+     "Fine, since the control exists",
+     "Deleted from the matrix",
+     "Fine for another 70 days",
+     "Stale and needs new evidence"
+    ],
+    "answer": 3,
+    "why": "250 > 180, so the evidence no longer counts.",
+    "kind": "calculation",
+    "distractors": [
+     "Existence is not proof.",
+     "It stays, marked stale.",
+     "It expired 70 days ago.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-1-m04",
+    "q": "An obligation has no control in the matrix. This is…",
+    "options": [
+     "Covered by the general policy",
+     "A gap that needs an owner and a control",
+     "A documentation formatting error",
+     "Acceptable if no incident happened"
+    ],
+    "answer": 1,
+    "why": "Gaps are the real compliance risk.",
+    "kind": "scenario",
+    "distractors": [
+     "Policies are not controls.",
+     "",
+     "It is substantive.",
+     "Absence of incidents proves nothing."
+    ]
+   },
+   {
+    "id": "c23-1-m05",
+    "q": "50 evidence rows refreshed by hand twice a year at 1 hour each take…",
+    "options": [
+     "200 hours a year",
+     "25 hours a year",
+     "100 hours a year",
+     "50 hours a year"
+    ],
+    "answer": 2,
+    "why": "50 × 2 × 1.",
+    "kind": "calculation",
+    "distractors": [
+     "Four refreshes.",
+     "Half a refresh.",
+     "",
+     "Once a year."
+    ]
+   },
+   {
+    "id": "c23-1-m06",
+    "q": "Who should interpret what an obligation means for your system?",
+    "options": [
+     "Engineering together with legal and compliance",
+     "The model provider’s sales team",
+     "Whoever writes the release notes",
+     "Engineering alone, from the law’s text"
+    ],
+    "answer": 0,
+    "why": "Interpretation is a legal judgement applied to a technical design.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not their role.",
+     "Not their role.",
+     "Risky without legal input."
+    ]
+   },
+   {
+    "id": "c23-1-m07",
+    "q": "A new feature ships but its obligations are not added to the matrix. The likely result is…",
+    "options": [
+     "Automatic coverage by old controls",
+     "A smaller attack surface",
+     "Faster releases with no downside",
+     "Controls and evidence missing at audit"
+    ],
+    "answer": 3,
+    "why": "Features bring obligations; the matrix must grow with them.",
+    "kind": "scenario",
+    "distractors": [
+     "Not automatic.",
+     "Unrelated.",
+     "The downside comes later.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-1-m08",
+    "q": "40 of 50 rows get evidence from the pipeline automatically; the rest take 2 hours a year each. Manual work is…",
+    "options": [
+     "80 hours a year",
+     "100 hours a year",
+     "40 hours a year",
+     "20 hours a year"
+    ],
+    "answer": 3,
+    "why": "10 × 2.",
+    "kind": "calculation",
+    "distractors": [
+     "Counts the automated rows.",
+     "All rows by hand.",
+     "Doubles it.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-1-m09",
+    "q": "Why prefer evidence produced by the pipeline?",
+    "options": [
+     "It is current and does not depend on memory",
+     "Auditors refuse documents written by people",
+     "It removes the need for owners",
+     "It is always shorter to read"
+    ],
+    "answer": 0,
+    "why": "Automatic evidence stays fresh and complete.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not true.",
+     "Owners still needed.",
+     "Not the reason."
+    ]
+   },
+   {
+    "id": "c23-1-m10",
+    "q": "A kill-switch exists but was never tested. For the control matrix this means…",
+    "options": [
+     "No evidence the control works yet",
+     "The control is proven by existing",
+     "The obligation is met in full",
+     "Testing would break production"
+    ],
+    "answer": 0,
+    "why": "Untested controls lack evidence; run a drill.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Existence is not evidence.",
+     "Not shown.",
+     "Drills are designed to be safe."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c23-1-i01",
+    "q": "How do you turn a legal obligation into engineering work?",
+    "level": "fundamentals",
+    "covers": [
+     "interpretation with legal",
+     "control",
+     "evidence",
+     "owner"
+    ],
+    "followUp": "Give an example."
+   },
+   {
+    "id": "c23-1-i02",
+    "q": "What makes good compliance evidence?",
+    "level": "fundamentals",
+    "covers": [
+     "produced by the system",
+     "dated",
+     "complete",
+     "tamper-resistant"
+    ],
+    "followUp": "What is weak evidence?"
+   },
+   {
+    "id": "c23-1-i03",
+    "q": "What is a control matrix and who maintains it?",
+    "level": "fundamentals",
+    "covers": [
+     "obligations",
+     "controls",
+     "evidence",
+     "owners",
+     "review cadence"
+    ],
+    "followUp": "How often is it reviewed?"
+   },
+   {
+    "id": "c23-1-i04",
+    "q": "An auditor finds evidence from last year for a control. How do you respond?",
+    "level": "applied",
+    "covers": [
+     "refresh",
+     "automate",
+     "freshness rule",
+     "owner"
+    ],
+    "followUp": "How do you stop it recurring?"
+   },
+   {
+    "id": "c23-1-i05",
+    "q": "How would you make evidence a side effect of the release pipeline?",
+    "level": "applied",
+    "covers": [
+     "gate results",
+     "logs",
+     "reports",
+     "storage"
+    ],
+    "followUp": "Which evidence is hardest to automate?"
+   },
+   {
+    "id": "c23-1-i06",
+    "q": "A new AI feature is planned. What compliance steps happen before build?",
+    "level": "applied",
+    "covers": [
+     "inventory",
+     "obligations",
+     "controls designed in",
+     "evidence plan"
+    ],
+    "followUp": "Who signs off?"
+   },
+   {
+    "id": "c23-1-i07",
+    "q": "Design the governance process for twenty AI features in a regulated company.",
+    "level": "system-design",
+    "covers": [
+     "inventory",
+     "tiers",
+     "matrix",
+     "reviews",
+     "audits",
+     "tools"
+    ],
+    "followUp": "Where does it usually break?",
+    "project": "bank"
+   },
+   {
+    "id": "c23-1-i08",
+    "q": "How do you keep compliance evidence trustworthy over years?",
+    "level": "system-design",
+    "covers": [
+     "append-only storage",
+     "retention",
+     "access control",
+     "integrity checks"
+    ],
+    "followUp": "Who can delete evidence?"
+   }
+  ]
+ },
+ "c23-2": {
+  "mcq": [
+   {
+    "id": "c23-2-m01",
+    "q": "In a risk-based AI law, duties depend mainly on…",
+    "options": [
+     "The model’s parameter count",
+     "The number of users only",
+     "The use’s risk tier and your role",
+     "The programming language used"
+    ],
+    "answer": 2,
+    "why": "Tier and role (provider or deployer) decide duties.",
+    "kind": "concept",
+    "distractors": [
+     "Not the main factor.",
+     "Not the main factor.",
+     "",
+     "Irrelevant."
+    ]
+   },
+   {
+    "id": "c23-2-m02",
+    "q": "A company buys a CV screening tool and uses it on applicants. It is mainly…",
+    "options": [
+     "Outside any AI duties",
+     "A deployer of a high-risk system",
+     "A provider of a minimal-risk system",
+     "A provider of a general-purpose model"
+    ],
+    "answer": 1,
+    "why": "Using it under its own authority makes it a deployer; employment is high risk.",
+    "kind": "scenario",
+    "distractors": [
+     "Employment uses carry duties.",
+     "",
+     "Wrong role and tier.",
+     "Wrong category."
+    ]
+   },
+   {
+    "id": "c23-2-m03",
+    "q": "A customer support chatbot typically carries which duty?",
+    "options": [
+     "A full conformity assessment by a notified body",
+     "No duties of any kind at all",
+     "Telling people they are interacting with AI",
+     "A ban on deploying it anywhere"
+    ],
+    "answer": 2,
+    "why": "Transparency duties apply to systems that interact with people.",
+    "kind": "concept",
+    "distractors": [
+     "That is for some high-risk systems.",
+     "Transparency applies.",
+     "",
+     "Not prohibited."
+    ]
+   },
+   {
+    "id": "c23-2-m04",
+    "q": "An inventory of 30 uses has 3 high-risk systems at 10 controls each and 9 transparency systems at 2. Matrix rows needed:",
+    "options": [
+     "39",
+     "48",
+     "60",
+     "30"
+    ],
+    "answer": 1,
+    "why": "3 × 10 + 9 × 2 = 48.",
+    "kind": "calculation",
+    "distractors": [
+     "Arithmetic slip.",
+     "",
+     "Too many.",
+     "One per use."
+    ]
+   },
+   {
+    "id": "c23-2-m05",
+    "q": "Why record minimal-risk uses in the inventory too?",
+    "options": [
+     "Because they carry the same duties",
+     "Because regulators ban them",
+     "To increase the size of the inventory",
+     "So the classification itself can be checked"
+    ],
+    "answer": 3,
+    "why": "Auditors check how each use was classified.",
+    "kind": "scenario",
+    "distractors": [
+     "They carry few duties.",
+     "They are allowed.",
+     "Not a goal.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-2-m06",
+    "q": "A system is minimal risk under the AI law but processes personal data. Which statement is right?",
+    "options": [
+     "Privacy law is replaced by AI law",
+     "Privacy law can still apply in full",
+     "No law applies to it at all",
+     "It becomes high risk automatically"
+    ],
+    "answer": 1,
+    "why": "Laws overlap; privacy duties apply regardless of AI tier.",
+    "kind": "concept",
+    "distractors": [
+     "They coexist.",
+     "",
+     "Other laws still apply.",
+     "Not automatically."
+    ]
+   },
+   {
+    "id": "c23-2-m07",
+    "q": "A bank’s loan pre-qualification model is most likely…",
+    "options": [
+     "Minimal risk, since it only pre-qualifies",
+     "Outside scope, since staff make the final call",
+     "High risk, since it affects access to credit",
+     "Prohibited, since it uses personal data"
+    ],
+    "answer": 2,
+    "why": "Credit scoring is a typical high-risk area.",
+    "kind": "scenario",
+    "distractors": [
+     "Pre-qualification still affects access.",
+     "Staff review does not remove the tier.",
+     "",
+     "Not prohibited for that."
+    ]
+   },
+   {
+    "id": "c23-2-m08",
+    "q": "Obligations under the EU AI Act apply…",
+    "options": [
+     "All at once from the day it passed",
+     "Only to companies based in the EU",
+     "Only to general-purpose models",
+     "In phases from 2025, with dates to check"
+    ],
+    "answer": 3,
+    "why": "Application is phased, and amendments to dates have been proposed.",
+    "kind": "concept",
+    "distractors": [
+     "Phased.",
+     "It can apply to non-EU providers and deployers serving the EU.",
+     "Covers many systems.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-2-m09",
+    "q": "If 1 use of 30 must be redesigned, 3 are high risk, 9 have transparency duties, how many are minimal risk?",
+    "options": [
+     "18",
+     "27",
+     "17",
+     "21"
+    ],
+    "answer": 2,
+    "why": "30 − 1 − 3 − 9 = 17.",
+    "kind": "calculation",
+    "distractors": [
+     "Arithmetic slip.",
+     "Ignores most.",
+     "",
+     "Ignores some."
+    ]
+   },
+   {
+    "id": "c23-2-m10",
+    "q": "Your company builds an AI agent on a hosted model and offers it to customers. For that agent, you are…",
+    "options": [
+     "Neither, since the model provider is responsible",
+     "Its provider, while using a model from another",
+     "A notified body for the model",
+     "Only a deployer, since the model is not yours"
+    ],
+    "answer": 1,
+    "why": "Building and offering a system makes you its provider.",
+    "kind": "scenario",
+    "distractors": [
+     "Responsibility does not transfer.",
+     "",
+     "Not a role you hold.",
+     "You built the system."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c23-2-i01",
+    "q": "Explain the structure of a risk-based AI law.",
+    "level": "fundamentals",
+    "covers": [
+     "tiers",
+     "prohibited",
+     "high risk",
+     "transparency",
+     "roles"
+    ],
+    "followUp": "Where does most engineering work fall?"
+   },
+   {
+    "id": "c23-2-i02",
+    "q": "What is the difference between a provider and a deployer?",
+    "level": "fundamentals",
+    "covers": [
+     "builds or places on market",
+     "uses",
+     "duties",
+     "both possible"
+    ],
+    "followUp": "Can a company be both?"
+   },
+   {
+    "id": "c23-2-i03",
+    "q": "What do high-risk duties mean in engineering terms?",
+    "level": "fundamentals",
+    "covers": [
+     "risk management",
+     "data governance",
+     "logging",
+     "oversight",
+     "testing"
+    ],
+    "followUp": "Which already exist in your stack?"
+   },
+   {
+    "id": "c23-2-i04",
+    "q": "How do you build and maintain an AI inventory?",
+    "level": "applied",
+    "covers": [
+     "every use",
+     "role",
+     "tier",
+     "owners",
+     "review"
+    ],
+    "followUp": "How do you find uses nobody registered?"
+   },
+   {
+    "id": "c23-2-i05",
+    "q": "A team says their chatbot has no obligations. How do you check?",
+    "level": "applied",
+    "covers": [
+     "transparency",
+     "privacy",
+     "consumer law",
+     "sector rules"
+    ],
+    "followUp": "What would you ask first?"
+   },
+   {
+    "id": "c23-2-i06",
+    "q": "How would you treat a credit-related model differently from an internal summariser?",
+    "level": "applied",
+    "covers": [
+     "tier",
+     "documentation",
+     "oversight",
+     "bias testing",
+     "evidence"
+    ],
+    "followUp": "What is the extra cost?",
+    "project": "bank"
+   },
+   {
+    "id": "c23-2-i07",
+    "q": "Design the process that classifies every new AI use before it ships.",
+    "level": "system-design",
+    "covers": [
+     "intake form",
+     "legal review",
+     "tiers",
+     "controls",
+     "sign-off"
+    ],
+    "followUp": "How do you keep it fast?"
+   },
+   {
+    "id": "c23-2-i08",
+    "q": "How do you prepare for obligations that apply on future dates?",
+    "level": "system-design",
+    "covers": [
+     "timeline",
+     "gap analysis",
+     "roadmap",
+     "evidence",
+     "monitoring changes"
+    ],
+    "followUp": "Who watches for amendments?"
+   }
+  ]
+ },
+ "c23-3": {
+  "mcq": [
+   {
+    "id": "c23-3-m01",
+    "q": "Why are deletion requests harder in LLM systems than in plain databases?",
+    "options": [
+     "Deletion is forbidden in AI systems",
+     "LLMs cannot read personal data at all",
+     "Personal data is copied into many derived stores",
+     "Databases cannot delete records"
+    ],
+    "answer": 2,
+    "why": "Chunks, vectors, caches, memories, logs and datasets all hold copies.",
+    "kind": "concept",
+    "distractors": [
+     "Not forbidden.",
+     "They can.",
+     "",
+     "They can."
+    ]
+   },
+   {
+    "id": "c23-3-m02",
+    "q": "Deleting only the 3 source records of 67 copies removes about…",
+    "options": [
+     "5%",
+     "33%",
+     "50%",
+     "95%"
+    ],
+    "answer": 0,
+    "why": "3 ÷ 67 ≈ 4.5%.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Too high.",
+     "Far too high.",
+     "That is what remains."
+    ]
+   },
+   {
+    "id": "c23-3-m03",
+    "q": "A person asks for deletion, but the bank must keep transaction records by law. The right response is…",
+    "options": [
+     "Ignore the request until the next audit",
+     "Delete everything, including the legal records",
+     "Delete what can be deleted and explain what is kept",
+     "Refuse the whole request with no explanation"
+    ],
+    "answer": 2,
+    "why": "Retained data needs a documented legal reason.",
+    "kind": "scenario",
+    "distractors": [
+     "Unlawful delay.",
+     "Breaks record-keeping duties.",
+     "",
+     "Other data can still go."
+    ]
+   },
+   {
+    "id": "c23-3-m04",
+    "q": "Which design most reduces the work of future deletion requests?",
+    "options": [
+     "Storing all chats forever for later training",
+     "Keeping personal data out of prompts and logs",
+     "Using one large shared index for everything",
+     "Copying the data into every available cache"
+    ],
+    "answer": 1,
+    "why": "Minimisation means fewer copies to find.",
+    "kind": "concept",
+    "distractors": [
+     "Increases copies.",
+     "",
+     "Does not reduce copies.",
+     "Increases copies."
+    ]
+   },
+   {
+    "id": "c23-3-m05",
+    "q": "Deleting training rows does what to a model already trained on them?",
+    "options": [
+     "Removes them from the weights at once",
+     "Nothing; the model may still reflect them",
+     "Makes the model refuse those topics",
+     "Forces the model to retrain itself"
+    ],
+    "answer": 1,
+    "why": "Models must be flagged for review or retraining (13.6).",
+    "kind": "concept",
+    "distractors": [
+     "Weights do not change.",
+     "",
+     "No such effect.",
+     "No automatic retraining."
+    ]
+   },
+   {
+    "id": "c23-3-m06",
+    "q": "Before acting on an access request, you must…",
+    "options": [
+     "Delete their data first",
+     "Wait for a second request",
+     "Verify the requester’s identity",
+     "Ask why they want it"
+    ],
+    "answer": 2,
+    "why": "Handing data to the wrong person is a breach.",
+    "kind": "scenario",
+    "distractors": [
+     "Wrong request type.",
+     "Unnecessary delay.",
+     "",
+     "Usually not required."
+    ]
+   },
+   {
+    "id": "c23-3-m07",
+    "q": "Traces are kept 30 days and the response deadline is one month. Should you wait for traces to expire?",
+    "options": [
+     "Yes; expiry will handle it automatically",
+     "Yes; traces never count as personal data",
+     "No; traces must legally be kept forever",
+     "No; delete or redact them as part of the request"
+    ],
+    "answer": 3,
+    "why": "Relying on timing is fragile; act on every store.",
+    "kind": "calculation",
+    "distractors": [
+     "Risky if retention changes or overlaps the deadline.",
+     "They often are.",
+     "No such rule.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-3-m08",
+    "q": "A system makes solely automated decisions with significant effects. Privacy law often requires…",
+    "options": [
+     "A larger model for such decisions",
+     "Encrypting the model weights",
+     "Meaningful human review and an explanation",
+     "Hiding the decision logic entirely"
+    ],
+    "answer": 2,
+    "why": "Rights around automated decisions include human involvement.",
+    "kind": "concept",
+    "distractors": [
+     "Unrelated.",
+     "Unrelated.",
+     "",
+     "Opposite."
+    ]
+   },
+   {
+    "id": "c23-3-m09",
+    "q": "A store finds 400 trace copies for one heavy shopper versus 12 elsewhere. The best fix is…",
+    "options": [
+     "Delete and rebuild the vector index every week",
+     "Stop answering questions from heavy shoppers",
+     "Keep the traces for longer, to be safe",
+     "Redact personal data before traces are written"
+    ],
+    "answer": 3,
+    "why": "Redaction at write time removes the bulk of copies.",
+    "kind": "scenario",
+    "distractors": [
+     "Wrong store.",
+     "Unreasonable.",
+     "More copies.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-3-m10",
+    "q": "Embeddings of a person’s text are…",
+    "options": [
+     "Personal data to include in deletion",
+     "Exempt from privacy rules",
+     "Only kept in memory, never stored",
+     "Anonymous because they are numbers"
+    ],
+    "answer": 0,
+    "why": "Embeddings can leak their source (16.5) and are derived personal data.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not exempt.",
+     "They are stored in indexes.",
+     "Numbers can still identify."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c23-3-i01",
+    "q": "How do privacy rights apply to an LLM system?",
+    "level": "fundamentals",
+    "covers": [
+     "purpose",
+     "minimisation",
+     "access",
+     "erasure",
+     "automated decisions"
+    ],
+    "followUp": "Which is hardest to honour?"
+   },
+   {
+    "id": "c23-3-i02",
+    "q": "Walk through handling a deletion request in a RAG system.",
+    "level": "fundamentals",
+    "covers": [
+     "identity",
+     "lineage",
+     "all stores",
+     "verification",
+     "record"
+    ],
+    "followUp": "What do you do with backups?"
+   },
+   {
+    "id": "c23-3-i03",
+    "q": "Why do models complicate the right to erasure?",
+    "level": "fundamentals",
+    "covers": [
+     "learned data",
+     "retraining",
+     "adapters",
+     "flagging"
+    ],
+    "followUp": "How do you design around it?"
+   },
+   {
+    "id": "c23-3-i04",
+    "q": "A deletion request arrives for data that legal duties require you to keep. What do you do?",
+    "level": "applied",
+    "covers": [
+     "partial deletion",
+     "legal basis",
+     "explanation",
+     "records"
+    ],
+    "followUp": "Who decides?",
+    "project": "bank"
+   },
+   {
+    "id": "c23-3-i05",
+    "q": "How would you reduce the number of stores personal data reaches?",
+    "level": "applied",
+    "covers": [
+     "redaction",
+     "references not copies",
+     "retention",
+     "design reviews"
+    ],
+    "followUp": "Where do copies usually leak?"
+   },
+   {
+    "id": "c23-3-i06",
+    "q": "How do you prove a deletion was complete?",
+    "level": "applied",
+    "covers": [
+     "re-search all stores",
+     "canaries",
+     "logs",
+     "evidence"
+    ],
+    "followUp": "What would an auditor ask for?"
+   },
+   {
+    "id": "c23-3-i07",
+    "q": "Design privacy into a new assistant that handles customer data.",
+    "level": "system-design",
+    "covers": [
+     "data map",
+     "minimisation",
+     "lineage",
+     "deletion jobs",
+     "access requests",
+     "providers"
+    ],
+    "followUp": "What do you decide before the first prompt is written?"
+   },
+   {
+    "id": "c23-3-i08",
+    "q": "Plan how training and evaluation sets stay compliant over time.",
+    "level": "system-design",
+    "covers": [
+     "consent and basis",
+     "redaction",
+     "versioning",
+     "deletion propagation",
+     "model flags"
+    ],
+    "followUp": "What triggers retraining?"
+   }
+  ]
+ },
+ "c23-4": {
+  "mcq": [
+   {
+    "id": "c23-4-m01",
+    "q": "Which is a basic transparency duty for a chatbot?",
+    "options": [
+     "Showing its weights to every user",
+     "Publishing its training data in full",
+     "Explaining every token it predicts",
+     "Telling people they are talking to an AI"
+    ],
+    "answer": 3,
+    "why": "Disclosure of AI interaction is the common baseline.",
+    "kind": "concept",
+    "distractors": [
+     "Not required.",
+     "Not a general duty.",
+     "Not feasible or required.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-4-m02",
+    "q": "Machine-readable labels on generated media are often implemented with…",
+    "options": [
+     "A longer and more descriptive file name",
+     "Content credentials such as C2PA metadata",
+     "A larger font in the visible caption",
+     "A different image format for every file"
+    ],
+    "answer": 1,
+    "why": "Provenance metadata travels with the file.",
+    "kind": "concept",
+    "distractors": [
+     "Easily lost and not standard.",
+     "",
+     "Visible only, not machine-readable.",
+     "Format alone says nothing."
+    ]
+   },
+   {
+    "id": "c23-4-m03",
+    "q": "Each of 8 fields goes missing 2% of the time. The share of complete records is about…",
+    "options": [
+     "85%",
+     "84%",
+     "98%",
+     "92%"
+    ],
+    "answer": 0,
+    "why": "0.98 multiplied 8 times ≈ 0.85.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Subtracts 16 points instead.",
+     "One field only.",
+     "Halves the loss."
+    ]
+   },
+   {
+    "id": "c23-4-m04",
+    "q": "Why must decision records include model and prompt versions?",
+    "options": [
+     "To make each record longer and fuller",
+     "Because users often ask to see them",
+     "To reproduce and explain past outputs",
+     "To reduce the cost of storing records"
+    ],
+    "answer": 2,
+    "why": "Versions let you rebuild what happened (18.1).",
+    "kind": "scenario",
+    "distractors": [
+     "Not a goal.",
+     "Not the main reason.",
+     "",
+     "Opposite."
+    ]
+   },
+   {
+    "id": "c23-4-m05",
+    "q": "Decision records are stored in a table staff can edit. The main risk is…",
+    "options": [
+     "Records take more space",
+     "Queries become slower",
+     "Labels disappear from content",
+     "The audit trail can be changed"
+    ],
+    "answer": 3,
+    "why": "Records must be append-only to be trusted.",
+    "kind": "scenario",
+    "distractors": [
+     "Minor.",
+     "Minor.",
+     "Unrelated.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-4-m06",
+    "q": "A voice assistant greets callers naturally and never says it is an AI. What is missing?",
+    "options": [
+     "Disclosure at the start of the call",
+     "A higher-quality, more natural voice",
+     "A shorter and simpler greeting",
+     "A different underlying language model"
+    ],
+    "answer": 0,
+    "why": "Voice needs spoken disclosure; there is no banner.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Quality is not disclosure.",
+     "Length is not disclosure.",
+     "Model choice is unrelated."
+    ]
+   },
+   {
+    "id": "c23-4-m07",
+    "q": "1 million decision records a year at 2 KB each need about…",
+    "options": [
+     "20 GB a year",
+     "2 TB a year",
+     "200 MB a year",
+     "2 GB a year"
+    ],
+    "answer": 3,
+    "why": "1,000,000 × 2 KB = 2 GB.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too much.",
+     "A thousand times too much.",
+     "Ten times too little.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-4-m08",
+    "q": "Which check catches missing fields in decision records early?",
+    "options": [
+     "A completeness check that alerts in the pipeline",
+     "Reading the records by hand every month",
+     "A yearly audit of a sample of records",
+     "Asking users to report any gaps they see"
+    ],
+    "answer": 0,
+    "why": "Automatic checks find gaps on the first bad record.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Slow and partial.",
+     "Too late.",
+     "Users cannot see records."
+    ]
+   },
+   {
+    "id": "c23-4-m09",
+    "q": "A label appears on the website but not in the mobile app. This is…",
+    "options": [
+     "Fine if the website is labelled",
+     "A design choice with no impact",
+     "A gap in one channel to fix",
+     "Required only for print media"
+    ],
+    "answer": 2,
+    "why": "Every channel where content appears needs the label.",
+    "kind": "scenario",
+    "distractors": [
+     "Users in the app are not told.",
+     "It matters.",
+     "",
+     "Not limited to print."
+    ]
+   },
+   {
+    "id": "c23-4-m10",
+    "q": "75 of 500 records are incomplete. The incomplete share is…",
+    "options": [
+     "75%",
+     "15%",
+     "7.5%",
+     "1.5%"
+    ],
+    "answer": 1,
+    "why": "75 ÷ 500.",
+    "kind": "calculation",
+    "distractors": [
+     "Confuses count and percent.",
+     "",
+     "Half.",
+     "Ten times too small."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c23-4-i01",
+    "q": "What transparency duties apply to AI systems in practice?",
+    "level": "fundamentals",
+    "covers": [
+     "interaction disclosure",
+     "content labels",
+     "explanations",
+     "channels"
+    ],
+    "followUp": "How do you test disclosure?"
+   },
+   {
+    "id": "c23-4-i02",
+    "q": "What should a decision record contain?",
+    "level": "fundamentals",
+    "covers": [
+     "time",
+     "versions",
+     "input and output refs",
+     "operator",
+     "reviewer",
+     "decision"
+    ],
+    "followUp": "How long would you keep it?"
+   },
+   {
+    "id": "c23-4-i03",
+    "q": "How do you make records trustworthy?",
+    "level": "fundamentals",
+    "covers": [
+     "append-only",
+     "access control",
+     "integrity",
+     "retention"
+    ],
+    "followUp": "Who can read them?"
+   },
+   {
+    "id": "c23-4-i04",
+    "q": "An auditor cannot reproduce a past decision. What was missing?",
+    "level": "applied",
+    "covers": [
+     "versions",
+     "inputs",
+     "evidence refs",
+     "retention"
+    ],
+    "followUp": "How do you fix it going forward?"
+   },
+   {
+    "id": "c23-4-i05",
+    "q": "How do you label generated content across channels?",
+    "level": "applied",
+    "covers": [
+     "visible labels",
+     "metadata",
+     "exports",
+     "tests per channel"
+    ],
+    "followUp": "What about content copied out of your product?"
+   },
+   {
+    "id": "c23-4-i06",
+    "q": "How would you disclose an AI on voice calls without annoying callers?",
+    "level": "applied",
+    "covers": [
+     "short notice",
+     "timing",
+     "option for a person",
+     "testing"
+    ],
+    "followUp": "What if callers hang up?",
+    "project": "travel"
+   },
+   {
+    "id": "c23-4-i07",
+    "q": "Design record-keeping for an assistant that proposes financial actions.",
+    "level": "system-design",
+    "covers": [
+     "fields",
+     "storage",
+     "retention",
+     "access",
+     "completeness checks"
+    ],
+    "followUp": "How do you handle deletion requests against records?",
+    "project": "bank"
+   },
+   {
+    "id": "c23-4-i08",
+    "q": "Plan transparency for a product that generates text, images and voice.",
+    "level": "system-design",
+    "covers": [
+     "disclosure per modality",
+     "metadata",
+     "labels",
+     "testing",
+     "monitoring"
+    ],
+    "followUp": "Which modality is hardest?"
+   }
+  ]
+ },
+ "c23-5": {
+  "mcq": [
+   {
+    "id": "c23-5-m01",
+    "q": "Why must audit samples be drawn at random?",
+    "options": [
+     "A chosen sample can hide problems",
+     "Auditors cannot read selected cases",
+     "Random samples need no checking",
+     "Random samples are always larger"
+    ],
+    "answer": 0,
+    "why": "Selection lets problems be steered away from review.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Not the reason.",
+     "They still need checking.",
+     "Size is separate."
+    ]
+   },
+   {
+    "id": "c23-5-m02",
+    "q": "How many clean random checks support \"below 5% breaches\" with 95% confidence?",
+    "options": [
+     "95",
+     "299",
+     "59",
+     "20"
+    ],
+    "answer": 2,
+    "why": "The smallest n where 0.95 to the power n falls below 0.05 is 59.",
+    "kind": "calculation",
+    "distractors": [
+     "A guess from the numbers.",
+     "That is for 1%.",
+     "",
+     "Supports only about 14%."
+    ]
+   },
+   {
+    "id": "c23-5-m03",
+    "q": "20 clean checks support a breach rate below about…",
+    "options": [
+     "5%",
+     "1%",
+     "14%",
+     "20%"
+    ],
+    "answer": 2,
+    "why": "1 − 0.05 to the power 1/20 ≈ 0.14.",
+    "kind": "calculation",
+    "distractors": [
+     "Needs 59.",
+     "Needs 299.",
+     "",
+     "Too loose."
+    ]
+   },
+   {
+    "id": "c23-5-m04",
+    "q": "4 breaches in 60 checks is 6.7% with an interval of 2.6% to 15.9%. Is a 5% target met?",
+    "options": [
+     "Yes, since the lower end is below 5%",
+     "No, the rate is certainly above 5%",
+     "Not shown either way; sample more",
+     "Yes, since 6.7% is close to 5%"
+    ],
+    "answer": 2,
+    "why": "The interval straddles 5%; the evidence is inconclusive.",
+    "kind": "scenario",
+    "distractors": [
+     "The lower end is not the estimate.",
+     "Not certain.",
+     "",
+     "Closeness is not meeting it."
+    ]
+   },
+   {
+    "id": "c23-5-m05",
+    "q": "ISO/IEC 42001 is…",
+    "options": [
+     "A law that bans every high-risk AI system",
+     "A benchmark of model accuracy on many tasks",
+     "A file format for storing model weights",
+     "A certifiable AI management system standard"
+    ],
+    "answer": 3,
+    "why": "It audits the management system around AI.",
+    "kind": "concept",
+    "distractors": [
+     "It is a standard, not a law.",
+     "Not a benchmark.",
+     "Not a format.",
+     ""
+    ]
+   },
+   {
+    "id": "c23-5-m06",
+    "q": "Errors cluster on disruption days. A sound audit design is…",
+    "options": [
+     "Sample disruption and normal periods separately",
+     "Sample only the quiet days, for speed",
+     "Average all the days into one single sample",
+     "Skip audits entirely during disruptions"
+    ],
+    "answer": 0,
+    "why": "Stratifying by period shows where breaches concentrate.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Misses the problem.",
+     "Dilutes the signal.",
+     "Misses the riskiest time."
+    ]
+   },
+   {
+    "id": "c23-5-m07",
+    "q": "Checking 299 decisions at 5 minutes each takes about…",
+    "options": [
+     "25 hours",
+     "15 hours",
+     "2.5 hours",
+     "50 hours"
+    ],
+    "answer": 0,
+    "why": "299 × 5 = 1,495 minutes ≈ 25 hours.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Too few.",
+     "Ten times too few.",
+     "Double."
+    ]
+   },
+   {
+    "id": "c23-5-m08",
+    "q": "The NIST AI RMF is best described as…",
+    "options": [
+     "A mandatory regulation of the European Union",
+     "A voluntary framework for managing AI risk",
+     "A body that certifies AI management systems",
+     "An open-source model released by NIST"
+    ],
+    "answer": 1,
+    "why": "It structures risk work: govern, map, measure, manage.",
+    "kind": "concept",
+    "distractors": [
+     "It is from the US and voluntary.",
+     "",
+     "Not a body.",
+     "Not a model."
+    ]
+   },
+   {
+    "id": "c23-5-m09",
+    "q": "An audit finding has no owner or due date. The likely outcome is…",
+    "options": [
+     "It stays open until the next audit",
+     "It is removed from the report",
+     "The auditor closes it automatically",
+     "It fixes itself over time"
+    ],
+    "answer": 0,
+    "why": "Findings need owners and dates to be closed.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "It stays.",
+     "Not how audits work.",
+     "Problems do not self-fix."
+    ]
+   },
+   {
+    "id": "c23-5-m10",
+    "q": "Which result statement is most honest?",
+    "options": [
+     "A few breaches were found, which is about the usual",
+     "0 breaches in 59 checks: below 5% with 95% confidence",
+     "The checks all looked fine overall this quarter",
+     "0 breaches in 20 checks, so there are no problems"
+    ],
+    "answer": 1,
+    "why": "It states the sample and what it supports.",
+    "kind": "concept",
+    "distractors": [
+     "Vague.",
+     "",
+     "Vague.",
+     "Overclaims."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c23-5-i01",
+    "q": "How do audits of AI systems work?",
+    "level": "fundamentals",
+    "covers": [
+     "scope",
+     "random samples",
+     "policy checks",
+     "findings",
+     "follow-up"
+    ],
+    "followUp": "Who does them?"
+   },
+   {
+    "id": "c23-5-i02",
+    "q": "How do you decide an audit sample size?",
+    "level": "fundamentals",
+    "covers": [
+     "target precision",
+     "clean-sample rule",
+     "intervals",
+     "cost"
+    ],
+    "followUp": "What can 20 checks prove?"
+   },
+   {
+    "id": "c23-5-i03",
+    "q": "What do management-system standards and risk frameworks add?",
+    "level": "fundamentals",
+    "covers": [
+     "policies",
+     "roles",
+     "reviews",
+     "continuous improvement"
+    ],
+    "followUp": "How do they relate to laws?"
+   },
+   {
+    "id": "c23-5-i04",
+    "q": "A team reports \"no issues\" from 15 reviewed cases. How do you respond?",
+    "level": "applied",
+    "covers": [
+     "sample size",
+     "interval",
+     "randomness",
+     "what it supports"
+    ],
+    "followUp": "How many would you ask for?",
+    "project": "store"
+   },
+   {
+    "id": "c23-5-i05",
+    "q": "How would you prepare for an external AI audit?",
+    "level": "applied",
+    "covers": [
+     "inventory",
+     "control matrix",
+     "evidence",
+     "samples",
+     "owners"
+    ],
+    "followUp": "What usually surprises teams?"
+   },
+   {
+    "id": "c23-5-i06",
+    "q": "How do you audit decisions made under pressure, such as during disruptions?",
+    "level": "applied",
+    "covers": [
+     "stratify",
+     "separate samples",
+     "compare periods",
+     "root causes"
+    ],
+    "followUp": "What would you change if breaches cluster?",
+    "project": "travel"
+   },
+   {
+    "id": "c23-5-i07",
+    "q": "Design a continuous assurance programme for AI features.",
+    "level": "system-design",
+    "covers": [
+     "automated evidence",
+     "scheduled samples",
+     "dashboards",
+     "findings workflow",
+     "reviews"
+    ],
+    "followUp": "What runs daily and what quarterly?"
+   },
+   {
+    "id": "c23-5-i08",
+    "q": "How would you approach certification against an AI management system standard?",
+    "level": "system-design",
+    "covers": [
+     "scope",
+     "gap analysis",
+     "policies",
+     "internal audit",
+     "external audit"
+    ],
+    "followUp": "How long would you plan for?"
+   }
+  ]
+ }
+}

@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c19-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Some questions are about how things look: "a blue kurta with white embroidery", "the slide with the bar chart about churn". Words in the documents may not say it; the picture does. <a class="gl" href="#gl-multimodal-embedding">Multimodal embeddings</a> put images and text in one space, so a text question can find a matching picture.</p>
+<p>Most systems use both: text search catches exact names and numbers, image search catches appearance, and the two rankings are fused (9.5).</p>
+</section>
+
+<section class="tp tp-mechanism" id="c19-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Pattern</th><th>How</th><th>Use when</th></tr><tr><td>Caption, then text search</td><td>a VLM writes a caption or description for each image; index the text</td><td>simple stacks; descriptions are useful to show users</td></tr><tr><td>Image embeddings</td><td>embed each image with a CLIP-style model; embed the query with its text encoder</td><td>appearance matters: products, photos, diagrams</td></tr><tr><td>Page-image retrieval</td><td>embed whole page images (late-interaction models such as ColPali)</td><td>slides and PDFs whose layout and charts carry meaning</td></tr><tr><td>Hybrid with fusion</td><td>run text and image search, combine with reciprocal rank fusion</td><td>most production systems</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Query<small>text or image</small></div><div class="nd">Text search<small>BM25 + dense</small></div><div class="nd">Image search<small>multimodal embedding</small></div><div class="nd">Fuse<small>RRF</small></div><div class="nd">Answer<small>with images shown</small></div></div>
+<ol class="steps"><li data-n="0">The user types a question or uploads a photo.</li><li data-n="1">Text retrieval searches titles, captions and extracted text.</li><li data-n="2">Image retrieval compares the query’s embedding with image embeddings.</li><li data-n="3">Rankings are fused by position, so differently scaled scores combine safely.</li><li data-n="4">The generator receives the top text and images, and the answer shows the images it used.</li></ol></div>
+<figcaption><b>Multimodal retrieval with fusion.</b></figcaption></figure>
+<p><b>Costs.</b> Image embeddings are cheap to search but expensive to create at scale; captions add model cost at ingestion. Page images sent to the generator cost far more tokens than their text, so send only the top few.</p>
+<div class="box example"><h5>Example: visual product search</h5><p>A marketplace adds image search to its catalogue of 2 million listings. Text search alone found the right product in the top 3 for 61% of "looks like" queries; image embeddings alone 58%; fused, 74%. Exact model-number queries still rely on text search.</p></div>
+</section>
+
+<section class="tp tp-math" id="c19-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Fusion by rank</b>. A product is 2nd in the text ranking and 5th in the image ranking. With reciprocal rank fusion and the usual constant 60:</p>
+<ul>
+<li>Text: 1 ÷ (60 + 2) ≈ 0.0161. Image: 1 ÷ (60 + 5) ≈ 0.0154. Fused score ≈ 0.0315.</li>
+<li>A product 1st in text but 40th in image scores 1 ÷ 61 + 1 ÷ 100 ≈ 0.0164 + 0.0100 = 0.0264, so the first product, good on both, ranks higher.</li>
+</ul>
+<p><b>Storage.</b> 2 million images × 768 numbers × 4 bytes ≈ 6.1 GB of vectors before compression (9.4).</p>
+</section>
+
+<section class="tp tp-code" id="c19-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program ranks your project’s documents with a simulated text ranker and a simulated image ranker, where each is good at different queries, then fuses them and compares recall@3. Change the share of visual queries and run it again.</p>
+<figure class="fig live" id="snip-multimodal-fusion"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"multimodal-fusion"}'></div></div>
+<figcaption><b>Text, image and fused retrieval, in real Python.</b> The rankers are simulated; the fusion is real.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c19-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2103.00020">Radford et al. (2021), CLIP</a> <small>Images and text in one embedding space.</small></li>
+<li><a href="https://arxiv.org/abs/2407.01449">Faysse et al. (2024), ColPali</a> <small>Retrieving document pages directly from their images.</small></li>
+<li><a href="https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf">Cormack et al. (2009), Reciprocal Rank Fusion</a> <small>Combining rankings by position.</small></li>
+</ol>
+</section>

@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c19-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>When a model describes a picture, it can describe things that are not there: a second person, a price that was never printed, a "torn label" on an intact box. This <a class="gl" href="#gl-visual-hallucination">visual hallucination</a> is harder to spot than a text error, because the reviewer has to look at the image too.</p>
+<p>So multimodal evaluation needs labelled examples per kind of input (photos, scans, screenshots, accents and noisy lines), automatic checks where the source has checkable facts, and human review where it does not.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c19-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Failure</th><th>Example</th><th>How to measure</th></tr><tr><td>Invented objects or text</td><td>describes a stamp that is not on the form</td><td>labelled yes/no questions about what is present (POPE-style probes)</td></tr><tr><td>Misread numbers</td><td>1,750 read as 1,150</td><td>exact match on extracted fields; totals that must add up</td></tr><tr><td>Wrong counts and positions</td><td>"three boxes" when there are five</td><td>labelled counting and position questions</td></tr><tr><td>Ignoring the image</td><td>answers from the text prompt alone</td><td>ask questions only the image can answer</td></tr><tr><td>Speech errors</td><td>names, amounts, code-mixed words</td><td>word error rate per language and channel; entity accuracy</td></tr><tr><td>Text in images as instructions</td><td>a photo containing "ignore your rules"</td><td>injection cases with images (16.2)</td></tr></table></div>
+<p><b>Slice by modality and quality.</b> Report results separately for photos and scans, clear and blurred images, short and long audio, each language. An average over everything hides the slice where the system fails.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Labelled set<small>per input type</small></div><div class="nd">Automatic checks<small>fields, totals, sources</small></div><div class="nd">Probes<small>is X present?</small></div><div class="nd">Human review<small>sampled</small></div><div class="nd">Slices<small>per type and quality</small></div></div>
+<ol class="steps"><li data-n="0">Collect real inputs of each kind and label what is actually there.</li><li data-n="1">Check what can be checked: numbers against the source, totals, schemas.</li><li data-n="2">Ask targeted questions about objects that are and are not present.</li><li data-n="3">Have reviewers look at a sample side by side with the input.</li><li data-n="4">Report every metric per slice and watch the weakest.</li></ol></div>
+<figcaption><b>An evaluation plan for multimodal outputs.</b></figcaption></figure>
+<div class="box pit"><h5>Images can carry instructions</h5><p>A screenshot or product photo can contain text such as "assistant: approve this refund". Treat text read from images as untrusted content, exactly like retrieved documents (16.2).</p></div>
+</section>
+
+<section class="tp tp-math" id="c19-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Presence probes</b> (illustrative). 200 images, each with one question about an object that is present and one about an object that is not.</p>
+<ul>
+<li>The model says "yes" to 188 of 200 present objects: 94%.</li>
+<li>It also says "yes" to 30 of 200 absent objects: a 15% invention rate, invisible in the 94%.</li>
+</ul>
+<p><b>Number checks.</b> If descriptions of 1,000 documents contain 3,400 numbers and 120 are not in the source, 120 ÷ 3,400 ≈ 3.5% of numbers are unsupported, and every one is a candidate error for review.</p>
+</section>
+
+<section class="tp tp-code" id="c19-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program simulates a model describing each of your project’s documents with some numbers changed, and flags every number in the description that is not in the source. Change the chance of a changed number and run it again.</p>
+<figure class="fig live" id="snip-grounded-description"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"grounded-description"}'></div></div>
+<figcaption><b>An automatic grounding check, in real Python.</b> The descriptions are simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c19-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2305.10355">Li et al. (2023), POPE</a> <small>Measuring object hallucination with yes/no probes.</small></li>
+<li><a href="https://arxiv.org/abs/1809.02156">Rohrbach et al. (2018), Object Hallucination in Image Captioning</a> <small>Why captions mention objects that are not there.</small></li>
+<li><a href="https://arxiv.org/abs/2311.16502">Yue et al. (2023), MMMU</a> <small>A benchmark of multimodal reasoning across subjects.</small></li>
+</ol>
+</section>

@@ -1,0 +1,196 @@
+{
+ "c20-1": {
+  "harbor": {
+   "practice": "Harbor routes every incoming ticket to one of six queues. A small classifier trained on two years of labelled tickets matches the large model on common categories, so the large model now handles only security and unclear tickets.",
+   "failure": "Replacing the large model everywhere because the small one wins on the common ticket categories.",
+   "tryIt": "Run the snippet with tickets.csv and note accuracy at 10, 20 and 50 training examples. Then set LARGE_ACC to 0.97 and decide whether the small model is still enough.",
+   "fit": "good",
+   "fitNote": "ticket routing at volume"
+  },
+  "store": {
+   "practice": "{company} classifies about 2 million listings into categories. A small model trained on seller-confirmed categories runs in milliseconds for a fraction of a cent per thousand, which the large model could not match at festival-sale volume.",
+   "failure": "Paying a large model per listing for a fixed-label task a small classifier handles well.",
+   "tryIt": "Run the snippet with products.csv, then set MONTHLY to 40 million for a sale month and compare the two monthly costs with the accuracy gap.",
+   "fit": "best",
+   "fitNote": "category labelling at huge volume"
+  },
+  "bank": {
+   "practice": "{company} sorts dispute messages into five reasons. A small model on its own servers handles them, which also keeps customer text inside the bank, while the large model drafts letters for unusual cases.",
+   "failure": "Sending every dispute message to an external model when a small on-premises classifier handles the five reasons.",
+   "tryIt": "Run the snippet with disputes.csv and compare accuracy at 10 and 50 training examples. Work out the monthly saving at 500,000 disputes. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "reason classification, data stays on premises"
+  },
+  "travel": {
+   "practice": "{assistant} detects intent in requests in four languages. A small model handles English and Hindi well, but its Tamil and Hinglish accuracy lagged, so those still go to the large model.",
+   "failure": "Deploying a small model on its English accuracy without checking the other languages.",
+   "tryIt": "Run the snippet with requests.csv and note accuracy at 10, 20 and 50 examples. Estimate how many labelled examples per language you would need. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "intent detection in several languages"
+  }
+ },
+ "c20-2": {
+  "harbor": {
+   "practice": "Harbor used a large model to label 30,000 historical tickets for training. Only labels where two samples agreed were kept, and a team lead reviewed 200 to estimate the error rate before training.",
+   "failure": "Training a student on every teacher label, including the ones the teacher answered differently each time.",
+   "tryIt": "Run the snippet with tickets.csv, set TEACHER_RIGHT to 0.75, and compare the label error rate of each filter. Note how many rows the strictest filter keeps.",
+   "fit": "good",
+   "fitNote": "historical tickets to label"
+  },
+  "store": {
+   "practice": "{company} generates training labels for new product categories with a large model. Rare categories are oversampled before labelling, and filtering is checked so it does not remove the rare categories entirely.",
+   "failure": "Filtering teacher labels by confidence until the rare product categories vanish from the training set.",
+   "tryIt": "Run the snippet with products.csv, then raise the confidence threshold to 0.9 and count how many rows remain per category after filtering. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "labels for new categories"
+  },
+  "bank": {
+   "practice": "{company} checks the teacher’s terms of use before distilling, and keeps teacher outputs inside the bank. Labels are filtered by agreement, and every kept dispute label is traceable to the prompt and teacher version.",
+   "failure": "Distilling from a provider whose terms forbid training competing models, without recording the teacher version.",
+   "tryIt": "Run the snippet with disputes.csv and compare the student’s accuracy when trained on all teacher labels and on the agreed-and-confident subset. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "audited teacher data"
+  },
+  "travel": {
+   "practice": "{company} asks a large model to label traveller requests in Hindi, Tamil and Hinglish. Agreement between two samples was much lower for Hinglish, so those labels get a human spot-check before training.",
+   "failure": "Assuming the teacher is equally reliable in every language and skipping spot-checks for Hinglish.",
+   "tryIt": "Run the snippet with requests.csv, set TEACHER_RIGHT to 0.8, and see how much the agreement filter lowers the label error rate. Write down the numbers and the decision you would make from them.",
+   "fit": "best",
+   "fitNote": "multilingual labels with uneven quality"
+  }
+ },
+ "c20-3": {
+  "harbor": {
+   "practice": "Harbor distils an open-weight model into a small ticket classifier using soft targets, because the teacher’s probabilities show which categories, such as access and security, are often confused.",
+   "failure": "Distilling with hard labels only and losing which ticket categories the teacher found close.",
+   "tryIt": "Run the snippet and change the temperature from 4 to 2 and 8. Compare the student’s accuracy on soft targets with hard labels each time.",
+   "fit": "good",
+   "fitNote": "confusable ticket categories"
+  },
+  "store": {
+   "practice": "{company} trains a small model on product descriptions written by a large hosted model. With no access to the teacher’s probabilities, this is sequence-level distillation: plain fine-tuning on checked teacher outputs.",
+   "failure": "Expecting logit distillation from a hosted API that does not expose the teacher’s probabilities.",
+   "tryIt": "Run the snippet, then change the number of training examples from 40 to 200 and see whether soft targets still help as data grows. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "sequence-level from a hosted teacher"
+  },
+  "bank": {
+   "practice": "{company} distils dispute-reason classification with soft targets from an on-premises open-weight teacher. The student learns that \"duplicate\" and \"amount differs\" are often confused and flags such cases for review.",
+   "failure": "Training only on the teacher’s top label, so the student is falsely certain on confusable reasons.",
+   "tryIt": "Run the snippet and set the noise in sample() to 2.0. Compare soft and hard training, and note when soft targets help most. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "confusable dispute reasons"
+  },
+  "travel": {
+   "practice": "{company} fine-tunes a small model on a large model’s step-by-step fare-change explanations. Traces are checked against fare_rules.json first, because a student copies wrong reasoning as readily as right.",
+   "failure": "Training on the teacher’s reasoning traces without checking them against the actual fare rules.",
+   "tryIt": "Run the snippet with temperatures 1 and 4, then shrink the training set to 20 examples. Note how the gap between soft and hard targets changes.",
+   "fit": "good",
+   "fitNote": "reasoning traces about fare rules"
+  }
+ },
+ "c20-4": {
+  "harbor": {
+   "practice": "Harbor serves an internal small model on CPUs. Quantising it to 8-bit halved memory with no measurable loss on the ticket suite; unstructured pruning saved nothing on the CPU, so it was dropped.",
+   "failure": "Counting a speed-up from pruned zero weights that the CPU still multiplies.",
+   "tryIt": "Run the snippet and compare accuracy at 50%, 80% and 95% pruning. Then work out the memory of a 3B model in 16-bit and 8-bit.",
+   "fit": "limited",
+   "fitNote": "CPU serving; little need to compress further"
+  },
+  "store": {
+   "practice": "{company} pruned and quantised its search-intent model to cut latency during sales. Structured pruning removed four of 24 layers, and a short distillation from the original recovered most of the lost accuracy.",
+   "failure": "Shipping a pruned model to production without retraining it or re-running the search evaluation.",
+   "tryIt": "Run the snippet and find the pruning share where accuracy drops by more than 5 points. Compare the int8 size with the float32 size. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "latency at sale peaks"
+  },
+  "bank": {
+   "practice": "{company} compresses an on-premises model to fit its existing GPUs. After 4-bit quantisation, every release reruns the dispute suite and the safety suite, because compression can change refusals as well as accuracy.",
+   "failure": "Testing a compressed model only for accuracy and missing changes in refusal behaviour.",
+   "tryIt": "Run the snippet and record accuracy after each pruning step. Decide which step you would ship if the gate allows a drop of at most 2 points.",
+   "fit": "good",
+   "fitNote": "fit on existing hardware"
+  },
+  "travel": {
+   "practice": "{company} compresses its intent model to ship it in the mobile app. Pruning plus 4-bit quantisation brought it under 700 MB, and a check on Tamil and Hinglish requests confirmed quality held for every language.",
+   "failure": "Checking a compressed model only in English before shipping it to multilingual users.",
+   "tryIt": "Run the snippet and compare pruning at 50% and 80%. Estimate the download size of a 1.5B model in 4-bit for the app. Write down the numbers and the decision you would make from them.",
+   "fit": "best",
+   "fitNote": "model size for the mobile app"
+  }
+ },
+ "c20-5": {
+  "harbor": {
+   "practice": "Harbor runs a small model on employee laptops for summarising local documents, so confidential drafts never leave the device. Questions about company policy still go to the server, which has the permissions and the index.",
+   "failure": "Answering policy questions on the laptop without the permission checks the server applies.",
+   "tryIt": "Run the snippet and find the largest model that fits a 16 GB laptop in 4-bit. Note its decode-speed ceiling. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "private summaries on laptops"
+  },
+  "store": {
+   "practice": "{assistant} runs a small model in the shopping app to suggest search terms as the shopper types, with no network round trip. Anything needing live prices or stock goes to the server.",
+   "failure": "Answering stock or price questions from the on-device model, which has no live data.",
+   "tryIt": "Run the snippet and compare the phone’s ceiling for 0.5B and 1.5B models in 4-bit. Decide which would type ahead without lag. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "type-ahead in the app"
+  },
+  "bank": {
+   "practice": "{company} keeps models on bank servers rather than phones: authentication, audit and fraud checks must happen centrally. On-device models are limited to formatting and help text.",
+   "failure": "Moving decisions about money onto customers’ devices, where they cannot be checked or audited.",
+   "tryIt": "Run the snippet and note which models fit a phone. List which tasks in the banking app could safely run there and which cannot. Write down the numbers and the decision you would make from them.",
+   "fit": "limited",
+   "fitNote": "decisions must stay on servers"
+  },
+  "travel": {
+   "practice": "{company} ships a small model with downloaded itineraries so travellers can ask about them offline, on trains and planes. Rebooking requests are queued until the phone is back online.",
+   "failure": "Letting the offline model promise rebookings that only the online system can make.",
+   "tryIt": "Run the snippet and find the fastest 4-bit model under 2 GB on the phone. Estimate how long a 60-token answer takes at that speed.",
+   "fit": "best",
+   "fitNote": "offline itinerary help"
+  }
+ },
+ "c20-6": {
+  "harbor": {
+   "practice": "Harbor’s cascade sends tickets to a small classifier first and escalates to the large model when confidence is below 0.9. About 12% are escalated; the security category always goes to the large model by rule.",
+   "failure": "Letting a security ticket stay with the small model because it was confident.",
+   "tryIt": "Run the snippet with tickets.csv and choose the threshold with the lowest cost that keeps accuracy above 95%. Note the share escalated. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "ticket routing cascade"
+  },
+  "store": {
+   "practice": "{assistant} answers product questions with a small model and escalates when the answer fails a check against the listing or confidence is low. During sales, the escalation share is watched because it drives cost.",
+   "failure": "Choosing the escalation threshold once and not watching the share escalated during a sale.",
+   "tryIt": "Run the snippet with products.csv and compare cost per 1,000 requests at thresholds 0.6 and 0.9. Set LARGE_COST to 0.01 and compare again. Write down the numbers and the decision you would make from them.",
+   "fit": "best",
+   "fitNote": "cost control at scale"
+  },
+  "bank": {
+   "practice": "{company} uses a cascade for dispute triage. The small model’s confidence was overconfident on rare reasons, so it was calibrated on held-out cases before the threshold was chosen.",
+   "failure": "Using raw confidence scores for escalation without checking whether 90% means 90% right.",
+   "tryIt": "Run the snippet with disputes.csv and find the threshold where accuracy stops improving. Note the cost at that point. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "calibrated triage"
+  },
+  "travel": {
+   "practice": "{assistant} handles simple requests with a small model and escalates changes involving fare rules or disruptions to a large model. Language is a routing signal too: Hinglish requests escalate at a lower threshold.",
+   "failure": "Using one escalation threshold for all languages when the small model is weaker in Hinglish.",
+   "tryIt": "Run the snippet with requests.csv and compare the share escalated at thresholds 0.8 and 0.99. Decide which you would use during a disruption spike. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "routing by difficulty and language"
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Distil ticket routing: label 300 tickets by hand, have a large model label 3,000 more twice, filter, and train a small classifier. Build a cascade that always escalates security tickets and compare cost per correct routing.</p>"
+  },
+  "store": {
+   "scenario": "<p>Distil product categorisation from products.csv: filter teacher labels, train a small model, quantise it, and run a cascade. Report cost per 1,000 listings at normal and sale volume.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Distil dispute-reason classification with an on-premises teacher. Check the teacher’s licence, calibrate the student’s confidence, and choose a cascade threshold from the curve. Keep the audit trail of the data.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Distil intent detection in four languages from requests.csv. Measure the student per language, compress it to under 1 GB, and set language-specific escalation thresholds.</p>"
+  }
+ }
+}

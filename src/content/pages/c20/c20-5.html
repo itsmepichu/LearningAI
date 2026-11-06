@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c20-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p><a class="gl" href="#gl-on-device-inference">Running a model on the device</a> is like carrying a pocket dictionary instead of phoning a library: always available, private and free per use, but smaller and slower for hard questions.</p>
+<p>The limits are physical: how much memory the device can spare, how fast it can read that memory, how hot it gets and how much battery it uses. A model has to fit all four.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c20-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Constraint</th><th>Typical phone</th><th>Typical laptop</th><th>What it means</th></tr><tr><td>Memory an app can use</td><td>2–4 GB</td><td>4–12 GB</td><td>model + KV cache must fit</td></tr><tr><td>Memory bandwidth</td><td>50–70 GB/s</td><td>80–400 GB/s</td><td>sets the ceiling on tokens per second</td></tr><tr><td>Sustained power</td><td>a few watts</td><td>tens of watts</td><td>phones slow down when hot</td></tr><tr><td>Download size</td><td>hundreds of MB</td><td>a few GB</td><td>first-run delay; updates</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Choose size<small>0.5–3B</small></div><div class="nd">Compress<small>4-bit, maybe pruned</small></div><div class="nd">Package<small>GGUF, Core ML, ONNX, MLC</small></div><div class="nd">Run locally<small>llama.cpp, runtime</small></div><div class="nd">Fallback<small>server for hard cases</small></div></div>
+<ol class="steps"><li data-n="0">Pick the smallest model that passes your task evaluation.</li><li data-n="1">Quantise to 4-bit and check quality again.</li><li data-n="2">Convert to the format the device runtime uses.</li><li data-n="3">Run with the platform’s runtime, using the GPU or neural engine when available.</li><li data-n="4">Send hard or long requests to a server model, with the user’s consent if data leaves the device.</li></ol></div>
+<figcaption><b>Shipping a model to devices.</b></figcaption></figure>
+<p><b>Why bother.</b> Privacy (data stays on the device), offline use, no per-request cost, and low latency for short tasks. <b>Costs</b>: shipping updates to millions of devices, many hardware variants to test, and no central place to log failures, so evaluation has to happen before release.</p>
+<div class="box example"><h5>Example: offline itinerary help</h5><p>A travel app ships a 1-billion-parameter model in 4-bit (about 0.6 GB) to answer questions about a downloaded itinerary offline. It handles "what time is my train?" locally; anything needing live data goes to the server when the phone is online.</p></div>
+</section>
+
+<section class="tp tp-math" id="c20-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Fit and speed</b> on a laptop CPU with 16 GB and about 80 GB/s.</p>
+<ul>
+<li>A 3B model in 4-bit: 3 × 0.55 ≈ 1.7 GB. Decode reads it all per token: 80 ÷ 1.7 ≈ 48 tokens a second at best.</li>
+<li>An 8B model in 16-bit: 16 GB, more than half the machine’s memory, so it does not fit comfortably.</li>
+<li>A phone with 8 GB and about 50 GB/s running the 3B 4-bit model: at most 50 ÷ 1.7 ≈ 30 tokens a second, less when it heats up.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c20-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks four model sizes in three formats against a phone and two laptops, and estimates the decode-speed ceiling from memory bandwidth. Add your own device’s memory and bandwidth and run it again.</p>
+<figure class="fig live" id="snip-device-budget"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"device-budget"}'></div></div>
+<figcaption><b>Device budgets, in real Python.</b> Rough device figures; speeds are upper bounds.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c20-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> <small>Running quantised models on CPUs, laptops and phones.</small></li>
+<li><a href="https://onnxruntime.ai/docs/">ONNX Runtime</a> <small>A cross-platform runtime for on-device models.</small></li>
+<li><a href="https://llm.mlc.ai/docs/">MLC LLM</a> <small>Compiling language models for phones and browsers.</small></li>
+</ol>
+</section>

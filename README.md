@@ -2,7 +2,7 @@
 
 An Interactive AI Course For My DD: the **Enterprise AI Field Manual**, rebuilt as a front-end-only React app.
 
-18 required chapters take a software engineer from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale. Every chapter has the same structure:
+23 required chapters take a software engineer from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale, and on to multimodal models, small models, cost, product design and regulation. Every chapter has the same structure:
 
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams
@@ -11,7 +11,7 @@ An Interactive AI Course For My DD: the **Enterprise AI Field Manual**, rebuilt 
 
 There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. There is no choice to make up front: you start with Harbor and can switch at any time. When another project suits a topic better, a short note at the end of the topic says so. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes and run interview drills.
 
-Status: all 18 chapters and the capstone have notes and lab scenarios for all four projects, and every section has a full chapter check: 1,353 choose-the-answer and 1,080 interview questions in all (see [ROADMAP.md](ROADMAP.md)).
+Status: all 23 chapters and the capstone have notes and lab scenarios for all four projects, every section has a full chapter check (1,794 choose-the-answer and 1,312 interview questions in all), and every topic uses the five-part structure with a runnable snippet (see [ROADMAP.md](ROADMAP.md)).
 
 Interactive figures run in the browser. Each one carries an evidence label:
 

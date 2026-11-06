@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c20-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A hospital does not send every patient to a consultant. A nurse handles most cases and refers the difficult ones. A <a class="gl" href="#gl-model-cascade">model cascade</a> works the same way: a small, cheap model answers first, and only the requests it is unsure about, or that fail a check, go to a large model.</p>
+<p>The art is in the referral rule. Refer too little and quality drops; refer too much and you pay for the large model anyway.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c20-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Request</div><div class="nd">Small model<small>answer + confidence</small></div><div class="nd">Checks<small>confidence, schema, rules</small></div><div class="nd">Large model<small>only if needed</small></div><div class="nd">Answer<small>logged with the path</small></div></div>
+<ol class="steps"><li data-n="0">Every request goes to the small model first.</li><li data-n="1">It answers and reports a confidence, or a calibrated score is computed.</li><li data-n="2">Low confidence, a failed schema or a rule violation sends the request on.</li><li data-n="3">The large model handles the hard minority.</li><li data-n="4">Log which path answered, to measure quality and cost per path.</li></ol></div>
+<figcaption><b>A two-stage cascade.</b></figcaption></figure>
+<div class="tw"><table><tr><th>Routing signal</th><th>Strength</th><th>Weakness</th></tr><tr><td>Small model’s confidence</td><td>free</td><td>often overconfident; calibrate first (3.5)</td></tr><tr><td>A trained router</td><td>learns which requests are hard</td><td>needs labelled data; can drift</td></tr><tr><td>Rules (length, language, topic)</td><td>predictable</td><td>coarse</td></tr><tr><td>Checks on the small answer</td><td>catches visible failures</td><td>misses plausible wrong answers</td></tr></table></div>
+<p><b>Calibrate before you trust confidence.</b> A model that says 90% should be right about 90% of the time. Measure it on held-out data, and choose the threshold from a curve of accuracy against the share sent to the large model.</p>
+<div class="box example"><h5>Example: a cascade for support routing</h5><p>A small classifier answers 85% of messages with confidence above 0.9 and is 98% right on those; the other 15% go to a large model. Overall accuracy is 96%, close to the large model alone, at about a sixth of its cost.</p></div>
+</section>
+
+<section class="tp tp-math" id="c20-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Cost and accuracy</b> (the example, illustrative). Small model 0.00002 dollars, large 0.004.</p>
+<ul>
+<li>Every request pays the small model: 0.00002. 15% also pay the large model: 0.15 × 0.004 = 0.0006. Total about 0.00062 per request, against 0.004 for the large model alone, about a sixth.</li>
+<li>Accuracy: 0.85 × 98% + 0.15 × 85% (hard cases are harder for everyone) ≈ 83.3% + 12.8% ≈ 96%.</li>
+</ul>
+<p>Raising the threshold so 30% go to the large model doubles the large-model cost; it is worth it only if accuracy rises enough.</p>
+</section>
+
+<section class="tp tp-code" id="c20-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program trains a small classifier on 30 of your project’s examples, sends low-confidence cases to an assumed large model, and shows the share escalated, accuracy and cost for several thresholds. Change <code>LARGE_COST</code> or the training size and run it again.</p>
+<figure class="fig live" id="snip-cascade"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"cascade"}'></div></div>
+<figcaption><b>A cascade’s trade-off, in real Python.</b> The large model is simulated.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c20-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2305.05176">Chen et al. (2023), FrugalGPT</a> <small>Cascading models to cut cost at equal quality.</small></li>
+<li><a href="https://arxiv.org/abs/2406.18665">Ong et al. (2024), RouteLLM</a> <small>Learning routers between strong and weak models.</small></li>
+<li><a href="https://arxiv.org/abs/1706.04599">Guo et al. (2017), On Calibration of Modern Neural Networks</a> <small>Why confidences need calibrating.</small></li>
+</ol>
+</section>

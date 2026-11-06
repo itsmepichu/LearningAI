@@ -21,12 +21,17 @@ import { C15 } from './c15.ts'
 import { C16 } from './c16.ts'
 import { C17 } from './c17.ts'
 import { C18 } from './c18.ts'
+import { C19 } from './c19.ts'
+import { C20 } from './c20.ts'
+import { C21 } from './c21.ts'
+import { C22 } from './c22.ts'
+import { C23 } from './c23.ts'
 import { CAPSTONE } from './capstone.ts'
 
 export type { Snippet, SnippetBundle } from './common.ts'
 export { projectMessages } from './common.ts'
 
-export const SNIPPETS = { ...C1, ...C2, ...C3, ...C4, ...C5, ...C6, ...C7, ...C8, ...C9, ...C10, ...C11, ...C12, ...C13, ...C14, ...C15, ...C16, ...C17, ...C18, ...CAPSTONE } satisfies Record<string, Snippet>
+export const SNIPPETS = { ...C1, ...C2, ...C3, ...C4, ...C5, ...C6, ...C7, ...C8, ...C9, ...C10, ...C11, ...C12, ...C13, ...C14, ...C15, ...C16, ...C17, ...C18, ...C19, ...C20, ...C21, ...C22, ...C23, ...CAPSTONE } satisfies Record<string, Snippet>
 
 export type SnippetId = keyof typeof SNIPPETS
 export const SNIPPET_IDS = Object.keys(SNIPPETS) as SnippetId[]

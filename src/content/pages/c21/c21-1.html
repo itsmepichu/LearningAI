@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c21-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A restaurant knows what one plate costs: ingredients, a share of the chef’s time and the rent. An AI feature needs the same number, its <a class="gl" href="#gl-unit-cost">unit cost</a>: what one request, and more usefully one successful task, really costs.</p>
+<p>The model call is only part of it. Retries, retrieval, tools, the platform around the model and, above all, the people who handle what the model gets wrong all belong in the price of the plate.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c21-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Cost line</th><th>Driver</th><th>How to measure</th></tr><tr><td>Input tokens</td><td>instructions, retrieved context, history</td><td>provider usage per call, split cached and uncached</td></tr><tr><td>Output tokens</td><td>answer length, reasoning tokens</td><td>provider usage; usually several times the input price per token</td></tr><tr><td>Retries and failed calls</td><td>timeouts, invalid output, agent loops</td><td>calls per successful request</td></tr><tr><td>Retrieval and embeddings</td><td>queries, re-indexing</td><td>per-request share of vector DB and embedding cost</td></tr><tr><td>Tools and external APIs</td><td>calls per task</td><td>tool logs</td></tr><tr><td>Platform</td><td>gateway, observability, storage</td><td>allocated by usage (21.5)</td></tr><tr><td>People</td><td>reviews, escalations, failures</td><td>minutes per case × cost per minute</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Usage records<small>per call, tagged</small></div><div class="nd">Price table<small>versioned</small></div><div class="nd">Cost per request<small>all lines</small></div><div class="nd">Success rate<small>from evaluation</small></div><div class="nd">Cost per success<small>the number to manage</small></div></div>
+<ol class="steps"><li data-n="0">Log tokens and calls for every request, tagged by feature and tenant (17.5).</li><li data-n="1">Apply a versioned price table, so past costs can be recomputed.</li><li data-n="2">Add retrieval, tools, platform share and retries.</li><li data-n="3">Measure how many requests succeed (8.1).</li><li data-n="4">Divide the total, including people, by the successes (15.9).</li></ol></div>
+<figcaption><b>From usage records to cost per successful task.</b></figcaption></figure>
+<div class="box example"><h5>Example: the support assistant</h5><p>A support assistant costs 0.017 dollars per request in model and platform costs. With 85% success and 1.20 dollars of agent time for each failure, cost per resolved conversation is about 0.23 dollars, and over 90% of it is people handling failures. Raising success to 90% saves more than halving the token bill.</p></div>
+</section>
+
+<section class="tp tp-math" id="c21-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>One request</b> (illustrative prices: 3 dollars per million input tokens, 0.30 cached, 15 output).</p>
+<ul>
+<li>Input: 150 uncached instruction tokens + 3,000 context + 50 question = 3,200 × 3 ÷ 1,000,000 ≈ 0.0096.</li>
+<li>Cached instructions: 1,350 × 0.30 ÷ 1,000,000 ≈ 0.0004. Output: 350 × 15 ÷ 1,000,000 ≈ 0.0053.</li>
+<li>Model total ≈ 0.0153; with 5% retries about 0.016; plus about 0.0007 for search and tools ≈ 0.017 dollars.</li>
+</ul>
+<p><b>Per success.</b> (0.017 + 0.15 × 1.20) ÷ 0.85 = (0.017 + 0.18) ÷ 0.85 ≈ 0.23 dollars.</p>
+</section>
+
+<section class="tp tp-code" id="c21-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds the cost of one request from your project’s message lengths, splits it into lines, and works out the cost per successful task including people. Change <code>SUCCESS</code> to 0.9 or <code>OUTPUT</code> to 700 and see which matters more.</p>
+<figure class="fig live" id="snip-unit-cost"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"unit-cost"}'></div></div>
+<figcaption><b>A unit-cost model, in real Python.</b> Every price is illustrative.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c21-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.finops.org/wg/finops-for-ai-overview/">FinOps Foundation: FinOps for AI</a> <small>Unit economics and cost allocation for AI workloads.</small></li>
+<li><a href="https://www.anthropic.com/pricing">Anthropic: Pricing</a> <small>Input, cached and output token prices.</small></li>
+<li><a href="https://openai.com/api/pricing/">OpenAI: API pricing</a> <small>Another provider’s token, cached and batch prices.</small></li>
+</ol>
+</section>

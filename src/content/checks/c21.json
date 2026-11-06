@@ -1,0 +1,1783 @@
+{
+ "c21-1": {
+  "mcq": [
+   {
+    "id": "c21-1-m01",
+    "q": "Which number best ties AI spend to value?",
+    "options": [
+     "Total monthly invoice",
+     "Cost per GPU-hour",
+     "Cost per input token",
+     "Cost per successful task"
+    ],
+    "answer": 3,
+    "why": "It includes failures and people and divides by what was achieved.",
+    "kind": "concept",
+    "distractors": [
+     "No link to value delivered.",
+     "Infrastructure only.",
+     "Ignores output, retries and people.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-1-m02",
+    "q": "A request costs 0.017 dollars, 15% fail and each failure costs 1.20 dollars of agent time; 85% succeed. Cost per success is about…",
+    "options": [
+     "0.02 dollars",
+     "0.23 dollars",
+     "0.20 dollars",
+     "1.20 dollars"
+    ],
+    "answer": 1,
+    "why": "(0.017 + 0.15 × 1.20) ÷ 0.85 ≈ 0.197 ÷ 0.85 ≈ 0.23.",
+    "kind": "calculation",
+    "distractors": [
+     "Ignores failures.",
+     "",
+     "Forgets to divide by successes.",
+     "One failure only."
+    ]
+   },
+   {
+    "id": "c21-1-m03",
+    "q": "Output tokens cost 15 and input 3 dollars per million. 350 output tokens cost about…",
+    "options": [
+     "0.00053 dollars",
+     "0.0053 dollars",
+     "0.0011 dollars",
+     "0.053 dollars"
+    ],
+    "answer": 1,
+    "why": "350 × 15 ÷ 1,000,000 = 0.00525.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too little.",
+     "",
+     "Uses the input price.",
+     "Ten times too much."
+    ]
+   },
+   {
+    "id": "c21-1-m04",
+    "q": "Most of a support feature’s cost per success is people fixing failures. The best lever is usually…",
+    "options": [
+     "Shortening the system prompt",
+     "Turning off prompt caching",
+     "Switching to a cheaper model",
+     "Raising the success rate"
+    ],
+    "answer": 3,
+    "why": "Each avoided failure saves far more than its tokens.",
+    "kind": "scenario",
+    "distractors": [
+     "Small saving on a minor line.",
+     "Raises cost.",
+     "May lower success and raise people cost.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-1-m05",
+    "q": "Why keep a versioned price table with usage records?",
+    "options": [
+     "So the provider can bill you a second time",
+     "So past costs can be recomputed after price changes",
+     "Because tokens change size from month to month",
+     "So prompts can stay in the cache for longer"
+    ],
+    "answer": 1,
+    "why": "Cost history stays explainable when prices change.",
+    "kind": "concept",
+    "distractors": [
+     "Not a reason.",
+     "",
+     "Token counts are what they are.",
+     "Unrelated to caching."
+    ]
+   },
+   {
+    "id": "c21-1-m06",
+    "q": "Retries run at 5%. The model cost line should be multiplied by…",
+    "options": [
+     "1.5",
+     "1.05",
+     "5",
+     "0.95"
+    ],
+    "answer": 1,
+    "why": "Each retry is another paid call: 1 + 0.05.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times the retry rate.",
+     "",
+     "Confuses percent with a factor.",
+     "Retries add cost."
+    ]
+   },
+   {
+    "id": "c21-1-m07",
+    "q": "A team reports only total monthly spend. Agent steps per task double; what will they see first?",
+    "options": [
+     "Nothing until users complain",
+     "An alert on cost per task",
+     "A drop in answer quality",
+     "A bill rising for no visible reason"
+    ],
+    "answer": 3,
+    "why": "Without unit costs, the cause hides in the total.",
+    "kind": "scenario",
+    "distractors": [
+     "The bill shows it, unexplained.",
+     "They have no unit-cost alert.",
+     "Quality may be unchanged.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-1-m08",
+    "q": "Which cost line is most often forgotten?",
+    "options": [
+     "The embedding model calls",
+     "Input tokens from the prompt",
+     "Output tokens from the model",
+     "People reviewing or fixing outputs"
+    ],
+    "answer": 3,
+    "why": "Human time rarely appears in the AI bill but often dominates.",
+    "kind": "concept",
+    "distractors": [
+     "Visible in usage.",
+     "Visible in usage.",
+     "Visible in usage.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-1-m09",
+    "q": "Unit cost is 0.02 dollars per request and a sale month brings 40 times the usual 3 million requests. The sale-month model bill is about…",
+    "options": [
+     "240,000 dollars",
+     "2.4 million dollars",
+     "24,000 dollars",
+     "60,000 dollars"
+    ],
+    "answer": 1,
+    "why": "3,000,000 × 40 × 0.02 = 2,400,000.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too small.",
+     "",
+     "A hundred times too small.",
+     "A normal month."
+    ]
+   },
+   {
+    "id": "c21-1-m10",
+    "q": "Which data must every usage record carry to build unit costs?",
+    "options": [
+     "Tokens, model, feature, tenant and outcome",
+     "Only the total number of tokens in the month",
+     "The model’s full answer text, word for word",
+     "The user’s full message text, word for word"
+    ],
+    "answer": 0,
+    "why": "Tags and outcome let cost be split and divided by successes.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Too coarse.",
+     "Not needed and sensitive.",
+     "Not needed and sensitive."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c21-1-i01",
+    "q": "How do you build the unit cost of an AI feature?",
+    "level": "fundamentals",
+    "covers": [
+     "tokens",
+     "retries",
+     "retrieval",
+     "tools",
+     "platform share",
+     "people"
+    ],
+    "followUp": "Which line usually dominates?"
+   },
+   {
+    "id": "c21-1-i02",
+    "q": "Why is cost per successful task better than cost per request?",
+    "level": "fundamentals",
+    "covers": [
+     "failures",
+     "people",
+     "value",
+     "comparisons"
+    ],
+    "followUp": "How do you define success?"
+   },
+   {
+    "id": "c21-1-i03",
+    "q": "What do you need in usage records to do cost analysis?",
+    "level": "fundamentals",
+    "covers": [
+     "tokens by type",
+     "model",
+     "tags",
+     "outcome",
+     "price version"
+    ],
+    "followUp": "Who sets the tags?"
+   },
+   {
+    "id": "c21-1-i04",
+    "q": "Spend rose 40% with flat traffic. How do you investigate?",
+    "level": "applied",
+    "covers": [
+     "unit cost trend",
+     "tokens per request",
+     "steps per task",
+     "by feature and tenant"
+    ],
+    "followUp": "What is your first query?"
+   },
+   {
+    "id": "c21-1-i05",
+    "q": "Finance asks you to forecast next quarter’s AI spend. How?",
+    "level": "applied",
+    "covers": [
+     "unit cost",
+     "volume forecast",
+     "events",
+     "ranges",
+     "price changes"
+    ],
+    "followUp": "How do you present the uncertainty?"
+   },
+   {
+    "id": "c21-1-i06",
+    "q": "How do you include reviewer time in the cost of a regulated workflow?",
+    "level": "applied",
+    "covers": [
+     "minutes per case",
+     "edit rate",
+     "cost per minute",
+     "trend"
+    ],
+    "followUp": "How would you reduce it?",
+    "project": "bank"
+   },
+   {
+    "id": "c21-1-i07",
+    "q": "Design cost reporting for a portfolio of twenty AI features.",
+    "level": "system-design",
+    "covers": [
+     "unit costs",
+     "tagging at the gateway",
+     "dashboards",
+     "owners",
+     "reviews"
+    ],
+    "followUp": "Who acts on the reports?"
+   },
+   {
+    "id": "c21-1-i08",
+    "q": "A product is priced per seat. How do you check AI costs fit inside that price?",
+    "level": "system-design",
+    "covers": [
+     "usage per seat",
+     "heavy users",
+     "limits",
+     "margins",
+     "monitoring"
+    ],
+    "followUp": "What do you do about heavy users?"
+   }
+  ]
+ },
+ "c21-2": {
+  "mcq": [
+   {
+    "id": "c21-2-m01",
+    "q": "Why does putting the current date at the start of the prompt hurt cost?",
+    "options": [
+     "Dates use more tokens than other words",
+     "It breaks prefix caching for everything after it",
+     "Providers charge extra for dates",
+     "It forces a larger model to be used"
+    ],
+    "answer": 1,
+    "why": "A changing prefix means no cache hits.",
+    "kind": "concept",
+    "distractors": [
+     "A date is a few tokens.",
+     "",
+     "No such charge.",
+     "Model choice is unaffected."
+    ]
+   },
+   {
+    "id": "c21-2-m02",
+    "q": "Cutting answers from 500 to 300 tokens at 15 dollars per million output tokens over 3 million requests saves…",
+    "options": [
+     "900 dollars a month",
+     "9,000 dollars a month",
+     "1,800 dollars a month",
+     "90,000 dollars a month"
+    ],
+    "answer": 1,
+    "why": "200 × 3,000,000 × 15 ÷ 1,000,000 = 9,000.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too small.",
+     "",
+     "Uses the input price.",
+     "Ten times too large."
+    ]
+   },
+   {
+    "id": "c21-2-m03",
+    "q": "Which saving should be checked most carefully against quality?",
+    "options": [
+     "Using the batch interface",
+     "Caching stable instructions",
+     "Retrieving fewer chunks",
+     "Moving the date after the instructions"
+    ],
+    "answer": 2,
+    "why": "Fewer chunks can drop the evidence an answer needs.",
+    "kind": "scenario",
+    "distractors": [
+     "Same requests, later.",
+     "Caching does not change content.",
+     "",
+     "Same content, better caching."
+    ]
+   },
+   {
+    "id": "c21-2-m04",
+    "q": "Caching 2,160 instruction tokens moves them from 3 to 0.30 dollars per million. Over 3 million requests the saving is about…",
+    "options": [
+     "17,500 dollars",
+     "1,750 dollars",
+     "6,500 dollars",
+     "19,400 dollars"
+    ],
+    "answer": 0,
+    "why": "2,160 × 2.70 × 3,000,000 ÷ 1,000,000 ≈ 17,496.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too small.",
+     "Uses the wrong token count.",
+     "Uses the full price, not the difference."
+    ]
+   },
+   {
+    "id": "c21-2-m05",
+    "q": "After trimming instructions, one rule the model needed was lost. How should that be caught?",
+    "options": [
+     "A regression suite run after each cut",
+     "A check of the monthly invoice",
+     "A look at the new token count",
+     "Asking the model if anything is missing"
+    ],
+    "answer": 0,
+    "why": "Quality checks after every change catch dropped behaviour.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Too late and unrelated.",
+     "Tokens do not show behaviour.",
+     "Unreliable."
+    ]
+   },
+   {
+    "id": "c21-2-m06",
+    "q": "Why do output tokens deserve attention first in many features?",
+    "options": [
+     "They cannot be cached by providers",
+     "They usually cost several times more per token",
+     "They are billed even when not shown",
+     "They are always more numerous than input"
+    ],
+    "answer": 1,
+    "why": "Higher per-token prices make output the biggest lever.",
+    "kind": "concept",
+    "distractors": [
+     "True but not the main reason.",
+     "",
+     "Not generally true.",
+     "Input is often larger."
+    ]
+   },
+   {
+    "id": "c21-2-m07",
+    "q": "A long chat sends every past turn with each request. A safe reduction is…",
+    "options": [
+     "Drop all of the history after five turns",
+     "Send only the last word the user typed",
+     "Stop the chat entirely after ten turns",
+     "Summarise older turns, keep key facts verbatim"
+    ],
+    "answer": 3,
+    "why": "Summaries keep context; key identifiers must survive exactly (7.5).",
+    "kind": "scenario",
+    "distractors": [
+     "Loses context.",
+     "Loses meaning.",
+     "Hurts users.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-2-m08",
+    "q": "Reranking 20 candidates and keeping the top 4 instead of sending 8 unranked chunks mainly…",
+    "options": [
+     "Raises tokens because a reranker is added",
+     "Cuts tokens while keeping the best evidence",
+     "Makes prompt caching impossible to use",
+     "Removes the need for any retrieval step"
+    ],
+    "answer": 1,
+    "why": "Better ordering lets you send fewer chunks.",
+    "kind": "concept",
+    "distractors": [
+     "The reranker’s cost is small next to tokens saved.",
+     "",
+     "Unrelated.",
+     "Retrieval still happens."
+    ]
+   },
+   {
+    "id": "c21-2-m09",
+    "q": "Cutting 200 input tokens at 3 dollars per million over 3 million requests saves…",
+    "options": [
+     "18,000 dollars",
+     "9,000 dollars",
+     "1,800 dollars",
+     "180 dollars"
+    ],
+    "answer": 2,
+    "why": "200 × 3,000,000 × 3 ÷ 1,000,000 = 1,800.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too large.",
+     "Uses the output price.",
+     "",
+     "Ten times too small."
+    ]
+   },
+   {
+    "id": "c21-2-m10",
+    "q": "A format instruction \"answer in at most three sentences\" halves output length but two slices fail. What next?",
+    "options": [
+     "Raise the temperature to compensate",
+     "Remove the limit for all requests",
+     "Keep it everywhere; average is fine",
+     "Keep the limit except for those slices"
+    ],
+    "answer": 3,
+    "why": "Apply savings where quality holds; exempt slices that need length.",
+    "kind": "scenario",
+    "distractors": [
+     "Unrelated.",
+     "Gives up the saving everywhere.",
+     "Ignores failing slices.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c21-2-i01",
+    "q": "What levers reduce tokens in an LLM feature?",
+    "level": "fundamentals",
+    "covers": [
+     "caching",
+     "shorter instructions",
+     "fewer chunks",
+     "history summaries",
+     "output limits",
+     "fewer steps"
+    ],
+    "followUp": "Which do you try first?"
+   },
+   {
+    "id": "c21-2-i02",
+    "q": "How does prompt caching work and how do you get high hit rates?",
+    "level": "fundamentals",
+    "covers": [
+     "stable prefix",
+     "order",
+     "changing details last",
+     "measure hits"
+    ],
+    "followUp": "What breaks it?"
+   },
+   {
+    "id": "c21-2-i03",
+    "q": "Why must every token cut be followed by an evaluation?",
+    "level": "fundamentals",
+    "covers": [
+     "lost rules",
+     "missing evidence",
+     "truncation",
+     "slices"
+    ],
+    "followUp": "What is your acceptance margin?"
+   },
+   {
+    "id": "c21-2-i04",
+    "q": "Answers got longer after a model upgrade and the bill rose. What do you do?",
+    "level": "applied",
+    "covers": [
+     "measure output",
+     "length guidance",
+     "limits",
+     "re-check quality"
+    ],
+    "followUp": "How do you prevent it next time?"
+   },
+   {
+    "id": "c21-2-i05",
+    "q": "How do you reduce cost in long multi-turn chats?",
+    "level": "applied",
+    "covers": [
+     "summaries",
+     "key facts kept",
+     "windows",
+     "evaluation on long chats"
+    ],
+    "followUp": "Which facts must never be summarised away?",
+    "project": "travel"
+   },
+   {
+    "id": "c21-2-i06",
+    "q": "Your cache hit rate is near zero. How do you investigate?",
+    "level": "applied",
+    "covers": [
+     "prompt order",
+     "dynamic content",
+     "templates",
+     "provider rules"
+    ],
+    "followUp": "How do you measure the hit rate?"
+   },
+   {
+    "id": "c21-2-i07",
+    "q": "Design a token budget for a RAG feature at three million requests a month.",
+    "level": "system-design",
+    "covers": [
+     "instructions",
+     "context",
+     "history",
+     "output",
+     "caching",
+     "quality gates"
+    ],
+    "followUp": "Where is the biggest saving?"
+   },
+   {
+    "id": "c21-2-i08",
+    "q": "How would you run a cost-reduction programme across many prompts?",
+    "level": "system-design",
+    "covers": [
+     "measurement",
+     "prioritise largest",
+     "one change at a time",
+     "gates",
+     "tracking savings"
+    ],
+    "followUp": "How do you report savings honestly?"
+   }
+  ]
+ },
+ "c21-3": {
+  "mcq": [
+   {
+    "id": "c21-3-m01",
+    "q": "Which work suits a 24-hour batch interface?",
+    "options": [
+     "Live chat answers",
+     "A user waiting for a rebooking",
+     "Fraud checks during payment",
+     "Weekly evaluation runs"
+    ],
+    "answer": 3,
+    "why": "No one is waiting and the deadline is days.",
+    "kind": "concept",
+    "distractors": [
+     "Users are waiting.",
+     "Someone is waiting.",
+     "Needs an answer in milliseconds.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-3-m02",
+    "q": "Re-embedding 1 billion tokens at 4 dollars per million costs 4,000. At half price in batch it costs…",
+    "options": [
+     "400 dollars",
+     "4,000 dollars",
+     "2,000 dollars",
+     "1,000 dollars"
+    ],
+    "answer": 2,
+    "why": "4,000 × 0.5.",
+    "kind": "calculation",
+    "distractors": [
+     "Ten times too small.",
+     "No discount applied.",
+     "",
+     "Three-quarter discount."
+    ]
+   },
+   {
+    "id": "c21-3-m03",
+    "q": "A digest is needed by 08:00 and the batch window is 24 hours. The safe choice is…",
+    "options": [
+     "Submit it to the batch interface at 07:00",
+     "Run it on idle GPUs overnight or real-time",
+     "Skip the digest on the busiest days",
+     "Submit it to the batch interface at 01:00"
+    ],
+    "answer": 1,
+    "why": "A 24-hour window can deliver after 08:00; use your own off-peak capacity.",
+    "kind": "scenario",
+    "distractors": [
+     "May arrive the next day.",
+     "",
+     "Fails the requirement.",
+     "Still not guaranteed by 08:00."
+    ]
+   },
+   {
+    "id": "c21-3-m04",
+    "q": "Why are self-hosted GPUs often cheap for night work?",
+    "options": [
+     "Providers give discounts for night-time usage",
+     "Electricity for servers is free at night",
+     "They are sized for the day and idle at night",
+     "Requests at night use fewer tokens each"
+    ],
+    "answer": 2,
+    "why": "The capacity is already paid for; using it raises utilisation.",
+    "kind": "concept",
+    "distractors": [
+     "Self-hosted, not a provider.",
+     "Not free.",
+     "",
+     "Tokens do not depend on time."
+    ]
+   },
+   {
+    "id": "c21-3-m05",
+    "q": "Jobs totalling 61,520 dollars a month save 3,160 in batch. The saving is about…",
+    "options": [
+     "5%",
+     "0.5%",
+     "50%",
+     "20%"
+    ],
+    "answer": 0,
+    "why": "3,160 ÷ 61,520 ≈ 5%.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ten times too small.",
+     "That is the discount, not the share.",
+     "Too large."
+    ]
+   },
+   {
+    "id": "c21-3-m06",
+    "q": "Why match batch outputs to inputs by an id you assign?",
+    "options": [
+     "Without an id the outputs are never saved",
+     "Results may return out of order or partly fail",
+     "Adding ids makes the batch run much faster",
+     "The provider needs the ids for its billing"
+    ],
+    "answer": 1,
+    "why": "Ids let you reconcile and retry failures.",
+    "kind": "concept",
+    "distractors": [
+     "Outputs are saved anyway.",
+     "",
+     "No speed effect.",
+     "Not the reason."
+    ]
+   },
+   {
+    "id": "c21-3-m07",
+    "q": "A bank batches dispute letters with a legal deadline in 48 hours. The risk is…",
+    "options": [
+     "Batch results cannot be audited afterwards",
+     "The batch quietly uses a different model",
+     "A delayed batch pushes letters past the deadline",
+     "Letters come back shorter when run in batch"
+    ],
+    "answer": 2,
+    "why": "Regulated deadlines need guaranteed timing.",
+    "kind": "scenario",
+    "distractors": [
+     "Results can be logged.",
+     "Same model.",
+     "",
+     "Length is unaffected."
+    ]
+   },
+   {
+    "id": "c21-3-m08",
+    "q": "Live chat is 78% of a bill and cannot be batched. Batch work is 22% and gets 50% off. The best total saving is…",
+    "options": [
+     "39%",
+     "11%",
+     "22%",
+     "50%"
+    ],
+    "answer": 1,
+    "why": "22% × 50% = 11%.",
+    "kind": "calculation",
+    "distractors": [
+     "Half of the live share.",
+     "",
+     "Assumes batch work becomes free.",
+     "Applies the discount to everything."
+    ]
+   },
+   {
+    "id": "c21-3-m09",
+    "q": "What should happen to items that fail inside a batch job?",
+    "options": [
+     "Resubmit them and record the failures",
+     "Send them to live chat users",
+     "Rerun the whole batch from scratch",
+     "Ignore them; batches are best effort"
+    ],
+    "answer": 0,
+    "why": "Retry the failed items only and keep counts.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Nonsensical.",
+     "Wastes cost.",
+     "Loses work."
+    ]
+   },
+   {
+    "id": "c21-3-m10",
+    "q": "Which statement about batch pricing is safest?",
+    "options": [
+     "Every provider gives exactly 50% off",
+     "Batch results always arrive within an hour",
+     "Batch is only for embedding models",
+     "Discounts and windows vary by provider; check terms"
+    ],
+    "answer": 3,
+    "why": "Terms differ; the course uses illustrative figures.",
+    "kind": "concept",
+    "distractors": [
+     "Not universal.",
+     "Windows are often up to 24 hours.",
+     "Also for chat and other models.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c21-3-i01",
+    "q": "Which AI workloads can move to batch or off-peak?",
+    "level": "fundamentals",
+    "covers": [
+     "no one waiting",
+     "deadlines",
+     "examples",
+     "savings"
+    ],
+    "followUp": "Which cannot?"
+   },
+   {
+    "id": "c21-3-i02",
+    "q": "How does a batch interface work?",
+    "level": "fundamentals",
+    "covers": [
+     "request file",
+     "ids",
+     "window",
+     "results",
+     "retries"
+    ],
+    "followUp": "How do you handle partial failure?"
+   },
+   {
+    "id": "c21-3-i03",
+    "q": "Why use idle self-hosted capacity at night?",
+    "level": "fundamentals",
+    "covers": [
+     "sized for peak",
+     "utilisation",
+     "no extra cost",
+     "scheduling"
+    ],
+    "followUp": "What could go wrong?"
+   },
+   {
+    "id": "c21-3-i04",
+    "q": "A nightly job sometimes finishes after the team needs it. What do you change?",
+    "level": "applied",
+    "covers": [
+     "deadline vs window",
+     "own capacity",
+     "split jobs",
+     "alerts"
+    ],
+    "followUp": "How do you guarantee the time?"
+   },
+   {
+    "id": "c21-3-i05",
+    "q": "Which jobs in a regulated workflow should never be batched?",
+    "level": "applied",
+    "covers": [
+     "legal deadlines",
+     "customer waiting",
+     "audit timing",
+     "risk"
+    ],
+    "followUp": "Who decides?",
+    "project": "bank"
+   },
+   {
+    "id": "c21-3-i06",
+    "q": "How would you estimate the saving from moving work to batch?",
+    "level": "applied",
+    "covers": [
+     "inventory of jobs",
+     "volumes",
+     "deadlines",
+     "discount",
+     "share of bill"
+    ],
+    "followUp": "How do you check the estimate after a month?"
+   },
+   {
+    "id": "c21-3-i07",
+    "q": "Design the scheduling of bulk AI work for a company with its own GPU cluster.",
+    "level": "system-design",
+    "covers": [
+     "queues",
+     "priorities",
+     "night windows",
+     "preemption",
+     "monitoring"
+    ],
+    "followUp": "How do you stop bulk work hurting daytime traffic?"
+   },
+   {
+    "id": "c21-3-i08",
+    "q": "Design a monthly re-embedding of a large corpus at the lowest cost.",
+    "level": "system-design",
+    "covers": [
+     "changed documents only",
+     "batch or night",
+     "blue/green index",
+     "verification",
+     "cost tracking"
+    ],
+    "followUp": "How do you avoid re-embedding unchanged documents?",
+    "project": "store"
+   }
+  ]
+ },
+ "c21-4": {
+  "mcq": [
+   {
+    "id": "c21-4-m01",
+    "q": "Cost-aware routing chooses a model by…",
+    "options": [
+     "Whichever model happened to answer last",
+     "Request type and its measured quality bar",
+     "The time of day the request arrived",
+     "How fast the user typed the request"
+    ],
+    "answer": 1,
+    "why": "Each type goes to the cheapest model that met the bar in evaluation.",
+    "kind": "concept",
+    "distractors": [
+     "Not a routing signal.",
+     "",
+     "Time alone ignores quality.",
+     "Unrelated."
+    ]
+   },
+   {
+    "id": "c21-4-m02",
+    "q": "1,000 requests: 400 small at 0.0002, 450 mid at 0.0015, 150 large at 0.006. Total cost is…",
+    "options": [
+     "2.55 dollars",
+     "0.98 dollars",
+     "6.00 dollars",
+     "1.655 dollars"
+    ],
+    "answer": 3,
+    "why": "0.08 + 0.675 + 0.90 = 1.655.",
+    "kind": "calculation",
+    "distractors": [
+     "Arithmetic slip.",
+     "Misses the large share.",
+     "All on the large model.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-4-m03",
+    "q": "How does routing differ from a cascade?",
+    "options": [
+     "They are two names for the same thing",
+     "Routing always sends work to the largest model",
+     "Routing decides up front; a cascade tries small first",
+     "A cascade never escalates any requests"
+    ],
+    "answer": 2,
+    "why": "Routing uses the request type; a cascade reacts to the small model’s result.",
+    "kind": "concept",
+    "distractors": [
+     "They differ.",
+     "Routing uses cheaper models.",
+     "",
+     "Cascades escalate."
+    ]
+   },
+   {
+    "id": "c21-4-m04",
+    "q": "Fallbacks from the small model rise from 3% to 15% for one type. This suggests…",
+    "options": [
+     "The small model no longer meets the bar for it",
+     "The large model has become cheaper",
+     "Traffic has dropped for that type",
+     "The gateway is mislabelling every type"
+    ],
+    "answer": 0,
+    "why": "A rising fallback rate is a quality signal for that route.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Unrelated to fallbacks.",
+     "Rates, not volume.",
+     "Would affect all types."
+    ]
+   },
+   {
+    "id": "c21-4-m05",
+    "q": "The quality bar is raised from 90% to 94%. Expect…",
+    "options": [
+     "Lower overall cost",
+     "Fewer types on larger models",
+     "More types routed to larger models",
+     "No change in the routing table"
+    ],
+    "answer": 2,
+    "why": "Fewer cheap models meet a higher bar.",
+    "kind": "scenario",
+    "distractors": [
+     "Cost rises.",
+     "Opposite.",
+     "",
+     "The table depends on the bar."
+    ]
+   },
+   {
+    "id": "c21-4-m06",
+    "q": "Why evaluate per request type rather than overall?",
+    "options": [
+     "Request types are easier to label by hand",
+     "Overall scores are always lower than per type",
+     "Providers require per-type evaluation",
+     "A model can pass overall and fail one type"
+    ],
+    "answer": 3,
+    "why": "Averages hide types where the cheap model fails.",
+    "kind": "concept",
+    "distractors": [
+     "Not the reason.",
+     "Not always.",
+     "No such requirement.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-4-m07",
+    "q": "Everything on the large model costs 6 dollars per 1,000 requests; routed, 1.66. The saving is about…",
+    "options": [
+     "60%",
+     "83%",
+     "28%",
+     "72%"
+    ],
+    "answer": 3,
+    "why": "1 − 1.66 ÷ 6 ≈ 0.72.",
+    "kind": "calculation",
+    "distractors": [
+     "Rough guess.",
+     "Too high.",
+     "That is the routed share.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-4-m08",
+    "q": "A security report is cheap to route to a small model, which scored 91%. The routing rule should…",
+    "options": [
+     "Send security reports to the strongest model",
+     "Drop security reports from routing",
+     "Use the small model since 91% passes",
+     "Pick a model at random each time"
+    ],
+    "answer": 0,
+    "why": "High-stakes types override cost.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Ignores them.",
+     "Cost should not decide high-stakes routes.",
+     "Unpredictable."
+    ]
+   },
+   {
+    "id": "c21-4-m09",
+    "q": "5% of 400 small-model answers fall back to the large model at 0.006 dollars. The extra cost is…",
+    "options": [
+     "0.024 dollars",
+     "0.12 dollars",
+     "1.20 dollars",
+     "0.012 dollars"
+    ],
+    "answer": 1,
+    "why": "20 × 0.006 = 0.12.",
+    "kind": "calculation",
+    "distractors": [
+     "Wrong count.",
+     "",
+     "Ten times too much.",
+     "Ten times too little."
+    ]
+   },
+   {
+    "id": "c21-4-m10",
+    "q": "When a provider releases a new model, the routing table should…",
+    "options": [
+     "Send everything to the new model",
+     "Stay unchanged",
+     "Be replaced by a cascade",
+     "Be re-evaluated per type"
+    ],
+    "answer": 3,
+    "why": "Model changes alter who meets the bar (18.5).",
+    "kind": "concept",
+    "distractors": [
+     "Untested.",
+     "May now be wrong.",
+     "A different design choice.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c21-4-i01",
+    "q": "How does cost-aware routing work?",
+    "level": "fundamentals",
+    "covers": [
+     "request types",
+     "quality bar",
+     "cheapest passing model",
+     "fallbacks"
+    ],
+    "followUp": "How is the type decided?"
+   },
+   {
+    "id": "c21-4-i02",
+    "q": "How do you build a routing table?",
+    "level": "fundamentals",
+    "covers": [
+     "evaluation per type",
+     "models",
+     "costs",
+     "volume"
+    ],
+    "followUp": "How often do you rebuild it?"
+   },
+   {
+    "id": "c21-4-i03",
+    "q": "Routing or cascade: when would you choose each?",
+    "level": "fundamentals",
+    "covers": [
+     "known types",
+     "uncertain difficulty",
+     "latency",
+     "cost"
+    ],
+    "followUp": "Could you combine them?"
+   },
+   {
+    "id": "c21-4-i04",
+    "q": "Fallbacks for one route are rising. What do you do?",
+    "level": "applied",
+    "covers": [
+     "investigate type",
+     "drift",
+     "re-evaluate",
+     "move route"
+    ],
+    "followUp": "How fast would you act?"
+   },
+   {
+    "id": "c21-4-i05",
+    "q": "How do you keep high-stakes requests away from cheap models?",
+    "level": "applied",
+    "covers": [
+     "rules",
+     "types",
+     "audit",
+     "tests"
+    ],
+    "followUp": "How do you detect a misclassified high-stakes request?"
+   },
+   {
+    "id": "c21-4-i06",
+    "q": "How do you add language to a routing table?",
+    "level": "applied",
+    "covers": [
+     "evaluation per language",
+     "thresholds",
+     "volume",
+     "cost"
+    ],
+    "followUp": "What if a language has little data?",
+    "project": "travel"
+   },
+   {
+    "id": "c21-4-i07",
+    "q": "Design routing in a gateway serving fifteen features.",
+    "level": "system-design",
+    "covers": [
+     "types",
+     "tables",
+     "fallbacks",
+     "monitoring",
+     "ownership"
+    ],
+    "followUp": "Who owns each route?"
+   },
+   {
+    "id": "c21-4-i08",
+    "q": "Plan how routing tables stay correct as models and traffic change.",
+    "level": "system-design",
+    "covers": [
+     "scheduled re-evaluation",
+     "alerts",
+     "model upgrades",
+     "drift"
+    ],
+    "followUp": "What triggers an unscheduled review?"
+   }
+  ]
+ },
+ "c21-5": {
+  "mcq": [
+   {
+    "id": "c21-5-m01",
+    "q": "Showback means…",
+    "options": [
+     "Blocking each team once it reaches its limit",
+     "Reporting each team’s spend without moving money",
+     "Moving spend into each team’s own budget",
+     "Refunding each team’s unused spend"
+    ],
+    "answer": 1,
+    "why": "It shows usage; chargeback moves the money.",
+    "kind": "concept",
+    "distractors": [
+     "That is a hard limit.",
+     "",
+     "That is chargeback.",
+     "Not a refund."
+    ]
+   },
+   {
+    "id": "c21-5-m02",
+    "q": "Shared costs of 2,000 split by usage; team A used 4,000 of 8,000 direct spend. A’s share is…",
+    "options": [
+     "1,000 dollars",
+     "667 dollars",
+     "2,000 dollars",
+     "500 dollars"
+    ],
+    "answer": 0,
+    "why": "2,000 × 4,000 ÷ 8,000.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "A third.",
+     "All of it.",
+     "A quarter."
+    ]
+   },
+   {
+    "id": "c21-5-m03",
+    "q": "A team has used 5,000 of a 6,000 budget. Which alert has fired?",
+    "options": [
+     "None",
+     "50% only",
+     "100%",
+     "80%"
+    ],
+    "answer": 3,
+    "why": "5,000 ÷ 6,000 ≈ 83%.",
+    "kind": "calculation",
+    "distractors": [
+     "Past two thresholds.",
+     "Also past 80%.",
+     "Not yet reached.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-5-m04",
+    "q": "Untagged spend keeps growing. The best fix is…",
+    "options": [
+     "Refuse untagged calls at the gateway",
+     "Split untagged spend evenly each month",
+     "Ignore it below 20% of the bill",
+     "Ask teams to tag voluntarily"
+    ],
+    "answer": 0,
+    "why": "Enforcement at one choke point works; goodwill does not.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Hides the cause.",
+     "It grows.",
+     "Unreliable."
+    ]
+   },
+   {
+    "id": "c21-5-m05",
+    "q": "Why start with showback before chargeback?",
+    "options": [
+     "Chargeback needs no tagging",
+     "Showback is more accurate",
+     "Chargeback is illegal in most places",
+     "Teams must trust the numbers first"
+    ],
+    "answer": 3,
+    "why": "Moving money on disputed numbers causes conflict.",
+    "kind": "concept",
+    "distractors": [
+     "It needs tags too.",
+     "Same numbers.",
+     "It is common practice.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-5-m06",
+    "q": "A regulated dispute process hits its budget. The right policy is…",
+    "options": [
+     "Block it until next month",
+     "Switch it to the cheapest model",
+     "Remove its budget entirely",
+     "Alert and review; do not block it"
+    ],
+    "answer": 3,
+    "why": "Blocking would breach service commitments; soft limits fit.",
+    "kind": "scenario",
+    "distractors": [
+     "Causes a breach.",
+     "May break quality obligations.",
+     "Loses control.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-5-m07",
+    "q": "Spend is 4,000, 3,000 and 1,000 with 2,000 shared split by usage. Team C’s total is…",
+    "options": [
+     "1,250 dollars",
+     "1,667 dollars",
+     "3,000 dollars",
+     "1,000 dollars"
+    ],
+    "answer": 0,
+    "why": "1,000 + 2,000 × 1,000 ÷ 8,000 = 1,250.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Equal split of shared.",
+     "Wrong team.",
+     "Forgets the shared part."
+    ]
+   },
+   {
+    "id": "c21-5-m08",
+    "q": "Which allocation key is usually fairest for a shared vector database?",
+    "options": [
+     "An equal split between all the teams",
+     "Alphabetical order of the team names",
+     "Each team’s share of queries or stored vectors",
+     "The number of people in each team"
+    ],
+    "answer": 2,
+    "why": "Usage-based keys reflect who drives the cost.",
+    "kind": "concept",
+    "distractors": [
+     "Ignores usage.",
+     "Arbitrary.",
+     "",
+     "Unrelated to usage."
+    ]
+   },
+   {
+    "id": "c21-5-m09",
+    "q": "Showback reveals one tool calls the assistant on every page load. The likely next step is…",
+    "options": [
+     "Switch the whole company to a cheaper model",
+     "Raise the team’s budget to fit",
+     "Fix the integration and add a per-team limit",
+     "Hide the tool from the report"
+    ],
+    "answer": 2,
+    "why": "Fix the cause and add a guard.",
+    "kind": "scenario",
+    "distractors": [
+     "Punishes everyone.",
+     "Pays for waste.",
+     "",
+     "Hides the problem."
+    ]
+   },
+   {
+    "id": "c21-5-m10",
+    "q": "Which limit suits an experiment with an external API key?",
+    "options": [
+     "A limit set after the first bill",
+     "A hard limit that blocks at the budget",
+     "A soft limit with monthly review",
+     "No limit during the experiment"
+    ],
+    "answer": 1,
+    "why": "Experiments can run away; block at the cap.",
+    "kind": "scenario",
+    "distractors": [
+     "Too late.",
+     "",
+     "Too slow for runaway costs.",
+     "Risky."
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c21-5-i01",
+    "q": "Explain showback and chargeback.",
+    "level": "fundamentals",
+    "covers": [
+     "reporting",
+     "moving money",
+     "trust",
+     "when to use"
+    ],
+    "followUp": "Which would you start with?"
+   },
+   {
+    "id": "c21-5-i02",
+    "q": "How do you allocate shared AI platform costs?",
+    "level": "fundamentals",
+    "covers": [
+     "usage keys",
+     "queries",
+     "tokens",
+     "fairness"
+    ],
+    "followUp": "What if teams dispute the key?"
+   },
+   {
+    "id": "c21-5-i03",
+    "q": "What budget alerts and limits would you set?",
+    "level": "fundamentals",
+    "covers": [
+     "50/80/100",
+     "soft vs hard",
+     "actions",
+     "owners"
+    ],
+    "followUp": "Which features get hard limits?"
+   },
+   {
+    "id": "c21-5-i04",
+    "q": "A team says showback numbers are wrong. How do you respond?",
+    "level": "applied",
+    "covers": [
+     "tagging audit",
+     "price table",
+     "reconcile with invoice",
+     "fix process"
+    ],
+    "followUp": "How do you rebuild trust?"
+   },
+   {
+    "id": "c21-5-i05",
+    "q": "How do you set budgets for regulated processes?",
+    "level": "applied",
+    "covers": [
+     "soft limits",
+     "alerts",
+     "review",
+     "service commitments"
+    ],
+    "followUp": "What happens at 100%?",
+    "project": "bank"
+   },
+   {
+    "id": "c21-5-i06",
+    "q": "How do you enforce tagging?",
+    "level": "applied",
+    "covers": [
+     "gateway",
+     "refuse untagged",
+     "defaults",
+     "reporting"
+    ],
+    "followUp": "What about batch jobs?"
+   },
+   {
+    "id": "c21-5-i07",
+    "q": "Design FinOps for AI across a company with ten product teams.",
+    "level": "system-design",
+    "covers": [
+     "tags",
+     "metering",
+     "allocation",
+     "showback",
+     "budgets",
+     "reviews"
+    ],
+    "followUp": "Who chairs the review?"
+   },
+   {
+    "id": "c21-5-i08",
+    "q": "Design budget enforcement in a model gateway.",
+    "level": "system-design",
+    "covers": [
+     "per-team counters",
+     "thresholds",
+     "degrade or block",
+     "exceptions",
+     "audit"
+    ],
+    "followUp": "How do you avoid blocking a critical feature?"
+   }
+  ]
+ },
+ "c21-6": {
+  "mcq": [
+   {
+    "id": "c21-6-m01",
+    "q": "Committed spend gives a lower unit price in exchange for…",
+    "options": [
+     "Guaranteed access to all future models",
+     "Free usage above the commitment",
+     "A promise to never change providers",
+     "Paying for the committed amount even if unused"
+    ],
+    "answer": 3,
+    "why": "You pay for the commitment whether or not you use it.",
+    "kind": "concept",
+    "distractors": [
+     "Not guaranteed unless negotiated.",
+     "Overage is paid.",
+     "Not inherent.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-6-m02",
+    "q": "Forecast is 100 units a month, give or take 25. A sensible commitment is…",
+    "options": [
+     "About 85, below the forecast",
+     "Exactly 100, the forecast",
+     "125, the high case",
+     "Zero, to stay flexible"
+    ],
+    "answer": 0,
+    "why": "Commit to what you are confident of; burst on demand.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Unused in low months.",
+     "Mostly idle.",
+     "Gives up the discount."
+    ]
+   },
+   {
+    "id": "c21-6-m03",
+    "q": "Committed units cost 0.70 and on-demand 1.00. In a month using 60 of 100 committed units you pay…",
+    "options": [
+     "70, against 60 on demand",
+     "100, against 60 on demand",
+     "42, against 60 on demand",
+     "60, against 70 on demand"
+    ],
+    "answer": 0,
+    "why": "100 × 0.70 = 70 versus 60 × 1.00 = 60.",
+    "kind": "calculation",
+    "distractors": [
+     "",
+     "Ignores the discount.",
+     "Pays only for used units.",
+     "Reversed."
+    ]
+   },
+   {
+    "id": "c21-6-m04",
+    "q": "On-demand prices fall 40% mid-year to 0.60, below the committed 0.70. A long commitment then…",
+    "options": [
+     "Becomes free for the rest of the year",
+     "Costs more than not committing",
+     "Is automatically renegotiated",
+     "Still saves 30% as before"
+    ],
+    "answer": 1,
+    "why": "The committed rate is now higher than on demand.",
+    "kind": "scenario",
+    "distractors": [
+     "Not free.",
+     "",
+     "Not unless negotiated.",
+     "The discount was against the old price."
+    ]
+   },
+   {
+    "id": "c21-6-m05",
+    "q": "Which clause protects you when models are retired?",
+    "options": [
+     "An exit fee paid to the provider on leaving",
+     "A longer term at the same unit price",
+     "A higher committed amount each month",
+     "The right to move the commitment to newer models"
+    ],
+    "answer": 3,
+    "why": "Model-swap rights keep the commitment usable (18.5).",
+    "kind": "scenario",
+    "distractors": [
+     "Costs you.",
+     "Increases exposure.",
+     "Increases exposure.",
+     ""
+    ]
+   },
+   {
+    "id": "c21-6-m06",
+    "q": "Why are commitments riskier for AI than for ordinary servers?",
+    "options": [
+     "Providers do not offer discounts",
+     "Prices and models change quickly",
+     "Tokens cannot be forecast at all",
+     "AI usage never changes"
+    ],
+    "answer": 1,
+    "why": "Fast price drops and deprecations make long terms risky.",
+    "kind": "concept",
+    "distractors": [
+     "They do.",
+     "",
+     "They can be forecast with ranges.",
+     "Usage changes a lot."
+    ]
+   },
+   {
+    "id": "c21-6-m07",
+    "q": "A store with sale peaks of forty times normal should commit to…",
+    "options": [
+     "The everyday base load only",
+     "Nothing, buying all on demand",
+     "The peak sale volume",
+     "The average including sales"
+    ],
+    "answer": 0,
+    "why": "Base load is used every month; peaks are short.",
+    "kind": "scenario",
+    "distractors": [
+     "",
+     "Misses the base discount.",
+     "Idle almost always.",
+     "Idle most months."
+    ]
+   },
+   {
+    "id": "c21-6-m08",
+    "q": "Reserved GPU capacity mainly guarantees…",
+    "options": [
+     "Capacity is available when you need it",
+     "Higher model accuracy",
+     "Lower prices than any provider API",
+     "Freedom from operations work"
+    ],
+    "answer": 0,
+    "why": "Reservations secure capacity, useful for known peaks.",
+    "kind": "concept",
+    "distractors": [
+     "",
+     "Unrelated.",
+     "Not always cheaper.",
+     "You still operate it."
+    ]
+   },
+   {
+    "id": "c21-6-m09",
+    "q": "Commit 85 at 0.70 and use 110 at 1.00 on demand above it. The month costs…",
+    "options": [
+     "77.00",
+     "84.50",
+     "59.50",
+     "110.00"
+    ],
+    "answer": 1,
+    "why": "85 × 0.70 + 25 × 1.00 = 59.50 + 25 = 84.50.",
+    "kind": "calculation",
+    "distractors": [
+     "Discount applied to all usage.",
+     "",
+     "Forgets the overage.",
+     "All on demand."
+    ]
+   },
+   {
+    "id": "c21-6-m10",
+    "q": "Which terms belong in the same negotiation as price?",
+    "options": [
+     "Only the length of the contract term",
+     "Only the discount percentage on offer",
+     "Only the support phone number and hours",
+     "Data handling, residency and price-drop protection"
+    ],
+    "answer": 3,
+    "why": "Changing provider later is costly; agree the whole package (16.5).",
+    "kind": "concept",
+    "distractors": [
+     "Too narrow.",
+     "Too narrow.",
+     "Minor.",
+     ""
+    ]
+   }
+  ],
+  "interview": [
+   {
+    "id": "c21-6-i01",
+    "q": "How do commitments and reservations work, and what do they risk?",
+    "level": "fundamentals",
+    "covers": [
+     "discount",
+     "paid if unused",
+     "capacity",
+     "lock-in"
+    ],
+    "followUp": "How do you size one?"
+   },
+   {
+    "id": "c21-6-i02",
+    "q": "How would you size a spend commitment under uncertain usage?",
+    "level": "fundamentals",
+    "covers": [
+     "forecast range",
+     "base load",
+     "below forecast",
+     "review"
+    ],
+    "followUp": "What data would you use?"
+   },
+   {
+    "id": "c21-6-i03",
+    "q": "Why are AI commitments riskier than server commitments?",
+    "level": "fundamentals",
+    "covers": [
+     "price drops",
+     "deprecations",
+     "new models",
+     "usage uncertainty"
+    ],
+    "followUp": "How do you reduce that risk?"
+   },
+   {
+    "id": "c21-6-i04",
+    "q": "Prices fell below your committed rate. What do you do?",
+    "level": "applied",
+    "covers": [
+     "renegotiate",
+     "swap rights",
+     "shift usage",
+     "shorter terms next time"
+    ],
+    "followUp": "What would you ask for?"
+   },
+   {
+    "id": "c21-6-i05",
+    "q": "How would you plan capacity for a seasonal peak forty times normal?",
+    "level": "applied",
+    "covers": [
+     "base commitment",
+     "peak reservations",
+     "on-demand",
+     "lead time"
+    ],
+    "followUp": "When would you reserve?",
+    "project": "store"
+   },
+   {
+    "id": "c21-6-i06",
+    "q": "What do you negotiate besides price?",
+    "level": "applied",
+    "covers": [
+     "model swap",
+     "price protection",
+     "data terms",
+     "residency",
+     "exit"
+    ],
+    "followUp": "Which matters most for a bank?"
+   },
+   {
+    "id": "c21-6-i07",
+    "q": "Design the purchasing strategy for model capacity over the next year.",
+    "level": "system-design",
+    "covers": [
+     "forecast",
+     "mix of on-demand and committed",
+     "reviews",
+     "risks",
+     "contracts"
+    ],
+    "followUp": "How often do you review it?"
+   },
+   {
+    "id": "c21-6-i08",
+    "q": "Self-host or commit to a provider: how do you decide?",
+    "level": "system-design",
+    "covers": [
+     "utilisation",
+     "break-even",
+     "operations",
+     "flexibility",
+     "data control"
+    ],
+    "followUp": "What would change your answer?"
+   }
+  ]
+ }
+}

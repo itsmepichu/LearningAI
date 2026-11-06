@@ -1,0 +1,196 @@
+{
+ "c21-1": {
+  "harbor": {
+   "practice": "Harbor reports cost per resolved question, not per request. Most of the cost turned out to be staff time spent on answers Harbor got wrong, so improving retrieval saved more than switching to a cheaper model.",
+   "failure": "Choosing a cheaper model to cut the bill when people fixing wrong answers are most of the cost.",
+   "tryIt": "Run the snippet with tickets.csv, then raise SUCCESS from 0.85 to 0.92 and separately halve OUTPUT. Compare which change lowers the cost per successful task more.",
+   "fit": "good",
+   "fitNote": "cost per resolved question"
+  },
+  "store": {
+   "practice": "{company} tracks cost per resolved shopper question for {assistant}, split into tokens, search, tools and agent escalations. During festival sales the per-request cost is stable but volume grows forty-fold, so the monthly bill is forecast from unit cost times volume.",
+   "failure": "Forecasting the sale-month bill from last month’s total instead of unit cost times expected volume.",
+   "tryIt": "Run the snippet with reviews.json and chats.json, note the cost per 1,000 requests, and multiply it by 40 times normal volume for a festival sale month.",
+   "fit": "best",
+   "fitNote": "unit cost at huge, spiky volume"
+  },
+  "bank": {
+   "practice": "{company} counts compliance review time in the unit cost of {assistant}’s dispute letters. A letter that needs a reviewer’s edits costs far more than its tokens, so the team tracks the edit rate alongside token spend.",
+   "failure": "Reporting the token cost of dispute letters while ignoring the reviewer time each one needs.",
+   "tryIt": "Run the snippet with disputes.csv, set HUMAN to 4.00 for reviewer time, and compare the share of cost that comes from people at success rates of 0.85 and 0.95.",
+   "fit": "good",
+   "fitNote": "review time in unit cost"
+  },
+  "travel": {
+   "practice": "{company} measures cost per completed booking change, including agent steps, fare lookups and failed attempts. Agent loops during disruptions doubled the steps per change, which showed up in unit cost before anyone looked at the bill.",
+   "failure": "Watching total spend only, so a doubling of agent steps per change goes unnoticed for weeks.",
+   "tryIt": "Run the snippet with requests.csv, set TOOLS to 0.003 for fare lookups and RETRY_RATE to 0.3 for disruption days, and compare the unit cost with a normal day.",
+   "fit": "good",
+   "fitNote": "cost per completed change"
+  }
+ },
+ "c21-2": {
+  "harbor": {
+   "practice": "Harbor sent the same 2,400-token policy instructions with every question. Moving the date and user name after the instructions let the provider cache them, which cut the input bill by more than a third without changing a single answer.",
+   "failure": "Putting the current date at the very start of the prompt, so nothing is ever served from the cache.",
+   "tryIt": "Run the snippet with policies.json and swap the order of the steps so shorter answers come first. Check the final cost is the same and note which single step saves most.",
+   "fit": "good",
+   "fitNote": "long, stable instructions"
+  },
+  "store": {
+   "practice": "{assistant}’s answers grew longer after a prompt change, and output tokens cost five times input. A length instruction and a 300-token limit for product answers brought the bill back down, and the suite confirmed answers were still complete.",
+   "failure": "Cutting answer length without re-running the suite, so some answers lose sizes or prices.",
+   "tryIt": "Run the snippet with products.csv and change the final output length from 300 to 150 tokens. Compare the saving with the step that retrieves 4 chunks instead of 8.",
+   "fit": "best",
+   "fitNote": "output length at scale"
+  },
+  "bank": {
+   "practice": "{company} reduced retrieved context for {assistant} from eight to four chunks only after checking recall on the dispute suite. One policy needed six chunks to answer correctly, so that question type keeps a larger budget.",
+   "failure": "Trimming retrieved context for every question type without checking recall per type.",
+   "tryIt": "Run the snippet with policies.json, set the retrieved chunks to 2 in the fourth step, and estimate how much is saved. Then list which dispute questions might lose evidence.",
+   "fit": "good",
+   "fitNote": "context trimmed carefully"
+  },
+  "travel": {
+   "practice": "{assistant}’s long rebooking chats carried the whole conversation in every call. Summarising older turns after ten messages cut input tokens by half on disruption days, with the booking reference and dates kept verbatim in the summary.",
+   "failure": "Summarising a conversation so loosely that the booking reference or travel date is lost.",
+   "tryIt": "Run the snippet with fare_rules.json and add a step that halves the system tokens. Compare its saving with caching, and decide which to do first.",
+   "fit": "good",
+   "fitNote": "long multi-turn chats"
+  }
+ },
+ "c21-3": {
+  "harbor": {
+   "practice": "Harbor’s weekly evaluation runs and monthly policy re-embedding now go through the batch interface at half price. Morning ticket digests need results by 08:00, so they run at 01:00 on the team’s own GPUs instead.",
+   "failure": "Putting the morning digest in a 24-hour batch and having it arrive after the team needed it.",
+   "tryIt": "Run the snippet and add a job for 50,000 policy questions in the evaluation suite with a 72-hour deadline. Recompute the monthly saving and the share of the total bill.",
+   "fit": "good",
+   "fitNote": "evaluations and re-embedding"
+  },
+  "store": {
+   "practice": "{company} regenerates product descriptions for new listings overnight through the batch interface. Live shopper answers stay real-time, and the description jobs are split so a failed batch does not hold up the whole catalogue.",
+   "failure": "Running catalogue-wide description generation in real time during the day at full price.",
+   "tryIt": "Run the snippet and add a job for 300,000 listing descriptions a month at 800 tokens each with a 48-hour deadline. Compare the new saving with the original.",
+   "fit": "best",
+   "fitNote": "overnight catalogue work"
+  },
+  "bank": {
+   "practice": "{company} runs monthly statement summaries and model evaluations in batch. Dispute letters with regulatory deadlines are never batched, because a delayed batch could push a letter past its legal deadline.",
+   "failure": "Batching work with a regulatory deadline, where a late batch result causes a breach.",
+   "tryIt": "Run the snippet and set the deadline of the monthly report drafts to 12 hours. Note how the saving changes and which bank jobs should never move to batch.",
+   "fit": "good",
+   "fitNote": "batch with deadlines respected"
+  },
+  "travel": {
+   "practice": "{company} batches the nightly re-pricing summaries for saved trips, but disruption messages stay real-time. During a monsoon spike, idle night GPUs were used to pre-compute rebooking options for flights likely to be cancelled.",
+   "failure": "Leaving self-hosted GPUs idle at night while daytime batch work runs at full price elsewhere.",
+   "tryIt": "Run the snippet and add a job of 1 million saved-trip summaries a month at 1,500 tokens with a 24-hour deadline. Recompute the saving and the share of the bill.",
+   "fit": "good",
+   "fitNote": "nightly trip summaries"
+  }
+ },
+ "c21-4": {
+  "harbor": {
+   "practice": "Harbor evaluated each ticket type separately and found a small model met the bar for how-to and access questions. Security reports always go to the largest model by rule, whatever the evaluation says.",
+   "failure": "Routing security reports to a small model because it scored well on average.",
+   "tryIt": "Run the snippet with tickets.csv, raise BAR to 0.94, and note which ticket types move to larger models. Compare the routed cost with the earlier run.",
+   "fit": "good",
+   "fitNote": "routing by ticket type"
+  },
+  "store": {
+   "practice": "{assistant} routes product-fact questions to a small model, comparisons to a mid model and complaints to the largest. During sales the routing table is the main lever on cost, so fallback rates per type are on the sale-day dashboard.",
+   "failure": "Ignoring a rising fallback rate on one type, so the cheap route quietly sends work to the large model.",
+   "tryIt": "Run the snippet with products.csv, then change the small model’s cost to 0.001 and see whether the routing table changes. Note the new routed cost.",
+   "fit": "best",
+   "fitNote": "routing at sale volume"
+  },
+  "bank": {
+   "practice": "{company} routes dispute triage to a small on-premises model and letter drafting to a large model. Any request touching money movement is routed to the large model and still needs approval, regardless of cost.",
+   "failure": "Choosing the model for requests that touch money movement on cost alone, without the approval step.",
+   "tryIt": "Run the snippet with disputes.csv and lower BAR to 0.85. Note how much cheaper routing gets and decide whether that bar is acceptable for dispute reasons.",
+   "fit": "good",
+   "fitNote": "triage and drafting split"
+  },
+  "travel": {
+   "practice": "{assistant} routes status questions to a small model and fare-rule changes to a large one. Evaluation by language showed the small model missed the bar in Hinglish, so the routing table has a language column.",
+   "failure": "Building the routing table from English evaluations only, so Hinglish requests go to a model that fails them.",
+   "tryIt": "Run the snippet with requests.csv, raise BAR to 0.93, and see which request types move to the large model. Estimate the extra cost per 1,000 requests.",
+   "fit": "good",
+   "fitNote": "routing by type and language"
+  }
+ },
+ "c21-5": {
+  "harbor": {
+   "practice": "Harbor’s monthly AI bill is shown back to each department by the questions their staff asked. Engineering’s share fell once it could see that one internal tool called the assistant on every page load.",
+   "failure": "Keeping all AI spend in one central budget, so no team sees its own usage.",
+   "tryIt": "Run the snippet with tickets.csv and raise SHARED from 0.25 to 0.5 of direct spend. See how each team’s total changes and which team crosses an alert.",
+   "fit": "good",
+   "fitNote": "showback by department"
+  },
+  "store": {
+   "practice": "{company} charges AI spend back to product teams: search, support and seller tools. Untagged calls are refused at the gateway, so every rupee lands with a team that can act on it.",
+   "failure": "Letting untagged calls through, so a growing share of spend belongs to nobody.",
+   "tryIt": "Run the snippet with orders.csv and change HEADROOM so the largest category has 0.8. Note which alerts fire and what the team should do at each level.",
+   "fit": "good",
+   "fitNote": "chargeback across product teams"
+  },
+  "bank": {
+   "practice": "{company} shows AI spend per business line and per regulated process. Budgets are soft limits for production processes, because blocking dispute handling at a budget limit would breach service commitments.",
+   "failure": "Putting a hard spending block on a regulated process that must keep running.",
+   "tryIt": "Run the snippet with transactions.csv and compare the alerts at two HEADROOM settings. Decide which teams should have hard limits and which only alerts. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "soft limits for regulated work"
+  },
+  "travel": {
+   "practice": "{company} splits spend by product (flights, hotels, rail, packages) and by channel. Showback revealed that the package team’s itinerary agent cost four times the others per booking, which started a routing review.",
+   "failure": "Reviewing spend only in total and missing that one product’s agent costs four times the others.",
+   "tryIt": "Run the snippet with bookings.csv, then double SHARED. Compare each product’s share and note which crosses the 80% alert. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "spend by travel product"
+  }
+ },
+ "c21-6": {
+  "harbor": {
+   "practice": "Harbor’s usage is steady, so it committed to about 80% of its expected annual model spend for a discount, with a clause that lets the commitment move to newer models from the same provider.",
+   "failure": "Committing to one specific model version that the provider retires halfway through the contract.",
+   "tryIt": "Run the snippet and set DISCOUNT to 0.15. Find the best commitment level now, and compare it with the result at 0.30. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "steady internal usage"
+  },
+  "store": {
+   "practice": "{company}’s usage spikes forty-fold at festival sales, so it commits only to the everyday base load and buys sale-time capacity on demand, reserving GPU capacity for the sale weeks well in advance.",
+   "failure": "Committing to the average including sale months, then paying for idle capacity for most of the year.",
+   "tryIt": "Run the snippet and widen the usage spread from 25 to 60. Find the new best commitment level and explain why it moves. Write down the numbers and the decision you would make from them.",
+   "fit": "best",
+   "fitNote": "spiky volume and reservations"
+  },
+  "bank": {
+   "practice": "{company} negotiated data-handling terms, regional processing and price-drop protection in the same contract as its spend commitment, because changing provider later would need a new security review.",
+   "failure": "Signing a spend commitment before the data-handling and residency terms have been agreed.",
+   "tryIt": "Run the snippet with a 40% price cut from month 3 instead of month 6, and compare the yearly costs at each commitment level. Write down the numbers and the decision you would make from them.",
+   "fit": "good",
+   "fitNote": "contract terms alongside price"
+  },
+  "travel": {
+   "practice": "{company} reviews its commitments quarterly because model prices fell sharply twice in a year. Short terms cost a little more per unit but let the company move to cheaper models quickly.",
+   "failure": "Locking in a three-year rate just before on-demand prices fell below it.",
+   "tryIt": "Run the snippet and change the price cut to 60% from month 6. Compare committing 100 units with not committing at all, and decide what term length you would accept.",
+   "fit": "good",
+   "fitNote": "fast-falling prices"
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Build Harbor’s cost per resolved question from a week of usage records, cache the policy instructions, route how-to tickets to a small model, and write a showback report by department.</p>"
+  },
+  "store": {
+   "scenario": "<p>Model the cost of a festival-sale month for {assistant}: unit cost times forecast volume, output length limits, batch description generation, and a commitment sized to the everyday base load.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Build the unit cost of a dispute letter including reviewer time, trim context only where recall holds, keep regulated work out of batch, and write budget rules with soft limits.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Measure cost per completed booking change on normal and disruption days, summarise long chats, route by request type and language, and recommend a commitment term given falling prices.</p>"
+  }
+ }
+}

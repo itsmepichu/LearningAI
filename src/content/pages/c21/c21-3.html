@@ -1,0 +1,45 @@
+<section class="tp tp-intuition" id="c21-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Next-day delivery costs less than delivery within the hour. Model providers work the same way: <a class="gl" href="#gl-batch-api">batch processing</a> accepts many requests at once, returns them within a day, and charges much less, because the provider can run them when its machines are quiet.</p>
+<p>A lot of AI work has no one waiting: nightly summaries, re-embedding, evaluation runs, report drafts. Moving that work to batch, or to off-peak hours on your own GPUs, is often the easiest saving there is.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c21-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Work</th><th>Someone waiting?</th><th>Deadline</th><th>Batch?</th></tr><tr><td>Live chat answers</td><td>yes</td><td>seconds</td><td>no</td></tr><tr><td>Agent tasks a user started</td><td>yes, async</td><td>minutes</td><td>no; queue instead (15.4)</td></tr><tr><td>Nightly summaries of the day’s tickets</td><td>no</td><td>by morning</td><td>only if the batch window fits</td></tr><tr><td>Re-embedding changed documents</td><td>no</td><td>a day</td><td>yes</td></tr><tr><td>Weekly evaluation runs</td><td>no</td><td>days</td><td>yes</td></tr><tr><td>Monthly report drafts</td><td>no</td><td>days</td><td>yes</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Collect<small>requests as a file</small></div><div class="nd">Submit<small>one batch job</small></div><div class="nd">Wait<small>up to the window</small></div><div class="nd">Results<small>file of outputs</small></div><div class="nd">Retry failures<small>and reconcile</small></div></div>
+<ol class="steps"><li data-n="0">Write each request with an id you can match later.</li><li data-n="1">Submit the file as one job.</li><li data-n="2">The provider runs it within its window, often 24 hours.</li><li data-n="3">Download outputs and match them to inputs by id.</li><li data-n="4">Resubmit failed items; record cost and completion time.</li></ol></div>
+<figcaption><b>A batch job.</b> Self-hosted: schedule the same work for night hours on idle GPUs.</figcaption></figure>
+<p><b>Off-peak on your own GPUs.</b> Self-hosted capacity is sized for the daytime peak and idle at night (14.8). Scheduling bulk work into those hours costs almost nothing extra and raises average utilisation.</p>
+<div class="box example"><h5>Example: re-embedding at night</h5><p>A team re-embeds 2 million changed chunks each month. On the hosted batch interface at half price it costs 2,000 dollars instead of 4,000; on their own GPUs between 01:00 and 06:00 it costs nothing extra, because those GPUs would otherwise sit idle.</p></div>
+</section>
+
+<section class="tp tp-math" id="c21-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Which jobs fit</b> (illustrative, 4 dollars per million tokens, batch at half price, 24-hour window).</p>
+<ul>
+<li>Re-embedding: 2,000,000 × 500 tokens = 1 billion tokens: 4,000 dollars, 2,000 in batch.</li>
+<li>Evaluation runs: 80,000 × 6,000 = 480 million tokens: 1,920 dollars, 960 in batch.</li>
+<li>Nightly summaries due in 12 hours do not fit a 24-hour window; they stay real-time or run on idle GPUs.</li>
+</ul>
+<p>Live chat dominates the bill and cannot move, so batch saves a modest share overall but is nearly free to adopt.</p>
+</section>
+
+<section class="tp tp-code" id="c21-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program lists five kinds of model work with volumes and deadlines, moves those that can wait for the batch window to a discounted price, and totals the saving. Set <code>BATCH_WINDOW_H</code> to 12 and see which jobs join.</p>
+<figure class="fig live" id="snip-batch-offpeak"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"batch-offpeak"}'></div></div>
+<figcaption><b>What can wait for a batch, in real Python.</b> Discount and volumes are illustrative.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c21-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">Anthropic: Batch processing</a> <small>The Message Batches API, its window and pricing.</small></li>
+<li><a href="https://developers.openai.com/api/docs/guides/batch">OpenAI: Batch API</a> <small>Submitting request files for asynchronous processing.</small></li>
+<li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Kubernetes: CronJob</a> <small>Scheduling bulk work into off-peak hours on your own cluster.</small></li>
+</ol>
+</section>

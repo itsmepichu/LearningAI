@@ -1,0 +1,45 @@
+<section class="tp tp-intuition" id="c20-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A teacher marking a test can say just "wrong", or can say "you picked B; A was right, and C was almost right too". The second tells the student much more. <a class="gl" href="#gl-soft-targets">Soft targets</a> are that richer answer: the teacher’s whole spread of probabilities, not only its top choice.</p>
+<p>When you cannot see a hosted teacher’s probabilities, you train on its generated outputs instead, sometimes including its step-by-step explanations. That is <a class="gl" href="#gl-sequence-distillation">sequence-level distillation</a>, and it is how most distillation from API models works.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c20-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Method</th><th>Student learns from</th><th>Needs</th><th>Notes</th></tr><tr><td>Hard labels</td><td>the teacher’s chosen answer</td><td>any teacher</td><td>simplest; loses the teacher’s uncertainty</td></tr><tr><td>Soft targets (logits)</td><td>the full probability distribution, softened by a temperature</td><td>access to the teacher’s probabilities, same vocabulary helps</td><td>richer signal; usually open-weight teachers</td></tr><tr><td>Sequence-level</td><td>whole generated outputs</td><td>any teacher, including APIs</td><td>standard supervised fine-tuning (6.4) on teacher text</td></tr><tr><td>Reasoning traces</td><td>outputs with explanations</td><td>a teacher that explains</td><td>can help small models on multi-step tasks; check traces are correct</td></tr></table></div>
+<p><b>Temperature.</b> Dividing the teacher’s scores by a temperature above 1 before the softmax flattens the distribution, so the student sees which wrong answers are "nearly right". The student is trained to match these soft probabilities, usually mixed with the true labels.</p>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Teacher scores<small>6.0, 3.5, 0.5, −1.0</small></div><div class="nd">Soften<small>temperature 4</small></div><div class="nd">Soft targets<small>0.51, 0.27, 0.13, 0.09</small></div><div class="nd">Student<small>matches them</small></div><div class="nd">Evaluate<small>human-labelled test</small></div></div>
+<ol class="steps"><li data-n="0">The teacher strongly prefers the first answer and thinks the second is plausible.</li><li data-n="1">Dividing by 4 shrinks the gaps between scores.</li><li data-n="2">The probabilities now show the second answer is far more plausible than the last.</li><li data-n="3">The student is trained to reproduce this spread, not only the winner.</li><li data-n="4">Test the student on labels written by people.</li></ol></div>
+<figcaption><b>Soft targets with a temperature.</b></figcaption></figure>
+<div class="box example"><h5>Example: distilling a classifier</h5><p>A team distils a 7B teacher into a 300M student for intent detection. With hard labels the student reaches 91%; adding soft targets at temperature 2 reaches 93% with the same 20,000 examples, because the teacher’s probabilities show which intents are easily confused.</p></div>
+</section>
+
+<section class="tp tp-math" id="c20-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Softening</b>. Teacher scores 6.0, 3.5, 0.5 and −1.0.</p>
+<ul>
+<li>At temperature 1 the probabilities are about 0.92, 0.08, 0.004 and 0.001: almost a hard label.</li>
+<li>At temperature 4, the scores become 1.5, 0.875, 0.125 and −0.25, and the probabilities about 0.51, 0.27, 0.13 and 0.09: the student now sees that the second answer is a near miss.</li>
+</ul>
+<p><b>Data needed.</b> Soft targets give more information per example, so a student often reaches the same accuracy with fewer examples, which matters when teacher calls are expensive.</p>
+</section>
+
+<section class="tp tp-code" id="c20-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program shows how temperature softens a teacher’s probabilities, then trains a small student on 40 examples with soft targets and with hard labels and compares them on 4,000 test points. Change the temperature or the number of training examples and run it again.</p>
+<figure class="fig live" id="snip-soft-targets"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"soft-targets"}'></div></div>
+<figcaption><b>Soft targets against hard labels, in real Python.</b> A toy with a perfect teacher.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c20-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1503.02531">Hinton et al. (2015), Distilling the Knowledge in a Neural Network</a> <small>Soft targets and temperature.</small></li>
+<li><a href="https://arxiv.org/abs/1606.07947">Kim and Rush (2016), Sequence-Level Knowledge Distillation</a> <small>Training on the teacher’s generated outputs.</small></li>
+<li><a href="https://arxiv.org/abs/1910.01108">Sanh et al. (2019), DistilBERT</a> <small>A distilled model 40% smaller that keeps most of the quality.</small></li>
+<li><a href="https://huggingface.co/docs/trl/gkd_trainer">TRL: GKD Trainer</a> <small>A library trainer for on-policy distillation of language models.</small></li>
+</ol>
+</section>

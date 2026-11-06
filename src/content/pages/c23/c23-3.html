@@ -1,0 +1,43 @@
+<section class="tp tp-intuition" id="c23-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Privacy laws give people <a class="gl" href="#gl-data-subject-rights">rights over their data</a>: to see what an organisation holds about them, to correct it and, in many cases, to have it deleted. Those rights were written with databases in mind; AI systems scatter copies into chunks, vectors, caches, memories, logs, evaluation sets and even model weights.</p>
+<p>So privacy has to be designed in: know where every copy lives (lineage, 10.4), keep as little as possible, and build deletion that reaches every store, with proof.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c23-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<div class="tw"><table><tr><th>Right or principle</th><th>What it means for an LLM system</th></tr><tr><td>Purpose and lawful basis</td><td>decide and record why personal data is processed, including for training or evaluation</td></tr><tr><td>Minimisation</td><td>send the model only what the task needs; redact before logging (16.5)</td></tr><tr><td>Access</td><td>be able to find and export what you hold about a person, across stores</td></tr><tr><td>Erasure</td><td>delete across chunks, vectors, caches, memories, logs and datasets; flag models trained on the data</td></tr><tr><td>Automated decisions</td><td>meaningful human review and an explanation where decisions significantly affect people</td></tr><tr><td>Transfers and processors</td><td>know where providers process data; contracts and region controls</td></tr></table></div>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Request<small>identity checked</small></div><div class="nd">Locate<small>lineage across stores</small></div><div class="nd">Act<small>export or delete</small></div><div class="nd">Verify<small>search again, canaries</small></div><div class="nd">Record<small>evidence, within deadline</small></div></div>
+<ol class="steps"><li data-n="0">Verify the requester’s identity before acting.</li><li data-n="1">Use lineage to find every copy, including derived data such as embeddings.</li><li data-n="2">Export or delete; retained copies need a documented reason (legal hold, backups that expire).</li><li data-n="3">Search every store again to prove nothing was missed.</li><li data-n="4">Record what was done, and when, within the legal deadline.</li></ol></div>
+<figcaption><b>Handling a data-subject request.</b></figcaption></figure>
+<div class="box pit"><h5>Models remember</h5><p>Deleting training rows does not remove what a model learned from them. Keep personal data out of training sets where possible, use per-tenant adapters that can be dropped, and flag models trained on deleted data for review (13.6).</p></div>
+<p><small>Orientation for engineers, not legal advice. Laws, guidance and application dates change; confirm what applies with your legal and compliance team.</small></p>
+</section>
+
+<section class="tp tp-math" id="c23-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Copies of one person’s data</b> (illustrative): 3 source records, 12 chunks and vectors, 4 cached answers, 2 memories, 40 traces, 1 evaluation case, 2 fine-tuning rows and 3 backups: 67 copies in 8 stores.</p>
+<ul>
+<li>Deleting the source alone removes 3 of 67, under 5%.</li>
+<li>If traces are kept 30 days and the deadline to respond is a month, waiting for traces to expire on their own is not a plan: delete or redact them.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c23-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program finds a fictional customer’s data in eight stores, deletes what can be deleted, records what is retained and why, and notes what deleting training rows cannot undo. Add a store your own system has and run it again.</p>
+<figure class="fig live" id="snip-erasure-request"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"erasure-request"}'></div></div>
+<figcaption><b>An erasure request across stores, in real Python.</b> Illustrative stores; check your law’s deadlines.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c23-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://gdpr-info.eu/art-17-gdpr/">GDPR Article 17: Right to erasure</a> <small>The right and its exceptions.</small></li>
+<li><a href="https://gdpr-info.eu/art-22-gdpr/">GDPR Article 22: Automated decision-making</a> <small>Rights around decisions made solely by automated means.</small></li>
+<li><a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/">ICO: Artificial intelligence guidance</a> <small>A regulator’s guidance on data protection in AI systems.</small></li>
+</ol>
+</section>

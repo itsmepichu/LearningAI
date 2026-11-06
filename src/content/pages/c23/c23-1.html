@@ -1,0 +1,44 @@
+<section class="tp tp-intuition" id="c23-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A law says what must be true; it rarely says how. "Keep a person in control of consequential decisions" does not name a screen or a log table. Engineering turns each obligation into a <a class="gl" href="#gl-control-evidence">control</a>, something the system does, and into evidence, the record that proves it was done.</p>
+<p>The result is a table anyone can audit: obligation, control, evidence, owner and date. Gaps in that table are the real compliance risk.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c23-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<figure class="fig flow"><div class="stage">
+<div class="nodes"><div class="nd">Obligation<small>what must be true</small></div><div class="nd">Interpretation<small>with legal</small></div><div class="nd">Control<small>what the system does</small></div><div class="nd">Evidence<small>records, produced automatically</small></div><div class="nd">Review<small>owner, date, gaps</small></div></div>
+<ol class="steps"><li data-n="0">Start from the text that applies, identified with legal and compliance.</li><li data-n="1">Agree in writing what it means for this system.</li><li data-n="2">Design a control: an approval step, a log, a test, a banner, a deletion job.</li><li data-n="3">Make the system produce evidence as a side effect: logs, gate results, drill reports.</li><li data-n="4">Keep the matrix current: every control has an owner and fresh evidence.</li></ol></div>
+<figcaption><b>From an obligation to evidence.</b></figcaption></figure>
+<div class="tw"><table><tr><th>Obligation (generic example)</th><th>Control</th><th>Evidence</th></tr><tr><td>Human oversight of consequential decisions</td><td>approval step with exact parameters (11.7); stop switch</td><td>approval records; kill-switch drill reports</td></tr><tr><td>Records of system operation</td><td>decision logs with versions (18.1)</td><td>log retention reports; sample queries</td></tr><tr><td>Tell people they are talking to an AI</td><td>disclosure in the interface</td><td>screenshots per release; UI tests</td></tr><tr><td>Manage risks before release</td><td>threat model (16.1), release gates (18.3)</td><td>threat model document; gate results</td></tr><tr><td>Honour deletion requests</td><td>deletion across all copies (16.5)</td><td>deletion job logs; verification searches</td></tr></table></div>
+<div class="box pit"><h5>Evidence made by hand goes stale</h5><p>A screenshot taken for last year’s audit proves nothing about today. Prefer evidence the pipeline produces on every release or every decision, and date it.</p></div>
+<p><small>Orientation for engineers, not legal advice. Laws, guidance and application dates change; confirm what applies with your legal and compliance team.</small></p>
+</section>
+
+<section class="tp tp-math" id="c23-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Size of the job</b> (illustrative). 25 obligations, 2 controls each on average, 1 piece of evidence per control: 50 rows to keep current.</p>
+<ul>
+<li>If evidence is refreshed by hand every 6 months at 1 hour a row, that is 50 × 2 = 100 hours a year, and much of it is stale at any moment.</li>
+<li>If 40 of the 50 are produced automatically by the pipeline, the manual work drops to 10 × 2 = 20 hours.</li>
+</ul>
+<p><b>Staleness.</b> With a 180-day freshness rule, evidence dated 250 days ago fails, even if the control still works: the drill must be run again.</p>
+</section>
+
+<section class="tp tp-code" id="c23-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program maps five example obligations to controls and each control to its latest evidence, and flags missing controls, missing evidence and evidence older than 180 days. Add a control for the deletion obligation and run it again.</p>
+<figure class="fig live" id="snip-control-matrix"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"control-matrix"}'></div></div>
+<figcaption><b>A control matrix, in real Python.</b> Generic example obligations; not legal advice.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c23-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> <small>Govern, map, measure and manage: a structure for controls.</small></li>
+<li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1: Generative AI Profile</a> <small>Risks specific to generative AI and suggested actions.</small></li>
+<li><a href="https://www.iso.org/standard/81230.html">ISO/IEC 42001</a> <small>An AI management system with controls and audits.</small></li>
+</ol>
+</section>

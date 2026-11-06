@@ -1,0 +1,196 @@
+{
+ "c19-1": {
+  "harbor": {
+   "practice": "Harbor staff paste screenshots of error dialogs into tickets. Harbor crops each screenshot to the dialog before sending it, which cuts image tokens from about 780 to 150 and keeps the model focused on the error text.",
+   "failure": "Sending full-screen screenshots at high detail, so image tokens cost more than the whole question.",
+   "tryIt": "Run the snippet and add a 1,920 × 1,080 screenshot and a 600 × 300 crop to the image list. Compare their tokens and the cost of 2,000 tickets a month with each.",
+   "fit": "good",
+   "fitNote": "screenshots in support tickets"
+  },
+  "store": {
+   "practice": "{assistant} receives shopper photos of damaged items with return requests. {company} resizes them to a 1,024-pixel longest side before analysis, so a 12-megapixel phone photo costs about 1,000 tokens instead of many thousands.",
+   "failure": "Forwarding full-resolution phone photos and paying for detail the model never uses.",
+   "tryIt": "In the snippet, set the maximum side to 512, then 2,048, and price 50,000 return photos a month at each setting. Note how tokens grow with resolution.",
+   "fit": "best",
+   "fitNote": "shopper photos for returns and search"
+  },
+  "bank": {
+   "practice": "{assistant} reads uploaded statements and cheque images in dispute cases. {company} counts image tokens per page before choosing a model, because a 10-page scanned statement can cost more than the whole case history in text.",
+   "failure": "Estimating dispute-handling cost from text tokens alone and ignoring the scanned attachments customers upload.",
+   "tryIt": "Add a \"scanned page\" of 2,480 × 3,508 to the snippet, multiply its tokens by 10 pages, and compare with the text tokens of a typical dispute message in disputes.csv.",
+   "fit": "good",
+   "fitNote": "scanned statements in disputes"
+  },
+  "travel": {
+   "practice": "{assistant} handles voice notes from travellers in Hindi, Tamil and Hinglish. {company} budgets context by audio length: a two-minute voice note becomes about 6,000 audio positions before merging, more than the booking record itself.",
+   "failure": "Letting long voice notes fill the context window and push out the booking details.",
+   "tryIt": "In the snippet, add 120 and 300 seconds to the audio loop and compare the positions with the text tokens of a request from requests.csv.",
+   "fit": "good",
+   "fitNote": "voice notes from travellers"
+  }
+ },
+ "c19-2": {
+  "harbor": {
+   "practice": "Harbor answers questions about architecture diagrams and dashboard screenshots with a vision-language model. Staff are told it reads labels well but misreads small numbers, so exact figures are always checked against the source system.",
+   "failure": "Trusting numbers a model read off a dashboard screenshot without checking the source.",
+   "tryIt": "In the snippet, set IMG to 896 and compare the prefill tokens of one diagram with four. Decide whether to crop diagrams before sending them.",
+   "fit": "good",
+   "fitNote": "diagrams and dashboard screenshots"
+  },
+  "store": {
+   "practice": "{assistant} uses a vision-language model to check that listing photos match their titles. It runs at low detail first and re-asks at high detail only when unsure, which keeps image tokens low across thousands of new listings a day.",
+   "failure": "Running every listing photo at high detail when a low-detail pass settles most of them.",
+   "tryIt": "In the snippet, change the number of images to 1, 3 and 8 per listing and estimate the prefill time for 10,000 listings a day at 10,000 tokens a second.",
+   "fit": "best",
+   "fitNote": "listing photos against titles"
+  },
+  "bank": {
+   "practice": "{company} tested a vision-language model on cheque images. It read payee names well but swapped digits in amounts on 2% of blurred images, so {assistant} uses it only to draft, and amounts come from the core banking record.",
+   "failure": "Letting a model’s reading of a cheque amount drive a money movement.",
+   "tryIt": "In the snippet, count the tokens for one cheque image at 448 pixels and at 896 pixels, then estimate the KV memory for 50 concurrent requests at 128 KiB per token.",
+   "fit": "good",
+   "fitNote": "cheques and statements, with strict checks"
+  },
+  "travel": {
+   "practice": "{assistant} reads screenshots of booking confirmations that travellers send from other sites. A vision-language model extracts dates and PNRs, and {company} validates each against the airline’s booking record before changing anything.",
+   "failure": "Changing a booking from dates a model read off a screenshot without checking the airline record.",
+   "tryIt": "In the snippet, set the question to 120 tokens and compare prefill for one and four screenshots. Note the time to first token for each.",
+   "fit": "good",
+   "fitNote": "confirmation screenshots from travellers"
+  }
+ },
+ "c19-3": {
+  "harbor": {
+   "practice": "Harbor’s policy library includes scanned PDFs from before 2020. Harbor routes text-layer PDFs to direct extraction, scans to OCR, and only pages with tables to a vision-language model, keeping page links for citations.",
+   "failure": "Indexing scanned policies with a broken reading order, so answers cite scrambled text.",
+   "tryIt": "Run the snippet with policies.json, set TABLE_PAGES to 0.3, and compare the cost and table errors of all-OCR and all-VLM. Then work out the cost of routing only table pages to the VLM.",
+   "fit": "good",
+   "fitNote": "scanned policy PDFs"
+  },
+  "store": {
+   "practice": "{company} receives supplier invoices and product specification sheets as PDFs. Routine invoices go through OCR and rules; spec sheets with tables go to a vision-language model, and every total is checked against its line items.",
+   "failure": "Accepting an invoice total read by a model without checking that its lines add up.",
+   "tryIt": "In the snippet, change COPIES to 5,000 and TABLE_PAGES to 0.6 to model spec sheets, then compare table errors, worker-hours and cost for the two approaches.",
+   "fit": "good",
+   "fitNote": "supplier invoices and spec sheets"
+  },
+  "bank": {
+   "practice": "{company} processes scanned account-opening forms and statements. OCR handles typed pages; handwritten fields go to a model with a JSON schema, and any field that fails validation goes to an operations reviewer.",
+   "failure": "Auto-filling account records from handwritten fields without a confidence check or review.",
+   "tryIt": "Run the snippet, raise OCR_TABLE_ERRORS to 0.35 for handwriting, and work out how many pages a month a reviewer would need to check at each error rate.",
+   "fit": "best",
+   "fitNote": "scanned forms and statements"
+  },
+  "travel": {
+   "practice": "{assistant} reads PDF itineraries and visa letters uploaded by travellers. Direct text extraction works for most; scanned letters go to OCR, and the extracted dates are checked against the booking before any change is offered.",
+   "failure": "Trusting dates extracted from a scanned visa letter without checking them against the booking.",
+   "tryIt": "Run the snippet with fare_rules.json, set COPIES to 50,000, and compare worker-hours and cost for OCR and page images over a month of traveller uploads.",
+   "fit": "good",
+   "fitNote": "uploaded itineraries and letters"
+  }
+ },
+ "c19-4": {
+  "harbor": {
+   "practice": "Harbor joins internal meetings to take notes. Speech-to-text runs on recordings after the meeting, word error rate is measured per accent on a labelled sample, and names of products and customers are added as recognition hints.",
+   "failure": "Publishing meeting notes in which product names are routinely misheard, without measuring it.",
+   "tryIt": "Run the snippet with tickets.csv and compare word error rate for English and German. Raise the German noise to 0.15 and see how the average hides it.",
+   "fit": "limited",
+   "fitNote": "meeting notes only; voice is not central"
+  },
+  "store": {
+   "practice": "{assistant} offers voice search in Hindi, Tamil and Hinglish. {company} measures word error rate per language on recorded queries, because code-mixed Hinglish fails far more often than English and drives most failed searches.",
+   "failure": "Reporting one average word error rate while Hinglish queries fail several times as often.",
+   "tryIt": "Run the snippet with reviews.json and chats.json and compare word error rate by language. Lower the Hinglish noise to 0.08 and see the average change.",
+   "fit": "good",
+   "fitNote": "voice search in several languages"
+  },
+  "bank": {
+   "practice": "{assistant} answers card-block calls by voice. Amounts and card digits are always read back for confirmation, and the turn budget is kept under 1.2 seconds so callers do not talk over it.",
+   "failure": "Acting on a spoken amount or card number without reading it back for confirmation.",
+   "tryIt": "In the snippet, change the latency budget so the model’s first token takes 900 ms and see the total. Then find which step to shorten to get back under 1.2 seconds.",
+   "fit": "good",
+   "fitNote": "phone banking with read-back"
+  },
+  "travel": {
+   "practice": "{assistant} takes voice requests during disruptions, when call volumes spike. Speech recognition is tuned with city and airport names, and transcripts are kept so every change made by voice can be audited.",
+   "failure": "Rebooking from a misheard city name because the transcript was not confirmed with the traveller.",
+   "tryIt": "Run the snippet with requests.csv and compare word error rate for Hindi, Tamil and Hinglish requests. Raise the Tamil noise to 0.25 and see the effect.",
+   "fit": "best",
+   "fitNote": "multilingual voice requests"
+  }
+ },
+ "c19-5": {
+  "harbor": {
+   "practice": "Harbor’s knowledge base includes slide decks whose charts carry the meaning. Harbor indexes each slide’s extracted text and a page-image embedding, and fuses the two rankings so questions about a chart find the right slide.",
+   "failure": "Indexing slides by their text only, so questions about charts never find them.",
+   "tryIt": "Run the snippet with policies.json and change the share of visual queries from 0.4 to 0.2, then 0.6. Note the recall@3 of each ranker and when fusion helps most.",
+   "fit": "good",
+   "fitNote": "slide decks and diagrams"
+  },
+  "store": {
+   "practice": "{assistant} lets shoppers search with a photo or a description of how something looks. Text search handles model numbers; image embeddings handle \"looks like\"; the two are fused, and the answer shows the product images used.",
+   "failure": "Relying on text search alone, so \"blue kurta with white embroidery\" finds nothing useful.",
+   "tryIt": "Run the snippet with products.csv, set the share of visual queries to 0.7, and compare text-only, image-only and fused recall@3. Then set it to 0.1 and compare again.",
+   "fit": "best",
+   "fitNote": "visual product search"
+  },
+  "bank": {
+   "practice": "{company}’s internal procedures include scanned forms and screenshots. Retrieval over page images helps operations staff find \"the form with the red stamp box\", but customer answers still cite only the text policies.",
+   "failure": "Showing customers answers grounded only in an image match, with no text source to cite.",
+   "tryIt": "Run the snippet with policies.json and set the share of visual queries to 0.1. Compare the three rankers and note that fusion adds little when queries are about words.",
+   "fit": "limited",
+   "fitNote": "few image-centred queries"
+  },
+  "travel": {
+   "practice": "{assistant} helps travellers find hotels \"with a pool facing the sea\". Hotel photos are embedded alongside descriptions, and fused retrieval ranks properties whose photos match even when descriptions do not mention it.",
+   "failure": "Promising a sea-facing pool because one photo matched, without checking the hotel’s listed amenities.",
+   "tryIt": "Run the snippet with fare_rules.json, set the share of visual queries to 0.5, and compare recall@3 for text, image and fused rankings. Then try 0.8 and compare.",
+   "fit": "good",
+   "fitNote": "hotel photos and descriptions"
+  }
+ },
+ "c19-6": {
+  "harbor": {
+   "practice": "Harbor evaluates screenshot answers on a labelled set of 150 screenshots, sliced by app and image quality. Presence probes revealed that blurred screenshots led the model to invent error codes, so blurred images now trigger a request for a clearer one.",
+   "failure": "Reporting one accuracy figure while blurred screenshots lead the model to invent error codes.",
+   "tryIt": "Run the snippet with policies.json and raise the chance of a changed number from 0.15 to 0.3. Count the unsupported numbers and decide how many a reviewer could check each day.",
+   "fit": "good",
+   "fitNote": "screenshot answers"
+  },
+  "store": {
+   "practice": "{company} checks generated product descriptions against listing attributes. Any colour, size or number in a description that is not in the listing is flagged, and presence probes test whether the model invents accessories that are not in the photo.",
+   "failure": "Publishing generated descriptions that mention accessories neither shown in the photo nor listed.",
+   "tryIt": "Run the snippet with products.csv and count the unsupported numbers in the descriptions. Then lower the change rate to 0.05 and compare the share flagged for review.",
+   "fit": "best",
+   "fitNote": "generated product descriptions"
+  },
+  "bank": {
+   "practice": "{company} evaluates statement extraction on 300 labelled pages, sliced by scan quality. Every extracted amount is checked against the page, and the review queue receives all pages with an unsupported number.",
+   "failure": "Measuring extraction accuracy on clean scans only, then deploying on faxed statements.",
+   "tryIt": "Run the snippet with policies.json and count how many numbers would go to review at a 15% change rate. Estimate reviewer minutes at 30 seconds each.",
+   "fit": "good",
+   "fitNote": "statement extraction checks"
+  },
+  "travel": {
+   "practice": "{company} evaluates voice and screenshot inputs separately, per language. Hinglish voice requests had the most errors on city names, so those requests now get a confirmation step before any rebooking.",
+   "failure": "Averaging voice and text results together, hiding the language where rebookings go wrong.",
+   "tryIt": "Run the snippet with fare_rules.json, raise the change rate to 0.25, and count how many fare figures would be wrong in descriptions. Estimate the review time at 30 seconds each.",
+   "fit": "good",
+   "fitNote": "voice and screenshot inputs"
+  }
+ },
+ "_lab": {
+  "harbor": {
+   "scenario": "<p>Use 20 screenshots of internal tools and 10 scanned policy pages. Route pages to OCR or a VLM, record tokens and cost, and run presence probes on screenshot descriptions. Keep the per-input-type table as evidence.</p>"
+  },
+  "store": {
+   "scenario": "<p>Take 30 product photos (your own or freely licensed), write their true attributes, and compare text, image and fused retrieval on 30 \"looks like\" queries. Check generated descriptions against the attributes and keep the errors.</p>"
+  },
+  "bank": {
+   "scenario": "<p>Use 20 synthetic scanned statements you generate from transactions.csv. Extract amounts with OCR and with a VLM, check every amount against the source row, and report errors by scan quality.</p>"
+  },
+  "travel": {
+   "scenario": "<p>Record 10 short voice requests in two languages based on requests.csv, transcribe them locally, and compute word error rate per language. Add a confirmation step for city names and measure how many errors it would catch.</p>"
+  }
+ }
+}
