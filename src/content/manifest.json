@@ -499,7 +499,7 @@
      "title": "Instruction datasets, chat templates, loss masking and training objectives",
      "tags": [],
      "figures": 1,
-     "interactive": 0,
+     "interactive": 1,
      "words": 276
     },
     {
@@ -731,7 +731,7 @@
      "title": "What RAG solves; when to use RAG, fine-tuning, or both",
      "tags": [],
      "figures": 1,
-     "interactive": 0,
+     "interactive": 1,
      "words": 240
     },
     {
@@ -928,7 +928,7 @@
       "cpu"
      ],
      "figures": 1,
-     "interactive": 1,
+     "interactive": 2,
      "words": 441
     },
     {
@@ -1203,7 +1203,7 @@
       "cpu"
      ],
      "figures": 1,
-     "interactive": 1,
+     "interactive": 2,
      "words": 370
     },
     {
@@ -1345,8 +1345,8 @@
      "tn": "15.7",
      "title": "Multi-region architecture, disaster recovery and provider outages",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
+     "figures": 2,
+     "interactive": 1,
      "words": 373
     },
     {

@@ -23,4 +23,5 @@ for chunk in ollama.generate(model="llama3.2:1b", prompt=prompt, stream=True, op
               f" | engine: prefill {chunk.prompt_eval_count / (chunk.prompt_eval_duration / 1e9):.0f} tok/s,"
               f" decode {chunk.eval_count / (chunk.eval_duration / 1e9):.1f} tok/s")</code></pre>
 <p>Multiply the prompt length by 4 and re-run: TTFT grows roughly linearly while decode speed barely changes. That is prefill vs decode, measured on your own CPU. Run it twice: the second TTFT is lower because Ollama reuses the cached prompt prefix (14.3).</p></div>
+<div class="walkthru" id="walk-serving"><p class="walkthru-h"><b>Walkthrough: one request through the serving stack.</b> A chat request passes the gateway, the router and the queue, then prefill and decode, and streams back, with time to first token worked out at each stage. Scroll through the steps: the diagram follows the step in the middle of the screen. It uses your example project's data; switch project in the top bar to see the same journey in another company's terms.</p><div data-widget="walkthrough" data-props='{"story":"serving"}'></div></div>
 <div data-slot="practice"></div>

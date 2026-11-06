@@ -171,6 +171,8 @@ export interface SceneStep {
   table?: DataTable
   /** For points: the 2D view draws a map from above (x across, z down). */
   map?: boolean
+  /** A solid sphere at the origin, such as a globe, drawn behind everything else. */
+  globe?: { r: number }
   /** Where the camera looks, and from how far. */
   target: Vec3
   distance: number
