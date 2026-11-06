@@ -1,6 +1,6 @@
 {
  "totals": {
-  "mcq": 1365,
+  "mcq": 1367,
   "interview": 1080
  },
  "chapters": {
@@ -125,15 +125,15 @@
    }
   },
   "c5": {
-   "mcq": 71,
+   "mcq": 73,
    "interview": 56,
    "sections": {
     "c5-4": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c5-2": {
-     "mcq": 10,
+     "mcq": 11,
      "interview": 8
     },
     "c5-7": {
