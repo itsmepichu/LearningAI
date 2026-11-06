@@ -1,4 +1,12 @@
-<p>A <dfn>gate</dfn> is an automated check that blocks promotion when a threshold is not met. Gates make the acceptance criteria of 8.1 and the release criteria of 13.7 enforceable for every change.</p>
+<section class="tp tp-intuition" id="c18-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A <a class="gl" href="#gl-release-gate">release gate</a> is a turnstile that only opens when a change has shown its ticket: quality at least as good as before, no new safety failures, latency and cost within limits. It applies to every change, including a one-line prompt edit.</p>
+<p>Each gate catches different mistakes. A tighter prompt may pass quality and fail cost; a cheaper model may pass cost and fail quality; a new tool may pass both and fail security. That is why all four run.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c18-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A <dfn><a class="gl" href="#gl-release-gate">gate</a></dfn> is an automated check that blocks promotion when a threshold is not met. Gates make the acceptance criteria of 8.1 and the release criteria of 13.7 enforceable for every change.</p>
 <div class="tw"><table>
 <tr><th>Gate</th><th>Checks</th><th>Example threshold</th></tr>
 <tr><td><b>Quality</b></td><td>Regression suite, critical set, per-segment scores, judge-based metrics with CIs</td><td>No critical case regresses; overall ≥ baseline − 0.5 pts (within CI); no language drops &gt; 2 pts</td></tr>
@@ -10,6 +18,23 @@
 <div class="ctl"><label for="gtCase" style="font-family:var(--f-display);font-size:.82rem">Change <select id="gtCase"><option value="ok">prompt v13: tighter citation rule</option><option value="q">model swap to cheaper model</option><option value="s">new tool: send_email</option><option value="p">retrieval k 8 → 20</option></select></label><button class="btn primary" id="gtRun" type="button">Run pipeline</button></div>
 <div id="gtViz" style="display:grid;gap:6px"></div></div></div>
 <figcaption><b>A gated pipeline</b> (scripted results for four typical changes). Each gate shows its measured value against its threshold. Notice that different changes fail different gates: that is why all four are needed.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c18-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Averages hide segments</b> (illustrative). A suite of 400 cases in 6 segments passes 92% before and 91.8% after a change, which looks fine.</p>
+<ul>
+<li>But one segment of 26 cases fell from 92% to 77%: 4 more failures in that segment, hidden by the other 374.</li>
+<li>A rule "no segment drops more than 3 points" fails this change, as it should.</li>
+</ul>
+<p><b>Critical cases.</b> If 1 in 10 cases is tagged critical, 40 cases must never regress, whatever the overall score.</p>
+</section>
+
+<section class="tp tp-code" id="c18-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds a suite from your project’s labelled data, runs a baseline and a candidate that is worse on one segment, and fails the gate on the overall rate, regressed critical cases or a segment drop. Change <code>MAX_SEGMENT_DROP</code> and run it again.</p>
+<figure class="fig live" id="snip-ci-gate"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"ci-gate"}'></div></div>
+<figcaption><b>A quality gate, in real Python.</b> Pass and fail results are simulated; the gate logic is real.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: a quality gate in CI <span class="tag cpu">Laptop · CPU (runner) · or GitHub Actions</span></h5>
 <pre><code># .github/workflows/eval.yml (sketch) — runs promptfoo against a model endpoint on every PR touching prompts/
 on: {pull_request: {paths: ["prompts/**", "promptfooconfig.yaml"]}}
@@ -22,4 +47,15 @@ jobs:
         env: {OPENAI_API_KEY: "${{ secrets.EVAL_API_KEY }}"}     # or point providers at a hosted test endpoint
       - run: python scripts/gate.py results.json --min-pass-rate 0.95 --critical-tag critical</code></pre>
 <p><code>gate.py</code> is 20 lines: load results, compute pass rate overall and on cases tagged <code>critical</code>, exit non-zero if below thresholds. Locally you can run the same command against Ollama before pushing.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c18-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://www.promptfoo.dev/docs/integrations/ci-cd/">promptfoo: CI/CD integration</a> <small>Running evaluation gates on every pull request.</small></li>
+<li><a href="https://docs.github.com/en/actions">GitHub Actions documentation</a> <small>Workflows that block merges on failed checks.</small></li>
+<li><a href="https://martinfowler.com/articles/continuousIntegration.html">Martin Fowler: Continuous Integration</a> <small>Why every change runs the same checks.</small></li>
+</ol>
+</section>

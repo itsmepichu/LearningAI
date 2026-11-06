@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c13-3-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Full fine-tuning rewrites every page of a huge book to change its style. <a class="gl" href="#gl-lora">LoRA</a> leaves the book alone and adds a thin booklet of corrections that is read alongside it. The booklet is tiny, so training needs far less memory, and you can keep one booklet per task and swap them.</p>
+<p><a class="gl" href="#gl-qlora">QLoRA</a> goes one step further and stores the book itself in a compressed form while the booklet is written, which is how a large model can be fine-tuned on a single GPU.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-3-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Full fine-tuning</b>: update all weights. Maximum flexibility; needs ~16 bytes/parameter of training memory (6.6) and produces a full model copy per variant.</div>
-<div><b>PEFT</b> (parameter-efficient fine-tuning): freeze the base model and train a small number of new parameters.</div>
-<div><b>LoRA</b> (low-rank adaptation): for a frozen weight matrix W (d_out × d_in), learn two small matrices B (d_out × r) and A (r × d_in) with rank r ≪ d (e.g. 8–64). The layer computes W·x + (α/r)·B·A·x. Trainable parameters per matrix: r·(d_in + d_out). After training, B·A can be merged into W (no inference overhead) or kept as a swappable adapter.</div>
-<div><b>QLoRA</b>: store the frozen base model in 4-bit (NF4) to cut memory, train LoRA adapters in higher precision on top. Makes fine-tuning large models possible on a single GPU, at some speed cost.</div>
+<div><b><a class="gl" href="#gl-peft">PEFT</a></b> (parameter-efficient fine-tuning): freeze the base model and train a small number of new parameters.</div>
+<div><b><a class="gl" href="#gl-lora">LoRA</a></b> (low-rank adaptation): for a frozen weight matrix W (d_out × d_in), learn two small matrices B (d_out × r) and A (r × d_in) with a rank r much smaller than the matrix (e.g. 8–64). The layer’s output is the frozen output plus the small correction from B and A, scaled by a fixed factor. Trainable numbers per matrix: r × (d_in + d_out). After training, B·A can be merged into W (no inference overhead) or kept as a swappable adapter.</div>
+<div><b><a class="gl" href="#gl-qlora">QLoRA</a></b>: store the frozen base model in 4-bit (NF4) to cut memory, train LoRA adapters in higher precision on top. Makes fine-tuning large models possible on a single GPU, at some speed cost.</div>
 </div>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 720 230" role="img" aria-label="LoRA adds a low-rank update beside a frozen weight matrix">
@@ -23,7 +31,7 @@
 <div class="row2"><label for="loR">Rank r <select id="loR"><option>4</option><option>8</option><option selected>16</option><option>32</option><option>64</option></select></label>
 <label for="loT">Target modules <select id="loT"><option value="qv">q, v (attention)</option><option value="attn">q, k, v, o</option><option value="all" selected>all linear (attn + MLP)</option></select></label></div>
 <div class="kpis" id="loK"></div></div></div>
-<figcaption><b>LoRA parameter calculator</b> for a Llama-3-8B-shaped model (d = 4096, 32 layers, 8 KV heads, MLP width 14,336). Computed exactly as Σ r·(d_in + d_out) over targeted matrices.</figcaption></figure>
+<figcaption><b>LoRA parameter calculator</b> for a Llama-3-8B-shaped model (d = 4096, 32 layers, 8 KV heads, MLP width 14,336). Computed exactly: rank × (inputs + outputs), added up over the targeted matrices.</figcaption></figure>
 <figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">Approximate GPU memory to fine-tune an 8B model (excluding long-sequence activations)</p>
 <div class="bars" data-unit=" GB"><div data-v="130" data-c="b">Full fine-tune, mixed-precision Adam</div><div data-v="22" data-c="s">LoRA, BF16 base</div><div data-v="10" data-c="g">QLoRA, 4-bit base</div></div></div>
 <figcaption><b>Why PEFT dominates enterprise fine-tuning</b> (rough figures; activations add more with longer sequences and larger batches). QLoRA on an 8B model fits a single 16–24 GB GPU. Anything beyond tiny models needs a GPU: <a href="#colab-qlora">the Colab guide below</a> fine-tunes a 1.7B model on a free one.</figcaption></figure>
@@ -33,6 +41,26 @@
 <label for="lsR">Rank r <input type="range" id="lsR" min="1" max="256" value="16"><span id="lsRO"></span></label></div>
 <svg id="lsSvg" viewBox="0 0 640 300"></svg><div class="kpis" id="lsK"></div></div></div>
 <figcaption><b>LoRA drawn to scale.</b> The grey rectangle is the frozen weight matrix W (d_out × d_in); the amber strips are the trainable B (d_out × r) and A (r × d_in), drawn with the same pixels-per-dimension (a minimum width keeps tiny ranks visible). At rank 16 the adapter is a sliver of W; even rank 256 stays far smaller.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c13-3-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>One matrix</b>. A 4,096 × 4,096 attention matrix has 4,096 × 4,096 ≈ 16.8 million numbers. A rank-16 adapter has 16 × (4,096 + 4,096) = 131,072, under 1% of it.</p>
+<p><b>A whole 8B model</b> (rough figures, without activations).</p>
+<ul>
+<li>Full fine-tuning keeps weights, gradients and optimiser state: about 16 bytes a parameter, 8 billion × 16 = 128 GB.</li>
+<li>LoRA keeps the base in 16-bit, 2 bytes a parameter: about 16 GB, plus a few hundred MB for adapters and their optimiser state.</li>
+<li>QLoRA keeps the base in 4-bit, half a byte: about 4 GB, which is why it fits a 16–24 GB GPU with room for activations.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c13-3-code">
+<h3 data-n="4">Code</h3>
+<p>The program counts trainable LoRA numbers for an 8B-shaped model at three ranks and three target sets, estimates training memory, and checks with NumPy that a merged adapter gives exactly the same output. Change the ranks or the matrix shapes and run it again.</p>
+<figure class="fig live" id="snip-lora-sizes"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"lora-sizes"}'></div></div>
+<figcaption><b>LoRA sizes and merging, in real Python.</b> Nothing is trained here; the Colab guide below trains a real adapter.</figcaption></figure>
+<figure class="fig colab" id="colab-qlora"><div class="stage"><div data-widget="colab-guide" data-props='{"guide":"qlora"}'></div></div>
+<figcaption><b>QLoRA on a real 1.7B model, on a GPU in <a href="https://colab.research.google.com/">Google Colab</a>.</b> <span class="tag gpu">Colab · GPU</span> The guide stores the base model in 4 bits, trains LoRA adapters on your example project's labelled text (the same rows as the 3.2 classifier), and measures the gain against a frozen prompt-only baseline, general answers with the adapter off and on, and the train–test gap. It is the substantive fine-tune for the chapter 13 lab. The code runs on Google's machines, not on this site, and free GPU access is limited and <a href="https://research.google.com/colaboratory/faq.html">not guaranteed</a>.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: LoRA SFT on a 135M model <span class="tag cpu">Laptop · CPU · ~5–15 min</span></h5>
 <pre><code># pip install trl peft datasets transformers
 from datasets import Dataset
@@ -49,6 +77,16 @@ trainer = SFTTrainer(
     peft_config=LoraConfig(r=8, lora_alpha=16, target_modules=["q_proj", "v_proj"], task_type="CAUSAL_LM"))
 trainer.train(); trainer.save_model("lora-out")      # saves only the adapter (a few MB)</code></pre>
 <p>The prompt/completion format makes TRL compute loss only on the completion (6.4). The toy data is tiny and repetitive, so the point is the mechanics: watch loss fall, then test on <em>new</em> invoice formats to see overfitting. For a real model, follow the Colab guide below: QLoRA on a 1.7B model with your example project's labelled data, on a free GPU. <a href="https://docs.unsloth.ai/">Unsloth</a> and TRL wrap the same steps for larger runs.</p></div>
-<figure class="fig colab" id="colab-qlora"><div class="stage"><div data-widget="colab-guide" data-props='{"guide":"qlora"}'></div></div>
-<figcaption><b>QLoRA on a real 1.7B model, on a GPU in <a href="https://colab.research.google.com/">Google Colab</a>.</b> <span class="tag gpu">Colab · GPU</span> The guide stores the base model in 4 bits, trains LoRA adapters on your example project's labelled text (the same rows as the 3.2 classifier), and measures the gain against a frozen prompt-only baseline, general answers with the adapter off and on, and the train–test gap. It is the substantive fine-tune for the chapter 13 lab. The code runs on Google's machines, not on this site, and free GPU access is limited and <a href="https://research.google.com/colaboratory/faq.html">not guaranteed</a>.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-3-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2106.09685">Hu et al. (2021), LoRA</a> <small>Low-rank adapters and why they need so little memory.</small></li>
+<li><a href="https://arxiv.org/abs/2305.14314">Dettmers et al. (2023), QLoRA</a> <small>4-bit NF4 base models with LoRA adapters.</small></li>
+<li><a href="https://huggingface.co/docs/peft/index">Hugging Face PEFT documentation</a> <small>LoRA configuration, target modules and merging.</small></li>
+<li><a href="https://huggingface.co/docs/trl/sft_trainer">TRL: SFT Trainer</a> <small>Supervised fine-tuning with prompt–completion data.</small></li>
+</ol>
+</section>

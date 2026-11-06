@@ -916,9 +916,9 @@
      "tn": "11.1",
      "title": "Workflows vs agents; when autonomy adds value",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 301
+     "figures": 2,
+     "interactive": 1,
+     "words": 566
     },
     {
      "id": "c11-2",
@@ -927,54 +927,54 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 2,
-     "words": 441
+     "figures": 2,
+     "interactive": 3,
+     "words": 769
     },
     {
      "id": "c11-3",
      "tn": "11.3",
      "title": "Tool schemas, validation, scoped permissions and safe execution",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 414
+     "figures": 2,
+     "interactive": 2,
+     "words": 686
     },
     {
      "id": "c11-4",
      "tn": "11.4",
      "title": "Short-term state, persistent memory, memory retrieval and expiration",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 300
+     "figures": 2,
+     "interactive": 1,
+     "words": 542
     },
     {
      "id": "c11-5",
      "tn": "11.5",
      "title": "State machines, checkpointing, resumability and long-running jobs",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 460
+     "figures": 3,
+     "interactive": 2,
+     "words": 682
     },
     {
      "id": "c11-6",
      "tn": "11.6",
      "title": "Idempotency, retries, duplicate actions and compensating actions",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 462
+     "figures": 3,
+     "interactive": 3,
+     "words": 678
     },
     {
      "id": "c11-7",
      "tn": "11.7",
      "title": "Human approvals, escalation, step limits and cost budgets",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 304
+     "figures": 2,
+     "interactive": 2,
+     "words": 511
     },
     {
      "id": "c11-8",
@@ -983,9 +983,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 0,
-     "words": 692
+     "figures": 2,
+     "interactive": 1,
+     "words": 921
     }
    ],
    "hasIntro": false,
@@ -1010,63 +1010,63 @@
      "tn": "12.1",
      "title": "When multiple agents improve results over a single agent or an ordinary parallel workflow",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 336
+     "figures": 2,
+     "interactive": 1,
+     "words": 607
     },
     {
      "id": "c12-2",
      "tn": "12.2",
      "title": "Coordinator–worker, routing, handoff, supervisor and evaluator patterns",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 215
+     "figures": 2,
+     "interactive": 1,
+     "words": 450
     },
     {
      "id": "c12-3",
      "tn": "12.3",
      "title": "Task decomposition, delegation, parallel execution and result synthesis",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 239
+     "figures": 2,
+     "interactive": 2,
+     "words": 478
     },
     {
      "id": "c12-4",
      "tn": "12.4",
      "title": "Shared vs isolated state, message contracts and agent interoperability",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 271
+     "figures": 2,
+     "interactive": 1,
+     "words": 494
     },
     {
      "id": "c12-5",
      "tn": "12.5",
      "title": "Scheduling, dependencies, cancellation, timeouts and partial failures",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 231
+     "figures": 2,
+     "interactive": 2,
+     "words": 463
     },
     {
      "id": "c12-6",
      "tn": "12.6",
      "title": "Conflicting outputs, coordination overhead, error propagation and runaway loops",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 303
+     "figures": 2,
+     "interactive": 2,
+     "words": 545
     },
     {
      "id": "c12-7",
      "tn": "12.7",
      "title": "Identity and authorisation across agent boundaries",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 388
+     "figures": 2,
+     "interactive": 2,
+     "words": 625
     },
     {
      "id": "c12-8",
@@ -1075,9 +1075,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 0,
-     "words": 602
+     "figures": 2,
+     "interactive": 1,
+     "words": 805
     }
    ],
    "hasIntro": false,
@@ -1102,18 +1102,18 @@
      "tn": "13.1",
      "title": "Deciding between prompting, retrieval, fine-tuning, continued pretraining and distillation",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 401
+     "figures": 2,
+     "interactive": 2,
+     "words": 652
     },
     {
      "id": "c13-2",
      "tn": "13.2",
      "title": "Creating domain datasets with labelling guidelines and human quality checks",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 367
+     "figures": 2,
+     "interactive": 2,
+     "words": 600
     },
     {
      "id": "c13-3",
@@ -1123,18 +1123,18 @@
       "cpu",
       "gpu"
      ],
-     "figures": 5,
-     "interactive": 3,
-     "words": 600
+     "figures": 6,
+     "interactive": 4,
+     "words": 995
     },
     {
      "id": "c13-4",
      "tn": "13.4",
      "title": "Adapting models for extraction, classification, domain language, structured output and tool use",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 272
+     "figures": 2,
+     "interactive": 1,
+     "words": 522
     },
     {
      "id": "c13-5",
@@ -1143,18 +1143,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 455
+     "figures": 3,
+     "interactive": 2,
+     "words": 673
     },
     {
      "id": "c13-6",
      "tn": "13.6",
      "title": "Measuring domain gains, general-capability regressions, memorisation and safety regressions",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 303
+     "figures": 2,
+     "interactive": 1,
+     "words": 522
     },
     {
      "id": "c13-7",
@@ -1164,9 +1164,9 @@
       "cpu",
       "gpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 427
+     "figures": 2,
+     "interactive": 2,
+     "words": 673
     }
    ],
    "hasIntro": false,
@@ -1191,9 +1191,9 @@
      "tn": "14.1",
      "title": "Model weights, activations, KV cache and GPU memory estimation",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 387
+     "figures": 2,
+     "interactive": 2,
+     "words": 620
     },
     {
      "id": "c14-2",
@@ -1202,18 +1202,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 2,
-     "words": 370
+     "figures": 2,
+     "interactive": 3,
+     "words": 650
     },
     {
      "id": "c14-3",
      "tn": "14.3",
      "title": "Continuous batching, prefix caching and paged attention",
      "tags": [],
-     "figures": 4,
-     "interactive": 4,
-     "words": 480
+     "figures": 5,
+     "interactive": 5,
+     "words": 783
     },
     {
      "id": "c14-4",
@@ -1222,18 +1222,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 545
+     "figures": 3,
+     "interactive": 2,
+     "words": 827
     },
     {
      "id": "c14-5",
      "tn": "14.5",
      "title": "Multi-GPU serving and distributed inference",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 370
+     "figures": 2,
+     "interactive": 1,
+     "words": 596
     },
     {
      "id": "c14-6",
@@ -1242,9 +1242,9 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 426
+     "figures": 2,
+     "interactive": 2,
+     "words": 674
     },
     {
      "id": "c14-7",
@@ -1253,9 +1253,9 @@
      "tags": [
       "gpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 333
+     "figures": 3,
+     "interactive": 3,
+     "words": 577
     },
     {
      "id": "c14-8",
@@ -1264,9 +1264,9 @@
      "tags": [
       "gpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 381
+     "figures": 2,
+     "interactive": 2,
+     "words": 606
     }
    ],
    "hasIntro": true,
@@ -1291,63 +1291,63 @@
      "tn": "15.1",
      "title": "Converting product usage into peak requests/second, concurrency, tokens/second and background workload",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 486
+     "figures": 3,
+     "interactive": 3,
+     "words": 679
     },
     {
      "id": "c15-2",
      "tn": "15.2",
      "title": "Defining service-level objectives for availability, latency, quality and cost",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 282
+     "figures": 2,
+     "interactive": 2,
+     "words": 496
     },
     {
      "id": "c15-3",
      "tn": "15.3",
      "title": "Separating ingestion, retrieval, generation and agent execution workloads",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 274
+     "figures": 2,
+     "interactive": 1,
+     "words": 465
     },
     {
      "id": "c15-4",
      "tn": "15.4",
      "title": "Stateless services, durable state, queues, caches and asynchronous processing",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 405
+     "figures": 2,
+     "interactive": 2,
+     "words": 653
     },
     {
      "id": "c15-5",
      "tn": "15.5",
      "title": "Model gateways, routing, tenant quotas, fairness and noisy-neighbour protection",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 289
+     "figures": 2,
+     "interactive": 2,
+     "words": 506
     },
     {
      "id": "c15-6",
      "tn": "15.6",
      "title": "Backpressure, load shedding, circuit breakers and graceful degradation",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 453
+     "figures": 4,
+     "interactive": 3,
+     "words": 708
     },
     {
      "id": "c15-7",
      "tn": "15.7",
      "title": "Multi-region architecture, disaster recovery and provider outages",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 373
+     "figures": 3,
+     "interactive": 2,
+     "words": 711
     },
     {
      "id": "c15-8",
@@ -1356,27 +1356,27 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 0,
-     "words": 524
+     "figures": 2,
+     "interactive": 1,
+     "words": 755
     },
     {
      "id": "c15-9",
      "tn": "15.9",
      "title": "Cost per successful task, capacity forecasting and budget enforcement",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 300
+     "figures": 2,
+     "interactive": 2,
+     "words": 500
     },
     {
      "id": "c15-10",
      "tn": "15.10",
      "title": "Distinguishing measured performance, projected capacity and actual production usage",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 423
+     "figures": 2,
+     "interactive": 1,
+     "words": 607
     }
    ],
    "hasIntro": true,
@@ -1401,54 +1401,54 @@
      "tn": "16.1",
      "title": "Threat modelling for prompts, retrieved documents, tools, models and dependencies",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 363
+     "figures": 2,
+     "interactive": 1,
+     "words": 606
     },
     {
      "id": "c16-2",
      "tn": "16.2",
      "title": "Prompt injection, data exfiltration, poisoned content and unsafe tool execution",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 375
+     "figures": 2,
+     "interactive": 2,
+     "words": 624
     },
     {
      "id": "c16-3",
      "tn": "16.3",
      "title": "Authentication, authorisation, least privilege, sandboxing and secrets management",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 316
+     "figures": 2,
+     "interactive": 1,
+     "words": 552
     },
     {
      "id": "c16-4",
      "tn": "16.4",
      "title": "Tenant isolation across retrieval, memory, caches, logs and agent state",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 359
+     "figures": 3,
+     "interactive": 2,
+     "words": 600
     },
     {
      "id": "c16-5",
      "tn": "16.5",
      "title": "Sensitive-data handling, encryption, retention, deletion and auditability",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 446
+     "figures": 3,
+     "interactive": 3,
+     "words": 635
     },
     {
      "id": "c16-6",
      "tn": "16.6",
      "title": "Dataset and model licensing, provenance and supply-chain security",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 378
+     "figures": 2,
+     "interactive": 2,
+     "words": 579
     },
     {
      "id": "c16-7",
@@ -1457,18 +1457,18 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 429
+     "figures": 2,
+     "interactive": 2,
+     "words": 639
     },
     {
      "id": "c16-8",
      "tn": "16.8",
      "title": "Understanding applicable regulatory and organisational requirements",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 613
+     "figures": 2,
+     "interactive": 2,
+     "words": 834
     }
    ],
    "hasIntro": false,
@@ -1493,9 +1493,9 @@
      "tn": "17.1",
      "title": "Logs, metrics, distributed traces, correlation IDs and OpenTelemetry",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 376
+     "figures": 2,
+     "interactive": 2,
+     "words": 581
     },
     {
      "id": "c17-2",
@@ -1504,81 +1504,81 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 455
+     "figures": 3,
+     "interactive": 3,
+     "words": 628
     },
     {
      "id": "c17-3",
      "tn": "17.3",
      "title": "Operational signals: latency percentiles, errors, saturation, queue depth and availability",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 284
+     "figures": 2,
+     "interactive": 2,
+     "words": 475
     },
     {
      "id": "c17-4",
      "tn": "17.4",
      "title": "AI signals: task success, groundedness, retrieval failures, tool errors, loops and escalation",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 249
+     "figures": 2,
+     "interactive": 1,
+     "words": 461
     },
     {
      "id": "c17-5",
      "tn": "17.5",
      "title": "Token consumption, cost attribution, GPU utilisation and tenant-level usage",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 194
+     "figures": 2,
+     "interactive": 2,
+     "words": 400
     },
     {
      "id": "c17-6",
      "tn": "17.6",
      "title": "Trace sampling, sensitive-data redaction, retention and telemetry costs",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 338
+     "figures": 2,
+     "interactive": 2,
+     "words": 520
     },
     {
      "id": "c17-7",
      "tn": "17.7",
      "title": "Quality drift, data freshness, model changes and delayed feedback",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 294
+     "figures": 2,
+     "interactive": 1,
+     "words": 535
     },
     {
      "id": "c17-8",
      "tn": "17.8",
      "title": "Dashboards, actionable alerts, on-call runbooks, incident investigation and postmortems",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 437
+     "figures": 3,
+     "interactive": 3,
+     "words": 636
     },
     {
      "id": "c17-9",
      "tn": "17.9",
      "title": "Turning production failures into evaluation cases and corrective releases",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 296
+     "figures": 2,
+     "interactive": 2,
+     "words": 480
     },
     {
      "id": "c17-10",
      "tn": "17.10",
      "title": "OpenTelemetry GenAI semantic conventions, and checking their stability before adoption",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 509
+     "figures": 2,
+     "interactive": 2,
+     "words": 695
     }
    ],
    "hasIntro": false,
@@ -1603,18 +1603,18 @@
      "tn": "18.1",
      "title": "Versioning code, prompts, models, datasets, indexes, configurations and evaluation suites",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 198
+     "figures": 2,
+     "interactive": 1,
+     "words": 392
     },
     {
      "id": "c18-2",
      "tn": "18.2",
      "title": "Reproducible builds, infrastructure as code and environment promotion",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 322
+     "figures": 2,
+     "interactive": 2,
+     "words": 519
     },
     {
      "id": "c18-3",
@@ -1623,45 +1623,45 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 332
+     "figures": 2,
+     "interactive": 2,
+     "words": 555
     },
     {
      "id": "c18-4",
      "tn": "18.4",
      "title": "Shadow deployments, canaries, controlled rollouts and rollback",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 395
+     "figures": 3,
+     "interactive": 3,
+     "words": 616
     },
     {
      "id": "c18-5",
      "tn": "18.5",
      "title": "Model and provider upgrades, embedding migrations and compatibility testing",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 425
+     "figures": 2,
+     "interactive": 2,
+     "words": 636
     },
     {
      "id": "c18-6",
      "tn": "18.6",
      "title": "Feedback collection, annotation, retraining triggers and scheduled re-evaluation",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 349
+     "figures": 2,
+     "interactive": 2,
+     "words": 561
     },
     {
      "id": "c18-7",
      "tn": "18.7",
      "title": "Ownership, release documentation, operational readiness and service handover",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 407
+     "figures": 2,
+     "interactive": 2,
+     "words": 607
     }
    ],
    "hasIntro": false,
@@ -1682,18 +1682,18 @@
      "tn": "C.1",
      "title": "Milestones, evidence and pass conditions",
      "tags": [],
-     "figures": 0,
-     "interactive": 0,
-     "words": 354
+     "figures": 1,
+     "interactive": 1,
+     "words": 624
     },
     {
      "id": "app-c-int",
      "tn": "C.2",
      "title": "Explain it in an interview or design review",
      "tags": [],
-     "figures": 0,
-     "interactive": 0,
-     "words": 176
+     "figures": 1,
+     "interactive": 1,
+     "words": 417
     }
    ],
    "hasIntro": true,

@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c15-10-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Capacity discussions mix three kinds of numbers. A measurement is what you saw under stated conditions. A <a class="gl" href="#gl-projected-capacity">projection</a> is what you calculate from measurements and assumptions. Actual usage is what production really did.</p>
+<p>Each deserves a label. A projection presented as a measurement is how teams end up buying 20 GPUs for a launch that needs 52.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-10-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Three kinds of numbers are routinely confused in capacity discussions. Label every figure with which kind it is.</p>
 <div class="tw"><table>
 <tr><th>Kind</th><th>Source</th><th>Example</th><th>Trust</th></tr>
 <tr><td><b>Measured performance</b></td><td>Benchmarks and load tests you ran, under stated conditions</td><td>"One replica sustains 2,400 output tok/s at p95 ITL 45 ms with our traffic mix (load test 2026-10-28)"</td><td>High for those conditions; does not transfer to other prompt mixes or hardware</td></tr>
-<tr><td><b>Projected capacity</b></td><td>Calculation from measured numbers + assumptions</td><td>"12 replicas should support 30k output tok/s at peak"</td><td>As good as its assumptions; state them</td></tr>
+<tr><td><b><a class="gl" href="#gl-projected-capacity">Projected capacity</a></b></td><td>Calculation from measured numbers + assumptions</td><td>"12 replicas should support 30k output tok/s at peak"</td><td>As good as its assumptions; state them</td></tr>
 <tr><td><b>Actual production usage</b></td><td>Telemetry from real traffic</td><td>"Peak last Monday: 18.2k output tok/s; p95 ITL 52 ms"</td><td>Ground truth for the past; the input to the next forecast</td></tr>
 </table></div>
 <figure class="fig"><div class="stage">
@@ -17,7 +25,7 @@
 <text x="335" y="214" text-anchor="middle" class="xs mut">weeks →</text>
 </svg></div><figcaption><b>Three lines, three meanings.</b> The actual peak has crossed the safe limit and the forecast reaches projected capacity in about two weeks: time to add replicas or re-measure with the current traffic mix, since the projection rests on a load test that may no longer match production.</figcaption></figure>
 <div class="box example"><h5>Example: a projection that failed (illustrative scenario)</h5><p>A vendor benchmark said 5,000 tok/s per GPU; the team projected 20 GPUs would cover launch. Their own load test with real prompt lengths (median 3k input tokens, long tail to 30k) measured 1,700 tok/s at their latency SLO. Production at launch needed 52 GPUs. The fix is procedural: capacity plans cite measured numbers with test conditions, and launch reviews compare them with the first week's actual usage.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for scale</h3>
 <div class="cols3">
@@ -28,3 +36,31 @@
 <div class="card"><h5><a href="https://chaos-mesh.org/docs/">Chaos Mesh</a> · <a href="https://github.com/Shopify/toxiproxy">Toxiproxy</a></h5><span class="meta">failure injection</span><p>Inject latency, errors and outages into dependencies to test breakers and fallbacks; Toxiproxy runs locally.</p></div>
 <div class="card"><h5><a href="https://redis.io/docs/latest/">Redis</a> / <a href="https://valkey.io/docs/">Valkey</a></h5><span class="meta">caches · rate limiting</span><p>Response caches, token-bucket rate limiters and session state for stateless services.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c15-10-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The failed projection</b> (illustrative). A vendor figure of 5,000 tokens a second per GPU suggested 20 GPUs. The team’s own test with real prompt lengths measured 1,700.</p>
+<ul>
+<li>Same demand, measured rate: 20 × 5,000 ÷ 1,700 ≈ 59 GPUs’ worth at the vendor-planned load; the launch needed 52.</li>
+</ul>
+<p><b>Weeks of headroom.</b> 12 replicas × a measured 2,400 tokens a second = 28,800. Actual peaks grew from 12,100 to 18,200 in six weeks, about 7% a week. At that pace 18,200 reaches 28,800 in about 7 weeks.</p>
+</section>
+
+<section class="tp tp-code" id="c15-10-code">
+<h3 data-n="4">Code</h3>
+<p>The program labels a measured per-replica figure, the capacity projected from it and seven weeks of actual peaks, works out the weekly growth and the weeks left, and compares a vendor figure. Change <code>REPLICAS</code> or <code>SAFE</code> and run it again.</p>
+<figure class="fig live" id="snip-measured-projected"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"measured-projected"}'></div></div>
+<figcaption><b>Three kinds of numbers, in real Python.</b> All figures are illustrative.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-10-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://sre.google/sre-book/software-engineering-in-sre/">Google SRE book: capacity planning</a> <small>Planning from measured intent rather than guesses.</small></li>
+<li><a href="https://github.com/vllm-project/guidellm">GuideLLM</a> <small>Producing measured figures under stated conditions.</small></li>
+<li><a href="https://mlcommons.org/benchmarks/inference-datacenter/">MLPerf Inference: Datacenter</a> <small>Published benchmarks and the conditions behind them.</small></li>
+</ol>
+</section>

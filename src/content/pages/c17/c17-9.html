@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c17-9-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The most valuable test cases are the ones your system already failed in front of real users, because nobody thought to write them. The <a class="gl" href="#gl-eval-flywheel">evaluation flywheel</a> makes collecting them routine: flag bad traces, find the cause, turn each into a test case, fix the cause, and never ship a release that fails the growing suite.</p>
+<p>Over months, the suite becomes an exact description of what your users need.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-9-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>The most valuable evaluation data comes from production failures, because they are real and they were missed. Make the path from "bad trace" to "regression test" short and routine:</p>
 <figure class="fig flow loop"><div class="stage">
 <div class="nodes"><div class="nd">Failure signal<small>thumbs-down, low judge score, incident</small></div><div class="nd">Triage queue<small>sampled traces</small></div><div class="nd">Label root cause<small>retrieval / generation / tool / data</small></div><div class="nd">Create eval case<small>+ paraphrases, redacted</small></div><div class="nd">Fix<small>prompt, data, retrieval, model</small></div><div class="nd">Gate release<small>suite incl. new cases</small></div><div class="nd">Deploy + monitor</div></div>
@@ -13,4 +21,31 @@
     - type: not_contains: "2024"
     - type: judge_groundedness: {min: 1.0}
   tags: [freshness, policy, critical]</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c17-9-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A weekly review</b> (illustrative). 2,000 flagged traces a week; reviewers sample 150 across tenants and features.</p>
+<ul>
+<li>After removing duplicates, perhaps 100 distinct failures remain; if 60 are worth keeping, the suite grows by 60 cases a week, about 3,000 a year.</li>
+<li>If 40% of them are retrieval failures, 24 a week point to retrieval rather than the prompt: fix the stage that fails most.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c17-9-code">
+<h3 data-n="4">Code</h3>
+<p>The program turns flagged traces built from your project’s messages into evaluation cases: it redacts phone numbers, drops duplicates, keeps the trace link and tags the root cause. Add another redaction rule and run it again.</p>
+<figure class="fig live" id="snip-failure-to-eval"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"failure-to-eval"}'></div></div>
+<figcaption><b>From trace to test, in real Python.</b> Flags and causes are simulated; expected behaviour needs a reviewer.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-9-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://hamel.dev/blog/posts/evals/">Hamel Husain: Your AI product needs evals</a> <small>Error analysis on real traces as the source of tests.</small></li>
+<li><a href="https://www.promptfoo.dev/docs/intro/">promptfoo documentation</a> <small>Keeping evaluation cases as files that gate releases.</small></li>
+<li><a href="https://langfuse.com/docs/evaluation/dataset-runs/datasets">Langfuse: Datasets</a> <small>Adding production traces to evaluation datasets.</small></li>
+</ol>
+</section>

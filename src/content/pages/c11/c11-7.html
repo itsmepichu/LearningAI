@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c11-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A new employee may answer questions alone, but needs a manager’s signature to send a large refund. Agents need the same rules, written into the runtime rather than the prompt: small, reversible actions run automatically, and big or irreversible ones wait for <a class="gl" href="#gl-human-in-the-loop">human approval</a> of the exact action.</p>
+<p>Budgets work the same way: a task gets a fixed allowance of steps, tokens and money, and when it is spent the agent stops and hands over its work, rather than trying forever.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Risk tiers</b>: classify actions. Read-only → automatic. Reversible low-value writes → automatic with audit. Irreversible, financial, external communication, or permission changes → human approval.</li>
-<li><b>Approval UX</b>: show the proposed action, its exact parameters, why the agent proposes it, the evidence (trace links), and the consequences. Approvers need to be able to edit or reject with a reason, which becomes feedback data.</li>
+<li><b><a class="gl" href="#gl-human-in-the-loop">Approval</a> UX</b>: show the proposed action, its exact parameters, why the agent proposes it, the evidence (trace links), and the consequences. Approvers need to be able to edit or reject with a reason, which becomes feedback data.</li>
 <li><b>Escalation</b>: hand the task to a human queue with a summary when the agent is uncertain, hits a limit, sees conflicting data, or the user asks for a person.</li>
 <li><b>Step limits and budgets</b>: per-task maximum steps, tokens, dollars and wall-clock time; per-user and per-tenant daily budgets. Enforce in the runtime, not the prompt. When a budget is exhausted, stop and escalate with the work so far.</li>
 <li><b>Approve an exact version</b>: an approval applies to one immutable action (target, arguments, content hash). If the agent edits the email or the amount afterwards, it needs a new approval, and cancelling must stop executions that are already queued.</li></ul>
@@ -15,4 +23,33 @@ actions:
   propose_credit_over_50: {tier: financial, approval: role:support_lead, timeout: 24h, on_timeout: escalate}
   send_email:     {tier: external, approval: none,  template_only: true}
 escalation: {queue: tier2-support, include: [summary, trace_url, proposed_actions]}</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c11-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Where the money goes</b> (illustrative). 1,000 refund proposals a day:</p>
+<ul>
+<li>900 are under the threshold, average 800 rupees: 720,000 rupees run automatically with an audit record.</li>
+<li>100 are over it, average 12,000 rupees: 1,200,000 rupees, the larger share of the money, passes a person.</li>
+<li>At 3 minutes per review, 100 × 3 = 300 minutes, 5 hours of reviewer time a day.</li>
+</ul>
+<p>Moving the threshold trades reviewer hours against how much money moves without a second look.</p>
+</section>
+
+<section class="tp tp-code" id="c11-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program splits your project’s cases at the approval threshold, counts the cases and money on each side and the reviewer time, and stops tasks that exceed a cost budget. Change the threshold in <code>A["threshold"]</code> or <code>MAX_COST</code> and run it again.</p>
+<figure class="fig live" id="snip-approval-tiers"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"approval-tiers"}'></div></div>
+<figcaption><b>Risk tiers and budgets, in real Python.</b> Step counts and prices are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph: Interrupts</a> <small>Pausing a run for human approval and resuming it.</small></li>
+<li><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/">OWASP LLM06:2025 Excessive Agency</a> <small>Human approval for high-impact actions.</small></li>
+<li><a href="https://openai.github.io/openai-agents-python/guardrails/">OpenAI Agents SDK: Guardrails</a> <small>Checks that run alongside an agent and can stop it.</small></li>
+</ol>
+</section>

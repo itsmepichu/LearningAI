@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c17-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Logs are diary entries, metrics are the bathroom scale, and a <a class="gl" href="#gl-distributed-trace">trace</a> is a parcel’s tracking history: every place one request went, in order, with how long each stop took.</p>
+<p>What ties them together is an id that travels with the request, through services, queues and agents. With it you can go from "latency is up" to the exact slow request and every log line it produced. <a class="gl" href="#gl-opentelemetry">OpenTelemetry</a> is the common way to produce all three and send them anywhere.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
 <div><b>Logs</b>: timestamped event records ("tool call failed: timeout"). Best as structured JSON with consistent fields.</div>
 <div><b>Metrics</b>: numeric time series aggregated over time (request rate, p95 latency, tokens/s). Cheap to store and alert on; no per-request detail.</div>
-<div><b>Traces</b>: the path of one request through the system as a tree of <b>spans</b> (timed operations with attributes), linked by a trace ID that propagates across services, queues and agents.</div>
-<div><b>Correlation ID</b>: an identifier attached to everything related to one request or task (logs, spans, DB rows, tickets), so you can find all of it. The trace ID usually serves this role; propagate it through queues and async jobs explicitly.</div>
-<div><b>OpenTelemetry (OTel)</b>: the vendor-neutral standard and SDKs for producing traces, metrics and logs, plus the <b>Collector</b> that receives, processes (sample, redact, enrich) and exports them to any backend via OTLP.</div>
+<div><b><a class="gl" href="#gl-distributed-trace">Traces</a></b>: the path of one request through the system as a tree of <b>spans</b> (timed operations with attributes), linked by a trace ID that propagates across services, queues and agents.</div>
+<div><b><a class="gl" href="#gl-correlation-id">Correlation ID</a></b>: an identifier attached to everything related to one request or task (logs, spans, DB rows, tickets), so you can find all of it. The trace ID usually serves this role; propagate it through queues and async jobs explicitly.</div>
+<div><b><a class="gl" href="#gl-opentelemetry">OpenTelemetry (OTel)</a></b>: the vendor-neutral standard and SDKs for producing traces, metrics and logs, plus the <b>Collector</b> that receives, processes (sample, redact, enrich) and exports them to any backend via OTLP.</div>
 </div>
 <p><b>Telemetry needs its own backpressure.</b> Use batch exporters with bounded queues, timeouts and a drop policy, so a slow or unavailable telemetry backend never blocks request handling or exhausts memory. Count what gets dropped (17.6).</p>
 <figure class="fig flow"><div class="stage">
@@ -14,4 +22,33 @@
 <pre><code>{"ts":"2026-11-04T10:14:22.381Z","level":"warn","service":"rag-api","msg":"reranker timeout, using fused order",
  "trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"00f067aa0ba902b7","tenant":"acme",
  "feature":"kb-assistant","prompt_version":"answer@v12","timeout_ms":250}</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c17-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>What each costs</b> (illustrative), at 200 requests a second.</p>
+<ul>
+<li>Metrics: a few hundred time series, a number every 15 seconds each: tiny, whatever the traffic.</li>
+<li>Logs: 10 lines of 300 bytes per request = 200 × 10 × 300 × 86,400 ≈ 52 GB a day.</li>
+<li>Traces with 25 spans of 1 KB each: 200 × 25 KB × 86,400 ≈ 430 GB a day, before sampling (17.6).</li>
+</ul>
+<p>That is why metrics carry the alerts and traces are sampled.</p>
+</section>
+
+<section class="tp tp-code" id="c17-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program creates spans with trace and span ids, puts the trace context into a queue message as a W3C traceparent header, continues the trace in a "worker", rebuilds the span tree and finds the trace’s logs. Remove the header from the message and see the worker start a separate trace.</p>
+<figure class="fig live" id="snip-trace-context"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"trace-context"}'></div></div>
+<figcaption><b>Trace context across a queue, in real Python.</b> Not the OpenTelemetry SDK itself.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://opentelemetry.io/docs/concepts/">OpenTelemetry: Concepts</a> <small>Signals, context propagation and the Collector.</small></li>
+<li><a href="https://www.w3.org/TR/trace-context/">W3C Trace Context</a> <small>The traceparent header format.</small></li>
+<li><a href="https://opentelemetry.io/docs/collector/">OpenTelemetry Collector</a> <small>Receiving, processing and exporting telemetry.</small></li>
+</ol>
+</section>

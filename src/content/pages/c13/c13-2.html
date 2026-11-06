@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c13-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A fine-tuned model is a very good student of whatever its examples show, including the mistakes and the inconsistencies. If two annotators label the same case differently, the model learns to be unsure.</p>
+<p>So a dataset is built like a small production line: a <a class="gl" href="#gl-labelling-guideline">labelling guideline</a> that says exactly how to decide, a pilot labelled twice to find unclear rules, model drafts checked by experts, and quality checks that catch the reviewer who accepts every draft without reading it.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Fine-tuning learns whatever the data shows, including its mistakes and inconsistencies. A few thousand consistent examples beat tens of thousands of noisy ones.</p>
 <ul>
 <li><b>Source inputs</b> from real production traffic (privacy-reviewed, PII handled per 16.5), covering the real distribution plus hard cases.</li>
-<li><b>Write a labelling guideline</b>: task definition, output schema, decision rules, many worked examples, explicit edge cases, and what to do when unsure. Version it.</li>
+<li><b>Write a <a class="gl" href="#gl-labelling-guideline">labelling guideline</a></b>: task definition, output schema, decision rules, many worked examples, explicit edge cases, and what to do when unsure. Version it.</li>
 <li><b>Produce outputs</b>: experts write them, or a strong model drafts them and experts correct (much faster; watch for annotators rubber-stamping).</li>
 <li><b>Quality checks</b>: double-label a sample and measure agreement; expert audit of random samples per annotator; automatic checks (schema validity, length, banned content); deduplicate; check for contamination with the evaluation set (6.2).</li>
 <li><b>Split</b>: hold out a test set first (by customer or time if leakage is possible), never trained on.</li>
@@ -11,4 +19,32 @@
 <ol class="steps"><li data-n="0">Pull inputs across segments and difficulty; record where each came from.</li><li data-n="1">Draft the guideline with domain experts.</li><li data-n="2">Two annotators independently label a pilot.</li><li data-n="3">Low agreement points to unclear rules; fix the guideline, not the annotators. Repeat until κ is acceptable (e.g. ≥ 0.7 for the task).</li><li data-n="4">A strong model produces first drafts to speed things up.</li><li data-n="5">Experts correct drafts; track edit rates per annotator to spot rubber-stamping.</li><li data-n="6">Schema validation, dedup, PII scan, contamination check.</li><li data-n="7">Freeze with a version and datasheet: sources, guideline version, annotator pool, known gaps.</li></ol></div>
 <figcaption><b>Dataset creation pipeline.</b> Tools such as Argilla and Label Studio support review queues and agreement tracking.</figcaption></figure>
 <div class="box example"><h5>Example: QC finding</h5><p>Spot-checking 200 records shows one annotator accepted 99% of model drafts unchanged while others edited 22%. Their accepted records contain three times the error rate. Their batch is re-reviewed and the review tool changes to hide the model draft for 10% of items (a blind check).</p></div>
+</section>
+
+<section class="tp tp-math" id="c13-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Agreement beyond chance</b>. Two annotators label 200 cases and agree on 180, which is 90%. If each uses the label "billing" for half the cases at random, they would agree by chance about half the time.</p>
+<ul>
+<li>Kappa compares the two: (0.90 − 0.50) ÷ (1 − 0.50) = 0.40 ÷ 0.50 = 0.80.</li>
+<li>A kappa of 0.8 is good agreement; 0.4 means the guideline leaves too much to judgement.</li>
+</ul>
+<p><b>Spotting rubber-stamping.</b> If model drafts are wrong 15% of the time, a careful reviewer edits about 15%. A reviewer who edits 1% leaves about 14 wrong labels in every 100.</p>
+</section>
+
+<section class="tp tp-code" id="c13-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program gives model-drafted labels for your project’s data to three simulated annotators, two careful and one who almost never edits, and measures each one’s edit rate, error rate and agreement. Change <code>DRAFT_RIGHT</code> to 0.95 and see how hard rubber-stamping becomes to spot.</p>
+<figure class="fig live" id="snip-rubber-stamping"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"rubber-stamping"}'></div></div>
+<figcaption><b>Edit rates, error rates and kappa, in real Python.</b> The drafts and annotators are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1803.09010">Gebru et al. (2018), Datasheets for Datasets</a> <small>What to document about a dataset’s sources and labelling.</small></li>
+<li><a href="https://docs.argilla.io/latest/">Argilla documentation</a> <small>Review queues and agreement for LLM datasets.</small></li>
+<li><a href="https://labelstud.io/guide/">Label Studio documentation</a> <small>An open-source labelling tool with review workflows.</small></li>
+</ol>
+</section>

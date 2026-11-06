@@ -1,23 +1,21 @@
+<section class="tp tp-intuition" id="c13-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Six months after release someone asks: which data trained this model, with which settings, and how did it score? Without records, nobody knows, and nobody can rebuild it.</p>
+<p>Experiment tracking records every run’s data version, code, configuration and results. A <a class="gl" href="#gl-model-registry">model registry</a> keeps each released model as an unchangeable version linked to that run, and a <a class="gl" href="#gl-model-card">model card</a> tells users what it is for and where it fails.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Experiment tracking</b>: every training run logs its config, code commit, dataset version, base model revision, hyperparameters, metrics curves, evaluation results and output artefacts (MLflow, Weights &amp; Biases, or similar).</li>
+<li><b><a class="gl" href="#gl-model-registry">Experiment tracking</a></b>: every training run logs its config, code commit, dataset version, base model revision, hyperparameters, metrics curves, evaluation results and output artefacts (MLflow, Weights &amp; Biases, or similar).</li>
 <li><b>Versioning</b>: datasets (DVC, lakeFS, Hugging Face dataset revisions) and models (a model registry with immutable versions and stages such as staging/production). A model version should be traceable back to exactly the data and code that produced it.</li>
 <li><b>Reproducibility</b>: pinned environments (container image digest), seeds, deterministic data ordering; record hardware. Exact bitwise reproduction on GPUs is often impossible; aim for "same metrics within tolerance".</li>
-<li><b>Release criteria</b>: pre-agreed gates (13.6 scorecard), a <dfn>model card</dfn> (intended use, training data summary, evaluation results, limitations, licence), approval by an owner, and a rollback plan (18.4).</li>
+<li><b>Release criteria</b>: pre-agreed gates (13.6 scorecard), a <dfn><a class="gl" href="#gl-model-card">model card</a></dfn> (intended use, training data summary, evaluation results, limitations, licence), approval by an owner, and a rollback plan (18.4).</li>
 </ul>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Dataset v12<small>hash, datasheet</small></div><div class="nd">Training run #431<small>config, commit, seed</small></div><div class="nd">Candidate model<small>registry: staging</small></div><div class="nd">Eval suites<small>domain, general, safety</small></div><div class="nd">Model card + approval</div><div class="nd">Registry: production<small>canary → full</small></div></div>
 <ol class="steps"><li data-n="0">Immutable dataset version with its documentation.</li><li data-n="1">Run logged to the tracker with everything needed to rerun it.</li><li data-n="2">Artefact registered with links to run and dataset.</li><li data-n="3">Automated gates run; results attached to the model version.</li><li data-n="4">Model card generated from tracked metadata; owner signs off.</li><li data-n="5">Promotion triggers controlled rollout (chapter 18). Previous version stays available for rollback.</li></ol></div>
 <figcaption><b>Model lineage and release flow.</b></figcaption></figure>
-<div class="box lab"><h5>Laptop lab: track runs with MLflow <span class="tag cpu">Laptop · CPU</span></h5>
-<pre><code># pip install mlflow ; then run `mlflow ui` and open http://127.0.0.1:5000
-import mlflow
-mlflow.set_experiment("invoice-extractor")
-with mlflow.start_run(run_name="lora-r8-lr2e-4"):
-    mlflow.log_params({"base": "SmolLM2-135M-Instruct", "r": 8, "lr": 2e-4, "dataset": "invoices@v12"})
-    # ... train ...
-    mlflow.log_metrics({"field_acc": 0.964, "fabrication_rate": 0.021, "general_if": 0.785})
-    mlflow.log_artifacts("lora-out", artifact_path="adapter")</code></pre></div>
-<div data-slot="practice"></div>
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for model adaptation</h3>
 <div class="cols3">
@@ -28,3 +26,39 @@ with mlflow.start_run(run_name="lora-r8-lr2e-4"):
 <div class="card"><h5><a href="https://docs.argilla.io/">Argilla</a> · <a href="https://labelstud.io/guide/">Label Studio</a></h5><span class="meta">annotation · review</span><p>Labelling and expert-review UIs with agreement tracking; run locally with Docker or pip.</p></div>
 <div class="card"><h5><a href="https://mlflow.org/docs/latest/">MLflow</a> · <a href="https://dvc.org/doc">DVC</a></h5><span class="meta">tracking · registry · data versioning</span><p>Experiment tracking and model registry; Git-like versioning for datasets and pipelines.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c13-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Hashes as fingerprints.</b> A 12-character hash of the dataset changes completely if a single label changes, so "trained on dataset 2268…" names exactly one version.</p>
+<p><b>Within tolerance.</b> GPU training is rarely bit-for-bit repeatable. If the release run scored 0.964 and a rerun scores 0.961, the difference is 0.003, inside a tolerance of 0.005, so the run counts as reproduced. A rerun at 0.950 differs by 0.014 and does not.</p>
+<p><b>Storage.</b> 200 runs × a 40 MB adapter = 8 GB; 200 full 8B models in 16-bit would be 200 × 16 GB = 3.2 TB.</p>
+</section>
+
+<section class="tp tp-code" id="c13-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program hashes your project’s labelled data and a training config into a run id, shows that changing one label makes a new dataset version, checks a rerun against a tolerance and refuses to edit a registered version. Change the tolerance and run it again.</p>
+<figure class="fig live" id="snip-run-lineage"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"run-lineage"}'></div></div>
+<figcaption><b>Lineage by hashing, in real Python.</b> A dictionary stands in for a tracker and a registry.</figcaption></figure>
+<div class="box lab"><h5>Laptop lab: track runs with MLflow <span class="tag cpu">Laptop · CPU</span></h5>
+<pre><code># pip install mlflow ; then run `mlflow ui` and open http://127.0.0.1:5000
+import mlflow
+mlflow.set_experiment("invoice-extractor")
+with mlflow.start_run(run_name="lora-r8-lr2e-4"):
+    mlflow.log_params({"base": "SmolLM2-135M-Instruct", "r": 8, "lr": 2e-4, "dataset": "invoices@v12"})
+    # ... train ...
+    mlflow.log_metrics({"field_acc": 0.964, "fabrication_rate": 0.021, "general_if": 0.785})
+    mlflow.log_artifacts("lora-out", artifact_path="adapter")</code></pre></div>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://mlflow.org/docs/latest/ml/tracking/">MLflow Tracking</a> <small>Logging parameters, metrics and artefacts for every run.</small></li>
+<li><a href="https://mlflow.org/docs/latest/ml/model-registry/">MLflow Model Registry</a> <small>Versioned models with aliases and lineage.</small></li>
+<li><a href="https://arxiv.org/abs/1810.03993">Mitchell et al. (2018), Model Cards for Model Reporting</a> <small>What a model card should contain.</small></li>
+<li><a href="https://dvc.org/doc">DVC documentation</a> <small>Versioning datasets alongside code.</small></li>
+</ol>
+</section>

@@ -1,12 +1,45 @@
+<section class="tp tp-intuition" id="c16-6-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Downloading a model is like installing a program from the internet. Its licence may forbid your use, its files may run code when loaded, and its weights may have been tampered with.</p>
+<p>So treat the <a class="gl" href="#gl-model-supply-chain">model supply chain</a> like any other dependency: check the licence, pin an exact version, accept only safe file formats, scan, evaluate, sign, and deploy only from your own registry, with an <a class="gl" href="#gl-ai-bom">AI bill of materials</a> that lists every model and dataset in use.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-6-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Model licences</b>: "open-weight" does not mean open-source. Licences vary: permissive (Apache-2.0, MIT), custom community licences with usage restrictions or user-count thresholds, non-commercial research licences, and terms that restrict using outputs to train other models. Legal review per model, recorded in a model inventory.</li>
 <li><b>Dataset licences and provenance</b>: know where training, fine-tuning and evaluation data came from, under what licence and consent, and whether it contains personal data. Synthetic data inherits restrictions from the model that generated it.</li>
-<li><b>Model supply chain</b>: weights from public hubs can be tampered with or backdoored. Python pickle-based checkpoint formats can execute arbitrary code on load; prefer <code>safetensors</code>, avoid <code>trust_remote_code=True</code> unless the code is reviewed and pinned, scan artefacts (e.g. ModelScan), pin to exact revisions (commit hashes), and mirror approved models in an internal registry.</li>
-<li><b>Software supply chain</b>: AI stacks pull many fast-moving dependencies (engines, CUDA libraries, agent frameworks, MCP servers). Use lockfiles, vulnerability scanning, SBOMs, signed artefacts (Sigstore/cosign), and provenance attestations (SLSA). An <dfn>AI-BOM</dfn> extends the SBOM with models, datasets and their versions.</li>
+<li><b><a class="gl" href="#gl-model-supply-chain">Model supply chain</a></b>: weights from public hubs can be tampered with or backdoored. Python pickle-based checkpoint formats can execute arbitrary code on load; prefer <code>safetensors</code>, avoid <code>trust_remote_code=True</code> unless the code is reviewed and pinned, scan artefacts (e.g. ModelScan), pin to exact revisions (commit hashes), and mirror approved models in an internal registry.</li>
+<li><b>Software supply chain</b>: AI stacks pull many fast-moving dependencies (engines, CUDA libraries, agent frameworks, MCP servers). Use lockfiles, vulnerability scanning, SBOMs, signed artefacts (Sigstore/cosign), and provenance attestations (SLSA). An <dfn><a class="gl" href="#gl-ai-bom">AI-BOM</a></dfn> extends the SBOM with models, datasets and their versions.</li>
 </ul>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Public hub model</div><div class="nd">Licence review<small>inventory entry</small></div><div class="nd">Pin revision<small>commit hash</small></div><div class="nd">Scan<small>format, malware, safetensors only</small></div><div class="nd">Evaluate<small>quality + safety</small></div><div class="nd">Sign &amp; mirror<small>internal registry</small></div><div class="nd">Deploy from registry only</div></div>
 <ol class="steps"><li data-n="0">A team requests a new open model.</li><li data-n="1">Legal and security check the licence terms against intended use; record them.</li><li data-n="2">Reference an exact revision, never "latest".</li><li data-n="3">Reject pickle checkpoints and unreviewed custom code; scan files.</li><li data-n="4">Run capability and safety suites; look for unexpected behaviours (backdoor triggers are hard to detect, which is why provenance matters).</li><li data-n="5">Sign and store in an internal registry with its AI-BOM.</li><li data-n="6">Production pulls only signed artefacts from the registry; admission policies enforce it.</li></ol></div>
 <figcaption><b>Model intake pipeline</b>, the AI equivalent of dependency vetting.</figcaption></figure>
 <div class="box example"><h5>Example</h5><p>A team loads a fine-tuned model from a personal hub account using <code>trust_remote_code=True</code>. The repository's custom modelling file contains code that reads environment variables and posts them to a remote server. Intake policy would have blocked it at the "scan" step; runtime egress restrictions would have blocked the exfiltration.</p></div>
+</section>
+
+<section class="tp tp-math" id="c16-6-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Pinning</b>. A revision named "main" can change tomorrow; a 40-character commit hash names exactly one version. A checksum (SHA-256, 64 hex characters) of each file confirms the bytes you deploy are the bytes you approved: change one byte and the checksum is completely different.</p>
+<p><b>Scale of the inventory</b> (illustrative). 12 models × 3 versions in use, 30 datasets and 400 Python packages: about 470 entries in the AI-BOM, each with a licence and a source.</p>
+</section>
+
+<section class="tp tp-code" id="c16-6-code">
+<h3 data-n="4">Code</h3>
+<p>The program reviews three model requests for licence, pinned revision, pickle files, custom code and trust_remote_code, then checks a file’s checksum before and after tampering. Change a request so it passes and run it again.</p>
+<figure class="fig live" id="snip-model-intake"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"model-intake"}'></div></div>
+<figcaption><b>An intake gate, in real Python.</b> It does not detect backdoors in weights.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-6-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://huggingface.co/docs/safetensors/index">Hugging Face: safetensors</a> <small>A weight format that cannot run code on load.</small></li>
+<li><a href="https://github.com/protectai/modelscan">ModelScan</a> <small>Scanning model files for unsafe serialisation.</small></li>
+<li><a href="https://slsa.dev/spec/v1.0/">SLSA specification</a> <small>Provenance levels for build artefacts.</small></li>
+<li><a href="https://docs.sigstore.dev/">Sigstore</a> <small>Signing and verifying artefacts.</small></li>
+</ol>
+</section>

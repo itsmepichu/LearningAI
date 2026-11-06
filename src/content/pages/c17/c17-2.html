@@ -1,9 +1,34 @@
+<section class="tp tp-intuition" id="c17-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>For an AI request, a good trace answers every question you might ask later: what was asked, what was retrieved, what exactly the model saw, what it said, which tools ran, how long each step took and what it cost.</p>
+<p>Reading a trace well means finding the <a class="gl" href="#gl-critical-path">critical path</a>: the chain of steps the user really waited for. Steps that run alongside a slower one do not count, however slow they look on their own.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>For AI systems, a trace should let you answer, for any single request: what did the user ask, what was retrieved (IDs and scores), what exactly was sent to the model (prompt version, and the content if policy allows), what came back, which tools ran with what arguments and results, how long each step took, how many tokens and dollars it cost, and what the user did next. Agent runs produce traces with dozens of nested spans; multi-agent runs link child traces to the parent task.</p>
 <figure class="fig"><div class="stage"><div data-widget="trace-waterfall"></div></div>
 <figcaption><b>A trace waterfall</b> for one RAG request with an agentic tool call (example data, illustrative timings). Bars are positioned to scale on the time axis. Notice the reranker span dominates retrieval time and the model call has a long TTFT; select spans to inspect GenAI attributes.</figcaption></figure>
 <figure class="fig live"><div class="stage"><div data-widget="critical-path"></div></div>
 <figcaption><b>Critical path, recomputed live</b> from timings you set; the defaults are illustrative. BM25 and vector search run in parallel, so only the slower one is on the critical path. Speeding up a span that is not on the critical path changes nothing; speeding up the longest one helps most. Toggle the tool retry to see how one hidden timeout dominates the request.</figcaption></figure>
 <div class="box example"><h5>Example: what the trace revealed</h5><p>Users report "the assistant is slow on Mondays". Traces show p95 end-to-end time of 9 s, of which 5 s is <code>retrieval.rerank</code> waiting for a GPU shared with the Monday ingestion backfill. Metrics alone showed "latency up"; the trace showed where and why, and led to separating the reranker pool (15.3).</p></div>
+</section>
+
+<section class="tp tp-math" id="c17-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A request</b> (illustrative). Keyword search 60 ms and vector search 90 ms run side by side, then reranking 420 ms, the first token 690 ms and decoding 2,600 ms.</p>
+<ul>
+<li>Only the slower search counts: 40 (embed) + 90 + 5 (fuse) + 420 + 690 + 2,600 = 3,845 ms.</li>
+<li>Making keyword search 50 ms faster saves nothing; it was already waiting for vector search.</li>
+<li>Making reranking 300 ms faster saves 300 ms; shortening the answer by a third saves about 870 ms.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c17-2-code">
+<h3 data-n="4">Code</h3>
+<p>The program computes when each step of a RAG request finishes, with some running in parallel, finds the critical path, and shows which speed-ups change the total. Make the tool lookup 3,000 ms and see the path change.</p>
+<figure class="fig live" id="snip-critical-path"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"critical-path"}'></div></div>
+<figcaption><b>Critical path, in real Python.</b> The timings are illustrative.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: trace a local RAG call into Jaeger <span class="tag cpu">Laptop · CPU · Docker</span></h5>
 <pre><code>docker run --rm -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/jaeger:latest     # UI: http://localhost:16686
 pip install opentelemetry-sdk opentelemetry-exporter-otlp-proto-http ollama</code></pre>
@@ -27,4 +52,15 @@ with tracer.start_as_current_span("rag.request", attributes={"tenant": "demo", "
         s.set_attribute("gen_ai.usage.output_tokens", r.eval_count)
 tp.shutdown()</code></pre>
 <p>Alternatives with LLM-specific UIs (prompt/response views, token costs, evaluations): <code>pip install arize-phoenix &amp;&amp; phoenix serve</code>, or self-host Langfuse with Docker Compose. Both accept OpenTelemetry data.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/">OpenTelemetry: GenAI semantic conventions</a> <small>Span names and attributes for model calls and tools.</small></li>
+<li><a href="https://www.jaegertracing.io/docs/latest/">Jaeger documentation</a> <small>Viewing traces as waterfalls.</small></li>
+<li><a href="https://langfuse.com/docs/observability/overview">Langfuse: Observability</a> <small>LLM-specific trace views with prompts, tokens and costs.</small></li>
+</ol>
+</section>

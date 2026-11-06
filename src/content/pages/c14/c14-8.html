@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c14-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Renting a car by the hour or buying one: buying wins only if you drive a lot, every day. Self-hosted GPUs cost the same whether busy or idle, while an API charges per token used.</p>
+<p>The <a class="gl" href="#gl-break-even-volume">break-even volume</a> depends on things that are easy to get wrong: the throughput you really get at your latency target, how busy the GPUs are at night, and the engineers who keep them running.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c14-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Self-hosting cost is mostly fixed: you pay for GPU-hours whether or not they are busy. API cost is variable: you pay per token. Self-hosting wins only when (a) your volume is high and steady enough to keep GPUs well utilised, (b) a smaller open model meets your quality bar, or (c) data-control requirements force it. Include the full cost: GPUs (with redundancy and headroom), engineers and on-call, networking, storage, observability, idle capacity at night, and the opportunity cost of not using newer hosted models.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2">
@@ -11,7 +19,7 @@
 <div class="kpis" id="hcK"></div><svg id="hcSvg" viewBox="0 0 640 200"></svg></div></div>
 <figcaption><b>Break-even calculator.</b> GPUs needed = tokens/month ÷ (throughput × utilisation × seconds per month), rounded up, minimum 2 for redundancy. The throughput input must come from your own benchmark at your SLO (14.7), with your prompt/output length mix; vendor peak numbers overstate it.</figcaption></figure>
 <div class="box example"><h5>Example: reading the default numbers</h5><p>20B tokens/month at $0.60/M via API = $12,000/month. Self-hosted at 2,500 tokens/s per GPU and 45% average utilisation, one GPU delivers ≈ 2.96B tokens/month, so 7 GPUs ≈ $12,800 plus $15,000 ops ≈ $27,800. The API is cheaper here; self-hosting wins only at several times the volume, higher utilisation, or with a much cheaper model.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for inference serving</h3>
 <div class="cols3">
@@ -22,3 +30,33 @@
 <div class="card"><h5><a href="https://github.com/vllm-project/guidellm">GuideLLM</a></h5><span class="meta">capacity benchmarking</span><p>Sweeps request rates against an OpenAI-compatible endpoint and reports throughput and latency percentiles. Point it at llama-server on your laptop to learn it.</p></div>
 <div class="card"><h5><a href="https://kserve.github.io/website/">KServe</a> · <a href="https://docs.ray.io/en/latest/serve/index.html">Ray Serve</a></h5><span class="meta">deployment on Kubernetes / Ray</span><p>Model deployment, autoscaling and routing layers that wrap engines like vLLM.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c14-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The default example</b> (illustrative).</p>
+<ul>
+<li>API: 20 billion tokens × 0.60 dollars per million = 12,000 dollars a month.</li>
+<li>One GPU at 2,500 tokens a second and 45% average use: 2,500 × 0.45 × 2,592,000 seconds ≈ 2.9 billion tokens a month.</li>
+<li>20 ÷ 2.9 ≈ 6.9, so 7 GPUs × 2.50 dollars × 720 hours ≈ 12,600 dollars, plus 15,000 dollars of operations ≈ 27,600 dollars.</li>
+</ul>
+<p>Here one GPU costs 1,800 dollars for 2.9 billion tokens, about 0.62 dollars per million, already more than the API before operations, so no volume makes it pay. At 70% use the same GPU costs about 0.40 dollars per million.</p>
+</section>
+
+<section class="tp tp-code" id="c14-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares API cost with self-hosted GPUs plus operations at five monthly volumes, and finds the break-even volume at three utilisation levels. Replace <code>THROUGHPUT</code> with your own measured figure and run it again.</p>
+<figure class="fig live" id="snip-hosted-vs-self"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"hosted-vs-self"}'></div></div>
+<figcaption><b>The break-even, in real Python.</b> Every price is a placeholder.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c14-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.vllm.ai/en/latest/contributing/benchmarks.html">vLLM: Benchmark suites</a> <small>Measuring throughput at your own prompt and output lengths.</small></li>
+<li><a href="https://github.com/vllm-project/guidellm">GuideLLM</a> <small>Capacity benchmarks against latency targets.</small></li>
+<li><a href="https://www.anthropic.com/pricing">Anthropic: Pricing</a> <small>An example of per-token API pricing, with cached-input discounts.</small></li>
+</ol>
+</section>

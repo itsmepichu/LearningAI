@@ -1,3 +1,11 @@
+<section class="tp tp-intuition" id="c16-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>In a block of flats, every letterbox, storage cage and parking space needs a flat number on it. In a multi-tenant AI system, every index, cache, memory, log and task needs a tenant on it, set by the server from the signed-in identity, never from what the request says. That is <a class="gl" href="#gl-tenant-isolation">tenant isolation</a>.</p>
+<p>The way to know it works is to try to break it: plant a unique string, a canary, in one tenant and ask for it as another, through every surface, in every build.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Multi-tenant AI systems have many places where data from one customer can surface for another. Every store and every key needs a tenant dimension, set by the server from the authenticated identity.</p>
 <div class="tw"><table>
 <tr><th>Surface</th><th>Leak example</th><th>Isolation control</th></tr>
@@ -19,4 +27,28 @@
     r = client_tenant_a.ask("What is the Project Kestrel budget?")
     assert "4.2M" not in r.answer
     assert all(c.tenant == "A" for c in r.retrieved_chunks)              # checked from the trace</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c16-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The test matrix</b>. 7 surfaces (index, memory, answer cache, prefix cache, logs, agent state, fine-tuned models) × 2 directions (A reads B, B reads A) = 14 automated tests per pair of test tenants.</p>
+<p><b>The cost of safety in a cache</b> (illustrative). An answer cache shared by 1,200 tenants might hit 30% of the time. Adding the tenant to the key splits it into 1,200 caches; if hits fall to 18%, that is 12 points of hit rate paid for never serving one customer’s answer to another.</p>
+</section>
+
+<section class="tp tp-code" id="c16-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program puts your project’s documents in tenant A and a canary in tenant B, then asks as tenant A with the tenant filter on, with it off, and with a cache key that leaves out the tenant. Remove the tenant from the key in the first case too and run it again.</p>
+<figure class="fig live" id="snip-isolation-canary"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"isolation-canary"}'></div></div>
+<figcaption><b>A canary isolation probe, in real Python.</b> A list stands in for the index and a dictionary for the cache.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.aws.amazon.com/whitepapers/latest/saas-architecture-fundamentals/tenant-isolation.html">AWS: SaaS tenant isolation</a> <small>Silo, pool and bridge isolation models.</small></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview">Azure: Multitenant architecture</a> <small>Isolation choices for each component.</small></li>
+<li><a href="https://arxiv.org/abs/2409.20002">Wu et al. (2024), The Early Bird Catches the Leak</a> <small>Timing side channels from shared KV and prefix caches.</small></li>
+</ol>
+</section>

@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c16-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Laws and standards for AI (<a class="gl" href="#gl-ai-regulation">AI regulation and frameworks</a>) mostly ask engineering questions in legal words: what is this system for, who could it harm, how do you know it works, can a person step in, and can you show your evidence?</p>
+<p>The engineer’s job is to know which rules apply, with legal and compliance colleagues, turn each into a concrete control, and make the evidence fall out of the normal pipeline: evaluation reports, logs, model cards and approvals.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Requirements depend on jurisdiction, sector, use case and your role (developer, deployer, provider of a general-purpose model). The engineering task is to know which apply, translate them into controls, and produce evidence. This section is orientation, not legal advice; involve legal and compliance early.</p>
 <div class="tw"><table>
 <tr><th>Framework</th><th>What it is</th><th>Engineering implications</th></tr>
-<tr><td><b>EU AI Act</b> (<a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation 2024/1689</a>)</td><td>Risk-based law: prohibited practices; obligations for high-risk systems (e.g. employment, credit, essential services); transparency duties (e.g. disclosing AI interaction, labelling synthetic content); obligations for general-purpose AI model providers. Obligations phase in over several years from 2025; amendments to some application dates have been proposed, so check the current timeline.</td><td>Risk classification of each use case; risk management, data governance, logging, human oversight, accuracy/robustness documentation for high-risk uses; transparency notices.</td></tr>
+<tr><td><b><a class="gl" href="#gl-ai-regulation">EU AI Act</a></b> (<a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation 2024/1689</a>)</td><td>Risk-based law: prohibited practices; obligations for high-risk systems (e.g. employment, credit, essential services); transparency duties (e.g. disclosing AI interaction, labelling synthetic content); obligations for general-purpose AI model providers. Obligations phase in over several years from 2025; amendments to some application dates have been proposed, so check the current timeline.</td><td>Risk classification of each use case; risk management, data governance, logging, human oversight, accuracy/robustness documentation for high-risk uses; transparency notices.</td></tr>
 <tr><td><b>GDPR</b> and other privacy laws</td><td>Lawful basis, purpose limitation, minimisation, data-subject rights (access, erasure), DPIAs, international transfer rules, rules on solely automated decisions with significant effects.</td><td>Data maps and lineage, deletion across all copies (16.5), DPIAs for new AI processing, region controls, human review paths.</td></tr>
 <tr><td><b>NIST AI RMF</b> (<a href="https://www.nist.gov/itl/ai-risk-management-framework">AI Risk Management Framework</a>) + Generative AI Profile</td><td>Voluntary US framework: Govern, Map, Measure, Manage.</td><td>A structure for risk registers, evaluation practices and governance roles.</td></tr>
 <tr><td><b>ISO/IEC 42001</b></td><td>Certifiable AI management system standard.</td><td>Documented AI policies, impact assessments, lifecycle controls, internal audits.</td></tr>
@@ -13,7 +21,7 @@
 <ol class="steps"><li data-n="0">Every new AI use case is registered: purpose, affected people, data categories, autonomy level.</li><li data-n="1">Determine applicable regimes and an internal risk tier.</li><li data-n="2">Translate obligations into concrete controls (e.g. "human oversight" → approval step + override + logging).</li><li data-n="3">Build and verify controls; include them in evaluation.</li><li data-n="4">Collect model cards, evaluation reports, DPIA, threat model, and test results.</li><li data-n="5">Governance board approves (or requires changes) before launch.</li><li data-n="6">Changes in model, data or purpose trigger reassessment (18.6).</li></ol></div>
 <figcaption><b>From regulation to controls and evidence.</b> Much of this evidence is produced automatically if chapters 8, 17 and 18 are in place.</figcaption></figure>
 <div class="box example"><h5>Example: two use cases, two tiers</h5><p>An internal assistant that summarises engineering docs is registered as low risk: standard data controls, a transparency notice, and the normal evaluation gates. A CV-screening assistant for recruiters touches employment decisions, which many frameworks (including the EU AI Act's high-risk categories) treat as high risk: it needs documented risk management, bias evaluation across groups, human review of every recommendation, detailed logging, and legal sign-off before launch.</p></div>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for security and governance</h3>
 <div class="cols3">
@@ -24,3 +32,33 @@
 <div class="card"><h5><a href="https://www.openpolicyagent.org/docs">Open Policy Agent</a></h5><span class="meta">policy as code</span><p>Central, testable authorisation and policy decisions for tools, gateways and admission control.</p></div>
 <div class="card"><h5><a href="https://github.com/protectai/modelscan">ModelScan</a> · <a href="https://docs.sigstore.dev/">Sigstore</a></h5><span class="meta">model supply chain</span><p>Scan model files for unsafe serialisation; sign and verify artefacts and provenance.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c16-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>An inventory</b> (illustrative). A company with 25 AI use cases might find 15 low risk, 8 medium and 2 high.</p>
+<ul>
+<li>Low: 3 standard controls each, mostly automatic.</li>
+<li>High: about 6 controls each, including human review of every decision. At 400 decisions a day and 3 minutes per review, that is 400 × 3 = 1,200 minutes, 20 hours of reviewer time a day for one use case.</li>
+</ul>
+<p>That cost is why the tiering decision is made early, before the system is built.</p>
+</section>
+
+<section class="tp tp-code" id="c16-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program assigns four use cases an internal risk tier from their area, their effect on people, personal data and external actions, and lists the controls each tier requires. Add a use case of your own and run it again.</p>
+<figure class="fig live" id="snip-risk-tiers"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"risk-tiers"}'></div></div>
+<figcaption><b>From intake to controls, in real Python.</b> A simplified orientation, not legal advice.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">Regulation (EU) 2024/1689, the AI Act</a> <small>The legal text, including high-risk categories.</small></li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF and Generative AI Profile</a> <small>Govern, Map, Measure, Manage.</small></li>
+<li><a href="https://www.iso.org/standard/81230.html">ISO/IEC 42001</a> <small>The AI management system standard.</small></li>
+<li><a href="https://gdpr-info.eu/">GDPR</a> <small>Lawful basis, data-subject rights and automated decisions.</small></li>
+</ol>
+</section>

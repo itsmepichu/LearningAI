@@ -1,8 +1,44 @@
-<p>A multi-agent run is a <dfn>DAG</dfn> (directed acyclic graph) of tasks, and needs the same machinery as any job scheduler: dependency tracking (task C waits for A and B), concurrency limits, per-task timeouts and budgets, cancellation that propagates to children (and stops their tool calls), and a policy for partial failure: retry, substitute, proceed with what is available (marked incomplete), or fail the whole run.</p>
+<section class="tp tp-intuition" id="c12-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Cooking dinner has an order: the rice and the curry can cook at the same time, but serving waits for both. A <a class="gl" href="#gl-task-dag">task graph</a> writes that order down, so a scheduler knows what can run in parallel, what must wait and what to do when one dish burns.</p>
+<p>The hard questions are about failure. Do you serve the meal without the curry, marked as missing, or cancel dinner? When the guest leaves, do you stop cooking everything, including what is already on the stove?</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>A multi-agent run is a <dfn><a class="gl" href="#gl-task-dag">DAG</a></dfn> (directed acyclic graph) of tasks, and needs the same machinery as any job scheduler: dependency tracking (task C waits for A and B), concurrency limits, per-task timeouts and budgets, cancellation that propagates to children (and stops their tool calls), and a policy for partial failure: retry, substitute, proceed with what is available (marked incomplete), or fail the whole run.</p>
 <figure class="fig sim"><div class="stage"><div class="wid">
 <div class="ctl"><label for="dgFail" style="font-family:var(--f-display);font-size:.82rem">Failure <select id="dgFail"><option value="none">none</option><option value="timeout" selected>worker B times out</option><option value="error">worker C errors (retry once)</option><option value="cancel">user cancels mid-run</option></select></label>
 <label for="dgPol" style="font-family:var(--f-display);font-size:.82rem">Policy <select id="dgPol"><option value="partial" selected>proceed with partial results</option><option value="strict">fail whole run</option></select></label><button class="btn primary" id="dgRun" type="button">Run DAG</button></div>
 <svg id="dgSvg" viewBox="0 0 720 230"></svg><div class="out" id="dgOut"></div></div></div>
 <figcaption><b>A task DAG under failure</b> (scripted). Plan → workers A, B, C in parallel → synthesis (needs all three) → review. Watch timeouts, retries, cancellation propagating to running tasks, and the effect of the partial-results policy.</figcaption></figure>
 <div class="box example"><h5>Example: deadlines flow down</h5><p>The user-facing request has a 90-second deadline. The coordinator reserves 20 s for synthesis and passes each worker a deadline of now + 60 s. Workers pass even tighter deadlines to their tool calls. When a worker hits its deadline it returns partial results with coverage information rather than nothing, so the system degrades gracefully (15.6).</p></div>
+</section>
+
+<section class="tp tp-math" id="c12-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Deadlines flow down</b>. A user request has 90 seconds.</p>
+<ul>
+<li>Keep 20 seconds for synthesis and 10 for review: the workers get 90 − 20 − 10 = 60 seconds.</li>
+<li>Each worker keeps 10 seconds to write its result, so its tool calls must finish within 50 seconds.</li>
+</ul>
+<p><b>Waiting on all of them</b> (illustrative). If each of 3 workers misses its deadline 5% of the time, all three finish in time only about 0.95 × 0.95 × 0.95 ≈ 86% of the time. A "wait for all" policy fails 14% of runs; "proceed with partial results" fails none, but 14% of answers are marked incomplete.</p>
+</section>
+
+<section class="tp tp-code" id="c12-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program runs a plan, three workers, synthesis and review under four situations: a worker that times out with two different policies, a worker that errors once and is retried, and a user who cancels. Change <code>TIMEOUT</code> or a duration and run it again.</p>
+<figure class="fig live" id="snip-task-dag"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"task-dag"}'></div></div>
+<figcaption><b>Dependencies, timeouts and cancellation, in real Python.</b> Durations are scripted.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c12-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.temporal.io/encyclopedia/detecting-activity-failures">Temporal: Activity timeouts</a> <small>Start-to-close, schedule-to-close and heartbeat timeouts.</small></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html">Apache Airflow: DAGs</a> <small>Dependencies, retries and trigger rules in a job scheduler.</small></li>
+<li><a href="https://docs.python.org/3/library/asyncio-task.html#task-cancellation">Python: task cancellation</a> <small>How cancellation reaches running tasks.</small></li>
+</ol>
+</section>

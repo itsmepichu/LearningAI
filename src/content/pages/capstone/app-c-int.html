@@ -1,7 +1,43 @@
+<section class="tp tp-intuition" id="app-c-int-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>In an interview or a design review, the strongest answer is a story with evidence: the task and its risk, the simplest thing that worked, the failure that justified each extra part, and how the system is operated.</p>
+<p>Every number in that story carries its <a class="gl" href="#gl-evidence-category">evidence category</a>: simulated, measured locally, projected, or operated in production. Saying "projected, not yet validated" shows judgement; letting a projection pass as a measurement loses trust the moment someone asks.</p>
+</section>
+
+<section class="tp tp-mechanism" id="app-c-int-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ol><li><b>The task and its risk</b>: who uses it, what a wrong answer costs, and the acceptance criteria you wrote first.</li>
 <li><b>The simplest baseline</b> and its measured numbers.</li>
 <li><b>The failure that justified each extra component</b> (reranker, agent step, fine-tune), with the paired measurement that showed it helped.</li>
 <li><b>Operational limits</b>: how you handle permission revocation, duplicate tool execution, stale indexes, model upgrades, failed rollouts, quality drift and cost per successful task.</li>
-<li><b>The evidence category of every claim</b>: simulated, measured locally, projected, or operated in production (Appendix E). Saying "projected, not yet validated" is a strength, not a weakness.</li></ol>
+<li><b>The <a class="gl" href="#gl-evidence-category">evidence category</a> of every claim</b>: simulated, measured locally, projected, or operated in production (Appendix E). Saying "projected, not yet validated" is a strength, not a weakness.</li></ol>
 <div class="box example"><h5>Example answer fragment</h5><p>"BM25 alone reached Recall@10 = 0.71 on our 100 labelled questions; hybrid plus a reranker reached 0.88, a paired improvement whose 95% interval excluded zero. Answer groundedness was 96% on a 60-case held-out set. On my laptop the service handled 4 requests/s with a mocked model at p95 1.2 s; that measures orchestration only. For production I projected GPU needs from vLLM benchmarks I have not yet run, so that figure is a projection."</p></div>
+</section>
+
+<section class="tp tp-math" id="app-c-int-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>The example fragment, checked</b>.</p>
+<ul>
+<li>Recall@10 from 0.71 to 0.88 on 100 questions: 17 more questions answered, measured locally.</li>
+<li>4 requests a second at a p95 of 1.2 seconds with a mocked model: by Little’s law about 4 × 1.2 ≈ 5 requests in flight. It measures orchestration only, because the model was mocked.</li>
+<li>GPU needs from benchmarks not yet run: projected, and saying so is the right answer.</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="app-c-int-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks a short write-up sentence by sentence: every number needs an evidence category, and words like "never" need to say what was tested. Add a sentence of your own capstone write-up and run it again.</p>
+<figure class="fig live" id="snip-claim-labels"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"claim-labels"}'></div></div>
+<figcaption><b>Labelling every claim, in real Python.</b> A pattern check, not a fact check.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="app-c-int-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2407.01502">Kapoor et al. (2024), AI Agents That Matter</a> <small>Reporting results with baselines, cost and honest comparisons.</small></li>
+<li><a href="https://arxiv.org/abs/1810.03993">Mitchell et al. (2018), Model Cards</a> <small>Stating evaluation conditions and limitations.</small></li>
+<li><a href="https://sre.google/sre-book/service-level-objectives/">Google SRE book: Service Level Objectives</a> <small>Talking about reliability in measured terms.</small></li>
+</ol>
+</section>

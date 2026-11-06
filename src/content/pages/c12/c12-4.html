@@ -1,8 +1,16 @@
+<section class="tp tp-intuition" id="c12-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Two departments that share one big notice board soon overwrite each other’s notes and read things they should not. Two departments that exchange agreed forms keep their own files and only share what the form asks for.</p>
+<p>Agents are the same. Isolated agents that talk through a <a class="gl" href="#gl-message-contract">message contract</a>, with typed fields, a version, a status and evidence, are easier to secure and to debug than agents writing into a shared scratchpad.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Shared state</b> (blackboard): agents read and write a common store (a task board, a document). Easy coordination; risk of conflicting writes, context pollution (everyone sees everything), and permission leakage.</li>
 <li><b>Isolated state</b>: each agent has private context and communicates only through messages. Cleaner boundaries and least-privilege data access; requires explicit, well-designed messages.</li>
-<li><b>Message contracts</b>: typed, versioned schemas for requests and results (like API contracts between microservices), validated on both ends, including status, errors, confidence and evidence.</li>
-<li><b>Interoperability</b>: for agents from different frameworks or organisations, open protocols are emerging. <a href="https://a2a-protocol.org/">Agent2Agent (A2A)</a> defines agent discovery (agent cards), task lifecycle and message exchange between agents; MCP (11.8) connects agents to tools and data. They are complementary.</li>
+<li><b><a class="gl" href="#gl-message-contract">Message contracts</a></b>: typed, versioned schemas for requests and results (like API contracts between microservices), validated on both ends, including status, errors, confidence and evidence.</li>
+<li><b>Interoperability</b>: for agents from different frameworks or organisations, open protocols are emerging. <a href="https://a2a-protocol.org/"><a class="gl" href="#gl-a2a">Agent2Agent (A2A)</a></a> defines agent discovery (agent cards), task lifecycle and message exchange between agents; MCP (11.8) connects agents to tools and data. They are complementary.</li>
 </ul>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 220" role="img" aria-label="Shared blackboard vs isolated message passing">
@@ -25,4 +33,29 @@
  "coverage": {"searched": 9400, "of_estimated": 12000, "reason": "deadline reached"},
  "confidence": "medium", "errors": [], "cost_usd": 0.13}</code></pre>
 <p>"status: partial" plus coverage lets the coordinator decide whether to accept, extend the budget, or flag incomplete coverage in the final report.</p></div>
+</section>
+
+<section class="tp tp-math" id="c12-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Shared context grows fast</b> (illustrative). If 5 agents each write 2,000 tokens to a shared scratchpad and every agent reads all of it each turn, each turn reads 5 × 2,000 = 10,000 tokens per agent, 50,000 in total.</p>
+<p>With isolated agents that exchange 300-token results, the coordinator reads 5 × 300 = 1,500 tokens and each worker reads only its own brief.</p>
+<p><b>Partial results.</b> A worker that searched 9,400 of an estimated 12,000 records reports 9,400 ÷ 12,000 ≈ 78% coverage, so the coordinator can say what was not checked instead of presenting the result as complete.</p>
+</section>
+
+<section class="tp tp-code" id="c12-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks four worker results against a versioned contract: a good one, an old version it can upgrade, a free-text reply and a partial result that does not say why. Add a field to the contract and see which messages fail.</p>
+<figure class="fig live" id="snip-message-contract"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"message-contract"}'></div></div>
+<figcaption><b>Contract checks between agents, in real Python.</b> Well-formed is not the same as true.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c12-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://a2a-protocol.org/latest/specification/">A2A protocol specification</a> <small>Agent cards, tasks and messages between agents.</small></li>
+<li><a href="https://modelcontextprotocol.io/specification/2025-11-25">MCP specification</a> <small>The complementary protocol for tools and data.</small></li>
+<li><a href="https://json-schema.org/understanding-json-schema/">Understanding JSON Schema</a> <small>Typed, versioned message schemas.</small></li>
+</ol>
+</section>

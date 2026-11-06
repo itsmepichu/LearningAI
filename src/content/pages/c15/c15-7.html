@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c15-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A second region is a spare house in another town. It only helps if the spare house is big enough for everyone, has the furniture (the data and indexes) already inside, and you have practised moving in.</p>
+<p>Two numbers set the plan: how much recent data you may lose and how quickly you must be back, the <a class="gl" href="#gl-rpo-rto">RPO and RTO</a>. Data residency adds a rule: European customers may only move to European houses, so those houses need room for them.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c15-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Multi-region</b>: run in two or more regions. <em>Active-active</em>: both serve traffic, routed by latency or residency; more complex data consistency. <em>Active-passive</em>: standby region takes over on failure; simpler, slower failover.</li>
 <li><b>Data residency</b>: EU users' data and prompts may need to stay in EU regions and EU-hosted model endpoints; this constrains routing and failover targets.</li>
-<li><b>Disaster recovery</b>: define <dfn>RPO</dfn> (recovery point objective: how much data you may lose, e.g. 5 minutes) and <dfn>RTO</dfn> (recovery time objective: how fast you must recover, e.g. 30 minutes) per component. Vector indexes can be rebuilt from stored chunks and embeddings, but rebuilding takes hours at scale, so replicate or snapshot them.</li>
+<li><b>Disaster recovery</b>: define <dfn><a class="gl" href="#gl-rpo-rto">RPO</a></dfn> (recovery point objective: how much data you may lose, e.g. 5 minutes) and <dfn>RTO</dfn> (recovery time objective: how fast you must recover, e.g. 30 minutes) per component. Vector indexes can be rebuilt from stored chunks and embeddings, but rebuilding takes hours at scale, so replicate or snapshot them.</li>
 <li><b>Provider outages</b>: hosted model APIs have outages and regional incidents. Mitigate with a second provider or self-hosted fallback (evaluated for quality and prompt compatibility), regional endpoints, circuit breakers, and the degradation ladder. Test failover regularly; untested failover usually fails.</li>
 <li><b>Restore, don't just back up</b>: test restores on a schedule. Replicas copy corruption and accidental deletes instantly, so they are not backups. Rehearse failing <em>back</em> to the primary region too, including replaying queued writes exactly once.</li></ul>
 <figure class="fig"><div class="stage">
@@ -24,4 +32,32 @@
 <figure class="fig sim" id="scene-globe"><div class="stage"><div data-widget="failover-globe"></div></div>
 <figcaption><b>A regional failover, on a globe.</b> Your example project's regions and user cities, at their real positions. Step through a region failing: traffic is rerouted to the nearest region each city may use, with data residency deciding where that is. Then come the round trip, the capacity of the survivors and the data they need. Distances are real great-circle distances; round trips use a rule of thumb (routes about 1.5 times the straight line, light in fibre about 200 km per ms), and traffic shares, regions and capacity are illustrative. The 2D view shows the same numbers as tables.</figcaption></figure>
 <div class="box example"><h5>Example: a game-day exercise</h5><p>Quarterly, the team blocks Provider A at the gateway in staging, then in production for 10% of traffic. Findings from the first run: the fallback model ignored the JSON schema in 4% of responses (fixed by enabling constrained decoding), and fallback quota was too small for full traffic (raised in the provider contract). Without the exercise, both would have surfaced during a real outage.</p></div>
+</section>
+
+<section class="tp tp-math" id="c15-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Room for the move</b> (illustrative). EU-west carries 70 units and EU-central carries 60 of its 100.</p>
+<ul>
+<li>If EU-west fails and 80% of its load must stay in the EU, EU-central receives 70 × 0.8 = 56 units: 60 + 56 = 116, over its 100.</li>
+<li>So EU-central needs at least 16% more capacity, or less of the traffic must be bound to the EU.</li>
+</ul>
+<p><b>RPO.</b> At 1,200 conversation writes a minute, a 5-minute RPO accepts losing up to 6,000 writes. Rebuilding a large vector index from scratch may take hours, which is why indexes are replicated or snapshotted.</p>
+</section>
+
+<section class="tp tp-code" id="c15-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program fails one region at a time, moves its load to the survivors with most EU traffic kept in EU regions, and flags any region pushed over capacity. Change <code>EU_ONLY_SHARE</code> or a region’s capacity and run it again.</p>
+<figure class="fig live" id="snip-failover-capacity"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"failover-capacity"}'></div></div>
+<figcaption><b>Failover with residency, in real Python.</b> Regions and loads are invented.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c15-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html">AWS: Disaster recovery options in the cloud</a> <small>Backup and restore, pilot light, warm standby and active-active.</small></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/reliability/disaster-recovery-overview">Azure: Disaster recovery overview</a> <small>RPO, RTO and regional failover.</small></li>
+<li><a href="https://sre.google/sre-book/data-integrity/">Google SRE book: Data Integrity</a> <small>Why replicas are not backups and restores must be tested.</small></li>
+</ol>
+</section>

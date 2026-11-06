@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c17-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A service can be fast, available and wrong. Operational dashboards would show green while answers get worse, so AI systems need signals about behaviour: was the task done, was the answer grounded, did retrieval find anything, did tools fail, did agents loop?</p>
+<p>Some of the best signals come from what users do rather than what they say: asking the same question again in other words, copying the answer, or opening a ticket afterwards. This <a class="gl" href="#gl-implicit-feedback">implicit feedback</a> is available at once, long before slow outcomes arrive.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>Operational health does not tell you whether answers are good. Add signals specific to AI behaviour:</p>
 <ul>
-<li><b>Task success</b>: explicit feedback (thumbs, ratings), implicit signals (user copied the answer, did not rephrase, did not open a ticket afterwards), and outcome events (refund processed, ticket resolved).</li>
+<li><b><a class="gl" href="#gl-implicit-feedback">Task success</a></b>: explicit feedback (thumbs, ratings), implicit signals (user copied the answer, did not rephrase, did not open a ticket afterwards), and outcome events (refund processed, ticket resolved).</li>
 <li><b>Groundedness / quality samples</b>: run judges (8.2) on a sample of production traffic continuously; track scores by feature, tenant and language.</li>
 <li><b>Retrieval failures</b>: zero-result queries, low top-score queries, abstention rate, citation-validation failures.</li>
 <li><b>Tool errors</b>: invalid arguments, permission denials, timeouts, per tool.</li>
@@ -11,4 +19,28 @@
 <figure class="fig"><div class="stage"><div class="cols3" id="aiPanels"></div></div>
 <figcaption><b>An AI quality dashboard</b> (example data, last 14 days). The dashed line on each panel is its alert threshold. A model-provider update on day 9 (marker) shows up as rising schema failures and falling groundedness, before users complain.</figcaption></figure>
 <div class="box example"><h5>Example: an implicit-feedback signal</h5><p>"Rephrase within 60 seconds" (user asks essentially the same question again) correlates strongly with unhelpful answers in many assistants. Computing it needs only conversation logs and an embedding similarity check, so it is available immediately, unlike delayed outcomes (17.7).</p></div>
+</section>
+
+<section class="tp tp-math" id="c17-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Sampling quality</b> (illustrative). Judging 500 sampled conversations a day out of 200,000 is 0.25% of traffic. If groundedness is around 95%, 500 samples pin it to within about ±2 points, enough to see a drop to 81% on the first day.</p>
+<p><b>Escalation rate.</b> If 4% of 10,000 daily conversations go to a person, 400 a day is normal. A jump to 900 means unhelpful answers; a fall to 50 may mean the assistant has become overconfident.</p>
+</section>
+
+<section class="tp tp-code" id="c17-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds simulated sessions from your project’s messages, where an unhelpful answer often leads to the question being asked again in other words, and measures how many of those the "rephrased within 60 seconds" rule finds. Change the similarity threshold and run it again.</p>
+<figure class="fig live" id="snip-rephrase-signal"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"rephrase-signal"}'></div></div>
+<figcaption><b>An implicit-feedback signal, in real Python.</b> The sessions are simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.ragas.io/en/stable/">Ragas documentation</a> <small>Faithfulness and other quality metrics for sampled traffic.</small></li>
+<li><a href="https://arize.com/docs/phoenix">Arize Phoenix</a> <small>Running evaluations on production traces.</small></li>
+<li><a href="https://langfuse.com/docs/scores/overview">Langfuse: Scores</a> <small>Attaching user feedback and judge scores to traces.</small></li>
+</ol>
+</section>

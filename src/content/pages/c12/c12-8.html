@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c12-8-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A more elaborate machine is not automatically a better one. Before keeping a multi-agent design, race it against the simplest designs on the same tasks: one well-prompted agent, and a fixed workflow written in code.</p>
+<p>Then take it apart. An <a class="gl" href="#gl-ablation">ablation</a> removes one agent, such as the critic, and measures again. If quality does not drop beyond the noise, the part was cost without benefit.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c12-8-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>A multi-agent system must beat the strongest simple alternative on the metrics that matter, at acceptable cost. Run the same evaluation set (8.8) through:</p>
 <ol><li>a single well-prompted agent with all tools,</li><li>a fixed parallel workflow written in code,</li><li>the multi-agent design,</li></ol>
-<p>and compare task success, pass^k reliability, latency percentiles, cost per successful task, and failure types. Also evaluate components: routing accuracy, worker success per subtask, synthesis faithfulness to worker outputs, and how often conflicts are surfaced correctly. Run ablations: remove the evaluator agent; merge two workers; does quality actually drop?</p>
+<p>and compare task success, pass^k reliability, latency percentiles, cost per successful task, and failure types. Also evaluate components: routing accuracy, worker success per subtask, synthesis faithfulness to worker outputs, and how often conflicts are surfaced correctly. Run <a class="gl" href="#gl-ablation">ablations</a>: remove the evaluator agent; merge two workers; does quality actually drop?</p>
 <div class="tw"><table>
 <tr><th>Design</th><th>Task success</th><th>pass^3</th><th>p95 latency</th><th>Cost / successful task</th><th>Verdict</th></tr>
 <tr><td>Single agent</td><td>64%</td><td>41%</td><td>48 s</td><td>$0.19</td><td>Fails on broad tasks</td></tr>
@@ -13,6 +21,34 @@
 <div><p style="font-family:var(--f-display);font-size:.85rem;margin-bottom:6px">Cost per successful task</p><div class="bars" data-max="1" data-unit=""><div data-v="0.19">Single agent · $0.19</div><div data-v="0.21" data-c="g">Parallel workflow · $0.21</div><div data-v="0.88" data-c="b">Coordinator + workers + critic · $0.88</div></div></div>
 </div></div><figcaption><b>Compare designs on the same suite.</b> The decision rests on reliability per dollar, not on which design looks most sophisticated. Re-run the comparison when models improve: a stronger single agent may close the gap.</figcaption></figure>
 <div class="box example"><h5>Example: an ablation that simplified a system</h5><p>A team removed the critic agent from a four-agent report generator. Task success fell from 81% to 80% (within the confidence interval), latency fell 35% and cost fell 30%. They kept the critic only for reports flagged as high-stakes.</p></div>
+<div class="tools">
+<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for multi-agent systems</h3>
+<div class="cols3">
+<div class="card"><h5><a href="https://github.com/langchain-ai/langgraph">LangGraph</a></h5><span class="meta">supervisor · swarm · subgraphs</span><p>Multi-agent graphs with explicit state, checkpointing and human-in-the-loop interrupts.</p></div>
+<div class="card"><h5><a href="https://github.com/microsoft/agent-framework">Microsoft Agent Framework</a></h5><span class="meta">successor to AutoGen + Semantic Kernel</span><p>Python and .NET framework for agents and multi-agent workflows (1.0 released). AutoGen is being archived and its README directs new users here.</p></div>
+<div class="card"><h5><a href="https://docs.crewai.com/">CrewAI</a></h5><span class="meta">role-based crews · flows</span><p>Define agents with roles and tasks; "flows" add deterministic orchestration around crews.</p></div>
+<div class="card"><h5><a href="https://google.github.io/adk-docs/">Google ADK</a></h5><span class="meta">agent development kit</span><p>Code-first agents and multi-agent hierarchies, with evaluation tooling; model-agnostic.</p></div>
+<div class="card"><h5><a href="https://a2a-protocol.org/">A2A protocol</a></h5><span class="meta">agent interoperability</span><p>Open protocol (Linux Foundation project) for agent discovery and task exchange across frameworks and vendors.</p></div>
+<div class="card"><h5><a href="https://openai.github.io/openai-agents-python/">OpenAI Agents SDK</a></h5><span class="meta">handoffs · agents-as-tools</span><p>Simple handoff and agent-as-tool primitives with built-in tracing; good for learning the patterns.</p></div>
+</div></div>
+</section>
+
+<section class="tp tp-math" id="c12-8-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Cost per successful task</b> is cost divided by success rate (the table’s illustrative numbers).</p>
+<ul>
+<li>Single agent: 0.12 dollars a run ÷ 0.64 ≈ 0.19 dollars.</li>
+<li>Parallel workflow: 0.16 ÷ 0.78 ≈ 0.21 dollars.</li>
+<li>Coordinator with workers and critic: 0.71 ÷ 0.81 ≈ 0.88 dollars.</li>
+</ul>
+<p>Three points of success for four times the cost. <b>Is 81% really above 78%?</b> On 120 tasks, one task is 0.8 points, so the gap is about 4 tasks; a paired comparison usually shows an interval that includes zero at this size.</p>
+</section>
+
+<section class="tp tp-code" id="c12-8-code">
+<h3 data-n="4">Code</h3>
+<p>The program scores three designs on the same 120 simulated tasks, each run three times: success, pass^3, cost per success and a paired bootstrap interval for the difference. Change the success chances or costs and run it again.</p>
+<figure class="fig live" id="snip-design-baseline"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"design-baseline"}'></div></div>
+<figcaption><b>Comparing designs on one suite, in real Python.</b> Every success chance and cost is invented.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: baseline vs coordinator on one machine <span class="tag cpu">Laptop · CPU · slow but workable</span></h5>
 <pre><code>import asyncio, ollama
 client = ollama.AsyncClient()
@@ -33,14 +69,15 @@ q = "What are the top onboarding complaints?"
 print(asyncio.run(single_agent(q))); print(asyncio.run(parallel_workflow(q)))
 # Score both against a hand-written answer key of themes; repeat 3x; compare tokens and time.</code></pre>
 <p>On CPU, parallel calls queue behind each other in one Ollama instance (set <code>OLLAMA_NUM_PARALLEL</code> to allow concurrency; memory use rises), so wall-clock gains are smaller than with a hosted API. The quality and token comparison is still valid.</p></div>
+</section>
+
 <div data-slot="practice"></div>
-<div class="tools">
-<h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for multi-agent systems</h3>
-<div class="cols3">
-<div class="card"><h5><a href="https://github.com/langchain-ai/langgraph">LangGraph</a></h5><span class="meta">supervisor · swarm · subgraphs</span><p>Multi-agent graphs with explicit state, checkpointing and human-in-the-loop interrupts.</p></div>
-<div class="card"><h5><a href="https://github.com/microsoft/agent-framework">Microsoft Agent Framework</a></h5><span class="meta">successor to AutoGen + Semantic Kernel</span><p>Python and .NET framework for agents and multi-agent workflows (1.0 released). AutoGen is being archived and its README directs new users here.</p></div>
-<div class="card"><h5><a href="https://docs.crewai.com/">CrewAI</a></h5><span class="meta">role-based crews · flows</span><p>Define agents with roles and tasks; "flows" add deterministic orchestration around crews.</p></div>
-<div class="card"><h5><a href="https://google.github.io/adk-docs/">Google ADK</a></h5><span class="meta">agent development kit</span><p>Code-first agents and multi-agent hierarchies, with evaluation tooling; model-agnostic.</p></div>
-<div class="card"><h5><a href="https://a2a-protocol.org/">A2A protocol</a></h5><span class="meta">agent interoperability</span><p>Open protocol (Linux Foundation project) for agent discovery and task exchange across frameworks and vendors.</p></div>
-<div class="card"><h5><a href="https://openai.github.io/openai-agents-python/">OpenAI Agents SDK</a></h5><span class="meta">handoffs · agents-as-tools</span><p>Simple handoff and agent-as-tool primitives with built-in tracing; good for learning the patterns.</p></div>
-</div></div>
+
+<section class="tp tp-sources" id="c12-8-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/2406.12045">Yao et al. (2024), τ-bench</a> <small>Repeated-run reliability (pass^k) for agents.</small></li>
+<li><a href="https://arxiv.org/abs/2407.01502">Kapoor et al. (2024), AI Agents That Matter</a> <small>Comparing agents with simple baselines and accounting for cost.</small></li>
+<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: multi-agent research system</a> <small>Evaluating a multi-agent system end to end.</small></li>
+</ol>
+</section>

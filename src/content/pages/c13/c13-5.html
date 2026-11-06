@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c13-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A general search model has never seen your company’s codenames, part numbers or abbreviations, so it matches them badly. Fine-tuning the search model on your own question–passage pairs teaches it what your words mean, and it is far cheaper than fine-tuning an LLM.</p>
+<p>The most useful training examples are near misses: a passage that shares words with the question but does not answer it. These <a class="gl" href="#gl-hard-negative">hard negatives</a> teach the fine distinctions that easy examples never do.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c13-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <p>General embedding models often miss domain meaning: internal product codenames, part numbers, legal terms of art, abbreviations. Fine-tuning the retriever is often the highest-return adaptation in a RAG system, and it is much cheaper than fine-tuning an LLM.</p>
 <ul>
 <li><b>Training data</b>: (query, relevant passage) pairs from search logs (queries with clicked/used results), from FAQ structures, from human labelling, or generated synthetically by an LLM writing questions for each chunk (then filtered).</li>
-<li><b>Hard negatives</b>: passages that look relevant but are not, mined by retrieving top results with the current model and excluding true positives. They teach fine distinctions and matter more than more easy pairs.</li>
+<li><b><a class="gl" href="#gl-hard-negative">Hard negatives</a></b>: passages that look relevant but are not, mined by retrieving top results with the current model and excluding true positives. They teach fine distinctions and matter more than more easy pairs.</li>
 <li><b>Loss</b>: contrastive with in-batch negatives (MultipleNegativesRankingLoss / InfoNCE, 4.4). Rerankers (cross-encoders) train as binary or listwise classifiers over (query, passage).</li>
 <li><b>Re-embedding</b>: a new embedding model means a full re-index with blue/green migration (10.7). A new reranker does not touch the index, which makes rerankers the easier first step.</li>
 </ul>
@@ -11,6 +19,20 @@
 <figcaption><b>Synthetic-data pipeline for retriever fine-tuning.</b></figcaption></figure>
 <figure class="fig"><div class="stage"><div class="bars" data-max="100" data-unit="%"><div data-v="71">Recall@10 · general embedding model</div><div data-v="80" data-c="s">+ fine-tuned reranker</div><div data-v="84">fine-tuned embeddings</div><div data-v="89" data-c="g">fine-tuned embeddings + reranker</div></div></div>
 <figcaption><b>Typical shape of gains</b> on a jargon-heavy internal corpus (illustrative). Measure on held-out real queries.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c13-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Building the pairs</b> (illustrative). 20,000 chunks × 2 generated questions = 40,000 candidate pairs. If a filter drops the 15% the chunk does not really answer, 34,000 remain.</p>
+<p><b>Mining negatives.</b> For each question, retrieve the top 20 with the current model and keep up to 2 that are not the source: about 68,000 hard negatives.</p>
+<p><b>Measuring.</b> On 300 real labelled queries, Recall@10 rising from 0.71 to 0.83 means 0.83 × 300 − 0.71 × 300 = 249 − 213 = 36 more queries find their passage in the top ten.</p>
+</section>
+
+<section class="tp tp-code" id="c13-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program uses each of your project’s document titles as a query, ranks the documents with a keyword scorer, and keeps the high-ranked wrong ones as hard negatives for contrastive training. Use the document text’s first sentence as the query instead and run it again.</p>
+<figure class="fig live" id="snip-hard-negatives"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"hard-negatives"}'></div></div>
+<figcaption><b>Mining triplets, in real Python.</b> Titles stand in for LLM-generated questions; nothing is trained.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: fine-tune a small embedding model <span class="tag cpu">Laptop · CPU · minutes for ~1k pairs</span></h5>
 <pre><code>from datasets import Dataset
 from sentence_transformers import SentenceTransformer, SentenceTransformerTrainer, losses
@@ -24,4 +46,15 @@ SentenceTransformerTrainer(model=model, train_dataset=train,
                            loss=losses.MultipleNegativesRankingLoss(model)).train()
 model.save_pretrained("bge-small-acme")</code></pre>
 <p>With a few hundred real pairs you can measure Recall@k before and after using your chapter 9 harness. Expect gains on jargon; watch for losses on general queries (13.6).</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c13-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://sbert.net/docs/sentence_transformer/training_overview.html">Sentence Transformers: Training overview</a> <small>Fine-tuning embedding models with contrastive losses.</small></li>
+<li><a href="https://sbert.net/docs/package_reference/util/hard_negatives.html">Sentence Transformers: mine_hard_negatives</a> <small>A library function for mining hard negatives.</small></li>
+<li><a href="https://arxiv.org/abs/2004.04906">Karpukhin et al. (2020), Dense Passage Retrieval</a> <small>In-batch and hard negatives for retriever training.</small></li>
+</ol>
+</section>

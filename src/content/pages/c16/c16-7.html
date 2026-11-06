@@ -1,6 +1,14 @@
+<section class="tp tp-intuition" id="c16-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Fire drills find blocked exits before a real fire does. <a class="gl" href="#gl-red-teaming">Red teaming</a> is the drill for AI systems: attack your own system, the whole system and not only the model, with injections, jailbreaks, data extraction, cross-tenant probes and cost attacks.</p>
+<p>Every finding becomes a regression test, every <a class="gl" href="#gl-guardrail">guardrail</a> gets a measured catch rate and false-alarm rate, and an incident plan says who can switch a feature off within minutes.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c16-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Red teaming</b>: deliberately attacking your system (not just the model) before attackers do: injections via every content source, jailbreaks, data extraction, cross-tenant probes, tool abuse, cost attacks (inputs designed to maximise tokens). Combine automated scanners (garak, PyRIT, promptfoo red-team) with human creativity; feed findings into regression suites (8.6).</li>
-<li><b>Policy enforcement</b>: write the policy (what the system must not do or say) and enforce it with layered controls: input/output classifiers (e.g. Llama Guard-style safety models), rules, guardrail frameworks, and architectural limits. Measure each control's catch rate and false-positive rate.</li>
+<li><b><a class="gl" href="#gl-red-teaming">Red teaming</a></b>: deliberately attacking your system (not just the model) before attackers do: injections via every content source, jailbreaks, data extraction, cross-tenant probes, tool abuse, cost attacks (inputs designed to maximise tokens). Combine automated scanners (garak, PyRIT, promptfoo red-team) with human creativity; feed findings into regression suites (8.6).</li>
+<li><b><a class="gl" href="#gl-guardrail">Policy enforcement</a></b>: write the policy (what the system must not do or say) and enforce it with layered controls: input/output classifiers (e.g. Llama Guard-style safety models), rules, guardrail frameworks, and architectural limits. Measure each control's catch rate and false-positive rate.</li>
 <li><b>Human oversight</b>: approvals for consequential actions (11.7), review queues for flagged outputs, the ability to stop an agent or disable a feature quickly (kill switches and feature flags), and clear accountability for each AI system.</li>
 <li><b>Incident response</b>: AI incidents include data leaks, harmful outputs at scale, runaway costs, injection-driven actions and quality collapses. Prepare runbooks (17.8), preserve traces as evidence, contain (disable tool, roll back prompt/model, block source), notify per legal obligations, and run a blameless postmortem.</li>
 </ul>
@@ -8,10 +16,36 @@
 <div class="nodes"><div class="nd">Detect<small>alert, user report, red team</small></div><div class="nd">Triage<small>severity, scope</small></div><div class="nd">Contain<small>kill switch, rollback</small></div><div class="nd">Investigate<small>traces, lineage</small></div><div class="nd">Notify<small>legal, customers</small></div><div class="nd">Fix + regression cases</div><div class="nd">Postmortem</div></div>
 <ol class="steps"><li data-n="0">A user reports the assistant revealed another customer's invoice amount.</li><li data-n="1">Severity 1: potential cross-tenant data exposure. Incident commander assigned.</li><li data-n="2">Disable the affected feature via flag; rotate any exposed credentials; preserve logs.</li><li data-n="3">Trace shows a semantic cache hit across tenants after a config change removed tenant from the key.</li><li data-n="4">Privacy/legal determine notification obligations and timelines for affected tenants.</li><li data-n="5">Fix the key; add an isolation test (16.4) for that cache; purge the cache.</li><li data-n="6">Blameless review: why did the config change pass review and CI? Add a CI gate.</li></ol></div>
 <figcaption><b>AI incident response</b>, following the standard incident lifecycle with AI-specific containment levers.</figcaption></figure>
+</section>
+
+<section class="tp tp-math" id="c16-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A catch rate needs an interval</b>. 96 of 150 indirect injections caught is 64%, but with only 150 tries the true rate could reasonably be anywhere from about 56% to 71%.</p>
+<p><b>False alarms at scale</b>. A guardrail that wrongly flags 46 of 2,000 ordinary requests (2.3%) would block about 23,000 of 1 million requests a day.</p>
+<p><b>Cost attacks.</b> A prompt designed to produce 8,000 output tokens instead of 300 costs about 8,000 ÷ 300 ≈ 27 times as much; a cap on output tokens bounds it.</p>
+</section>
+
+<section class="tp tp-code" id="c16-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program turns a red-team run into a catch rate and 95% interval for each attack family, adds the false-alarm rate on ordinary traffic, and names the weakest family. Multiply the attack counts by ten and watch the intervals narrow.</p>
+<figure class="fig live" id="snip-red-team-rates"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"red-team-rates"}'></div></div>
+<figcaption><b>Reading red-team results, in real Python.</b> The counts are illustrative.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: scan a local model with garak <span class="tag cpu">Laptop · CPU · slow</span></h5>
 <pre><code>pip install garak
 # probes for prompt injection and related weaknesses against a local Ollama model
 python -m garak --target_type ollama --target_name llama3.2:1b --probes promptinject
 python -m garak --list_probes          # explore other probe families</code></pre>
 <p>Small models fail many probes; the exercise is to read the report, understand each probe family, and then design <em>system-level</em> mitigations, since swapping the model alone will not fix architectural exposure. Older garak versions used <code>--model_type</code>/<code>--model_name</code>; current versions use <code>--target_type</code>/<code>--target_name</code>.</p></div>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c16-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://github.com/NVIDIA/garak">garak</a> <small>An LLM vulnerability scanner with many probe families.</small></li>
+<li><a href="https://github.com/Azure/PyRIT">PyRIT</a> <small>Orchestrating multi-turn red-team campaigns.</small></li>
+<li><a href="https://arxiv.org/abs/2312.06674">Inan et al. (2023), Llama Guard</a> <small>A safety classifier for inputs and outputs.</small></li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> <small>Measuring and managing AI risks, including red teaming.</small></li>
+</ol>
+</section>

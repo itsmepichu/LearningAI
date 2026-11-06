@@ -1,5 +1,13 @@
+<section class="tp tp-intuition" id="c17-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>Systems rarely break in one go. <a class="gl" href="#gl-quality-drift">Quality drift</a> is slower: users start asking about a new product, documents go stale, a provider quietly updates its model, and the scores slide.</p>
+<p>So watch what goes in as well as what comes out: the languages, topics and lengths of requests, the freshness of documents and the model version in every trace. And join slow outcomes, such as an audit 45 days later, back to the original request by its id.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c17-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
-<li><b>Quality drift</b>: scores decline gradually as user behaviour, products and documents change (3.6). Detect with continuous sampled evaluation and input-distribution monitoring (topics, languages, query lengths, retrieval score distributions).</li>
+<li><b><a class="gl" href="#gl-quality-drift">Quality drift</a></b>: scores decline gradually as user behaviour, products and documents change (3.6). Detect with continuous sampled evaluation and input-distribution monitoring (topics, languages, query lengths, retrieval score distributions).</li>
 <li><b>Data freshness</b>: track ingestion lag and index staleness against the freshness SLO (10.4), plus "answers citing documents older than X" for time-sensitive domains.</li>
 <li><b>Model changes</b>: providers update models behind aliases, deprecate versions, and change safety filters. Pin snapshot versions where offered, record the response's model version in every trace, and annotate dashboards when it changes. Re-run regression suites on any change (18.5).</li>
 <li><b>Delayed feedback</b>: the outcomes that matter (was the claim correct? did the customer churn? did the code cause an incident?) arrive days or months later. Join them back to the original trace by ID, and use faster proxy signals (17.4) in the meantime; validate that proxies track the real outcomes.</li>
@@ -7,4 +15,29 @@
 <figure class="fig"><div class="stage"><svg id="driftSvg" viewBox="0 0 640 230" role="img" aria-label="Quality over time with change markers"></svg></div>
 <figcaption><b>Groundedness over 60 days</b> (example data) with annotated events: an index migration (no effect), a provider model update (sharp drop, fixed by a prompt change on day 34), and gradual drift from a new product line whose documents were never ingested. Annotations turn a wiggly line into an investigation.</figcaption></figure>
 <div class="box example"><h5>Example: joining delayed outcomes</h5><p>A claims-triage model's "auto-approve" decisions are audited 45 days later. Each audit result is written with the original <code>trace_id</code>, so weekly reports show audited accuracy per prompt version and model version, revealing that the v14 prompt (released 6 weeks ago) has 3× the overturn rate of v13, which faster signals had not shown.</p></div>
+</section>
+
+<section class="tp tp-math" id="c17-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Measuring a shift</b>. Last month 75% of requests were in English and 25% in other languages; this week it is 42% and 58%.</p>
+<p>The population stability index adds up, for each category, the change in share times how large that change is in proportion: for English (0.42 − 0.75) × log(0.42 ÷ 0.75) ≈ 0.19, and the other languages add more. Over 0.25 is usually treated as a large shift worth investigating.</p>
+<p><b>Delayed outcomes.</b> If audits arrive 45 days later and v14 of a prompt has 3 times the overturn rate of v13, only joining audits to traces by id reveals it.</p>
+</section>
+
+<section class="tp tp-code" id="c17-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program compares the language mix of your project’s messages with a simulated later week, scores the shift with a population stability index, and joins delayed audit results to decisions by trace id. Change the weights for the later week and run it again.</p>
+<figure class="fig live" id="snip-input-drift"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"input-drift"}'></div></div>
+<figcaption><b>Input drift and delayed outcomes, in real Python.</b> The later week is simulated.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c17-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.evidentlyai.com/">Evidently documentation</a> <small>Data drift and LLM quality monitoring.</small></li>
+<li><a href="https://arxiv.org/abs/2307.09009">Chen et al. (2023), How Is ChatGPT’s Behavior Changing over Time?</a> <small>Evidence that hosted models change behind the same name.</small></li>
+<li><a href="https://platform.claude.com/docs/en/about-claude/model-deprecations">Anthropic: Model deprecations</a> <small>Why pinned model versions and migration plans matter.</small></li>
+</ol>
+</section>

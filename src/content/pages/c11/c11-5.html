@@ -1,4 +1,12 @@
-<p>Agent tasks can last minutes to days (waiting for approvals, external jobs, rate limits). Processes crash, deploys restart pods, and providers time out. <b>Durable execution</b> means the task's progress survives all of that.</p>
+<section class="tp tp-intuition" id="c11-5-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A video game saves your progress at checkpoints. If the power goes out, you restart from the last checkpoint, not from the beginning, and the doors you already opened stay open.</p>
+<p><a class="gl" href="#gl-durable-execution">Durable execution</a> does the same for long agent tasks. Each step is saved as soon as it finishes, code allows only certain moves between states, and a restarted worker picks up where the last one stopped instead of repeating what was already done.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c11-5-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>Agent tasks can last minutes to days (waiting for approvals, external jobs, rate limits). Processes crash, deploys restart pods, and providers time out. <b><a class="gl" href="#gl-durable-execution">Durable execution</a></b> means the task's progress survives all of that.</p>
 <ul>
 <li><b>Explicit state machine</b>: model the task as states (RECEIVED → INVESTIGATING → AWAITING_APPROVAL → EXECUTING → DONE / FAILED / ESCALATED) with allowed transitions enforced in code. The LLM chooses actions <em>within</em> a state; code controls transitions.</li>
 <li><b>Checkpointing</b>: after each step, persist the full state (messages, results, pending actions) keyed by task ID. Agent frameworks (LangGraph checkpointers) and workflow engines (Temporal, which records an event history and replays it) do this.</li>
@@ -14,4 +22,33 @@
 <ol class="steps"><li data-n="0">Read order: result saved.</li><li data-n="1">Read shipping record: result saved.</li><li data-n="2">Calling the payments API to create a credit.</li><li data-n="3">Pod evicted mid-call. Did the credit happen? Unknown.</li><li data-n="4">Another worker picks up the task from checkpoint #2; steps 1–2 are not repeated.</li><li data-n="5">Step 3 is retried with the same idempotency key; the payments API returns the existing credit if the first attempt succeeded (11.6).</li><li data-n="6">The task proceeds exactly once in effect.</li></ol></div>
 <figcaption><b>Crash and resume.</b> Checkpoints plus idempotent side effects give "effectively once" execution.</figcaption></figure>
 <div class="box example"><h5>Example: choosing an engine</h5><p>A short interactive agent (under a minute) can checkpoint to Postgres after each step via a framework checkpointer. A procurement agent that waits days for approvals and calls slow ERP APIs belongs in a durable workflow engine (Temporal or a cloud equivalent), where each LLM call and tool call is an "activity" with its own retry policy and timeout.</p></div>
+</section>
+
+<section class="tp tp-math" id="c11-5-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How often crashes meet long tasks</b> (illustrative). If a worker restarts on average once a day (deploys, evictions) and a task takes 2 minutes:</p>
+<ul>
+<li>A day has 1,440 minutes, so a given task has about 2 ÷ 1,440 ≈ 0.14% chance of being interrupted.</li>
+<li>At 50,000 tasks a day, that is about 50,000 × 0.0014 ≈ 70 interrupted tasks every day.</li>
+<li>A task that waits 2 days for an approval is interrupted almost certainly, since it spans about 2 restarts.</li>
+</ul>
+<p>Without checkpoints those tasks start over, and repeat their earlier side effects.</p>
+</section>
+
+<section class="tp tp-code" id="c11-5-code">
+<h3 data-n="4">Code</h3>
+<p>The program moves your project’s largest case through a state machine, saves a checkpoint after every move, crashes during the write and resumes. The record is read only once. Try moving to a state that is not allowed.</p>
+<figure class="fig live" id="snip-checkpoint-resume"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"checkpoint-resume"}'></div></div>
+<figcaption><b>A checkpointed state machine, in real Python.</b> The checkpoint is a JSON file; production uses a database or a workflow engine.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c11-5-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://docs.temporal.io/workflows">Temporal: Workflows</a> <small>Event history, replay and durable timers.</small></li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a> <small>Checkpointers that save graph state after every step.</small></li>
+<li><a href="https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html">AWS Step Functions</a> <small>A managed state machine service with retries and waits.</small></li>
+</ol>
+</section>

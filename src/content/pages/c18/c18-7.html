@@ -1,7 +1,15 @@
+<section class="tp tp-intuition" id="c18-7-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>A system is not finished when it works; it is finished when someone else can run it at 3 a.m. An <a class="gl" href="#gl-operational-readiness">operational readiness review</a> checks exactly that: targets defined, alerts live, runbooks tested, people on call, capacity planned from measured numbers, recovery practised, security reviewed and budgets set.</p>
+<p>Every activity also needs exactly one accountable owner. Two owners is the same as none: each assumes the other has it.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c18-7-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Ownership</b>: every AI system has a named owning team accountable for quality, cost, incidents and compliance; every component (prompts, index, fine-tuned model, gateway routes, eval suite) has an owner. Shared platforms (gateway, vector DB, observability) have platform owners with clear interfaces.</li>
 <li><b>Release documentation</b>: release notes per release manifest: what changed, evaluation results vs previous, known limitations, rollout plan, rollback procedure. Model cards (13.7) and system cards (intended use, risks, controls) for governance (16.8).</li>
-<li><b>Operational readiness review</b>: before launch or handover, verify the system can be operated: SLOs defined, dashboards and alerts live, runbooks written and tested, on-call staffed and trained, capacity plan with measured numbers (15.10), DR tested, security review done, cost budgets configured.</li>
+<li><b><a class="gl" href="#gl-operational-readiness">Operational readiness review</a></b>: before launch or handover, verify the system can be operated: SLOs defined, dashboards and alerts live, runbooks written and tested, on-call staffed and trained, capacity plan with measured numbers (15.10), DR tested, security review done, cost budgets configured.</li>
 <li><b>Service handover</b>: when a project team hands a system to an operations or product team: walkthrough of architecture and traces, access granted, runbook drills, shadow on-call, and a period of joint ownership before the original team steps back.</li>
 </ul>
 <figure class="fig live"><div class="stage"><div class="wid">
@@ -17,7 +25,7 @@
 <tr><td>Cost budgets</td><td>A</td><td>R</td><td>C</td><td>I</td></tr>
 </table></div>
 <p style="font-size:.86rem;color:var(--muted)">Example RACI: R = responsible, A = accountable, C = consulted, I = informed.</p>
-<div data-slot="practice"></div>
+
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for LLMOps and delivery</h3>
 <div class="cols3">
@@ -28,3 +36,28 @@
 <div class="card"><h5><a href="https://openfeature.dev/docs/reference/intro">OpenFeature</a></h5><span class="meta">feature flags standard</span><p>Vendor-neutral flag API for routing cohorts to prompt/model/index versions and for kill switches.</p></div>
 <div class="card"><h5><a href="https://www.promptfoo.dev/docs/integrations/ci-cd/">promptfoo CI</a> · <a href="https://langfuse.com/docs/prompt-management/overview">Langfuse prompts</a></h5><span class="meta">prompt gates · prompt registry</span><p>Run evaluation gates in CI; manage versioned prompts with labels for environments.</p></div>
 </div></div>
+</section>
+
+<section class="tp tp-math" id="c18-7-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Why drills count</b> (illustrative). If an incident needs 4 runbook steps and each untested step has a 10% chance of being wrong or out of date, the chance all 4 work is 0.9 × 0.9 × 0.9 × 0.9 ≈ 66%. One drill that finds and fixes the bad steps lifts that close to 100%.</p>
+<p><b>Handover.</b> Two weeks of shadow on-call at one incident a week gives the new team about 2 real incidents to learn from before they are on their own.</p>
+</section>
+
+<section class="tp tp-code" id="c18-7-code">
+<h3 data-n="4">Code</h3>
+<p>The program checks a launch against its must-have readiness items and validates that every activity in a RACI table has exactly one accountable owner. Tick the missing items or fix the cost-budget row and run it again.</p>
+<figure class="fig live" id="snip-readiness-raci"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"readiness-raci"}'></div></div>
+<figcaption><b>Readiness and ownership checks, in real Python.</b> A ticked box does not prove a runbook works.</figcaption></figure>
+</section>
+
+<div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c18-7-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://sre.google/sre-book/evolving-sre-engagement-model/">Google SRE book: Evolving the SRE Engagement Model</a> <small>Production readiness reviews before handover.</small></li>
+<li><a href="https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html">AWS Well-Architected: Operational Excellence</a> <small>Readiness, runbooks and ownership.</small></li>
+<li><a href="https://arxiv.org/abs/1810.03993">Mitchell et al. (2018), Model Cards</a> <small>Release documentation for models.</small></li>
+</ol>
+</section>

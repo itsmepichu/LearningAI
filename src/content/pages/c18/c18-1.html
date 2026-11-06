@@ -1,4 +1,12 @@
-<p>Every artefact that can change behaviour needs an immutable version, and every production request should record the versions that served it. Bundle them into a <dfn>release manifest</dfn>: one identifier for "the system as deployed".</p>
+<section class="tp tp-intuition" id="c18-1-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>An AI system’s behaviour depends on much more than its code: the prompts, the models, the search index, the settings and even the evaluation suite that approved it. Change any one and the answers can change.</p>
+<p>A <a class="gl" href="#gl-release-manifest">release manifest</a> lists all of them under one id, and every request records that id. When someone complains about an answer, you know exactly which combination produced it and can reproduce it.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c18-1-mechanism">
+<h3 data-n="2">Mechanism</h3>
+<p>Every artefact that can change behaviour needs an immutable version, and every production request should record the versions that served it. Bundle them into a <dfn><a class="gl" href="#gl-release-manifest">release manifest</a></dfn>: one identifier for "the system as deployed".</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 260" role="img" aria-label="Release manifest pins every behaviour-affecting artefact">
 <g class="sm">
@@ -22,4 +30,28 @@ index: {alias: kb-search, target: kb-v4, embedder: bge-base@rev2, chunker: v5}
 config: {retrieval_k: 8, rerank_top: 50, temperature: 0.2, flags_revision: 41}
 evaluation: {suite: v31, judge_prompt: v4, results: s3://evals/r2026.11.3/}
 approved_by: [kb-owner, sec-review]   created: 2026-11-03T16:20Z</code></pre></div>
+</section>
+
+<section class="tp tp-math" id="c18-1-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>How many combinations</b> (illustrative). With 3 prompts, 3 models, 2 index versions and 4 configuration sets in use over a quarter, there are 3 × 3 × 2 × 4 = 72 possible combinations. Without a manifest, "which version answered this?" has 72 possible answers.</p>
+<p><b>Bisecting.</b> If quality dropped somewhere across 16 releases, comparing the middle release first and halving each time finds the culprit in about 4 steps, since 2 × 2 × 2 × 2 = 16.</p>
+</section>
+
+<section class="tp tp-code" id="c18-1-code">
+<h3 data-n="4">Code</h3>
+<p>The program hashes a manifest of code, prompts, models, index, configuration and evaluation suite into a release id, shows that changing only a prompt makes a new release, and finds which release served a complaint. Change the index target and run it again.</p>
+<figure class="fig live" id="snip-release-manifest"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"release-manifest"}'></div></div>
+<figcaption><b>Release ids from manifests, in real Python.</b> Nothing is deployed.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c18-1-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://mlflow.org/docs/latest/genai/prompt-registry/">MLflow Prompt Registry</a> <small>Versioned prompts alongside models and runs.</small></li>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/resource/">OpenTelemetry: Resource conventions</a> <small>Attaching service version to every span.</small></li>
+<li><a href="https://dvc.org/doc">DVC documentation</a> <small>Versioning data and pipelines with code.</small></li>
+</ol>
+</section>
