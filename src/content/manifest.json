@@ -384,9 +384,9 @@
      "tn": "5.1",
      "title": "Tokenisation: subwords, BPE, vocabulary and multilingual implications",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 413
+     "figures": 4,
+     "interactive": 3,
+     "words": 849
     },
     {
      "id": "c5-2",
@@ -395,9 +395,9 @@
      "tags": [
       "real"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 522
+     "figures": 4,
+     "interactive": 4,
+     "words": 1040
     },
     {
      "id": "c5-3",
@@ -406,18 +406,18 @@
      "tags": [
       "real"
      ],
-     "figures": 4,
-     "interactive": 3,
-     "words": 623
+     "figures": 5,
+     "interactive": 4,
+     "words": 1257
     },
     {
      "id": "c5-4",
      "tn": "5.4",
      "title": "Encoder-only, decoder-only and encoder–decoder architectures",
      "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 196
+     "figures": 2,
+     "interactive": 1,
+     "words": 571
     },
     {
      "id": "c5-5",
@@ -426,27 +426,27 @@
      "tags": [
       "cpu"
      ],
-     "figures": 1,
-     "interactive": 0,
-     "words": 323
+     "figures": 2,
+     "interactive": 1,
+     "words": 720
     },
     {
      "id": "c5-6",
      "tn": "5.6",
      "title": "Decoding: temperature, top-k, top-p, stop conditions and reproducibility limits",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 400
+     "figures": 3,
+     "interactive": 3,
+     "words": 871
     },
     {
      "id": "c5-7",
      "tn": "5.7",
      "title": "Dense vs mixture-of-experts models, context length and attention costs",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 409
+     "figures": 3,
+     "interactive": 2,
+     "words": 866
     }
    ],
    "hasIntro": false,

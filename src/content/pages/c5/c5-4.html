@@ -1,12 +1,51 @@
+<section class="tp tp-intuition" id="c5-4-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>The same transformer block can be wired three ways, and the wiring decides what the model is good at. A reader that sees the whole page at once is best at understanding it. A writer that can only see what it has written so far is built for producing text. A translator first reads a whole sentence with one part of itself and then writes with another, looking back at what it read.</p>
+<p>The only difference between these three is who may look at whom: the attention mask.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c5-4-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="tw"><table>
 <tr><th>Family</th><th>Attention</th><th>Trained to</th><th>Good for</th><th>Examples</th></tr>
-<tr><td><b>Encoder-only</b></td><td>Bidirectional: every token sees every token</td><td>Fill in masked tokens</td><td>Understanding: classification, NER, <b>embeddings, rerankers</b></td><td>BERT, RoBERTa, ModernBERT, most embedding models</td></tr>
-<tr><td><b>Decoder-only</b></td><td>Causal: only earlier tokens</td><td>Predict the next token</td><td>Generation, chat, code, agents; everything via prompting</td><td>GPT family, Llama, Qwen, Mistral, Gemma, Claude</td></tr>
-<tr><td><b>Encoder–decoder</b></td><td>Encoder bidirectional; decoder causal + cross-attention to encoder</td><td>Map input sequence to output sequence</td><td>Translation, summarisation, speech recognition</td><td>T5, BART, Whisper</td></tr>
+<tr><td><b><a class="gl" href="#gl-encoder-only">Encoder-only</a></b></td><td>Bidirectional: every token sees every token</td><td>Fill in masked tokens</td><td>Understanding: classification, NER, <b>embeddings, rerankers</b></td><td>BERT, RoBERTa, ModernBERT, most embedding models</td></tr>
+<tr><td><b><a class="gl" href="#gl-decoder-only">Decoder-only</a></b></td><td>Causal: only earlier tokens</td><td>Predict the next token</td><td>Generation, chat, code, agents; everything via prompting</td><td>GPT family, Llama, Qwen, Mistral, Gemma, Claude</td></tr>
+<tr><td><b><a class="gl" href="#gl-encoder-decoder">Encoder–decoder</a></b></td><td>Encoder bidirectional; decoder causal + cross-attention to encoder</td><td>Map input sequence to output sequence</td><td>Translation, summarisation, speech recognition</td><td>T5, BART, Whisper</td></tr>
 </table></div>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 210" role="img" aria-label="Attention mask patterns for three architectures">
 <g id="maskViz"></g>
 </svg></div><figcaption><b>Who can attend to whom.</b> Filled cell = row token may attend to column token. Decoder-only won for general-purpose models because one simple objective scales on any text and every task can be phrased as continuation.</figcaption></figure>
 <div class="box example"><h5>Example: picking architectures in one RAG system</h5><p>A bi-encoder (encoder-only) embeds documents and queries for fast vector search; a cross-encoder reranker (encoder-only, reading query and passage together) re-scores the top 50; a decoder-only LLM writes the answer. Three transformers, three architectures, each matched to its job.</p></div>
+</section>
+
+<section class="tp tp-math" id="c5-4-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>Who can see whom.</b> Count the allowed pairs with 4 output tokens and 5 input tokens:</p>
+<ul>
+<li>Encoder-only, with 4 tokens: every token sees all 4, so 4 × 4 = 16 pairs.</li>
+<li>Decoder-only, with 4 tokens: the first sees 1, the second 2, the third 3, the fourth 4, so 1 + 2 + 3 + 4 = 10 pairs.</li>
+<li>Cross-attention: each of the 4 output tokens sees all 5 input tokens, so 4 × 5 = 20 pairs.</li>
+</ul>
+<p><b>How much each text teaches.</b> A decoder-only model gets a lesson at every position: a 1,000-token text gives 1,000 "what comes next?" questions. BERT hides about 15% of the tokens and learns only from those, so the same text gives about 150 questions.</p>
+<p><b>Why the decoder can reuse work.</b> In a decoder-only model, an earlier token never sees later tokens, so its keys and values do not change when a new token is added. They can be saved and reused (the <a class="gl" href="#gl-kv-cache">KV cache</a>). In an encoder, adding a token changes what every earlier token sees, so everything would have to be computed again.</p>
+</section>
+
+<section class="tp tp-code" id="c5-4-code">
+<h3 data-n="4">Code</h3>
+<p>The program builds the three masks as matrices of ones and zeros and counts what each token can see. Change <code>n_src</code> and <code>n_tgt</code> to see how the causal triangle and the cross-attention rectangle grow.</p>
+<figure class="fig live" id="snip-masks"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"masks"}'></div></div>
+<figcaption><b>The three attention patterns, in real Python.</b> The masks are the whole difference between the families' attention; the rest of a real model is not shown.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c5-4-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1810.04805">Devlin et al. (2018), BERT</a> <small>The encoder-only model and its masked-language-model objective.</small></li>
+<li><a href="https://arxiv.org/abs/2005.14165">Brown et al. (2020), Language Models are Few-Shot Learners (GPT-3)</a> <small>A decoder-only model doing many tasks by continuation alone.</small></li>
+<li><a href="https://arxiv.org/abs/1910.10683">Raffel et al. (2019), Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer (T5)</a> <small>Compares the three families and their objectives under one setup.</small></li>
+<li><a href="https://arxiv.org/abs/2212.04356">Radford et al. (2022), Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)</a> <small>An encoder–decoder model for speech, in production use.</small></li>
+</ol>
+</section>

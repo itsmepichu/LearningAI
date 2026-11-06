@@ -5,6 +5,9 @@ import { resolveAnchor } from '../data/course'
 import { mountLegacyWidgets, type LegacyHandle } from '../legacy/runtime'
 import { useTheme } from '../store/theme'
 import { widgets } from '../widgets/registry'
+import { termId } from '../data/glossary'
+import { GlossaryTip } from './GlossaryTip'
+import { renderMath } from './math'
 
 interface Slot { el: HTMLElement; name: string; props: Record<string, unknown>; key: string }
 
@@ -37,7 +40,8 @@ function normaliseHeadings(root: HTMLElement) {
  *  - mounts React widgets into `<div data-widget="name" data-props='{...}'>` placeholders,
  *  - starts the v3 vanilla widgets found in the fragment (when `legacy` is on),
  *  - turns in-content "#id" links into app navigation,
- *  - normalises heading levels, before the legacy widgets look for headings.
+ *  - normalises heading levels, before the legacy widgets look for headings,
+ *  - typesets `.math` TeX with KaTeX, and shows glossary cards for `a.gl` term links.
  */
 export function HtmlContent({
   html,
@@ -55,6 +59,7 @@ export function HtmlContent({
   const navigate = useNavigate()
   const [widgetSlots, setWidgetSlots] = useState<Slot[]>([])
   const [slotEls, setSlotEls] = useState<{ name: string; el: HTMLElement }[]>([])
+  const [rootEl, setRootEl] = useState<HTMLElement | null>(null)
   const handle = useRef<LegacyHandle | null>(null)
   const themeVersion = useTheme((s) => s.version)
   const inner = useMemo(() => ({ __html: html }), [html])
@@ -63,6 +68,10 @@ export function HtmlContent({
     const root = ref.current
     if (!root) return
     normaliseHeadings(root)
+    setRootEl(root)
+    renderMath(root).catch(() => {
+      /* the raw TeX stays readable if KaTeX cannot load */
+    })
     root.querySelectorAll<HTMLAnchorElement>('a[href^="http"]').forEach((a) => {
       a.target = '_blank'
       a.rel = 'noopener noreferrer'
@@ -102,6 +111,12 @@ export function HtmlContent({
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return
     const href = a.getAttribute('href') || ''
     if (!href.startsWith('#') || href.length < 2) return
+    const term = termId(href)
+    if (term) {
+      e.preventDefault()
+      navigate(`/glossary#gl-${term}`)
+      return
+    }
     const id = decodeURIComponent(href.slice(1))
     const local = document.getElementById(id)
     if (local && ref.current?.contains(local)) {
@@ -120,6 +135,7 @@ export function HtmlContent({
   return (
     <>
       <div ref={ref} className={className} onClick={onClick} dangerouslySetInnerHTML={inner} />
+      <GlossaryTip root={rootEl} />
       {slotEls.map((s, i) => (slots?.[s.name] ? createPortal(slots[s.name], s.el, `slot-${s.name}-${i}`) : null))}
       {widgetSlots.map((s) => {
         const W = widgets[s.name]

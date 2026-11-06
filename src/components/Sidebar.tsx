@@ -1,13 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
 import { Check, ChevronRight } from 'lucide-react'
 import { chapters, getChapter, parts } from '../data/course'
 import { useProgress } from '../store/progress'
+import { dueIds } from '../data/flashcards'
 
 export function Sidebar() {
   const loc = useLocation()
   const current = loc.pathname.split('/')[1]
   const studied = useProgress((s) => s.studied)
+  const cards = useProgress((s) => s.cards)
+  // Counted when the sidebar renders; the flashcards page keeps its own count current.
+  const due = useMemo(() => dueIds(cards, new Date()).length, [cards, loc.pathname])
   const [open, setOpen] = useState<Record<string, boolean>>({})
   const listRef = useRef<HTMLDivElement>(null)
 
@@ -27,6 +31,13 @@ export function Sidebar() {
       </NavLink>
       <NavLink to="/practice" className="side-top">
         Practice
+      </NavLink>
+      <NavLink to="/flashcards" className="side-top">
+        Flashcards
+        {due > 0 && <span className="side-badge" aria-label={`${due} due`}>{due}</span>}
+      </NavLink>
+      <NavLink to="/glossary" className="side-top">
+        Glossary
       </NavLink>
       <NavLink to="/progress" className="side-top">
         Your progress

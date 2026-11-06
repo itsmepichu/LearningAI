@@ -1,9 +1,17 @@
+<section class="tp tp-intuition" id="c5-2-intuition">
+<h3 data-n="1">Intuition</h3>
+<p>To understand a word you look at the words around it, and some neighbours matter much more than others. In "The server that crashed restarted", the word "restarted" needs to find its subject, "server", and can mostly ignore "that". <a class="gl" href="#gl-attention">Attention</a> is how a transformer does this: every token asks a question, every token advertises what it holds, and each token collects a blend of the others, weighted by how well they answered its question.</p>
+<p>It works like a soft lookup in a dictionary. A normal lookup returns the one entry whose key matches exactly; attention returns a weighted mix of all entries, with the closest matches weighted most.</p>
+</section>
+
+<section class="tp tp-mechanism" id="c5-2-mechanism">
+<h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b>Query (Q), Key (K), Value (V)</b>: three vectors computed from each token's representation by learned matrices W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub>. Intuition: the query says "what I am looking for", the key says "what I contain", the value is "what I will pass on".</div>
-<div><b>Attention</b>: Attention(Q,K,V) = softmax(QKᵀ / √d) · V. Each token's output is a weighted average of all values, weighted by how well its query matches each key. Dividing by √d (d = key dimension) keeps scores in a range where softmax does not saturate.</div>
-<div><b>Self-attention</b>: Q, K and V all come from the same sequence. <b>Cross-attention</b>: Q comes from one sequence (the decoder) and K, V from another (the encoder's output), as in translation.</div>
-<div><b>Multi-head attention</b>: run several attentions in parallel with different learned projections (e.g. 32 heads of dimension 128), then concatenate. Different heads learn different relations (syntax, coreference, position).</div>
-<div><b>Causal mask</b>: in a generator, token i may only attend to tokens ≤ i. Scores for future positions are set to −∞ before softmax, so their weight is exactly 0.</div>
+<div><b><a class="gl" href="#gl-qkv">Query (Q), Key (K), Value (V)</a></b>: three vectors computed from each token's representation by learned matrices W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub>. Intuition: the query says "what I am looking for", the key says "what I contain", the value is "what I will pass on".</div>
+<div><b>Attention</b>: each token's output is a weighted average of all values, weighted by how well its query matches each key. The numbers part below works through an example.</div>
+<div><b>Self-attention</b>: Q, K and V all come from the same sequence. <b><a class="gl" href="#gl-cross-attention">Cross-attention</a></b>: Q comes from one sequence (the decoder) and K, V from another (the encoder's output), as in translation.</div>
+<div><b><a class="gl" href="#gl-multi-head-attention">Multi-head attention</a></b>: run several attentions in parallel with different learned projections (e.g. 32 heads of dimension 128), then concatenate. Different heads learn different relations (syntax, coreference, position).</div>
+<div><b><a class="gl" href="#gl-causal-mask">Causal mask</a></b>: in a generator, token i may only attend to tokens ≤ i. Scores for future positions are set to −∞ before softmax, so their weight is exactly 0.</div>
 </div>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Token vectors X<small>n × d</small></div><div class="nd">Q = XW<sub>Q</sub>, K = XW<sub>K</sub>, V = XW<sub>V</sub></div><div class="nd">Scores QKᵀ/√d<small>n × n</small></div><div class="nd">Mask future<small>−∞ above diagonal</small></div><div class="nd">Softmax per row<small>weights sum to 1</small></div><div class="nd">Weighted sum of V<small>n × d</small></div><div class="nd">Concat heads → W<sub>O</sub></div></div>
@@ -14,4 +22,41 @@
 <figure class="fig live" id="scene-multihead"><div class="stage"><div data-widget="multihead"></div></div>
 <figcaption><b>Multi-head attention as tensors, in 3D.</b> Step through the pipeline above with real numbers: the token matrix X, the projections to Q, K and V, the split into 3 heads laid one behind another (the third axis is the head), each head's causal attention weights, the weighted sum of values, and the concatenation mixed by W<sub>O</sub>. The arithmetic is real, computed in your browser, but X and the weights are random, so the attention patterns mean nothing: the figure above shows hand-designed heads with recognisable patterns. Drag or use the arrow keys to turn the view, or switch to the 2D view; the text under the figure describes each step.</figcaption></figure>
 <div class="box example"><h5>Example: what attention resolves</h5><p>In "The server that crashed restarted", the verb "restarted" needs its subject. A trained head may put high weight from "restarted" onto "server", skipping "crashed". The output vector for "restarted" then contains information about the server, which later layers use to predict the next token (e.g. "at", "after").</p></div>
+</section>
+
+<section class="tp tp-math" id="c5-2-math">
+<h3 data-n="3">The numbers</h3>
+<p><b>A small worked example.</b> Take the token "restarted". Its query is compared with the key of every earlier token, giving one score each. The scores here are illustrative:</p>
+<div class="tw"><table>
+<tr><th>Token</th><th>Score</th><th>After softmax (weight)</th></tr>
+<tr><td>server</td><td>4</td><td>0.84</td></tr>
+<tr><td>that</td><td>1</td><td>0.04</td></tr>
+<tr><td>crashed</td><td>2</td><td>0.11</td></tr>
+</table></div>
+<p>Softmax turns the scores into weights that add up to 1 (5.5 shows how). The output for "restarted" is then 84% of the value of "server", 4% of "that" and 11% of "crashed", added together. So it mostly carries information about the server.</p>
+<p><b>Why scores are divided by the square root of the width.</b> A score is the sum of one multiplication per dimension, so wider vectors give bigger scores. With very big scores, softmax gives almost all the weight to one token and learning stalls. Dividing by the square root of the width brings scores back to a normal size: for 128 dimensions that is about 11.3, so a raw score of 45 becomes about 4.</p>
+<p><b>The cost.</b> Every token is compared with every token, so each head builds a table of tokens × tokens scores:</p>
+<ul>
+<li>1,000 tokens: 1,000 × 1,000 = 1 million scores.</li>
+<li>2,000 tokens: 4 million scores. Double the text, four times the work (5.7).</li>
+</ul>
+</section>
+
+<section class="tp tp-code" id="c5-2-code">
+<h3 data-n="4">Code</h3>
+<p>The whole of attention fits in a few lines of NumPy. The program takes the first words of one of your example project's messages, computes causal attention, checks that each row of weights sums to 1 and that nothing above the diagonal is attended to, then splits the work into two heads. Try deleting the <code>/ np.sqrt(K.shape[1])</code> and multiplying <code>X</code> by 10 to see softmax saturate.</p>
+<figure class="fig live" id="snip-attention"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"attention"}'></div></div>
+<figcaption><b>Scaled dot-product attention, in real Python.</b> The operations are exact; the embeddings and weights are random, so the pattern of weights carries no meaning.</figcaption></figure>
+</section>
+
 <div data-slot="practice"></div>
+
+<section class="tp tp-sources" id="c5-2-sources">
+<h3 data-n="5">Primary sources</h3>
+<ol>
+<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> <small>Defines scaled dot-product and multi-head attention (section 3.2), including the √d scaling argument.</small></li>
+<li><a href="https://arxiv.org/abs/1409.0473">Bahdanau, Cho and Bengio (2014), Neural Machine Translation by Jointly Learning to Align and Translate</a> <small>The first attention mechanism, as cross-attention in a translation model.</small></li>
+<li><a href="https://arxiv.org/abs/2305.13245">Ainslie et al. (2023), GQA: Training Generalized Multi-Query Transformer Models</a> <small>Grouped-query attention, which most current LLMs use to shrink the KV cache.</small></li>
+<li><a href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html">PyTorch: scaled_dot_product_attention</a> <small>The production function, with its reference implementation, masking and scaling options.</small></li>
+</ol>
+</section>

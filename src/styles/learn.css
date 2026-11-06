@@ -1,0 +1,75 @@
+/* Phase 7: math, the topic structure, glossary terms and cards, and flashcards. */
+
+/* ---- math (KaTeX). Raw TeX shows in the mono face until KaTeX has typeset it. */
+.math:not([data-tex]){font-family:var(--f-mono);font-size:.92em;color:var(--muted)}
+div.math{margin:14px 0;max-width:72ch;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.katex{font-size:1.08em;color:var(--ink)}
+.katex-display{margin:0}
+
+/* ---- topic structure: Intuition, Mechanism, Math, Code, (practice block), Primary sources */
+.tp{position:relative;margin:34px 0 0;scroll-margin-top:76px}
+.tp>:is(h3,.as-h3):first-child,.tp>:is(h2,h3):first-child{display:flex;align-items:center;gap:10px;font-size:1.18rem;font-weight:650;letter-spacing:-.01em;margin:0 0 12px;padding-top:14px;border-top:1px solid var(--rule)}
+.tp>:first-child::before{content:attr(data-n);font-family:var(--f-mono);font-size:var(--fs-2xs);font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 7px}
+.tp>p,.tp>ul,.tp>ol{max-width:72ch}
+.tp>:is(p,ul,ol)+:is(p,ul,ol){margin-top:1em}
+.tp-intuition>p:first-of-type{font-size:1.06rem}
+.tp-sources ol{padding-left:1.3em}
+.tp-sources li{margin:.5em 0}
+.tp-sources li small{display:block;color:var(--muted);font-size:var(--fs-xs)}
+
+/* parts lead the "On this page" rail; what sits inside them is indented */
+.t-rail a.rk-part{font-weight:600;color:var(--ink)}
+.t-rail li:has(a.rk-part)~li:not(:has(a.rk-part)) a{padding-left:22px}
+
+/* ---- glossary term links and their card */
+a.gl{color:inherit;text-decoration:underline dotted color-mix(in srgb,var(--accent) 70%,transparent);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:help}
+a.gl:hover,a.gl:focus-visible{color:var(--accent);text-decoration-style:solid}
+.gl-tip{position:fixed;z-index:var(--z-menu);max-width:min(340px,calc(100vw - 32px));display:grid;gap:4px;padding:10px 12px;border-radius:10px;border:1px solid var(--rule-2);background:var(--surface);color:var(--ink);box-shadow:var(--sh-3);font-size:var(--fs-sm);line-height:1.45}
+.gl-tip b{font-weight:600}
+.gl-tip small{color:var(--muted);font-size:var(--fs-xs)}
+@media (prefers-reduced-motion:no-preference){.gl-tip{animation:gl-in .12s var(--ease)}}
+@keyframes gl-in{from{opacity:0;transform:translateY(-3px)}}
+
+/* ---- glossary page */
+.gl-filter{display:flex;align-items:center;gap:8px;max-width:420px;margin:6px 0 4px;padding:0 12px;border:1px solid var(--rule-2);border-radius:10px;background:var(--surface);color:var(--muted)}
+.gl-filter input{flex:1;min-height:40px;border:0;background:transparent;color:var(--ink);font:inherit}
+.gl-filter input:focus{outline:none}
+.gl-filter:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.gl-count{font-size:var(--fs-sm);margin:6px 0 18px}
+.gl-group h2{font-family:var(--f-mono);font-size:.95rem;color:var(--accent);border-bottom:1px solid var(--rule);padding-bottom:4px;margin:26px 0 6px}
+.gl-group dl{margin:0}
+.gl-entry{padding:10px 12px;margin:0 -12px;border-radius:10px;scroll-margin-top:90px;transition:background .6s}
+.gl-entry.hit{background:var(--accent-soft)}
+.gl-entry dt{font-weight:600}
+.gl-entry dt .muted{font-weight:400;font-size:var(--fs-sm)}
+.gl-entry dd{margin:2px 0 0;max-width:72ch}
+.gl-entry dd a{display:inline-block;margin-left:8px;font-size:var(--fs-sm)}
+
+/* ---- flashcards */
+.card-tg{display:inline-flex;align-items:center;gap:5px;min-height:24px;margin-left:auto;padding:2px 9px;border:1px solid var(--rule);border-radius:999px;background:transparent;color:var(--muted);font:inherit;font-size:var(--fs-xs);cursor:pointer}
+.card-tg:hover{border-color:var(--rule-2);color:var(--ink)}
+.card-tg.on{border-color:color-mix(in srgb,var(--accent) 45%,transparent);color:var(--accent);background:var(--accent-soft)}
+.side-badge{display:inline-block;min-width:20px;margin-left:8px;padding:0 6px;border-radius:999px;background:var(--accent);color:var(--surface);font-family:var(--f-mono);font-size:var(--fs-2xs);line-height:18px;text-align:center}
+.fc-stats{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;padding:0;margin:4px 0 18px;color:var(--muted)}
+.fc-stats b{color:var(--ink);font-family:var(--f-mono);font-size:1.05rem}
+.fc-card{border:1px solid var(--rule);border-radius:var(--r-3);background:var(--surface);box-shadow:var(--sh-2);padding:18px 20px 20px;max-width:760px}
+.fc-card h2{font-size:1.12rem;font-weight:600;line-height:1.4;margin:6px 0 12px}
+.fc-opts{margin:0 0 16px;padding-left:1.6em}
+.fc-opts li{margin:.35em 0;padding:2px 6px;border-radius:6px}
+.fc-opts li.answer{background:var(--ok-soft);color:var(--ink);font-weight:500}
+.fc-back{border-top:1px solid var(--rule);padding-top:12px;max-width:72ch}
+.fc-back ul{padding-left:1.2em}
+.fc-grades{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:760px;margin:12px 0 0}
+.fc-grades .btn{display:grid;gap:2px;justify-items:center;padding:9px 6px}
+.fc-grades .btn small{font-family:var(--f-mono);font-size:var(--fs-2xs);color:var(--muted)}
+.fc-grades .g-again{border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+.fc-grades .g-easy{border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+.fc-empty{display:flex;gap:10px;align-items:flex-start;max-width:72ch;padding:14px 16px;border:1px dashed var(--rule-2);border-radius:var(--r-2);color:var(--muted)}
+.fc-empty svg{flex:none;color:var(--ok);margin-top:2px}
+.fc-empty p{margin:0}
+.fc-deck{margin-top:28px;max-width:760px}
+.fc-deck summary{cursor:pointer;font-weight:600;min-height:24px}
+.fc-deck ul{list-style:none;padding:0;margin:8px 0 0}
+.fc-deck li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule);font-size:var(--fs-sm)}
+.fc-deck .fc-q{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+@media (max-width:560px){.fc-grades{grid-template-columns:repeat(2,minmax(0,1fr))}}

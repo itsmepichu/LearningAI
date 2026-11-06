@@ -385,10 +385,22 @@ Done (6 November 2026), one commit per chapter:
 
 ### Phase 7 — Deeper content and new chapters
 
+The last phase. Decided on 6 November 2026:
+- **Order:** the platform pieces first (the topic structure and its checker, glossary hover cards, FSRS flashcards), with one pilot chapter restructured for review. Then the other chapters, the new chapters and the paper walkthroughs.
+- **Existing topics:** all 143 are restructured fully, two or three chapters per pull request.
+- **New chapters:** appended as chapters 19–23 (ids `c19`–`c23`), after chapter 18 and before the capstone, so no existing id or chapter number changes.
+
+Progress:
+- [x] **Platform** (pull request 1): the topic structure, with a checker that enforces the order of the parts, a runnable snippet or Colab guide in Code and at least two links in Primary sources; runnable Python snippets (`py-snippet`, Pyodide, built from the selected project's data); glossary term cards and a `/glossary` page; flashcards with FSRS at `/flashcards`, fed by wrong answers and "Missed it" on the check and Practice pages.
+- [x] **Pilot:** chapter 5 restructured (7 topics), with 7 snippets, 34 glossary terms and 33 primary sources. Waiting for the owner's review before the rollout.
+- [ ] Chapters 1–4 and 6–18 and the capstone, two or three chapters per pull request.
+- [ ] Chapters 19–23.
+- [ ] Paper walkthroughs.
+
 - **Every topic follows one structure:**
   - Intuition
   - Mechanism
-  - Math (KaTeX)
+  - The numbers (plain words and worked examples, no formulas: decided on 6 November 2026)
   - Code (runnable: Pyodide in the browser for CPU work, a step-by-step Colab guide for GPU work)
   - In practice (your project)
   - Failure to avoid
@@ -402,15 +414,6 @@ Done (6 November 2026), one commit per chapter:
   - regulation basics
 - Annotated walkthroughs of about 10 key papers.
 - A glossary with hover cards, and flashcards with spaced repetition (FSRS), fed from the check pages.
-
-### Phase 8 — Learning system and hardening
-
-- A prerequisite map (2D/3D graph of topics), filtered by project.
-- A sandbox for your project that grows chapter by chapter.
-- Spaced-repetition scheduling on the Practice page: missed questions come back after increasing intervals (FSRS).
-- Export and import of progress (project choice, studied topics, check scores).
-- PWA offline mode for the course itself. Opt-in runtimes and models work offline only if already cached, and Colab guides always need a connection.
-- Accessibility audit (WCAG 2.1 AA) and performance budgets, including 3D scenes on integrated graphics. CI does not run e2e and it runs only on request, so decide what enforces these.
 
 ---
 

@@ -16,6 +16,7 @@ import '@fontsource/jetbrains-mono/600.css'
 import './styles/content.css'
 import './styles/app.css'
 import './styles/checks.css'
+import './styles/learn.css'
 import { Layout } from './components/Layout'
 import { Home } from './pages/Home'
 import { ChapterPage } from './pages/Chapter'
@@ -23,6 +24,8 @@ import { TopicPage } from './pages/Topic'
 import { Guide, ProgressPage } from './pages/Misc'
 import { ChapterCheckPage } from './pages/ChapterCheck'
 import { PracticePage } from './pages/PracticePage'
+import { FlashcardsPage } from './pages/Flashcards'
+import { GlossaryPage } from './pages/Glossary'
 import { NotFound } from './pages/NotFound'
 
 // Strip the trailing slash from Vite's base so the router sees "/LearningAI" style basenames.
@@ -38,6 +41,8 @@ createRoot(document.getElementById('root')!).render(
             <Route path="guide" element={<Guide />} />
             <Route path="progress" element={<ProgressPage />} />
             <Route path="practice" element={<PracticePage />} />
+            <Route path="flashcards" element={<FlashcardsPage />} />
+            <Route path="glossary" element={<GlossaryPage />} />
             <Route path=":chapterId/check" element={<ChapterCheckPage />} />
             <Route path=":chapterId" element={<ChapterPage />} />
             <Route path=":chapterId/:topicId" element={<TopicPage />} />
