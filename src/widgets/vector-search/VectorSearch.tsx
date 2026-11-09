@@ -152,7 +152,7 @@ const VIEWS = {
   search: {
     offer: `Search these documents with a real embedding model`,
     without: 'BM25 above works without it.',
-    proves: 'This shows how one small open model ranks one small corpus, by an exact scan. It does not show that dense search beats BM25, what a production model would do, or how an index behaves at scale. The model was trained mostly on English, so expect Hindi, Tamil and Hinglish queries to do worse.',
+    proves: 'This shows how one small open model ranks one small corpus, by an exact scan. It does not show that dense search beats BM25, what a production model would do, or how an index behaves at scale. The model was trained mostly on English, so expect Tamil queries to do worse.',
   },
   quantise: {
     offer: `Measure quantisation on real embeddings of these documents`,

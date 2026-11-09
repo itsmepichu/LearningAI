@@ -890,7 +890,7 @@
    },
    {
     "id": "c1-4-i06",
-    "q": "{assistant} handles English, Hindi, Tamil and Hinglish requests. How would you budget tokens and cost per language?",
+    "q": "{assistant} handles English and Tamil requests. How would you budget tokens and cost per language?",
     "level": "applied",
     "covers": [
      "Measure token counts per language with the real tokenizer",
@@ -900,7 +900,7 @@
      "Monitor as the language mix changes"
     ],
     "project": "travel",
-    "followUp": "Hinglish requests use far more tokens than you budgeted. What do you change first?"
+    "followUp": "Tamil requests use far more tokens than you budgeted. What do you change first?"
    },
    {
     "id": "c1-4-i07",
@@ -1848,7 +1848,7 @@
    },
    {
     "id": "c1-5-i06",
-    "q": "{company} must give the same answer to a customer in English, Hindi and Tamil. How would you test and monitor that?",
+    "q": "{company} must give the same answer to a customer in English and Tamil. How would you test and monitor that?",
     "level": "applied",
     "covers": [
      "Parallel test cases in each language",

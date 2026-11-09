@@ -184,10 +184,10 @@
    "scenario": "<p>Use <code>tickets.csv</code>: predict <code>category</code> from <code>text</code>, split by time at 1 September 2025, and report recall on <code>security</code> next to the majority-class baseline. Slice errors by <code>channel</code> and <code>language</code>.</p>"
   },
   "store": {
-   "scenario": "<p>Use <code>reviews.json</code>: label reviews with 4–5 stars positive and 1–2 negative, drop the 3-star ones, and train TF-IDF plus logistic regression. Report results per language (English, Hindi, Tamil, Hinglish) and check what the model does with the six <code>is_injection</code> reviews.</p>"
+   "scenario": "<p>Use <code>reviews.json</code>: label reviews with 4–5 stars positive and 1–2 negative, drop the 3-star ones, and train TF-IDF plus logistic regression. Report results per language (English, Tamil) and check what the model does with the six <code>is_injection</code> reviews.</p>"
   },
   "bank": {
-   "scenario": "<p>Use <code>disputes.csv</code>: predict <code>reason</code> from <code>text</code>. Split by <code>opened</code> date, compare with the majority-class baseline, and report recall on the rarest reason. Note which errors come from the Hindi, Tamil and Hinglish cases.</p>"
+   "scenario": "<p>Use <code>disputes.csv</code>: predict <code>reason</code> from <code>text</code>. Split by <code>opened</code> date, compare with the majority-class baseline, and report recall on the rarest reason. Note which errors come from the Tamil cases.</p>"
   },
   "travel": {
    "scenario": "<p>Use <code>bookings.csv</code> as a tabular variant: predict <code>cancelled</code> from <code>lead_days</code>, <code>product</code>, <code>refundable</code>, <code>passengers</code> and travel month, with a time split. Leave out <code>cancellation_fee_inr</code> and explain why in the model card.</p>"

@@ -10,7 +10,7 @@
   "store": {
    "fit": "good",
    "fitNote": "strata for languages, sale weeks and injected reviews",
-   "practice": "{company}'s evaluation set for {assistant} is stratified: common English questions; Hindi, Tamil and Hinglish; festival-sale questions; questions that must be refused because the listing lacks the information; and injected reviews. Results are reported per stratum.",
+   "practice": "{company}'s evaluation set for {assistant} is stratified: common English questions; Tamil; festival-sale questions; questions that must be refused because the listing lacks the information; and injected reviews. Results are reported per stratum.",
    "failure": "Sampling the set at random from an ordinary week. It then contains almost no festival-sale or Tamil questions.",
    "tryIt": "Write a 40-case stratified plan from <code>chats.json</code>, <code>reviews.json</code> and <code>products.csv</code>, with counts per stratum and the weight each stratum gets when you report an overall score."
   },
@@ -159,8 +159,8 @@
   },
   "store": {
    "fit": "best",
-   "fitNote": "injected reviews and Hinglish are built-in adversarial and multilingual cases",
-   "practice": "{company}'s regression suite includes all six injected reviews from the dataset, Hinglish and Tamil questions, price formats (₹1,299.00 versus 1299), and cases from past incidents. A single injected-review regression blocks release.",
+   "fitNote": "injected reviews and Tamil are built-in adversarial and multilingual cases",
+   "practice": "{company}'s regression suite includes all six injected reviews from the dataset, Tamil questions, price formats (₹1,299.00 versus 1299), and cases from past incidents. A single injected-review regression blocks release.",
    "failure": "Treating one failed injection phrasing as proof that the defence works.",
    "tryIt": "Add the six <code>is_injection</code> reviews from <code>reviews.json</code> to a suite with three paraphrases each, and record how many a local model obeys."
   },
@@ -174,9 +174,9 @@
   "travel": {
    "fit": "good",
    "fitNote": "relative dates in several languages",
-   "practice": "{company}'s suite covers relative dates (“kal”, “parso”, “next Friday”), all four languages, and past incidents such as a late-December booking made for the wrong year.",
+   "practice": "{company}'s suite covers relative dates (“நாளை” (tomorrow), “நாளை மறுநாள்” (the day after tomorrow), “next Friday”), both languages, and past incidents such as a late-December booking made for the wrong year.",
    "failure": "Testing dates only in English and only as absolute dates.",
-   "tryIt": "Write ten date cases mixing Hindi, Hinglish and English relative dates, fix a reference date, and score a local model's extraction."
+   "tryIt": "Write ten date cases mixing Tamil and English relative dates, fix a reference date, and score a local model's extraction."
   }
  },
  "c8-7": {
@@ -244,10 +244,10 @@
    "scenario": "<p>Build the 60 cases from <code>tickets.csv</code> and <code>policies.json</code>: user scope from <code>access_groups</code>, severity from priority, and evidence version from the policy's <code>current</code> flag. Include every security ticket in the critical set and report results by language.</p>"
   },
   "store": {
-   "scenario": "<p>Build the 60 cases from <code>chats.json</code>, <code>products.csv</code> and <code>reviews.json</code>, including the six injected reviews as critical cases and Hindi, Tamil and Hinglish questions. Compare the two prompt versions with a paired test and report by language.</p>"
+   "scenario": "<p>Build the 60 cases from <code>chats.json</code>, <code>products.csv</code> and <code>reviews.json</code>, including the six injected reviews as critical cases and Tamil questions. Compare the two prompt versions with a paired test and report by language.</p>"
   },
   "bank": {
-   "scenario": "<p>Build the 60 cases from <code>disputes.csv</code> and <code>policies.json</code>. Mark deadline and amount cases as critical, add cases about another customer's dispute that must be refused, and report parity across English, Hindi, Tamil and Hinglish.</p>"
+   "scenario": "<p>Build the 60 cases from <code>disputes.csv</code> and <code>policies.json</code>. Mark deadline and amount cases as critical, add cases about another customer's dispute that must be refused, and report parity across English and Tamil.</p>"
   },
   "travel": {
    "scenario": "<p>Build the 60 cases from <code>messages.json</code> plus requests you write, scored field by field (intent, dates, cities, travellers). Include relative dates, no-date messages that must abstain, and multi-city trips; run each case five times.</p>"

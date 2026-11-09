@@ -2,7 +2,7 @@ request_id,language,text,intent
 RQ-0001,en,My train to Delhi is running 5 hours late.,disruption
 RQ-0002,en,Please cancel my trip to Singapore.,cancel
 RQ-0003,en,Please cancel my trip to Mumbai.,cancel
-RQ-0004,hi,Goa की ट्रेन का रिफंड कब मिलेगा?,refund_status
+RQ-0004,ta,Goa ரயில் பயணத்தின் ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund for the Goa train?),refund_status
 RQ-0005,en,Please change the date of my Singapore flight.,change_date
 RQ-0006,en,It has been 3 days and my Goa refund has not come.,refund_status
 RQ-0007,en,I want to travel to Mumbai 3 days later instead.,change_date
@@ -17,53 +17,53 @@ RQ-0015,en,The Kochi flight was cancelled because of the weather. What now?,disr
 RQ-0016,en,"We can no longer travel to Chennai, cancel the flight.",cancel
 RQ-0017,ta,4 பேருக்கு Kolkata பயணம் பதிவு செய்ய வேண்டும்.,new_booking
 RQ-0018,en,It has been 4 days and my Kochi refund has not come.,refund_status
-RQ-0019,hi,मुझे Kolkata की फ्लाइट रद्द करनी है।,cancel
+RQ-0019,ta,Kolkata விமான பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the flight to Kolkata.),cancel
 RQ-0020,en,When will I get my money back for the train to Singapore?,refund_status
 RQ-0021,en,"We can no longer travel to Chennai, cancel the hotel.",cancel
-RQ-0022,hi,कृपया मेरी Bengaluru यात्रा रद्द कर दीजिए।,cancel
+RQ-0022,ta,தயவுசெய்து என் Bengaluru பயணத்தை ரத்து செய்யுங்கள். (Please cancel my Bengaluru trip.),cancel
 RQ-0023,en,Where is my refund for the Kolkata train?,refund_status
 RQ-0024,en,I need to cancel my train booking to Singapore.,cancel
-RQ-0025,hi,मेरी Bengaluru यात्रा 5 दिन आगे कर दीजिए।,change_date
+RQ-0025,ta,என் Bengaluru பயணத்தை 5 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Bengaluru trip by 5 days.),change_date
 RQ-0026,en,I want a hotel to Delhi next Friday.,new_booking
 RQ-0027,en,Show me train options to Chennai for 5 people.,new_booking
 RQ-0028,en,When will I get my money back for the hotel to Goa?,refund_status
 RQ-0029,en,It has been 5 days and my Singapore refund has not come.,refund_status
-RQ-0030,hi,Chennai की ट्रेन का रिफंड कब मिलेगा?,refund_status
+RQ-0030,ta,Chennai ரயில் பயணத்தின் ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund for the Chennai train?),refund_status
 RQ-0031,en,"We can no longer travel to Kochi, cancel the flight.",cancel
-RQ-0032,hinglish,Delhi wali train cancel karni hai.,cancel
-RQ-0033,hi,Bengaluru की फ्लाइट 3 घंटे देर से है।,disruption
+RQ-0032,ta,Delhi ரயில் முன்பதிவை ரத்து செய்ய வேண்டும். (I need to cancel the Delhi train booking.),cancel
+RQ-0033,ta,Bengaluru விமான பயணம் 3 மணி நேரம் தாமதமாக உள்ளது. (The Bengaluru flight is 3 hours late.),disruption
 RQ-0034,en,Show me train options to Mumbai for 3 people.,new_booking
 RQ-0035,en,Where is my refund for the Delhi hotel?,refund_status
-RQ-0036,hinglish,"3 din ho gaye, refund abhi tak nahi aaya.",refund_status
-RQ-0037,hi,"5 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
+RQ-0036,ta,3 நாள் ஆகியும் ரீஃபண்ட் இன்னும் வரவில்லை. (It has been 3 days and the refund has still not arrived.),refund_status
+RQ-0037,ta,"5 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 5 days and my refund has not come.)",refund_status
 RQ-0038,ta,என் Kochi முன்பதிவை ரத்து செய்யுங்கள்.,cancel
 RQ-0039,en,Show me train options to Delhi for 5 people.,new_booking
 RQ-0040,en,I need to cancel my flight booking to Kochi.,cancel
 RQ-0041,en,Show me train options to Delhi for 4 people.,new_booking
-RQ-0042,hi,क्या मैं Kochi की फ्लाइट की तारीख बदल सकता हूँ?,change_date
-RQ-0043,hi,Chennai की फ्लाइट 5 घंटे देर से है।,disruption
+RQ-0042,ta,Kochi விமான பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my flight to Kochi?),change_date
+RQ-0043,ta,Chennai விமான பயணம் 5 மணி நேரம் தாமதமாக உள்ளது. (The Chennai flight is 5 hours late.),disruption
 RQ-0044,en,I need to cancel my train booking to Kolkata.,cancel
 RQ-0045,ta,Kochi பயணத்தை ரத்து செய்ய வேண்டும்.,cancel
-RQ-0046,hinglish,Kochi ke liye sabse sasti train book kar do.,new_booking
+RQ-0046,ta,Kochi செல்ல மலிவான ரயில் முன்பதிவு செய்யுங்கள். (Book the cheapest train to Kochi.),new_booking
 RQ-0047,en,Where is my refund for the Kolkata flight?,refund_status
 RQ-0048,en,I want to travel to Goa 5 days later instead.,change_date
 RQ-0049,en,When will I get my money back for the flight to Delhi?,refund_status
 RQ-0050,en,My flight to Kochi is running 5 hours late.,disruption
-RQ-0051,hi,Mumbai के लिए सबसे सस्ती फ्लाइट बुक कर दीजिए।,new_booking
+RQ-0051,ta,Mumbai செல்ல மிகவும் மலிவான விமான பயணத்தை முன்பதிவு செய்யுங்கள். (Please book the cheapest flight to Mumbai.),new_booking
 RQ-0052,en,Show me flight options to Mumbai for 3 people.,new_booking
 RQ-0053,en,I need to cancel my hotel booking to Kolkata.,cancel
 RQ-0054,en,Please cancel my trip to Goa.,cancel
-RQ-0055,hinglish,Goa ke liye sabse sasti train book kar do.,new_booking
-RQ-0056,hi,कृपया मेरी Delhi यात्रा रद्द कर दीजिए।,cancel
-RQ-0057,hi,मेरी Mumbai यात्रा 4 दिन आगे कर दीजिए।,change_date
-RQ-0058,hi,"बारिश के कारण Kochi की फ्लाइट रद्द हो गई, अब क्या करूँ?",disruption
+RQ-0055,ta,Goa செல்ல மலிவான ரயில் முன்பதிவு செய்யுங்கள். (Book the cheapest train to Goa.),new_booking
+RQ-0056,ta,தயவுசெய்து என் Delhi பயணத்தை ரத்து செய்யுங்கள். (Please cancel my Delhi trip.),cancel
+RQ-0057,ta,என் Mumbai பயணத்தை 4 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Mumbai trip by 4 days.),change_date
+RQ-0058,ta,"மழையால் Kochi விமான பயணம் ரத்தாகிவிட்டது, இப்போது நான் என்ன செய்வது? (The Kochi flight was cancelled because of rain, what do I do now?)",disruption
 RQ-0059,en,Where is my refund for the Singapore hotel?,refund_status
 RQ-0060,en,I want a flight to Goa next Friday.,new_booking
 RQ-0061,en,Please cancel my trip to Kolkata.,cancel
 RQ-0062,ta,Chennai பயணத்தின் பணம் எப்போது திரும்ப கிடைக்கும்?,refund_status
 RQ-0063,en,My hotel to Singapore is running 4 hours late.,disruption
-RQ-0064,hinglish,Goa wali train cancel karni hai.,cancel
-RQ-0065,hi,Kochi की ट्रेन का रिफंड कब मिलेगा?,refund_status
+RQ-0064,ta,Goa ரயில் முன்பதிவை ரத்து செய்ய வேண்டும். (I need to cancel the Goa train booking.),cancel
+RQ-0065,ta,Kochi ரயில் பயணத்தின் ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund for the Kochi train?),refund_status
 RQ-0066,en,It has been 5 days and my Singapore refund has not come.,refund_status
 RQ-0067,en,I want to travel to Goa 3 days later instead.,change_date
 RQ-0068,en,Show me flight options to Delhi for 2 people.,new_booking
@@ -73,40 +73,40 @@ RQ-0071,en,I need to cancel my flight booking to Singapore.,cancel
 RQ-0072,ta,என் Goa பயணத்தை 5 நாள் தள்ளி வையுங்கள்.,change_date
 RQ-0073,ta,2 நாள் ஆகியும் பணம் வரவில்லை.,refund_status
 RQ-0074,en,Please cancel my trip to Kochi.,cancel
-RQ-0075,hi,मुझे Bengaluru की ट्रेन रद्द करनी है।,cancel
+RQ-0075,ta,Bengaluru ரயில் பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the train to Bengaluru.),cancel
 RQ-0076,en,"We can no longer travel to Kolkata, cancel the hotel.",cancel
-RQ-0077,hinglish,Kochi wala flight 2 din aage kar do.,change_date
-RQ-0078,hi,"3 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
+RQ-0077,ta,Kochi விமான பயணத்தை 2 நாள் தள்ளி வையுங்கள். (Move the Kochi flight trip 2 days later.),change_date
+RQ-0078,ta,"3 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 3 days and my refund has not come.)",refund_status
 RQ-0079,en,Please cancel my trip to Goa.,cancel
 RQ-0080,en,It has been 2 days and my Kochi refund has not come.,refund_status
 RQ-0081,en,Please change the date of my Singapore train.,change_date
 RQ-0082,en,Can I move my flight to Goa by 3 days?,change_date
 RQ-0083,en,Please cancel my trip to Bengaluru.,cancel
-RQ-0084,hinglish,"Baarish ki wajah se Mumbai ki flight cancel ho gayi, ab kya karein?",disruption
-RQ-0085,hi,"4 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
+RQ-0084,ta,"மழை காரணமாக Mumbai விமான ரத்தாகிவிட்டது, இனி என்ன செய்வது? (The Mumbai flight was cancelled because of rain, what should we do now?)",disruption
+RQ-0085,ta,"4 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 4 days and my refund has not come.)",refund_status
 RQ-0086,en,My train to Delhi is running 2 hours late.,disruption
 RQ-0087,en,Where is my refund for the Mumbai flight?,refund_status
 RQ-0088,en,I want a flight to Chennai next Friday.,new_booking
-RQ-0089,hinglish,Kochi wala flight 2 din aage kar do.,change_date
+RQ-0089,ta,Kochi விமான பயணத்தை 2 நாள் தள்ளி வையுங்கள். (Move the Kochi flight trip 2 days later.),change_date
 RQ-0090,en,When will I get my money back for the flight to Mumbai?,refund_status
-RQ-0091,hi,मेरी Singapore यात्रा 5 दिन आगे कर दीजिए।,change_date
+RQ-0091,ta,என் Singapore பயணத்தை 5 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Singapore trip by 5 days.),change_date
 RQ-0092,en,Please cancel my trip to Chennai.,cancel
 RQ-0093,en,"We can no longer travel to Kochi, cancel the hotel.",cancel
 RQ-0094,ta,Delhi விமானம் 5 மணி நேரம் தாமதமாக உள்ளது.,disruption
 RQ-0095,en,When will I get my money back for the train to Bengaluru?,refund_status
 RQ-0096,en,"We can no longer travel to Kochi, cancel the train.",cancel
-RQ-0097,hi,3 लोगों के लिए Chennai की ट्रेन दिखाइए।,new_booking
+RQ-0097,ta,3 பேருக்கு Chennai ரயில் பயண விருப்பங்களைக் காட்டுங்கள். (Show train options to Chennai for 3 people.),new_booking
 RQ-0098,en,Can I move my flight to Chennai by 5 days?,change_date
 RQ-0099,en,Please cancel my trip to Delhi.,cancel
 RQ-0100,en,Please cancel my trip to Goa.,cancel
 RQ-0101,ta,"மழையால் Kolkata விமானம் ரத்து ஆனது, இப்போது என்ன செய்வது?",disruption
 RQ-0102,en,I want a train to Bengaluru next Friday.,new_booking
 RQ-0103,en,I want a train to Delhi next Friday.,new_booking
-RQ-0104,hinglish,Kochi ki date change ho sakti hai kya?,change_date
+RQ-0104,ta,Kochi பயணத்தின் தேதியை மாற்ற முடியுமா? (Can the date of the Kochi trip be changed?),change_date
 RQ-0105,en,My flight to Goa is running 3 hours late.,disruption
-RQ-0106,hi,क्या मैं Kochi की ट्रेन की तारीख बदल सकता हूँ?,change_date
+RQ-0106,ta,Kochi ரயில் பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my train to Kochi?),change_date
 RQ-0107,en,"We can no longer travel to Kochi, cancel the flight.",cancel
-RQ-0108,hinglish,Chennai ke liye sabse sasti flight book kar do.,new_booking
+RQ-0108,ta,Chennai செல்ல மலிவான விமான முன்பதிவு செய்யுங்கள். (Book the cheapest flight to Chennai.),new_booking
 RQ-0109,en,When will I get my money back for the hotel to Kochi?,refund_status
 RQ-0110,en,Please change the date of my Singapore hotel.,change_date
 RQ-0111,en,I want to travel to Kochi 4 days later instead.,change_date
@@ -119,17 +119,17 @@ RQ-0117,en,"We can no longer travel to Mumbai, cancel the train.",cancel
 RQ-0118,en,Can I move my train to Kolkata by 4 days?,change_date
 RQ-0119,en,Please cancel my trip to Mumbai.,cancel
 RQ-0120,en,Please cancel my trip to Goa.,cancel
-RQ-0121,hi,Kolkata की फ्लाइट 4 घंटे देर से है।,disruption
+RQ-0121,ta,Kolkata விமான பயணம் 4 மணி நேரம் தாமதமாக உள்ளது. (The Kolkata flight is 4 hours late.),disruption
 RQ-0122,ta,Singapore செல்ல மலிவான டிக்கெட் பதிவு செய்யுங்கள்.,new_booking
 RQ-0123,en,Can I move my hotel to Delhi by 5 days?,change_date
 RQ-0124,ta,3 நாள் ஆகியும் பணம் வரவில்லை.,refund_status
-RQ-0125,hi,मुझे Goa की फ्लाइट रद्द करनी है।,cancel
+RQ-0125,ta,Goa விமான பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the flight to Goa.),cancel
 RQ-0126,en,When will I get my money back for the train to Chennai?,refund_status
 RQ-0127,en,I want to travel to Goa 2 days later instead.,change_date
 RQ-0128,en,Show me flight options to Delhi for 4 people.,new_booking
 RQ-0129,en,"We can no longer travel to Chennai, cancel the hotel.",cancel
 RQ-0130,en,Book the cheapest train to Kochi for 4 adults.,new_booking
-RQ-0131,hi,"4 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
+RQ-0131,ta,"4 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 4 days and my refund has not come.)",refund_status
 RQ-0132,en,I want a train to Kolkata next Friday.,new_booking
 RQ-0133,en,My train to Kolkata is running 2 hours late.,disruption
 RQ-0134,en,The Kolkata train was cancelled because of the weather. What now?,disruption
@@ -138,20 +138,20 @@ RQ-0136,en,"We can no longer travel to Kochi, cancel the hotel.",cancel
 RQ-0137,en,My hotel to Mumbai is running 3 hours late.,disruption
 RQ-0138,en,I want a flight to Kolkata next Friday.,new_booking
 RQ-0139,ta,Goa பயணத்தை ரத்து செய்ய வேண்டும்.,cancel
-RQ-0140,hinglish,Mumbai ka refund kab milega?,refund_status
+RQ-0140,ta,Mumbai ரீஃபண்ட் எப்போது வரும்? (When will the Mumbai refund arrive?),refund_status
 RQ-0141,en,Heavy rain in Delhi. Is my flight still on?,disruption
-RQ-0142,hinglish,Kochi ki flight 2 ghante late hai.,disruption
+RQ-0142,ta,Kochi விமான 2 மணி நேரம் தாமதம். (The Kochi flight is 2 hours late.),disruption
 RQ-0143,en,Show me flight options to Singapore for 4 people.,new_booking
-RQ-0144,hi,कृपया मेरी Delhi यात्रा रद्द कर दीजिए।,cancel
+RQ-0144,ta,தயவுசெய்து என் Delhi பயணத்தை ரத்து செய்யுங்கள். (Please cancel my Delhi trip.),cancel
 RQ-0145,en,I want a hotel to Chennai next Friday.,new_booking
-RQ-0146,hi,4 लोगों के लिए Kolkata की फ्लाइट दिखाइए।,new_booking
-RQ-0147,hi,Delhi के लिए सबसे सस्ती ट्रेन बुक कर दीजिए।,new_booking
-RQ-0148,hi,मेरी Goa यात्रा 3 दिन आगे कर दीजिए।,change_date
+RQ-0146,ta,4 பேருக்கு Kolkata விமான பயண விருப்பங்களைக் காட்டுங்கள். (Show flight options to Kolkata for 4 people.),new_booking
+RQ-0147,ta,Delhi செல்ல மிகவும் மலிவான ரயில் பயணத்தை முன்பதிவு செய்யுங்கள். (Please book the cheapest train to Delhi.),new_booking
+RQ-0148,ta,என் Goa பயணத்தை 3 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Goa trip by 3 days.),change_date
 RQ-0149,en,Book the cheapest flight to Goa for 2 adults.,new_booking
 RQ-0150,en,It has been 3 days and my Kolkata refund has not come.,refund_status
 RQ-0151,en,I want a flight to Delhi next Friday.,new_booking
-RQ-0152,hinglish,3 logon ke liye Chennai ki flight dikhao.,new_booking
-RQ-0153,hinglish,Mumbai wali train cancel karni hai.,cancel
+RQ-0152,ta,3 பேருக்கு Chennai விமான பயண வாய்ப்புகளைக் காட்டுங்கள். (Show flight travel options to Chennai for 3 people.),new_booking
+RQ-0153,ta,Mumbai ரயில் முன்பதிவை ரத்து செய்ய வேண்டும். (I need to cancel the Mumbai train booking.),cancel
 RQ-0154,ta,Kochi பயணத்தை ரத்து செய்ய வேண்டும்.,cancel
 RQ-0155,en,Please change the date of my Chennai flight.,change_date
 RQ-0156,en,It has been 2 days and my Singapore refund has not come.,refund_status
@@ -160,62 +160,62 @@ RQ-0158,en,I want a flight to Bengaluru next Friday.,new_booking
 RQ-0159,en,My train to Kolkata is running 4 hours late.,disruption
 RQ-0160,en,Book the cheapest flight to Goa for 2 adults.,new_booking
 RQ-0161,en,Show me hotel options to Bengaluru for 4 people.,new_booking
-RQ-0162,hinglish,Chennai wali train cancel karni hai.,cancel
+RQ-0162,ta,Chennai ரயில் முன்பதிவை ரத்து செய்ய வேண்டும். (I need to cancel the Chennai train booking.),cancel
 RQ-0163,en,I want to travel to Kolkata 3 days later instead.,change_date
 RQ-0164,en,Please change the date of my Mumbai hotel.,change_date
-RQ-0165,hi,2 लोगों के लिए Chennai की ट्रेन दिखाइए।,new_booking
+RQ-0165,ta,2 பேருக்கு Chennai ரயில் பயண விருப்பங்களைக் காட்டுங்கள். (Show train options to Chennai for 2 people.),new_booking
 RQ-0166,en,Please cancel my trip to Chennai.,cancel
-RQ-0167,hi,मेरी Chennai यात्रा 2 दिन आगे कर दीजिए।,change_date
+RQ-0167,ta,என் Chennai பயணத்தை 2 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Chennai trip by 2 days.),change_date
 RQ-0168,en,I need to cancel my hotel booking to Mumbai.,cancel
-RQ-0169,hi,क्या मैं Delhi की फ्लाइट की तारीख बदल सकता हूँ?,change_date
+RQ-0169,ta,Delhi விமான பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my flight to Delhi?),change_date
 RQ-0170,en,Can I move my train to Goa by 4 days?,change_date
 RQ-0171,en,I want to travel to Bengaluru 4 days later instead.,change_date
 RQ-0172,en,When will I get my money back for the flight to Delhi?,refund_status
 RQ-0173,en,I need to cancel my hotel booking to Mumbai.,cancel
-RQ-0174,hinglish,Singapore ke liye sabse sasti flight book kar do.,new_booking
-RQ-0175,hi,क्या मैं Kochi की ट्रेन की तारीख बदल सकता हूँ?,change_date
-RQ-0176,hinglish,Meri Mumbai trip cancel kar do please.,cancel
-RQ-0177,hi,क्या मैं Bengaluru की फ्लाइट की तारीख बदल सकता हूँ?,change_date
+RQ-0174,ta,Singapore செல்ல மலிவான விமான முன்பதிவு செய்யுங்கள். (Book the cheapest flight to Singapore.),new_booking
+RQ-0175,ta,Kochi ரயில் பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my train to Kochi?),change_date
+RQ-0176,ta,என் Mumbai பயணத்தை தயவுசெய்து ரத்து செய்துவிடுங்கள். (Please cancel my Mumbai trip.),cancel
+RQ-0177,ta,Bengaluru விமான பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my flight to Bengaluru?),change_date
 RQ-0178,en,Can I move my hotel to Goa by 5 days?,change_date
-RQ-0179,hinglish,Meri Kochi trip cancel kar do please.,cancel
+RQ-0179,ta,என் Kochi பயணத்தை தயவுசெய்து ரத்து செய்துவிடுங்கள். (Please cancel my Kochi trip.),cancel
 RQ-0180,en,Show me hotel options to Delhi for 2 people.,new_booking
 RQ-0181,en,It has been 5 days and my Kolkata refund has not come.,refund_status
 RQ-0182,en,Where is my refund for the Singapore flight?,refund_status
 RQ-0183,en,I want a train to Chennai next Friday.,new_booking
-RQ-0184,hi,4 लोगों के लिए Kochi की फ्लाइट दिखाइए।,new_booking
-RQ-0185,hi,"बारिश के कारण Delhi की ट्रेन रद्द हो गई, अब क्या करूँ?",disruption
+RQ-0184,ta,4 பேருக்கு Kochi விமான பயண விருப்பங்களைக் காட்டுங்கள். (Show flight options to Kochi for 4 people.),new_booking
+RQ-0185,ta,"மழையால் Delhi ரயில் பயணம் ரத்தாகிவிட்டது, இப்போது நான் என்ன செய்வது? (The Delhi train was cancelled because of rain, what do I do now?)",disruption
 RQ-0186,en,Book the cheapest hotel to Goa for 5 adults.,new_booking
 RQ-0187,en,"We can no longer travel to Mumbai, cancel the hotel.",cancel
-RQ-0188,hi,"5 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
-RQ-0189,hinglish,Chennai wala flight 2 din aage kar do.,change_date
+RQ-0188,ta,"5 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 5 days and my refund has not come.)",refund_status
+RQ-0189,ta,Chennai விமான பயணத்தை 2 நாள் தள்ளி வையுங்கள். (Move the Chennai flight trip 2 days later.),change_date
 RQ-0190,en,Please change the date of my Singapore train.,change_date
 RQ-0191,en,Can I move my flight to Chennai by 5 days?,change_date
 RQ-0192,en,Show me flight options to Mumbai for 5 people.,new_booking
-RQ-0193,hinglish,Goa ke liye sabse sasti train book kar do.,new_booking
+RQ-0193,ta,Goa செல்ல மலிவான ரயில் முன்பதிவு செய்யுங்கள். (Book the cheapest train to Goa.),new_booking
 RQ-0194,en,Where is my refund for the Singapore train?,refund_status
-RQ-0195,hi,मेरी Kolkata यात्रा 3 दिन आगे कर दीजिए।,change_date
+RQ-0195,ta,என் Kolkata பயணத்தை 3 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Kolkata trip by 3 days.),change_date
 RQ-0196,en,Where is my refund for the Delhi hotel?,refund_status
 RQ-0197,en,Book the cheapest train to Mumbai for 3 adults.,new_booking
 RQ-0198,en,"We can no longer travel to Chennai, cancel the flight.",cancel
-RQ-0199,hi,कृपया मेरी Bengaluru यात्रा रद्द कर दीजिए।,cancel
+RQ-0199,ta,தயவுசெய்து என் Bengaluru பயணத்தை ரத்து செய்யுங்கள். (Please cancel my Bengaluru trip.),cancel
 RQ-0200,en,Where is my refund for the Delhi flight?,refund_status
 RQ-0201,en,I need to cancel my train booking to Goa.,cancel
 RQ-0202,en,Can I move my flight to Kolkata by 3 days?,change_date
 RQ-0203,en,When will I get my money back for the flight to Chennai?,refund_status
-RQ-0204,hi,मेरी Mumbai यात्रा 3 दिन आगे कर दीजिए।,change_date
+RQ-0204,ta,என் Mumbai பயணத்தை 3 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Mumbai trip by 3 days.),change_date
 RQ-0205,en,Can I move my flight to Singapore by 5 days?,change_date
-RQ-0206,hinglish,Kochi wala train 5 din aage kar do.,change_date
-RQ-0207,hinglish,Chennai wali flight cancel karni hai.,cancel
+RQ-0206,ta,Kochi ரயில் பயணத்தை 5 நாள் தள்ளி வையுங்கள். (Move the Kochi train trip 5 days later.),change_date
+RQ-0207,ta,Chennai விமான முன்பதிவை ரத்து செய்ய வேண்டும். (I need to cancel the Chennai flight booking.),cancel
 RQ-0208,en,Can I move my train to Chennai by 3 days?,change_date
-RQ-0209,hi,Singapore की फ्लाइट का रिफंड कब मिलेगा?,refund_status
-RQ-0210,hinglish,Kochi wali train cancel karni hai.,cancel
-RQ-0211,hi,Mumbai की फ्लाइट का रिफंड कब मिलेगा?,refund_status
+RQ-0209,ta,Singapore விமான பயணத்தின் ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund for the Singapore flight?),refund_status
+RQ-0210,ta,Kochi ரயில் முன்பதிவை ரத்து செய்ய வேண்டும். (I need to cancel the Kochi train booking.),cancel
+RQ-0211,ta,Mumbai விமான பயணத்தின் ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund for the Mumbai flight?),refund_status
 RQ-0212,en,When will I get my money back for the train to Bengaluru?,refund_status
 RQ-0213,en,Where is my refund for the Mumbai flight?,refund_status
-RQ-0214,hi,मेरी Singapore यात्रा 5 दिन आगे कर दीजिए।,change_date
+RQ-0214,ta,என் Singapore பயணத்தை 5 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Singapore trip by 5 days.),change_date
 RQ-0215,en,I need to cancel my train booking to Delhi.,cancel
 RQ-0216,ta,என் Kolkata பயணத்தை 4 நாள் தள்ளி வையுங்கள்.,change_date
-RQ-0217,hinglish,5 logon ke liye Singapore ki flight dikhao.,new_booking
+RQ-0217,ta,5 பேருக்கு Singapore விமான பயண வாய்ப்புகளைக் காட்டுங்கள். (Show flight travel options to Singapore for 5 people.),new_booking
 RQ-0218,en,Please cancel my trip to Singapore.,cancel
 RQ-0219,en,My train to Delhi is running 5 hours late.,disruption
 RQ-0220,en,I need to cancel my train booking to Goa.,cancel
@@ -227,65 +227,65 @@ RQ-0225,en,Book the cheapest flight to Mumbai for 4 adults.,new_booking
 RQ-0226,en,Please cancel my trip to Mumbai.,cancel
 RQ-0227,en,Where is my refund for the Kochi hotel?,refund_status
 RQ-0228,en,I want a hotel to Kochi next Friday.,new_booking
-RQ-0229,hi,"3 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
+RQ-0229,ta,"3 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 3 days and my refund has not come.)",refund_status
 RQ-0230,en,"We can no longer travel to Kolkata, cancel the train.",cancel
 RQ-0231,en,Please cancel my trip to Mumbai.,cancel
-RQ-0232,hi,"4 दिन हो गए, मेरा रिफंड नहीं आया।",refund_status
+RQ-0232,ta,"4 நாள் ஆகிவிட்டது, என் ரீஃபண்ட் வரவில்லை. (It has been 4 days and my refund has not come.)",refund_status
 RQ-0233,en,I want a hotel to Singapore next Friday.,new_booking
 RQ-0234,en,Where is my refund for the Singapore flight?,refund_status
 RQ-0235,en,Show me flight options to Kochi for 2 people.,new_booking
 RQ-0236,en,Book the cheapest train to Singapore for 3 adults.,new_booking
-RQ-0237,hi,मुझे Mumbai की फ्लाइट रद्द करनी है।,cancel
-RQ-0238,hi,Mumbai की ट्रेन 5 घंटे देर से है।,disruption
+RQ-0237,ta,Mumbai விமான பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the flight to Mumbai.),cancel
+RQ-0238,ta,Mumbai ரயில் பயணம் 5 மணி நேரம் தாமதமாக உள்ளது. (The Mumbai train is 5 hours late.),disruption
 RQ-0239,en,Book the cheapest flight to Delhi for 3 adults.,new_booking
 RQ-0240,en,Please change the date of my Kochi hotel.,change_date
 RQ-0241,en,I want a flight to Singapore next Friday.,new_booking
 RQ-0242,en,Heavy rain in Goa. Is my hotel still on?,disruption
 RQ-0243,en,Heavy rain in Chennai. Is my hotel still on?,disruption
 RQ-0244,en,"We can no longer travel to Mumbai, cancel the flight.",cancel
-RQ-0245,hi,मेरी Singapore यात्रा 3 दिन आगे कर दीजिए।,change_date
+RQ-0245,ta,என் Singapore பயணத்தை 3 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Singapore trip by 3 days.),change_date
 RQ-0246,en,Book the cheapest train to Chennai for 3 adults.,new_booking
 RQ-0247,en,When will I get my money back for the train to Mumbai?,refund_status
 RQ-0248,en,Heavy rain in Singapore. Is my hotel still on?,disruption
 RQ-0249,en,Heavy rain in Mumbai. Is my train still on?,disruption
-RQ-0250,hi,मुझे Bengaluru की फ्लाइट रद्द करनी है।,cancel
+RQ-0250,ta,Bengaluru விமான பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the flight to Bengaluru.),cancel
 RQ-0251,en,Can I move my train to Singapore by 5 days?,change_date
 RQ-0252,en,My hotel to Singapore is running 2 hours late.,disruption
 RQ-0253,en,Show me flight options to Chennai for 3 people.,new_booking
-RQ-0254,hi,"बारिश के कारण Chennai की ट्रेन रद्द हो गई, अब क्या करूँ?",disruption
+RQ-0254,ta,"மழையால் Chennai ரயில் பயணம் ரத்தாகிவிட்டது, இப்போது நான் என்ன செய்வது? (The Chennai train was cancelled because of rain, what do I do now?)",disruption
 RQ-0255,en,Heavy rain in Mumbai. Is my train still on?,disruption
 RQ-0256,en,Please change the date of my Goa hotel.,change_date
 RQ-0257,en,Where is my refund for the Bengaluru hotel?,refund_status
 RQ-0258,ta,Mumbai செல்ல மலிவான டிக்கெட் பதிவு செய்யுங்கள்.,new_booking
 RQ-0259,en,Can I move my train to Mumbai by 4 days?,change_date
 RQ-0260,en,It has been 3 days and my Delhi refund has not come.,refund_status
-RQ-0261,hinglish,Mumbai ki date change ho sakti hai kya?,change_date
+RQ-0261,ta,Mumbai பயணத்தின் தேதியை மாற்ற முடியுமா? (Can the date of the Mumbai trip be changed?),change_date
 RQ-0262,en,Show me flight options to Goa for 3 people.,new_booking
 RQ-0263,en,"We can no longer travel to Chennai, cancel the hotel.",cancel
 RQ-0264,en,"We can no longer travel to Kolkata, cancel the flight.",cancel
 RQ-0265,en,Please cancel my trip to Goa.,cancel
 RQ-0266,en,I need to cancel my train booking to Mumbai.,cancel
-RQ-0267,hinglish,2 logon ke liye Goa ki train dikhao.,new_booking
+RQ-0267,ta,2 பேருக்கு Goa ரயில் பயண வாய்ப்புகளைக் காட்டுங்கள். (Show train travel options to Goa for 2 people.),new_booking
 RQ-0268,ta,Mumbai பயண தேதியை மாற்ற முடியுமா?,change_date
-RQ-0269,hi,क्या मैं Mumbai की ट्रेन की तारीख बदल सकता हूँ?,change_date
+RQ-0269,ta,Mumbai ரயில் பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my train to Mumbai?),change_date
 RQ-0270,en,I need to cancel my hotel booking to Mumbai.,cancel
-RQ-0271,hi,Bengaluru के लिए सबसे सस्ती ट्रेन बुक कर दीजिए।,new_booking
-RQ-0272,hi,Singapore की फ्लाइट का रिफंड कब मिलेगा?,refund_status
+RQ-0271,ta,Bengaluru செல்ல மிகவும் மலிவான ரயில் பயணத்தை முன்பதிவு செய்யுங்கள். (Please book the cheapest train to Bengaluru.),new_booking
+RQ-0272,ta,Singapore விமான பயணத்தின் ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund for the Singapore flight?),refund_status
 RQ-0273,en,My train to Goa is running 4 hours late.,disruption
 RQ-0274,ta,Bengaluru பயண தேதியை மாற்ற முடியுமா?,change_date
-RQ-0275,hi,Mumbai के लिए सबसे सस्ती ट्रेन बुक कर दीजिए।,new_booking
+RQ-0275,ta,Mumbai செல்ல மிகவும் மலிவான ரயில் பயணத்தை முன்பதிவு செய்யுங்கள். (Please book the cheapest train to Mumbai.),new_booking
 RQ-0276,en,Can I move my hotel to Delhi by 2 days?,change_date
-RQ-0277,hinglish,"Baarish ki wajah se Kochi ki flight cancel ho gayi, ab kya karein?",disruption
-RQ-0278,hinglish,Bengaluru ke liye sabse sasti flight book kar do.,new_booking
+RQ-0277,ta,"மழை காரணமாக Kochi விமான ரத்தாகிவிட்டது, இனி என்ன செய்வது? (The Kochi flight was cancelled because of rain, what should we do now?)",disruption
+RQ-0278,ta,Bengaluru செல்ல மலிவான விமான முன்பதிவு செய்யுங்கள். (Book the cheapest flight to Bengaluru.),new_booking
 RQ-0279,en,I want to travel to Chennai 5 days later instead.,change_date
 RQ-0280,en,When will I get my money back for the train to Kochi?,refund_status
-RQ-0281,hi,मेरी Chennai यात्रा 3 दिन आगे कर दीजिए।,change_date
-RQ-0282,hi,Bengaluru की फ्लाइट 3 घंटे देर से है।,disruption
+RQ-0281,ta,என் Chennai பயணத்தை 3 நாள் தள்ளி வைத்துவிடுங்கள். (Please postpone my Chennai trip by 3 days.),change_date
+RQ-0282,ta,Bengaluru விமான பயணம் 3 மணி நேரம் தாமதமாக உள்ளது. (The Bengaluru flight is 3 hours late.),disruption
 RQ-0283,ta,3 பேருக்கு Goa பயணம் பதிவு செய்ய வேண்டும்.,new_booking
-RQ-0284,hi,"बारिश के कारण Chennai की फ्लाइट रद्द हो गई, अब क्या करूँ?",disruption
-RQ-0285,hi,कृपया मेरी Mumbai यात्रा रद्द कर दीजिए।,cancel
-RQ-0286,hi,मुझे Bengaluru की फ्लाइट रद्द करनी है।,cancel
-RQ-0287,hi,मुझे Bengaluru की ट्रेन रद्द करनी है।,cancel
+RQ-0284,ta,"மழையால் Chennai விமான பயணம் ரத்தாகிவிட்டது, இப்போது நான் என்ன செய்வது? (The Chennai flight was cancelled because of rain, what do I do now?)",disruption
+RQ-0285,ta,தயவுசெய்து என் Mumbai பயணத்தை ரத்து செய்யுங்கள். (Please cancel my Mumbai trip.),cancel
+RQ-0286,ta,Bengaluru விமான பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the flight to Bengaluru.),cancel
+RQ-0287,ta,Bengaluru ரயில் பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel the train to Bengaluru.),cancel
 RQ-0288,ta,Bengaluru பயணத்தை ரத்து செய்ய வேண்டும்.,cancel
 RQ-0289,en,It has been 5 days and my Delhi refund has not come.,refund_status
 RQ-0290,en,Show me flight options to Singapore for 3 people.,new_booking
@@ -294,8 +294,8 @@ RQ-0292,en,Book the cheapest train to Goa for 2 adults.,new_booking
 RQ-0293,en,Book the cheapest hotel to Mumbai for 5 adults.,new_booking
 RQ-0294,en,Heavy rain in Delhi. Is my hotel still on?,disruption
 RQ-0295,en,I want to travel to Goa 3 days later instead.,change_date
-RQ-0296,hinglish,Delhi ke liye sabse sasti flight book kar do.,new_booking
-RQ-0297,hi,क्या मैं Kochi की फ्लाइट की तारीख बदल सकता हूँ?,change_date
-RQ-0298,hi,3 लोगों के लिए Kolkata की फ्लाइट दिखाइए।,new_booking
-RQ-0299,hinglish,Singapore ki date change ho sakti hai kya?,change_date
-RQ-0300,hi,क्या मैं Chennai की ट्रेन की तारीख बदल सकता हूँ?,change_date
+RQ-0296,ta,Delhi செல்ல மலிவான விமான முன்பதிவு செய்யுங்கள். (Book the cheapest flight to Delhi.),new_booking
+RQ-0297,ta,Kochi விமான பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my flight to Kochi?),change_date
+RQ-0298,ta,3 பேருக்கு Kolkata விமான பயண விருப்பங்களைக் காட்டுங்கள். (Show flight options to Kolkata for 3 people.),new_booking
+RQ-0299,ta,Singapore பயணத்தின் தேதியை மாற்ற முடியுமா? (Can the date of the Singapore trip be changed?),change_date
+RQ-0300,ta,Chennai ரயில் பயணத் தேதியை நான் மாற்றலாமா? (Can I change the date of my train to Chennai?),change_date

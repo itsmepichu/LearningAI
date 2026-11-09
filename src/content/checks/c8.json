@@ -1196,7 +1196,7 @@
    },
    {
     "id": "c8-1-i08",
-    "q": "{company}'s evaluation must cover four languages and sale weeks. How would you design the strata and report results?",
+    "q": "{company}'s evaluation must cover two languages and sale weeks. How would you design the strata and report results?",
     "level": "system-design",
     "covers": [
      "Strata for language and season",

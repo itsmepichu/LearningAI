@@ -11,14 +11,14 @@ DS-70008,TX-9000730,2025-04-27,en,"I don't recognise a payment of 4,936 rupees o
 DS-70009,TX-9002655,2025-11-05,en,Money was debited on 2025-11-05 but the UPI payment failed.,failed_upi,refund,10
 DS-70010,TX-9001287,2025-04-29,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,14
 DS-70011,TX-9003084,2025-04-27,en,I don't recognise a payment of 936 rupees on 2025-04-27.,unrecognised,refund,15
-DS-70012,TX-9000632,2025-03-28,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,8
+DS-70012,TX-9000632,2025-03-28,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,8
 DS-70013,TX-9003397,2025-12-02,en,"I don't recognise a payment of 1,001 rupees on 2025-12-02.",unrecognised,refund,7
 DS-70014,TX-9008725,2025-03-13,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,14
 DS-70015,TX-9007293,2025-06-26,en,"I don't recognise a payment of 2,500 rupees on 2025-06-26.",unrecognised,rejected,12
 DS-70016,TX-9008241,2025-12-09,en,"I don't recognise a payment of 1,471 rupees on 2025-12-09.",unrecognised,refund,6
 DS-70017,TX-9006784,2025-03-22,en,I was charged twice for the same purchase on 2025-03-22.,duplicate,refund,8
-DS-70018,TX-9001940,2025-05-25,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,partial,10
-DS-70019,TX-9006185,2025-04-12,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,8
+DS-70018,TX-9001940,2025-05-25,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,partial,10
+DS-70019,TX-9006185,2025-04-12,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,8
 DS-70020,TX-9006252,2025-12-25,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,4
 DS-70021,TX-9007897,2025-06-12,en,I was charged twice for the same purchase on 2025-06-12.,duplicate,refund,6
 DS-70022,TX-9001227,2025-11-14,en,The merchant charged 384 rupees instead of the agreed amount.,amount_differs,partial,12
@@ -42,7 +42,7 @@ DS-70039,TX-9007111,2025-06-27,en,"I don't recognise a payment of 1,194 rupees o
 DS-70040,TX-9003013,2025-09-28,en,I was charged twice for the same purchase on 2025-09-28.,duplicate,refund,6
 DS-70041,TX-9009566,2025-01-27,en,I was charged twice for the same purchase on 2025-01-27.,duplicate,partial,15
 DS-70042,TX-9010515,2025-08-16,en,"I paid 2,500 rupees on 2025-08-16 but the item never arrived.",not_received,partial,8
-DS-70043,TX-9005695,2025-07-28,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,5
+DS-70043,TX-9005695,2025-07-28,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,5
 DS-70044,TX-9004879,2025-12-25,en,Money was debited on 2025-12-25 but the UPI payment failed.,failed_upi,refund,2
 DS-70045,TX-9002019,2025-12-24,en,I was charged twice for the same purchase on 2025-12-24.,duplicate,refund,2
 DS-70046,TX-9001495,2025-11-14,en,"I don't recognise a payment of 1,204 rupees on 2025-11-14.",unrecognised,refund,12
@@ -61,17 +61,17 @@ DS-70058,TX-9002309,2025-11-12,en,"I don't recognise a payment of 2,064 rupees o
 DS-70059,TX-9002132,2025-06-22,en,"I paid 3,222 rupees on 2025-06-22 but the item never arrived.",not_received,rejected,8
 DS-70060,TX-9004917,2025-01-16,en,I was charged twice for the same purchase on 2025-01-16.,duplicate,refund,15
 DS-70061,TX-9000042,2025-06-08,en,I was charged twice for the same purchase on 2025-06-08.,duplicate,refund,8
-DS-70062,TX-9008881,2025-01-08,hinglish,Ek hi payment do baar kat gaya.,duplicate,partial,11
-DS-70063,TX-9011176,2025-05-10,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,9
+DS-70062,TX-9008881,2025-01-08,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,partial,11
+DS-70063,TX-9011176,2025-05-10,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,9
 DS-70064,TX-9004406,2025-02-22,en,"I don't recognise a payment of 2,500 rupees on 2025-02-22.",unrecognised,refund,4
 DS-70065,TX-9008718,2025-03-14,en,"I don't recognise a payment of 1,500 rupees on 2025-03-14.",unrecognised,rejected,4
 DS-70066,TX-9002703,2025-01-16,en,"I don't recognise a payment of 5,000 rupees on 2025-01-16.",unrecognised,refund,12
-DS-70067,TX-9008975,2025-09-24,hinglish,Mere account se paise kat gaye par payment fail ho gaya.,failed_upi,refund,13
+DS-70067,TX-9008975,2025-09-24,ta,"என் கணக்கிலிருந்து பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் தோல்வியடைந்தது. (Money was deducted from my account, but the payment failed.)",failed_upi,refund,13
 DS-70068,TX-9011857,2025-03-14,en,"I don't recognise a payment of 1,609 rupees on 2025-03-14.",unrecognised,rejected,9
 DS-70069,TX-9001381,2025-09-30,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,15
 DS-70070,TX-9002446,2025-03-12,en,"I paid 2,000 rupees on 2025-03-12 but the item never arrived.",not_received,partial,4
 DS-70071,TX-9007823,2025-11-29,en,"I don't recognise a payment of 2,000 rupees on 2025-11-29.",unrecognised,refund,7
-DS-70072,TX-9001756,2025-06-09,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,4
+DS-70072,TX-9001756,2025-06-09,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,4
 DS-70073,TX-9011696,2025-08-13,en,"I don't recognise a payment of 2,573 rupees on 2025-08-13.",unrecognised,refund,1
 DS-70074,TX-9007281,2025-09-08,en,The merchant charged 572 rupees instead of the agreed amount.,amount_differs,rejected,6
 DS-70075,TX-9005545,2025-12-10,en,"I don't recognise a payment of 2,626 rupees on 2025-12-10.",unrecognised,rejected,12
@@ -84,7 +84,7 @@ DS-70081,TX-9008619,2025-04-19,en,I don't recognise a payment of 300 rupees on 2
 DS-70082,TX-9000284,2025-09-13,en,Money was debited on 2025-09-13 but the UPI payment failed.,failed_upi,refund,17
 DS-70083,TX-9006088,2025-04-16,en,I don't recognise a payment of 876 rupees on 2025-04-16.,unrecognised,refund,5
 DS-70084,TX-9000498,2025-10-03,en,I paid 960 rupees on 2025-10-03 but the item never arrived.,not_received,refund,15
-DS-70085,TX-9008531,2025-11-15,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,8
+DS-70085,TX-9008531,2025-11-15,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,8
 DS-70086,TX-9001509,2025-06-21,en,"I don't recognise a payment of 2,170 rupees on 2025-06-21.",unrecognised,refund,11
 DS-70087,TX-9001989,2025-05-15,en,"I don't recognise a payment of 2,500 rupees on 2025-05-15.",unrecognised,refund,9
 DS-70088,TX-9009164,2025-11-21,en,Money was debited on 2025-11-21 but the UPI payment failed.,failed_upi,refund,7
@@ -103,7 +103,7 @@ DS-70100,TX-9002381,2025-04-02,en,I was charged twice for the same purchase on 2
 DS-70101,TX-9007984,2025-01-23,en,I don't recognise a payment of 334 rupees on 2025-01-23.,unrecognised,refund,8
 DS-70102,TX-9008497,2025-06-02,en,"I don't recognise a payment of 7,576 rupees on 2025-06-02.",unrecognised,partial,9
 DS-70103,TX-9001541,2025-11-19,en,I was charged twice for the same purchase on 2025-11-19.,duplicate,refund,14
-DS-70104,TX-9006384,2025-03-24,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,8
+DS-70104,TX-9006384,2025-03-24,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,8
 DS-70105,TX-9006131,2025-12-09,en,"I paid 3,339 rupees on 2025-12-09 but the item never arrived.",not_received,rejected,8
 DS-70106,TX-9002621,2025-10-04,en,The merchant charged 758 rupees instead of the agreed amount.,amount_differs,rejected,13
 DS-70107,TX-9005231,2025-03-07,en,"The merchant charged 1,974 rupees instead of the agreed amount.",amount_differs,rejected,2
@@ -119,7 +119,7 @@ DS-70116,TX-9009927,2025-01-13,en,Money was debited on 2025-01-13 but the UPI pa
 DS-70117,TX-9003291,2025-03-18,en,"I don't recognise a payment of 2,000 rupees on 2025-03-18.",unrecognised,refund,11
 DS-70118,TX-9001394,2025-01-21,en,"I don't recognise a payment of 5,000 rupees on 2025-01-21.",unrecognised,rejected,13
 DS-70119,TX-9009439,2025-11-20,en,Money was debited on 2025-11-20 but the UPI payment failed.,failed_upi,refund,14
-DS-70120,TX-9007431,2025-12-16,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,1
+DS-70120,TX-9007431,2025-12-16,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,1
 DS-70121,TX-9010544,2025-10-16,en,I don't recognise a payment of 581 rupees on 2025-10-16.,unrecognised,refund,8
 DS-70122,TX-9007525,2025-10-26,en,"I paid 2,500 rupees on 2025-10-26 but the item never arrived.",not_received,rejected,9
 DS-70123,TX-9001435,2025-05-13,en,I was charged twice for the same purchase on 2025-05-13.,duplicate,refund,10
@@ -132,12 +132,12 @@ DS-70129,TX-9008477,2025-12-14,en,I don't recognise a payment of 788 rupees on 2
 DS-70130,TX-9008396,2025-01-03,en,"I paid 1,320 rupees on 2025-01-03 but the item never arrived.",not_received,refund,14
 DS-70131,TX-9000312,2025-03-19,en,"I don't recognise a payment of 1,721 rupees on 2025-03-19.",unrecognised,refund,14
 DS-70132,TX-9011271,2025-08-31,en,Money was debited on 2025-08-31 but the UPI payment failed.,failed_upi,refund,4
-DS-70133,TX-9000980,2025-10-12,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,6
+DS-70133,TX-9000980,2025-10-12,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,6
 DS-70134,TX-9004330,2025-03-04,en,"I don't recognise a payment of 1,179 rupees on 2025-03-04.",unrecognised,refund,2
 DS-70135,TX-9003817,2025-12-23,en,"I don't recognise a payment of 1,833 rupees on 2025-12-23.",unrecognised,rejected,11
 DS-70136,TX-9005051,2025-06-16,en,I was charged twice for the same purchase on 2025-06-16.,duplicate,refund,9
 DS-70137,TX-9000642,2025-11-26,en,I don't recognise a payment of 939 rupees on 2025-11-26.,unrecognised,refund,8
-DS-70138,TX-9009042,2025-06-28,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,rejected,4
+DS-70138,TX-9009042,2025-06-28,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,rejected,4
 DS-70139,TX-9007299,2025-11-25,en,I paid 256 rupees on 2025-11-25 but the item never arrived.,not_received,refund,6
 DS-70140,TX-9010097,2025-07-23,en,I don't recognise a payment of 641 rupees on 2025-07-23.,unrecognised,rejected,11
 DS-70141,TX-9001741,2025-05-21,en,"I don't recognise a payment of 1,084 rupees on 2025-05-21.",unrecognised,rejected,6
@@ -145,12 +145,12 @@ DS-70142,TX-9000813,2025-08-31,en,I don't recognise a payment of 383 rupees on 2
 DS-70143,TX-9009636,2025-09-18,en,Money was debited on 2025-09-18 but the UPI payment failed.,failed_upi,refund,8
 DS-70144,TX-9002520,2025-05-04,en,"The merchant charged 1,092 rupees instead of the agreed amount.",amount_differs,rejected,14
 DS-70145,TX-9008432,2025-10-24,en,I don't recognise a payment of 763 rupees on 2025-10-24.,unrecognised,rejected,12
-DS-70146,TX-9005126,2025-10-29,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,9
+DS-70146,TX-9005126,2025-10-29,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,9
 DS-70147,TX-9010656,2025-08-25,en,Money was debited on 2025-08-25 but the UPI payment failed.,failed_upi,refund,13
 DS-70148,TX-9007603,2025-09-12,en,I was charged twice for the same purchase on 2025-09-12.,duplicate,refund,3
 DS-70149,TX-9011047,2025-06-22,en,Money was debited on 2025-06-22 but the UPI payment failed.,failed_upi,refund,2
 DS-70150,TX-9003604,2025-05-09,en,I don't recognise a payment of 200 rupees on 2025-05-09.,unrecognised,rejected,11
-DS-70151,TX-9003874,2025-10-17,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,13
+DS-70151,TX-9003874,2025-10-17,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,13
 DS-70152,TX-9002457,2025-03-10,en,"I don't recognise a payment of 1,092 rupees on 2025-03-10.",unrecognised,refund,9
 DS-70153,TX-9002266,2025-10-25,en,Money was debited on 2025-10-25 but the UPI payment failed.,failed_upi,refund,3
 DS-70154,TX-9007831,2025-04-24,ta,பணம் கழிக்கப்பட்டது ஆனால் பரிவர்த்தனை தோல்வியடைந்தது.,failed_upi,refund,4
@@ -174,7 +174,7 @@ DS-70171,TX-9002947,2025-11-20,en,I don't recognise a payment of 926 rupees on 2
 DS-70172,TX-9000480,2025-07-08,en,I don't recognise a payment of 630 rupees on 2025-07-08.,unrecognised,refund,8
 DS-70173,TX-9006891,2025-04-15,en,I was charged twice for the same purchase on 2025-04-15.,duplicate,refund,7
 DS-70174,TX-9010136,2025-06-08,en,"I don't recognise a payment of 2,000 rupees on 2025-06-08.",unrecognised,refund,6
-DS-70175,TX-9003776,2025-04-30,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,rejected,7
+DS-70175,TX-9003776,2025-04-30,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,rejected,7
 DS-70176,TX-9008234,2025-09-08,en,"I don't recognise a payment of 1,000 rupees on 2025-09-08.",unrecognised,refund,8
 DS-70177,TX-9009558,2025-02-09,en,Money was debited on 2025-02-09 but the UPI payment failed.,failed_upi,refund,6
 DS-70178,TX-9001303,2025-04-14,en,I don't recognise a payment of 296 rupees on 2025-04-14.,unrecognised,rejected,5
@@ -190,13 +190,13 @@ DS-70187,TX-9002432,2025-03-19,en,I was charged twice for the same purchase on 2
 DS-70188,TX-9001392,2025-05-20,en,The merchant charged 753 rupees instead of the agreed amount.,amount_differs,partial,11
 DS-70189,TX-9007535,2025-08-16,en,"The merchant charged 4,671 rupees instead of the agreed amount.",amount_differs,partial,12
 DS-70190,TX-9006922,2025-04-04,en,"I don't recognise a payment of 5,023 rupees on 2025-04-04.",unrecognised,refund,8
-DS-70191,TX-9003385,2025-03-10,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,rejected,4
+DS-70191,TX-9003385,2025-03-10,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,rejected,4
 DS-70192,TX-9011142,2025-03-28,en,The merchant charged 359 rupees instead of the agreed amount.,amount_differs,refund,11
 DS-70193,TX-9001362,2025-09-25,en,I paid 291 rupees on 2025-09-25 but the item never arrived.,not_received,rejected,9
 DS-70194,TX-9001395,2025-11-13,en,I paid 630 rupees on 2025-11-13 but the item never arrived.,not_received,rejected,10
 DS-70195,TX-9006414,2025-06-14,en,I was charged twice for the same purchase on 2025-06-14.,duplicate,refund,13
-DS-70196,TX-9002777,2025-08-21,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,8
-DS-70197,TX-9010957,2025-12-31,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,12
+DS-70196,TX-9002777,2025-08-21,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,8
+DS-70197,TX-9010957,2025-12-31,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,12
 DS-70198,TX-9011987,2025-03-26,en,I don't recognise a payment of 300 rupees on 2025-03-26.,unrecognised,rejected,9
 DS-70199,TX-9009974,2025-07-03,en,"I don't recognise a payment of 1,098 rupees on 2025-07-03.",unrecognised,refund,21
 DS-70200,TX-9006433,2025-08-26,en,I don't recognise a payment of 514 rupees on 2025-08-26.,unrecognised,rejected,7
@@ -220,25 +220,25 @@ DS-70217,TX-9005596,2025-01-29,en,I was charged twice for the same purchase on 2
 DS-70218,TX-9008235,2025-10-27,en,"I paid 2,774 rupees on 2025-10-27 but the item never arrived.",not_received,rejected,15
 DS-70219,TX-9005881,2025-10-23,en,I was charged twice for the same purchase on 2025-10-23.,duplicate,rejected,7
 DS-70220,TX-9010433,2025-12-18,en,Money was debited on 2025-12-18 but the UPI payment failed.,failed_upi,refund,1
-DS-70221,TX-9009421,2025-06-06,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,6
+DS-70221,TX-9009421,2025-06-06,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,6
 DS-70222,TX-9003067,2025-03-16,en,I was charged twice for the same purchase on 2025-03-16.,duplicate,partial,6
 DS-70223,TX-9007384,2025-07-11,en,"I don't recognise a payment of 1,292 rupees on 2025-07-11.",unrecognised,rejected,9
 DS-70224,TX-9007723,2025-12-20,en,"The merchant charged 2,114 rupees instead of the agreed amount.",amount_differs,partial,7
-DS-70225,TX-9004838,2025-06-13,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,8
+DS-70225,TX-9004838,2025-06-13,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,8
 DS-70226,TX-9004749,2025-03-29,en,"The merchant charged 1,249 rupees instead of the agreed amount.",amount_differs,refund,5
 DS-70227,TX-9011361,2025-05-12,en,I don't recognise a payment of 520 rupees on 2025-05-12.,unrecognised,refund,3
 DS-70228,TX-9010861,2025-08-14,en,"The merchant charged 2,500 rupees instead of the agreed amount.",amount_differs,partial,8
 DS-70229,TX-9011259,2025-02-08,en,"The merchant charged 1,275 rupees instead of the agreed amount.",amount_differs,rejected,1
 DS-70230,TX-9010450,2025-06-27,en,"I don't recognise a payment of 1,810 rupees on 2025-06-27.",unrecognised,refund,8
 DS-70231,TX-9007435,2025-08-25,en,I was charged twice for the same purchase on 2025-08-25.,duplicate,refund,8
-DS-70232,TX-9004927,2025-08-01,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,12
+DS-70232,TX-9004927,2025-08-01,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,12
 DS-70233,TX-9010140,2025-12-01,en,I was charged twice for the same purchase on 2025-12-01.,duplicate,refund,11
 DS-70234,TX-9010167,2025-03-06,en,"I don't recognise a payment of 2,000 rupees on 2025-03-06.",unrecognised,refund,5
 DS-70235,TX-9011427,2025-03-06,en,I was charged twice for the same purchase on 2025-03-06.,duplicate,refund,8
 DS-70236,TX-9010915,2025-12-20,en,"I don't recognise a payment of 2,773 rupees on 2025-12-20.",unrecognised,refund,16
 DS-70237,TX-9011233,2025-09-09,en,"I don't recognise a payment of 14,772 rupees on 2025-09-09.",unrecognised,refund,12
-DS-70238,TX-9000677,2025-05-18,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,10
-DS-70239,TX-9006613,2025-06-27,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,12
+DS-70238,TX-9000677,2025-05-18,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,10
+DS-70239,TX-9006613,2025-06-27,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,12
 DS-70240,TX-9001504,2025-05-27,en,Money was debited on 2025-05-27 but the UPI payment failed.,failed_upi,refund,6
 DS-70241,TX-9002556,2025-11-30,en,Money was debited on 2025-11-30 but the UPI payment failed.,failed_upi,refund,7
 DS-70242,TX-9000152,2025-07-21,en,"I don't recognise a payment of 2,500 rupees on 2025-07-21.",unrecognised,refund,12
@@ -250,15 +250,15 @@ DS-70247,TX-9002622,2025-12-09,en,"I don't recognise a payment of 5,782 rupees o
 DS-70248,TX-9003289,2025-06-19,en,The merchant charged 388 rupees instead of the agreed amount.,amount_differs,rejected,15
 DS-70249,TX-9007363,2025-09-24,en,Money was debited on 2025-09-24 but the UPI payment failed.,failed_upi,refund,5
 DS-70250,TX-9001710,2025-05-05,en,"I don't recognise a payment of 1,500 rupees on 2025-05-05.",unrecognised,refund,11
-DS-70251,TX-9010061,2025-11-29,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,6
+DS-70251,TX-9010061,2025-11-29,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,6
 DS-70252,TX-9009472,2025-11-18,en,I don't recognise a payment of 710 rupees on 2025-11-18.,unrecognised,rejected,15
 DS-70253,TX-9000224,2025-10-25,en,I was charged twice for the same purchase on 2025-10-25.,duplicate,refund,8
-DS-70254,TX-9006841,2025-05-13,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,14
+DS-70254,TX-9006841,2025-05-13,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,14
 DS-70255,TX-9011249,2025-09-11,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,8
 DS-70256,TX-9008322,2025-02-25,en,I was charged twice for the same purchase on 2025-02-25.,duplicate,refund,10
 DS-70257,TX-9005765,2025-10-31,en,I paid 434 rupees on 2025-10-31 but the item never arrived.,not_received,refund,6
 DS-70258,TX-9003282,2025-05-25,en,I was charged twice for the same purchase on 2025-05-25.,duplicate,refund,9
-DS-70259,TX-9008618,2025-06-10,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,rejected,10
+DS-70259,TX-9008618,2025-06-10,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,rejected,10
 DS-70260,TX-9010152,2025-02-16,en,"I don't recognise a payment of 2,000 rupees on 2025-02-16.",unrecognised,refund,10
 DS-70261,TX-9002773,2025-01-11,en,"I don't recognise a payment of 6,000 rupees on 2025-01-11.",unrecognised,refund,16
 DS-70262,TX-9005694,2025-04-06,en,"I don't recognise a payment of 1,500 rupees on 2025-04-06.",unrecognised,refund,8
@@ -266,9 +266,9 @@ DS-70263,TX-9005893,2025-02-27,en,I was charged twice for the same purchase on 2
 DS-70264,TX-9008293,2025-11-22,en,I paid 242 rupees on 2025-11-22 but the item never arrived.,not_received,rejected,11
 DS-70265,TX-9000526,2025-07-03,en,"I don't recognise a payment of 10,591 rupees on 2025-07-03.",unrecognised,refund,5
 DS-70266,TX-9009494,2025-09-17,en,I was charged twice for the same purchase on 2025-09-17.,duplicate,refund,8
-DS-70267,TX-9006819,2025-02-16,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,9
+DS-70267,TX-9006819,2025-02-16,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,9
 DS-70268,TX-9005381,2025-07-09,en,"I paid 1,821 rupees on 2025-07-09 but the item never arrived.",not_received,rejected,10
-DS-70269,TX-9001674,2025-12-18,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,11
+DS-70269,TX-9001674,2025-12-18,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,11
 DS-70270,TX-9007104,2025-06-20,en,I paid 301 rupees on 2025-06-20 but the item never arrived.,not_received,rejected,13
 DS-70271,TX-9008782,2025-01-11,en,"The merchant charged 2,407 rupees instead of the agreed amount.",amount_differs,rejected,5
 DS-70272,TX-9002113,2025-10-08,en,I don't recognise a payment of 732 rupees on 2025-10-08.,unrecognised,refund,8
@@ -283,7 +283,7 @@ DS-70280,TX-9005848,2025-02-18,en,I was charged twice for the same purchase on 2
 DS-70281,TX-9008744,2025-01-07,en,"I don't recognise a payment of 2,066 rupees on 2025-01-07.",unrecognised,partial,11
 DS-70282,TX-9003145,2025-08-13,en,The merchant charged 228 rupees instead of the agreed amount.,amount_differs,partial,11
 DS-70283,TX-9010165,2025-12-24,en,I don't recognise a payment of 628 rupees on 2025-12-24.,unrecognised,refund,6
-DS-70284,TX-9000408,2025-02-21,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,1
+DS-70284,TX-9000408,2025-02-21,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,1
 DS-70285,TX-9011642,2025-08-22,en,Money was debited on 2025-08-22 but the UPI payment failed.,failed_upi,refund,10
 DS-70286,TX-9008035,2025-08-22,en,"I paid 2,605 rupees on 2025-08-22 but the item never arrived.",not_received,refund,14
 DS-70287,TX-9011253,2025-08-20,en,"I don't recognise a payment of 1,980 rupees on 2025-08-20.",unrecognised,refund,9
@@ -293,7 +293,7 @@ DS-70290,TX-9007616,2025-10-30,en,"I don't recognise a payment of 2,000 rupees o
 DS-70291,TX-9005156,2025-11-17,en,"I don't recognise a payment of 2,988 rupees on 2025-11-17.",unrecognised,refund,7
 DS-70292,TX-9002916,2025-12-29,en,"I don't recognise a payment of 4,951 rupees on 2025-12-29.",unrecognised,refund,7
 DS-70293,TX-9011981,2025-07-31,en,"I don't recognise a payment of 2,500 rupees on 2025-07-31.",unrecognised,refund,7
-DS-70294,TX-9001724,2025-10-18,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,9
+DS-70294,TX-9001724,2025-10-18,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,9
 DS-70295,TX-9003022,2025-01-03,en,"I paid 2,000 rupees on 2025-01-03 but the item never arrived.",not_received,partial,2
 DS-70296,TX-9011443,2025-02-25,en,"I paid 1,782 rupees on 2025-02-25 but the item never arrived.",not_received,refund,5
 DS-70297,TX-9010010,2025-12-31,en,I was charged twice for the same purchase on 2025-12-31.,duplicate,refund,7
@@ -303,7 +303,7 @@ DS-70300,TX-9004004,2025-02-14,en,I don't recognise a payment of 507 rupees on 2
 DS-70301,TX-9006331,2025-06-09,en,I don't recognise a payment of 851 rupees on 2025-06-09.,unrecognised,refund,9
 DS-70302,TX-9006584,2025-06-23,en,"I paid 2,000 rupees on 2025-06-23 but the item never arrived.",not_received,refund,15
 DS-70303,TX-9004420,2025-12-15,en,I was charged twice for the same purchase on 2025-12-15.,duplicate,refund,14
-DS-70304,TX-9002280,2025-01-24,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,rejected,9
+DS-70304,TX-9002280,2025-01-24,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,rejected,9
 DS-70305,TX-9001864,2025-11-10,en,"I don't recognise a payment of 3,494 rupees on 2025-11-10.",unrecognised,refund,3
 DS-70306,TX-9005339,2025-12-16,en,I don't recognise a payment of 905 rupees on 2025-12-16.,unrecognised,refund,15
 DS-70307,TX-9006906,2025-06-06,en,I was charged twice for the same purchase on 2025-06-06.,duplicate,refund,13
@@ -322,7 +322,7 @@ DS-70319,TX-9005665,2025-04-03,en,"I don't recognise a payment of 3,206 rupees o
 DS-70320,TX-9000669,2025-06-06,en,Money was debited on 2025-06-06 but the UPI payment failed.,failed_upi,refund,10
 DS-70321,TX-9000174,2025-04-07,en,"I don't recognise a payment of 2,214 rupees on 2025-04-07.",unrecognised,refund,3
 DS-70322,TX-9003682,2025-01-18,en,"I paid 2,500 rupees on 2025-01-18 but the item never arrived.",not_received,rejected,10
-DS-70323,TX-9007102,2025-09-26,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,7
+DS-70323,TX-9007102,2025-09-26,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,7
 DS-70324,TX-9007532,2025-03-11,en,"I don't recognise a payment of 1,424 rupees on 2025-03-11.",unrecognised,refund,11
 DS-70325,TX-9004040,2025-01-08,en,I don't recognise a payment of 708 rupees on 2025-01-08.,unrecognised,rejected,13
 DS-70326,TX-9003535,2025-10-31,en,"The merchant charged 1,500 rupees instead of the agreed amount.",amount_differs,rejected,10
@@ -331,15 +331,15 @@ DS-70328,TX-9001277,2025-12-24,en,"The merchant charged 3,430 rupees instead of 
 DS-70329,TX-9000323,2025-05-25,en,"I don't recognise a payment of 3,500 rupees on 2025-05-25.",unrecognised,refund,11
 DS-70330,TX-9009106,2025-12-02,en,I don't recognise a payment of 854 rupees on 2025-12-02.,unrecognised,refund,14
 DS-70331,TX-9001894,2025-12-02,en,I was charged twice for the same purchase on 2025-12-02.,duplicate,refund,8
-DS-70332,TX-9001848,2025-06-01,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,10
-DS-70333,TX-9006565,2025-05-01,hinglish,Mere account se paise kat gaye par payment fail ho gaya.,failed_upi,refund,7
+DS-70332,TX-9001848,2025-06-01,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,10
+DS-70333,TX-9006565,2025-05-01,ta,"என் கணக்கிலிருந்து பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் தோல்வியடைந்தது. (Money was deducted from my account, but the payment failed.)",failed_upi,refund,7
 DS-70334,TX-9001162,2025-10-22,en,"I don't recognise a payment of 1,129 rupees on 2025-10-22.",unrecognised,refund,9
 DS-70335,TX-9008067,2025-10-26,en,Money was debited on 2025-10-26 but the UPI payment failed.,failed_upi,partial,11
 DS-70336,TX-9005337,2025-05-03,en,Money was debited on 2025-05-03 but the UPI payment failed.,failed_upi,refund,10
 DS-70337,TX-9005059,2025-04-26,en,The merchant charged 615 rupees instead of the agreed amount.,amount_differs,rejected,1
 DS-70338,TX-9009328,2025-03-08,en,I paid 715 rupees on 2025-03-08 but the item never arrived.,not_received,rejected,3
 DS-70339,TX-9002825,2025-11-08,en,"The merchant charged 4,000 rupees instead of the agreed amount.",amount_differs,rejected,10
-DS-70340,TX-9002362,2025-11-15,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,14
+DS-70340,TX-9002362,2025-11-15,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,14
 DS-70341,TX-9000856,2025-05-30,en,"I paid 2,000 rupees on 2025-05-30 but the item never arrived.",not_received,rejected,10
 DS-70342,TX-9010386,2025-12-27,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,partial,10
 DS-70343,TX-9003783,2025-03-29,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,4
@@ -353,33 +353,33 @@ DS-70350,TX-9002645,2025-03-09,en,I was charged twice for the same purchase on 2
 DS-70351,TX-9009251,2025-04-30,en,"I paid 2,534 rupees on 2025-04-30 but the item never arrived.",not_received,rejected,3
 DS-70352,TX-9005786,2025-12-12,en,"I don't recognise a payment of 2,000 rupees on 2025-12-12.",unrecognised,refund,9
 DS-70353,TX-9011597,2025-07-09,en,I paid 275 rupees on 2025-07-09 but the item never arrived.,not_received,rejected,6
-DS-70354,TX-9007375,2025-04-30,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,9
+DS-70354,TX-9007375,2025-04-30,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,9
 DS-70355,TX-9009700,2025-12-28,en,"I don't recognise a payment of 2,188 rupees on 2025-12-28.",unrecognised,rejected,7
 DS-70356,TX-9000343,2025-07-24,en,Money was debited on 2025-07-24 but the UPI payment failed.,failed_upi,refund,4
-DS-70357,TX-9007127,2025-03-30,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,12
+DS-70357,TX-9007127,2025-03-30,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,12
 DS-70358,TX-9011414,2025-12-10,en,The merchant charged 332 rupees instead of the agreed amount.,amount_differs,partial,14
 DS-70359,TX-9011990,2025-07-16,en,I don't recognise a payment of 209 rupees on 2025-07-16.,unrecognised,refund,11
 DS-70360,TX-9001801,2025-12-02,en,"I don't recognise a payment of 2,000 rupees on 2025-12-02.",unrecognised,refund,13
 DS-70361,TX-9006958,2025-06-11,en,I was charged twice for the same purchase on 2025-06-11.,duplicate,refund,10
 DS-70362,TX-9000532,2025-07-07,en,"I don't recognise a payment of 3,500 rupees on 2025-07-07.",unrecognised,refund,9
 DS-70363,TX-9011717,2025-06-29,en,"The merchant charged 1,151 rupees instead of the agreed amount.",amount_differs,refund,6
-DS-70364,TX-9009270,2025-05-15,hi,UPI से पैसे कट गए लेकिन भुगतान नहीं हुआ।,failed_upi,refund,10
+DS-70364,TX-9009270,2025-05-15,ta,"UPI மூலம் பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் நடக்கவில்லை. (Money was deducted through UPI, but the payment did not go through.)",failed_upi,refund,10
 DS-70365,TX-9005654,2025-11-16,en,"I don't recognise a payment of 4,224 rupees on 2025-11-16.",unrecognised,refund,11
 DS-70366,TX-9005913,2025-08-12,en,"I don't recognise a payment of 1,733 rupees on 2025-08-12.",unrecognised,refund,7
-DS-70367,TX-9001422,2025-01-21,hinglish,Mere account se paise kat gaye par payment fail ho gaya.,failed_upi,rejected,10
+DS-70367,TX-9001422,2025-01-21,ta,"என் கணக்கிலிருந்து பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் தோல்வியடைந்தது. (Money was deducted from my account, but the payment failed.)",failed_upi,rejected,10
 DS-70368,TX-9008374,2025-05-23,en,The merchant charged 421 rupees instead of the agreed amount.,amount_differs,refund,12
 DS-70369,TX-9002519,2025-12-31,en,"I don't recognise a payment of 1,070 rupees on 2025-12-31.",unrecognised,rejected,10
 DS-70370,TX-9000987,2025-01-18,en,I was charged twice for the same purchase on 2025-01-18.,duplicate,partial,1
 DS-70371,TX-9010934,2025-05-18,en,"I don't recognise a payment of 10,978 rupees on 2025-05-18.",unrecognised,refund,12
-DS-70372,TX-9002981,2025-04-21,hinglish,Mere account se paise kat gaye par payment fail ho gaya.,failed_upi,refund,9
+DS-70372,TX-9002981,2025-04-21,ta,"என் கணக்கிலிருந்து பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் தோல்வியடைந்தது. (Money was deducted from my account, but the payment failed.)",failed_upi,refund,9
 DS-70373,TX-9004415,2025-05-07,ta,என் கார்டில் தெரியாத பரிவர்த்தனை நடந்துள்ளது.,unrecognised,refund,1
 DS-70374,TX-9009846,2025-12-20,en,I don't recognise a payment of 208 rupees on 2025-12-20.,unrecognised,refund,1
 DS-70375,TX-9004928,2025-07-22,en,I was charged twice for the same purchase on 2025-07-22.,duplicate,refund,6
-DS-70376,TX-9002608,2025-05-02,hinglish,Ek hi payment do baar kat gaya.,duplicate,refund,6
+DS-70376,TX-9002608,2025-05-02,ta,ஒரே பணம் செலுத்தல் இரண்டு முறை கழிக்கப்பட்டது. (The same payment was deducted twice.),duplicate,refund,6
 DS-70377,TX-9000243,2025-01-14,en,"The merchant charged 2,000 rupees instead of the agreed amount.",amount_differs,refund,8
 DS-70378,TX-9000451,2025-02-01,en,The merchant charged 319 rupees instead of the agreed amount.,amount_differs,partial,7
 DS-70379,TX-9009207,2025-03-07,en,"I don't recognise a payment of 1,599 rupees on 2025-03-07.",unrecognised,rejected,7
-DS-70380,TX-9004055,2025-09-30,hinglish,Mere account se paise kat gaye par payment fail ho gaya.,failed_upi,refund,11
+DS-70380,TX-9004055,2025-09-30,ta,"என் கணக்கிலிருந்து பணம் கழிக்கப்பட்டது, ஆனால் பணம் செலுத்தல் தோல்வியடைந்தது. (Money was deducted from my account, but the payment failed.)",failed_upi,refund,11
 DS-70381,TX-9000508,2025-11-16,en,I paid 300 rupees on 2025-11-16 but the item never arrived.,not_received,rejected,13
 DS-70382,TX-9009510,2025-09-25,en,I was charged twice for the same purchase on 2025-09-25.,duplicate,refund,4
 DS-70383,TX-9009263,2025-07-15,en,I don't recognise a payment of 290 rupees on 2025-07-15.,unrecognised,refund,6
@@ -395,7 +395,7 @@ DS-70392,TX-9006070,2025-11-09,en,"I don't recognise a payment of 1,119 rupees o
 DS-70393,TX-9004466,2025-08-19,en,"The merchant charged 1,700 rupees instead of the agreed amount.",amount_differs,refund,10
 DS-70394,TX-9000576,2025-01-17,en,I was charged twice for the same purchase on 2025-01-17.,duplicate,refund,10
 DS-70395,TX-9000032,2025-01-01,en,I was charged twice for the same purchase on 2025-01-01.,duplicate,refund,8
-DS-70396,TX-9008135,2025-09-23,hi,मेरे कार्ड से एक अनजान लेनदेन हुआ है।,unrecognised,refund,10
+DS-70396,TX-9008135,2025-09-23,ta,என் கார்டில் எனக்குத் தெரியாத ஒரு பரிவர்த்தனை நடந்துள்ளது. (An unknown transaction has taken place on my card.),unrecognised,refund,10
 DS-70397,TX-9002769,2025-12-13,en,I was charged twice for the same purchase on 2025-12-13.,duplicate,refund,11
 DS-70398,TX-9004409,2025-07-09,en,"I don't recognise a payment of 2,117 rupees on 2025-07-09.",unrecognised,refund,4
 DS-70399,TX-9009568,2025-07-26,en,"I don't recognise a payment of 2,000 rupees on 2025-07-26.",unrecognised,refund,8

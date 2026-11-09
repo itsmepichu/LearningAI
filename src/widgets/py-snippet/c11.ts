@@ -138,7 +138,7 @@ const MEMORY = String.raw`import re
 
 TODAY = 400   # day number
 memories = [
-    {"id": "m1", "user": "u1", "text": "prefers summaries in Hindi", "day": 120, "ttl": 365, "importance": 2},
+    {"id": "m1", "user": "u1", "text": "prefers summaries in Tamil", "day": 120, "ttl": 365, "importance": 2},
     {"id": "m2", "user": "u1", "text": "reports go to the finance list", "day": 150, "ttl": 365, "importance": 3},
     {"id": "m3", "user": "u1", "text": "prefers summaries in English", "day": 390, "ttl": 365, "importance": 2, "supersedes": "m1"},
     {"id": "m4", "user": "u2", "text": "prefers summaries in Tamil", "day": 380, "ttl": 365, "importance": 2},
@@ -167,7 +167,7 @@ for user, query in (("u1", "which language for my summaries"), ("u2", "which lan
     for m in top:
         print(f"   {m['id']}: {m['text']}")
     print(f"   ({dropped} memories filtered out by scope, expiry or superseding)")
-print("m1 (Hindi) was superseded by m3; m5 expired; m4 belongs to another user.")
+print("m1 (Tamil) was superseded by m3; m5 expired; m4 belongs to another user.")
 `
 
 // ---- 11.5 A state machine with checkpoints, crash and resume ----------------------------------------------------------

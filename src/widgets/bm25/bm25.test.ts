@@ -11,16 +11,16 @@ test('tokenize lower-cases, drops stop words and punctuation, and strips a plura
 })
 
 test('tokenize keeps whole words in other scripts, including their vowel signs', () => {
-  assert.deepEqual(tokenize('मेरा ऑर्डर'), ['मेरा', 'ऑर्डर'])
+  assert.deepEqual(tokenize('பணம் செலுத்தல்'), ['பணம்', 'செலுத்தல்'])
   assert.deepEqual(tokenize('என் ஆர்டர்!'), ['என்', 'ஆர்டர்'])
 })
 
-test('a Hindi query finds the Hindi document, not just some of its letters', () => {
+test('a Tamil query finds the Tamil document, not just some of its letters', () => {
   const ix = buildIndex([
-    { id: 'hi', text: 'मेरा ऑर्डर नहीं आया' },
+    { id: 'ta', text: 'என் ஆர்டர் வரவில்லை' },
     { id: 'en', text: 'my order did not arrive' },
   ])
-  const [top, rest] = search(ix, 'ऑर्डर')
+  const [top, rest] = search(ix, 'ஆர்டர்')
   assert.equal(top.index, 0)
   assert.equal(rest.score, 0)
 })
@@ -105,7 +105,7 @@ const CLAIMS = {
   bank: {
     '3.5% markup': { top: 'NB-004' },
     'UPI debit reversal': { top: 'NB-005', second: 'NB-002', unmatched: ['debit', 'reversal'] },
-    'paise kat gaye payment fail': { top: 'NB-002', unmatched: ['paise', 'kat', 'gaye'] },
+    'பணம் கழிக்கப்பட்டது payment fail': { top: 'NB-002', unmatched: ['பணம்', 'கழிக்கப்பட்டது'] },
   },
   travel: {
     'saver change fee': { top: 'SR-001' },

@@ -14,9 +14,9 @@ interface Tenancy {
 }
 export const TENANCY: Record<ProjectId, Tenancy> = {
   harbor: { tenant: 'customer workspace', low: 'An intern', high: 'an HR admin', edited: 'The refund policy was edited', speaker: 'A German user', asked: 'the exact question workspace A asked' },
-  store: { tenant: 'seller', low: 'A shopper', high: 'a seller’s account manager', edited: 'The returns policy was edited', speaker: 'A Hindi speaker', asked: 'the question seller A asked about its sales' },
+  store: { tenant: 'seller', low: 'A shopper', high: 'a seller’s account manager', edited: 'The returns policy was edited', speaker: 'A Tamil speaker', asked: 'the question seller A asked about its sales' },
   bank: { tenant: 'business customer', low: 'A branch teller', high: 'a fraud analyst', edited: 'The dispute policy was edited', speaker: 'A Tamil speaker', asked: 'the question business customer A asked about its accounts' },
-  travel: { tenant: 'corporate client', low: 'A traveller', high: 'a travel desk agent', edited: 'The fare rules were edited', speaker: 'A Hindi speaker', asked: 'the question corporate client A asked about its travel policy' },
+  travel: { tenant: 'corporate client', low: 'A traveller', high: 'a travel desk agent', edited: 'The fare rules were edited', speaker: 'A Tamil speaker', asked: 'the question corporate client A asked about its travel policy' },
 }
 
 export function fieldLabel(id: FieldId, projectId: ProjectId): string {

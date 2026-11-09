@@ -10,7 +10,7 @@ const close = (a: number, b: number) => assert.ok(Math.abs(a - b) < 1e-9, `${a} 
 test('the estimate follows the heuristic for each kind of character', () => {
   assert.equal(estimateTokens('abcdabcd'), 2)
   assert.equal(estimateTokens('12345678'), 4)
-  assert.equal(estimateTokens('मेरा'), 3)
+  assert.equal(estimateTokens('தரம்'), 3)
 })
 
 test('the estimate is never zero', () => {
@@ -18,7 +18,7 @@ test('the estimate is never zero', () => {
 })
 
 test('non-Latin scripts cost more per character, which is what the figure teaches', () => {
-  assert.ok(estimateTokens('मेरा ऑर्डर अभी तक नहीं आया') / 26 > estimateTokens('Where is my order today now') / 27)
+  assert.ok(estimateTokens('என் ஆர்டர் இன்னும் வரவில்லை') / 27 > estimateTokens('Where is my order today now') / 27)
 })
 
 test('cost and latency match a hand calculation', () => {
@@ -49,7 +49,7 @@ test('firstPerLanguage keeps the first message of each language and names it', (
     { language: 'en', text: 'second' },
     { language: 'ta', text: 'tamil' },
     { language: 'xx', text: 'other' },
-    { language: 'hi', text: '' },
+    { language: 'de', text: '' },
   ]
   assert.deepEqual(firstPerLanguage(rows), [
     { language: 'English', text: 'first' },
@@ -58,7 +58,7 @@ test('firstPerLanguage keeps the first message of each language and names it', (
   ])
 })
 
-const LANGUAGES = { harbor: ['English', 'German', 'Tamil'], store: ['English', 'Hindi', 'Tamil', 'Hinglish'], bank: ['English', 'Hindi', 'Tamil', 'Hinglish'], travel: ['English', 'Hindi', 'Tamil', 'Hinglish'] }
+const LANGUAGES = { harbor: ['English', 'German', 'Tamil'], store: ['English', 'Tamil'], bank: ['English', 'Tamil'], travel: ['English', 'Tamil'] }
 
 for (const id of PROJECT_IDS) {
   test(`${id}: samples cover the languages its dataset has, as its note asks`, async () => {

@@ -10,8 +10,8 @@
   "store": {
    "fit": "good",
    "fitNote": "a multilingual evaluation set decides the model mix",
-   "practice": "{company} chose {assistant}'s model with a 200-case set built from real shopper questions in four languages. The frontier model scored best, but a mid-size model met the bar at festival-peak prices, so it serves most traffic and the frontier model handles escalations.",
-   "failure": "Choosing a model on an English-only evaluation for a marketplace where many chats are in Hindi, Tamil or Hinglish.",
+   "practice": "{company} chose {assistant}'s model with a 200-case set built from real shopper questions in two languages. The frontier model scored best, but a mid-size model met the bar at festival-peak prices, so it serves most traffic and the frontier model handles escalations.",
+   "failure": "Choosing a model on an English-only evaluation for a marketplace where many chats are in Tamil.",
    "tryIt": "Build a 40-case set from <code>chats.json</code> and product questions about <code>products.csv</code> (each with an expected answer), and compare two local models' accuracy by language and their latency."
   },
   "bank": {
@@ -40,7 +40,7 @@
   "store": {
    "fit": "good",
    "fitNote": "few-shot examples that can bias recommendations",
-   "practice": "{assistant}'s prompt puts the returns policy and tone rules first, where they can be cached, then the listing and reviews in tagged blocks marked as data, then the shopper's question. Its few-shot examples include a Hinglish question so the model answers in the shopper's language.",
+   "practice": "{assistant}'s prompt puts the returns policy and tone rules first, where they can be cached, then the listing and reviews in tagged blocks marked as data, then the shopper's question. Its few-shot examples include a Tamil question so the model answers in the shopper's language.",
    "failure": "Using few-shot examples that all mention the same brand. The model starts recommending that brand.",
    "tryIt": "Write a product-question prompt with two varied examples, then swap in two examples about a single brand from <code>products.csv</code>, and see whether a local model's answers drift towards that brand."
   },
@@ -54,7 +54,7 @@
   "travel": {
    "fit": "best",
    "fitNote": "structured itinerary extraction is driven by the prompt",
-   "practice": "{assistant}'s extraction prompt shows three diverse examples (English, Hinglish and a multi-city trip) and a JSON template, and puts the traveller's message last.",
+   "practice": "{assistant}'s extraction prompt shows three diverse examples (English, Tamil and a multi-city trip) and a JSON template, and puts the traveller's message last.",
    "failure": "Few-shot examples that are all one-way flights. The model forces multi-city requests into one leg.",
    "tryIt": "Write the extraction prompt for <code>messages.json</code> with three examples, then remove the multi-city example and test the Goa hotel request and a two-city request you write yourself."
   }
@@ -214,7 +214,7 @@
    "scenario": "<p>Use <code>policies.json</code> with its <code>access_groups</code>. Your 30 cases must include questions from a user outside the leadership group about the salary-band and reorganisation documents (the service must abstain), and questions answered only by an outdated revision (it must cite the current one).</p>"
   },
   "store": {
-   "scenario": "<p>Use <code>products.csv</code> and <code>reviews.json</code>; evidence IDs are SKUs and review IDs. Cases include an attribute missing from the listing (abstain), a review that contradicts the listing (the listing wins), one of the injected reviews (its instruction must be ignored), and Hinglish questions.</p>"
+   "scenario": "<p>Use <code>products.csv</code> and <code>reviews.json</code>; evidence IDs are SKUs and review IDs. Cases include an attribute missing from the listing (abstain), a review that contradicts the listing (the listing wins), one of the injected reviews (its instruction must be ignored), and Tamil questions.</p>"
   },
   "bank": {
    "scenario": "<p>Use <code>policies.json</code> and <code>disputes.csv</code>. Cases include deadline questions, a failed UPI debit, a request about another customer's case (refuse), and answers whose amounts must match <code>transactions.csv</code> exactly. Label every case with the cost of a wrong answer.</p>"

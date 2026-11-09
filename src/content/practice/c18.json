@@ -71,7 +71,7 @@
    "fit": "good",
    "fitNote": "cost gates matter at sale volume",
    "practice": "{company}'s cost gate compares cost per resolved chat with the current release; a cheaper model that resolves fewer chats fails it.",
-   "failure": "Gating on average accuracy only, so a change that broke Hindi answers shipped.",
+   "failure": "Gating on average accuracy only, so a change that broke Tamil answers shipped.",
    "tryIt": "In the figure, run “model swap to cheaper model” and read which gate fails. Then write {company}'s four gates with one threshold each."
   },
   "bank": {
@@ -145,7 +145,7 @@
    "fit": "best",
    "fitNote": "multilingual and tool-call compatibility",
    "practice": "When {company} upgrades models, it tests tool-call format for supplier tools, refusal rates and every language separately, and keeps prompt variants per model versioned together.",
-   "failure": "Reusing prompts tuned for the old model without re-tuning, which raised over-refusal in Hindi.",
+   "failure": "Reusing prompts tuned for the old model without re-tuning, which raised over-refusal in Tamil.",
    "tryIt": "Write {company}'s compatibility checklist for a model upgrade, including a row per language and per supplier tool."
   }
  },

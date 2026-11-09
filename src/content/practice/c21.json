@@ -112,8 +112,8 @@
    "fitNote": "triage and drafting split"
   },
   "travel": {
-   "practice": "{assistant} routes status questions to a small model and fare-rule changes to a large one. Evaluation by language showed the small model missed the bar in Hinglish, so the routing table has a language column.",
-   "failure": "Building the routing table from English evaluations only, so Hinglish requests go to a model that fails them.",
+   "practice": "{assistant} routes status questions to a small model and fare-rule changes to a large one. Evaluation by language showed the small model missed the bar in Tamil, so the routing table has a language column.",
+   "failure": "Building the routing table from English evaluations only, so Tamil requests go to a model that fails them.",
    "tryIt": "Run the snippet with requests.csv, raise BAR to 0.93, and see which request types move to the large model. Estimate the extra cost per 1,000 requests.",
    "fit": "good",
    "fitNote": "routing by type and language"

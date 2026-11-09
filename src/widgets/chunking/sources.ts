@@ -27,7 +27,7 @@ const pick = (rows: Doc[], ids: string[]): Section[] =>
   })
 
 const REVIEW_SKU = 'BZ-KIT-1097'
-const LANGUAGE: Record<string, string> = { en: 'English', hi: 'Hindi', ta: 'Tamil', hinglish: 'Hinglish' }
+const LANGUAGE: Record<string, string> = { en: 'English', ta: 'Tamil' }
 
 /** One short document from each project's dataset, picked so that fixed-size windows cut across real rules. */
 export async function loadChunkSource(p: Project, read: DataReader): Promise<ChunkSource> {

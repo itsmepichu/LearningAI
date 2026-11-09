@@ -10,8 +10,8 @@ test('words are split into characters with a start marker, and counted', () => {
   ])
 })
 
-test('vowel signs stay in Hindi and Tamil words', () => {
-  assert.deepEqual(initWords('मेरा').flatMap((w) => w.symbols).join(''), '▁मेरा')
+test('vowel signs and the dot that silences a consonant stay in Tamil words', () => {
+  assert.deepEqual(initWords('தரம்').flatMap((w) => w.symbols).join(''), '▁தரம்')
   assert.deepEqual(initWords('என்').flatMap((w) => w.symbols).join(''), '▁என்')
 })
 

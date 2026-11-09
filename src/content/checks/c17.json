@@ -1861,7 +1861,7 @@
    },
    {
     "id": "c17-5-m12",
-    "q": "Cost reports estimate tokens as characters ÷ 4, and Hindi conversations come out 25% cheaper than the invoice says. What should the usage records use?",
+    "q": "Cost reports estimate tokens as characters ÷ 4, and Tamil conversations come out 25% cheaper than the invoice says. What should the usage records use?",
     "options": [
      "The monthly invoice, spread evenly over calls",
      "A different divisor for each language",

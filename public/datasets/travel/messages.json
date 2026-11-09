@@ -21,37 +21,37 @@
  },
  {
   "id": "MS-005",
-  "language": "hi",
-  "text": "मुझे कल की फ्लाइट रद्द करनी है।"
- },
- {
-  "id": "MS-006",
-  "language": "hi",
-  "text": "क्या मैं अपनी यात्रा की तारीख बदल सकता हूँ?"
- },
- {
-  "id": "MS-007",
-  "language": "hi",
-  "text": "मेरी ट्रेन देर से चल रही है, होटल का क्या होगा?"
- },
- {
-  "id": "MS-008",
   "language": "ta",
   "text": "நாளைய விமான முன்பதிவை ரத்து செய்ய வேண்டும்."
  },
  {
-  "id": "MS-009",
+  "id": "MS-006",
   "language": "ta",
   "text": "பயண தேதியை மாற்ற முடியுமா?"
  },
  {
+  "id": "MS-007",
+  "language": "ta",
+  "text": "நாளை விமானப் பயணத்தை ரத்து செய்ய வேண்டும். (I need to cancel tomorrow's flight.)"
+ },
+ {
+  "id": "MS-008",
+  "language": "ta",
+  "text": "என் பயணத் தேதியை நான் மாற்றலாமா? (Can I change my travel date?)"
+ },
+ {
+  "id": "MS-009",
+  "language": "ta",
+  "text": "என் ரயில் தாமதமாக ஓடுகிறது, ஹோட்டலுக்கு என்ன ஆகும்? (My train is running late, what will happen to the hotel?)"
+ },
+ {
   "id": "MS-010",
-  "language": "hinglish",
-  "text": "Kal ki flight cancel karni hai, refund milega?"
+  "language": "ta",
+  "text": "நாளைய விமானத்தை ரத்து செய்ய வேண்டும், பணம் திரும்பக் கிடைக்குமா? (I need to cancel tomorrow's flight, will I get a refund?)"
  },
  {
   "id": "MS-011",
-  "language": "hinglish",
-  "text": "Goa wala hotel do din aage kar do please."
+  "language": "ta",
+  "text": "தயவுசெய்து கோவா ஹோட்டல் முன்பதிவை இரண்டு நாள் தள்ளி வையுங்கள். (Please move my Goa hotel booking two days later.)"
  }
 ]

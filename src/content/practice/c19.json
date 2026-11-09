@@ -22,7 +22,7 @@
    "fitNote": "scanned statements in disputes"
   },
   "travel": {
-   "practice": "{assistant} handles voice notes from travellers in Hindi, Tamil and Hinglish. {company} budgets context by audio length: a two-minute voice note becomes about 6,000 audio positions before merging, more than the booking record itself.",
+   "practice": "{assistant} handles voice notes from travellers in Tamil. {company} budgets context by audio length: a two-minute voice note becomes about 6,000 audio positions before merging, more than the booking record itself.",
    "failure": "Letting long voice notes fill the context window and push out the booking details.",
    "tryIt": "In the snippet, add 120 and 300 seconds to the audio loop and compare the positions with the text tokens of a request from requests.csv.",
    "fit": "good",
@@ -98,9 +98,9 @@
    "fitNote": "meeting notes only; voice is not central"
   },
   "store": {
-   "practice": "{assistant} offers voice search in Hindi, Tamil and Hinglish. {company} measures word error rate per language on recorded queries, because code-mixed Hinglish fails far more often than English and drives most failed searches.",
-   "failure": "Reporting one average word error rate while Hinglish queries fail several times as often.",
-   "tryIt": "Run the snippet with reviews.json and chats.json and compare word error rate by language. Lower the Hinglish noise to 0.08 and see the average change.",
+   "practice": "{assistant} offers voice search in Tamil. {company} measures word error rate per language on recorded queries, because Tamil queries mixed with English words fail far more often than English and drive most failed searches.",
+   "failure": "Reporting one average word error rate while Tamil queries fail several times as often.",
+   "tryIt": "Run the snippet with reviews.json and chats.json and compare word error rate by language. Lower the Tamil noise to 0.08 and see the average change.",
    "fit": "good",
    "fitNote": "voice search in several languages"
   },
@@ -114,7 +114,7 @@
   "travel": {
    "practice": "{assistant} takes voice requests during disruptions, when call volumes spike. Speech recognition is tuned with city and airport names, and transcripts are kept so every change made by voice can be audited.",
    "failure": "Rebooking from a misheard city name because the transcript was not confirmed with the traveller.",
-   "tryIt": "Run the snippet with requests.csv and compare word error rate for Hindi, Tamil and Hinglish requests. Raise the Tamil noise to 0.25 and see the effect.",
+   "tryIt": "Run the snippet with requests.csv and compare word error rate for Tamil requests. Raise the Tamil noise to 0.25 and see the effect.",
    "fit": "best",
    "fitNote": "multilingual voice requests"
   }
@@ -172,7 +172,7 @@
    "fitNote": "statement extraction checks"
   },
   "travel": {
-   "practice": "{company} evaluates voice and screenshot inputs separately, per language. Hinglish voice requests had the most errors on city names, so those requests now get a confirmation step before any rebooking.",
+   "practice": "{company} evaluates voice and screenshot inputs separately, per language. Tamil voice requests had the most errors on city names, so those requests now get a confirmation step before any rebooking.",
    "failure": "Averaging voice and text results together, hiding the language where rebookings go wrong.",
    "tryIt": "Run the snippet with fare_rules.json, raise the change rate to 0.25, and count how many fare figures would be wrong in descriptions. Estimate the review time at 30 seconds each.",
    "fit": "good",

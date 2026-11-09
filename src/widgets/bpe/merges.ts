@@ -18,7 +18,7 @@ export interface BpeState {
 
 const WORD_START = '▁'
 
-/** Keeps letters, combining marks and digits, so a vowel sign in Hindi or Tamil stays in its word. */
+/** Keeps letters, combining marks and digits, so a vowel sign in a Tamil word stays in its word. */
 export function initWords(text: string): BpeWord[] {
   const counts = new Map<string, number>()
   for (const raw of text.toLowerCase().split(/\s+/)) {

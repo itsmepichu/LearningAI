@@ -110,7 +110,7 @@ def wer(ref, hyp):
             d[i][j] = min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (r[i - 1] != h[j - 1]))
     return d[len(r)][len(h)] / max(1, len(r))
 
-NOISE = {"en": 0.05, "hi": 0.12, "ta": 0.15, "hinglish": 0.18, "de": 0.08}   # simulated per-word error rates
+NOISE = {"en": 0.05, "ta": 0.15, "de": 0.08}   # simulated per-word error rates
 def recognise(text, lang):
     out = []
     for w in text.split():

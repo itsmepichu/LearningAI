@@ -114,9 +114,9 @@
   "travel": {
    "fit": "best",
    "fitNote": "non-English quality degrades first",
-   "practice": "Quantisation hurt {company}'s Tamil and Hindi answers more than English, so each language is tested separately before a format is accepted.",
+   "practice": "Quantisation hurt {company}'s Tamil answers more than English, so each language is tested separately before a format is accepted.",
    "failure": "Testing a quantised model only in English and shipping it for all languages.",
-   "tryIt": "In the llama.cpp lab, compare Q8_0 and Q4_K_M on 10 English and 10 Hindi or Tamil messages from <code>messages.json</code>, and compare error counts per language."
+   "tryIt": "In the llama.cpp lab, compare Q8_0 and Q4_K_M on 10 English and 10 Tamil messages from <code>messages.json</code>, and compare error counts per language."
   }
  },
  "c14-5": {

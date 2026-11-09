@@ -26,7 +26,7 @@
    "fitNote": "hotel content in several languages dominates",
    "practice": "{company} indexes fare rules (small) and hotel content (hundreds of thousands of properties with descriptions and reviews in several languages); hotel content dominates storage.",
    "failure": "Forgetting that each language version of a hotel description is a separate set of chunks.",
-   "tryIt": "In the calculator, model 300,000 hotels × 4 languages × 1 page of 400 tokens, and compare float32 with int8."
+   "tryIt": "In the calculator, model 300,000 hotels × 2 languages × 1 page of 400 tokens, and compare float32 with int8."
   }
  },
  "c10-2": {

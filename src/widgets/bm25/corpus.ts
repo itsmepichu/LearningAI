@@ -56,7 +56,7 @@ export const SUGGESTIONS: Record<ProjectId, Suggestion[]> = {
   bank: [
     { q: '3.5% markup', shows: 'Exact terms: the foreign transaction policy wins clearly.' },
     { q: 'UPI debit reversal', shows: 'The right policy says “debited” and “reversed”, which do not match, so a limits policy ranks first on “UPI” alone.' },
-    { q: 'paise kat gaye payment fail', shows: 'The Hinglish words match nothing. Only the English “payment” and “fail” score.' },
+    { q: 'பணம் கழிக்கப்பட்டது payment fail', shows: 'The query means “money was deducted, payment failed”. The Tamil words match nothing; only the English “payment” and “fail” score.' },
   ],
   travel: [
     { q: 'saver change fee', shows: 'The query uses the rule’s own words, and the saver-fare change rule ranks first.' },

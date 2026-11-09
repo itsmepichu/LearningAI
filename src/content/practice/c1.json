@@ -99,10 +99,10 @@
   },
   "store": {
    "fit": "best",
-   "fitNote": "Hindi, Tamil and Hinglish chats show real token-cost differences",
-   "practice": "A typical {assistant} request carries a 700-token system prompt, about 1,500 tokens of listing and review text and a 250-token reply (illustrative). Festival-sale traffic multiplies the request count, so trimming 200 tokens of reviews is a visible line in the monthly bill. Hindi and Tamil chats usually cost more tokens than English ones that say the same thing.",
-   "failure": "Budgeting with English word counts. With most tokenizers Devanagari and Tamil text produces many more tokens per word, so a budget built on English traffic under-estimates an Indian marketplace.",
-   "tryIt": "Paste the English, Hindi and Tamil messages from <code>chats.json</code> into the estimator one at a time, then count them with the laptop-lab tokenizer and compare tokens per character across the three scripts. Set requests per day to 500,000 to see what the difference does to cost."
+   "fitNote": "Tamil chats show real token-cost differences",
+   "practice": "A typical {assistant} request carries a 700-token system prompt, about 1,500 tokens of listing and review text and a 250-token reply (illustrative). Festival-sale traffic multiplies the request count, so trimming 200 tokens of reviews is a visible line in the monthly bill. Tamil chats usually cost more tokens than English ones that say the same thing.",
+   "failure": "Budgeting with English word counts. With most tokenizers Tamil text produces many more tokens per word, so a budget built on English traffic under-estimates an Indian marketplace.",
+   "tryIt": "Paste the English and Tamil messages from <code>chats.json</code> into the estimator one at a time, then count them with the laptop-lab tokenizer and compare tokens per character across the two scripts. Set requests per day to 500,000 to see what the difference does to cost."
   },
   "bank": {
    "fit": "good",
@@ -114,7 +114,7 @@
   "travel": {
    "fit": "best",
    "fitNote": "multilingual requests and long itineraries make token costs visible",
-   "practice": "{assistant} plans trips in English, Hindi, Tamil and Hinglish. With some tokenizers a Tamil request uses several times as many tokens as the English one, and itinerary replies are long, so output tokens dominate both cost and waiting time.",
+   "practice": "{assistant} plans trips in English and Tamil. With some tokenizers a Tamil request uses several times as many tokens as the English one, and itinerary replies are long, so output tokens dominate both cost and waiting time.",
    "failure": "Letting itinerary replies run long. Output tokens are slower to generate and usually pricier than input, so a 600-token itinerary costs more waiting time than a 3,000-token prompt.",
    "tryIt": "Paste the English and Tamil cancellation messages from <code>messages.json</code> into the estimator, then raise output tokens from 150 to 600 (a full itinerary) and watch latency and cost. Confirm the token counts with the laptop-lab tokenizer."
   }
@@ -130,16 +130,16 @@
   "store": {
    "fit": "good",
    "fitNote": "reviews contain contradictions and hidden instructions",
-   "practice": "{assistant}'s evaluation set includes a product with no warranty information, a review that contradicts its listing, a Hinglish question and a review carrying hidden instructions. Answers are graded on whether they stay inside the listing and treat reviews as opinions, not facts.",
+   "practice": "{assistant}'s evaluation set includes a product with no warranty information, a review that contradicts its listing, a Tamil question and a review carrying hidden instructions. Answers are graded on whether they stay inside the listing and treat reviews as opinions, not facts.",
    "failure": "Trusting the assistant's tone. “Yes, this is definitely pure silk” sounds the same whether or not the listing says so.",
-   "tryIt": "From <code>reviews.json</code>, pick one review with <code>is_injection: true</code> and one Hinglish review. Put each in a prompt with its product listing and ask a local model to summarise what shoppers say. Check whether it follows the injected instruction or invents details."
+   "tryIt": "From <code>reviews.json</code>, pick one review with <code>is_injection: true</code> and one Tamil review. Put each in a prompt with its product listing and ask a local model to summarise what shoppers say. Check whether it follows the injected instruction or invents details."
   },
   "bank": {
    "fit": "best",
    "fitNote": "regulated answers make hallucination and bias concrete",
-   "practice": "{company} treats bias and stale knowledge as compliance risks: {assistant} must give the same service whatever the customer's name, language or region, and must never quote a rate from an outdated policy. Its test set asks the same question in English, Hindi and Tamil, and includes a policy changed yesterday.",
+   "practice": "{company} treats bias and stale knowledge as compliance risks: {assistant} must give the same service whatever the customer's name, language or region, and must never quote a rate from an outdated policy. Its test set asks the same question in English and Tamil, and includes a policy changed yesterday.",
    "failure": "Using the model's own “I'm confident” to decide whether to show an answer about fees or limits. Confidence has to be measured against labelled cases first (3.5).",
-   "tryIt": "With the “Card dispute timelines” policy in context, ask a local model the same dispute question in English and in Hindi (both are in <code>disputes.csv</code>). Check that both answers give the same 30-day and 5-working-day figures."
+   "tryIt": "With the “Card dispute timelines” policy in context, ask a local model the same dispute question in English and in Tamil (both are in <code>disputes.csv</code>). Check that both answers give the same 30-day and 5-working-day figures."
   },
   "travel": {
    "fit": "good",
@@ -176,7 +176,7 @@
    "fitNote": "a change request splits into language, lookup and arithmetic",
    "practice": "For a change request at {company}: “Can this fare change 4 hours before departure?” is a rule. “What are this hotel's cancellation terms?” is search. “Will this booking be cancelled?” is a trained model used to price flexible fares. “Understand ‘move my Goa hotel by two days’ and confirm it” is the LLM.",
    "failure": "Letting the agent pick between rebooking options by “judgement” when the cheapest valid option is a deterministic search over fares.",
-   "tryIt": "Take “Kal ki flight cancel karni hai, refund milega?” from <code>messages.json</code> and split it with the decision guide into language understanding, fare-rule lookup and fee calculation."
+   "tryIt": "Take “நாளைய விமானத்தை ரத்து செய்ய வேண்டும், பணம் திரும்பக் கிடைக்குமா? (I need to cancel tomorrow's flight, will I get a refund?)” from <code>messages.json</code> and split it with the decision guide into language understanding, fare-rule lookup and fee calculation."
   }
  },
  "_lab": {
@@ -184,13 +184,13 @@
    "scenario": "<p>Use five Harbor tasks instead of your own:</p><ol><li>Check that every ticket in <code>tickets.csv</code> has an account ID.</li><li>Find the policy that covers client dinners.</li><li>Draft a reply to a billing ticket.</li><li>Predict resolution time (<code>resolved_hours</code>) for a new ticket.</li><li>Summarise a week of security tickets for the security lead.</li></ol><p>Write the ten acceptance examples for task 3, including one German and one Tamil ticket.</p>"
   },
   "store": {
-   "scenario": "<p>Use five {company} tasks:</p><ol><li>Flag orders in <code>orders.csv</code> with a missing city.</li><li>Find the returns rule for opened beauty products.</li><li>Reply to the chat “Refund kab milega? UPI se pay kiya tha.”</li><li>Predict which orders will be returned.</li><li>Summarise this week's reviews for one product.</li></ol><p>Write ten acceptance examples for task 3, including Hindi, Tamil and Hinglish messages from <code>chats.json</code>.</p>"
+   "scenario": "<p>Use five {company} tasks:</p><ol><li>Flag orders in <code>orders.csv</code> with a missing city.</li><li>Find the returns rule for opened beauty products.</li><li>Reply to the chat “பணம் திரும்ப எப்போது கிடைக்கும்? UPI மூலம் செலுத்தினேன். (When will I get the refund? I paid by UPI.)”</li><li>Predict which orders will be returned.</li><li>Summarise this week's reviews for one product.</li></ol><p>Write ten acceptance examples for task 3, including Tamil messages from <code>chats.json</code>.</p>"
   },
   "bank": {
    "scenario": "<p>Use five {company} tasks:</p><ol><li>Check that a dispute is raised within 30 days of the transaction.</li><li>Find the policy on failed UPI debits.</li><li>Draft the customer update for a dispute in <code>disputes.csv</code>.</li><li>Score a transaction for fraud.</li><li>Summarise a case for the investigator.</li></ol><p>Write ten acceptance examples for task 3. Make the cost of a wrong answer explicit for each (a wrong refund promise, a missed deadline).</p>"
   },
   "travel": {
-   "scenario": "<p>Use five {company} tasks:</p><ol><li>Check that a booking's travel date is after its booking date.</li><li>Find the change rule for a saver fare.</li><li>Understand and confirm “Goa wala hotel do din aage kar do please”.</li><li>Predict whether a booking will be cancelled (<code>bookings.csv</code>).</li><li>Explain the change fee to the traveller.</li></ol><p>Write ten acceptance examples for task 3 using the messages in <code>messages.json</code>.</p>"
+   "scenario": "<p>Use five {company} tasks:</p><ol><li>Check that a booking's travel date is after its booking date.</li><li>Find the change rule for a saver fare.</li><li>Understand and confirm “தயவுசெய்து கோவா ஹோட்டல் முன்பதிவை இரண்டு நாள் தள்ளி வையுங்கள். (Please move my Goa hotel booking two days later.)”</li><li>Predict whether a booking will be cancelled (<code>bookings.csv</code>).</li><li>Explain the change fee to the traveller.</li></ol><p>Write ten acceptance examples for task 3 using the messages in <code>messages.json</code>.</p>"
   }
  }
 }

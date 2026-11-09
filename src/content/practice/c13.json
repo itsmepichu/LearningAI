@@ -24,8 +24,8 @@
   "travel": {
    "fit": "good",
    "fitNote": "multilingual messages strain prompting",
-   "practice": "{company}'s intent extraction from messages in English, Hindi, Tamil and Hinglish worked with a strong prompt but needed 3,000 tokens of examples per call. A small fine-tune moved the examples into the model and cut the prompt.",
-   "failure": "Reaching for continued pretraining for Hinglish when a few hundred labelled examples were enough.",
+   "practice": "{company}'s intent extraction from messages in English and Tamil worked with a strong prompt but needed 3,000 tokens of examples per call. A small fine-tune moved the examples into the model and cut the prompt.",
+   "failure": "Reaching for continued pretraining for Tamil when a few hundred labelled examples were enough.",
    "tryIt": "Extract intent and booking fields from 20 messages in <code>messages.json</code> with a short prompt, then with a long few-shot prompt, and count the prompt tokens each needs."
   }
  },
@@ -47,14 +47,14 @@
   "bank": {
    "fit": "good",
    "fitNote": "labels drive regulated decisions",
-   "practice": "{company} labels dispute texts with reason codes. The guideline covers cases with two reasons and texts in Hindi, and the test set is split by customer so no customer's cases appear in both train and test.",
+   "practice": "{company} labels dispute texts with reason codes. The guideline covers cases with two reasons and texts in Tamil, and the test set is split by customer so no customer's cases appear in both train and test.",
    "failure": "Splitting by row, so near-identical complaints from one customer land in train and test and inflate the score.",
    "tryIt": "Label 30 rows of <code>disputes.csv</code> for <code>reason</code> without looking at the column, compare with a colleague and with the given labels, and write the rule that resolves your top disagreement."
   },
   "travel": {
    "fit": "good",
    "fitNote": "annotators must read several languages",
-   "practice": "{company}'s guideline has worked examples in each language and for code-mixed Hinglish. Each language has its own reviewer, and agreement is measured per language because it was much lower for Tamil at first.",
+   "practice": "{company}'s guideline has worked examples in each language and for Tamil text mixed with English words. Each language has its own reviewer, and agreement is measured per language because it was much lower for Tamil at first.",
    "failure": "Measuring agreement only on English and assuming the other languages are labelled as well.",
    "tryIt": "Label 20 messages from <code>messages.json</code> with intent and travel date, with a colleague, and compute agreement separately for English and the other languages."
   }
@@ -130,7 +130,7 @@
   "store": {
    "fit": "best",
    "fitNote": "shopper queries use their own words",
-   "practice": "Shoppers search {company} with sizes, brand nicknames and Hinglish (“kurta cotton XL”, “saree halka”). Search logs give query and clicked-product pairs; hard negatives are similar products the shopper did not choose.",
+   "practice": "Shoppers search {company} with sizes, brand nicknames and Tamil queries (“காட்டன் குர்தா XL” (cotton kurta XL), “இலகுவான சேலை” (light saree)). Search logs give query and clicked-product pairs; hard negatives are similar products the shopper did not choose.",
    "failure": "Taking every non-clicked product as a negative, when many were relevant and just lower on the page.",
    "tryIt": "Write 20 shopper-style queries for products in <code>products.csv</code>, pair each with its product, mine 3 hard negatives with a general embedding model, and check by hand that the negatives are really wrong."
   },
@@ -160,9 +160,9 @@
   "store": {
    "fit": "good",
    "fitNote": "general and multilingual regressions",
-   "practice": "{company}'s fine-tuned extractor improved attribute accuracy but its chat answers in Hindi got worse; the release was blocked until Hindi examples were added to the training mix.",
+   "practice": "{company}'s fine-tuned extractor improved attribute accuracy but its chat answers in Tamil got worse; the release was blocked until Tamil examples were added to the training mix.",
    "failure": "Comparing the fine-tuned model with the base model and a weak prompt, which exaggerates the gain.",
-   "tryIt": "Write a scorecard like the figure's for an attribute extractor: domain gain, fabrication rate, general instruction following, Hindi and English chat, each with a gate."
+   "tryIt": "Write a scorecard like the figure's for an attribute extractor: domain gain, fabrication rate, general instruction following, Tamil and English chat, each with a gate."
   },
   "bank": {
    "fit": "best",

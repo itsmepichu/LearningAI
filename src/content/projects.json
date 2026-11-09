@@ -33,9 +33,9 @@
    "icon": "shopping-bag",
    "datasets": [
     { "file": "products.csv", "what": "300 product listings with category, brand, price in rupees, rating and attributes.", "notes": "Titles mix brand names, sizes and materials, which is where keyword search beats embeddings." },
-    { "file": "reviews.json", "what": "600 reviews in English, Hindi, Tamil and Hinglish.", "notes": "Six reviews contain prompt-injection attempts (is_injection: true)." },
+    { "file": "reviews.json", "what": "600 reviews in English and Tamil (some Tamil reviews carry their English meaning in brackets).", "notes": "Six reviews contain prompt-injection attempts (is_injection: true)." },
     { "file": "orders.csv", "what": "About 5,500 orders across 2025 with payment method, city, delivery time and whether the item was returned.", "notes": "returned is the target (about 14%). The festival sale (10 Oct to 10 Nov) changes the mix and the return rate: a covariate shift. refund_amount_inr is only known after a return, so it leaks the answer." },
-    { "file": "chats.json", "what": "Short shopper messages in English, Hindi, Tamil and Hinglish.", "notes": "Use them to compare token counts across languages and scripts." }
+    { "file": "chats.json", "what": "Short shopper messages in English and Tamil (some messages carry their English meaning in brackets).", "notes": "Use them to compare token counts across languages and scripts." }
    ]
   },
   {
@@ -64,18 +64,18 @@
    "company": "Safarnova",
    "assistant": "Compass",
    "about": "Safarnova is an online travel agency in India. Its agent, Compass, plans trips and books, changes and cancels flights, hotels, rail and packages, where every multi-step booking must either complete or be undone cleanly.",
-   "scale": "about 1.5 million bookings a month · English, Hindi, Tamil and Hinglish · live fares",
+   "scale": "about 1.5 million bookings a month · English and Tamil · live fares",
    "teaches": "Multi-step agents and sagas, fresh prices, multilingual input and disruption spikes",
    "accent": "--sim",
    "icon": "plane",
    "datasets": [
     { "file": "bookings.csv", "what": "9,000 bookings across 2025 with product, route, lead time, fare, passengers, refundability and outcome.", "notes": "cancelled is the target (about 14%). Monsoon travel (July and August) raises cancellations and changes: a shift. cancellation_fee_inr is only known after cancelling, so it leaks the answer." },
     { "file": "fare_rules.json", "what": "Change and cancellation rules for flights, hotels, rail and packages.", "notes": "Fictional rules for a fictional company." },
-    { "file": "messages.json", "what": "Traveller messages in English, Hindi, Tamil and Hinglish.", "notes": "Use them for token counts and intent extraction." },
+    { "file": "messages.json", "what": "Traveller messages in English and Tamil (some messages carry their English meaning in brackets).", "notes": "Use them for token counts and intent extraction." },
     { "file": "disruptions.csv", "what": "Monsoon and fog disruption days with flights cancelled.", "notes": "Use them to explain traffic spikes and change requests." },
     {
      "file": "requests.csv",
-     "what": "300 labelled traveller requests in English, Hindi, Tamil and Hinglish, with their intent.",
+     "what": "300 labelled traveller requests in English and Tamil, with their intent (some requests carry their English meaning in brackets).",
      "notes": "Use intent as a classification target. The text comes from a few templates, so a classifier scores far higher here than it would on real messages."
     }
    ]

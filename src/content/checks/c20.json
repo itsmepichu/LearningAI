@@ -473,12 +473,12 @@
    },
    {
     "id": "c20-2-m10",
-    "q": "Agreement in Hinglish is much lower than in English. The sensible action is…",
+    "q": "Agreement in Tamil is much lower than in English. The sensible action is…",
     "options": [
-     "Translate Hinglish into English first",
-     "Trust Hinglish labels like the others",
-     "Drop Hinglish from the student entirely",
-     "Add human spot-checks for Hinglish labels"
+     "Translate Tamil into English first",
+     "Trust Tamil labels like the others",
+     "Drop Tamil from the student entirely",
+     "Add human spot-checks for Tamil labels"
     ],
     "answer": 3,
     "why": "Low agreement signals a weaker teacher there; review more.",
@@ -1642,7 +1642,7 @@
    },
    {
     "id": "c20-6-m09",
-    "q": "A team uses one threshold for all languages, and Hinglish errors rise. A better design is…",
+    "q": "A team uses one threshold for all languages, and Tamil errors rise. A better design is…",
     "options": [
      "Ignoring language in routing",
      "Removing the large model from the cascade",

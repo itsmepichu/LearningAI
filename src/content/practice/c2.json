@@ -17,16 +17,16 @@
   "bank": {
    "fit": "good",
    "fitNote": "similar-case search over dispute descriptions",
-   "practice": "{company} embeds dispute descriptions so investigators can find similar past cases. “I don't recognise a payment” and “unknown transaction on my card” should be close, and so should the same complaint in Hindi, if the embedding model is multilingual.",
+   "practice": "{company} embeds dispute descriptions so investigators can find similar past cases. “I don't recognise a payment” and “unknown transaction on my card” should be close, and so should the same complaint in Tamil, if the embedding model is multilingual.",
    "failure": "Using the cosine similarity between customers' embeddings as a risk decision. Similarity is not a calibrated fraud or credit score.",
-   "tryIt": "Embed the English and Hindi “unrecognised payment” dispute texts from <code>disputes.csv</code> with a multilingual model (for example <code>paraphrase-multilingual-MiniLM-L12-v2</code>) and with an English-only one (<code>all-MiniLM-L6-v2</code>). Compare the cosine similarity each gives the pair."
+   "tryIt": "Embed the English and Tamil “unrecognised payment” dispute texts from <code>disputes.csv</code> with a multilingual model (for example <code>paraphrase-multilingual-MiniLM-L12-v2</code>) and with an English-only one (<code>all-MiniLM-L6-v2</code>). Compare the cosine similarity each gives the pair."
   },
   "travel": {
    "fit": "good",
    "fitNote": "matching multilingual requests to intents",
-   "practice": "{assistant} embeds traveller requests and matches them to intents such as cancel, change date or add baggage. “Kal ki flight cancel karni hai” and “I need to cancel tomorrow's flight” should land near the same intent.",
+   "practice": "{assistant} embeds traveller requests and matches them to intents such as cancel, change date or add baggage. “நாளைய விமானத்தை ரத்து செய்ய வேண்டும்” (I need to cancel tomorrow's flight) and its English version should land near the same intent.",
    "failure": "Always picking the nearest intent, even when every similarity is low. Set a minimum cosine and ask a clarifying question below it.",
-   "tryIt": "Embed the messages in <code>messages.json</code> with a multilingual model and compute the cosine similarity between each Hindi, Tamil or Hinglish message and its English counterpart. Note the weakest pair and why it might be weak."
+   "tryIt": "Embed the messages in <code>messages.json</code> with a multilingual model and compute the cosine similarity between each Tamil message and its English counterpart. Note the weakest pair and why it might be weak."
   }
  },
  "c2-2": {

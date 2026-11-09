@@ -44,7 +44,7 @@ function Compare({ samples, call }: { samples: Sample[]; call: <T>(op: string, a
       <div className="wk-chips">
         <span>Try</span>
         {samples.map((s) => (
-          <button key={s.text} type="button" className="wk-chip" lang={s.language === 'hinglish' ? 'hi-Latn' : s.language} aria-pressed={s.text === text} onClick={() => setText(s.text)}>
+          <button key={s.text} type="button" className="wk-chip" lang={s.language} aria-pressed={s.text === text} onClick={() => setText(s.text)}>
             {LANGUAGE_NAMES[s.language] ?? s.language}: {s.text.length > 26 ? [...s.text].slice(0, 24).join('') + '…' : s.text}
           </button>
         ))}

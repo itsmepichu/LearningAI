@@ -893,7 +893,7 @@
    },
    {
     "id": "c7-1-i06",
-    "q": "{company} must choose a model for shopper questions in four languages at festival-peak volume. How would you decide?",
+    "q": "{company} must choose a model for shopper questions in two languages at festival-peak volume. How would you decide?",
     "level": "applied",
     "covers": [
      "Evaluation set per language",
