@@ -9,10 +9,10 @@
   },
   "store": {
    "fit": "best",
-   "fitNote": "Hindi, Tamil and Hinglish shoppers pay a token tax",
-   "practice": "{company}'s chats arrive in English, Hindi, Tamil and Hinglish. Measured with the answer model's own tokenizer, the same “where is my order” message usually costs more tokens in Devanagari or Tamil script than in English or Latin-script Hinglish, so one fixed per-conversation token budget gives Hindi and Tamil shoppers less history.",
+   "fitNote": "Tamil shoppers pay a token tax",
+   "practice": "{company}'s chats arrive in English and Tamil. Measured with the answer model's own tokenizer, the same “where is my order” message usually costs more tokens in Tamil script than in English, so one fixed per-conversation token budget gives Tamil shoppers less history.",
    "failure": "Setting one token budget for every language. Non-English shoppers silently get less context; budget from measured counts per language.",
-   "tryIt": "Paste the Hindi and Tamil messages from <code>chats.json</code> into the BPE trainer as training text and run merges: few merges form, because the script is rare in this tiny corpus. Then count the same messages with two real tokenizers (laptop lab) and record tokens per message."
+   "tryIt": "Paste the Tamil messages from <code>chats.json</code> into the BPE trainer as training text and run merges: few merges form, because the script is rare in this tiny corpus. Then count the same messages with two real tokenizers (laptop lab) and record tokens per message."
   },
   "bank": {
    "fit": "good",
@@ -23,8 +23,8 @@
   },
   "travel": {
    "fit": "best",
-   "fitNote": "four languages plus booking codes and airport codes",
-   "practice": "{assistant} serves English, Hindi, Tamil and Hinglish. The team budgets context per language from measured token counts, and keeps booking IDs and airport codes out of any free text the model must reproduce.",
+   "fitNote": "two languages plus booking codes and airport codes",
+   "practice": "{assistant} serves English and Tamil. The team budgets context per language from measured token counts, and keeps booking IDs and airport codes out of any free text the model must reproduce.",
    "failure": "Letting the model rewrite booking references in its reply. Tokenisation splits them, and one wrong character sends the traveller to the wrong booking.",
    "tryIt": "Tokenise every message in <code>messages.json</code> with two tokenizers and make a table of tokens per message by language. Estimate how many more tokens a ten-turn Tamil conversation needs than an English one."
   }
@@ -113,7 +113,7 @@
    "fitNote": "speech requests through an encoder–decoder model",
    "practice": "Calls to {company}'s phone line go through an encoder–decoder speech model (Whisper-style) before a decoder-only model handles the booking.",
    "failure": "Feeding speech-recognition output straight into booking tools without confirming key fields (date, city) with the traveller.",
-   "tryIt": "Run Whisper (tiny or base, on CPU) on a recording of yourself making a booking request in English and in Hindi, and compare the dates and city names in each transcript."
+   "tryIt": "Run Whisper (tiny or base, on CPU) on a recording of yourself making a booking request in English and in Tamil, and compare the dates and city names in each transcript."
   }
  },
  "c5-5": {
@@ -210,10 +210,10 @@
    "scenario": "<p>Use a German policy paragraph, a Tamil ticket from <code>tickets.csv</code>, an order ID such as A-104322 and a code snippet for the tokenizer table. For generation, use prompts that begin a Harbor reply, such as “According to the parental leave policy,”.</p>"
   },
   "store": {
-   "scenario": "<p>Tokenise the English, Hindi, Tamil and Hinglish chats from <code>chats.json</code> and a SKU such as BZ-MOB-1000. For generation, use prompts such as “This kurta is made of” and note when higher temperatures invent materials.</p>"
+   "scenario": "<p>Tokenise the English and Tamil chats from <code>chats.json</code> and a SKU such as BZ-MOB-1000. For generation, use prompts such as “This kurta is made of” and note when higher temperatures invent materials.</p>"
   },
   "bank": {
-   "scenario": "<p>Tokenise transaction IDs from <code>transactions.csv</code>, amounts written as ₹12,499.00 and a Hindi dispute text. For generation, use “Your dispute has been” and record how often the model invents an amount or a deadline at each temperature.</p>"
+   "scenario": "<p>Tokenise transaction IDs from <code>transactions.csv</code>, amounts written as ₹12,499.00 and a Tamil dispute text. For generation, use “Your dispute has been” and record how often the model invents an amount or a deadline at each temperature.</p>"
   },
   "travel": {
    "scenario": "<p>Tokenise every message in <code>messages.json</code>, a booking ID such as SN-300001 and airport codes. For generation, use “Your flight from Mumbai to Goa” and note when the model invents a time or fare.</p>"

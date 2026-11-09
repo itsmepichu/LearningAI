@@ -51,8 +51,8 @@
   "id": "RV-0007",
   "sku": "BZ-BEA-1045",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -67,8 +67,8 @@
   "id": "RV-0009",
   "sku": "BZ-HOM-1140",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -107,16 +107,16 @@
   "id": "RV-0014",
   "sku": "BZ-BEA-1293",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0015",
   "sku": "BZ-TOY-1009",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -131,16 +131,16 @@
   "id": "RV-0017",
   "sku": "BZ-KUR-1129",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0018",
   "sku": "BZ-BEA-1239",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -179,8 +179,8 @@
   "id": "RV-0023",
   "sku": "BZ-TOY-1128",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -195,8 +195,8 @@
   "id": "RV-0025",
   "sku": "BZ-FOO-1052",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -227,8 +227,8 @@
   "id": "RV-0029",
   "sku": "BZ-HOM-1066",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -251,16 +251,16 @@
   "id": "RV-0032",
   "sku": "BZ-FOO-1080",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0033",
   "sku": "BZ-KUR-1129",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -291,8 +291,8 @@
   "id": "RV-0037",
   "sku": "BZ-MOB-1086",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -331,8 +331,8 @@
   "id": "RV-0042",
   "sku": "BZ-TOY-1128",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -355,16 +355,16 @@
   "id": "RV-0045",
   "sku": "BZ-KUR-1288",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0046",
   "sku": "BZ-BEA-1117",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -435,8 +435,8 @@
   "id": "RV-0055",
   "sku": "BZ-TOY-1136",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -507,8 +507,8 @@
   "id": "RV-0064",
   "sku": "BZ-FOO-1030",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -531,8 +531,8 @@
   "id": "RV-0067",
   "sku": "BZ-KUR-1238",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -587,8 +587,8 @@
   "id": "RV-0074",
   "sku": "BZ-TOY-1009",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -603,8 +603,8 @@
   "id": "RV-0076",
   "sku": "BZ-FOO-1242",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -635,16 +635,16 @@
   "id": "RV-0080",
   "sku": "BZ-BEA-1111",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0081",
   "sku": "BZ-HOM-1025",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -659,8 +659,8 @@
   "id": "RV-0083",
   "sku": "BZ-BEA-1098",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -707,8 +707,8 @@
   "id": "RV-0089",
   "sku": "BZ-TOY-1076",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -755,8 +755,8 @@
   "id": "RV-0095",
   "sku": "BZ-MOB-1169",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -771,8 +771,8 @@
   "id": "RV-0097",
   "sku": "BZ-KUR-1173",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -795,8 +795,8 @@
   "id": "RV-0100",
   "sku": "BZ-TOY-1185",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -819,8 +819,8 @@
   "id": "RV-0103",
   "sku": "BZ-HOM-1261",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -835,8 +835,8 @@
   "id": "RV-0105",
   "sku": "BZ-KIT-1044",
   "stars": 3,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -851,8 +851,8 @@
   "id": "RV-0107",
   "sku": "BZ-TOY-1028",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -867,8 +867,8 @@
   "id": "RV-0109",
   "sku": "BZ-FOO-1052",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -931,8 +931,8 @@
   "id": "RV-0117",
   "sku": "BZ-KUR-1243",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -947,8 +947,8 @@
   "id": "RV-0119",
   "sku": "BZ-BEA-1162",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -971,16 +971,16 @@
   "id": "RV-0122",
   "sku": "BZ-TOY-1019",
   "stars": 3,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
   "id": "RV-0123",
   "sku": "BZ-KUR-1260",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -1019,8 +1019,8 @@
   "id": "RV-0128",
   "sku": "BZ-FOO-1190",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -1035,16 +1035,16 @@
   "id": "RV-0130",
   "sku": "BZ-HOM-1014",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0131",
   "sku": "BZ-KUR-1036",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -1147,8 +1147,8 @@
   "id": "RV-0144",
   "sku": "BZ-MOB-1286",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -1163,8 +1163,8 @@
   "id": "RV-0146",
   "sku": "BZ-MOB-1296",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -1179,8 +1179,8 @@
   "id": "RV-0148",
   "sku": "BZ-BEA-1001",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -1195,8 +1195,8 @@
   "id": "RV-0150",
   "sku": "BZ-HOM-1150",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -1211,8 +1211,8 @@
   "id": "RV-0152",
   "sku": "BZ-FOO-1204",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -1259,8 +1259,8 @@
   "id": "RV-0158",
   "sku": "BZ-HOM-1165",
   "stars": 3,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -1275,40 +1275,40 @@
   "id": "RV-0160",
   "sku": "BZ-BEA-1115",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0161",
   "sku": "BZ-MOB-1148",
   "stars": 3,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0162",
   "sku": "BZ-FOO-1030",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0163",
   "sku": "BZ-TOY-1215",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0164",
   "sku": "BZ-FOO-1199",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -1363,16 +1363,16 @@
   "id": "RV-0171",
   "sku": "BZ-KUR-1160",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
   "id": "RV-0172",
   "sku": "BZ-KIT-1061",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -1419,16 +1419,16 @@
   "id": "RV-0178",
   "sku": "BZ-TOY-1213",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
   "id": "RV-0179",
   "sku": "BZ-KUR-1118",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -1451,8 +1451,8 @@
   "id": "RV-0182",
   "sku": "BZ-BEA-1166",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -1475,8 +1475,8 @@
   "id": "RV-0185",
   "sku": "BZ-TOY-1207",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -1555,16 +1555,16 @@
   "id": "RV-0195",
   "sku": "BZ-KUR-1107",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0196",
   "sku": "BZ-FOO-1222",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -1579,8 +1579,8 @@
   "id": "RV-0198",
   "sku": "BZ-BEA-1001",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -1595,16 +1595,16 @@
   "id": "RV-0200",
   "sku": "BZ-FOO-1156",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0201",
   "sku": "BZ-TOY-1050",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -1627,8 +1627,8 @@
   "id": "RV-0204",
   "sku": "BZ-BEA-1117",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -1643,24 +1643,24 @@
   "id": "RV-0206",
   "sku": "BZ-HOM-1062",
   "stars": 3,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0207",
   "sku": "BZ-FOO-1226",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0208",
   "sku": "BZ-FOO-1205",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -1683,8 +1683,8 @@
   "id": "RV-0211",
   "sku": "BZ-FOO-1084",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -1699,8 +1699,8 @@
   "id": "RV-0213",
   "sku": "BZ-FOO-1083",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -1739,8 +1739,8 @@
   "id": "RV-0218",
   "sku": "BZ-TOY-1087",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -1787,16 +1787,16 @@
   "id": "RV-0224",
   "sku": "BZ-MOB-1251",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0225",
   "sku": "BZ-KUR-1202",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -1819,8 +1819,8 @@
   "id": "RV-0228",
   "sku": "BZ-TOY-1185",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -1867,8 +1867,8 @@
   "id": "RV-0234",
   "sku": "BZ-TOY-1225",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -1907,8 +1907,8 @@
   "id": "RV-0239",
   "sku": "BZ-KUR-1217",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -1939,8 +1939,8 @@
   "id": "RV-0243",
   "sku": "BZ-HOM-1122",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -1979,8 +1979,8 @@
   "id": "RV-0248",
   "sku": "BZ-KUR-1211",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -2011,8 +2011,8 @@
   "id": "RV-0252",
   "sku": "BZ-MOB-1121",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -2027,8 +2027,8 @@
   "id": "RV-0254",
   "sku": "BZ-TOY-1215",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -2043,40 +2043,40 @@
   "id": "RV-0256",
   "sku": "BZ-KIT-1259",
   "stars": 3,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
   "id": "RV-0257",
   "sku": "BZ-FOO-1200",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
   "id": "RV-0258",
   "sku": "BZ-BEA-1101",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
   "id": "RV-0259",
   "sku": "BZ-HOM-1294",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0260",
   "sku": "BZ-KIT-1281",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -2091,8 +2091,8 @@
   "id": "RV-0262",
   "sku": "BZ-TOY-1076",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -2107,8 +2107,8 @@
   "id": "RV-0264",
   "sku": "BZ-FOO-1276",
   "stars": 3,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -2155,8 +2155,8 @@
   "id": "RV-0270",
   "sku": "BZ-FOO-1093",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -2171,8 +2171,8 @@
   "id": "RV-0272",
   "sku": "BZ-KUR-1224",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -2219,16 +2219,16 @@
   "id": "RV-0278",
   "sku": "BZ-MOB-1197",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0279",
   "sku": "BZ-HOM-1294",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -2251,8 +2251,8 @@
   "id": "RV-0282",
   "sku": "BZ-MOB-1279",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -2283,32 +2283,32 @@
   "id": "RV-0286",
   "sku": "BZ-MOB-1005",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
   "id": "RV-0287",
   "sku": "BZ-FOO-1032",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0288",
   "sku": "BZ-KUR-1269",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0289",
   "sku": "BZ-BEA-1188",
   "stars": 1,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -2411,8 +2411,8 @@
   "id": "RV-0302",
   "sku": "BZ-KIT-1106",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -2427,8 +2427,8 @@
   "id": "RV-0304",
   "sku": "BZ-KUR-1264",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -2547,8 +2547,8 @@
   "id": "RV-0319",
   "sku": "BZ-MOB-1139",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -2571,16 +2571,16 @@
   "id": "RV-0322",
   "sku": "BZ-HOM-1088",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0323",
   "sku": "BZ-HOM-1003",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -2595,8 +2595,8 @@
   "id": "RV-0325",
   "sku": "BZ-BEA-1115",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -2627,8 +2627,8 @@
   "id": "RV-0329",
   "sku": "BZ-FOO-1130",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -2643,8 +2643,8 @@
   "id": "RV-0331",
   "sku": "BZ-TOY-1177",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -2683,8 +2683,8 @@
   "id": "RV-0336",
   "sku": "BZ-BEA-1111",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -2803,8 +2803,8 @@
   "id": "RV-0351",
   "sku": "BZ-FOO-1110",
   "stars": 2,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -2851,8 +2851,8 @@
   "id": "RV-0357",
   "sku": "BZ-BEA-1295",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -2923,8 +2923,8 @@
   "id": "RV-0366",
   "sku": "BZ-MOB-1191",
   "stars": 3,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -2947,8 +2947,8 @@
   "id": "RV-0369",
   "sku": "BZ-KUR-1129",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -2987,8 +2987,8 @@
   "id": "RV-0374",
   "sku": "BZ-BEA-1291",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -3035,16 +3035,16 @@
   "id": "RV-0380",
   "sku": "BZ-KUR-1036",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
   "id": "RV-0381",
   "sku": "BZ-BEA-1166",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -3075,8 +3075,8 @@
   "id": "RV-0385",
   "sku": "BZ-HOM-1100",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -3091,8 +3091,8 @@
   "id": "RV-0387",
   "sku": "BZ-BEA-1034",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -3107,8 +3107,8 @@
   "id": "RV-0389",
   "sku": "BZ-TOY-1248",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -3131,24 +3131,24 @@
   "id": "RV-0392",
   "sku": "BZ-BEA-1045",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
   "id": "RV-0393",
   "sku": "BZ-FOO-1290",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
   "id": "RV-0394",
   "sku": "BZ-TOY-1189",
   "stars": 5,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
@@ -3163,16 +3163,16 @@
   "id": "RV-0396",
   "sku": "BZ-FOO-1298",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0397",
   "sku": "BZ-KIT-1095",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -3291,8 +3291,8 @@
   "id": "RV-0412",
   "sku": "BZ-HOM-1088",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -3363,8 +3363,8 @@
   "id": "RV-0421",
   "sku": "BZ-KUR-1114",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -3459,8 +3459,8 @@
   "id": "RV-0433",
   "sku": "BZ-KIT-1249",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -3523,8 +3523,8 @@
   "id": "RV-0441",
   "sku": "BZ-FOO-1198",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -3539,24 +3539,24 @@
   "id": "RV-0443",
   "sku": "BZ-KIT-1132",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0444",
   "sku": "BZ-TOY-1033",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0445",
   "sku": "BZ-MOB-1157",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -3627,8 +3627,8 @@
   "id": "RV-0454",
   "sku": "BZ-KIT-1103",
   "stars": 3,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -3643,8 +3643,8 @@
   "id": "RV-0456",
   "sku": "BZ-MOB-1229",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -3659,16 +3659,16 @@
   "id": "RV-0458",
   "sku": "BZ-KUR-1114",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0459",
   "sku": "BZ-KUR-1051",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -3731,24 +3731,24 @@
   "id": "RV-0467",
   "sku": "BZ-BEA-1016",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0468",
   "sku": "BZ-BEA-1115",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0469",
   "sku": "BZ-TOY-1209",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -3811,16 +3811,16 @@
   "id": "RV-0477",
   "sku": "BZ-KIT-1077",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0478",
   "sku": "BZ-BEA-1098",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -3891,8 +3891,8 @@
   "id": "RV-0487",
   "sku": "BZ-MOB-1203",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -3915,8 +3915,8 @@
   "id": "RV-0490",
   "sku": "BZ-KUR-1020",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -3931,8 +3931,8 @@
   "id": "RV-0492",
   "sku": "BZ-TOY-1185",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -3963,8 +3963,8 @@
   "id": "RV-0496",
   "sku": "BZ-FOO-1154",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -4003,8 +4003,8 @@
   "id": "RV-0501",
   "sku": "BZ-FOO-1184",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -4027,8 +4027,8 @@
   "id": "RV-0504",
   "sku": "BZ-TOY-1123",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -4115,16 +4115,16 @@
   "id": "RV-0515",
   "sku": "BZ-HOM-1096",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0516",
   "sku": "BZ-KUR-1039",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -4171,8 +4171,8 @@
   "id": "RV-0522",
   "sku": "BZ-KUR-1129",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -4203,24 +4203,24 @@
   "id": "RV-0526",
   "sku": "BZ-KUR-1144",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0527",
   "sku": "BZ-KUR-1202",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0528",
   "sku": "BZ-KUR-1051",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -4235,40 +4235,40 @@
   "id": "RV-0530",
   "sku": "BZ-HOM-1094",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0531",
   "sku": "BZ-MOB-1053",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0532",
   "sku": "BZ-KIT-1097",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
   "id": "RV-0533",
   "sku": "BZ-KIT-1097",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0534",
   "sku": "BZ-MOB-1246",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -4315,8 +4315,8 @@
   "id": "RV-0540",
   "sku": "BZ-BEA-1017",
   "stars": 3,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -4339,8 +4339,8 @@
   "id": "RV-0543",
   "sku": "BZ-BEA-1091",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -4355,8 +4355,8 @@
   "id": "RV-0545",
   "sku": "BZ-MOB-1021",
   "stars": 3,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -4411,16 +4411,16 @@
   "id": "RV-0552",
   "sku": "BZ-BEA-1241",
   "stars": 4,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
   "id": "RV-0553",
   "sku": "BZ-TOY-1164",
   "stars": 5,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
@@ -4499,8 +4499,8 @@
   "id": "RV-0563",
   "sku": "BZ-KIT-1010",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -4515,16 +4515,16 @@
   "id": "RV-0565",
   "sku": "BZ-HOM-1127",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0566",
   "sku": "BZ-FOO-1081",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -4539,16 +4539,16 @@
   "id": "RV-0568",
   "sku": "BZ-KUR-1212",
   "stars": 5,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
   "id": "RV-0569",
   "sku": "BZ-FOO-1204",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Quality accha hai, value for money.",
+  "language": "ta",
+  "text": "பணத்துக்கு ஏற்ற நல்ல தரம். (Good quality for the price.)",
   "is_injection": false
  },
  {
@@ -4571,8 +4571,8 @@
   "id": "RV-0572",
   "sku": "BZ-KUR-1243",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -4595,16 +4595,16 @@
   "id": "RV-0575",
   "sku": "BZ-KUR-1257",
   "stars": 4,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
   "id": "RV-0576",
   "sku": "BZ-KIT-1097",
   "stars": 4,
-  "language": "hi",
-  "text": "डिलीवरी बहुत जल्दी हुई।",
+  "language": "ta",
+  "text": "டெலிவரி மிக விரைவாக நடந்தது. (The delivery was very quick.)",
   "is_injection": false
  },
  {
@@ -4635,16 +4635,16 @@
   "id": "RV-0580",
   "sku": "BZ-HOM-1062",
   "stars": 3,
-  "language": "hi",
-  "text": "बहुत अच्छा उत्पाद है।",
+  "language": "ta",
+  "text": "மிகவும் நல்ல பொருள். (This is a very good product.)",
   "is_injection": false
  },
  {
   "id": "RV-0581",
   "sku": "BZ-HOM-1094",
   "stars": 2,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -4659,8 +4659,8 @@
   "id": "RV-0583",
   "sku": "BZ-HOM-1284",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Size thoda bada hai.",
+  "language": "ta",
+  "text": "அளவு கொஞ்சம் பெரியது. (The size is a little big.)",
   "is_injection": false
  },
  {
@@ -4723,8 +4723,8 @@
   "id": "RV-0591",
   "sku": "BZ-HOM-1161",
   "stars": 5,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {
@@ -4779,16 +4779,16 @@
   "id": "RV-0598",
   "sku": "BZ-KUR-1173",
   "stars": 3,
-  "language": "hinglish",
-  "text": "Delivery late thi par product sahi hai.",
+  "language": "ta",
+  "text": "டெலிவரி தாமதமாக வந்தது, ஆனால் பொருள் நன்றாக உள்ளது. (The delivery was late, but the product is fine.)",
   "is_injection": false
  },
  {
   "id": "RV-0599",
   "sku": "BZ-MOB-1000",
   "stars": 4,
-  "language": "hi",
-  "text": "रंग फोटो से अलग है।",
+  "language": "ta",
+  "text": "நிறம் படத்தில் உள்ளதுபோல் இல்லை. (The colour is not as it looks in the photo.)",
   "is_injection": false
  },
  {

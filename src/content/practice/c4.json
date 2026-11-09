@@ -97,22 +97,22 @@
   },
   "store": {
    "fit": "best",
-   "fitNote": "Hinglish and product jargon test embedding models",
+   "fitNote": "Tamil and product jargon test embedding models",
    "practice": "{company} embeds product titles and shopper queries into one space for search. Shoppers type “kurta for wedding”, “sherwani” or “ethnic wear for men”; a model trained contrastively on {company}'s own query–click pairs placed these together far better than a general one.",
    "failure": "Training contrastive embeddings with random negatives only. They are too easy, so the model never learns to tell a cotton kurta from a cotton kurta set; add hard negatives.",
-   "tryIt": "Embed the product titles in <code>products.csv</code> and three shopper queries of your own, one in Hinglish, then list each query's top three titles. Note where a general model confuses categories."
+   "tryIt": "Embed the product titles in <code>products.csv</code> and three shopper queries of your own, one in Tamil, then list each query's top three titles. Note where a general model confuses categories."
   },
   "bank": {
    "fit": "good",
-   "fitNote": "the same complaint in English, Hindi and Hinglish",
-   "practice": "{company} embeds dispute descriptions to find similar past cases and to route new ones. English, Hindi and Hinglish descriptions of the same failed UPI debit should land together, which needs a multilingual embedding model.",
+   "fitNote": "the same complaint in English and Tamil",
+   "practice": "{company} embeds dispute descriptions to find similar past cases and to route new ones. English and Tamil descriptions of the same failed UPI debit should land together, which needs a multilingual embedding model.",
    "failure": "Treating embeddings as anonymous. They are derived from the text, so personal data in the input stays personal data: redact identifiers before embedding and apply the same retention rules.",
    "tryIt": "Embed the texts in <code>disputes.csv</code> with a multilingual model, cluster them with k-means (k = 5) and compare the clusters with the <code>reason</code> column."
   },
   "travel": {
    "fit": "good",
    "fitNote": "intent matching across languages and fare rules",
-   "practice": "{assistant} matches traveller requests to intents and to fare rules by embedding both. “Date change”, “reschedule” and “kal ke bajaye parso” (day after tomorrow instead of tomorrow) should land near each other.",
+   "practice": "{assistant} matches traveller requests to intents and to fare rules by embedding both. “Date change”, “reschedule” and “நாளைக்குப் பதிலாக நாளை மறுநாள்” (the day after tomorrow instead of tomorrow) should land near each other.",
    "failure": "Using token embeddings from inside an LLM as intent vectors. They represent single tokens, not whole requests.",
    "tryIt": "Embed the messages in <code>messages.json</code> and the rule titles in <code>fare_rules.json</code>, then check whether each message's nearest rule is the one you would pick."
   }

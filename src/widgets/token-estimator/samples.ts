@@ -6,7 +6,7 @@ export interface Sample {
   text: string
 }
 
-const LANGUAGE: Record<string, string> = { en: 'English', de: 'German', hi: 'Hindi', ta: 'Tamil', hinglish: 'Hinglish' }
+const LANGUAGE: Record<string, string> = { en: 'English', de: 'German', ta: 'Tamil' }
 
 /** The first message in each language, so the reader can compare scripts on real rows from the dataset. */
 export function firstPerLanguage(rows: { language: string; text: string }[]): Sample[] {

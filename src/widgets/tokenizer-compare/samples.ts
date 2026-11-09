@@ -12,7 +12,7 @@ export interface SampleSet {
 
 const PER_LANGUAGE = 4
 
-export const LANGUAGE_NAMES: Record<string, string> = { en: 'English', de: 'German', hi: 'Hindi', ta: 'Tamil', hinglish: 'Hinglish' }
+export const LANGUAGE_NAMES: Record<string, string> = { en: 'English', de: 'German', ta: 'Tamil' }
 
 /** Up to four different messages per language, in the order the file has them. */
 function pickSamples(rows: { language: string; text: string }[]): Sample[] {
@@ -25,7 +25,7 @@ function pickSamples(rows: { language: string; text: string }[]): Sample[] {
   return [...taken].flatMap(([language, texts]) => [...texts].map((text) => ({ language, text })))
 }
 
-/** Each project's multilingual messages: Travel has four languages, Harbor three. */
+/** Each project's multilingual messages: Harbor has three (English, German, Tamil), the other projects two (English, Tamil). */
 export async function loadTokenizerSamples(p: Project, read: DataReader): Promise<SampleSet> {
   if (p.id === 'travel') return { file: 'messages.json', samples: pickSamples(await read.json<Sample[]>('messages.json')) }
   if (p.id === 'store') return { file: 'chats.json', samples: pickSamples(await read.json<Sample[]>('chats.json')) }

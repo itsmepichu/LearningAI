@@ -22,7 +22,7 @@
    "fitNote": "reason classification, data stays on premises"
   },
   "travel": {
-   "practice": "{assistant} detects intent in requests in four languages. A small model handles English and Hindi well, but its Tamil and Hinglish accuracy lagged, so those still go to the large model.",
+   "practice": "{assistant} detects intent in requests in English and Tamil. A small model handles English well, but its Tamil accuracy lagged, so those still go to the large model.",
    "failure": "Deploying a small model on its English accuracy without checking the other languages.",
    "tryIt": "Run the snippet with requests.csv and note accuracy at 10, 20 and 50 examples. Estimate how many labelled examples per language you would need. Write down the numbers and the decision you would make from them.",
    "fit": "good",
@@ -52,8 +52,8 @@
    "fitNote": "audited teacher data"
   },
   "travel": {
-   "practice": "{company} asks a large model to label traveller requests in Hindi, Tamil and Hinglish. Agreement between two samples was much lower for Hinglish, so those labels get a human spot-check before training.",
-   "failure": "Assuming the teacher is equally reliable in every language and skipping spot-checks for Hinglish.",
+   "practice": "{company} asks a large model to label traveller requests in Tamil. Agreement between two samples was much lower for Tamil, so those labels get a human spot-check before training.",
+   "failure": "Assuming the teacher is equally reliable in every language and skipping spot-checks for Tamil.",
    "tryIt": "Run the snippet with requests.csv, set TEACHER_RIGHT to 0.8, and see how much the agreement filter lowers the label error rate. Write down the numbers and the decision you would make from them.",
    "fit": "best",
    "fitNote": "multilingual labels with uneven quality"
@@ -112,7 +112,7 @@
    "fitNote": "fit on existing hardware"
   },
   "travel": {
-   "practice": "{company} compresses its intent model to ship it in the mobile app. Pruning plus 4-bit quantisation brought it under 700 MB, and a check on Tamil and Hinglish requests confirmed quality held for every language.",
+   "practice": "{company} compresses its intent model to ship it in the mobile app. Pruning plus 4-bit quantisation brought it under 700 MB, and a check on Tamil requests confirmed quality held for every language.",
    "failure": "Checking a compressed model only in English before shipping it to multilingual users.",
    "tryIt": "Run the snippet and compare pruning at 50% and 80%. Estimate the download size of a 1.5B model in 4-bit for the app. Write down the numbers and the decision you would make from them.",
    "fit": "best",
@@ -172,8 +172,8 @@
    "fitNote": "calibrated triage"
   },
   "travel": {
-   "practice": "{assistant} handles simple requests with a small model and escalates changes involving fare rules or disruptions to a large model. Language is a routing signal too: Hinglish requests escalate at a lower threshold.",
-   "failure": "Using one escalation threshold for all languages when the small model is weaker in Hinglish.",
+   "practice": "{assistant} handles simple requests with a small model and escalates changes involving fare rules or disruptions to a large model. Language is a routing signal too: Tamil requests escalate at a lower threshold.",
+   "failure": "Using one escalation threshold for all languages when the small model is weaker in Tamil.",
    "tryIt": "Run the snippet with requests.csv and compare the share escalated at thresholds 0.8 and 0.99. Decide which you would use during a disruption spike. Write down the numbers and the decision you would make from them.",
    "fit": "good",
    "fitNote": "routing by difficulty and language"
@@ -190,7 +190,7 @@
    "scenario": "<p>Distil dispute-reason classification with an on-premises teacher. Check the teacher’s licence, calibrate the student’s confidence, and choose a cascade threshold from the curve. Keep the audit trail of the data.</p>"
   },
   "travel": {
-   "scenario": "<p>Distil intent detection in four languages from requests.csv. Measure the student per language, compress it to under 1 GB, and set language-specific escalation thresholds.</p>"
+   "scenario": "<p>Distil intent detection in both languages from requests.csv. Measure the student per language, compress it to under 1 GB, and set language-specific escalation thresholds.</p>"
   }
  }
 }

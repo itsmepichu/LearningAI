@@ -599,7 +599,7 @@
      "Test long, mixed-language requests"
     ],
     "project": "travel",
-    "followUp": "How would you test that the fix works for Hinglish requests?"
+    "followUp": "How would you test that the fix works for Tamil requests?"
    },
    {
     "id": "c5-2-i07",
@@ -1198,7 +1198,7 @@
    },
    {
     "id": "c5-1-i06",
-    "q": "{assistant} serves four languages with one fixed token budget per conversation. Is that fair, and what would you change?",
+    "q": "{assistant} serves two languages with one fixed token budget per conversation. Is that fair, and what would you change?",
     "level": "applied",
     "covers": [
      "Fixed budgets give costlier languages less context",

@@ -1542,11 +1542,11 @@
    },
    {
     "id": "c4-4-i06",
-    "q": "{assistant} confuses “change date” and “cancel” requests in Hinglish. How do you improve the intent embeddings?",
+    "q": "{assistant} confuses “change date” and “cancel” requests in Tamil. How do you improve the intent embeddings?",
     "level": "applied",
     "covers": [
      "Use a multilingual model",
-     "Labelled pairs including Hinglish",
+     "Labelled pairs including Tamil",
      "Contrastive fine-tuning with these hard negatives",
      "A minimum similarity and a clarifying question"
     ],

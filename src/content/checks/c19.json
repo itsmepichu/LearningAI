@@ -988,10 +988,10 @@
    },
    {
     "id": "c19-4-m06",
-    "q": "Average WER is 6%, but Hinglish requests are 20% of traffic at 18% WER. Reporting only the average…",
+    "q": "Average WER is 6%, but Tamil requests are 20% of traffic at 18% WER. Reporting only the average…",
     "options": [
      "Is fine because 6% is low",
-     "Overstates the Hinglish error rate",
+     "Overstates the Tamil error rate",
      "Makes the English rate look worse",
      "Hides where most failures happen"
     ],
@@ -1000,7 +1000,7 @@
     "kind": "scenario",
     "distractors": [
      "Low average, bad slice.",
-     "It understates Hinglish.",
+     "It understates Tamil.",
      "English is fine either way.",
      ""
     ]

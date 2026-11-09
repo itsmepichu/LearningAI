@@ -2125,7 +2125,7 @@
    },
    {
     "id": "c6-7-i06",
-    "q": "{company} trains the bigram model on Hindi and Tamil messages. Why do the losses not compare directly with an English run?",
+    "q": "{company} trains the bigram model on Tamil messages. Why do the losses not compare directly with an English run?",
     "level": "applied",
     "covers": [
      "Different vocabulary sizes",

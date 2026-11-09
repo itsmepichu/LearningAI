@@ -10,7 +10,7 @@ for (const id of PROJECT_IDS) {
     const { samples } = await loadTokenizerSamples(projectOf(id), readerOf(id))
     const langs = new Map<string, number>()
     for (const s of samples) langs.set(s.language, (langs.get(s.language) ?? 0) + 1)
-    assert.ok(langs.size >= 3, `${id} shows ${langs.size} languages`)
+    assert.ok(langs.size >= 2, `${id} shows ${langs.size} languages`)
     for (const [lang, n] of langs) {
       assert.ok(n >= 1 && n <= 4, `${lang}: ${n}`)
       assert.ok(LANGUAGE_NAMES[lang], `${lang} has a name`)
@@ -19,9 +19,9 @@ for (const id of PROJECT_IDS) {
   })
 }
 
-test('the Travel project has its four languages', async () => {
+test('the Travel project has its two languages, English and Tamil', async () => {
   const { samples } = await loadTokenizerSamples(projectOf('travel'), readerOf('travel'))
-  assert.deepEqual([...new Set(samples.map((s) => s.language))].sort(), ['en', 'hi', 'hinglish', 'ta'])
+  assert.deepEqual([...new Set(samples.map((s) => s.language))].sort(), ['en', 'ta'])
 })
 
 test('per-language means count tokens per tokenizer and characters by code point', () => {

@@ -274,7 +274,7 @@
    },
    {
     "id": "c9-3-i06",
-    "q": "{company}'s customers paste transaction references and write Hinglish complaints. Design retrieval for both.",
+    "q": "{company}'s customers paste transaction references and write Tamil complaints. Design retrieval for both.",
     "level": "applied",
     "covers": [
      "BM25 for references and codes",

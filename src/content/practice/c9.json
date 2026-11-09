@@ -70,7 +70,7 @@
   "store": {
    "fit": "best",
    "fitNote": "SKUs, sizes and brand names are keyword territory",
-   "practice": "Shoppers type exact things: “UK 8”, a SKU, a brand name. BM25 finds those instantly; dense retrieval handles “shoes for a wedding” and Hinglish paraphrases. {company} runs both.",
+   "practice": "Shoppers type exact things: “UK 8”, a SKU, a brand name. BM25 finds those instantly; dense retrieval handles “shoes for a wedding” and Tamil paraphrases. {company} runs both.",
    "failure": "Relying on dense retrieval alone and missing exact SKU and size matches.",
    "tryIt": "Index the titles in <code>products.csv</code> with bm25s and search “UK 8 sneakers” and one SKU; then repeat with a small embedding model and compare the top three results."
   },
@@ -79,7 +79,7 @@
    "fitNote": "references from SMS alerts versus paraphrased complaints",
    "practice": "Customers quote transaction references and error codes from SMS alerts; BM25 finds those exactly, while dense retrieval matches “money cut but payment failed” to the failed-UPI policy.",
    "failure": "Expecting an embedding model to match a 12-digit reference number.",
-   "tryIt": "Run BM25 and a multilingual embedding model over <code>policies.json</code> for the Hinglish “paise kat gaye payment fail” and for “UPI debit reversal”, and compare."
+   "tryIt": "Run BM25 and a multilingual embedding model over <code>policies.json</code> for the Tamil “பணம் கழிக்கப்பட்டது payment fail” (money was deducted, payment failed) and for “UPI debit reversal”, and compare."
   },
   "travel": {
    "fit": "good",
@@ -212,10 +212,10 @@
    "scenario": "<p>Use <code>policies.json</code> as the corpus (tenant labels from <code>access_groups</code>) and write queries from <code>tickets.csv</code>. Include exact identifiers (error codes, order IDs) and paraphrases, and check that outdated revisions are not counted as relevant.</p>"
   },
   "store": {
-   "scenario": "<p>Use the listings in <code>products.csv</code> as documents. Queries include SKUs, sizes (“UK 8”), brand names, vague requests and Hinglish questions; report metrics per query type.</p>"
+   "scenario": "<p>Use the listings in <code>products.csv</code> as documents. Queries include SKUs, sizes (“UK 8”), brand names, vague requests and Tamil questions; report metrics per query type.</p>"
   },
   "bank": {
-   "scenario": "<p>Use <code>policies.json</code> plus 20 short product documents you write. Turn dispute texts from <code>disputes.csv</code> into queries, including Hinglish ones, and report MRR alongside Recall@k.</p>"
+   "scenario": "<p>Use <code>policies.json</code> plus 20 short product documents you write. Turn dispute texts from <code>disputes.csv</code> into queries, including Tamil ones, and report MRR alongside Recall@k.</p>"
   },
   "travel": {
    "scenario": "<p>Use <code>fare_rules.json</code> plus 30 short hotel descriptions you write. Queries come from <code>messages.json</code> and change or refund questions; each fare-rule query has exactly one relevant rule.</p>"

@@ -21,52 +21,52 @@
  },
  {
   "id": "CH-005",
-  "language": "hi",
-  "text": "मेरा ऑर्डर अभी तक नहीं आया है।"
- },
- {
-  "id": "CH-006",
-  "language": "hi",
-  "text": "मुझे यह उत्पाद वापस करना है।"
- },
- {
-  "id": "CH-007",
-  "language": "hi",
-  "text": "रिफंड कब मिलेगा?"
- },
- {
-  "id": "CH-008",
-  "language": "hi",
-  "text": "क्या यह साइज़ में बड़ा आता है?"
- },
- {
-  "id": "CH-009",
   "language": "ta",
   "text": "என் ஆர்டர் இன்னும் வரவில்லை."
  },
  {
-  "id": "CH-010",
+  "id": "CH-006",
   "language": "ta",
   "text": "இந்த பொருளைத் திருப்பி அனுப்ப வேண்டும்."
  },
  {
-  "id": "CH-011",
+  "id": "CH-007",
   "language": "ta",
   "text": "பணம் எப்போது திரும்ப கிடைக்கும்?"
  },
  {
+  "id": "CH-008",
+  "language": "ta",
+  "text": "எனக்கு ஆர்டர் இதுவரை வந்து சேரவில்லை. (My order has not reached me yet.)"
+ },
+ {
+  "id": "CH-009",
+  "language": "ta",
+  "text": "இந்தப் பொருளை நான் திருப்பித் தர வேண்டும். (I want to return this product.)"
+ },
+ {
+  "id": "CH-010",
+  "language": "ta",
+  "text": "ரீஃபண்ட் எப்போது கிடைக்கும்? (When will I get the refund?)"
+ },
+ {
+  "id": "CH-011",
+  "language": "ta",
+  "text": "இது அளவில் பெரியதாக வருமா? (Does this run large in size?)"
+ },
+ {
   "id": "CH-012",
-  "language": "hinglish",
-  "text": "Mera order abhi tak nahi aaya, kab aayega?"
+  "language": "ta",
+  "text": "என் ஆர்டர் இன்னும் வரவில்லை, எப்போது வரும்? (My order has not arrived yet, when will it come?)"
  },
  {
   "id": "CH-013",
-  "language": "hinglish",
-  "text": "Refund kab milega? UPI se pay kiya tha."
+  "language": "ta",
+  "text": "பணம் திரும்ப எப்போது கிடைக்கும்? UPI மூலம் செலுத்தினேன். (When will I get the refund? I paid by UPI.)"
  },
  {
   "id": "CH-014",
-  "language": "hinglish",
-  "text": "Size bada hai, exchange ho sakta hai?"
+  "language": "ta",
+  "text": "அளவு பெரியதாக உள்ளது, மாற்றிக் கொடுக்க முடியுமா? (The size is big, can it be exchanged?)"
  }
 ]
