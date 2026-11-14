@@ -2,7 +2,8 @@
 // Creates the topic HTML (five parts and the practice slot), its manifest entry, one note for the topic's primary project
 // (Harbor unless --primary is given; the manifest records a non-default primary), a chapter-check
 // section and a snippet. Counts, link targets and search text are generated, so nothing else needs editing.
-// Every stub carries a visible TODO. The chapter-check section starts empty, so no unfinished question is published.
+// Every stub carries a visible TODO, including the chapter-check section: 6 choose-the-answer questions (the first 3 core, 3 of them
+// scenario or calculation) and 4 interview questions, the quota in src/content/CLAUDE.md. Replace every TODO before the topic ships.
 import { writeFileSync, existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { CONTENT, PROJECTS, ROOT, manifest, pagePath, readJson, writeJson } from './lib/content.mjs'
@@ -88,10 +89,31 @@ practice[topicId] = Object.fromEntries(
 writeJson(practicePath, practice)
 touched.push(`src/content/practice/${chapterId}.json`)
 
-// 4. an empty chapter-check section
+// 4. a chapter-check section with the quota's stub questions (all marked TODO)
 const checksPath = join(CONTENT, 'checks', `${chapterId}.json`)
 const checks = existsSync(checksPath) ? readJson(checksPath) : {}
-checks[topicId] = { mcq: [], interview: [] }
+const KINDS = ['concept', 'concept', 'scenario', 'calculation', 'scenario', 'concept']
+const ANSWERS = [0, 1, 2, 3, 1, 2]
+const LEVELS = ['fundamentals', 'fundamentals', 'applied', 'system-design']
+checks[topicId] = {
+  mcq: KINDS.map((kind, i) => ({
+    id: `${topicId}-m0${i + 1}`,
+    q: `TODO: ${kind} question ${i + 1}, traceable to this topic`,
+    options: ['TODO: option A', 'TODO: option B', 'TODO: option C', 'TODO: option D'],
+    answer: ANSWERS[i],
+    why: 'TODO: why the right answer is right.',
+    ...(i < 3 ? { tier: 'core' } : {}),
+    kind,
+    distractors: ['TODO: why A is wrong', 'TODO: why B is wrong', 'TODO: why C is wrong', 'TODO: why D is wrong'].map((d, j) => (j === ANSWERS[i] ? '' : d)),
+  })),
+  interview: LEVELS.map((level, i) => ({
+    id: `${topicId}-i0${i + 1}`,
+    q: `TODO: ${level} interview question, asked the way an interviewer would`,
+    level,
+    covers: ['TODO: what a strong answer covers'],
+    followUp: 'TODO: the question an interviewer would ask next',
+  })),
+}
 writeJson(checksPath, checks)
 touched.push(`src/content/checks/${chapterId}.json`)
 

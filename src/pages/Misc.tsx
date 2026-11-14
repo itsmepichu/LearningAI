@@ -113,6 +113,15 @@ export function ProgressPage() {
           </div>
         ))}
       </div>
+      <section className="prog-parts" aria-label="Part reviews">
+        <h2>Part reviews and evidence</h2>
+        <p className="muted">After each part, a review of 20 mixed questions (core first), then the evidence to keep. <Link to="/evidence">Open Evidence</Link>.</p>
+        <ul>
+          {parts.filter((p) => p.id !== 'res').map((p) => (
+            <li key={p.id}><Link to={`/practice?part=${p.id}`}>{p.label} review</Link> <span className="muted small">· {p.title}</span></li>
+          ))}
+        </ul>
+      </section>
       <button
         type="button"
         className="btn"

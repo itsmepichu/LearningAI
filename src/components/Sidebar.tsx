@@ -45,6 +45,9 @@ export function Sidebar() {
       <NavLink to="/progress" className="side-top">
         Your progress
       </NavLink>
+      <NavLink to="/evidence" className="side-top">
+        Evidence
+      </NavLink>
       {parts.map((p) => (
         <div key={p.id} className="side-part">
           <div className="side-part-h">

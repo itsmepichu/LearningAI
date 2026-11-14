@@ -3,6 +3,7 @@
 //   idmap.json         element id -> route, from the ids in the pages, plus src/content/idmap.extra.json
 //   search.json        plain text per topic, for the search dialog
 //   check-summary.json question counts per chapter and section, from the checks files
+//   evidence.json      each chapter lab's "Keep as evidence" and pass condition, and the capstone's milestone table
 // Runs automatically before `npm run dev`, `build` and `test`, and after `npm install`. It generates; it checks nothing.
 import { join } from 'node:path'
 import { CONTENT, existsSync, manifest, pagePath, readJson, readText, stripTags, writeGenerated } from './lib/content.mjs'
@@ -96,4 +97,21 @@ for (const c of m.chapters) {
 }
 writeGenerated('check-summary.json', summary, 1)
 
-console.log(`generated · ${search.length} topics · ${Object.keys(idmap).length + Object.keys(extra).length} link targets · ${summary.totals.mcq} + ${summary.totals.interview} questions`)
+// ---- evidence.json (the Evidence page: lab deliverables and capstone milestones)
+const evidence = { labs: [], milestones: [] }
+for (const c of m.chapters.filter((c) => c.kind === 'chapter')) {
+  const file = pagePath(c.id, '_lab')
+  if (!existsSync(file)) continue
+  const ev = /<div class="ev"><div><b>Keep as evidence<\/b>([\s\S]*?)<\/div><div><b>Pass condition<\/b>([\s\S]*?)<\/div><\/div>/.exec(readText(file))
+  if (!ev) { console.warn(`no evidence block in ${c.id}/_lab.html`); continue }
+  evidence.labs.push({ chapter: c.id, num: c.num, title: c.title, keep: stripTags(ev[1]), pass: stripTags(ev[2]) })
+}
+const msFile = pagePath('capstone', 'app-c-ms')
+if (existsSync(msFile)) {
+  for (const r of readText(msFile).matchAll(/<tr><td><b>(\d) · ([^<]+)<\/b><\/td><td>([\s\S]*?)<\/td><td>([\s\S]*?)<\/td><td>([\s\S]*?)<\/td><\/tr>/g)) {
+    evidence.milestones.push({ id: `ms${r[1]}`, n: Number(r[1]), title: stripTags(r[2]), build: stripTags(r[3]), keep: stripTags(r[4]), pass: stripTags(r[5]) })
+  }
+}
+writeGenerated('evidence.json', evidence, 1)
+
+console.log(`generated · ${search.length} topics · ${Object.keys(idmap).length + Object.keys(extra).length} link targets · ${summary.totals.mcq} + ${summary.totals.interview} questions · ${evidence.labs.length} lab and ${evidence.milestones.length} milestone evidence items`)

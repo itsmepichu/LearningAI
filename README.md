@@ -7,9 +7,9 @@ An interactive AI course, rebuilt as a front-end-only React app. For beginner pr
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams
 - an **In practice** card for the topic's example project: how the idea applies, the failure to avoid, and a **Try it** exercise
-- a **workshop** page with the chapter lab and a hands-on task for each topic, on the example project you choose, and a separate **chapter check** page with choose-the-answer and interview questions for every section
+- a **workshop** page with the chapter lab and a hands-on task for each topic, on the example project you choose, a **quick check** at the end of every topic (3–5 core questions), and a separate **chapter check** page with choose-the-answer and interview questions for every section (system-design questions sit behind an Interview prep switch)
 
-There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. A lesson shows one project; you choose among the four on a chapter's workshop page, where a data explorer opens the synthetic files. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes and run interview drills.
+There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. A lesson shows one project; you choose among the four on a chapter's workshop page, where a data explorer opens the synthetic files. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes, run interview drills and take a 20-question review at the end of each part. An **Evidence** page lists what to keep from each chapter lab and capstone milestone (ticks and notes stay in this browser).
 
 Status: all 23 chapters and the capstone have a workshop with notes and lab scenarios for all four projects, every section has a full chapter check (1,794 choose-the-answer and 1,312 interview questions in all), and every topic uses the five-part structure with a runnable snippet (see [ROADMAP.md](ROADMAP.md)).
 
@@ -69,7 +69,7 @@ src/
     pages/<chapter>/*.html topic bodies, chapter intro/outro, labs
   data/course.ts           typed access to the manifest and routes
   components/              layout, sidebar, search, quiz, HtmlContent renderer
-  pages/                   home, chapter, topic, chapter check, practice, guide, progress
+  pages/                   home, chapter, topic, chapter check, practice, evidence, guide, progress
   widgets/                 React widgets; registry.ts maps data-widget names to components
   legacy/                  v3 vanilla widgets and the runtime that mounts and cleans them up
   styles/                  content.css (design system and figures), app.css (app shell)

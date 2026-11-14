@@ -21,6 +21,8 @@ interface ProgressState {
   project: ProjectId
   /** Chapters (and the capstone) whose workshop the reader marked done. */
   workshopDone: Record<string, true>
+  /** The Evidence page: a tick and a short note or link per item. A lab item's tick is the chapter's workshopDone. */
+  evidence: Record<string, { done?: true; note?: string }>
   last?: string
   setStudied: (id: string, on: boolean) => void
   setMany: (ids: string[], on: boolean) => void
@@ -32,6 +34,8 @@ interface ProgressState {
   reviewCard: (qid: string, grade: GradeName) => void
   setProject: (p: ProjectId) => void
   setWorkshopDone: (chapterId: string, on: boolean) => void
+  setEvidenceDone: (id: string, on: boolean) => void
+  setEvidenceNote: (id: string, note: string) => void
   visit: (path: string) => void
   reset: () => void
 }
@@ -85,6 +89,7 @@ export const useProgress = create<ProgressState>()(
       cards: {},
       project: DEFAULT_PROJECT,
       workshopDone: {},
+      evidence: {},
       setStudied: (id, on) =>
         set((s) => {
           const studied = { ...s.studied }
@@ -139,18 +144,39 @@ export const useProgress = create<ProgressState>()(
           else delete workshopDone[chapterId]
           return { workshopDone }
         }),
+      setEvidenceDone: (id, on) =>
+        set((s) => {
+          const evidence = { ...s.evidence }
+          const cur = { ...evidence[id] }
+          if (on) cur.done = true
+          else delete cur.done
+          if (cur.done || cur.note) evidence[id] = cur
+          else delete evidence[id]
+          return { evidence }
+        }),
+      setEvidenceNote: (id, note) =>
+        set((s) => {
+          const evidence = { ...s.evidence }
+          const cur = { ...evidence[id] }
+          const text = note.slice(0, 300)
+          if (text.trim()) cur.note = text
+          else delete cur.note
+          if (cur.done || cur.note) evidence[id] = cur
+          else delete evidence[id]
+          return { evidence }
+        }),
       visit: (path) => set({ last: path }),
-      reset: () => set({ studied: {}, answers: {}, results: {}, ratings: {}, cards: {}, workshopDone: {}, last: undefined }),
+      reset: () => set({ studied: {}, answers: {}, results: {}, ratings: {}, cards: {}, workshopDone: {}, evidence: {}, last: undefined }),
     }),
     {
       name: 'lai-progress-v1',
       storage: safeStorage,
-      version: 4,
-      // v1 stored chapter quiz answers as quiz["c5:0"]; v2 keys answers by question id; v3 adds flashcards; v4 adds workshopDone.
+      version: 5,
+      // v1 stored chapter quiz answers as quiz["c5:0"]; v2 keys answers by question id; v3 adds flashcards; v4 adds workshopDone; v5 adds evidence.
       // Every step keeps the fields it does not know about, so saved progress survives.
       migrate: (persisted, version) => {
         const earlier = migrateEarlier(persisted, version) as unknown as Record<string, unknown>
-        return { ...earlier, workshopDone: earlier.workshopDone ?? {} } as unknown as ProgressState
+        return { ...earlier, workshopDone: earlier.workshopDone ?? {}, evidence: earlier.evidence ?? {} } as unknown as ProgressState
       },
     },
   ),

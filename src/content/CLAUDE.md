@@ -67,16 +67,22 @@ These rules cover the course content: topics, example projects, notes, glossary,
 ## Chapter checks
 - Each chapter has a separate check page at `/<chapter>/check`. The chapter page shows no quiz, only a link card after the lab.
 - Questions go in `src/content/checks/<chapter>.json`, keyed by topic id (one section per topic):
-  - `mcq`: 10–12 per section, `{ id, q, options, answer (index or array for "choose all"), why, distractors, kind: "concept" | "calculation" | "scenario" }`
-  - `interview`: 8–10 per section, `{ id, q, level: "fundamentals" | "applied" | "system-design", covers: [..], followUp, project? }`
-    - Aim for about 3 fundamentals, 3–4 applied and 2–3 system design per section.
+  - `mcq`: `{ id, q, options, answer (index or array for "choose all"), why, distractors, kind: "concept" | "calculation" | "scenario", tier? }`
+  - `interview`: `{ id, q, level: "fundamentals" | "applied" | "system-design", covers: [..], followUp, project? }`
+    - Aim for about 3 fundamentals, 3–4 applied and 2–3 system design per section in the published chapters.
     - At most 2 per section are framed in a project (`project` set).
   - `id` is stable (for example `c5-3-m07`, `c5-3-i04`), because saved answers and Practice-page history are keyed by it. Never reuse or renumber ids.
 - Every question must be traceable to its topic's content or a cited primary source. Avoid near-duplicates within and across sections.
-- The course-wide Practice page (`/practice`) reads the same files, loading only the chapters its filters select.
+- The course-wide Practice page (`/practice`) reads the same files, loading only the chapters its filters select. `?part=<id>` opens the part review: 20 mixed questions across the part's chapters, core first.
+- The Evidence page (`/evidence`) lists each chapter lab's "Keep as evidence" and pass condition (the `.ev` block in `_lab.html`) and the capstone milestone table. `npm run generate` extracts them into `src/content/generated/evidence.json`, so keep those blocks and the table's row format (`<b>N · Title</b>`) intact. Milestone 0 (Part I) is written in `src/data/evidence.ts`. Part checkpoints (last chapter of each part) link the part review, the milestones and Evidence.
 - Explain why the right answer is right. Use distractors that are real misconceptions, not filler, and explain each one in `distractors` (aligned with `options`, `""` for right answers). Every question needs them.
 - Do not let length give the answer away: write wrong options as specific and as long as the right one. Do not make a right answer 1.4 times the wrong options' average length or more.
-- At least 4 of a section's choose-the-answer questions are `scenario` or `calculation`, not plain recall.
-- Every interview question has a `followUp`: the question an interviewer would ask next.
+- Quota for a new section (D4 in `project_revamp/`; a convention, nothing enforces it; sections already published are not trimmed):
+  - At least 6 `mcq`, of which 3–5 are core (`"tier": "core"`). The core set covers the topic's outcomes and includes at least one `scenario` or `calculation`. A question without `tier` is extended.
+  - At least one third of the `mcq` (rounded up) are `scenario` or `calculation`, not plain recall. Published sections hold 10–12, with at least 4 of these.
+  - At least 4 `interview` questions, each with a `followUp`, the question an interviewer would ask next; at most 2 are project-framed.
+  - `npm run new:topic` scaffolds a section with exactly these counts as TODO stubs.
+- Core questions are the topic's quick check, shown at the end of the topic page, and come first on the chapter check. Set `tier` with `reviseChecks(chapter, { id: { tier: 'core' } })` in `scripts/content-tools.mjs`; it inserts one line and changes nothing else.
+- On the chapter check, system-design interview questions sit behind the "Interview prep" switch (off by default). In chapters 1–6 the switch carries the note "Come back to these after Part II." No question is deleted; with the switch off none is rendered.
 - Vary the position of the right answer. Shuffle options with a fixed seed when adding questions; do not let more than half of a section's answers share a position. Never reorder options of a question that is already published, because saved answers are option indices.
 - Write interview questions the way interviewers ask them, with a checklist of what a strong answer covers. Do not write a script to memorise.

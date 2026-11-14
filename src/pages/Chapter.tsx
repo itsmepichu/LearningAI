@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import { ArrowRight, Check, Clock, FlaskConical, ListChecks, MousePointerClick } from 'lucide-react'
 import { chapterCheckCount, getChapter, minutes, partOf } from '../data/course'
 import { hasWorkshop, workshopPath } from '../data/workshop'
+import { PartCheckpoint } from '../components/PartCheckpoint'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { ProgressRing } from '../components/Icons'
@@ -111,6 +112,7 @@ export function ChapterPage() {
 
       {hasWorkshop(ch.id) && <WorkshopCard chapterId={ch.id} num={ch.num} lab={ch.hasLab} />}
       {ch.kind === 'chapter' && <ChapterCheckCard chapterId={ch.id} num={ch.num} />}
+      {ch.kind === 'chapter' && <PartCheckpoint chapterId={ch.id} />}
 
       {ids.length > 0 && (
         <div className="chdone2">

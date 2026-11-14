@@ -204,8 +204,9 @@ export function sectionScore(sec: Section | undefined, answers: Record<string, A
   return { total: mcq.length, answered: answered.length, correct }
 }
 
-export function visibleInterview(sec: Section | undefined, project: ProjectId, allProjects: boolean) {
-  return (sec?.interview ?? []).filter((q) => !q.project || allProjects || q.project === project)
+/** The interview questions to show. With `prep` off, system-design questions stay out of sight (nothing is deleted). */
+export function visibleInterview(sec: Section | undefined, project: ProjectId, allProjects: boolean, prep = true) {
+  return (sec?.interview ?? []).filter((q) => (!q.project || allProjects || q.project === project) && (prep || q.level !== 'system-design'))
 }
 
 interface SectionProps {
@@ -217,13 +218,15 @@ interface SectionProps {
   mode: Mode
   project: ProjectId
   allProjects: boolean
+  /** Interview prep switch: when false, system-design questions are not rendered. */
+  prep?: boolean
   open: boolean
   onToggle: () => void
   /** When set, only these questions show: the ones still unanswered when the reader turned the filter on. */
   only?: Set<string> | null
 }
 
-export function CheckSection({ id, tn, title, topicPath, sec, mode, project, allProjects, open, onToggle, only }: SectionProps) {
+export function CheckSection({ id, tn, title, topicPath, sec, mode, project, allProjects, prep = true, open, onToggle, only }: SectionProps) {
   const answers = useProgress((s) => s.answers)
   const ratings = useProgress((s) => s.ratings)
   const answer = useProgress((s) => s.answer)
@@ -233,7 +236,7 @@ export function CheckSection({ id, tn, title, topicPath, sec, mode, project, all
   // Core questions come first; the sort keeps the published order within each group.
   const ordered = useMemo(() => [...(sec?.mcq ?? [])].sort((a, b) => Number(isCore(b)) - Number(isCore(a))), [sec])
   const mcq = useMemo(() => (only ? ordered.filter((q) => only.has(q.id)) : ordered), [ordered, only])
-  const allIv = useMemo(() => visibleInterview(sec, project, allProjects), [sec, project, allProjects])
+  const allIv = useMemo(() => visibleInterview(sec, project, allProjects, prep), [sec, project, allProjects, prep])
   const iv = useMemo(() => (only ? allIv.filter((q) => only.has(q.id)) : allIv), [allIv, only])
   const coreCount = ordered.filter(isCore).length
   const score = sectionScore(sec, answers)

@@ -25,6 +25,7 @@ import { Guide, ProgressPage, StartPage } from './pages/Misc'
 import { ChapterCheckPage } from './pages/ChapterCheck'
 import { WorkshopPage } from './pages/Workshop'
 import { PracticePage } from './pages/PracticePage'
+import { EvidencePage } from './pages/Evidence'
 import { FlashcardsPage } from './pages/Flashcards'
 import { GlossaryPage } from './pages/Glossary'
 import { NotFound } from './pages/NotFound'
@@ -42,6 +43,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="start" element={<StartPage />} />
             <Route path="guide" element={<Guide />} />
             <Route path="progress" element={<ProgressPage />} />
+            <Route path="evidence" element={<EvidencePage />} />
             <Route path="practice" element={<PracticePage />} />
             <Route path="flashcards" element={<FlashcardsPage />} />
             <Route path="glossary" element={<GlossaryPage />} />
