@@ -92,3 +92,34 @@ One command, `npm run generate` (`scripts/generate.mjs`, which absorbs `content-
 - A new topic needs four authored files.
 - Python is needed only for `npm run datasets`.
 - No generated file is in git.
+
+## Results
+
+Commits: `aba4eda` (1.1–1.2), `0d6c711` (1.3–1.4), `9fd87e7` (1.5), `c24b1eb` (1.6), `d8e0fd9` (1.7). Nothing was built, typechecked or run in the browser, as D9 requires; the generator, the authoring tools and the scaffold were run with Node only.
+
+| Measure | Before | After |
+|---|---|---|
+| Hand-kept counts in `manifest.json` | `figures`, `interactive`, `words` on every topic | none; `scripts/generate.mjs` counts them from the topic HTML |
+| `idmap.json`, `search.json`, `checks/summary.json` | committed, rebuilt by hand | generated into `src/content/generated/` (git-ignored, D7) before `dev`, `build` and `test` and after `npm install` |
+| Authoring tools | Python (`content_tools.py`, `refresh_search.py`) and `content-summary.mjs` | Node: `scripts/content-tools.mjs`, `scripts/generate.mjs`, `scripts/lib/content.mjs` |
+| Python needed for | authoring and datasets | `npm run datasets` only (`scripts/datasets.mjs` finds `python3`, `python` or `py -3`) |
+| Files to edit for a new topic | about 10 | four authored (HTML, note, questions, snippet); `npm run new:topic` creates the stubs and the manifest entry |
+| Editor support | none | `schemas/*.schema.json`, `.vscode/settings.json`, `docs/editor-schemas.md`, `.editorconfig` |
+
+Checks against the old files (done once, by script; the scripts are not kept):
+- A no-op merge of all 23 check files and 24 practice files through `content-tools.mjs` produced no git diff.
+- New questions and the `reviseChecks` refusals (answer or option-count change) were tried on a throwaway `c99` file, then deleted.
+- Regenerated datasets were unchanged.
+- The five schemas accept every current data file (checked once with a Python validator, not kept).
+
+Topics whose count changed against the old manifest:
+- **Figures:** c2-3 (manifest said 4; the HTML has 3).
+- **Interactive:** c3-5, c7-4 and c16-4.
+- **Words:** about 44 topics differ by more than 5%. By design, words are now counted outside `<svg>`, so diagram labels no longer count. If you prefer the old basis, it is a one-line change in `topicStats` in `scripts/generate.mjs`. The old and new word figures matched within 5% for 74% of topics, short of the 95% aim in the accept line, which assumed the old counts were exact.
+
+`c1-99` scaffold trial (reverted, not committed): the command touched `src/content/pages/c1/c1-99.html` (new), `src/content/manifest.json`, `src/content/practice/c1.json`, `src/content/checks/c1.json` and `src/widgets/py-snippet/c1.ts`. The generator counted 1 figure, 1 interactive and 86 words, and the links `/c1/c1-99`, `snip-c1-99` and `c1-99-code` resolved.
+
+Deferred or noted:
+- The capstone has no check file (`capstone.json`); `new:topic` leaves an empty check section.
+- `new:topic` stubs carry `TODO` text and `fit: "good"`; the author sets the real fit.
+- `rm` of the old worktree `node_modules`, the stale `origin` branches and the push stay with the owner (phase 0 Results).

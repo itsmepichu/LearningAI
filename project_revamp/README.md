@@ -68,7 +68,7 @@ D9 overrides any instruction in `CLAUDE.md` that mentions tests, typecheck, buil
 | # | File | Goal | Effort | Depends on | Status |
 |---|---|---|---|---|---|
 | 0 | [phase-0-decide-and-tidy.md](phase-0-decide-and-tidy.md) | Apply the audience and title; remove tests and checks; clear finished history | 1–2 days | — | Done (234d20c to 88de249; hand-off in the next commit) |
-| 1 | [phase-1-one-source-of-truth.md](phase-1-one-source-of-truth.md) | A new topic needs four authored files; the rest is generated | 3–4 days | 0 | Not started |
+| 1 | [phase-1-one-source-of-truth.md](phase-1-one-source-of-truth.md) | A new topic needs four authored files; the rest is generated | 3–4 days | 0 | Done (aba4eda to d8e0fd9; hand-off in the phase file) |
 | 2 | [phase-2-beginner-on-ramp.md](phase-2-beginner-on-ramp.md) | A reader with basic Python never meets an unexplained term | 5–7 days | 1 | Not started |
 | 3 | [phase-3-lesson-and-workshop.md](phase-3-lesson-and-workshop.md) | One project in the lesson; a workshop page per chapter | 6–9 days | 1 | Not started |
 | 4 | [phase-4-review-and-evidence.md](phase-4-review-and-evidence.md) | Quick check per topic, levelled interview prep, an Evidence page | 4–6 days | 2, 3 | Not started |
