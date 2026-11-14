@@ -290,3 +290,6 @@ kbd{font-family:var(--f-mono);border:1px solid var(--rule-2);border-bottom-width
 }
 .t-covers{margin:6px 0 0;color:var(--muted);font-size:.9rem;max-width:62ch}
 .t-covers b{font-family:var(--f-mono);font-size:var(--fs-2xs);letter-spacing:.06em;text-transform:uppercase;margin-right:8px}
+.t-report{margin:14px 0 0;font-size:.82rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.t-report svg{flex:none}
+.t-report a{display:inline-flex;align-items:center;min-height:24px}

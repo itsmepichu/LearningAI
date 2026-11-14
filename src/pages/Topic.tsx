@@ -7,6 +7,7 @@ import { ExampleDataBanner, PracticeBlock, useChapterPractice } from '../compone
 import { hasWorkshop, workshopPath } from '../data/workshop'
 import { HtmlContent } from '../components/HtmlContent'
 import { QuickCheck } from '../components/QuickCheck'
+import { ReportProblem } from '../components/ReportProblem'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
@@ -185,6 +186,8 @@ export function TopicPage() {
             </button>
             <span className="muted">Progress is saved in this browser only.</span>
           </div>
+
+          <ReportProblem topicId={topic.id} title={topic.title} />
 
           <nav className="pager" aria-label="Previous and next topic">
             {prev ? (
