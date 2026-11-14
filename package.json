@@ -10,7 +10,7 @@
     "prebuild": "npm run generate",
     "build": "vite build",
     "preview": "vite preview",
-    "datasets": "python3 scripts/make_datasets.py",
+    "datasets": "node scripts/datasets.mjs",
     "test": "tsc --noEmit && npm run build",
     "pretest": "npm run generate",
     "postinstall": "npm run generate"
