@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Different models produce incompatible vector spaces even at equal dimensions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Matching dimensions do not make the spaces compatible.",
@@ -50,6 +51,7 @@
     ],
     "answer": 0,
     "why": "Rollback is then switching the alias back.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -107,6 +109,7 @@
     ],
     "answer": 3,
     "why": "Then shadow or canary reads.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Deleting first removes the rollback path.",
@@ -126,6 +129,7 @@
     ],
     "answer": 1,
     "why": "Otherwise queries are embedded for the wrong space.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The vendor does not change.",
@@ -183,6 +187,7 @@
     ],
     "answer": 3,
     "why": "A query service can refuse an index whose embedder differs from its own.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Users are not part of the index's identity.",
@@ -365,6 +370,7 @@
     ],
     "answer": 0,
     "why": "Only what changed is processed.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -403,6 +409,7 @@
     ],
     "answer": 0,
     "why": "Deletion speed can be a legal requirement (16.5).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -422,6 +429,7 @@
     ],
     "answer": 1,
     "why": "Reconciliation repairs what missed events left stale.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Replicas copy errors.",
@@ -460,6 +468,7 @@
     ],
     "answer": 3,
     "why": "Lineage answers “why did the assistant say this?” and “what must be rebuilt?”.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Text alone cannot trace origins.",
@@ -517,6 +526,7 @@
     ],
     "answer": 1,
     "why": "Freshness is a percentile target, not an average.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "It can; five changes are a small sample.",
@@ -683,6 +693,7 @@
     ],
     "answer": 1,
     "why": "Isolate and scale the hot tenant's own capacity.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Extra replicas everywhere spread capacity that the hot tenant cannot use.",
@@ -702,6 +713,7 @@
     ],
     "answer": 0,
     "why": "Shards scale data and writes; replicas scale reads and availability.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -778,6 +790,7 @@
     ],
     "answer": 1,
     "why": "Rebuilds and growth need space.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Rebuilds need room.",
@@ -797,6 +810,7 @@
     ],
     "answer": 0,
     "why": "Writes go to every replica, so replicas can even add write work.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -873,6 +887,7 @@
     ],
     "answer": 0,
     "why": "120 × 2 = 240 GB, plus 40% headroom = 336 GB.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1017,6 +1032,7 @@
     ],
     "answer": 1,
     "why": "10⁷ × 6 × 500 = 3 × 10¹⁰.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ten times too few.",
@@ -1036,6 +1052,7 @@
     ],
     "answer": 0,
     "why": "Each chunk adds about 461 new tokens: 3 × 10¹⁰ ÷ 461 ≈ 65 million.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1055,6 +1072,7 @@
     ],
     "answer": 3,
     "why": "6.5 × 10⁷ × 768 × 4 bytes ≈ 200 GB.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is int8.",
@@ -1112,6 +1130,7 @@
     ],
     "answer": 3,
     "why": "(50 + 8) × 2 = 116 GB, before metadata and rebuild headroom.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That counts one replica.",
@@ -1169,6 +1188,7 @@
     ],
     "answer": 2,
     "why": "Total memory is several times the raw vectors.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A different system.",
@@ -1315,6 +1335,7 @@
     ],
     "answer": 1,
     "why": "Producers and consumers no longer need to run at the same speed.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Queues do not speed models.",
@@ -1353,6 +1374,7 @@
     ],
     "answer": 3,
     "why": "Bounded queues and consumer-paced pulling implement it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "More queues do not slow producers.",
@@ -1372,6 +1394,7 @@
     ],
     "answer": 3,
     "why": "Monitor and replay it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Successes are committed.",
@@ -1410,6 +1433,7 @@
     ],
     "answer": 0,
     "why": "Queues redeliver and reorder.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1429,6 +1453,7 @@
     ],
     "answer": 3,
     "why": "Early acknowledgement loses work on a crash.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A crash would lose the item.",
@@ -1614,6 +1639,7 @@
     ],
     "answer": 3,
     "why": "Layout analysis is needed to recover reading order.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Born-digital PDFs do contain text.",
@@ -1633,6 +1659,7 @@
     ],
     "answer": 3,
     "why": "Scanned pages are images with no text layer.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unrelated.",
@@ -1671,6 +1698,7 @@
     ],
     "answer": 2,
     "why": "Flattening loses which number belongs to which column.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Tables hold key facts.",
@@ -1728,6 +1756,7 @@
     ],
     "answer": 1,
     "why": "Row-as-sentence chunks keep each value with its row and column.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Randomness is not the problem.",
@@ -1808,6 +1837,7 @@
     ],
     "answer": 0,
     "why": "Scans need OCR; the quality gate should flag near-empty pages.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1954,6 +1984,7 @@
     ],
     "answer": 0,
     "why": "The model sees whatever is retrieved.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1973,6 +2004,7 @@
     ],
     "answer": 3,
     "why": "Fast, but correctness depends on keeping ACLs in sync.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is no control.",
@@ -1992,6 +2024,7 @@
     ],
     "answer": 0,
     "why": "Always current, but slower; over-fetch to keep enough results.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2106,6 +2139,7 @@
     ],
     "answer": 1,
     "why": "Enforce access before generation.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Instructions are not enforcement.",
@@ -2125,6 +2159,7 @@
     ],
     "answer": 0,
     "why": "The deny list or a late check closes that window.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2289,6 +2324,7 @@
     ],
     "answer": 2,
     "why": "Your benchmark must reproduce your conditions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They do test retrieval.",
@@ -2308,6 +2344,7 @@
     ],
     "answer": 3,
     "why": "A user who sees 2% of the corpus behaves very differently.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Selective filters change behaviour a lot.",
@@ -2346,6 +2383,7 @@
     ],
     "answer": 1,
     "why": "Trade-offs are only visible together.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "One number hides the trade-offs.",
@@ -2384,6 +2422,7 @@
     ],
     "answer": 0,
     "why": "Use varied queries sampled from logs.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2403,6 +2442,7 @@
     ],
     "answer": 3,
     "why": "Only the realistic condition predicts production.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Use the realistic one.",
@@ -2587,6 +2627,7 @@
     ],
     "answer": 3,
     "why": "Simpler fixes first: parsing, hybrid search, reranking, query rewriting.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Some failures need them.",
@@ -2625,6 +2666,7 @@
     ],
     "answer": 1,
     "why": "Fine-grained matching that a single vector blurs.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is reranking.",
@@ -2644,6 +2686,7 @@
     ],
     "answer": 2,
     "why": "0.9 + 0.6 = 1.5.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That uses token 1 only.",
@@ -2720,6 +2763,7 @@
     ],
     "answer": 0,
     "why": "The evidence does not justify the cost.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2739,6 +2783,7 @@
     ],
     "answer": 0,
     "why": "Aggregates need exact computation, not a few retrieved chunks.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",

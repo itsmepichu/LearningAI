@@ -12,6 +12,7 @@
     ],
     "answer": 0,
     "why": "If you know the split, code is cheaper and more predictable.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -35,6 +36,7 @@
      3
     ],
     "why": "Breadth, separable expertise, independent verification and organisational boundaries justify multiple agents.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Tightly coupled, short tasks are where multiple agents do not help.",
@@ -54,6 +56,7 @@
     ],
     "answer": 2,
     "why": "Parallel workers each read and summarise, so token use grows a lot.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Reports describe far more than 10%.",
@@ -130,6 +133,7 @@
     ],
     "answer": 0,
     "why": "Agreement between agents with the same evidence is not independent validation.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -206,6 +210,7 @@
     ],
     "answer": 2,
     "why": "0.15 ÷ 0.70 ≈ $0.21; 1.20 ÷ 0.85 ≈ $1.41. The multi-agent design costs over 6× more per success.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That multiplies by the success rate instead of dividing.",
@@ -364,6 +369,7 @@
     ],
     "answer": 1,
     "why": "Resolve with rules and evidence; do not average conflicts away.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Confidence is not evidence.",
@@ -383,6 +389,7 @@
     ],
     "answer": 0,
     "why": "0.9^10 ≈ 0.349.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -421,6 +428,7 @@
     ],
     "answer": 1,
     "why": "Errors propagate through the chain; evidence requirements break it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Synthesis tends to build on it.",
@@ -444,6 +452,7 @@
      3
     ],
     "why": "Hard limits stop loops; “perfect” criteria cause them.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is how the chapter's 14-round loop happened.",
@@ -501,6 +510,7 @@
     ],
     "answer": 2,
     "why": "Source authority and recency rules resolve the conflict.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Arrival order is arbitrary.",
@@ -661,6 +671,7 @@
     ],
     "answer": 1,
     "why": "Pass the user's identity and narrow scopes at each hop instead.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Least privilege is the fix, not the problem.",
@@ -680,6 +691,7 @@
     ],
     "answer": 2,
     "why": "Narrowing the user's rights at each hop prevents escalation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That invites misuse.",
@@ -699,6 +711,7 @@
     ],
     "answer": 0,
     "why": "Each hop can only reduce permissions; tokens are short-lived.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -718,6 +731,7 @@
     ],
     "answer": 2,
     "why": "A signed token proves who the user is; a string does not.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Speed is not the issue.",
@@ -832,6 +846,7 @@
     ],
     "answer": 3,
     "why": "Investigators need to see which agent acted and for whom (16.7).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The chain is lost.",
@@ -993,6 +1008,7 @@
     ],
     "answer": 3,
     "why": "In a handoff, control of the conversation moves to the next agent.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The coordinator keeps control and delegates subtasks.",
@@ -1012,6 +1028,7 @@
     ],
     "answer": 2,
     "why": "A router can send a request to the wrong specialist; an “other” path catches unknown types.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is evaluator–optimiser.",
@@ -1031,6 +1048,7 @@
     ],
     "answer": 0,
     "why": "A summary keeps context without overloading or over-sharing; the next agent gets only its own tools.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1088,6 +1106,7 @@
     ],
     "answer": 2,
     "why": "Handoff ping-pong is a known risk; cap handoffs and send to a person.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Nothing is being undone.",
@@ -1183,6 +1202,7 @@
     ],
     "answer": 3,
     "why": "Distinct request types with distinct tools suit routing; misrouting needs an “other” path.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Fan-out wastes work when one specialist fits.",
@@ -1324,6 +1344,7 @@
     ],
     "answer": 0,
     "why": "A clear brief keeps workers focused and outputs combinable.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1343,6 +1364,7 @@
     ],
     "answer": 2,
     "why": "Sequential is the sum (120 s); unlimited parallel waits for the slowest (30 s).",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Parallelism cuts wall-clock time.",
@@ -1362,6 +1384,7 @@
     ],
     "answer": 2,
     "why": "The same work is done, plus coordination overhead.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No such saving.",
@@ -1400,6 +1423,7 @@
     ],
     "answer": 3,
     "why": "Vague delegation produces vague, overlapping outputs.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Overlap wastes tokens.",
@@ -1457,6 +1481,7 @@
     ],
     "answer": 3,
     "why": "Evidence links let reviewers check each claim.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Token counts are cost data.",
@@ -1636,6 +1661,7 @@
     ],
     "answer": 2,
     "why": "Shared state is easy to coordinate but risks conflicts and leakage.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is isolated state.",
@@ -1678,6 +1704,7 @@
     ],
     "answer": 0,
     "why": "Agents communicate only through messages, so contracts matter.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1697,6 +1724,7 @@
     ],
     "answer": 3,
     "why": "Typed, versioned contracts with status and evidence let the coordinator decide.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Hidden reasoning is not a contract field.",
@@ -1716,6 +1744,7 @@
     ],
     "answer": 3,
     "why": "A2A is for agent-to-agent interoperability; MCP connects agents to tools and data.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is MCP.",
@@ -1830,6 +1859,7 @@
     ],
     "answer": 3,
     "why": "Isolation keeps data least-privilege; a structured record shares status without leaking content.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "More shared text leaks more.",
@@ -1970,6 +2000,7 @@
     ],
     "answer": 3,
     "why": "Tasks have dependencies, like a job scheduler.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Tasks depend on each other.",
@@ -2012,6 +2043,7 @@
     ],
     "answer": 2,
     "why": "Options: retry, substitute, proceed marked incomplete, or fail the run.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Guesses become false facts.",
@@ -2031,6 +2063,7 @@
     ],
     "answer": 2,
     "why": "90 − 20 − 10 = 60 s, as in the chapter's example.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That forgets the 10 s spare.",
@@ -2126,6 +2159,7 @@
     ],
     "answer": 0,
     "why": "Deadlines flow down, each hop tighter, leaving time for later steps.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2145,6 +2179,7 @@
     ],
     "answer": 0,
     "why": "A successful retry satisfies the dependency; nothing is missing.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2286,6 +2321,7 @@
     ],
     "answer": 1,
     "why": "It must beat the strongest simple alternative at acceptable cost.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That flatters the design.",
@@ -2343,6 +2379,7 @@
     ],
     "answer": 3,
     "why": "$0.30 / 0.60 = $0.50.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the right calculation.",
@@ -2362,6 +2399,7 @@
     ],
     "answer": 1,
     "why": "For example, remove the evaluator or merge two workers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is the opposite.",
@@ -2381,6 +2419,7 @@
     ],
     "answer": 1,
     "why": "A drop within noise did not justify 30% more cost and 35% more latency.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The data did not justify it.",
@@ -2461,6 +2500,7 @@
     ],
     "answer": 2,
     "why": "The design must beat the strongest simple alternative, not a straw man.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "pass^k can still be computed.",

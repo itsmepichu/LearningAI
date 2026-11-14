@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "The server returns the stored result for a repeated key instead of creating a duplicate.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A longer timeout does not tell you whether the first request succeeded.",
@@ -69,6 +70,7 @@
     ],
     "answer": 0,
     "why": "Compensations semantically undo earlier steps.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -107,6 +109,7 @@
     ],
     "answer": 0,
     "why": "Undo the most recent completed step first.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -126,6 +129,7 @@
     ],
     "answer": 0,
     "why": "The resumed run repeats the action unless the call is idempotent.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -225,6 +229,7 @@
     ],
     "answer": 3,
     "why": "Completed steps are compensated in reverse; the irreversible charge comes last, so it never ran.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That books a second flight.",
@@ -345,6 +350,7 @@
     ],
     "answer": 1,
     "why": "Prompts can be ignored; the runtime must stop the loop.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model can ignore or be talked out of prompt limits.",
@@ -383,6 +389,7 @@
     ],
     "answer": 2,
     "why": "External communication, financial, irreversible and permission changes need approval.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Read-only actions run automatically.",
@@ -406,6 +413,7 @@
      3
     ],
     "why": "Approvers need enough to judge, and must be able to edit or reject with a reason.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -463,6 +471,7 @@
     ],
     "answer": 2,
     "why": "Budgets are enforced in the runtime; exhaustion leads to escalation.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That spends more.",
@@ -520,6 +529,7 @@
     ],
     "answer": 2,
     "why": "Splitting an action into small ones must not bypass a limit; the policy should apply per order or task.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "The model cannot approve.",
@@ -676,6 +686,7 @@
     ],
     "answer": 3,
     "why": "The defining question is who controls the path: code (workflow) or the model (agent). Workflows can call LLMs and branch.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Workflows can branch in code.",
@@ -714,6 +725,7 @@
     ],
     "answer": 2,
     "why": "Autonomy pays off for open-ended investigation and long-tail cases that cannot be enumerated.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Autonomy adds cost and latency.",
@@ -790,6 +802,7 @@
     ],
     "answer": 0,
     "why": "The loop is bounded by code; the model only produces drafts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -869,6 +882,7 @@
     ],
     "answer": 1,
     "why": "The path does not vary, so a workflow is cheaper, faster and easier to test.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That adds cost and approvals to a solved problem.",
@@ -888,6 +902,7 @@
     ],
     "answer": 2,
     "why": "The next step depends on findings, which is where autonomy adds value.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Fixing is a high-risk action needing approval.",
@@ -1009,6 +1024,7 @@
     ],
     "answer": 1,
     "why": "The loop is: reason, act (call a tool), observe (append the result), repeat.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That ends the loop.",
@@ -1028,6 +1044,7 @@
     ],
     "answer": 3,
     "why": "The model chooses from what it reads; overlap and vague descriptions cause wrong calls.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model needs to see the tools.",
@@ -1070,6 +1087,7 @@
      2
     ],
     "why": "Termination must be engineered: final-answer detection plus hard limits, loop detection and an escalation path.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1165,6 +1183,7 @@
     ],
     "answer": 2,
     "why": "$0.38 + $0.08 = $0.46 > $0.40, so the runtime should not start another step.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That does not guarantee staying in budget.",
@@ -1222,6 +1241,7 @@
     ],
     "answer": 0,
     "why": "Repeating the same call with the same arguments is the loop signal the chapter names.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1344,6 +1364,7 @@
     ],
     "answer": 1,
     "why": "It blocks unknown fields, so the model cannot smuggle extra parameters.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is the required list's job.",
@@ -1363,6 +1384,7 @@
     ],
     "answer": 1,
     "why": "The agent acts on behalf of a user and must not exceed that user's rights.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The provider does not own your data.",
@@ -1382,6 +1404,7 @@
     ],
     "answer": 3,
     "why": "Taking the amount away from the model removes wrong or manipulated amounts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Brevity is not the reason.",
@@ -1401,6 +1424,7 @@
     ],
     "answer": 3,
     "why": "Tool results can carry prompt injection; label them as data and gate consequential actions.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It came from a web page.",
@@ -1557,6 +1581,7 @@
     ],
     "answer": 1,
     "why": "The agent must act with the user's permissions, checked by the same authorisation service the UI uses.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Descriptions are not permission checks.",
@@ -1679,6 +1704,7 @@
     ],
     "answer": 3,
     "why": "Working state lives in the context window and the checkpointed task state.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That outlives the task.",
@@ -1698,6 +1724,7 @@
     ],
     "answer": 0,
     "why": "Persistent memory holds facts worth keeping, with source, scope and expiry.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1736,6 +1763,7 @@
     ],
     "answer": 2,
     "why": "Update or supersede rather than piling up contradictions.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The newer fact is valid.",
@@ -1835,6 +1863,7 @@
     ],
     "answer": 0,
     "why": "These let you filter, audit and expire memories.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1854,6 +1883,7 @@
     ],
     "answer": 1,
     "why": "The user did not state it; untrusted text must not become trusted memory.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It came from a review, not the user.",
@@ -1995,6 +2025,7 @@
     ],
     "answer": 1,
     "why": "The LLM chooses actions within a state; code controls transitions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Code enforces transitions.",
@@ -2014,6 +2045,7 @@
     ],
     "answer": 2,
     "why": "Completed calls' recorded results are reused.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is how it resumes.",
@@ -2052,6 +2084,7 @@
     ],
     "answer": 2,
     "why": "Waiting states should not hold resources; workflow engines resume on events.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Connections drop over days.",
@@ -2071,6 +2104,7 @@
     ],
     "answer": 0,
     "why": "Access and conditions can change during a wait.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2189,6 +2223,7 @@
     ],
     "answer": 0,
     "why": "Completed calls are not re-executed; step 4 is retried with the same idempotency key in case it already ran.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2330,6 +2365,7 @@
     ],
     "answer": 3,
     "why": "The host runs one client per server connection.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The host manages many clients, one per server.",
@@ -2387,6 +2423,7 @@
     ],
     "answer": 1,
     "why": "Tools are functions, resources are data, prompts are templates.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a prompt.",
@@ -2425,6 +2462,7 @@
     ],
     "answer": 2,
     "why": "MCP servers act as OAuth resource servers and publish that metadata.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model has no such knowledge.",
@@ -2463,6 +2501,7 @@
     ],
     "answer": 3,
     "why": "Descriptions and results flow into the model's context.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is clutter, not poisoning.",
@@ -2524,6 +2563,7 @@
     ],
     "answer": 2,
     "why": "Descriptions flow into the model's context and can carry injection; treat servers like dependencies.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Protocol support does not make content trustworthy.",
