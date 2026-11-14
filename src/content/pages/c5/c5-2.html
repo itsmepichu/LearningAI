@@ -14,7 +14,7 @@
 <div><b><a class="gl" href="#gl-causal-mask">Causal mask</a></b>: in a generator, token i may only attend to tokens ≤ i. Scores for future positions are set to −∞ before softmax, so their weight is exactly 0.</div>
 </div>
 <figure class="fig flow"><div class="stage">
-<div class="nodes"><div class="nd">Token vectors X<small>n × d</small></div><div class="nd">Q = XW<sub>Q</sub>, K = XW<sub>K</sub>, V = XW<sub>V</sub></div><div class="nd">Scores QKᵀ/√d<small>n × n</small></div><div class="nd">Mask future<small>−∞ above diagonal</small></div><div class="nd">Softmax per row<small>weights sum to 1</small></div><div class="nd">Weighted sum of V<small>n × d</small></div><div class="nd">Concat heads → W<sub>O</sub></div></div>
+<div class="nodes"><div class="nd">Token vectors X<small>n × d</small></div><div class="nd">Q = XW<sub>Q</sub>, K = XW<sub>K</sub>, V = XW<sub>V</sub></div><div class="nd">Scores: Q times K transposed, divided by the square root of d<small>n × n</small></div><div class="nd">Mask future<small>−∞ above diagonal</small></div><div class="nd">Softmax per row<small>weights sum to 1</small></div><div class="nd">Weighted sum of V<small>n × d</small></div><div class="nd">Concat heads → W<sub>O</sub></div></div>
 <ol class="steps"><li data-n="0">Input: one vector per token (embedding plus position information).</li><li data-n="1">Three matrix multiplies produce queries, keys and values for every token at once.</li><li data-n="2">Every query is compared with every key by dot product: an n × n score matrix. This is the quadratic cost (5.7).</li><li data-n="3">For generation, future positions are masked so a token cannot peek ahead.</li><li data-n="4">Softmax turns each row of scores into attention weights.</li><li data-n="5">Each token's output is the weighted sum of value vectors: it has "gathered" information from relevant tokens.</li><li data-n="6">Outputs of all heads are concatenated and mixed by one more matrix.</li></ol></div>
 <figcaption><b>Attention as a pipeline of matrix operations.</b> Everything happens for all tokens in parallel during prefill.</figcaption></figure>
 <figure class="fig live"><div class="stage"><div data-widget="attention"></div></div>
@@ -54,7 +54,7 @@
 <section class="tp tp-sources" id="c5-2-sources">
 <h3 data-n="5">Primary sources</h3>
 <ol>
-<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> <small>Defines scaled dot-product and multi-head attention (section 3.2), including the √d scaling argument.</small></li>
+<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> <small>Defines scaled dot-product and multi-head attention (section 3.2), including why scores are divided by the square root of d.</small></li>
 <li><a href="https://arxiv.org/abs/1409.0473">Bahdanau, Cho and Bengio (2014), Neural Machine Translation by Jointly Learning to Align and Translate</a> <small>The first attention mechanism, as cross-attention in a translation model.</small></li>
 <li><a href="https://arxiv.org/abs/2305.13245">Ainslie et al. (2023), GQA: Training Generalized Multi-Query Transformer Models</a> <small>Grouped-query attention, which most current LLMs use to shrink the KV cache.</small></li>
 <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html">PyTorch: scaled_dot_product_attention</a> <small>The production function, with its reference implementation, masking and scaling options.</small></li>
