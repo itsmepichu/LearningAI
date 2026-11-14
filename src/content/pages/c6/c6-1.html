@@ -7,7 +7,7 @@
 <section class="tp tp-mechanism" id="c6-1-mechanism">
 <h3 data-n="2">Mechanism</h3>
 <div class="terms">
-<div><b><a class="gl" href="#gl-pretraining">Pretraining</a></b>: next-token prediction on a huge general corpus. Produces a <b><a class="gl" href="#gl-base-model">base model</a></b> that continues text but does not reliably follow instructions. This stage uses &gt;95% of total compute.</div>
+<div><b><a class="gl" href="#gl-pretraining">Pretraining</a></b>: next-token prediction on a huge general <a class="gl" href="#gl-corpus">corpus</a>. Produces a <b><a class="gl" href="#gl-base-model">base model</a></b> that continues text but does not reliably follow instructions. This stage uses &gt;95% of total compute.</div>
 <div><b><a class="gl" href="#gl-continued-pretraining">Continued pretraining</a></b> (domain-adaptive pretraining): more next-token training on domain text (legal, medical, code, a new language) to shift knowledge and vocabulary use.</div>
 <div><b><a class="gl" href="#gl-sft">Supervised fine-tuning (SFT)</a></b> / instruction tuning: train on curated (instruction, response) conversations so the model learns to act as an assistant.</div>
 <div><b>Preference optimisation</b>: train on comparisons ("response A is better than B") via <a class="gl" href="#gl-rlhf">RLHF</a> or DPO, and increasingly on verifiable rewards (tests pass, maths answer correct) to improve helpfulness, safety and reasoning.</div>

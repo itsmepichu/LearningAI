@@ -15,7 +15,7 @@
 <div><b><a class="gl" href="#gl-training-inference">Training</a></b>: adjusting parameters so predictions improve. Expensive, done rarely. <b>Inference</b>: using fixed parameters to produce outputs. Cheap per call, done millions of times. Prompting and chatting change only the input, never the weights: a conversation does not retrain the model, and "memory" in chat products is application storage (7.5).</div>
 </div>
 <figure class="fig flow"><div class="stage">
-<div class="nodes"><div class="nd">Text<small>"Refund my order"</small></div><div class="nd">Tokens<small>Ref · und · ␣my · ␣order</small></div><div class="nd">Token IDs<small>[4032, 1263, 856, 2015]</small></div><div class="nd">Embeddings<small>4 × 4096 numbers</small></div><div class="nd">Transformer layers<small>billions of parameters</small></div><div class="nd"><a class="gl" href="#gl-logits">Logits</a> → probabilities<small>one per vocab entry</small></div><div class="nd">Next token<small>"␣please"</small></div></div>
+<div class="nodes"><div class="nd">Text<small>"Refund my order"</small></div><div class="nd">Tokens<small>Ref · und · ␣my · ␣order</small></div><div class="nd">Token IDs<small>[4032, 1263, 856, 2015]</small></div><div class="nd">Embeddings<small>4 × 4096 numbers</small></div><div class="nd"><a class="gl" href="#gl-transformer">Transformer</a> layers<small>billions of parameters</small></div><div class="nd"><a class="gl" href="#gl-logits">Logits</a> → probabilities<small>one per vocab entry</small></div><div class="nd">Next token<small>"␣please"</small></div></div>
 <ol class="steps">
 <li data-n="0">Your application sends text. Everything that will influence the answer (system instructions, history, retrieved documents) must be in this text, because the model has no other input.</li>
 <li data-n="1">A <b><a class="gl" href="#gl-tokenizer">tokenizer</a></b> splits the text into tokens using rules learned before model training (chapter 5.1). The same text can be a different number of tokens for different models.</li>
@@ -24,7 +24,7 @@
 <li data-n="4">The vectors flow through dozens of transformer layers. Each layer mixes information between positions (<a class="gl" href="#gl-attention">attention</a>) and transforms each position (feed-forward). This is where almost all parameters and computation live.</li>
 <li data-n="5">The final vector at the last position is turned into one score (<b>logit</b>) per vocabulary token, then into probabilities with <a class="gl" href="#gl-softmax">softmax</a>.</li>
 <li data-n="6">A decoding rule picks one token (chapter 5.6). It is appended to the input and the loop repeats until a stop condition. That loop is <b>inference</b>.</li>
-</ol></div><figcaption><b>One pass through a model.</b> Token IDs shown are illustrative. During <em>training</em> the same forward pass runs, then the error against the real next token is pushed backward to adjust the parameters.</figcaption></figure>
+</ol></div><figcaption><b>One pass through a model.</b> Token IDs shown are illustrative. During <em>training</em> the same <a class="gl" href="#gl-forward-pass">forward pass</a> runs, then the error against the real next token is pushed backward to adjust the parameters.</figcaption></figure>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 760 190" role="img" aria-label="Training versus inference lanes">
 <rect x="10" y="15" width="740" height="75" rx="5" class="fss"/><rect x="10" y="102" width="740" height="75" rx="5" class="fas"/>

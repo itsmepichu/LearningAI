@@ -30,12 +30,12 @@
   <text x="600" y="124" class="xs acc">ML: credit-risk gradient</text><text x="600" y="137" class="xs acc">boosting on 40 features</text>
   <text x="600" y="164" class="xs sig">DL: image classifier that</text><text x="600" y="177" class="xs sig">learns its own features</text>
   <text x="600" y="204" class="xs simc">GenAI: LLM drafting a</text><text x="600" y="217" class="xs simc">support reply</text></g>
-</svg></div><figcaption><b>Nested sets.</b> Every LLM is generative, deep and machine-learned, so it inherits all the outer sets' concerns: it needs data, it can overfit, and its behaviour is statistical.</figcaption></figure>
+</svg></div><figcaption><b>Nested sets.</b> Every LLM is generative, deep and machine-learned, so it inherits all the outer sets' concerns: it needs data, it can overfit, and its behaviour is statistical. The examples in the figure: a credit-risk model built with <a class="gl" href="#gl-gradient-boosting">gradient boosting</a> on 40 features (machine learning), an image classifier that learns its own features (deep learning), and a model that drafts a support reply (generative AI).</figcaption></figure>
 <div class="box example"><h5>Example: one business problem, four approaches</h5>
 <p>Routing incoming support emails to the right team:</p>
 <ul><li><b>Rules (AI):</b> <code>if "invoice" in subject → Billing</code>. Transparent, brittle when wording changes.</li>
-<li><b>Classical ML:</b> TF-IDF word features + logistic regression trained on 20,000 labelled emails. Cheap, fast, accurate on common categories.</li>
-<li><b>Deep learning:</b> fine-tuned BERT-style encoder. Handles paraphrase and context better; needs more compute.</li>
+<li><b>Classical ML:</b> <a class="gl" href="#gl-tf-idf">TF-IDF</a> word features + <a class="gl" href="#gl-logistic-regression">logistic regression</a> trained on 20,000 labelled emails. Cheap, fast, accurate on common categories.</li>
+<li><b>Deep learning:</b> fine-tuned <a class="gl" href="#gl-bert">BERT</a>-style encoder. Handles paraphrase and context better; needs more compute.</li>
 <li><b>Generative AI:</b> prompt an LLM with the team descriptions and ask for a label plus a one-line reason. Zero training data needed to start; higher cost per email; must validate that the label is one of the allowed values.</li></ul></div>
 </section>
 

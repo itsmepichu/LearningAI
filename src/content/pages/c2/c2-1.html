@@ -14,7 +14,7 @@
 <div><b>Projection</b> of a onto b: the shadow of a along b's direction, take the dot product of a and b, divide by the squared length of b, and multiply b by the result. For a = [2, 3] and b = [1, 0]: dot product 2, squared length 1, so the projection is 2 × [1, 0] = [2, 0]. It answers "how much of a points along b?"</div>
 </div>
 <p>Why this matters: an embedding model maps text to vectors so that related meanings point in similar directions. Retrieval then becomes "find the stored vectors with the highest cosine similarity to the query vector". If vectors are <dfn>normalised</dfn> (scaled to length 1), cosine similarity equals the dot product, which is cheaper to compute, so vector databases usually normalise.</p>
-<p>A matrix multiply <code>y = W·x</code> computes many dot products at once: each output entry is the dot product of one row of W with x. A transformer layer with a 4096×4096 weight matrix does 16.7 million multiply-adds per token for that one matrix. This is why AI hardware is designed around fast matrix multiplication.</p>
+<p>A matrix multiply <code>y = W·x</code> computes many dot products at once: each output entry is the dot product of one row of W with x. A <a class="gl" href="#gl-transformer">transformer</a> layer with a 4096×4096 weight matrix does 16.7 million multiply-adds per token for that one matrix. This is why AI hardware is designed around fast matrix multiplication.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2"><label for="va">Angle of a <input type="range" id="va" min="0" max="360" value="30"><span id="vaO"></span></label>
 <label for="vb">Angle of b <input type="range" id="vb" min="0" max="360" value="75"><span id="vbO"></span></label>

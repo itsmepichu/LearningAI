@@ -7,7 +7,7 @@
 <section class="tp tp-mechanism" id="c5-7-mechanism">
 <h3 data-n="2">Mechanism</h3>
 <p>In a <dfn>dense</dfn> model, every parameter is used for every token. In a <dfn><a class="gl" href="#gl-moe">mixture-of-experts (MoE)</a></dfn> model, each FFN is replaced by many "expert" FFNs plus a small <dfn><a class="gl" href="#gl-router">router</a></dfn> that picks the top few experts (e.g. 2 of 8, or 8 of 128) per token. Total parameters grow, but <b><a class="gl" href="#gl-active-parameters">active parameters</a></b> per token stay small. Mixtral 8x7B, for example, has ~47B total parameters and ~13B active per token.</p>
-<p>Tradeoff: MoE gives near-large-model quality at small-model compute per token, but <b>all</b> experts must sit in memory, so it needs as much memory as a dense model of its total size. Serving also needs good load balancing across experts (expert parallelism, 14.5).</p>
+<p>Tradeoff: MoE gives near-large-model quality at small-model compute per token, but <b>all</b> experts must sit in memory, so it needs as much memory as a dense model of its total size. Serving also needs good load balancing across experts (<a class="gl" href="#gl-expert-parallelism">expert parallelism</a>, 14.5).</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 700 220" role="img" aria-label="MoE router selecting two of eight experts per token">
 <g id="moeViz"></g>

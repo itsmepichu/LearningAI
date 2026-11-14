@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <p>Attention by itself treats its input as a set: shuffling tokens shuffles outputs identically. Word order must be injected as <dfn><a class="gl" href="#gl-positional-encoding">positional information</a></dfn>.</p>
 <ul>
-<li><b>Absolute positional embeddings</b> (original transformer, BERT, GPT-2): add a learned or sinusoidal vector for position 1, 2, 3… to each token embedding.</li>
+<li><b>Absolute positional embeddings</b> (original transformer, <a class="gl" href="#gl-bert">BERT</a>, GPT-2): add a learned or sinusoidal vector for position 1, 2, 3… to each token embedding.</li>
 <li><b><a class="gl" href="#gl-rope">RoPE (rotary position embedding)</a></b>, used by most current LLMs: rotate each query and key vector by an angle proportional to its position. The dot product between a query at position m and a key at position n then depends on m − n, i.e. relative distance. RoPE scaling methods are part of how context windows are extended after training.</li>
 <li><b>ALiBi</b> and similar methods add a distance-based penalty directly to attention scores.</li>
 </ul>

@@ -1,6 +1,6 @@
 <section class="tp tp-intuition" id="c5-2-intuition">
 <h3 data-n="1">Intuition</h3>
-<p>To understand a word you look at the words around it, and some neighbours matter much more than others. In "The server that crashed restarted", the word "restarted" needs to find its subject, "server", and can mostly ignore "that". <a class="gl" href="#gl-attention">Attention</a> is how a transformer does this: every token asks a question, every token advertises what it holds, and each token collects a blend of the others, weighted by how well they answered its question.</p>
+<p>To understand a word you look at the words around it, and some neighbours matter much more than others. In "The server that crashed restarted", the word "restarted" needs to find its subject, "server", and can mostly ignore "that". <a class="gl" href="#gl-attention">Attention</a> is how a <a class="gl" href="#gl-transformer">transformer</a> does this: every token asks a question, every token advertises what it holds, and each token collects a blend of the others, weighted by how well they answered its question.</p>
 <p>It works like a soft lookup in a dictionary. A normal lookup returns the one entry whose key matches exactly; attention returns a weighted mix of all entries, with the closest matches weighted most.</p>
 </section>
 
