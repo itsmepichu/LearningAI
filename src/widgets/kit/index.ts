@@ -4,6 +4,6 @@ export { ThemeCanvas, readTokens, type CanvasFrame, type Tokens } from './ThemeC
 export { BarList, Legend, LineChart, SERIES, StackBar, TimeBars, type BarItem, type LineSeries, type StackSegment, type TimeBar } from './charts'
 export { DataGate, DataSource, useProjectData, type DataReader, type ProjectData } from './dataset'
 export { useNearViewport, useProject, useReducedMotion, useWidth } from './hooks'
-export { compact, fmt, pct, usd } from './format'
+export { bytesText, compact, fmt, pct, si, usd } from './format'
 export { DownloadGate, gateFor, useGate } from './DownloadGate'
 export { CallCancelled, Gate, formatBytes, totalBytes, type DownloadSpec, type GateState, type WorkerLike } from './download'

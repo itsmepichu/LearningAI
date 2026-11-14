@@ -12,13 +12,7 @@
 <div><b><a class="gl" href="#gl-kl-divergence">KL divergence</a></b> the cross-entropy minus the entropy: the extra surprise caused by using q instead of p. Never below 0, and exactly 0 only when q is the same as p. It is not symmetric: swapping p and q gives a different number. Used in <a class="gl" href="#gl-rlhf">RLHF</a> and DPO to keep a tuned model close to its original (6.5), and in <a class="gl" href="#gl-distillation">distillation</a>.</div>
 <div><b><a class="gl" href="#gl-perplexity">Perplexity</a></b> = e<sup>cross-entropy</sup> (natural log): roughly "how many tokens the model is choosing between". Lower is better.</div>
 </div>
-<figure class="fig live"><div class="stage"><div class="wid">
-<p style="font-size:.9rem">True distribution p (what actually happens) vs the model's prediction q over three next tokens.</p>
-<div class="row2"><div><b style="font-family:var(--f-display);font-size:.85rem">p (truth)</b>
-<label for="ip0">"yes" <input type="range" id="ip0" min="0" max="100" value="100"></label><label for="ip1">"no" <input type="range" id="ip1" min="0" max="100" value="0"></label><label for="ip2">"maybe" <input type="range" id="ip2" min="0" max="100" value="0"></label></div>
-<div><b style="font-family:var(--f-display);font-size:.85rem">q (model)</b>
-<label for="iq0">"yes" <input type="range" id="iq0" min="1" max="100" value="60"></label><label for="iq1">"no" <input type="range" id="iq1" min="1" max="100" value="25"></label><label for="iq2">"maybe" <input type="range" id="iq2" min="1" max="100" value="15"></label></div></div>
-<svg id="infoSvg" viewBox="0 0 600 120"></svg><div class="kpis" id="infoK"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="cross-entropy"></div></div>
 <figcaption><b>Live calculator</b> (natural log, so units are nats). With p = 100% "yes", cross-entropy is −ln q(yes). Raise q(yes) toward 100% and the loss falls toward 0. Being confidently wrong (q(yes) near 1%) costs about 4.6 nats.</figcaption></figure>
 <div class="box example"><h5>Example: reading a training log</h5><p>A training log shows <code>loss 2.30</code> at step 0 for a 10-class classifier. ln(10) = 2.30, which is exactly the loss of a uniform guess, so the model starts knowing nothing, as expected. For an LLM with a 50,000-token vocabulary, the initial loss should be near ln(50,000) ≈ 10.8. A first-step loss far from that suggests a bug in initialisation or labels.</p></div>
 </section>

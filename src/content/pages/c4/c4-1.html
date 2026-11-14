@@ -14,12 +14,7 @@
 <div><b><a class="gl" href="#gl-backpropagation">Backpropagation</a></b>: computes the gradient of the loss with respect to every weight by applying the chain rule backward through the layers, reusing intermediate results.</div>
 </div>
 <p><b><a class="gl" href="#gl-logits">Logits</a> in, <a class="gl" href="#gl-softmax">softmax</a> inside.</b> Classification losses such as PyTorch's <code>CrossEntropyLoss</code> expect raw logits and apply (log-)softmax internally in a numerically stable way. Applying softmax yourself first is a common bug: training still runs, but gradients shrink and the model learns slowly.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2"><label for="nw1">w₁ <input type="range" id="nw1" min="-20" max="20" value="8"><span id="nw1O"></span></label>
-<label for="nw2">w₂ <input type="range" id="nw2" min="-20" max="20" value="-5"><span id="nw2O"></span></label>
-<label for="nb">bias b <input type="range" id="nb" min="-20" max="20" value="1"><span id="nbO"></span></label>
-<label for="nact">activation <select id="nact"><option>ReLU</option><option>GELU</option><option>sigmoid</option><option>tanh</option><option>none (linear)</option></select></label></div>
-<div class="cols2"><svg id="neuSvg" viewBox="0 0 320 180"></svg><svg id="actSvg" viewBox="0 0 300 180"></svg></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="neuron"></div></div>
 <figcaption><b>One neuron with inputs x₁ = 1.0, x₂ = 0.5.</b> Left: the computation. Right: the activation curve with the current z marked. Note that ReLU outputs exactly 0 for negative z, so its gradient is 0 there too.</figcaption></figure>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">x = 1.0</div><div class="nd">z = w₁x = 0.5<small>w₁ = 0.5</small></div><div class="nd">h = ReLU(z) = 0.5</div><div class="nd">ŷ = w₂h = 1.0<small>w₂ = 2.0</small></div><div class="nd">L = (ŷ − 2)² = 1.0</div></div>
@@ -31,14 +26,7 @@
 <li data-n="1">How the loss changes with w₁: the change with z times x = −4 × 1.0 = −4.</li>
 <li data-n="0,1,3">Update with η = 0.1: w₁ ← 0.5 + 0.4 = 0.9, w₂ ← 2.0 + 0.1 = 2.1. New prediction 0.9 × 2.1 = 1.89, loss drops from 1.0 to 0.012.</li>
 </ol></div><figcaption><b>Backpropagation with real numbers</b> on a two-weight network. Frameworks do exactly this, but for billions of weights and with tensors instead of scalars.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2">
-<label for="nnD">Dataset <select id="nnD"><option value="circle">circles</option><option value="xor">XOR quadrants</option><option value="moons" selected>two moons</option><option value="spiral">spiral (hard)</option></select></label>
-<label for="nnH">Hidden units per layer <input type="range" id="nnH" min="2" max="16" value="8"><span id="nnHO"></span></label>
-<label for="nnA">Activation <select id="nnA"><option>tanh</option><option>ReLU</option><option>linear (no activation)</option></select></label>
-<label for="nnLr">Learning rate <input type="range" id="nnLr" min="1" max="100" value="30"><span id="nnLrO"></span></label></div>
-<div class="cols2"><canvas id="nnCan" width="320" height="320"></canvas><div><canvas id="nnLoss" width="320" height="160"></canvas><div class="kpis" id="nnK" style="margin-top:10px"></div></div></div>
-<div class="ctl"><button class="btn primary" type="button" id="nnRun">Train</button><button class="btn" type="button" id="nnReset">Reset weights</button><span class="count" id="nnInfo"></span></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="nn-playground"></div></div>
 <figcaption><b>Neural-network playground, trained live.</b> A 2-layer network (2 → H → H → 1) learns by real backpropagation with <a class="gl" href="#gl-momentum">momentum</a>, full batch, in your browser. The background shows the predicted probability; points are the training data. Try "linear (no activation)" on circles: it can only draw a straight line, which is the non-linearity argument from this section made visible.</figcaption></figure>
 <div class="box example"><h5>Example: why non-linearity matters</h5><p>Two linear layers W₂(W₁x) equal one layer (W₂W₁)x. No matter how deep, a purely linear network can only draw straight decision boundaries. Insert ReLU between them and the network can bend boundaries, which is how it separates, say, a spiral of fraudulent transactions from normal ones.</p></div>
 </section>

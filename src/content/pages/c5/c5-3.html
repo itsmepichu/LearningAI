@@ -32,19 +32,7 @@
 <path d="M14 -44 A 46 46 0 0 0 -31 -33" class="ln"/><text x="-30" y="-15" class="xs">Δ = 3 steps</text></g>
 <text x="320" y="200" text-anchor="middle" class="sm mut">Both pairs are rotated by different absolute amounts, but the angle between q and k is the same, so their dot product depends only on relative distance.</text>
 </svg></div><figcaption><b>Rotary position embedding, one 2-D slice.</b> Real RoPE rotates many 2-D slices of each vector at different frequencies.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
-<label for="tsP">Preset <select id="tsP"><option value="l8" selected>Llama-3-8B-like</option><option value="l3">3B-like</option><option value="l70">70B-like</option><option value="g2">GPT-2 small</option></select></label>
-<label for="tsD">d_model <input type="number" id="tsD" value="4096" min="64" step="64" style="width:90px"></label>
-<label for="tsH">heads <input type="number" id="tsH" value="32" min="1" style="width:70px"></label>
-<label for="tsKv">KV heads <input type="number" id="tsKv" value="8" min="1" style="width:70px"></label>
-<label for="tsL">layers <input type="number" id="tsL" value="32" min="1" style="width:70px"></label>
-<label for="tsF">FFN width <input type="number" id="tsF" value="14336" min="64" step="64" style="width:90px"></label>
-<label for="tsV">vocab <input type="number" id="tsV" value="128256" min="100" style="width:100px"></label>
-<label for="tsFt">FFN type <select id="tsFt"><option value="3">SwiGLU (3 matrices)</option><option value="2">GELU (2 matrices)</option></select></label>
-<label for="tsTie"><input type="checkbox" id="tsTie"> tied input/output embeddings</label>
-<label for="tsS">sequence <input type="number" id="tsS" value="2048" min="1" style="width:80px"></label>
-<label for="tsB">batch <input type="number" id="tsB" value="1" min="1" style="width:60px"></label></div>
-<div class="tw"><table id="tsTbl"></table></div><div class="kpis" id="tsKp"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="shape-tracer"></div></div>
 <figcaption><b>Transformer shape and parameter tracer.</b> Exact arithmetic for one pre-norm block with grouped-query attention, ignoring biases (most current LLMs have none) and small norm weights. Choose a preset or edit any field. The 8B preset reproduces the ≈ 8.0B count worked out in the example below; GPT-2 small (with learned position embeddings, 1,024 positions) gives ≈ 124M.</figcaption></figure>
 <div class="box example"><h5>Example: counting an 8B model's parameters</h5><p>Llama-3-8B-style shape: d = 4096, 32 layers, FFN width 14,336, vocabulary 128,256, <a class="gl" href="#gl-gqa">grouped-query attention</a> with 8 KV heads (each key and value head is shared by 4 query heads). Per layer: attention ≈ 4096×4096 (Q) + 2×4096×1024 (K,V) + 4096×4096 (O) ≈ 42M; FFN (SwiGLU has 3 matrices) ≈ 3×4096×14,336 ≈ 176M. 32 layers × 218M ≈ 7.0B, plus input and output embeddings 2×128,256×4096 ≈ 1.05B → ≈ 8.0B.</p></div>
 </section>

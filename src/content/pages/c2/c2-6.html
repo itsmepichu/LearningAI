@@ -29,14 +29,7 @@
 <figure class="fig"><div class="stage"><p style="font-family:var(--f-display);font-size:.88rem;margin-bottom:8px">Memory to hold the weights of an 8-billion-parameter model</p>
 <div class="bars" data-unit=" GB"><div data-v="32" data-c="b">FP32 · 4 bytes</div><div data-v="16">BF16 / FP16 · 2 bytes</div><div data-v="8" data-c="s">INT8 / FP8 · 1 byte</div><div data-v="4.5" data-c="g">4-bit (incl. scales) · ~0.56 byte</div></div></div>
 <figcaption><b>Weights only.</b> Training needs far more: gradients and optimizer state bring mixed-precision <a class="gl" href="#gl-adamw">Adam</a> to roughly 16 bytes per parameter (6.6).</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
-<label for="lfM">Model <select id="lfM"><option value="0">0.5B (24 layers, 2 KV heads × 64)</option><option value="1">1B (16 layers, 8 KV heads × 64)</option><option value="2" selected>3B (28 layers, 8 KV heads × 128)</option><option value="3">8B (32 layers, 8 KV heads × 128)</option><option value="4">14B (48 layers, 8 KV heads × 128)</option><option value="5">70B (80 layers, 8 KV heads × 128)</option></select></label>
-<label for="lfQ">Weights format <select id="lfQ"><option value="2">FP16 / BF16</option><option value="1.06">Q8_0 (≈ 8.5 bits)</option><option value="0.69">Q5_K_M (≈ 5.5 bits)</option><option value="0.56" selected>Q4_K_M (≈ 4.5 bits)</option></select></label>
-<label for="lfR">Laptop RAM <select id="lfR"><option>8</option><option selected>16</option><option>32</option><option>64</option></select> GB</label>
-<label for="lfOs">Used by OS + apps (GB) <input type="range" id="lfOs" min="2" max="14" value="5"><span id="lfOsO"></span></label>
-<label for="lfC">Context (tokens) <input type="range" id="lfC" min="11" max="17" value="13"><span id="lfCO"></span></label>
-<label for="lfBw">Memory bandwidth (GB/s) <input type="range" id="lfBw" min="20" max="400" step="10" value="70"><span id="lfBwO"></span></label>
-</div><div id="lfBar" style="display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--rule)"></div><div class="kpis" id="lfK"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="laptop-fit"></div></div>
 <figcaption><b>Will it fit on my laptop?</b> Weights = parameters × bytes per parameter (quantised formats include their scales). KV cache assumes FP16 cache values, as llama.cpp uses by default. The speed ceiling is bandwidth ÷ bytes read per token; real speeds are lower. Apple-silicon and recent laptops reach 100–400 GB/s; typical x86 laptops 50–100 GB/s.</figcaption></figure>
 <div class="box example"><h5>Example: will it run on my laptop?</h5><p>A 16 GB laptop. Operating system and apps use ~5 GB, leaving ~11 GB. A 3B model at 4-bit ≈ 2 GB: comfortable. An 8B model at 4-bit ≈ 5 GB: works, a few tokens per second. A 70B model at 4-bit ≈ 40 GB: does not fit. Use a hosted API or rented GPU for that.</p></div>
 </section>

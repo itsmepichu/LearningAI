@@ -13,11 +13,7 @@
 <div><b><a class="gl" href="#gl-lr-schedule">Schedule</a></b>: changing the learning rate over training. Standard for LLMs: linear <b>warm-up</b> from near zero for the first few hundred or thousand steps, then <b>cosine decay</b> to a small final value.</div>
 </div>
 <p>Batch size trades noise for cost. Small batches give noisy gradients (which can help escape poor regions) but use hardware poorly. Large batches give smoother gradients and better throughput but may need a larger learning rate and warm-up. When memory limits the batch, <dfn><a class="gl" href="#gl-gradient-accumulation">gradient accumulation</a></dfn> sums gradients over several small batches before one update, simulating a larger batch.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2"><label for="lrPeak">Peak LR (×10⁻⁴) <input type="range" id="lrPeak" min="1" max="30" value="6"><span id="lrPeakO"></span></label>
-<label for="lrWarm">Warm-up % <input type="range" id="lrWarm" min="0" max="30" value="5"><span id="lrWarmO"></span></label>
-<label for="lrKind">Decay <select id="lrKind"><option>cosine</option><option>linear</option><option>constant</option><option>step</option></select></label></div>
-<svg id="lrSvg" viewBox="0 0 620 200"></svg></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="lr-schedule"></div></div>
 <figcaption><b>Learning-rate schedule</b> over 10,000 steps. Warm-up avoids huge early updates while Adam's statistics are still unreliable; decay lets the model settle into a minimum at the end.</figcaption></figure>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 720 120" role="img" aria-label="Epochs, batches and steps">

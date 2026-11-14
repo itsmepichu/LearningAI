@@ -15,13 +15,7 @@
 </div>
 <p>Why this matters: an embedding model maps text to vectors so that related meanings point in similar directions. Retrieval then becomes "find the stored vectors with the highest cosine similarity to the query vector". If vectors are <dfn>normalised</dfn> (scaled to length 1), cosine similarity equals the dot product, which is cheaper to compute, so vector databases usually normalise.</p>
 <p>A matrix multiply <code>y = W·x</code> computes many dot products at once: each output entry is the dot product of one row of W with x. A <a class="gl" href="#gl-transformer">transformer</a> layer with a 4096×4096 weight matrix does 16.7 million multiply-adds per token for that one matrix. This is why AI hardware is designed around fast matrix multiplication.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<div class="row2"><label for="va">Angle of a <input type="range" id="va" min="0" max="360" value="30"><span id="vaO"></span></label>
-<label for="vb">Angle of b <input type="range" id="vb" min="0" max="360" value="75"><span id="vbO"></span></label>
-<label for="vla">Length of a <input type="range" id="vla" min="20" max="140" value="120"></label>
-<label for="vlb">Length of b <input type="range" id="vlb" min="20" max="140" value="100"></label></div>
-<svg id="vecSvg" viewBox="0 0 360 300" style="max-width:360px"></svg>
-<div class="kpis" id="vecK"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="vectors"></div></div>
 <figcaption><b>Drag the sliders.</b> The orange segment is the projection of a onto b. Cosine similarity ignores length; the dot product does not. Doubling the length of a doubles the dot product but leaves cosine unchanged, which is why cosine is used to compare meaning.</figcaption></figure>
 <div class="box example"><h5>Example: three tiny "embeddings"</h5><p>Suppose "invoice" = [0.9, 0.1, 0.2], "bill" = [0.8, 0.2, 0.3], "giraffe" = [0.1, 0.9, 0.1]. cos(invoice, bill) = (0.72+0.02+0.06)/(0.93·0.88) ≈ 0.98; cos(invoice, giraffe) = (0.09+0.09+0.02)/(0.93·0.91) ≈ 0.24. A search for "bill" therefore retrieves documents about invoices even though the word differs.</p></div>
 <figure class="fig live"><div class="stage"><div data-widget="py-lab" data-props='{"lab":"cosine"}'></div></div>
