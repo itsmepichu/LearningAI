@@ -109,3 +109,59 @@ A reader can finish a topic with a three-minute quick check. The larger question
 - Every topic with questions ends with a quick check of 3–5 questions.
 - System-design questions are behind the interview-prep switch.
 - The Evidence page lists a reader's kept work, and each part ends with a checkpoint.
+
+## Results
+
+Commits: `a92f9cf` (4.1, 4.3, 4.4), `df4bfdb` to `a8b474f` (4.2, core questions for all 23 chapters), `ece6e15` (4.5 to 4.10). Nothing was built, typechecked or opened in a browser (D9), so type errors are possible; run `npm install` and `npm run dev` first.
+
+| Item | Result |
+|---|---|
+| Tier (4.1) | `tier: "core"` on `mcq`; missing means extended. `reviseChecks` takes `tier` and inserts one line before `kind`. |
+| Core set (4.2) | 811 core questions in all 164 sections, 3–5 per section, each section's set covers its outcomes and includes a `scenario` or `calculation`. |
+| Quick check (4.3) | At the end of each topic page, same answers and ids as the chapter check, so a wrong answer joins the flashcards. |
+| Chapter check (4.4) | Core first with a Core badge; "Not answered only" filter. |
+| Interview levels (4.5) | Chapter check hides `system-design` questions until the "Interview prep" switch is on; chapters 1–6 add "Come back to these after Part II." Practice page: same exclusion plus an "Interview prep preset" (interview drill, system design included). |
+| Part review (4.6) | `/practice?part=<id>` draws 20 mixed questions (16 choose-the-answer, 4 interview, chapters in turn, core first, no system design). Linked from each part checkpoint and from the progress page. |
+| Evidence page (4.7) | `/evidence`, in the sidebar after Your progress. `npm run generate` writes `evidence.json`: 23 lab items (the `.ev` block of each `_lab.html`) and 8 milestones (the table in `app-c-ms.html`). Ticks and notes are in the progress store (persist version 5, `evidence`, migration keeps all fields). A lab's tick is `workshopDone`. |
+| Part checkpoints (4.8) | On the last chapter page of each part (c6, c9, c12, c18, c23). Milestone 0 (tiny language model plus six Part I labs) is in `src/data/evidence.ts`. Part II holds milestones 1–3, Part III milestone 4, Part IV milestones 5–8. |
+| Quota (4.9) | D4 convention in `src/content/CLAUDE.md`; `new:topic` writes 6 `mcq` (3 core, 3 scenario or calculation) and 4 interview TODO stubs. |
+| Guide (4.10) | `how.html`, `/start`, `src/content/CLAUDE.md`, README updated. |
+
+Review by inspection:
+- Sections with core questions: 164 of 164.
+- Questions whose text, options, answer or id changed: 0 (every section equals its pre-phase JSON once `tier` is removed).
+- `system-design` questions behind the switch in chapters 1–6: 77.
+- No milestone moved: the capstone text puts each milestone's chapters inside or before its part. Milestone 3's optional embedding fine-tune uses chapter 13, which is why it is optional.
+
+Core questions per chapter:
+
+| Chapter | Core |
+|---|---|
+| c1 | 28 |
+| c2 | 26 |
+| c3 | 29 |
+| c4 | 28 |
+| c5 | 35 |
+| c6 | 35 |
+| c7 | 35 |
+| c8 | 40 |
+| c9 | 35 |
+| c10 | 45 |
+| c11 | 40 |
+| c12 | 40 |
+| c13 | 35 |
+| c14 | 40 |
+| c15 | 50 |
+| c16 | 40 |
+| c17 | 50 |
+| c18 | 35 |
+| c19 | 30 |
+| c20 | 30 |
+| c21 | 30 |
+| c22 | 30 |
+| c23 | 25 |
+
+Known limits:
+- The part review draws 16 + 4 questions from the part's chapters; a part with one chapter's data not loaded yet waits for it.
+- Evidence notes are limited to 300 characters; a link is opened only when the note is just a URL.
+- The Evidence page and part checkpoint are not in the e2e or axe lists, because of D9.

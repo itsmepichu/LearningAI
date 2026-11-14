@@ -71,7 +71,7 @@ D9 overrides any instruction in `CLAUDE.md` that mentions tests, typecheck, buil
 | 1 | [phase-1-one-source-of-truth.md](phase-1-one-source-of-truth.md) | A new topic needs four authored files; the rest is generated | 3–4 days | 0 | Done (aba4eda to d8e0fd9; hand-off in the phase file) |
 | 2 | [phase-2-beginner-on-ramp.md](phase-2-beginner-on-ramp.md) | A reader with basic Python never meets an unexplained term | 5–7 days | 1 | Done (ca9b606 to bd41592; hand-off in the phase file) |
 | 3 | [phase-3-lesson-and-workshop.md](phase-3-lesson-and-workshop.md) | One project in the lesson; a workshop page per chapter | 6–9 days | 1 | Done (33a5541 to the 3.7/3.8 commit; hand-off in the phase file) |
-| 4 | [phase-4-review-and-evidence.md](phase-4-review-and-evidence.md) | Quick check per topic, levelled interview prep, an Evidence page | 4–6 days | 2, 3 | Not started |
+| 4 | [phase-4-review-and-evidence.md](phase-4-review-and-evidence.md) | Quick check per topic, levelled interview prep, an Evidence page | 4–6 days | 2, 3 | Done (a92f9cf to ece6e15; hand-off in the phase file) |
 | 5 | [phase-5-depth-and-feedback.md](phase-5-depth-and-feedback.md) | Get feedback from real beginners, then add depth | 5–8 days | 4 | Not started |
 
 Run order: 0, 1, 2, 3, 4, 5. Effort is an estimate for one person working with a coding agent.

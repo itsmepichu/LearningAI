@@ -24,7 +24,7 @@ Where a revamp decision (D1 to D9 below) differs from this scope, the decision w
 
 ## Open work
 
-- **The revamp** (`project_revamp/`, phases 0 to 3 done, run one per session): quick checks and an Evidence page, then depth and reader feedback. The lesson shows one project and each chapter has a workshop page.
+- **The revamp** (`project_revamp/`, phases 0 to 4 done, run one per session): depth and reader feedback come next. The lesson shows one project, each chapter has a workshop page, every topic ends with a quick check, and an Evidence page and part checkpoints close each part.
 - **Paper walkthroughs:** four first (phase 5 of the revamp, D6), more only after reader feedback.
 - **Phase 0 leftovers (owner):** delete the six stale branches on `origin` and the folder `.claude/worktrees/happy-ardinghelli-1a1294` (commands in `project_revamp/phase-0-decide-and-tidy.md`, Results).
 - **Legacy widgets:** whether to port the v3 blocks left in `src/legacy/widgets.js` (see Open decisions).
