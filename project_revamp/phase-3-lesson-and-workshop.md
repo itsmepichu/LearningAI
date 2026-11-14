@@ -109,3 +109,26 @@ A lesson shows one project. All four-project work lives on one workshop page per
 - No topic shows project tabs.
 - Every chapter has a workshop for all four projects.
 - All 664 existing notes are still in the repo and reachable from a workshop.
+
+## Results
+
+Commits: `33a5541` (slice a: 3.1–3.5, chapters 1 and 9), `b99edd0` (rollout to every chapter), then the 3.7 and 3.8 commit. The owner reviewed the chapter 1 and 9 pilot and approved it. Nothing was built, typechecked or opened in a browser (D9).
+
+| Item | Result |
+|---|---|
+| Primary project | `primary` in the manifest on exactly `c15-1`, `c15-8`, `c15-10` (Store; Store and Travel are both `best` for the first two, Store comes first in the order; `c15-10` has no `best`, Store is the first `good`) and `c19-4`, `c20-4` (Travel, the only `best`). Every other topic uses Harbor. |
+| Topic card | One card for the primary project; tabs, best-fit star, per-visit banner, fit note and dataset list are gone from topic pages. The project picker is hidden on topic pages and shown on the workshop, capstone, chapter check and Practice pages. |
+| `?project=` | A topic opened with `?project=<id>` shows a one-line "Example data" banner with a link back to the workshop; snippets and widgets use that project. Without it they use the primary project (the capstone uses the saved project). |
+| Workshop | `/<chapter>/workshop` for all 23 chapters and the capstone: picker, lab with that project's scenario, a task per topic (limited or missing notes show the best-fit project's task with a line saying why), data explorer, evidence note and a "Workshop done" control. The chapter page shows a Workshop card and a Chapter check card. |
+| Old links | `#lab` and `#lab-<chapter>` on a chapter page redirect to the workshop; the generated `lab-<chapter>` id maps to the workshop. |
+| Progress store | Persist version 4 with `workshopDone`; the earlier v1 to v3 steps are unchanged in `migrateEarlier`, and the new `migrate` adds the field without dropping any other. |
+| Data explorer | `src/widgets/data-explorer/`: pick a file, first rows and columns, count by a column, count rows matching one filter, mean of a number column, and a box that applies the filter to the other two tools. On `/start` and every workshop; a workshop task that names a dataset file gets an "Open in the data explorer" link. |
+| Authoring | Conventions a to d in `src/content/CLAUDE.md`; one-off count: the 664 existing notes already meet a, c and d. `new:topic` makes one note (for `--primary`, default Harbor); `mergePractice` takes any subset and warns when a topic has no primary note. The widget rule is in `src/widgets/CLAUDE.md`. |
+| Rules, guide, search | `CLAUDE.md` files, README, `how.html`, `/start` updated. A search result for a non-primary project's note sets that project and opens the workshop at the topic; the capstone sets the project and opens the topic. |
+| Review by inspection | `git diff --stat main -- src/content/practice/` shows one change, the Harbor lab scenario in `c1.json` from phase 2 task 2.8; phase 3 edited no note. No chapter has a project with fewer than two usable workshop tasks. |
+
+Known limits:
+- A task's "Open the figure" link goes to the topic's first interactive figure; that figure may not read project data.
+- The explorer has one filter, so a rule with two conditions takes two steps (filter the first, then look at the second column's counts).
+- The data-explorer widget is not in the e2e or axe lists, because of D9.
+- The Practice page and chapter check still use the saved project, as designed; phase 4 and later phases build on that.

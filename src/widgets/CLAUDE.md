@@ -8,6 +8,7 @@ These rules cover widgets, Colab guides, 3D scenes, walkthroughs and the legacy 
 - Build on the shared kit, `src/widgets/kit/`: `Widget` (the outer element), `Slider`, `KpiRow`, `StepPlayer`, `EventList`, `ScrollRegion`, `ThemeCanvas`, `LineChart`, `BarList`, `StackBar`, `TimeBars`, `Legend`, and `useProjectData` with `DataGate` and `DataSource` for the selected project's dataset.
 - Keep logic that can run without a browser in a plain `.ts` module beside the component. File names are case-insensitive on Windows, so do not name it after the component (`saga/events.ts`, not `saga/saga.ts` next to `Saga.tsx`).
 - A widget's data loader takes `(project, read)` and uses `read.json` and `read.csv`. Import only types from `../kit` in these modules, and only React components may import its values.
+- A new snippet or widget may be Harbor-only or `neutral`; it does not have to carry four projects' data (phase 3). Existing project-aware ones are left as they are. A topic's figures use the topic's primary project, or the project in `?project=` when a workshop task opens them.
 - A simulated widget uses the seeded generators in `kit/random.ts`, so the same seed gives the same result.
 - Never plot two scales on one axis. Use two charts, as the throughput and burn-rate widgets do.
 - Each widget should:

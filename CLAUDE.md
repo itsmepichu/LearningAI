@@ -7,7 +7,7 @@
 
 ## Current state
 - Phase 6b is done and phase 7 has started.
-- Every chapter and the capstone have notes for all four projects and lab scenarios.
+- Every chapter and the capstone have a workshop page with notes for all four projects and lab scenarios. A topic page shows one project (its `primary` in the manifest, else Harbor).
 - Every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions) that follows the quality rules in `src/content/CLAUDE.md`.
 - Every chapter (c1–c23, with c19–c23 in Part V) and the capstone use the topic structure in `src/content/CLAUDE.md`.
 - Phase 7 still has the paper walkthroughs to do. The revamp plan is in `project_revamp/`.

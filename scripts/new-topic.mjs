@@ -1,18 +1,24 @@
-// Scaffolds a topic: node scripts/new-topic.mjs <chapterId> <topicId> "<Title>"   (npm run new:topic -- c9 c9-9 "Title")
-// Creates the topic HTML (five parts and the practice slot), its manifest entry, a note for each project, a chapter-check
+// Scaffolds a topic: node scripts/new-topic.mjs <chapterId> <topicId> "<Title>" [--primary=<projectId>]   (npm run new:topic -- c9 c9-9 "Title")
+// Creates the topic HTML (five parts and the practice slot), its manifest entry, one note for the topic's primary project
+// (Harbor unless --primary is given; the manifest records a non-default primary), a chapter-check
 // section and a snippet. Counts, link targets and search text are generated, so nothing else needs editing.
 // Every stub carries a visible TODO. The chapter-check section starts empty, so no unfinished question is published.
 import { writeFileSync, existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { CONTENT, PROJECTS, ROOT, manifest, pagePath, readJson, writeJson } from './lib/content.mjs'
 
-const [chapterId, topicId, ...rest] = process.argv.slice(2)
+const args = process.argv.slice(2)
+const primaryArg = args.find((a) => a.startsWith('--primary='))?.slice('--primary='.length)
+const [chapterId, topicId, ...rest] = args.filter((a) => !a.startsWith('--primary='))
 const title = rest.join(' ').trim()
 const fail = (msg) => {
   console.error(msg)
   process.exit(1)
 }
-if (!chapterId || !topicId || !title) fail('Usage: npm run new:topic -- <chapterId> <topicId> "<Title>"   (for example: c9 c9-9 "Rerankers")')
+if (!chapterId || !topicId || !title) fail('Usage: npm run new:topic -- <chapterId> <topicId> "<Title>" [--primary=<projectId>]   (for example: c9 c9-9 "Rerankers")')
+const defaultProject = readJson(join(CONTENT, 'projects.json')).default
+const primary = primaryArg ?? defaultProject
+if (!PROJECTS.includes(primary)) fail(`Unknown project ${primary}. Use one of: ${PROJECTS.join(', ')}`)
 
 const m = manifest()
 const chapter = m.chapters.find((c) => c.id === chapterId)
@@ -69,15 +75,15 @@ writeFileSync(pagePath(chapterId, topicId), html)
 touched.push(`src/content/pages/${chapterId}/${topicId}.html`)
 
 // 2. manifest entry
-chapter.topics.push({ id: topicId, tn, title, tags: [], outcomes: ['TODO: first thing the reader can do afterwards', 'TODO: second thing the reader can do afterwards'] })
+chapter.topics.push({ id: topicId, tn, title, tags: [], ...(primary === defaultProject ? {} : { primary }), outcomes: ['TODO: first thing the reader can do afterwards', 'TODO: second thing the reader can do afterwards'] })
 writeJson(join(CONTENT, 'manifest.json'), m)
 touched.push('src/content/manifest.json')
 
-// 3. a note for each project
+// 3. one note, for the topic's primary project. Notes for the other projects are optional (see src/content/CLAUDE.md).
 const practicePath = join(CONTENT, 'practice', `${chapterId}.json`)
 const practice = existsSync(practicePath) ? readJson(practicePath) : {}
 practice[topicId] = Object.fromEntries(
-  PROJECTS.map((p) => [p, { practice: 'TODO: how the idea applies to {company}, 25–45 words.', failure: 'TODO: the failure to avoid, 12–25 words.', tryIt: 'TODO: exactly what to change in the figure or run on a laptop, 25–45 words.', fit: 'good', fitNote: 'TODO: why this project suits the topic' }]),
+  [primary].map((p) => [p, { practice: 'TODO: how the idea applies to {company}, 25–45 words.', failure: 'TODO: the failure to avoid, 12–25 words.', tryIt: 'TODO: exactly what to change in the figure or run on a laptop, 25–45 words.', fit: 'good', fitNote: 'TODO: why this project suits the topic' }]),
 )
 writeJson(practicePath, practice)
 touched.push(`src/content/practice/${chapterId}.json`)

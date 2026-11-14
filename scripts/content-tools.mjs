@@ -9,6 +9,8 @@
 // Run it with `node my-batch.mjs`. Do not commit the batch module.
 //
 // What the tools do (see src/content/CLAUDE.md):
+//   * Any subset of projects may be merged: a topic needs a note only for its primary project (the manifest's `primary`, else Harbor);
+//     the tool warns when a topic you merged has none.
 //   * Existing notes are updated field by field; Harbor's existing practice and failure are kept.
 //   * New questions get the next free stable id in their section; an identical question text is skipped.
 //   * New choose-the-answer options are shuffled with a seed taken from the question id, so the right answer's
@@ -17,7 +19,7 @@
 import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import { mulberry } from '../src/widgets/kit/random.ts'
-import { CONTENT, PROJECTS, existsSync, readJson, readText, unescapeHtml, writeJson } from './lib/content.mjs'
+import { CONTENT, PROJECTS, existsSync, manifest, readJson, readText, unescapeHtml, writeJson } from './lib/content.mjs'
 
 export const F = 'fundamentals'
 export const A = 'applied'
@@ -89,6 +91,13 @@ export function mergePractice(chapter, data) {
     cur[tid] = Object.fromEntries(PROJECTS.filter((k) => k in cur[tid]).map((k) => [k, cur[tid][k]]))
   }
   writeJson(path, cur)
+  const topics = new Map(manifest().chapters.flatMap((c) => c.topics.map((t) => [t.id, t])))
+  const dflt = readJson(join(CONTENT, 'projects.json')).default
+  for (const tid of Object.keys(data)) {
+    if (tid === '_lab' || !topics.has(tid)) continue
+    const primary = topics.get(tid).primary ?? dflt
+    if (!cur[tid]?.[primary]) console.warn(`warning: ${tid} has no note for its primary project (${primary})`)
+  }
   return Object.fromEntries(Object.entries(cur).map(([t, v]) => [t, Object.keys(v).length]))
 }
 

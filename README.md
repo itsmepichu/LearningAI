@@ -6,12 +6,12 @@ An interactive AI course, rebuilt as a front-end-only React app. For beginner pr
 
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams
-- an **In practice** block for your chosen **example project**: how the idea applies, the failure to avoid, and a **Try it** exercise on that project's downloadable synthetic dataset
-- a lab, and a separate **chapter check** page with choose-the-answer and interview questions for every section
+- an **In practice** card for the topic's example project: how the idea applies, the failure to avoid, and a **Try it** exercise
+- a **workshop** page with the chapter lab and a hands-on task for each topic, on the example project you choose, and a separate **chapter check** page with choose-the-answer and interview questions for every section
 
-There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. There is no choice to make up front: you start with Harbor and can switch at any time. When another project suits a topic better, a short note at the end of the topic says so. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes and run interview drills.
+There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. A lesson shows one project; you choose among the four on a chapter's workshop page, where a data explorer opens the synthetic files. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes and run interview drills.
 
-Status: all 23 chapters and the capstone have notes and lab scenarios for all four projects, every section has a full chapter check (1,794 choose-the-answer and 1,312 interview questions in all), and every topic uses the five-part structure with a runnable snippet (see [ROADMAP.md](ROADMAP.md)).
+Status: all 23 chapters and the capstone have a workshop with notes and lab scenarios for all four projects, every section has a full chapter check (1,794 choose-the-answer and 1,312 interview questions in all), and every topic uses the five-part structure with a runnable snippet (see [ROADMAP.md](ROADMAP.md)).
 
 Interactive figures run in the browser. Each one carries an evidence label:
 
