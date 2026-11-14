@@ -31,6 +31,7 @@
     ],
     "answer": 2,
     "why": "Online evidence is more realistic but carries more risk.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Online tests need pre-registered metrics.",
@@ -69,6 +70,7 @@
     ],
     "answer": 2,
     "why": "Pre-registration prevents moving the goalposts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Dates alone leave room for moving the goalposts.",
@@ -107,6 +109,7 @@
     ],
     "answer": 2,
     "why": "16 × 0.24 ÷ 0.0004 = 9,600.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ten times too many.",
@@ -145,6 +148,7 @@
     ],
     "answer": 0,
     "why": "Use outcome metrics such as resolution without repeat contact.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -183,6 +187,7 @@
     ],
     "answer": 1,
     "why": "For example, ship for premium customers only.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A trade-off of value and cost is a business call.",
@@ -326,6 +331,7 @@
     ],
     "answer": 2,
     "why": "0.8⁵ ≈ 0.33; pass@5 would be about 99.97%.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is pass@5, at least one success.",
@@ -345,6 +351,7 @@
     ],
     "answer": 2,
     "why": "A correct final message can hide unsafe or wasteful behaviour.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "These are operating measures, not the four levels.",
@@ -364,6 +371,7 @@
     ],
     "answer": 0,
     "why": "Inspect the environment after the run.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -402,6 +410,7 @@
     ],
     "answer": 2,
     "why": "1 − 0.2⁵ = 1 − 0.00032 ≈ 99.97%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is pass^5, all five succeeding.",
@@ -459,6 +468,7 @@
     ],
     "answer": 1,
     "why": "Assert the end state, forbidden calls, limits and an honest final message.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They reject valid paths too.",
@@ -643,6 +653,7 @@
     ],
     "answer": 3,
     "why": "Run both orders and combine the verdicts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a style preference, not position.",
@@ -662,6 +673,7 @@
     ],
     "answer": 3,
     "why": "Control length in the rubric or the comparison.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Formatting can sway judges.",
@@ -700,6 +712,7 @@
     ],
     "answer": 3,
     "why": "It agrees by chance alone, so chance-corrected agreement is zero.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the numbers here.",
@@ -719,6 +732,7 @@
     ],
     "answer": 3,
     "why": "Also check the judge's precision and recall on bad answers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is usually lower.",
@@ -738,6 +752,7 @@
     ],
     "answer": 1,
     "why": "Correlated rows treated as independent make the interval too narrow.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Correlated rows make the interval too narrow.",
@@ -941,6 +956,7 @@
     ],
     "answer": 2,
     "why": "For example: ≥ 92% correct, zero mislabelled urgent tickets in the critical set, p95 ≤ 2 s.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Vendor scores are not your bar.",
@@ -960,6 +976,7 @@
     ],
     "answer": 1,
     "why": "It should mirror production, with privacy controls.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Easy cases overstate quality.",
@@ -998,6 +1015,7 @@
     ],
     "answer": 1,
     "why": "A result without a baseline cannot be interpreted.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Baselines can be simpler.",
@@ -1017,6 +1035,7 @@
     ],
     "answer": 1,
     "why": "Stratified sets guarantee coverage; report results per stratum.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Rare critical segments would go untested.",
@@ -1055,6 +1074,7 @@
     ],
     "answer": 2,
     "why": "0.9 × 95 + 0.1 × 70 = 85.5 + 7 = 92.5%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That ignores segment B.",
@@ -1241,6 +1261,7 @@
     ],
     "answer": 3,
     "why": "It is the gold standard for nuance, but slow, expensive and variable.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Code does that.",
@@ -1298,6 +1319,7 @@
     ],
     "answer": 2,
     "why": "Use judges only for what code cannot check exactly.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A bigger judge is still probabilistic.",
@@ -1317,6 +1339,7 @@
     ],
     "answer": 1,
     "why": "Each method covers what the others cannot afford or cannot do.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Judges need calibration and miss exact errors.",
@@ -1336,6 +1359,7 @@
     ],
     "answer": 0,
     "why": "A fraction of supported claims is more informative than one 1–5 rating.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1393,6 +1417,7 @@
     ],
     "answer": 0,
     "why": "7 ÷ 9 ≈ 0.78.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1517,6 +1542,7 @@
     ],
     "answer": 0,
     "why": "Every claim should be supported by the provided sources.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1574,6 +1600,7 @@
     ],
     "answer": 3,
     "why": "Percentiles show the tail users actually experience (17.3).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The fastest hides the tail.",
@@ -1612,6 +1639,7 @@
     ],
     "answer": 2,
     "why": "Both sides of the trade-off must be visible.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Latency is not the issue here.",
@@ -1631,6 +1659,7 @@
     ],
     "answer": 0,
     "why": "Groundedness measures support by the sources, not the sources' correctness.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1669,6 +1698,7 @@
     ],
     "answer": 3,
     "why": "$0.004 ÷ 0.8 = $0.005.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That divides by 0.2.",
@@ -1814,6 +1844,7 @@
     ],
     "answer": 1,
     "why": "Diagnose before fixing.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They use different metrics.",
@@ -1852,6 +1883,7 @@
     ],
     "answer": 2,
     "why": "It separates generation errors from retrieval errors.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Logs show real retrieval, not perfect retrieval.",
@@ -1871,6 +1903,7 @@
     ],
     "answer": 2,
     "why": "Actions matter more than words (8.8).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Messages can misreport actions.",
@@ -1890,6 +1923,7 @@
     ],
     "answer": 1,
     "why": "With the right passages the model mostly answers correctly.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Nothing suggests that.",
@@ -1928,6 +1962,7 @@
     ],
     "answer": 2,
     "why": "If it still failed, the fault would be generation.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The passage fixed it.",
@@ -2108,6 +2143,7 @@
     ],
     "answer": 0,
     "why": "Cases from past bugs and incidents are tagged with their origin.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2146,6 +2182,7 @@
     ],
     "answer": 3,
     "why": "Critical cases are must-pass (18.3).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Deleting the failing test hides a real risk.",
@@ -2169,6 +2206,7 @@
      2
     ],
     "why": "Jailbreaks and contradictory sources are others.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2207,6 +2245,7 @@
     ],
     "answer": 2,
     "why": "Leaked cases inflate scores (6.2).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That leaks answers.",
@@ -2245,6 +2284,7 @@
     ],
     "answer": 3,
     "why": "371 + 14 − 6 = 379 (92.0%).",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That ignores the regressions.",

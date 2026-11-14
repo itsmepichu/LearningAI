@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Compositions of linear maps are linear; non-linearity lets networks model curved boundaries.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Activations add a little compute; they do not skip layers.",
@@ -31,6 +32,7 @@
     ],
     "answer": 0,
     "why": "z = 2·1 + (−1)·3 + 0.5 = −0.5, and ReLU(−0.5) = 0.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -88,6 +90,7 @@
     ],
     "answer": 3,
     "why": "CrossEntropyLoss expects raw logits and applies log-softmax itself; a second softmax squashes the signal.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The loss applies log-softmax again, so softmax is applied twice.",
@@ -107,6 +110,7 @@
     ],
     "answer": 1,
     "why": "∂L/∂ŷ = 2(ŷ − y) = −2, and ∂L/∂w₂ = ∂L/∂ŷ · h = −2 × 0.5 = −1.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is ∂L/∂ŷ, before multiplying by h.",
@@ -345,6 +349,7 @@
     ],
     "answer": 3,
     "why": "Autograd walks the recorded graph backward; the optimiser's step() then updates the weights.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is opt.zero_grad().",
@@ -364,6 +369,7 @@
     ],
     "answer": 2,
     "why": "PyTorch adds new gradients to existing ones by default.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "No error: PyTorch accumulates gradients by design.",
@@ -383,6 +389,7 @@
     ],
     "answer": 0,
     "why": "Autograd records a computation graph for tensors that need gradients.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -402,6 +409,7 @@
     ],
     "answer": 1,
     "why": "Wrong labels, a wrong loss or frozen weights show up immediately.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is a test for bugs; the run then restarts on the full data.",
@@ -516,6 +524,7 @@
     ],
     "answer": 3,
     "why": "A grad of None means autograd never connected the loss to the parameters, for example through .detach(), .item() or numpy() in the forward pass.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "zero_grad clears gradients after use; backward fills them again each step.",
@@ -664,6 +673,7 @@
     ],
     "answer": 0,
     "why": "Identical weights get identical gradients, so the symmetry is never broken.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -702,6 +712,7 @@
     ],
     "answer": 0,
     "why": "Many small factors multiply to almost nothing, so early layers barely learn.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -721,6 +732,7 @@
     ],
     "answer": 1,
     "why": "BatchNorm uses statistics across the batch, which is awkward for variable-length sequences and small batches.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "BatchNorm runs fine on GPUs.",
@@ -759,6 +771,7 @@
     ],
     "answer": 3,
     "why": "Dropout only regularises training; model.eval() disables it so predictions are deterministic.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Nothing doubles.",
@@ -797,6 +810,7 @@
     ],
     "answer": 1,
     "why": "Likely causes are a too-high rate, a corrupted batch or FP16 overflow; fix the cause and resume.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Size does not address a bad batch, a high rate or overflow.",
@@ -981,6 +995,7 @@
     ],
     "answer": 2,
     "why": "10,000 ÷ 32 = 312.5, so 313 steps including the last partial batch.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That multiplies instead of dividing.",
@@ -1000,6 +1015,7 @@
     ],
     "answer": 3,
     "why": "Gradients from 8 batches of 4 are summed before one update: an effective batch of 32.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the per-step batch.",
@@ -1038,6 +1054,7 @@
     ],
     "answer": 1,
     "why": "Starting near zero and ramping up avoids huge early steps.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Warm-up uses every batch, with a smaller rate.",
@@ -1057,6 +1074,7 @@
     ],
     "answer": 0,
     "why": "Velocity accumulates along steady slopes and damps oscillations across them.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1133,6 +1151,7 @@
     ],
     "answer": 1,
     "why": "Gradient accumulation sums gradients from several small batches, simulating the larger batch.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A lower rate does not average more examples per update.",
@@ -1257,6 +1276,7 @@
     ],
     "answer": 1,
     "why": "To predict the next word well, a model must encode meaning, syntax and facts in its vectors.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They are learned, not fixed.",
@@ -1371,6 +1391,7 @@
     ],
     "answer": 1,
     "why": "They are easy to confuse; RAG uses sentence or passage embeddings (chapter 9).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is the other way round: sentence embeddings go in the vector database.",
@@ -1390,6 +1411,7 @@
     ],
     "answer": 3,
     "why": "General models may never have seen internal acronyms; domain tuning teaches them.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Acronyms are what users type; removing them loses meaning.",
@@ -1470,6 +1492,7 @@
     ],
     "answer": 3,
     "why": "Hard negatives teach exactly the fine distinction the model is missing.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Next-token training does not teach query–passage matching.",
@@ -1593,6 +1616,7 @@
     ],
     "answer": 1,
     "why": "Filters detect edges, then textures, parts and objects in deeper layers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "CNNs keep the spatial layout.",
@@ -1631,6 +1655,7 @@
     ],
     "answer": 3,
     "why": "Output width = 6 − 3 + 1 = 4 in each direction.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the filter size.",
@@ -1669,6 +1694,7 @@
     ],
     "answer": 0,
     "why": "Repeated multiplication shrinks the signal over long spans.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1726,6 +1752,7 @@
     ],
     "answer": 2,
     "why": "Generating “student” can focus on “étudiant”, whatever the input length.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Attention needs the encoder's states.",
@@ -1802,6 +1829,7 @@
     ],
     "answer": 1,
     "why": "The fixed vector is a bottleneck for long inputs; attention lets each output look back at the relevant positions.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Any fixed vector still limits long inputs.",
