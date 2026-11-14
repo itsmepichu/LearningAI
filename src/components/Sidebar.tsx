@@ -27,7 +27,7 @@ export function Sidebar() {
         Overview
       </NavLink>
       <NavLink to="/guide" className="side-top">
-        How to use this manual
+        How to use this course
       </NavLink>
       <NavLink to="/practice" className="side-top">
         Practice

@@ -91,11 +91,11 @@ export function Layout() {
         <button ref={toggleRef} className="icon-btn nav-toggle" type="button" aria-label="Open contents" aria-expanded={navOpen} onClick={() => setNavOpen(true)}>
           <Menu size={18} />
         </button>
-        <Link to="/" className="brand" aria-label="LearningAI Enterprise AI Field Manual, home">
+        <Link to="/" className="brand" aria-label="LearningAI, home">
           <Logo width={28} height={28} />
           <span className="brand-txt">
             <b>LearningAI</b>{' '}
-            <small>Enterprise AI Field Manual</small>
+            <small>AI from foundations to production systems</small>
           </span>
         </Link>
         <nav className="crumbs" aria-label="Breadcrumb">

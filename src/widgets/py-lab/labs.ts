@@ -29,7 +29,7 @@ export interface LabBundle {
   grader: string
   /** What passing does and does not show. */
   proves: string
-  /** Other data the reader can switch to, such as the manual's own text. */
+  /** Other data the reader can switch to, such as the course's own text. */
   variants?: { label: string; files: Record<string, string> }[]
 }
 
@@ -68,7 +68,7 @@ def _report():
 _check("The JSON report matches the run", _report)
 `)
 
-/** Each project's English text, one short line per message, for the tiny model. Lower-cased, as the manual's own text is. */
+/** Each project's English text, one short line per message, for the tiny model. Lower-cased, as the course's own text is. */
 async function projectLines(p: Project, read: DataReader): Promise<string[]> {
   const corpus = (await loadCorpus(p, read)).docs.map((d) => d.body)
   const english = (rows: { language?: string; text: string }[]) => rows.filter((r) => r.language === 'en').map((r) => r.text)
@@ -106,7 +106,7 @@ async function bigramLab(p: Project, read: DataReader): Promise<LabBundle> {
     solution: BIGRAM_SCRIPT,
     grader: BIGRAM_GRADER,
     proves: 'Passing shows the lifecycle ran correctly: vocabulary from training data, a checkpoint chosen on validation loss, a baseline beaten, and a save that reloads. A lower toy loss says nothing about language understanding, or about any real model.',
-    variants: [{ label: 'The manual’s own text', files: MANUAL_FILES }],
+    variants: [{ label: 'The course’s own text', files: MANUAL_FILES }],
   }
 }
 

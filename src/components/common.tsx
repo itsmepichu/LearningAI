@@ -66,6 +66,6 @@ export function useNextTopic() {
 
 export function useDocumentTitle(title: string) {
   useEffect(() => {
-    document.title = title ? `${title} · LearningAI` : 'LearningAI · Enterprise AI Field Manual'
+    document.title = title ? `${title} · LearningAI` : 'LearningAI · AI from foundations to production systems'
   }, [title])
 }

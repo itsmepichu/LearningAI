@@ -8,7 +8,7 @@ import { ProgressRing } from '../components/Icons'
 import { useProgress } from '../store/progress'
 
 export function Guide() {
-  useDocumentTitle('How to use this manual')
+  useDocumentTitle('How to use this course')
   const html = usePage('home', 'how')
   const loc = useLocation()
   useEffect(() => {
@@ -17,7 +17,7 @@ export function Guide() {
   return (
     <div className="page-narrow">
       <span className="c-kicker">Start here</span>
-      <h1 className="page-h">How to use this manual</h1>
+      <h1 className="page-h">How to use this course</h1>
       {html && <HtmlContent html={html} className="read topic lai-topic" />}
     </div>
   )

@@ -1,8 +1,8 @@
 # LearningAI
 
-An Interactive AI Course For My DD: the **Enterprise AI Field Manual**, rebuilt as a front-end-only React app.
+An interactive AI course, rebuilt as a front-end-only React app. For beginner programmers and students who know basic Python; it ends at building professional AI applications.
 
-23 required chapters take a software engineer from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale, and on to multimodal models, small models, cost, product design and regulation. Every chapter has the same structure:
+23 required chapters take you from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale, and on to multimodal models, small models, cost, product design and regulation. Every chapter has the same structure:
 
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams

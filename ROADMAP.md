@@ -487,7 +487,18 @@ Every place that referred to Harbor as the only example, or to the chapter quiz.
 1. **Names.** Keep Bazrova, Navakosh Bank and Safarnova, or choose other fictional names (one-file change in `projects.json`).
 2. **Legacy widgets.** Whether to port the 59 v3 blocks left in `src/legacy/widgets.js`. They work and are not scheduled.
 
-Decided:
+Decided (14 November 2026, the revamp; see `project_revamp/README.md`):
+- **D1 Audience.** "For beginner programmers and students who know basic Python; it ends at building professional AI applications."
+- **D2 Practice model B.** One project inside the lesson. The four-project work moves to one workshop page per chapter. All existing notes are kept.
+- **D3 Lesson project.** Harbor in every lesson, except the 5 topics where Harbor's fit is `limited` (15.1, 15.8, 15.10, 19.4, 20.4), which use their best-fit project.
+- **D4 Question quota for new sections.** At least 6 choose-the-answer (3–5 of them `core`) and at least 4 interview questions. The existing bank is not trimmed.
+- **D5 Before you start.** A standalone, required `/start` page. Not a chapter, not a guide section.
+- **D6 Paper walkthroughs.** Four first, listed in phase 5. More only after reader feedback.
+- **D7 Generated files.** Not committed. Built automatically before dev and build, and after install.
+- **D8 Title.** The course is called "LearningAI". The name "Enterprise AI Field Manual" is retired, and "this manual" becomes "this course".
+- **D9 No tests, no checks.** No unit, end-to-end or accessibility tests, no CI, no content-rule checker. Existing tests and checker rules are removed in phase 0. The one exception is `npm run test` (compile and build), run once after all six phases are done, before the owner opens the pull request. Content rules stay as written conventions in the `CLAUDE.md` files.
+
+Decided earlier:
 - **Pilot review (6 November 2026):** chapters 1–3 against the rollout in chapters 4–18.
   - **Notes:** both lengths are kept. Pilot notes run about 30% longer (In practice: a median of 39 words against 28), and both are concrete and project-specific. The standard is the range they span: about 25–45 words for In practice and Try it, and 12–25 for Failure to avoid.
   - **Question mix:** 10–12 choose-the-answer and 8–10 interview questions per section, with about 3 fundamentals, 3 applied and 2 system design, as built. At least 4 of each section's choose-the-answer questions must be scenario or calculation questions; 75% of the rollout's are plain concept questions.

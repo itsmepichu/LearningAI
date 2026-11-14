@@ -197,7 +197,7 @@ kbd{font-family:var(--f-mono);border:1px solid var(--rule-2);border-bottom-width
 .ch-card-b small{font-size:var(--fs-2xs);color:var(--muted)}
 .mini-bar{display:block;height:3px;border-radius:2px;background:var(--sunk);overflow:hidden;margin-top:4px}
 .mini-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent));transition:width .5s var(--ease)}
-.label-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.label-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:14px}
 .label-grid>div{padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--rule)}
 .label-grid p{font-size:.84rem;color:var(--muted);margin-top:8px;line-height:1.5}
 .labels-sec .small{display:flex;gap:6px;align-items:center}

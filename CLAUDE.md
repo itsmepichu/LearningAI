@@ -18,7 +18,8 @@
 - Edit published questions with `content_tools.revise_checks(chapter, edits)`: it changes text, options, explanations, kind or follow-up by id, and refuses to change an answer or the number of options.
 - `scripts/import_legacy.py` was a one-time import from the v3 single file. Do not re-run it over edited content.
 - After editing topic HTML or adding topics, run `python3 scripts/refresh_search.py`, which rebuilds the search text in `src/content/search.json` from the pages and adds entries for new topics.
-- The course is one required sequence: every chapter, section and topic is a must-learn for an expert AI/ML engineer. Do not add learning paths, role-based tracks or wording that makes a topic optional.
+- Audience: For beginner programmers and students who know basic Python; it ends at building professional AI applications.
+- The course is one required sequence: every chapter, section and topic is required; the course takes a beginner to professional AI application building. Do not add learning paths, role-based tracks or wording that makes a topic optional.
 - Progress totals count the chapters and the capstone (`courseTopics` in `src/data/course.ts`), not the appendices.
 - Keep the course's standards:
   - Label simulations as simulations, and give illustrative numbers as illustrative.
@@ -100,7 +101,6 @@
   - Embed it as `<div data-widget="colab-guide" data-props='{"guide":"<id>"}'>` inside a `figure.fig.colab` (its label says it runs in Colab, not in the browser) with `id="colab-<id>"` (add it to `idmap.json`) and the `Colab · GPU` tag. Link to it from labs and tool cards with `#colab-<id>`.
   - Size it for a free T4: float16, not bfloat16, and models that fit 16 GB. Pin what it installs or clones (a commit, `==` versions), and say in `limits` what the run does and does not show.
   - Put the selected project's data into the code, unless the guide is `neutral`. The reader runs the notebook in their own Colab; the course does not run guides in Colab.
-  - Before a guide ships, run its code on a CPU: `node scripts/colab-notebooks.ts /tmp/nb`, then `python scripts/check_colab_guides.py /tmp/nb` in an environment with torch, transformers, peft, accelerate, tokenizers, tiktoken, numpy, matplotlib and openai. It uses tiny stand-ins (a tiny local model, nanoGPT at tiny size, a mock vLLM); add one for anything a CPU cannot run.
   - Work that needs several GPUs at once (DeepSpeed, Megatron-LM, a full nanochat run) is reading, tagged `Needs external compute`.
 - 3D (three.js / @react-three/fiber):
   - Mount only near the viewport.
@@ -117,17 +117,11 @@
 - Do not add Tailwind or another utility framework without a prefix. The legacy SVG and figure classes (`grid`, `row`, `fill`, `box`, `fig`, `out`, …) would clash with it.
 
 ## Checks
-Before each commit:
+This is a UI-only project. Do not run any test cases: no `npm run test:unit`, no `npm run test:e2e`, no axe check, no `scripts/check_colab_guides.py`, and no other test suite or test file, even when another rule above mentions tests.
+
+Before each commit, run only:
 
 ```bash
 npm run typecheck
-npm run test:unit
 npm run build
-```
-
-Run the end-to-end test only when the owner asks for it. It takes several minutes, so run it in the background when asked.
-
-```bash
-npx vite preview --port 4173 &
-npm run test:e2e   # must print ALL CHECKS PASSED; includes the axe check in tests/axe.cjs
 ```
