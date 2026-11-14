@@ -79,6 +79,13 @@
             "calculation",
             "scenario"
           ]
+        },
+        "tier": {
+          "enum": [
+            "core",
+            "extended"
+          ],
+          "description": "core questions are the topic's quick check (3 to 5 per section). Missing means extended."
         }
       }
     },

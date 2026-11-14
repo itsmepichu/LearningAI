@@ -87,11 +87,11 @@ export const totals = {
   interview: checkSummary.totals.interview,
 }
 
-export interface SectionCount { mcq: number; interview: number }
+export interface SectionCount { mcq: number; interview: number; core: number }
 const summaryChapters = checkSummary.chapters as Record<string, SectionCount & { sections: Record<string, SectionCount> }>
-export const chapterCheckCount = (chapterId: string): SectionCount => summaryChapters[chapterId] ?? { mcq: 0, interview: 0 }
+export const chapterCheckCount = (chapterId: string): SectionCount => summaryChapters[chapterId] ?? { mcq: 0, interview: 0, core: 0 }
 export const sectionCheckCount = (chapterId: string, topicId: string): SectionCount =>
-  summaryChapters[chapterId]?.sections[topicId] ?? { mcq: 0, interview: 0 }
+  summaryChapters[chapterId]?.sections[topicId] ?? { mcq: 0, interview: 0, core: 0 }
 export const chaptersWithChecks = () => chapters.filter((c) => summaryChapters[c.id])
 
 /** Lazy loaders for every HTML fragment, keyed by "<chapter>/<file>". */

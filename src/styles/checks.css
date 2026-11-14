@@ -248,3 +248,12 @@ a.hm-check:hover{color:var(--accent)}
 .ws-explorer[open]>summary{margin-bottom:10px}
 .ws-evidence{max-width:880px}
 .workcard .checkcard-ic{background:linear-gradient(135deg,var(--ok-soft),var(--accent-soft));color:var(--ok)}
+
+/* ---------- quick check, core badge ---------- */
+.badge.core{background:var(--accent);color:var(--surface)}
+.quickcheck{max-width:880px;margin-top:28px;padding:16px 18px;border:1px solid var(--rule);border-top:3px solid var(--accent);border-radius:var(--r-3);background:var(--surface);box-shadow:var(--sh-1)}
+.qc-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.qc-head h2{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:0;font-size:1.15rem}
+.qc-head h2 small{font-weight:400;color:var(--muted);font-size:.84rem}
+.qc-done{display:inline-flex;gap:6px;align-items:center;color:var(--ok);font-weight:600;font-size:.9rem}
+.qc-wait{min-height:120px}

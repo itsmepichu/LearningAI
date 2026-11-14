@@ -16,6 +16,7 @@
 //   * New choose-the-answer options are shuffled with a seed taken from the question id, so the right answer's
 //     position varies. Published questions are never reshuffled (saved answers are option indices).
 //   * reviseChecks edits published questions by id and refuses to change an answer or the number of options.
+//     reviseChecks('c1', { 'c1-1-m03': { tier: 'core' } }) marks a question core and adds one line to the file; "extended" clears it.
 import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import { mulberry } from '../src/widgets/kit/random.ts'
@@ -149,7 +150,23 @@ export function topicText(chapter, topic) {
   return s.replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim()
 }
 
-const REVISABLE = new Set(['q', 'options', 'why', 'distractors', 'kind', 'followUp', 'covers'])
+const REVISABLE = new Set(['q', 'options', 'why', 'distractors', 'kind', 'followUp', 'covers', 'tier'])
+
+/**
+ * Sets or clears `tier` on a choose-the-answer question without touching any other line of the file: the key goes just before
+ * `kind` (else `why`), so the diff is one added line. "core" is stored; "extended" is the default, so it removes the key.
+ */
+function placeTier(q, tier) {
+  assert(Array.isArray(q.options), q.id, 'only choose-the-answer questions have a tier')
+  assert(tier === 'core' || tier === 'extended', q.id, 'tier is "core" or "extended"')
+  const entries = Object.entries(q).filter(([k]) => k !== 'tier')
+  if (tier === 'core') {
+    const at = entries.findIndex(([k]) => k === 'kind') >= 0 ? entries.findIndex(([k]) => k === 'kind') : entries.findIndex(([k]) => k === 'why')
+    entries.splice(at, 0, ['tier', 'core'])
+  }
+  for (const k of Object.keys(q)) delete q[k]
+  Object.assign(q, Object.fromEntries(entries))
+}
 
 /**
  * Edit published questions in place, by id: reviseChecks('c1', { 'c1-2-m03': { options: [...], distractors: [...] }, 'c1-2-i04': { followUp: '...' } }).
@@ -168,7 +185,9 @@ export function reviseChecks(chapter, edits) {
     const bad = Object.keys(change).filter((k) => !REVISABLE.has(k))
     assert(!bad.length, `${qid}: cannot revise ${bad.sort()} (ids, answers and levels stay as published)`)
     if (change.options) assert(change.options.length === q.options.length, `${qid}: the number of options must not change`)
-    Object.assign(q, change)
+    const { tier, ...rest } = change
+    Object.assign(q, rest)
+    if (tier !== undefined) placeTier(q, tier)
     if (q.distractors) {
       const right = new Set(asList(q.answer))
       assert(q.distractors.length === q.options.length, `${qid}: distractors must align with options`)

@@ -18,6 +18,8 @@ export function ChapterCheckPage() {
   const [mode, setMode] = useState<Mode>('practice')
   const [allProjects, setAllProjects] = useState(false)
   const [open, setOpen] = useState<Record<string, boolean>>({})
+  // The questions still unanswered when the reader turned the filter on, so an answered one stays on screen with its feedback.
+  const [only, setOnly] = useState<Set<string> | null>(null)
   const { project } = useActiveProject()
   const answers = useProgress((s) => s.answers)
   const ratings = useProgress((s) => s.ratings)
@@ -60,6 +62,15 @@ export function ChapterCheckPage() {
 
   if (!ch || ch.kind !== 'chapter') return <NotFound />
   const count = chapterCheckCount(ch.id)
+  const toggleOnly = (on: boolean) => {
+    if (!on || !checks) return setOnly(null)
+    const ids = new Set<string>()
+    for (const t of ch.topics) {
+      for (const q of checks[t.id]?.mcq ?? []) if (answers[q.id] === undefined) ids.add(q.id)
+      for (const q of visibleInterview(checks[t.id], project, allProjects)) if (!ratings[q.id]) ids.add(q.id)
+    }
+    setOnly(ids)
+  }
 
   return (
     <div className="check-page">
@@ -68,7 +79,7 @@ export function ChapterCheckPage() {
         <span className="c-kicker">{partOf(ch)?.label} · Chapter check</span>
         <h1 className="page-h"><ListChecks size={28} /> Chapter {ch.num} check</h1>
         <p className="muted lead">
-          {count.mcq} choose-the-answer and {count.interview} interview questions, grouped by section. Your answers and ratings are saved in this browser and count on the{' '}
+          {count.mcq} choose-the-answer ({count.core} core, shown first) and {count.interview} interview questions, grouped by section. Your answers and ratings are saved in this browser and count on the{' '}
           <Link to="/practice">Practice page</Link> too.
         </p>
         <div className="ck-bar">
@@ -76,12 +87,15 @@ export function ChapterCheckPage() {
             <button type="button" role="radio" aria-checked={mode === 'practice'} tabIndex={mode === 'practice' ? 0 : -1} className={mode === 'practice' ? 'on' : ''} onClick={() => setMode('practice')}>
               Practice <small>feedback after each answer</small>
             </button>
-            <button type="button" role="radio" aria-checked={mode === 'check'} tabIndex={mode === 'check' ? 0 : -1} className={mode === 'check' ? 'on' : ''} onClick={() => setMode('check')}>
+            <button type="button" role="radio" aria-checked={mode === 'check'} tabIndex={mode === 'check' ? 0 : -1} className={mode === 'check' ? 'on' : ''} onClick={() => { setMode('check'); setOnly(null) }}>
               Check <small>answer a section, then score it</small>
             </button>
           </div>
           <label className="tgl">
             <input type="checkbox" checked={allProjects} onChange={(e) => setAllProjects(e.target.checked)} /> Show interview questions framed in all projects
+          </label>
+          <label className="tgl">
+            <input type="checkbox" checked={!!only} disabled={mode === 'check' || !checks} onChange={(e) => toggleOnly(e.target.checked)} /> Not answered only
           </label>
           <ProjectFramingNote />
           {totals && (
@@ -140,6 +154,7 @@ export function ChapterCheckPage() {
               allProjects={allProjects}
               open={!!open[t.id]}
               onToggle={() => setOpen((o) => ({ ...o, [t.id]: !o[t.id] }))}
+              only={only}
             />
           ))}
         </div>

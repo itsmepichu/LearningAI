@@ -77,20 +77,22 @@ const extra = existsSync(extraFile) ? readJson(extraFile) : {}
 writeGenerated('idmap.json', { ...idmap, ...extra })
 
 // ---- check-summary.json (question counts)
-const summary = { totals: { mcq: 0, interview: 0 }, chapters: {} }
+const summary = { totals: { mcq: 0, interview: 0, core: 0 }, chapters: {} }
 for (const c of m.chapters) {
   const file = join(CONTENT, 'checks', `${c.id}.json`)
   if (!existsSync(file)) continue
-  const ch = { mcq: 0, interview: 0, sections: {} }
+  const ch = { mcq: 0, interview: 0, core: 0, sections: {} }
   for (const [tid, sec] of Object.entries(readJson(file))) {
-    const s = { mcq: (sec.mcq ?? []).length, interview: (sec.interview ?? []).length }
+    const s = { mcq: (sec.mcq ?? []).length, interview: (sec.interview ?? []).length, core: (sec.mcq ?? []).filter((q) => q.tier === 'core').length }
     ch.sections[tid] = s
     ch.mcq += s.mcq
     ch.interview += s.interview
+    ch.core += s.core
   }
   summary.chapters[c.id] = ch
   summary.totals.mcq += ch.mcq
   summary.totals.interview += ch.interview
+  summary.totals.core += ch.core
 }
 writeGenerated('check-summary.json', summary, 1)
 

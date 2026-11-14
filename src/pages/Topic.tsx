@@ -6,6 +6,7 @@ import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, sh
 import { ExampleDataBanner, PracticeBlock, useChapterPractice } from '../components/Practice'
 import { hasWorkshop, workshopPath } from '../data/workshop'
 import { HtmlContent } from '../components/HtmlContent'
+import { QuickCheck } from '../components/QuickCheck'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
@@ -167,6 +168,7 @@ export function TopicPage() {
             <HtmlContent key={topic.id} html={html} className="topic lai-topic" slots={{ practice: <PracticeBlock practice={practice} chapterId={chapter.id} topicId={topic.id} /> }} />
           )}
 
+          {html !== null && <QuickCheck chapterId={chapter.id} topicId={topic.id} />}
           {html !== null && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
 
           {html !== null && !!topic.outcomes?.length && (
@@ -244,14 +246,15 @@ function MarkLink({ mark, className }: { mark: Mark; className?: string }) {
 function SectionCheckLink({ chapterId, topicId, tn }: { chapterId: string; topicId: string; tn: string }) {
   const n = sectionCheckCount(chapterId, topicId)
   const total = n.mcq + n.interview
+  const more = n.mcq - n.core
   return (
     <Link to={`/${chapterId}/check#${topicId}`} className="seccheck">
       <ListChecks size={18} />
       <span>
-        <b>Check section {tn}</b>
+        <b>{n.core ? `More practice for section ${tn}` : `Check section ${tn}`}</b>
         <small>
           {total
-            ? `${n.mcq} choose-the-answer · ${n.interview} interview ${n.interview === 1 ? 'question' : 'questions'}`
+            ? `${n.core ? `${more} extended ${more === 1 ? 'question' : 'questions'}` : `${n.mcq} choose-the-answer`} · ${n.interview} interview ${n.interview === 1 ? 'question' : 'questions'}`
             : 'Questions for this section are being written'}
         </small>
       </span>
