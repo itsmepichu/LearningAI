@@ -67,7 +67,8 @@
     "app-a",
     "app-b",
     "app-d",
-    "app-e"
+    "app-e",
+    "app-f"
    ]
   }
  ],
@@ -2603,6 +2604,48 @@
       "real",
       "sim"
      ]
+    }
+   ],
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": false
+  },
+  {
+   "id": "app-f",
+   "num": "F",
+   "title": "Paper walkthroughs",
+   "lede": "Four papers the course builds on, read in plain words: what problem each set out to solve, how its method works, the numbers it reports, and what those numbers do not show.",
+   "kind": "appendix",
+   "part": "res",
+   "www": {},
+   "topics": [
+    {
+     "id": "app-f-transformer",
+     "tn": "F.1",
+     "title": "Attention Is All You Need (Vaswani et al., 2017)",
+     "short": "The Transformer paper",
+     "tags": []
+    },
+    {
+     "id": "app-f-gpt3",
+     "tn": "F.2",
+     "title": "Language Models are Few-Shot Learners (Brown et al., 2020)",
+     "short": "The GPT-3 paper",
+     "tags": []
+    },
+    {
+     "id": "app-f-rag",
+     "tn": "F.3",
+     "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)",
+     "short": "The RAG paper",
+     "tags": []
+    },
+    {
+     "id": "app-f-lost",
+     "tn": "F.4",
+     "title": "Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023)",
+     "short": "The Lost in the Middle paper",
+     "tags": []
     }
    ],
    "hasIntro": false,

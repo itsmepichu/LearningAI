@@ -149,7 +149,7 @@ export function TopicPage() {
         )}
         <p>
           {hasWorkshop(chapter.id) && <Link to={workshopPath(chapter.id, topic.id)}><FlaskConical size={14} /> Chapter {chapter.num} workshop</Link>}
-          <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>
+          {chapter.kind !== 'appendix' && <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>}
         </p>
       </details>
 
@@ -171,7 +171,7 @@ export function TopicPage() {
           )}
 
           {html !== null && <QuickCheck chapterId={chapter.id} topicId={topic.id} />}
-          {html !== null && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
+          {html !== null && chapter.kind !== 'appendix' && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
 
           {html !== null && !!topic.outcomes?.length && (
             <section className="outcomes recap" aria-label="Recap">
@@ -223,9 +223,11 @@ export function TopicPage() {
               <span><FlaskConical size={13} /> Chapter {chapter.num} workshop</span> <ArrowRight size={13} />
             </Link>
           )}
-          <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>
-            <span><ListChecks size={13} /> Check this section</span> <ArrowRight size={13} />
-          </Link>
+          {chapter.kind !== 'appendix' && (
+                      <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>
+              <span><ListChecks size={13} /> Check this section</span> <ArrowRight size={13} />
+            </Link>
+          )}
         </aside>
       </div>
     </div>

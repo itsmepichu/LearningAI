@@ -1,0 +1,34 @@
+<p>This page walks through <a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> in plain words. Section and table numbers point into the paper, so you can check every number. It adds nothing the paper did not report.</p>
+
+<h3>1. The problem</h3>
+<p>In 2017 the best translation systems read a sentence with recurrent networks, which handle one word after another. That order is built in, so the work for one sentence cannot be spread across many chips, and training slows down on long sentences (section 1). Convolutional models avoid the waiting, but the number of steps needed to connect two far-apart words grows with their distance: in a straight line for one system and as a logarithm for another (section 2). The authors ask whether they can drop both and use only attention.</p>
+
+<h3>2. The method, in steps</h3>
+<p>Scroll through the model one stage at a time. The diagram follows the step in the middle of the screen.</p>
+<div class="walkthru" id="walk-paper-transformer"><div data-widget="walkthrough" data-props='{"story":"paper-transformer"}'></div></div>
+<p>Table 1 of the paper compares the three designs. Self-attention connects any two words in one step and needs no waiting between positions. The price is that its work grows with the square of the sentence length, which the authors judge fine for sentence-sized inputs (section 4).</p>
+
+<h3>3. What the paper reports</h3>
+<p>Training used the WMT 2014 English–German pairs (about 4.5 million sentences) and English–French (36 million), on one machine with 8 NVIDIA P100 GPUs. The base model trained for 12 hours and the big model for 3.5 days (sections 5.1 and 5.2). Table 2 gives the test scores on newstest2014, in BLEU (higher is better):</p>
+<div class="tw"><table><caption>Table 2 of the paper, selected rows</caption><thead><tr><th scope="col">Model</th><th scope="col">English→German</th><th scope="col">English→French</th><th scope="col">Training cost</th></tr></thead><tbody>
+<tr><th scope="row">Transformer (base)</th><td>27.3</td><td>38.1</td><td>3.3 × 10¹⁸ FLOPs</td></tr>
+<tr><th scope="row">Transformer (big)</th><td>28.4</td><td>41.8</td><td>2.3 × 10¹⁹ FLOPs</td></tr>
+<tr><th scope="row">ConvS2S, one model</th><td>25.16</td><td>40.46</td><td>listed in the paper</td></tr>
+<tr><th scope="row">ConvS2S, ensemble</th><td>26.36</td><td>41.29</td><td>1.2 × 10²¹ FLOPs (English→French)</td></tr>
+</tbody></table></div>
+<p>The ablations in Table 3 change one thing at a time on a development set. Using a single attention head scored 0.9 BLEU below the base model, and too many heads also hurt. A learned position table scored almost the same as the fixed sine pattern (row E). Section 6.3 reuses a smaller model for English constituency parsing and reports an F1 of 91.3 when trained on one small corpus and 92.7 with extra unlabelled data (Table 4).</p>
+
+<h3>4. What it does and does not show</h3>
+<ul>
+<li><b>Shows:</b> on these two translation tasks, a model built only from attention scored above the earlier single models in Table 2, and above the earlier ensembles on English→German, at a fraction of the training compute the paper lists for them.</li>
+<li><b>Shows:</b> the design trains in parallel across positions, which is why the base model needed only 12 hours.</li>
+<li><b>Does not show:</b> anything about chat, instruction following or long documents. The paper evaluates translation and one parsing task, with models that have a few hundred million parameters at most (Table 3).</li>
+<li><b>Does not show:</b> that attention scales to very long inputs. The authors list local, restricted attention for large inputs such as images, audio and video as future work (section 7).</li>
+<li>The compute column is the authors' own estimate, so compare it as an order of magnitude, not as a measurement.</li>
+</ul>
+
+<h3>5. Where this course uses it</h3>
+<p>Topic <a href="#c5-2">5.2</a> teaches the attention step in your own words and numbers, including the <a class="gl" href="#gl-causal-mask">causal mask</a> of section 3.2.3. Topic <a href="#c5-3">5.3</a> covers the positions, residual paths and feed-forward layers from sections 3.1, 3.3 and 3.5. Topic <a href="#c5-4">5.4</a> places this encoder–decoder design next to the encoder-only and decoder-only variants that came later. Topic <a href="#c6-7">6.7</a> trains a small model with the same building blocks.</p>
+
+<h3>6. Read the paper</h3>
+<p><a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a>. Start with sections 3.1 and 3.2, then Table 2. You can skip the formulas on a first read: the figures show the same structure.</p>
