@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LearningAI manifest (src/content/manifest.json)",
+  "description": "Course structure: parts, chapters and topics. A topic's figure, interactive and word counts are generated, not written here.",
+  "type": "object",
+  "required": ["parts", "chapters"],
+  "properties": {
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "title", "chapters"],
+        "properties": {
+          "id": { "type": "string", "description": "p1 to p5, or res for the capstone and appendices." },
+          "label": { "type": "string", "description": "For example \"Part I\"." },
+          "title": { "type": "string" },
+          "chapters": { "type": "array", "items": { "type": "string" }, "description": "Chapter ids, in order." }
+        }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "num", "title", "lede", "kind", "part", "www", "topics", "hasIntro", "hasOutro", "hasLab"],
+        "properties": {
+          "id": { "type": "string", "description": "Never rename: saved progress and links use it." },
+          "num": { "type": "string", "description": "Display number, for example \"07\"." },
+          "title": { "type": "string" },
+          "lede": { "type": "string", "description": "One or two sentences under the title." },
+          "kind": { "enum": ["chapter", "capstone", "appendix"] },
+          "part": { "type": "string", "description": "A part id from \"parts\"." },
+          "www": {
+            "type": "object",
+            "description": "The three opening panels, as HTML.",
+            "properties": {
+              "what": { "type": "string" },
+              "why": { "type": "string" },
+              "where": { "type": "string" }
+            }
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "tn", "title", "tags"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "description": "Never rename: the page file, questions and saved progress use it." },
+                "tn": { "type": "string", "description": "Display number, for example \"7.3\"." },
+                "title": { "type": "string" },
+                "tags": { "type": "array", "items": { "enum": ["cpu", "real", "sim", "gpu"] }, "description": "Evidence tags shown on the topic." }
+              }
+            }
+          },
+          "hasIntro": { "type": "boolean", "description": "pages/<chapter>/_intro.html exists." },
+          "hasOutro": { "type": "boolean", "description": "pages/<chapter>/_outro.html exists." },
+          "hasLab": { "type": "boolean", "description": "pages/<chapter>/_lab.html exists." }
+        }
+      }
+    }
+  }
+}

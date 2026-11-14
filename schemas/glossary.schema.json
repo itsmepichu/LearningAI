@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LearningAI glossary (src/content/glossary.json)",
+  "description": "id -> term. Mark a term in a topic with <a class=\"gl\" href=\"#gl-<id>\">.",
+  "type": "object",
+  "propertyNames": { "pattern": "^[a-z0-9-]+$" },
+  "additionalProperties": {
+    "type": "object",
+    "required": ["term", "def", "topic"],
+    "properties": {
+      "term": { "type": "string" },
+      "def": { "type": "string", "description": "A plain-words definition." },
+      "topic": { "type": "string", "description": "The id of the topic that teaches the term." },
+      "aliases": { "type": "array", "items": { "type": "string" } }
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LearningAI chapter checks (src/content/checks/<chapter>.json)",
+  "description": "topicId -> section with choose-the-answer (mcq) and interview questions. Ids are stable: never reuse, renumber or reorder published questions.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "mcq": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/mcq"
+        }
+      },
+      "interview": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/interview"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "mcq": {
+      "type": "object",
+      "required": [
+        "id",
+        "q",
+        "options",
+        "answer",
+        "why"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "<topic>-m<nn>, for example c5-3-m07."
+        },
+        "q": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "description": "Never reorder a published question's options."
+        },
+        "answer": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          ],
+          "description": "Index of the right option, or an array of indices for choose-all questions."
+        },
+        "why": {
+          "type": "string",
+          "description": "Why the right answer is right."
+        },
+        "distractors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "One explanation per option, aligned with options; \"\" for the right answer."
+        },
+        "kind": {
+          "enum": [
+            "concept",
+            "calculation",
+            "scenario"
+          ]
+        }
+      }
+    },
+    "interview": {
+      "type": "object",
+      "required": [
+        "id",
+        "q",
+        "level",
+        "covers"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "<topic>-i<nn>, for example c5-3-i04."
+        },
+        "q": {
+          "type": "string"
+        },
+        "level": {
+          "enum": [
+            "fundamentals",
+            "applied",
+            "system-design"
+          ]
+        },
+        "covers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The checklist of what a strong answer covers."
+        },
+        "followUp": {
+          "type": "string",
+          "description": "The question an interviewer would ask next."
+        },
+        "project": {
+          "enum": [
+            "harbor",
+            "store",
+            "bank",
+            "travel"
+          ],
+          "description": "Set when the question is framed in a project (at most 2 per section)."
+        }
+      }
+    }
+  }
+}

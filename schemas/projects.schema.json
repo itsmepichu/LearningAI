@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LearningAI example projects (src/content/projects.json)",
+  "description": "The four fictional example projects and their synthetic datasets. Company names must be fictional.",
+  "type": "object",
+  "required": ["default", "projects"],
+  "properties": {
+    "note": { "type": "string" },
+    "default": { "enum": ["harbor", "store", "bank", "travel"] },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "company", "assistant", "datasets"],
+        "properties": {
+          "id": { "enum": ["harbor", "store", "bank", "travel"] },
+          "label": { "type": "string" },
+          "short": { "type": "string" },
+          "kind": { "type": "string" },
+          "company": { "type": "string", "description": "Fictional. Never a real company's name." },
+          "assistant": { "type": "string" },
+          "about": { "type": "string" },
+          "scale": { "type": "string", "description": "Illustrative figures; say so where they appear." },
+          "teaches": { "type": "string" },
+          "accent": { "type": "string" },
+          "icon": { "type": "string" },
+          "datasets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["file", "what"],
+              "properties": {
+                "file": { "type": "string", "description": "A file in public/datasets/<project>/." },
+                "what": { "type": "string", "description": "What the file holds." },
+                "notes": { "type": "string", "description": "The fields and the traps on purpose." }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
