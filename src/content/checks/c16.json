@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Limit what a manipulated model can do; prompts alone are not a security boundary.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Prompts reduce but do not stop injection.",
@@ -31,6 +32,7 @@
     ],
     "answer": 0,
     "why": "The user may be the victim, not the attacker.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -50,6 +52,7 @@
     ],
     "answer": 1,
     "why": "Classifiers and prompts reduce success rates but do not eliminate them.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Size does not remove the risk.",
@@ -149,6 +152,7 @@
     ],
     "answer": 1,
     "why": "The person confirms the exact action.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Prompts are not controls.",
@@ -225,6 +229,7 @@
     ],
     "answer": 3,
     "why": "The 8% that pass, plus new variants, can still send email without a human check.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Approvals limit the damage of a successful injection.",
@@ -364,6 +369,7 @@
     ],
     "answer": 3,
     "why": "Workload identities are short-lived and attributable.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Internal services still need identity.",
@@ -383,6 +389,7 @@
     ],
     "answer": 0,
     "why": "Use a policy engine such as OPA or Cedar for consistency.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -406,6 +413,7 @@
      3
     ],
     "why": "Credentials do not belong in the sandbox.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Never put production credentials in a sandbox.",
@@ -425,6 +433,7 @@
     ],
     "answer": 2,
     "why": "Fix: tools attach credentials from the vault.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Users can ask the model to repeat them.",
@@ -444,6 +453,7 @@
     ],
     "answer": 2,
     "why": "Each component gets only what its job needs.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Too broad.",
@@ -683,6 +693,7 @@
     ],
     "answer": 1,
     "why": "Cache keys must include tenant and access scope.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Primary databases usually get tenant controls first.",
@@ -702,6 +713,7 @@
     ],
     "answer": 1,
     "why": "Client-supplied tenant IDs can be forged.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Users can write anything.",
@@ -740,6 +752,7 @@
     ],
     "answer": 3,
     "why": "Isolate prefix caches per tenant for sensitive workloads.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Timing can reveal it.",
@@ -797,6 +810,7 @@
     ],
     "answer": 1,
     "why": "Each cell of the matrix is a test.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Too late.",
@@ -835,6 +849,7 @@
     ],
     "answer": 3,
     "why": "Every store and key needs the tenant dimension.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The cache is another surface.",
@@ -1037,6 +1052,7 @@
     ],
     "answer": 3,
     "why": "Controls go at each boundary.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Boundaries are about trust, not buildings.",
@@ -1079,6 +1095,7 @@
      3
     ],
     "why": "Remove at least one leg to break the attack.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1098,6 +1115,7 @@
     ],
     "answer": 2,
     "why": "That removes the exfiltration channel.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not a control.",
@@ -1117,6 +1135,7 @@
     ],
     "answer": 3,
     "why": "Controls: source trust levels, scanning, data/instruction separation and capability limits.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not a security threat.",
@@ -1155,6 +1174,7 @@
     ],
     "answer": 0,
     "why": "Indirect injection uses content the model reads.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1355,6 +1375,7 @@
     ],
     "answer": 3,
     "why": "Public, internal, confidential and regulated data get different handling.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unrelated.",
@@ -1374,6 +1395,7 @@
     ],
     "answer": 3,
     "why": "Pattern redaction is a baseline, not a guarantee.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Patterns do not catch names in any language.",
@@ -1393,6 +1415,7 @@
     ],
     "answer": 3,
     "why": "Derived data is still sensitive.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Quantising does not anonymise.",
@@ -1416,6 +1439,7 @@
      3
     ],
     "why": "Derived models may need retraining or per-tenant adapters.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1511,6 +1535,7 @@
     ],
     "answer": 1,
     "why": "Derived data can repeat personal data verbatim.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It contains a phone number.",
@@ -1694,6 +1719,7 @@
     ],
     "answer": 0,
     "why": "Legal review per model, recorded in an inventory.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1713,6 +1739,7 @@
     ],
     "answer": 0,
     "why": "Malicious serialisation is a real supply-chain risk.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1732,6 +1759,7 @@
     ],
     "answer": 2,
     "why": "Names and tags can change.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Latest can change.",
@@ -1770,6 +1798,7 @@
     ],
     "answer": 3,
     "why": "Review and pin custom code, or avoid it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Code still runs.",
@@ -1907,6 +1936,7 @@
     ],
     "answer": 0,
     "why": "Pinned, mirrored and signed artefacts cannot change silently.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2032,6 +2062,7 @@
     ],
     "answer": 2,
     "why": "Attack the system, not just the model.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is load testing.",
@@ -2074,6 +2105,7 @@
     ],
     "answer": 2,
     "why": "Regression suites keep fixes in place.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They are lost.",
@@ -2112,6 +2144,7 @@
     ],
     "answer": 0,
     "why": "Contain first; investigate with preserved evidence.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2169,6 +2202,7 @@
     ],
     "answer": 0,
     "why": "Red teams find problems; they cannot prove absence.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2230,6 +2264,7 @@
     ],
     "answer": 3,
     "why": "180 ÷ 200 = 90%; 30 ÷ 1,000 = 3%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That reads 30 of 1,000 as 30%.",
@@ -2379,6 +2414,7 @@
     ],
     "answer": 0,
     "why": "Involve legal and compliance early; this is not legal advice.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2398,6 +2434,7 @@
     ],
     "answer": 2,
     "why": "Obligations phase in over several years; check the current timeline.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is ISO/IEC 42001.",
@@ -2417,6 +2454,7 @@
     ],
     "answer": 3,
     "why": "Plus a Generative AI Profile.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is ISO/IEC 42001.",
@@ -2474,6 +2512,7 @@
     ],
     "answer": 2,
     "why": "Requirements must be mapped to controls and evidenced.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It is not.",
@@ -2569,6 +2608,7 @@
     ],
     "answer": 0,
     "why": "Employment is a named high-risk area with specific obligations.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
