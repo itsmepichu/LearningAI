@@ -13,7 +13,7 @@ let indexPromise: Promise<Index> | null = null
 function loadIndex(): Promise<Index> {
   indexPromise ??= Promise.all([
     import('minisearch'),
-    import('../content/search.json'),
+    import('../content/generated/search.json'),
     Promise.all(practiceChapterIds().map((c) => loadPractice(c).then((d) => [c, d] as const))),
   ]).then(([m, data, practice]) => {
     const docs = ((data.default ?? data) as Doc[]).map((d) => ({ ...d, topic: d.id }))

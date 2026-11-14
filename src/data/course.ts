@@ -1,13 +1,18 @@
 import manifest from '../content/manifest.json'
-import idmap from '../content/idmap.json'
-import checkSummary from '../content/checks/summary.json'
+import idmap from '../content/generated/idmap.json'
+import checkSummary from '../content/generated/check-summary.json'
+import topicStats from '../content/generated/topic-stats.json'
 
 export type Tag = 'cpu' | 'real' | 'sim' | 'gpu'
-export interface Topic {
+/** A topic as the manifest authors it. */
+interface TopicEntry {
   id: string
   tn: string
   title: string
   tags: Tag[]
+}
+/** A topic with the counts generated from its HTML (`npm run generate`): figures, interactive figures and words. */
+export interface Topic extends TopicEntry {
   figures: number
   interactive: number
   words: number
@@ -28,7 +33,11 @@ export interface Chapter {
 export interface Part { id: string; label: string; title: string; chapters: string[] }
 
 export const parts = manifest.parts as Part[]
-export const chapters = manifest.chapters as Chapter[]
+const stats = topicStats as Record<string, Pick<Topic, 'figures' | 'interactive' | 'words'>>
+export const chapters = (manifest.chapters as unknown as (Omit<Chapter, 'topics'> & { topics: TopicEntry[] })[]).map((c) => ({
+  ...c,
+  topics: c.topics.map((t) => ({ ...t, ...(stats[t.id] ?? { figures: 0, interactive: 0, words: 0 }) })),
+})) as Chapter[]
 export const courseChapters = chapters.filter((c) => c.kind === 'chapter')
 
 const chapterById = new Map(chapters.map((c) => [c.id, c]))

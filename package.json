@@ -4,13 +4,16 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/content-summary.mjs",
+    "generate": "node scripts/generate.mjs",
+    "predev": "npm run generate",
     "dev": "vite",
-    "prebuild": "node scripts/content-summary.mjs",
+    "prebuild": "npm run generate",
     "build": "vite build",
     "preview": "vite preview",
     "datasets": "python3 scripts/make_datasets.py",
-    "test": "tsc --noEmit && npm run build"
+    "test": "tsc --noEmit && npm run build",
+    "pretest": "npm run generate",
+    "postinstall": "npm run generate"
   },
   "dependencies": {
     "@fontsource/ibm-plex-sans": "^5.3.0",

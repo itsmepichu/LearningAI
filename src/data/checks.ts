@@ -36,7 +36,7 @@ export function isCorrect(q: Mcq, given: number | number[] | undefined): boolean
   return want.size === got.size && [...want].every((a) => got.has(a))
 }
 
-const loaders = import.meta.glob(['../content/checks/*.json', '!../content/checks/summary.json', '!../content/checks/legacy-quiz-map.json'], {
+const loaders = import.meta.glob(['../content/checks/*.json', '!../content/checks/legacy-quiz-map.json'], {
   import: 'default',
 }) as Record<string, () => Promise<ChapterChecks>>
 const cache = new Map<string, Promise<ChapterChecks>>()
