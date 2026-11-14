@@ -26,11 +26,11 @@ These rules cover the course content: topics, example projects, notes, glossary,
 - There are four projects, with ids `harbor`, `store`, `bank` and `travel`. Their profiles go in `src/content/projects.json`.
   - Company names must be fictional. Never use a real company's name, because the notes invent internal systems, figures and mistakes.
   - Scale figures are illustrative; say so where they appear.
-- A lesson shows one project; the workshop is where the reader chooses (phase 3). In the chapters listed in `src/content/workshop.json` (`live`; "all" after rollout):
+- A lesson shows one project; the workshop is where the reader chooses (phase 3). In every chapter and the capstone:
   - A topic page shows one card for the topic's primary project: Harbor, unless the manifest sets `primary` on the topic. Only `c15-1`, `c15-8`, `c15-10`, `c19-4` and `c20-4` do, because Harbor's note there is `limited`. Never put `primary` in a practice file: code reads every key there as a project id.
   - The chapter workshop at `/<chapter>/workshop` holds the lab and each topic's Try it for the project the reader picked; the picker is not shown on topic pages.
   - A workshop task opens its figure with `/<chapter>/<topic>?project=<id>#<figure>`. Snippets and widgets use `?project=` if present, else the topic's primary project.
-  - Chapters not yet live keep the old behaviour: the saved project's note on the topic card, and the lab on the chapter page.
+  - The capstone's topics follow the reader's saved project (the picker stays in the top bar there), since the capstone has no primary project.
 - Per-topic notes go in `src/content/practice/<chapter>.json`, keyed `topicId -> projectId -> { practice, failure, tryIt, fit, fitNote }`.
   - Each of `practice`, `failure` and `tryIt` is a short HTML string: about 25–45 words for In practice and Try it, 12–25 for Failure to avoid (the range chapters 1–18 already use). Write the company and assistant as `{company}` and `{assistant}`, so names live only in `projects.json` (Harbor's existing notes name Harbor directly).
   - `fit` is `best`, `good` or `limited`. `fitNote` is a short phrase on why the project suits the topic; the workshop shows it when the reader's project is `limited`. A `limited` topic needs at least one other project rated `best` or `good`.

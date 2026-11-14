@@ -4,7 +4,6 @@ import { motion } from 'motion/react'
 import { ArrowRight, Check, Clock, FlaskConical, ListChecks, MousePointerClick } from 'lucide-react'
 import { chapterCheckCount, getChapter, minutes, partOf } from '../data/course'
 import { hasWorkshop, workshopPath } from '../data/workshop'
-import { LabScenario, useChapterPractice } from '../components/Practice'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { ProgressRing } from '../components/Icons'
@@ -23,14 +22,11 @@ export function ChapterPage() {
   const loc = useLocation()
   const intro = usePage(chapterId, '_intro', !!ch?.hasIntro)
   const outro = usePage(chapterId, '_outro', !!ch?.hasOutro)
-  const inlineLab = !!ch?.hasLab && !hasWorkshop(chapterId ?? '')
-  const lab = usePage(chapterId, '_lab', inlineLab)
-  const practice = useChapterPractice(inlineLab ? chapterId : undefined)
   const studied = useProgress((s) => s.studied)
   const setMany = useProgress((s) => s.setMany)
   useDocumentTitle(ch ? `${ch.num} ${ch.title}` : 'Not found')
 
-  const ready = (!inlineLab || lab !== null) && (!ch?.hasOutro || outro !== null)
+  const ready = !ch?.hasOutro || outro !== null
   useEffect(() => {
     if (!ready) return
     if (loc.hash) document.getElementById(loc.hash.slice(1))?.scrollIntoView({ block: 'start' })
@@ -39,7 +35,7 @@ export function ChapterPage() {
 
   if (!ch) return <NotFound />
   // The lab moved to the chapter's workshop. Old links to #lab and #lab-<chapter> still land on it.
-  if (hasWorkshop(ch.id) && (loc.hash === '#lab' || loc.hash === `#lab-${ch.id}`)) return <Navigate to={workshopPath(ch.id, 'lab')} replace />
+  if ((loc.hash === '#lab' || loc.hash === `#lab-${ch.id}`)) return <Navigate to={workshopPath(ch.id, 'lab')} replace />
   const part = partOf(ch)
   const ids = ch.topics.map((t) => t.id)
   const n = ids.filter((i) => studied[i]).length
@@ -68,7 +64,7 @@ export function ChapterPage() {
           </div>
           <span><Clock size={15} /> about {Math.round(mins / 5) * 5} min</span>
           {inter > 0 && <span><MousePointerClick size={15} /> {inter} interactive figures</span>}
-          {hasWorkshop(ch.id) ? <Link to={workshopPath(ch.id)}><FlaskConical size={15} /> Workshop</Link> : ch.hasLab && <a href="#lab" onClick={(e) => { e.preventDefault(); document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth' }) }}><FlaskConical size={15} /> Lab</a>}
+          {hasWorkshop(ch.id) && <Link to={workshopPath(ch.id)}><FlaskConical size={15} /> Workshop</Link>}
           {ch.kind === 'chapter' && <Link to={`/${ch.id}/check`}><ListChecks size={15} /> Chapter check</Link>}
           {firstOpen && (
             <Link className="btn primary" to={`/${ch.id}/${firstOpen.id}`}>
@@ -113,12 +109,6 @@ export function ChapterPage() {
 
       {outro && <HtmlContent html={outro} className="topic lai-topic c-outro" />}
 
-      {lab && (
-        <div id="lab" className="c-lab">
-          <HtmlContent html={lab} className="lai-lab" legacy={false} />
-          <LabScenario practice={practice} />
-        </div>
-      )}
       {hasWorkshop(ch.id) && <WorkshopCard chapterId={ch.id} num={ch.num} lab={ch.hasLab} />}
       {ch.kind === 'chapter' && <ChapterCheckCard chapterId={ch.id} num={ch.num} />}
 

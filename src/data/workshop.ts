@@ -1,4 +1,3 @@
-import live from '../content/workshop.json'
 import { getChapter, getTopic, type Chapter, type Topic } from './course'
 import { DEFAULT_PROJECT, getProject, isProjectId, practiceChapterIds, projects, type ChapterPractice, type PracticeNote, type ProjectId, type TopicPractice } from './projects'
 
@@ -12,13 +11,6 @@ export function primaryProject(topicId: string | undefined): ProjectId {
 }
 
 /**
- * Which chapters use the lesson/workshop split. The pilot is chapters 1 and 9 (`src/content/workshop.json`);
- * rolling out to every chapter means setting "live" to "all". Other chapters keep their lab on the chapter page.
- */
-const liveRule = live.live as string[] | 'all'
-export const workshopLive = (chapterId: string) => liveRule === 'all' || liveRule.includes(chapterId)
-
-/**
  * The topic whose lesson a path shows, or undefined for any other page. Lessons use the topic's primary project;
  * the capstone is not a lesson in this sense, because its topics follow the reader's own project choice.
  */
@@ -26,13 +18,13 @@ export function lessonTopicAt(pathname: string): Topic | undefined {
   const [chapterId, topicId, extra] = pathname.split('/').filter(Boolean)
   if (!chapterId || !topicId || extra || topicId === 'check' || topicId === 'workshop') return undefined
   const ch = getChapter(chapterId)
-  if (!ch || ch.kind === 'capstone' || !workshopLive(chapterId)) return undefined
+  if (!ch || ch.kind === 'capstone') return undefined
   return ch.topics.find((t) => t.id === topicId)
 }
 
 const withPractice = new Set(practiceChapterIds())
-/** A chapter or the capstone has a workshop when it is live and has practice notes. */
-export const hasWorkshop = (chapterId: string) => workshopLive(chapterId) && withPractice.has(chapterId)
+/** Every chapter and the capstone has a workshop, because each has practice notes. The appendices have neither. */
+export const hasWorkshop = (chapterId: string) => withPractice.has(chapterId)
 
 export const workshopPath = (chapterId: string, topicId?: string) => `/${chapterId}/workshop${topicId ? '#' + topicId : ''}`
 

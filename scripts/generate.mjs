@@ -8,9 +8,6 @@ import { join } from 'node:path'
 import { CONTENT, existsSync, manifest, pagePath, readJson, readText, stripTags, writeGenerated } from './lib/content.mjs'
 
 const m = manifest()
-// Chapters on the lesson/workshop split: their lab lives on the workshop page. See src/data/workshop.ts.
-const liveRule = readJson(join(CONTENT, 'workshop.json')).live
-const workshopLive = (id) => liveRule === 'all' || liveRule.includes(id)
 
 // ---- topic-stats.json
 // figures = <figure> elements. interactive = data-widget embeds, plus legacy figures that have no data-widget: a figure with the
@@ -72,7 +69,7 @@ for (const c of m.chapters) {
     for (const id of idsOf(readText(pagePath(c.id, t.id)))) add(id, route + '#' + id)
   }
   add(c.id, '/' + c.id)
-  add('lab-' + c.id, workshopLive(c.id) ? `/${c.id}/workshop#lab` : `/${c.id}#lab`)
+  if (c.hasLab) add('lab-' + c.id, `/${c.id}/workshop#lab`)
   add('quiz-' + c.id, `/${c.id}/check`)
 }
 const extraFile = join(CONTENT, 'idmap.extra.json')

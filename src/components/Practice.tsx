@@ -129,21 +129,3 @@ export function DatasetLinks({ projectId, full = false }: { projectId: ProjectId
     </div>
   )
 }
-
-/** The saved project's scenario for a chapter lab, for chapters whose lab is still on the chapter page. */
-export function LabScenario({ practice }: { practice: ChapterPractice | null }) {
-  const project = useProgress((s) => s.project)
-  const p = getProject(project)!
-  const v = practice?._lab?.[project]
-  if (!v) return null
-  return (
-    <section className="labvar" style={{ ['--pc' as string]: `var(${p.accent})` }} aria-label="Lab with your example project">
-      <header>
-        <span className="pp-ico"><ProjectIcon id={project} /></span>
-        <b>Do this lab with {p.label} <small>({p.company})</small></b>
-      </header>
-      <Html className="labvar-b" html={fill(v.scenario, p)} />
-      <DatasetLinks projectId={project} />
-    </section>
-  )
-}

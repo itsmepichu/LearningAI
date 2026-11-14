@@ -145,7 +145,7 @@ export function TopicPage() {
           </ol>
         )}
         <p>
-          {hasWorkshop(chapter.id) ? <Link to={workshopPath(chapter.id, topic.id)}><FlaskConical size={14} /> Chapter {chapter.num} workshop</Link> : chapter.hasLab && <Link to={`/${chapter.id}#lab`}><FlaskConical size={14} /> Chapter {chapter.num} lab</Link>}
+          {hasWorkshop(chapter.id) && <Link to={workshopPath(chapter.id, topic.id)}><FlaskConical size={14} /> Chapter {chapter.num} workshop</Link>}
           <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>
         </p>
       </details>
@@ -212,9 +212,9 @@ export function TopicPage() {
               </ol>
             </>
           )}
-          {(hasWorkshop(chapter.id) || chapter.hasLab) && (
-            <Link className="rail-lab" to={hasWorkshop(chapter.id) ? workshopPath(chapter.id, topic.id) : `/${chapter.id}#lab`}>
-              <span><FlaskConical size={13} /> Chapter {chapter.num} {hasWorkshop(chapter.id) ? 'workshop' : 'lab'}</span> <ArrowRight size={13} />
+          {hasWorkshop(chapter.id) && (
+            <Link className="rail-lab" to={workshopPath(chapter.id, topic.id)}>
+              <span><FlaskConical size={13} /> Chapter {chapter.num} workshop</span> <ArrowRight size={13} />
             </Link>
           )}
           <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>
