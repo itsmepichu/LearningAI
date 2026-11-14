@@ -4,12 +4,16 @@ import { DECODING } from './decoding.ts'
 import { QLORA } from './qlora.ts'
 import { TRAIN_GPT } from './train-gpt.ts'
 import { VLLM_BENCH } from './vllm-bench.ts'
+import { VLM } from './vlm.ts'
+import { DISTILL } from './distill.ts'
 
 export const GUIDES = {
   decoding: DECODING,
   'train-gpt': TRAIN_GPT,
   qlora: QLORA,
   'vllm-bench': VLLM_BENCH,
+  vlm: VLM,
+  distill: DISTILL,
 }
 
 export type GuideId = keyof typeof GUIDES

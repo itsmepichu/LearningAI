@@ -27,9 +27,11 @@
 
 <section class="tp tp-code" id="c20-3-code">
 <h3 data-n="4">Code</h3>
-<p>The program shows how temperature softens a teacher’s probabilities, then trains a small student on 40 examples with soft targets and with hard labels and compares them on 4,000 test points. Change the temperature or the number of training examples and run it again.</p>
+<p>The program shows how temperature softens a teacher’s probabilities, then trains a small student on 40 examples with soft targets and with hard labels and compares them on 4,000 test points. Change the temperature or the number of training examples and run it again. The Colab guide below does the same with real models.</p>
 <figure class="fig live" id="snip-soft-targets"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"soft-targets"}'></div></div>
 <figcaption><b>Soft targets against hard labels, in real Python.</b> A toy with a perfect teacher.</figcaption></figure>
+<figure class="fig colab" id="colab-distill"><div class="stage"><div data-widget="colab-guide" data-props='{"guide":"distill"}'></div></div>
+<figcaption><b>Logit distillation on real models, on a GPU in <a href="https://colab.research.google.com/">Google Colab</a>.</b> <span class="tag gpu">Colab · GPU</span> The guide trains a 0.6B student to match a 1.7B teacher's whole next-token distribution on your example project's labelled text, with the true label blended in, and measures the student before and after, the teacher, and how often the two start their answer with the same token. The code runs on Google's machines, not on this site, and free GPU access is limited and <a href="https://research.google.com/colaboratory/faq.html">not guaranteed</a>.</figcaption></figure>
 </section>
 
 <div data-slot="practice"></div>

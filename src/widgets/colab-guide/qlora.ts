@@ -204,7 +204,7 @@ print(f"Reloaded adapter, test score {accuracy(test):.0%} (was {after:.0%})")`,
 }
 
 /** A Python list literal of strings. */
-function pythonList(items: string[]): string {
+export function pythonList(items: string[]): string {
   return `[${items.map(py).join(', ')}]`
 }
 

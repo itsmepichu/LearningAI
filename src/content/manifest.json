@@ -2088,7 +2088,9 @@
      "id": "c19-2",
      "tn": "19.2",
      "title": "Vision-language models: architecture, capabilities and cost",
-     "tags": [],
+     "tags": [
+      "gpu"
+     ],
      "outcomes": [
       "Describe a vision-language model: vision encoder, projector and language model",
       "Name what these models do well, such as reading text in images",
@@ -2186,7 +2188,9 @@
      "id": "c20-3",
      "tn": "20.3",
      "title": "Distillation methods: labels, soft targets and reasoning traces",
-     "tags": [],
+     "tags": [
+      "gpu"
+     ],
      "outcomes": [
       "Compare hard labels, soft targets and reasoning traces as distillation signals",
       "Explain why soft targets teach the student about near misses",

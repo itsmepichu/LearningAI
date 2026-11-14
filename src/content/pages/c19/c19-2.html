@@ -33,9 +33,11 @@
 
 <section class="tp tp-code" id="c19-2-code">
 <h3 data-n="4">Code</h3>
-<p>The program cuts an image into patches with NumPy, passes them through a stand-in encoder, merges neighbours and projects them to the language model’s size, then counts prefill tokens for 1, 4 and 16 images. Change <code>IMG</code> to 896 and see how the counts grow.</p>
+<p>The program cuts an image into patches with NumPy, passes them through a stand-in encoder, merges neighbours and projects them to the language model’s size, then counts prefill tokens for 1, 4 and 16 images. Change <code>IMG</code> to 896 and see how the counts grow. The Colab guide below runs a real model on a real picture.</p>
 <figure class="fig live" id="snip-vlm-shapes"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"vlm-shapes"}'></div></div>
 <figcaption><b>The shapes inside a VLM, in real Python.</b> Random weights: shapes only, no recognition.</figcaption></figure>
+<figure class="fig colab" id="colab-vlm"><div class="stage"><div data-widget="colab-guide" data-props='{"guide":"vlm"}'></div></div>
+<figcaption><b>A real vision-language model, on a GPU in <a href="https://colab.research.google.com/">Google Colab</a>.</b> <span class="tag gpu">Colab · GPU</span> The guide draws one of your example project's messages as a picture, loads a 2B model in float16, counts the visual tokens the picture becomes at three sizes, scores how much of the text the model reads back at each, and asks about something the picture does not contain. The code runs on Google's machines, not on this site, and free GPU access is limited and <a href="https://research.google.com/colaboratory/faq.html">not guaranteed</a>.</figcaption></figure>
 </section>
 
 <div data-slot="practice"></div>
