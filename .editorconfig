@@ -1,0 +1,33 @@
+# Editor settings only. No formatter and no lint step runs on these files.
+# Git stores LF; on Windows, git converts line endings at checkout and commit.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.py]
+indent_size = 4
+
+# Topic fragments and notes are HTML inside text; keep their spacing exactly as written.
+[src/content/pages/**.html]
+trim_trailing_whitespace = false
+
+# Written by the authoring tools: one-space indent and no final newline, so a tool run leaves no diff.
+[src/content/{manifest,practice/*,checks/*}.json]
+indent_size = 1
+insert_final_newline = false
+
+[src/content/{glossary,projects}.json]
+indent_size = 1
+
+[public/datasets/**]
+insert_final_newline = unset
+trim_trailing_whitespace = unset
