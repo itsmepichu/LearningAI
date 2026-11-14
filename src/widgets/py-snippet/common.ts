@@ -1,7 +1,7 @@
 /**
  * Shared types and data helpers for the runnable snippets. Runnable Python for the Code section of a topic: a short program the reader can run, edit and run again in Pyodide.
  * Each snippet builds its files from the selected project's dataset (or is `neutral` and needs none). Plain data and
- * strings, so a test can run every snippet, for every project, through a local Python and check what it prints.
+ * strings.
  */
 import type { Project } from '../../data/projects'
 import type { DataReader } from '../kit'
@@ -22,8 +22,8 @@ export interface Snippet {
   /** Shows no example data, so it is the same for every project. */
   neutral?: boolean
   build: (p: Project, read: DataReader) => Promise<SnippetBundle>
-  /** Test only: Python run after the snippet, in its namespace, that must not raise. */
-  check: string
+  /** Optional, kept on older snippets: Python that was run after the snippet. Do not write it for new snippets. */
+  check?: string
 }
 
 export interface Message {
