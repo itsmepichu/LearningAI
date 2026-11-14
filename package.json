@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "generate": "node scripts/generate.mjs",
+    "new:topic": "node scripts/new-topic.mjs",
     "predev": "npm run generate",
     "dev": "vite",
     "prebuild": "npm run generate",
