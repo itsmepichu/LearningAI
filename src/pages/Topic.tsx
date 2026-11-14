@@ -103,8 +103,9 @@ export function TopicPage() {
         </div>
         <h1>
           <span className="tn">{topic.tn}</span>
-          {topic.title}
+          {shortTitle(topic)}
         </h1>
+        {topic.short && topic.short !== topic.title && <p className="t-covers"><b>Covers</b> {topic.title}</p>}
         <div className="t-meta">
           <span>
             <Clock size={14} /> about {minutes(topic)} min
@@ -165,7 +166,7 @@ export function TopicPage() {
               <i /><i /><i /><i className="tall" /><i />
             </div>
           ) : (
-            <HtmlContent key={topic.id} html={html} className="topic lai-topic" slots={{ practice: <PracticeBlock practice={practice} chapterId={chapter.id} topicId={topic.id} /> }} />
+            <HtmlContent key={topic.id} html={html} className="topic lai-topic" autoGlossary slots={{ practice: <PracticeBlock practice={practice} chapterId={chapter.id} topicId={topic.id} /> }} />
           )}
 
           {html !== null && <QuickCheck chapterId={chapter.id} topicId={topic.id} />}

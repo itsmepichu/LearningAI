@@ -24,7 +24,7 @@
  "autoregressive": {"term": "Autoregressive generation", "def": "Generating one token at a time, each appended to the input before the next is predicted.", "topic": "c5-5"},
  "prefill-decode": {"term": "Prefill and decode", "def": "The two phases of generation: prefill processes the whole prompt in one parallel pass; decode then produces one token per forward pass.", "topic": "c5-5", "aliases": ["prefill", "decode"]},
  "cross-entropy": {"term": "Cross-entropy loss", "def": "The training loss of a language model: the average of −log p of the token that actually came next. Lower is better; ln of the vocabulary size is what a uniform guess scores.", "topic": "c2-4"},
- "kv-cache": {"term": "KV cache", "def": "The keys and values of earlier tokens, kept in memory during generation so each new token only computes its own. It grows linearly with context and is often the memory limit in serving.", "topic": "c14-1"},
+ "kv-cache": {"term": "KV cache", "def": "The keys and values of earlier tokens, kept in memory during generation so each new token only computes its own. It grows linearly with context and is often the memory limit in serving.", "topic": "c14-1", "aliases": ["KV"]},
  "temperature": {"term": "Temperature", "def": "A decoding setting that divides logits before softmax: below 1 sharpens the distribution, above 1 flattens it, and towards 0 it approaches greedy decoding.", "topic": "c5-6"},
  "greedy-decoding": {"term": "Greedy decoding", "def": "Always choosing the most probable next token.", "topic": "c5-6"},
  "top-k": {"term": "Top-k sampling", "def": "Sampling only from the k most probable tokens, after renormalising their probabilities.", "topic": "c5-6"},
@@ -344,5 +344,15 @@
  "mixed-precision": {"term": "Mixed precision", "def": "Training or running with mostly 16-bit numbers while keeping a few quantities, such as the master copy of the weights, in 32-bit. Halves memory and speeds up GPUs.", "topic": "c2-6"},
  "transformer": {"term": "Transformer", "def": "The neural-network design behind modern language models: stacked blocks that use attention to mix information between tokens and feed-forward layers to process each token.", "topic": "c5-3"},
  "corpus": {"term": "Corpus", "def": "The collection of text a model is trained on, or a system searches over.", "topic": "c6-2"},
- "mini-batch": {"term": "Mini-batch", "def": "A small group of examples used for one update step, instead of the whole dataset.", "topic": "c4-2", "aliases": ["minibatch"]}
+ "mini-batch": {"term": "Mini-batch", "def": "A small group of examples used for one update step, instead of the whole dataset.", "topic": "c4-2", "aliases": ["minibatch"]},
+ "gpu": {"term": "GPU", "def": "A graphics processing unit: a chip with thousands of small cores that do many multiplications at once. It trains and runs models far faster than a CPU, but has its own, smaller memory (VRAM).", "topic": "c2-6", "aliases": ["GPUs"]},
+ "cpu": {"term": "CPU", "def": "The general-purpose processor in a laptop or server. It runs ordinary programs well but has far fewer cores than a GPU, so large models run on it slowly.", "topic": "c2-6", "aliases": ["CPUs"]},
+ "vram": {"term": "VRAM", "def": "The memory on a GPU. Model weights and the KV cache must fit in it, so VRAM, not speed, often decides which models a GPU can run.", "topic": "c2-6", "aliases": ["GPU memory"]},
+ "cuda": {"term": "CUDA", "def": "NVIDIA’s software layer for running programs on its GPUs. Libraries such as PyTorch call it for you; you mostly meet it as a version number that must match your driver.", "topic": "c2-6"},
+ "number-formats": {"term": "Number formats (FP32, FP16, FP8, INT8)", "def": "The ways a number is stored. FP32 uses 4 bytes, FP16 and BF16 use 2, FP8 and INT8 use 1. Fewer bytes make a model smaller and faster, at a small cost in accuracy.", "topic": "c2-6", "aliases": ["FP32", "FP16", "FP8", "INT8", "float32"]},
+ "api": {"term": "API", "def": "Application programming interface: the requests one program can send to another. A hosted model is used by sending an HTTPS request to its API and reading the reply.", "topic": "c7-1"},
+ "json": {"term": "JSON", "def": "A plain-text format for data: objects in braces with named fields, lists in brackets. Most APIs and structured model outputs use it.", "topic": "c7-4"},
+ "pii": {"term": "Personally identifiable information (PII)", "def": "Data that points to a specific person, such as a name, email address or account number. It needs extra care before it reaches a model, a log or a dataset.", "topic": "c16-5", "aliases": ["PII"]},
+ "acl": {"term": "Access control list (ACL)", "def": "A list of who may read or change a document. A retrieval system stores it with each chunk so people only get results they are allowed to see.", "topic": "c10-6", "aliases": ["ACL"]},
+ "gguf": {"term": "GGUF", "def": "A single-file format for quantised models, used by llama.cpp and Ollama so a model can run on a laptop.", "topic": "c14-4"}
 }

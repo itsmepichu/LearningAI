@@ -288,3 +288,5 @@ kbd{font-family:var(--f-mono);border:1px solid var(--rule-2);border-bottom-width
   body{background:#fff}
   body::before{display:none}
 }
+.t-covers{margin:6px 0 0;color:var(--muted);font-size:.9rem;max-width:62ch}
+.t-covers b{font-family:var(--f-mono);font-size:var(--fs-2xs);letter-spacing:.06em;text-transform:uppercase;margin-right:8px}
