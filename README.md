@@ -78,4 +78,4 @@ scripts/import_legacy.py   one-time importer from the v3 single-file manual
 scripts/content-summary.mjs  writes the question-count summary
 ```
 
-See [ROADMAP.md](ROADMAP.md) for what comes next and [CLAUDE.md](CLAUDE.md) for authoring conventions.
+See [ROADMAP.md](ROADMAP.md) for what comes next (finished plans are in [docs/archive/](docs/archive/)) and [CLAUDE.md](CLAUDE.md) for authoring conventions.
