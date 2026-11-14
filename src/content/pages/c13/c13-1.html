@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <p>Climb this ladder one rung at a time, and move up only when evaluation shows the current rung cannot reach the acceptance criteria.</p>
 <figure class="fig flow"><div class="stage">
-<div class="nodes"><div class="nd">Prompting<small>instructions, examples</small></div><div class="nd">Retrieval<small>add knowledge</small></div><div class="nd">Fine-tuning (PEFT)<small>change behaviour</small></div><div class="nd">Distillation<small>small model learns from big</small></div><div class="nd">Continued pretraining<small>deep domain shift</small></div></div>
+<div class="nodes"><div class="nd">Prompting<small>instructions, examples</small></div><div class="nd">Retrieval<small>add knowledge</small></div><div class="nd">Fine-tuning (<a class="gl" href="#gl-peft">PEFT</a>)<small>change behaviour</small></div><div class="nd">Distillation<small>small model learns from big</small></div><div class="nd">Continued pretraining<small>deep domain shift</small></div></div>
 <ol class="steps">
 <li data-n="0"><b>Prompting</b>: hours of work, no training. Try better instructions, few-shot examples, structured output, a stronger model. Often enough.</li>
 <li data-n="1"><b>Retrieval</b>: when the gap is missing or changing facts (9.1). Not a substitute for behaviour change.</li>
@@ -41,7 +41,7 @@
 
 <section class="tp tp-code" id="c13-1-code">
 <h3 data-n="4">Code</h3>
-<p>The program compares the large and the distilled model at five monthly volumes, including upkeep, and works out the payback time and the break-even volume. Change <code>UPKEEP_MONTH</code> or <code>LARGE_PER_ITEM</code> and run it again.</p>
+<p>The program compares the large and the distilled model at five monthly volumes, including upkeep, and works out the payback time and the <a class="gl" href="#gl-break-even-volume">break-even volume</a>. Change <code>UPKEEP_MONTH</code> or <code>LARGE_PER_ITEM</code> and run it again.</p>
 <figure class="fig live" id="snip-distillation-payback"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"distillation-payback"}'></div></div>
 <figcaption><b>The economics of distillation, in real Python.</b> Every price is illustrative.</figcaption></figure>
 </section>

@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b>Risk tiers</b>: classify actions. Read-only → automatic. Reversible low-value writes → automatic with audit. Irreversible, financial, external communication, or permission changes → human approval.</li>
-<li><b><a class="gl" href="#gl-human-in-the-loop">Approval</a> UX</b>: show the proposed action, its exact parameters, why the agent proposes it, the evidence (trace links), and the consequences. Approvers need to be able to edit or reject with a reason, which becomes feedback data.</li>
+<li><b><a class="gl" href="#gl-human-in-the-loop">Approval</a> UX</b>: show the proposed action, its exact parameters, why the agent proposes it, the evidence (<a class="gl" href="#gl-distributed-trace">trace</a> links), and the consequences. Approvers need to be able to edit or reject with a reason, which becomes feedback data.</li>
 <li><b>Escalation</b>: hand the task to a human queue with a summary when the agent is uncertain, hits a limit, sees conflicting data, or the user asks for a person.</li>
 <li><b>Step limits and budgets</b>: per-task maximum steps, tokens, dollars and wall-clock time; per-user and per-tenant daily budgets. Enforce in the runtime, not the prompt. When a budget is exhausted, stop and escalate with the work so far.</li>
 <li><b>Approve an exact version</b>: an approval applies to one immutable action (target, arguments, content hash). If the agent edits the email or the amount afterwards, it needs a new approval, and cancelling must stop executions that are already queued.</li></ul>

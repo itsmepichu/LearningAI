@@ -24,7 +24,7 @@
 <rect x="20" y="256" width="420" height="34" rx="4" class="nd"/><text x="34" y="278">→ model output (bounded by max_tokens)</text>
 <path d="M450 20 V100" class="lna"/><path d="M450 108 V250" class="lns"/></g>
 </svg></div><figcaption><b>Prompt anatomy.</b> Stable parts first (they can be prompt-cached, 14.3), variable parts last. Delimiting retrieved content matters for security (16.2).</figcaption></figure>
-<p><b><a class="gl" href="#gl-prompt-versioning">Prompt versioning</a>.</b> Treat prompts as code: store them in the repository or a prompt registry with an ID and version (<code>ticket_triage@v7</code>), review changes, run the evaluation set on every change, and log the prompt version with every production request so any output can be traced to the exact prompt that produced it (18.1).</p>
+<p><b><a class="gl" href="#gl-prompt-versioning">Prompt versioning</a>.</b> Treat prompts as code: store them in the repository or a prompt registry with an ID and version (<code>ticket_triage@v7</code>), review changes, run the <a class="gl" href="#gl-eval-set">evaluation set</a> on every change, and log the prompt version with every production request so any output can be traced to the exact prompt that produced it (18.1).</p>
 <div class="box example"><h5>Example: a versioned prompt file</h5>
 <pre><code># prompts/ticket_triage/v7.yaml
 id: ticket_triage

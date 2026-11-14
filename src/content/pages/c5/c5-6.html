@@ -12,7 +12,7 @@
 <li><b><a class="gl" href="#gl-top-k">Top-k</a></b>: keep only the k most probable tokens, renormalise, sample.</li>
 <li><b><a class="gl" href="#gl-top-p">Top-p (nucleus)</a></b>: keep the smallest set of tokens whose cumulative probability reaches p (e.g. 0.9), renormalise, sample. Adapts to how confident the model is.</li>
 <li><b>Stop conditions</b>: end-of-sequence token, a maximum number of new tokens, or stop strings (e.g. <code>"\n\nUser:"</code>). Always set a max token limit; it bounds cost and latency.</li>
-<li>Other controls: repetition/frequency penalties, min-p, and constrained decoding to force valid JSON (7.4).</li>
+<li>Other controls: repetition/frequency penalties, min-p, and <a class="gl" href="#gl-constrained-decoding">constrained decoding</a> to force valid JSON (7.4).</li>
 </ul>
 <p><b>Filter order varies by engine.</b> Engines differ in the order they apply temperature, top-k, top-p, min-p and penalties, and in whether they renormalise between steps, so identical settings can give different distributions on different engines. The demo below applies temperature first, then top-k and top-p together. Check your engine's documentation before comparing settings across providers.</p>
 <figure class="fig live"><div class="stage"><div class="wid">

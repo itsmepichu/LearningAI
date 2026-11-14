@@ -13,7 +13,7 @@
 <div><b>Loss function</b>: mean squared error for regression; cross-entropy for classification and language modelling.</div>
 <div><b><a class="gl" href="#gl-backpropagation">Backpropagation</a></b>: computes the gradient of the loss with respect to every weight by applying the chain rule backward through the layers, reusing intermediate results.</div>
 </div>
-<p><b>Logits in, softmax inside.</b> Classification losses such as PyTorch's <code>CrossEntropyLoss</code> expect raw logits and apply (log-)softmax internally in a numerically stable way. Applying softmax yourself first is a common bug: training still runs, but gradients shrink and the model learns slowly.</p>
+<p><b><a class="gl" href="#gl-logits">Logits</a> in, <a class="gl" href="#gl-softmax">softmax</a> inside.</b> Classification losses such as PyTorch's <code>CrossEntropyLoss</code> expect raw logits and apply (log-)softmax internally in a numerically stable way. Applying softmax yourself first is a common bug: training still runs, but gradients shrink and the model learns slowly.</p>
 <figure class="fig live"><div class="stage"><div class="wid">
 <div class="row2"><label for="nw1">w₁ <input type="range" id="nw1" min="-20" max="20" value="8"><span id="nw1O"></span></label>
 <label for="nw2">w₂ <input type="range" id="nw2" min="-20" max="20" value="-5"><span id="nw2O"></span></label>

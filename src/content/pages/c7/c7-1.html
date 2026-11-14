@@ -13,9 +13,9 @@
 <tr><td><b>Cost shape</b></td><td>Per token; scales to zero</td><td>Per GPU-hour; cheap only at high, steady utilisation (14.8)</td></tr>
 <tr><td><b>Data control</b></td><td>Depends on contract, region and retention settings</td><td>Full control; can run air-gapped</td></tr>
 <tr><td><b>Customisation</b></td><td>Prompting, provider fine-tuning where offered</td><td>Any fine-tuning, quantisation, decoding control</td></tr>
-<tr><td><b>Operational risk</b></td><td>Provider outages, rate limits, model deprecations</td><td>Your on-call, capacity planning, GPU failures</td></tr>
+<tr><td><b>Operational risk</b></td><td>Provider outages, rate limits, model deprecations</td><td>Your on-call, <a class="gl" href="#gl-capacity-planning">capacity planning</a>, GPU failures</td></tr>
 </table></div>
-<p><b>Selecting a model with evidence.</b> Public leaderboards measure general skills on public data, which may be contaminated and rarely matches your task. Instead, build a small task-specific evaluation set (50–200 real examples with expected outcomes) and run 3–5 candidate models through it, measuring quality, latency and cost together. Choose the cheapest model that meets the acceptance bar, not the best-scoring model overall.</p>
+<p><b>Selecting a model with evidence.</b> Public leaderboards measure general skills on public data, which may be contaminated and rarely matches your task. Instead, build a small task-specific <a class="gl" href="#gl-eval-set">evaluation set</a> (50–200 real examples with expected outcomes) and run 3–5 candidate models through it, measuring quality, latency and cost together. Choose the cheapest model that meets the acceptance bar, not the best-scoring model overall.</p>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 640 300" role="img" data-chart aria-label="Quality vs cost scatter for candidate models with an acceptance threshold">
 <rect x="60" y="20" width="540" height="230" class="fsunk"/>

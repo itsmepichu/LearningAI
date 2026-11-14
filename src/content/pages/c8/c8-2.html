@@ -9,7 +9,7 @@
 <ul>
 <li><b>Deterministic checks</b> (code): exact match, JSON validity, schema conformance, regex, "contains required citation", numeric tolerance, unit tests for generated code, SQL execution results, banned phrases. Cheap, fast, reproducible. Use them wherever possible.</li>
 <li><b>Human evaluation</b>: experts grade outputs against a rubric. The gold standard for nuanced quality (tone, helpfulness, correctness in specialist domains), but slow, expensive and itself variable. Use for calibration and for high-stakes decisions.</li>
-<li><b><a class="gl" href="#gl-llm-judge">Model-based judges</a></b> (LLM-as-judge): a model grades outputs using a rubric, either pointwise ("score 1–5 for groundedness") or pairwise ("which answer is better?"). Scales cheaply, but has biases (8.3) and must be validated against humans before you trust it.</li>
+<li><b><a class="gl" href="#gl-llm-judge">Model-based judges</a></b> (LLM-as-judge): a model grades outputs using a rubric, either pointwise ("score 1–5 for <a class="gl" href="#gl-groundedness">groundedness</a>") or pairwise ("which answer is better?"). Scales cheaply, but has biases (8.3) and must be validated against humans before you trust it.</li>
 </ul>
 <figure class="fig"><div class="stage">
 <svg viewBox="0 0 700 250" role="img" aria-label="Evaluation pyramid">

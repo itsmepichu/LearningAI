@@ -16,7 +16,7 @@
 <svg viewBox="0 0 760 210" role="img" aria-label="Attention mask patterns for three architectures">
 <g id="maskViz"></g>
 </svg></div><figcaption><b>Who can attend to whom.</b> Filled cell = row token may attend to column token. Decoder-only won for general-purpose models because one simple objective scales on any text and every task can be phrased as continuation.</figcaption></figure>
-<div class="box example"><h5>Example: picking architectures in one RAG system</h5><p>A bi-encoder (encoder-only) embeds documents and queries for fast vector search; a cross-encoder reranker (encoder-only, reading query and passage together) re-scores the top 50; a decoder-only LLM writes the answer. Three transformers, three architectures, each matched to its job.</p></div>
+<div class="box example"><h5>Example: picking architectures in one RAG system</h5><p>A bi-encoder (encoder-only) embeds documents and queries for fast <a class="gl" href="#gl-dense-retrieval">vector search</a>; a cross-encoder <a class="gl" href="#gl-reranker">reranker</a> (encoder-only, reading query and passage together) re-scores the top 50; a decoder-only LLM writes the answer. Three transformers, three architectures, each matched to its job.</p></div>
 </section>
 
 <section class="tp tp-math" id="c5-4-math">

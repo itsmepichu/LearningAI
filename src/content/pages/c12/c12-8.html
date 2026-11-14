@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <p>A multi-agent system must beat the strongest simple alternative on the metrics that matter, at acceptable cost. Run the same evaluation set (8.8) through:</p>
 <ol><li>a single well-prompted agent with all tools,</li><li>a fixed parallel workflow written in code,</li><li>the multi-agent design,</li></ol>
-<p>and compare task success, pass^k reliability, latency percentiles, cost per successful task, and failure types. Also evaluate components: routing accuracy, worker success per subtask, synthesis faithfulness to worker outputs, and how often conflicts are surfaced correctly. Run <a class="gl" href="#gl-ablation">ablations</a>: remove the evaluator agent; merge two workers; does quality actually drop?</p>
+<p>and compare task success, pass^k reliability, latency percentiles, <a class="gl" href="#gl-cost-per-success">cost per successful task</a>, and failure types. Also evaluate components: routing accuracy, worker success per subtask, synthesis faithfulness to worker outputs, and how often conflicts are surfaced correctly. Run <a class="gl" href="#gl-ablation">ablations</a>: remove the evaluator agent; merge two workers; does quality actually drop?</p>
 <div class="tw"><table>
 <tr><th>Design</th><th>Task success</th><th>pass^3</th><th>p95 latency</th><th>Cost / successful task</th><th>Verdict</th></tr>
 <tr><td>Single agent</td><td>64%</td><td>41%</td><td>48 s</td><td>$0.19</td><td>Fails on broad tasks</td></tr>

@@ -24,7 +24,7 @@
 <g id="epochViz"></g>
 <text x="10" y="112" class="xs mut">10,000 examples · batch 1,000 → 10 steps per epoch · 3 epochs = 30 updates. Highlighted batch = the one being processed.</text>
 </svg></div><figcaption><b>Steps, batches and epochs.</b> The highlight walks through batches; each completed batch is one optimiser step.</figcaption></figure>
-<div class="box example"><h5>Example: LoRA fine-tuning settings</h5><p>A typical small fine-tuning run: AdamW, peak learning rate 2×10⁻⁴, 3% warm-up, cosine decay, effective batch 32 (batch 4 × 8 accumulation steps), 2–3 epochs over 5,000 examples. If validation loss starts rising in epoch 3 while training loss keeps falling, stop at epoch 2 (early stopping).</p></div>
+<div class="box example"><h5>Example: <a class="gl" href="#gl-lora">LoRA</a> fine-tuning settings</h5><p>A typical small fine-tuning run: AdamW, peak learning rate 2×10⁻⁴, 3% warm-up, cosine decay, effective batch 32 (batch 4 × 8 accumulation steps), 2–3 epochs over 5,000 examples. If validation loss starts rising in epoch 3 while training loss keeps falling, stop at epoch 2 (early stopping).</p></div>
 </section>
 
 <section class="tp tp-math" id="c4-2-math">

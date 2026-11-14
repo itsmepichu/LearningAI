@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <p><b>Three parts.</b></p>
 <ul>
-<li><b>Vision encoder</b>: usually a vision transformer trained with images and captions (CLIP-style), turning patches into vectors.</li>
+<li><b>Vision encoder</b>: usually a vision transformer trained with images and captions (<a class="gl" href="#gl-multimodal-embedding">CLIP</a>-style), turning patches into vectors.</li>
 <li><b>Projector</b>: a small network, often one or two layers, that maps those vectors to the language model’s hidden size. Training usually starts by teaching only the projector to align images with captions, then fine-tunes more of the model on image–instruction pairs.</li>
 <li><b>Language model</b>: reads image tokens and text tokens in one sequence, so attention connects words to image regions.</li>
 </ul>
