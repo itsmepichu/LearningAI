@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowLeft, ArrowRight, Check, Clock, FlaskConical, Layers, ListChecks, MousePointerClick } from 'lucide-react'
 import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, shortTitle, topicPath } from '../data/course'
-import { PracticeBlock, ProjectFitNote, useChapterPractice } from '../components/Practice'
+import { ExampleDataBanner, PracticeBlock, useChapterPractice } from '../components/Practice'
+import { hasWorkshop, workshopPath } from '../data/workshop'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { useProgress } from '../store/progress'
@@ -144,7 +145,7 @@ export function TopicPage() {
           </ol>
         )}
         <p>
-          {chapter.hasLab && <Link to={`/${chapter.id}#lab`}><FlaskConical size={14} /> Chapter {chapter.num} lab</Link>}
+          {hasWorkshop(chapter.id) ? <Link to={workshopPath(chapter.id, topic.id)}><FlaskConical size={14} /> Chapter {chapter.num} workshop</Link> : chapter.hasLab && <Link to={`/${chapter.id}#lab`}><FlaskConical size={14} /> Chapter {chapter.num} lab</Link>}
           <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>
         </p>
       </details>
@@ -157,15 +158,15 @@ export function TopicPage() {
               <ul>{topic.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
             </section>
           )}
+          <ExampleDataBanner chapterId={chapter.id} topicId={topic.id} />
           {html === null ? (
             <div className="skeleton" aria-busy="true">
               <i /><i /><i /><i className="tall" /><i />
             </div>
           ) : (
-            <HtmlContent key={topic.id} html={html} className="topic lai-topic" slots={{ practice: <PracticeBlock practice={practice} /> }} />
+            <HtmlContent key={topic.id} html={html} className="topic lai-topic" slots={{ practice: <PracticeBlock practice={practice} chapterId={chapter.id} topicId={topic.id} /> }} />
           )}
 
-          {html !== null && <ProjectFitNote practice={practice} />}
           {html !== null && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
 
           {html !== null && !!topic.outcomes?.length && (
@@ -211,9 +212,9 @@ export function TopicPage() {
               </ol>
             </>
           )}
-          {chapter.hasLab && (
-            <Link className="rail-lab" to={`/${chapter.id}#lab`}>
-              <span><FlaskConical size={13} /> Chapter {chapter.num} lab</span> <ArrowRight size={13} />
+          {(hasWorkshop(chapter.id) || chapter.hasLab) && (
+            <Link className="rail-lab" to={hasWorkshop(chapter.id) ? workshopPath(chapter.id, topic.id) : `/${chapter.id}#lab`}>
+              <span><FlaskConical size={13} /> Chapter {chapter.num} {hasWorkshop(chapter.id) ? 'workshop' : 'lab'}</span> <ArrowRight size={13} />
             </Link>
           )}
           <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>

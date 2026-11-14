@@ -1579,6 +1579,7 @@
      "tn": "15.1",
      "title": "Converting product usage into peak requests/second, concurrency, tokens/second and background workload",
      "tags": [],
+     "primary": "store",
      "short": "From usage to peak load",
      "outcomes": [
       "Turn a user count into peak requests per second and concurrency",
@@ -1664,6 +1665,7 @@
      "tags": [
       "cpu"
      ],
+     "primary": "store",
      "short": "Load, stress and failure testing",
      "outcomes": [
       "Build a load test from realistic prompt lengths, bursts and agent calls",
@@ -1687,6 +1689,7 @@
      "tn": "15.10",
      "title": "Distinguishing measured performance, projected capacity and actual production usage",
      "tags": [],
+     "primary": "store",
      "outcomes": [
       "Label a number as measured, projected or actual production usage",
       "Say why a projection from a different prompt mix can mislead",
@@ -2108,6 +2111,7 @@
      "tn": "19.4",
      "title": "Speech: speech-to-text, text-to-speech and real-time voice",
      "tags": [],
+     "primary": "travel",
      "outcomes": [
       "Describe the speech-to-text, language model and text-to-speech relay",
       "Tell turn detection and latency from transcript accuracy",
@@ -2193,6 +2197,7 @@
      "tn": "20.4",
      "title": "Pruning, quantisation and other compression",
      "tags": [],
+     "primary": "travel",
      "outcomes": [
       "Explain pruning and say what it removes",
       "Explain why a pruned model with many zeros is not always faster",

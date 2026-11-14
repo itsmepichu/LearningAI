@@ -19,6 +19,8 @@ interface ProgressState {
   /** Flashcards, keyed by question id. A choose-the-answer question answered wrongly joins the deck by itself. */
   cards: Record<string, SavedCard>
   project: ProjectId
+  /** Chapters (and the capstone) whose workshop the reader marked done. */
+  workshopDone: Record<string, true>
   last?: string
   setStudied: (id: string, on: boolean) => void
   setMany: (ids: string[], on: boolean) => void
@@ -29,6 +31,7 @@ interface ProgressState {
   removeCard: (qid: string) => void
   reviewCard: (qid: string, grade: GradeName) => void
   setProject: (p: ProjectId) => void
+  setWorkshopDone: (chapterId: string, on: boolean) => void
   visit: (path: string) => void
   reset: () => void
 }
@@ -45,6 +48,33 @@ const safeStorage = createJSONStorage(() => {
   }
 })
 
+/** The v1 to v3 steps, unchanged: each returns the saved state with what it adds. */
+function migrateEarlier(persisted: unknown, version: number): ProgressState {
+  const s = (persisted ?? {}) as Record<string, unknown>
+  if (version < 2) {
+    const quiz = (s.quiz ?? {}) as Record<string, number>
+    const map = legacyQuizMap as Record<string, { id: string; answer: number }>
+    const answers: Record<string, Answer> = {}
+    const results: Record<string, boolean> = {}
+    for (const [k, v] of Object.entries(quiz)) {
+      const m = map[k]
+      if (!m) continue
+      answers[m.id] = v
+      results[m.id] = v === m.answer
+    }
+    delete s.quiz
+    return { ...s, answers, results, ratings: {}, cards: {}, project: DEFAULT_PROJECT } as unknown as ProgressState
+  }
+  if (version < 3) {
+    // Questions already answered wrongly start the deck, due now.
+    const results = (s.results ?? {}) as Record<string, boolean>
+    const now = new Date()
+    const cards = Object.fromEntries(Object.entries(results).filter(([, ok]) => !ok).map(([id]) => [id, newCard(now)]))
+    return { ...s, cards } as unknown as ProgressState
+  }
+  return s as unknown as ProgressState
+}
+
 export const useProgress = create<ProgressState>()(
   persist(
     (set) => ({
@@ -54,6 +84,7 @@ export const useProgress = create<ProgressState>()(
       ratings: {},
       cards: {},
       project: DEFAULT_PROJECT,
+      workshopDone: {},
       setStudied: (id, on) =>
         set((s) => {
           const studied = { ...s.studied }
@@ -101,38 +132,25 @@ export const useProgress = create<ProgressState>()(
         }),
       reviewCard: (qid, grade) => set((s) => (s.cards[qid] ? { cards: { ...s.cards, [qid]: review(s.cards[qid], grade, new Date()) } } : {})),
       setProject: (project) => set({ project }),
+      setWorkshopDone: (chapterId, on) =>
+        set((s) => {
+          const workshopDone = { ...s.workshopDone }
+          if (on) workshopDone[chapterId] = true
+          else delete workshopDone[chapterId]
+          return { workshopDone }
+        }),
       visit: (path) => set({ last: path }),
-      reset: () => set({ studied: {}, answers: {}, results: {}, ratings: {}, cards: {}, last: undefined }),
+      reset: () => set({ studied: {}, answers: {}, results: {}, ratings: {}, cards: {}, workshopDone: {}, last: undefined }),
     }),
     {
       name: 'lai-progress-v1',
       storage: safeStorage,
-      version: 3,
-      // v1 stored chapter quiz answers as quiz["c5:0"]; v2 keys answers by question id; v3 adds flashcards.
+      version: 4,
+      // v1 stored chapter quiz answers as quiz["c5:0"]; v2 keys answers by question id; v3 adds flashcards; v4 adds workshopDone.
+      // Every step keeps the fields it does not know about, so saved progress survives.
       migrate: (persisted, version) => {
-        const s = (persisted ?? {}) as Record<string, unknown>
-        if (version < 2) {
-          const quiz = (s.quiz ?? {}) as Record<string, number>
-          const map = legacyQuizMap as Record<string, { id: string; answer: number }>
-          const answers: Record<string, Answer> = {}
-          const results: Record<string, boolean> = {}
-          for (const [k, v] of Object.entries(quiz)) {
-            const m = map[k]
-            if (!m) continue
-            answers[m.id] = v
-            results[m.id] = v === m.answer
-          }
-          delete s.quiz
-          return { ...s, answers, results, ratings: {}, cards: {}, project: DEFAULT_PROJECT } as unknown as ProgressState
-        }
-        if (version < 3) {
-          // Questions already answered wrongly start the deck, due now.
-          const results = (s.results ?? {}) as Record<string, boolean>
-          const now = new Date()
-          const cards = Object.fromEntries(Object.entries(results).filter(([, ok]) => !ok).map(([id]) => [id, newCard(now)]))
-          return { ...s, cards } as unknown as ProgressState
-        }
-        return s as unknown as ProgressState
+        const earlier = migrateEarlier(persisted, version) as unknown as Record<string, unknown>
+        return { ...earlier, workshopDone: earlier.workshopDone ?? {} } as unknown as ProgressState
       },
     },
   ),

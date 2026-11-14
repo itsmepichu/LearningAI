@@ -8,6 +8,7 @@ import { Logo, ProgressRing } from './Icons'
 import { useTheme } from '../store/theme'
 import { useProgress } from '../store/progress'
 import { courseTopics, getChapter, getTopic } from '../data/course'
+import { lessonTopicAt } from '../data/workshop'
 
 // Matches the CSS breakpoint where the sidebar becomes an off-screen drawer.
 const DRAWER_QUERY = '(max-width: 1024px)'
@@ -110,7 +111,7 @@ export function Layout() {
             </span>
           )}
         </nav>
-        <ProjectPicker />
+        {!lessonTopicAt(loc.pathname) && <ProjectPicker />}
         <button className="search-btn" type="button" onClick={() => setSearchOpen(true)} aria-label="Search all topics">
           <Search size={15} />
           <span className="lbl">Search</span>

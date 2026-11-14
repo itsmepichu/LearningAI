@@ -14,12 +14,16 @@ interface TopicEntry {
   outcomes?: string[]
   /** A display title of at most 6 words for the sidebar, pager, step dots and search. The page heading keeps `title`. */
   short?: string
+  /** The example project the lesson card and figures use. Absent means the default project. */
+  primary?: string
 }
 /** A topic with the counts generated from its HTML (`npm run generate`): figures, interactive figures and words. */
 export interface Topic extends TopicEntry {
   figures: number
   interactive: number
   words: number
+  /** Ids of the topic's interactive figures, in page order. */
+  live?: string[]
 }
 export interface Chapter {
   id: string
@@ -37,7 +41,7 @@ export interface Chapter {
 export interface Part { id: string; label: string; title: string; chapters: string[] }
 
 export const parts = manifest.parts as Part[]
-const stats = topicStats as Record<string, Pick<Topic, 'figures' | 'interactive' | 'words'>>
+const stats = topicStats as Record<string, Pick<Topic, 'figures' | 'interactive' | 'words' | 'live'>>
 export const chapters = (manifest.chapters as unknown as (Omit<Chapter, 'topics'> & { topics: TopicEntry[] })[]).map((c) => ({
   ...c,
   topics: c.topics.map((t) => ({ ...t, ...(stats[t.id] ?? { figures: 0, interactive: 0, words: 0 }) })),

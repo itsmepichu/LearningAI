@@ -8,12 +8,15 @@ import { join } from 'node:path'
 import { CONTENT, existsSync, manifest, pagePath, readJson, readText, stripTags, writeGenerated } from './lib/content.mjs'
 
 const m = manifest()
+// Chapters on the lesson/workshop split: their lab lives on the workshop page. See src/data/workshop.ts.
+const liveRule = readJson(join(CONTENT, 'workshop.json')).live
+const workshopLive = (id) => liveRule === 'all' || liveRule.includes(id)
 
 // ---- topic-stats.json
 // figures = <figure> elements. interactive = data-widget embeds, plus legacy figures that have no data-widget: a figure with the
 // class `live` or `flow`, or one that holds an input, button or select (the old importer counted the same blocks).
 // A snippet is a figure with a widget, so it counts as both; a walkthrough sits outside a figure, so it counts as interactive only.
-// words = text outside <svg>, with the tags stripped.
+// words = text outside <svg>, with the tags stripped. live = ids of the interactive figures.
 export function topicStats(html) {
   const figures = (html.match(/<figure\b/g) ?? []).length
   const widgets = (html.match(/<[a-zA-Z][^>]*\sdata-widget="/g) ?? []).length
@@ -24,7 +27,14 @@ export function topicStats(html) {
     if (cls.includes('live') || cls.includes('flow') || /<(input|button|select)\b/.test(f[2])) legacy++
   }
   const words = stripTags(html.replace(/<svg[\s\S]*?<\/svg>/g, ' ')).split(' ').filter(Boolean).length
-  return { figures, interactive: widgets + legacy, words }
+  // live = ids of the interactive figures, in page order: a `live` figure or a walkthrough that holds a widget, not a Colab guide.
+  const live = []
+  for (const f of html.matchAll(/<(figure|div)\b([^>]*)>/g)) {
+    const id = /\sid="([^"]+)"/.exec(f[2])?.[1]
+    const cls = (/\sclass="([^"]*)"/.exec(f[2])?.[1] ?? '').split(/\s+/)
+    if (id && !cls.includes('colab') && ((f[1] === 'figure' && cls.includes('live')) || cls.includes('walkthru'))) live.push(id)
+  }
+  return { figures, interactive: widgets + legacy, words, live }
 }
 
 const stats = {}
@@ -62,7 +72,7 @@ for (const c of m.chapters) {
     for (const id of idsOf(readText(pagePath(c.id, t.id)))) add(id, route + '#' + id)
   }
   add(c.id, '/' + c.id)
-  add('lab-' + c.id, `/${c.id}#lab`)
+  add('lab-' + c.id, workshopLive(c.id) ? `/${c.id}/workshop#lab` : `/${c.id}#lab`)
   add('quiz-' + c.id, `/${c.id}/check`)
 }
 const extraFile = join(CONTENT, 'idmap.extra.json')

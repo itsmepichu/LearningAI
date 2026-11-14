@@ -23,6 +23,7 @@ import { ChapterPage } from './pages/Chapter'
 import { TopicPage } from './pages/Topic'
 import { Guide, ProgressPage, StartPage } from './pages/Misc'
 import { ChapterCheckPage } from './pages/ChapterCheck'
+import { WorkshopPage } from './pages/Workshop'
 import { PracticePage } from './pages/PracticePage'
 import { FlashcardsPage } from './pages/Flashcards'
 import { GlossaryPage } from './pages/Glossary'
@@ -45,6 +46,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="flashcards" element={<FlashcardsPage />} />
             <Route path="glossary" element={<GlossaryPage />} />
             <Route path=":chapterId/check" element={<ChapterCheckPage />} />
+            <Route path=":chapterId/workshop" element={<WorkshopPage />} />
             <Route path=":chapterId" element={<ChapterPage />} />
             <Route path=":chapterId/:topicId" element={<TopicPage />} />
             <Route path="*" element={<NotFound />} />

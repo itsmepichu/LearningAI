@@ -51,6 +51,7 @@
                 "title": { "type": "string" },
                 "tags": { "type": "array", "items": { "enum": ["cpu", "real", "sim", "gpu"] }, "description": "Evidence tags shown on the topic." },
                 "outcomes": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 3, "description": "What the reader can do afterwards. Each starts with a verb and has at most 14 words." },
+                "primary": { "enum": ["harbor", "store", "bank", "travel"], "description": "The example project this topic's lesson card and figures use. Leave it out for the default (Harbor). Set it only where Harbor's note is limited." },
                 "short": { "type": "string", "description": "Display title of at most 6 words for the sidebar, pager, step dots and search. Optional." }
               }
             }

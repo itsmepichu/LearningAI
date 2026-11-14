@@ -221,3 +221,14 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none}
 @media (prefers-reduced-motion:reduce){
   .wk *{transition:none!important;animation:none!important}
 }
+
+/* Data explorer */
+.wk-de-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:12px}
+.wk-de-tool{margin:0;padding:10px 12px;display:grid;gap:6px;align-content:start;border:1px solid var(--rule);border-radius:var(--r-2);background:var(--surface);min-width:0}
+.wk-de-tool legend{padding:0 6px;font-size:var(--fs-2xs);font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.wk-de-tool label{font-size:var(--fs-sm);color:var(--muted)}
+.wk-de-tool input[type=text],.wk-de-tool select{width:100%;min-height:30px}
+.wk-de-tool .out{white-space:pre-wrap;margin:0}
+.wk-de-table{font-size:var(--fs-2xs);white-space:nowrap}
+.wk-de-table td{max-width:22ch;overflow:hidden;text-overflow:ellipsis}
+.wk-de-scope{display:flex;gap:8px;align-items:flex-start;font-size:var(--fs-2xs)!important}

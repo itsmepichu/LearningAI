@@ -30,6 +30,7 @@ export const widgets: Record<string, LazyExoticComponent<ComponentType<any>>> = 
   'cache-key': lazy(() => import('./cache-key/CacheKey')),
   'isolation-grid': lazy(() => import('./isolation-grid/IsolationGrid')),
   'pii-redact': lazy(() => import('./pii-redact/PiiRedact')),
+  'data-explorer': lazy(() => import('./data-explorer/DataExplorer')),
   'agent-loop': lazy(() => import('./agent-loop/AgentLoop')),
   'token-estimator': lazy(() => import('./token-estimator/TokenEstimator')),
   'class-imbalance': lazy(() => import('./class-imbalance/ClassImbalance')),
