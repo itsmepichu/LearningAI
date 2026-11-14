@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import { Slider, Widget, fmt } from '../kit'
-import { ACTIVATIONS, INPUTS, neuron, type ActivationName } from './neuron'
+import { ACTIVATIONS, INPUTS, neuron, type ActivationName } from './activation.ts'
 
 const width = (w: number) => 1 + Math.abs(w) * 2
 const colour = (w: number) => (w >= 0 ? 'var(--accent)' : 'var(--bad)')

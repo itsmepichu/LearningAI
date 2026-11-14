@@ -14,7 +14,7 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 interface Matcher { id: string; re: RegExp }
 
 /** The words that mean an entry: its term without the bracketed part, the bracketed acronym, and its aliases. */
-function namesOf(id: string, e: Glossary[string]): string[] {
+function namesOf(e: Glossary[string]): string[] {
   const names = new Set<string>()
   const bracket = /\(([^)]+)\)/.exec(e.term)
   names.add(e.term.replace(/\s*\([^)]*\)/g, '').trim())
@@ -27,7 +27,7 @@ function matchers(g: Glossary, linked: Set<string>): Matcher[] {
   const out: Matcher[] = []
   for (const [id, e] of Object.entries(g)) {
     if (linked.has(id) || COMMON_WORDS.has(id)) continue
-    for (const name of namesOf(id, e)) {
+    for (const name of namesOf(e)) {
       // Acronyms and names with capitals inside match exactly; ordinary words match in any case.
       const exact = /[A-Z]/.test(name.slice(1)) || name === name.toUpperCase()
       out.push({ id, re: new RegExp(`(?<![\\w-])${escape(name)}(?:s|es)?(?![\\w-])`, exact ? '' : 'i') })
