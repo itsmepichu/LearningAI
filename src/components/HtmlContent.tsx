@@ -100,7 +100,7 @@ export function HtmlContent({
       })
     }
     if (legacy) {
-      mountLegacyWidgets(root).then((h) => {
+      mountLegacyWidgets(root, () => cancelled).then((h) => {
         if (cancelled) h.dispose()
         else handle.current = h
       })

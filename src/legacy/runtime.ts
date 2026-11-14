@@ -8,8 +8,13 @@ export interface LegacyHandle {
   dispose: () => void
 }
 
-export async function mountLegacyWidgets(root: HTMLElement): Promise<LegacyHandle> {
+/**
+ * `isCancelled` lets the caller drop a mount whose effect was already cleaned up before the module loaded.
+ * Without it, React StrictMode's second effect run would enhance the same DOM twice and show every stepper twice.
+ */
+export async function mountLegacyWidgets(root: HTMLElement, isCancelled?: () => boolean): Promise<LegacyHandle> {
   const { mountLegacy } = await import('./widgets.js')
+  if (isCancelled?.()) return { rerender: () => {}, dispose: () => {} }
   const intervals = new Set<number>()
   const timeouts = new Set<number>()
   const frames = new Set<number>()
