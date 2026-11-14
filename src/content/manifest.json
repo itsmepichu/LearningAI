@@ -67,7 +67,8 @@
     "app-a",
     "app-b",
     "app-d",
-    "app-e"
+    "app-e",
+    "app-f"
    ]
   }
  ],
@@ -76,7 +77,7 @@
    "id": "c1",
    "num": "01",
    "title": "AI foundations and history",
-   "lede": "The vocabulary and mental models that the rest of the manual depends on: what the different kinds of AI are, how we got to today's large language models, what those models actually compute, and when not to use one.",
+   "lede": "The vocabulary and mental models that the rest of the course depends on: what the different kinds of AI are, how we got to today's large language models, what those models actually compute, and when not to use one.",
    "kind": "chapter",
    "part": "p1",
    "www": {
@@ -90,27 +91,35 @@
      "tn": "1.1",
      "title": "AI vs machine learning vs deep learning vs generative AI",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 863
+     "short": "AI, ML, deep learning, generative AI",
+     "outcomes": [
+      "Tell AI, machine learning, deep learning and generative AI apart",
+      "Say where a system's knowledge comes from: written rules or learned examples",
+      "Match one business problem to rules, classic ML, deep learning or an LLM"
+     ]
     },
     {
      "id": "c1-2",
      "tn": "1.2",
      "title": "Evolution: from rules to foundation models and agents",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 856
+     "outcomes": [
+      "Describe what each era of AI fixed that the one before could not",
+      "Explain why attention and GPUs made large pretrained models practical",
+      "Place rules, classic ML, deep learning and foundation models on one timeline"
+     ]
     },
     {
      "id": "c1-3",
      "tn": "1.3",
      "title": "What language models predict, and what makes a model an LLM",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 749
+     "short": "What language models predict",
+     "outcomes": [
+      "Explain a language model as a probability for every possible next token",
+      "Describe how text is generated: pick a token, append it, predict again",
+      "Say why an LLM outputs likely text, not necessarily true text"
+     ]
     },
     {
      "id": "c1-4",
@@ -119,27 +128,36 @@
      "tags": [
       "cpu"
      ],
-     "figures": 4,
-     "interactive": 3,
-     "words": 1097
+     "short": "Tokens, parameters, context, inference",
+     "outcomes": [
+      "Explain tokens, parameters, embeddings and the context window in plain words",
+      "Tell training, which changes weights, from inference, which uses them fixed",
+      "Estimate the cost of a request from its token count"
+     ]
     },
     {
      "id": "c1-5",
      "tn": "1.5",
      "title": "Capabilities and limitations: hallucination, stale knowledge, bias and unreliable confidence",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 822
+     "short": "What LLMs get wrong",
+     "outcomes": [
+      "Recognise hallucination, stale knowledge, bias and misplaced confidence in an answer",
+      "Explain why a fluent, confident tone does not signal a correct answer",
+      "Design around these limits, for example by giving the model the facts"
+     ]
     },
     {
      "id": "c1-6",
      "tn": "1.6",
      "title": "AI problem selection: rules, search, traditional ML or an LLM",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 638
+     "short": "Choosing rules, search, ML or LLM",
+     "outcomes": [
+      "Choose between rules, search, classic ML and an LLM for a task",
+      "Split one product into the parts each of those tools does best",
+      "Justify why a simpler option is enough, or why it is not"
+     ]
     }
    ],
    "hasIntro": false,
@@ -166,18 +184,24 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 784
+     "short": "Linear algebra for AI",
+     "outcomes": [
+      "Compute a dot product, a length and a cosine similarity by hand",
+      "Read a layer of a neural network as a matrix multiplication",
+      "Explain why unit-length vectors make cosine the same as the dot product"
+     ]
     },
     {
      "id": "c2-2",
      "tn": "2.2",
      "title": "Probability and statistics: distributions, conditional probability, Bayes, sampling and confidence intervals",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 705
+     "short": "Probability and statistics",
+     "outcomes": [
+      "Use Bayes' rule to see why alarms for rare events are mostly false",
+      "Explain how sample size changes how far to trust a measured rate",
+      "Judge whether a new model's improvement is bigger than random noise"
+     ]
     },
     {
      "id": "c2-3",
@@ -186,18 +210,23 @@
      "tags": [
       "real"
      ],
-     "figures": 4,
-     "interactive": 4,
-     "words": 818
+     "short": "Calculus and gradient descent",
+     "outcomes": [
+      "Describe gradient descent as stepping downhill on a loss surface",
+      "Compute one gradient step by hand with a given learning rate",
+      "Explain how the chain rule lets a network pass blame back through its layers"
+     ]
     },
     {
      "id": "c2-4",
      "tn": "2.4",
      "title": "Information theory: entropy, cross-entropy and KL divergence",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 649
+     "outcomes": [
+      "Explain entropy as average surprise, with a coin as the example",
+      "Explain why cross-entropy is the loss that trains a language model",
+      "Read a training loss as roughly how many choices the model is hedging between"
+     ]
     },
     {
      "id": "c2-5",
@@ -206,9 +235,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 777
+     "short": "Python tools for AI",
+     "outcomes": [
+      "Replace a Python loop with a whole-array NumPy operation",
+      "Make an experiment reproducible by fixing seeds and recording versions",
+      "Choose between a notebook for exploring and a module for rerunning"
+     ]
     },
     {
      "id": "c2-6",
@@ -217,9 +249,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 4,
-     "interactive": 2,
-     "words": 1166
+     "short": "Hardware basics: CPU, GPU, precision",
+     "outcomes": [
+      "Explain why GPUs suit AI work and where memory bandwidth limits them",
+      "Compute the memory a model needs from its parameter count and number format",
+      "Choose between FP16, BF16 and FP32 and say what each gives up"
+     ]
     }
    ],
    "hasIntro": false,
@@ -244,9 +279,11 @@
      "tn": "3.1",
      "title": "Supervised, unsupervised and reinforcement learning",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 564
+     "outcomes": [
+      "Tell supervised, unsupervised and reinforcement learning apart by their feedback",
+      "Match a business problem to the learning style it needs",
+      "Explain why next-token prediction needs no human labels"
+     ]
     },
     {
      "id": "c3-2",
@@ -255,36 +292,48 @@
      "tags": [
       "cpu"
      ],
-     "figures": 4,
-     "interactive": 3,
-     "words": 836
+     "short": "Models and baselines",
+     "outcomes": [
+      "Pick regression, classification or clustering from the shape of the question",
+      "Compare random forests with gradient boosting, and say what k-means does",
+      "Set a simple baseline before trusting any model"
+     ]
     },
     {
      "id": "c3-3",
      "tn": "3.3",
      "title": "Data cleaning, labelling, feature engineering and class imbalance",
      "tags": [],
-     "figures": 4,
-     "interactive": 3,
-     "words": 874
+     "short": "Data cleaning and features",
+     "outcomes": [
+      "Clean data and write a labelling guideline with examples of each label",
+      "Explain why label noise caps how good a model can get",
+      "Handle a rare class with better metrics, class weights or resampling"
+     ]
     },
     {
      "id": "c3-4",
      "tn": "3.4",
      "title": "Train/validation/test splits, leakage, overfitting, regularisation and generalisation",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 719
+     "short": "Splits, leakage and overfitting",
+     "outcomes": [
+      "Split data into train, validation and test sets, and say what each is for",
+      "Spot overfitting by comparing training and validation curves",
+      "Find leakage: a feature that is unavailable at prediction time"
+     ]
     },
     {
      "id": "c3-5",
      "tn": "3.5",
      "title": "Metrics: precision, recall, F1, ROC/PR curves and probability calibration",
      "tags": [],
-     "figures": 4,
-     "interactive": 3,
-     "words": 679
+     "short": "Metrics and calibration",
+     "outcomes": [
+      "Compute precision and recall from counts, and explain the trade-off",
+      "Explain why ROC curves can look good while precision is poor on rare positives",
+      "Choose a threshold from the costs of each kind of mistake"
+     ]
     },
     {
      "id": "c3-6",
@@ -293,9 +342,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 780
+     "short": "Error analysis and tuning",
+     "outcomes": [
+      "Sort a model's errors into causes and fix the biggest pile first",
+      "Name three kinds of distribution shift and how each shows up",
+      "Tune hyperparameters with validation data, and keep the run reproducible"
+     ]
     }
    ],
    "hasIntro": false,
@@ -320,27 +372,36 @@
      "tn": "4.1",
      "title": "Neurons, layers, activations, loss functions and backpropagation",
      "tags": [],
-     "figures": 4,
-     "interactive": 4,
-     "words": 849
+     "short": "Neurons, layers and backpropagation",
+     "outcomes": [
+      "Trace one neuron's weighted sum and activation by hand",
+      "Explain why a network needs non-linear activations",
+      "Follow a backpropagation step with real numbers"
+     ]
     },
     {
      "id": "c4-2",
      "tn": "4.2",
      "title": "Optimisers, learning rates, batch sizes, epochs and learning-rate schedules",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 702
+     "short": "Optimisers and learning rates",
+     "outcomes": [
+      "Compare plain gradient descent, momentum and Adam",
+      "Explain how batch size, learning rate, warm-up and decay change training",
+      "Read typical fine-tuning settings and say what each one does"
+     ]
     },
     {
      "id": "c4-3",
      "tn": "4.3",
      "title": "Initialisation, normalisation, dropout and gradient stability",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 731
+     "short": "Initialisation, normalisation, dropout",
+     "outcomes": [
+      "Explain why gradients vanish or explode in a deep network",
+      "Say what initialisation, normalisation and dropout each prevent",
+      "Read a loss spike and name the likely causes"
+     ]
     },
     {
      "id": "c4-4",
@@ -349,18 +410,23 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 788
+     "outcomes": [
+      "Explain an embedding as a position in a meaning space",
+      "Tell a token embedding from a sentence embedding",
+      "Embed and cluster short texts, then check the groups make sense"
+     ]
     },
     {
      "id": "c4-5",
      "tn": "4.5",
      "title": "CNNs, RNNs, LSTMs and sequence-to-sequence models (conceptual)",
      "tags": [],
-     "figures": 3,
-     "interactive": 1,
-     "words": 697
+     "short": "CNNs, RNNs and sequence models",
+     "outcomes": [
+      "Explain how a CNN's sliding filters and weight sharing work",
+      "Describe how an RNN or LSTM reads a sequence, and where it struggles",
+      "Say how attention fixed the limits of sequence-to-sequence models"
+     ]
     },
     {
      "id": "c4-6",
@@ -369,9 +435,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 801
+     "short": "PyTorch and training loops",
+     "outcomes": [
+      "Explain how PyTorch records operations so it can compute gradients",
+      "Write the steps of a training loop and say what each does",
+      "Debug a training run by overfitting one batch and checking the first loss"
+     ]
     }
    ],
    "hasIntro": false,
@@ -396,9 +465,12 @@
      "tn": "5.1",
      "title": "Tokenisation: subwords, BPE, vocabulary and multilingual implications",
      "tags": [],
-     "figures": 4,
-     "interactive": 3,
-     "words": 849
+     "short": "Tokenisation and BPE",
+     "outcomes": [
+      "Explain how byte-pair encoding builds a vocabulary by merging frequent pairs",
+      "Say why non-English text costs more tokens",
+      "Explain why models miscount letters: they see tokens, not characters"
+     ]
     },
     {
      "id": "c5-2",
@@ -407,9 +479,12 @@
      "tags": [
       "real"
      ],
-     "figures": 4,
-     "interactive": 4,
-     "words": 1040
+     "short": "Self-attention and multi-head attention",
+     "outcomes": [
+      "Explain self-attention as queries, keys and values scoring every token pair",
+      "Say what a causal mask and multiple heads each add",
+      "Explain why attention scores are scaled before the softmax"
+     ]
     },
     {
      "id": "c5-3",
@@ -418,18 +493,23 @@
      "tags": [
       "real"
      ],
-     "figures": 5,
-     "interactive": 4,
-     "words": 1257
+     "short": "Positions, residuals and feed-forward layers",
+     "outcomes": [
+      "Say how a transformer learns word order from position information",
+      "Trace a residual connection, a normalisation step and a feed-forward layer in one block",
+      "Count the parameters of a small transformer from its sizes"
+     ]
     },
     {
      "id": "c5-4",
      "tn": "5.4",
      "title": "Encoder-only, decoder-only and encoder–decoder architectures",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 571
+     "outcomes": [
+      "Tell encoder-only, decoder-only and encoder–decoder models apart by what they attend to",
+      "Match each architecture to tasks such as classification, reranking and generation",
+      "Explain why decoder-only models dominate LLMs: simple objective, scales on any text"
+     ]
     },
     {
      "id": "c5-5",
@@ -438,27 +518,35 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 720
+     "short": "Next-token prediction and logits",
+     "outcomes": [
+      "Explain logits and turn them into probabilities with softmax by hand",
+      "Describe generation as one forward pass per new token",
+      "Explain why reading the prompt is parallel and writing the answer is not"
+     ]
     },
     {
      "id": "c5-6",
      "tn": "5.6",
      "title": "Decoding: temperature, top-k, top-p, stop conditions and reproducibility limits",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 871
+     "short": "Decoding: temperature, top-k, top-p",
+     "outcomes": [
+      "Explain what temperature, top-k and top-p each do to the next-token choice",
+      "Choose decoding settings for a task, such as extraction or brainstorming",
+      "Explain why even temperature zero may not give identical outputs"
+     ]
     },
     {
      "id": "c5-7",
      "tn": "5.7",
      "title": "Dense vs mixture-of-experts models, context length and attention costs",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 866
+     "outcomes": [
+      "Compare dense and mixture-of-experts models by parameters stored and parameters used",
+      "Explain why attention cost and KV cache grow with context length",
+      "Explain why a stuffed long context is not the same as retrieval"
+     ]
     }
    ],
    "hasIntro": false,
@@ -483,54 +571,72 @@
      "tn": "6.1",
      "title": "Pretraining, continued pretraining, supervised fine-tuning and preference optimisation",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 646
+     "short": "Pretraining to preference tuning",
+     "outcomes": [
+      "Describe the stages: pretraining, supervised fine-tuning and preference tuning",
+      "Tell a base model from an instruct model",
+      "Say when continued pretraining is the right fix, and when it is not"
+     ]
     },
     {
      "id": "c6-2",
      "tn": "6.2",
      "title": "Training corpora: collection, licensing, filtering, deduplication, quality and contamination",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 768
+     "short": "Training data quality",
+     "outcomes": [
+      "Describe how raw web data is filtered, deduplicated and scored for quality",
+      "Explain near-duplicate detection with shingles and MinHash",
+      "Check for benchmark contamination with an n-gram overlap search"
+     ]
     },
     {
      "id": "c6-3",
      "tn": "6.3",
      "title": "Dataset mixtures, token budgets, scaling relationships and compute requirements",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 612
+     "short": "Data mixtures and scaling",
+     "outcomes": [
+      "Estimate training compute from parameters and tokens",
+      "Explain what scaling laws predict, and about 20 tokens per parameter",
+      "Explain why a data mixture is tuned with small experiments first"
+     ]
     },
     {
      "id": "c6-4",
      "tn": "6.4",
      "title": "Instruction datasets, chat templates, loss masking and training objectives",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 601
+     "short": "Instruction data and chat templates",
+     "outcomes": [
+      "Format a conversation with the exact chat template and role markers",
+      "Explain loss masking: train on the answer, not the prompt",
+      "Spot a chat-template mismatch or a wrong loss mask in a run"
+     ]
     },
     {
      "id": "c6-5",
      "tn": "6.5",
      "title": "RLHF, reward models, DPO and reinforcement learning for verifiable tasks",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 749
+     "short": "RLHF, reward models and DPO",
+     "outcomes": [
+      "Explain how a reward model and a KL penalty fit into RLHF",
+      "Compare DPO's direct preference loss with the reward-model route",
+      "Spot reward hacking, such as answers that only get longer"
+     ]
     },
     {
      "id": "c6-6",
      "tn": "6.6",
      "title": "Distributed training: data, tensor and pipeline parallelism, plus sharding",
      "tags": [],
-     "figures": 6,
-     "interactive": 5,
-     "words": 931
+     "short": "Distributed training",
+     "outcomes": [
+      "Tell data, tensor and pipeline parallelism apart, and name what each splits",
+      "Explain sharding optimiser state, gradients and weights",
+      "Estimate whether a fine-tune fits the memory of the GPUs you have"
+     ]
     },
     {
      "id": "c6-7",
@@ -540,9 +646,12 @@
       "cpu",
       "gpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 993
+     "short": "Train a tiny language model",
+     "outcomes": [
+      "Train a tiny language model end to end and read its loss curve",
+      "Explain how train, validation and test splits and a baseline guard against fooling yourself",
+      "Say what a one-character model cannot learn that transformers can"
+     ]
     }
    ],
    "hasIntro": false,
@@ -567,27 +676,36 @@
      "tn": "7.1",
      "title": "Hosted APIs vs self-hosted models; selecting models using task-specific evidence",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 653
+     "short": "Hosted or self-hosted models",
+     "outcomes": [
+      "Compare hosted APIs with self-hosted models on quality, start-up time and control",
+      "Choose a model with task-specific evidence, not a public leaderboard",
+      "Write the acceptance bar before comparing quality, latency and cost"
+     ]
     },
     {
      "id": "c7-2",
      "tn": "7.2",
      "title": "Prompt structure, instructions, examples and prompt versioning",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 714
+     "short": "Prompt structure and versioning",
+     "outcomes": [
+      "Write a prompt with a role, goal, rules, examples and an output format",
+      "Keep prompts in version control and review changes like code",
+      "Run an evaluation set on every prompt change"
+     ]
     },
     {
      "id": "c7-3",
      "tn": "7.3",
      "title": "Context engineering: assembling, prioritising, compressing and managing context",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 572
+     "short": "Context engineering",
+     "outcomes": [
+      "List what must fit in a context window and budget each source",
+      "Prioritise and compress context, putting key items near the start or end",
+      "Explain why the model knows only what is in its context"
+     ]
     },
     {
      "id": "c7-4",
@@ -596,36 +714,46 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 776
+     "short": "Structured outputs and tool calling",
+     "outcomes": [
+      "Request structured output and validate it against a schema",
+      "Describe how a tool call works: the model asks, your code decides",
+      "Stream a response and say why partial output needs careful validation"
+     ]
     },
     {
      "id": "c7-5",
      "tn": "7.5",
      "title": "Conversation state, context limits and persistent memory",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 730
+     "outcomes": [
+      "Explain why each model call needs the whole relevant conversation again",
+      "Choose between a sliding window, a summary and persistent memory",
+      "Store the full transcript separately for audit and evaluation"
+     ]
     },
     {
      "id": "c7-6",
      "tn": "7.6",
      "title": "Timeouts, retries, rate limits, fallbacks and token budgets",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 621
+     "short": "Timeouts, retries and fallbacks",
+     "outcomes": [
+      "Set timeouts, retries with backoff and jitter, and a total deadline",
+      "Explain how synchronised retries make an outage worse",
+      "Plan a fallback model and a token budget per request"
+     ]
     },
     {
      "id": "c7-7",
      "tn": "7.7",
      "title": "Separating probabilistic model output from deterministic business rules",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 727
+     "outcomes": [
+      "Split a feature into model work, such as intent, and code work",
+      "Explain why exact business rules belong in code, not in a prompt",
+      "Explain how persuasion and edge cases break rules left to the model"
+     ]
     }
    ],
    "hasIntro": false,
@@ -650,63 +778,80 @@
      "tn": "8.1",
      "title": "Task definitions, acceptance criteria, baselines and representative evaluation datasets",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 663
+     "short": "Tasks, baselines and eval datasets",
+     "outcomes": [
+      "Write a task definition and acceptance criteria before building",
+      "Build an evaluation set sampled from real traffic and stratified by segment",
+      "Compare against a baseline: the current system, a simple rule or no AI"
+     ]
     },
     {
      "id": "c8-2",
      "tn": "8.2",
      "title": "Deterministic checks, human evaluation and model-based judges",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 500
+     "outcomes": [
+      "Choose between code checks, human review and a model judge for each question",
+      "Write a judge rubric that scores claims against sources",
+      "Name which decisions still need human sign-off"
+     ]
     },
     {
      "id": "c8-3",
      "tn": "8.3",
      "title": "Judge bias, calibration against humans and evaluation uncertainty",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 746
+     "outcomes": [
+      "Spot judge biases, such as position and length, and counter them",
+      "Calibrate a judge against 100 to 300 human-labelled cases",
+      "Report how uncertain a score is on a finite test set"
+     ]
     },
     {
      "id": "c8-4",
      "tn": "8.4",
      "title": "Accuracy, groundedness, completeness, refusal behaviour, latency and cost",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 572
+     "short": "Quality, latency and cost metrics",
+     "outcomes": [
+      "Measure accuracy, groundedness, completeness, refusals, latency and cost side by side",
+      "Tell a grounded answer from an accurate one",
+      "Treat over-refusal as a failure, not a safe result"
+     ]
     },
     {
      "id": "c8-5",
      "tn": "8.5",
      "title": "Retrieval evaluation vs answer evaluation vs agent task evaluation",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 486
+     "outcomes": [
+      "Separate retrieval failures from answer failures when a RAG answer is wrong",
+      "Test generation alone by supplying the correct passages",
+      "Judge an agent by the resulting state, not only its final message"
+     ]
     },
     {
      "id": "c8-6",
      "tn": "8.6",
      "title": "Regression suites, adversarial cases, multilingual cases and dataset contamination",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 568
+     "short": "Regression and adversarial test suites",
+     "outcomes": [
+      "Grow a regression suite from every bug and incident",
+      "Add adversarial and multilingual cases, and name the must-pass ones",
+      "Check for dataset contamination before trusting a score"
+     ]
     },
     {
      "id": "c8-7",
      "tn": "8.7",
      "title": "Offline experiments, online A/B tests and business outcome measurement",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 656
+     "outcomes": [
+      "Explain what an offline test shows and what only an online test can show",
+      "Set a primary metric and guardrail metrics for an A/B test",
+      "Say why model metrics are proxies for business outcomes"
+     ]
     },
     {
      "id": "c8-8",
@@ -715,9 +860,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 1017
+     "short": "Evaluating agents",
+     "outcomes": [
+      "Score an agent on tool choice, arguments, steps and cost",
+      "Explain pass@k and pass^k, and when each is the right measure",
+      "Check safety and repeatability across repeated runs"
+     ]
     }
    ],
    "hasIntro": false,
@@ -742,36 +890,48 @@
      "tn": "9.1",
      "title": "What RAG solves; when to use RAG, fine-tuning, or both",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 585
+     "short": "When to use RAG",
+     "outcomes": [
+      "Decide between RAG, fine-tuning or both from the gap you have",
+      "Explain why RAG suits changing knowledge and needs no retraining",
+      "Return citations that tie each claim to a source chunk"
+     ]
     },
     {
      "id": "c9-2",
      "tn": "9.2",
      "title": "Ingestion, parsing, cleaning, chunking, embedding, indexing, retrieval and generation",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 668
+     "short": "The RAG pipeline",
+     "outcomes": [
+      "List the offline steps: ingest, parse, clean, chunk, embed and index",
+      "List the online steps: retrieve, assemble context and generate",
+      "Explain how chunk size and structure decide what can be found"
+     ]
     },
     {
      "id": "c9-3",
      "tn": "9.3",
      "title": "Keyword search, inverted indexes, BM25, dense embeddings and sparse retrieval",
      "tags": [],
-     "figures": 4,
-     "interactive": 4,
-     "words": 873
+     "short": "Keyword search, BM25, embeddings",
+     "outcomes": [
+      "Explain an inverted index and how BM25 scores a match",
+      "Choose keyword or dense search for exact codes versus meaning",
+      "Explain the vocabulary mismatch problem that keyword search has"
+     ]
     },
     {
      "id": "c9-4",
      "tn": "9.4",
      "title": "Vector similarity, approximate nearest-neighbour search, HNSW and quantisation",
      "tags": [],
-     "figures": 5,
-     "interactive": 4,
-     "words": 834
+     "short": "Vector search and HNSW",
+     "outcomes": [
+      "Explain why brute-force vector search stops scaling",
+      "Describe how HNSW finds neighbours through layers of a graph",
+      "Compare int8 and product quantisation by memory saved"
+     ]
     },
     {
      "id": "c9-5",
@@ -780,27 +940,36 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 895
+     "short": "Hybrid retrieval and reranking",
+     "outcomes": [
+      "Combine keyword and dense results with reciprocal rank fusion",
+      "Explain what a reranker adds and why it runs on a short list",
+      "Apply metadata filters without leaking or starving results"
+     ]
     },
     {
      "id": "c9-6",
      "tn": "9.6",
      "title": "Query rewriting, decomposition, multi-hop retrieval, citations and abstention",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 782
+     "short": "Query rewriting and citations",
+     "outcomes": [
+      "Rewrite a follow-up question into a standalone search query",
+      "Split a compound question into sub-queries, or search in steps",
+      "Cite per claim, and abstain when no support is found"
+     ]
     },
     {
      "id": "c9-7",
      "tn": "9.7",
      "title": "Retrieval metrics: Recall@k, Precision@k, MRR and nDCG",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 939
+     "short": "Retrieval metrics",
+     "outcomes": [
+      "Compute recall@k, precision@k, MRR and nDCG for a ranked list",
+      "Explain why unretrieved evidence cannot help the model",
+      "Build retrieval labels cheaply, and say why unlabelled hits count as misses"
+     ]
     }
    ],
    "hasIntro": false,
@@ -825,18 +994,24 @@
      "tn": "10.1",
      "title": "Corpus sizing: documents → chunks → vectors → storage and memory",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 508
+     "short": "Corpus sizing: documents to vectors",
+     "outcomes": [
+      "Estimate documents, chunks, vectors and memory with back-of-envelope arithmetic",
+      "Account for overlap, replicas and double storage during a migration",
+      "Show why a small early wrong guess becomes a large sizing error"
+     ]
     },
     {
      "id": "c10-2",
      "tn": "10.2",
      "title": "Distributed ingestion: queues, checkpoints, backpressure, retries and dead-letter handling",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 786
+     "short": "Distributed ingestion",
+     "outcomes": [
+      "Design an ingestion pipeline with durable queues and checkpoints",
+      "Explain backpressure, bounded queues and at-least-once delivery",
+      "Send poison documents to a dead-letter queue and run backfills apart from live traffic"
+     ]
     },
     {
      "id": "c10-3",
@@ -845,45 +1020,59 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 836
+     "short": "PDFs, OCR and document structure",
+     "outcomes": [
+      "Explain why PDFs need reading-order, table and layout handling",
+      "Route digital, scanned and table-heavy documents to the right parser",
+      "Turn a table into text a search system can use"
+     ]
     },
     {
      "id": "c10-4",
      "tn": "10.4",
      "title": "Incremental updates, deletions, deduplication, lineage and freshness guarantees",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 805
+     "short": "Updates, deletions and freshness",
+     "outcomes": [
+      "Update an index incrementally with change feeds and reconciliation",
+      "Make deletions reach chunks, caches and backups",
+      "Record lineage so you can say why a source was used"
+     ]
     },
     {
      "id": "c10-5",
      "tn": "10.5",
      "title": "Index sharding, replication, partitioning, capacity planning and hot tenants",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 609
+     "short": "Index sharding and capacity",
+     "outcomes": [
+      "Choose between sharding and replication for data size, writes and read load",
+      "Plan capacity for memory, headroom and query throughput",
+      "Handle a hot tenant with dedicated shards"
+     ]
     },
     {
      "id": "c10-6",
      "tn": "10.6",
      "title": "Permission-aware retrieval, tenant isolation and access-control synchronisation",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 795
+     "outcomes": [
+      "Enforce permissions inside search, so users never retrieve what they cannot read",
+      "Choose early filtering or a late source check, and say what each risks",
+      "Keep access-control data in sync, including after a team change"
+     ]
     },
     {
      "id": "c10-7",
      "tn": "10.7",
      "title": "Embedding migrations, reindexing, versioned indexes and rollback",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 655
+     "short": "Embedding migrations and reindexing",
+     "outcomes": [
+      "Explain why vectors from different embedding models cannot be mixed",
+      "Migrate with a new versioned index, an alias and a rollback",
+      "Record model, chunker and settings with every index version"
+     ]
     },
     {
      "id": "c10-8",
@@ -892,18 +1081,24 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 628
+     "short": "Benchmarking retrieval at scale",
+     "outcomes": [
+      "Benchmark with real queries, filters and concurrent updates",
+      "Report retrieval quality and tail latency, not only the average",
+      "Spot where an ANN benchmark misleads, such as few eligible vectors"
+     ]
     },
     {
      "id": "c10-9",
      "tn": "10.9",
      "title": "Advanced retrieval: hierarchical search, late interaction, knowledge graphs and agentic retrieval",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 789
+     "short": "Advanced retrieval methods",
+     "outcomes": [
+      "Match a retrieval failure to hierarchical, late-interaction, graph or agentic retrieval",
+      "Try simpler fixes first; adopt an advanced method only when evaluation shows a gain",
+      "Explain how late interaction scores with one vector per token"
+     ]
     }
    ],
    "hasIntro": false,
@@ -928,9 +1123,11 @@
      "tn": "11.1",
      "title": "Workflows vs agents; when autonomy adds value",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 566
+     "outcomes": [
+      "Tell a workflow from an agent by who controls the path",
+      "Decide whether the cases can be listed, or autonomy is worth its cost",
+      "Bound a workflow's model steps with code"
+     ]
     },
     {
      "id": "c11-2",
@@ -939,54 +1136,72 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 3,
-     "words": 769
+     "short": "Tool selection and agent loops",
+     "outcomes": [
+      "Describe the agent loop: decide, call a tool, observe, repeat",
+      "Set termination rules: final answer, step, token, cost and time limits",
+      "Write tool names and descriptions so the model picks the right one"
+     ]
     },
     {
      "id": "c11-3",
      "tn": "11.3",
      "title": "Tool schemas, validation, scoped permissions and safe execution",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 686
+     "short": "Tool schemas and safe execution",
+     "outcomes": [
+      "Write a tool schema and validate every call before it runs",
+      "Check that the person the agent acts for may do the action",
+      "Treat tool results as untrusted, since they can carry injected instructions"
+     ]
     },
     {
      "id": "c11-4",
      "tn": "11.4",
      "title": "Short-term state, persistent memory, memory retrieval and expiration",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 542
+     "short": "Agent memory",
+     "outcomes": [
+      "Separate working state from persistent memory",
+      "Store memories with an owner, a source and an expiry",
+      "Retrieve memory with tenant and user filters, and never store secrets"
+     ]
     },
     {
      "id": "c11-5",
      "tn": "11.5",
      "title": "State machines, checkpointing, resumability and long-running jobs",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 682
+     "short": "State machines and checkpointing",
+     "outcomes": [
+      "Model a long task as a state machine with saved checkpoints",
+      "Resume a crashed job from the last checkpoint",
+      "Let code control transitions and the model act inside a state"
+     ]
     },
     {
      "id": "c11-6",
      "tn": "11.6",
      "title": "Idempotency, retries, duplicate actions and compensating actions",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 678
+     "short": "Idempotency and compensating actions",
+     "outcomes": [
+      "Use an idempotency key so a retry cannot run an action twice",
+      "Undo a multi-step process with compensating actions in reverse",
+      "Handle the crash window where an action ran but was not recorded"
+     ]
     },
     {
      "id": "c11-7",
      "tn": "11.7",
      "title": "Human approvals, escalation, step limits and cost budgets",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 511
+     "short": "Approvals, escalation and budgets",
+     "outcomes": [
+      "Set approval rules by risk: read-only runs freely, big or irreversible waits",
+      "Put approvals, step limits and budgets in the runtime, not the prompt",
+      "Show a reviewer the exact action, the reason and the evidence"
+     ]
     },
     {
      "id": "c11-8",
@@ -995,9 +1210,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 921
+     "short": "Model Context Protocol",
+     "outcomes": [
+      "Name the parts of MCP: host, client, server, tools and resources",
+      "Explain how authentication works for an MCP server, including OAuth",
+      "Treat a server's tool descriptions and results as untrusted input"
+     ]
     }
    ],
    "hasIntro": false,
@@ -1022,63 +1240,82 @@
      "tn": "12.1",
      "title": "When multiple agents improve results over a single agent or an ordinary parallel workflow",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 607
+     "short": "When multiple agents help",
+     "outcomes": [
+      "Say when several agents beat one agent or a parallel workflow",
+      "Count the extra cost: more tokens and more coordination",
+      "Name the shared blind spots that a team of agents does not remove"
+     ]
     },
     {
      "id": "c12-2",
      "tn": "12.2",
      "title": "Coordinator–worker, routing, handoff, supervisor and evaluator patterns",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 450
+     "short": "Multi-agent patterns",
+     "outcomes": [
+      "Tell coordinator–worker, routing, handoff, supervisor and evaluator patterns apart",
+      "Write a handoff note that carries evidence and what the user was told",
+      "Guard against endless loops between agents"
+     ]
     },
     {
      "id": "c12-3",
      "tn": "12.3",
      "title": "Task decomposition, delegation, parallel execution and result synthesis",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 478
+     "short": "Decomposition and delegation",
+     "outcomes": [
+      "Split a task into independent subtasks and write a clear brief for each",
+      "Run workers in parallel and say what that saves: time, not tokens",
+      "Combine worker results into one answer with their sources"
+     ]
     },
     {
      "id": "c12-4",
      "tn": "12.4",
      "title": "Shared vs isolated state, message contracts and agent interoperability",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 494
+     "outcomes": [
+      "Compare a shared blackboard with isolated agents that pass messages",
+      "Write a typed, versioned message contract, validated at both ends",
+      "Explain what an agent protocol such as A2A defines"
+     ]
     },
     {
      "id": "c12-5",
      "tn": "12.5",
      "title": "Scheduling, dependencies, cancellation, timeouts and partial failures",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 463
+     "short": "Scheduling and partial failure",
+     "outcomes": [
+      "Draw a task graph with dependencies and concurrency limits",
+      "Pass deadlines down the chain and reserve time for the final step",
+      "Choose to retry, substitute or report a partial result on failure"
+     ]
     },
     {
      "id": "c12-6",
      "tn": "12.6",
      "title": "Conflicting outputs, coordination overhead, error propagation and runaway loops",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 545
+     "short": "Multi-agent failure modes",
+     "outcomes": [
+      "Explain how one agent's invented fact compounds down a chain",
+      "Resolve conflicting outputs by evidence, recency and authority",
+      "Stop runaway loops with limits and an evaluator that can reject"
+     ]
     },
     {
      "id": "c12-7",
      "tn": "12.7",
      "title": "Identity and authorisation across agent boundaries",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 625
+     "outcomes": [
+      "Explain the confused deputy problem in an agent chain",
+      "Carry the requester's identity and narrow it at each hop",
+      "Keep an audit trail and a policy for each agent"
+     ]
     },
     {
      "id": "c12-8",
@@ -1087,9 +1324,11 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 805
+     "outcomes": [
+      "Compare a multi-agent design with one agent and a fixed workflow",
+      "Run an ablation: remove one agent and see if quality drops",
+      "Count the cost of failures when comparing designs"
+     ]
     }
    ],
    "hasIntro": false,
@@ -1114,18 +1353,24 @@
      "tn": "13.1",
      "title": "Deciding between prompting, retrieval, fine-tuning, continued pretraining and distillation",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 652
+     "short": "Prompting, RAG or fine-tuning?",
+     "outcomes": [
+      "Climb the ladder of fixes in order: prompting, retrieval, fine-tuning, then more",
+      "Tell a wrong-facts problem from a wrong-format problem using error analysis",
+      "Describe distillation as a student model copying a teacher's verified outputs"
+     ]
     },
     {
      "id": "c13-2",
      "tn": "13.2",
      "title": "Creating domain datasets with labelling guidelines and human quality checks",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 600
+     "short": "Building domain datasets",
+     "outcomes": [
+      "Build a domain dataset from real inputs with a labelling guideline",
+      "Measure annotator agreement and fix an unclear guideline",
+      "Catch rubber-stamping and copied model errors in quality checks"
+     ]
     },
     {
      "id": "c13-3",
@@ -1135,18 +1380,23 @@
       "cpu",
       "gpu"
      ],
-     "figures": 6,
-     "interactive": 4,
-     "words": 995
+     "outcomes": [
+      "Explain how LoRA adds small low-rank updates while the base weights stay frozen",
+      "Compare the memory of full fine-tuning, LoRA and QLoRA",
+      "Run a small LoRA fine-tune on a laptop"
+     ]
     },
     {
      "id": "c13-4",
      "tn": "13.4",
      "title": "Adapting models for extraction, classification, domain language, structured output and tool use",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 522
+     "short": "Adapting models to tasks",
+     "outcomes": [
+      "Build training examples for extraction, classification and tool use",
+      "Include null examples so a model does not invent absent fields",
+      "Compare an adapted model with prompting on accuracy, cost and latency"
+     ]
     },
     {
      "id": "c13-5",
@@ -1155,18 +1405,23 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 673
+     "outcomes": [
+      "Explain why a general embedding model misses your company's terms",
+      "Train with hard negatives and generated question–passage pairs",
+      "Fine-tune a small embedding model and check retrieval improves"
+     ]
     },
     {
      "id": "c13-6",
      "tn": "13.6",
      "title": "Measuring domain gains, general-capability regressions, memorisation and safety regressions",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 522
+     "short": "Measuring adaptation gains and regressions",
+     "outcomes": [
+      "Measure domain gain against the best prompt on the base model",
+      "Test for general-capability, memorisation and safety regressions",
+      "Run before-and-after suites, prefix probes and canaries"
+     ]
     },
     {
      "id": "c13-7",
@@ -1176,9 +1431,12 @@
       "cpu",
       "gpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 673
+     "short": "Experiment tracking and releases",
+     "outcomes": [
+      "Record every run's code commit, dataset version and configuration",
+      "Keep released models as immutable registry versions with an intended use",
+      "Write release criteria that a model must meet before shipping"
+     ]
     }
    ],
    "hasIntro": false,
@@ -1203,9 +1461,12 @@
      "tn": "14.1",
      "title": "Model weights, activations, KV cache and GPU memory estimation",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 620
+     "short": "Weights, KV cache and GPU memory",
+     "outcomes": [
+      "Estimate GPU memory for weights, activations and the KV cache",
+      "Explain why context length and users, not the model size alone, limit concurrency",
+      "Estimate the cache saving from shared key-value heads"
+     ]
     },
     {
      "id": "c14-2",
@@ -1214,18 +1475,23 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 3,
-     "words": 650
+     "short": "Prefill, decoding and latency",
+     "outcomes": [
+      "Tell prefill from decoding, and compute-bound from bandwidth-bound",
+      "Define time to first token and inter-token latency",
+      "Measure both on a local model"
+     ]
     },
     {
      "id": "c14-3",
      "tn": "14.3",
      "title": "Continuous batching, prefix caching and paged attention",
      "tags": [],
-     "figures": 5,
-     "interactive": 5,
-     "words": 783
+     "outcomes": [
+      "Explain continuous batching and why static batches waste GPU time",
+      "Explain paged attention as memory blocks allocated on demand",
+      "Say when prefix caching lowers time to first token and cost"
+     ]
     },
     {
      "id": "c14-4",
@@ -1234,18 +1500,22 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 2,
-     "words": 827
+     "outcomes": [
+      "Explain what quantisation saves and what it can cost in quality",
+      "Describe speculative decoding: a draft model proposes, the target verifies",
+      "Run a quantised model on CPU with llama.cpp"
+     ]
     },
     {
      "id": "c14-5",
      "tn": "14.5",
      "title": "Multi-GPU serving and distributed inference",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 596
+     "outcomes": [
+      "Explain tensor and pipeline splits of one model across GPUs",
+      "Size a deployment for a 70B model, including a spare unit",
+      "Say why separate prefill and decode pools need KV transfer"
+     ]
     },
     {
      "id": "c14-6",
@@ -1254,9 +1524,12 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 674
+     "short": "Serving engines and autoscaling",
+     "outcomes": [
+      "Choose a serving engine such as vLLM or SGLang for a workload",
+      "Explain cold start and why GPU replicas scale late",
+      "Scale on early signals such as queue depth and KV cache use"
+     ]
     },
     {
      "id": "c14-7",
@@ -1265,9 +1538,11 @@
      "tags": [
       "gpu"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 577
+     "outcomes": [
+      "Explain how larger batches raise throughput and slow each user",
+      "Pick the largest batch size that still meets the latency target",
+      "Use admission control and queue limits to protect latency"
+     ]
     },
     {
      "id": "c14-8",
@@ -1276,9 +1551,11 @@
      "tags": [
       "gpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 606
+     "outcomes": [
+      "Compute the break-even volume between a hosted API and self-hosted GPUs",
+      "List the hidden costs: people, redundancy, retries and quality",
+      "Run a capacity benchmark before you commit"
+     ]
     }
    ],
    "hasIntro": true,
@@ -1303,63 +1580,84 @@
      "tn": "15.1",
      "title": "Converting product usage into peak requests/second, concurrency, tokens/second and background workload",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 679
+     "primary": "store",
+     "short": "From usage to peak load",
+     "outcomes": [
+      "Turn a user count into peak requests per second and concurrency",
+      "Apply Little's law to find requests in flight",
+      "Plan for bursts and background load, not only the average"
+     ]
     },
     {
      "id": "c15-2",
      "tn": "15.2",
      "title": "Defining service-level objectives for availability, latency, quality and cost",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 496
+     "short": "Service-level objectives",
+     "outcomes": [
+      "Write a service-level objective with a measurement, a target and a window",
+      "Compute an error budget and say when to freeze risky changes",
+      "Add quality and cost objectives for an AI feature"
+     ]
     },
     {
      "id": "c15-3",
      "tn": "15.3",
      "title": "Separating ingestion, retrieval, generation and agent execution workloads",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 465
+     "short": "Separating workloads",
+     "outcomes": [
+      "Separate ingestion, retrieval, generation and agent work into their own pools",
+      "Explain how bulk work starves live users without quotas",
+      "Choose queues and databases to match each workload"
+     ]
     },
     {
      "id": "c15-4",
      "tn": "15.4",
      "title": "Stateless services, durable state, queues, caches and asynchronous processing",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 653
+     "short": "State, queues, caches and async",
+     "outcomes": [
+      "Design stateless services with durable state in a database",
+      "Move work the user need not wait for onto a queue",
+      "Choose an exact or a semantic cache and name the risk of each"
+     ]
     },
     {
      "id": "c15-5",
      "tn": "15.5",
      "title": "Model gateways, routing, tenant quotas, fairness and noisy-neighbour protection",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 506
+     "short": "Gateways, routing and quotas",
+     "outcomes": [
+      "Describe what a model gateway centralises: routing, credentials and usage",
+      "Set tenant quotas so one customer cannot fill the queue",
+      "Route a request to a model by task and tier, with a fallback"
+     ]
     },
     {
      "id": "c15-6",
      "tn": "15.6",
      "title": "Backpressure, load shedding, circuit breakers and graceful degradation",
      "tags": [],
-     "figures": 4,
-     "interactive": 3,
-     "words": 708
+     "short": "Backpressure and graceful degradation",
+     "outcomes": [
+      "Explain backpressure, load shedding and circuit breakers",
+      "Define degradation levels in advance and shed load by priority",
+      "Avoid wasted work and long delays during overload"
+     ]
     },
     {
      "id": "c15-7",
      "tn": "15.7",
      "title": "Multi-region architecture, disaster recovery and provider outages",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 711
+     "outcomes": [
+      "Explain RPO and RTO and how they shape a multi-region design",
+      "Compare active-active with standby regions and their consistency costs",
+      "Plan for a provider outage and rehearse it with a game day"
+     ]
     },
     {
      "id": "c15-8",
@@ -1368,27 +1666,36 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 1,
-     "words": 755
+     "primary": "store",
+     "short": "Load, stress and failure testing",
+     "outcomes": [
+      "Build a load test from realistic prompt lengths, bursts and agent calls",
+      "Find the breaking point and test soak and failure behaviour",
+      "Explain why closed-loop tests under-report latency"
+     ]
     },
     {
      "id": "c15-9",
      "tn": "15.9",
      "title": "Cost per successful task, capacity forecasting and budget enforcement",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 500
+     "outcomes": [
+      "Compute cost per successful task, including retries and human fixes",
+      "Forecast capacity from growth and per-task usage",
+      "Enforce budgets per tenant or task"
+     ]
     },
     {
      "id": "c15-10",
      "tn": "15.10",
      "title": "Distinguishing measured performance, projected capacity and actual production usage",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 607
+     "primary": "store",
+     "outcomes": [
+      "Label a number as measured, projected or actual production usage",
+      "Say why a projection from a different prompt mix can mislead",
+      "State the conditions behind every capacity figure"
+     ]
     }
    ],
    "hasIntro": true,
@@ -1413,54 +1720,71 @@
      "tn": "16.1",
      "title": "Threat modelling for prompts, retrieved documents, tools, models and dependencies",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 606
+     "short": "Threat modelling",
+     "outcomes": [
+      "Draw a data-flow diagram of an AI system and mark its trust boundaries",
+      "Spot the risky combination: private data, untrusted content and a way out",
+      "List threats from prompts, retrieved text, tools, models and dependencies"
+     ]
     },
     {
      "id": "c16-2",
      "tn": "16.2",
      "title": "Prompt injection, data exfiltration, poisoned content and unsafe tool execution",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 624
+     "short": "Prompt injection and exfiltration",
+     "outcomes": [
+      "Explain direct and indirect prompt injection with examples",
+      "Explain why filters fail and architecture is the dependable defence",
+      "Block data leaks through URLs, images and tool calls"
+     ]
     },
     {
      "id": "c16-3",
      "tn": "16.3",
      "title": "Authentication, authorisation, least privilege, sandboxing and secrets management",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 552
+     "short": "Access control and secrets",
+     "outcomes": [
+      "Tell authentication from authorisation, and apply least privilege to agents",
+      "Sandbox tools and default them to read-only",
+      "Keep secrets in a vault and inject them at the tool layer"
+     ]
     },
     {
      "id": "c16-4",
      "tn": "16.4",
      "title": "Tenant isolation across retrieval, memory, caches, logs and agent state",
      "tags": [],
-     "figures": 3,
-     "interactive": 2,
-     "words": 600
+     "short": "Tenant isolation",
+     "outcomes": [
+      "Tag every index, memory, cache and log entry with a server-set tenant",
+      "List each surface where tenants could mix, in a matrix",
+      "Probe isolation with synthetic tenants and planted strings"
+     ]
     },
     {
      "id": "c16-5",
      "tn": "16.5",
      "title": "Sensitive-data handling, encryption, retention, deletion and auditability",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 635
+     "short": "Sensitive data and audit",
+     "outcomes": [
+      "Classify sensitive data and minimise or redact it before the model sees it",
+      "Find every copy of the data: chunks, vectors, caches, traces and summaries",
+      "Set retention, deletion and an audit trail for each copy"
+     ]
     },
     {
      "id": "c16-6",
      "tn": "16.6",
      "title": "Dataset and model licensing, provenance and supply-chain security",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 579
+     "outcomes": [
+      "Check a model's licence, pinned version and permitted use",
+      "Accept only safe file formats and scan weights before loading",
+      "Treat custom model code as untrusted until reviewed"
+     ]
     },
     {
      "id": "c16-7",
@@ -1469,18 +1793,23 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 639
+     "short": "Red teaming and incident response",
+     "outcomes": [
+      "Red-team the whole system, not only the model",
+      "Turn each finding into a regression test and a measured guardrail",
+      "Run an incident with detect, triage, contain and review steps"
+     ]
     },
     {
      "id": "c16-8",
      "tn": "16.8",
      "title": "Understanding applicable regulatory and organisational requirements",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 834
+     "outcomes": [
+      "Tell a law from a framework and from a standard",
+      "Map a regulation's requirements to concrete engineering controls",
+      "Place a use case in a risk tier and see what duties follow"
+     ]
     }
    ],
    "hasIntro": false,
@@ -1505,9 +1834,12 @@
      "tn": "17.1",
      "title": "Logs, metrics, distributed traces, correlation IDs and OpenTelemetry",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 581
+     "short": "Logs, metrics, traces, OpenTelemetry",
+     "outcomes": [
+      "Tell logs, metrics and traces apart, and what each answers",
+      "Carry a correlation ID or trace context across services and queues",
+      "Say what OpenTelemetry and OTLP standardise"
+     ]
     },
     {
      "id": "c17-2",
@@ -1516,81 +1848,107 @@
      "tags": [
       "cpu"
      ],
-     "figures": 3,
-     "interactive": 3,
-     "words": 628
+     "short": "End-to-end tracing",
+     "outcomes": [
+      "Trace a request across retrieval, reranking, model calls, tools and queues",
+      "Read a trace to find the critical path the user waited for",
+      "Record what was retrieved and what the model saw, within privacy limits"
+     ]
     },
     {
      "id": "c17-3",
      "tn": "17.3",
      "title": "Operational signals: latency percentiles, errors, saturation, queue depth and availability",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 475
+     "short": "Operational signals",
+     "outcomes": [
+      "Measure latency percentiles instead of averages",
+      "Track errors, saturation, queue depth and availability per stage",
+      "Read an early warning from the tail, not the mean"
+     ]
     },
     {
      "id": "c17-4",
      "tn": "17.4",
      "title": "AI signals: task success, groundedness, retrieval failures, tool errors, loops and escalation",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 461
+     "short": "AI-specific signals",
+     "outcomes": [
+      "Track task success, groundedness, retrieval failures, tool errors and loops",
+      "Use user behaviour, such as edits, as an implicit quality signal",
+      "Explain why a service can return 200 OK and still be wrong"
+     ]
     },
     {
      "id": "c17-5",
      "tn": "17.5",
      "title": "Token consumption, cost attribution, GPU utilisation and tenant-level usage",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 400
+     "short": "Token usage and cost attribution",
+     "outcomes": [
+      "Tag every model call with tenant, feature and prompt version",
+      "Attribute cost from the token counts the provider returns",
+      "Tell a busy GPU from a useful one, with cost per success"
+     ]
     },
     {
      "id": "c17-6",
      "tn": "17.6",
      "title": "Trace sampling, sensitive-data redaction, retention and telemetry costs",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 520
+     "short": "Sampling, redaction and retention",
+     "outcomes": [
+      "Compare head sampling with tail sampling and what each can miss",
+      "Redact sensitive fields before telemetry is stored",
+      "Set retention and watch telemetry cost and silent drops"
+     ]
     },
     {
      "id": "c17-7",
      "tn": "17.7",
      "title": "Quality drift, data freshness, model changes and delayed feedback",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 535
+     "short": "Quality drift and delayed feedback",
+     "outcomes": [
+      "Spot quality drift from changing inputs, stale documents or model updates",
+      "Pin model snapshots and record the response model on every call",
+      "Join delayed feedback to traces and use proxies in the meantime"
+     ]
     },
     {
      "id": "c17-8",
      "tn": "17.8",
      "title": "Dashboards, actionable alerts, on-call runbooks, incident investigation and postmortems",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 636
+     "short": "Dashboards, alerts and postmortems",
+     "outcomes": [
+      "Write alerts on user-facing symptoms and burn rate, with an owner",
+      "Write a runbook: confirm, first safe actions and escalation",
+      "Run a blameless postmortem"
+     ]
     },
     {
      "id": "c17-9",
      "tn": "17.9",
      "title": "Turning production failures into evaluation cases and corrective releases",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 480
+     "outcomes": [
+      "Turn a failed production trace into a test case without private data",
+      "Run the evaluation flywheel: flag, find the cause, test, fix, gate",
+      "Block a release that fails the growing suite"
+     ]
     },
     {
      "id": "c17-10",
      "tn": "17.10",
      "title": "OpenTelemetry GenAI semantic conventions, and checking their stability before adoption",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 695
+     "short": "OpenTelemetry GenAI conventions",
+     "outcomes": [
+      "Explain what semantic conventions are and why shared names matter",
+      "Name what the GenAI conventions cover: spans, metrics and events",
+      "Check a convention's stability status before adopting it"
+     ]
     }
    ],
    "hasIntro": false,
@@ -1615,18 +1973,23 @@
      "tn": "18.1",
      "title": "Versioning code, prompts, models, datasets, indexes, configurations and evaluation suites",
      "tags": [],
-     "figures": 2,
-     "interactive": 1,
-     "words": 392
+     "short": "Versioning everything",
+     "outcomes": [
+      "List what changes an AI system's behaviour besides code",
+      "Record a release manifest id on every request",
+      "Use versions to reproduce an output or bisect a regression"
+     ]
     },
     {
      "id": "c18-2",
      "tn": "18.2",
      "title": "Reproducible builds, infrastructure as code and environment promotion",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 519
+     "outcomes": [
+      "Pin dependencies with lockfiles and image digests",
+      "Build once and promote the same artefact from staging to production",
+      "Define infrastructure as code that a pipeline applies"
+     ]
     },
     {
      "id": "c18-3",
@@ -1635,45 +1998,59 @@
      "tags": [
       "cpu"
      ],
-     "figures": 2,
-     "interactive": 2,
-     "words": 555
+     "short": "Automated release gates",
+     "outcomes": [
+      "Set quality, safety, latency and cost gates for every change",
+      "Explain why averages hide drops and gates need per-slice checks",
+      "Run a quality gate in CI"
+     ]
     },
     {
      "id": "c18-4",
      "tn": "18.4",
      "title": "Shadow deployments, canaries, controlled rollouts and rollback",
      "tags": [],
-     "figures": 3,
-     "interactive": 3,
-     "words": 616
+     "short": "Canaries, shadows and rollback",
+     "outcomes": [
+      "Compare shadow, canary and gradual rollout, and what each shows",
+      "Set rollout bounds that trigger an automatic rollback",
+      "Keep shadow runs from duplicating side effects, for example with stubbed tools"
+     ]
     },
     {
      "id": "c18-5",
      "tn": "18.5",
      "title": "Model and provider upgrades, embedding migrations and compatibility testing",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 636
+     "outcomes": [
+      "Treat a model upgrade as a release with its own compatibility suite",
+      "Check format adherence, tool calls and token counts on the new model",
+      "Keep an inventory and a retirement calendar of the models in use"
+     ]
     },
     {
      "id": "c18-6",
      "tn": "18.6",
      "title": "Feedback collection, annotation, retraining triggers and scheduled re-evaluation",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 561
+     "short": "Feedback and retraining triggers",
+     "outcomes": [
+      "Collect explicit and implicit feedback linked to the request",
+      "Keep evaluation data apart from training data",
+      "Write retraining triggers down in advance"
+     ]
     },
     {
      "id": "c18-7",
      "tn": "18.7",
      "title": "Ownership, release documentation, operational readiness and service handover",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 607
+     "short": "Ownership and handover",
+     "outcomes": [
+      "Name owners for the system and each of its components",
+      "Run an operational readiness review before handover",
+      "Prepare the runbooks, dashboards and access a new on-call person needs"
+     ]
     }
    ],
    "hasIntro": false,
@@ -1701,54 +2078,70 @@
      "tn": "19.1",
      "title": "How images and audio become tokens",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 646
+     "outcomes": [
+      "Explain how an image becomes patches and audio becomes frames, each as tokens",
+      "Estimate the token count of an image from its size and patch size",
+      "Say how resizing and merging patches change cost"
+     ]
     },
     {
      "id": "c19-2",
      "tn": "19.2",
      "title": "Vision-language models: architecture, capabilities and cost",
-     "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 591
+     "tags": [
+      "gpu"
+     ],
+     "outcomes": [
+      "Describe a vision-language model: vision encoder, projector and language model",
+      "Name what these models do well, such as reading text in images",
+      "Explain why images add prefill tokens and time to first token"
+     ]
     },
     {
      "id": "c19-3",
      "tn": "19.3",
      "title": "Document AI: OCR pipelines versus sending page images to a model",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 572
+     "short": "Document AI: OCR or page images",
+     "outcomes": [
+      "Compare an OCR pipeline with sending page images to a vision-language model",
+      "Choose by cost, speed, lost structure and reading order",
+      "Route document types to the cheaper method that still gets required fields right"
+     ]
     },
     {
      "id": "c19-4",
      "tn": "19.4",
      "title": "Speech: speech-to-text, text-to-speech and real-time voice",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 495
+     "primary": "travel",
+     "outcomes": [
+      "Describe the speech-to-text, language model and text-to-speech relay",
+      "Tell turn detection and latency from transcript accuracy",
+      "Count substitutions and deletions to measure word errors"
+     ]
     },
     {
      "id": "c19-5",
      "tn": "19.5",
      "title": "Multimodal retrieval and RAG over images and documents",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 513
+     "outcomes": [
+      "Explain how a multimodal embedding puts images and text in one space",
+      "Combine image search with text search from captions and OCR",
+      "Explain why scores from two retrievers sit on different scales"
+     ]
     },
     {
      "id": "c19-6",
      "tn": "19.6",
      "title": "Evaluating multimodal outputs and their failure modes",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 519
+     "outcomes": [
+      "Spot visual hallucination, such as invented objects and misread digits",
+      "Build labelled sets per failure kind, including presence probes",
+      "Treat instructions hidden in images as untrusted input"
+     ]
     }
    ]
   },
@@ -1773,54 +2166,70 @@
      "tn": "20.1",
      "title": "What small models are good at, and when they are enough",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 517
+     "short": "When small models are enough",
+     "outcomes": [
+      "Say what a small model does well: a narrow task with good training data",
+      "Compare a small model with the best-prompted large model on the same test set",
+      "Decide when a small model is enough, using labels, training and serving cost"
+     ]
     },
     {
      "id": "c20-2",
      "tn": "20.2",
      "title": "Producing and filtering teacher data",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 420
+     "outcomes": [
+      "Have a teacher model label real inputs for a student to learn from",
+      "Filter teacher outputs by confidence and agreement",
+      "Check a teacher's licence before using its outputs to train"
+     ]
     },
     {
      "id": "c20-3",
      "tn": "20.3",
      "title": "Distillation methods: labels, soft targets and reasoning traces",
-     "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 535
+     "tags": [
+      "gpu"
+     ],
+     "outcomes": [
+      "Compare hard labels, soft targets and reasoning traces as distillation signals",
+      "Explain why soft targets teach the student about near misses",
+      "Choose a method given what a hosted teacher exposes"
+     ]
     },
     {
      "id": "c20-4",
      "tn": "20.4",
      "title": "Pruning, quantisation and other compression",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 470
+     "primary": "travel",
+     "outcomes": [
+      "Explain pruning and say what it removes",
+      "Explain why a pruned model with many zeros is not always faster",
+      "Recover quality by retraining or distilling from the original"
+     ]
     },
     {
      "id": "c20-5",
      "tn": "20.5",
      "title": "Running models on devices and CPUs",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 467
+     "outcomes": [
+      "List the limits of running on a device: memory, bandwidth, heat and battery",
+      "Estimate whether a model fits a device from its size in bytes",
+      "Weigh privacy and offline use against smaller model quality"
+     ]
     },
     {
      "id": "c20-6",
      "tn": "20.6",
      "title": "Cascades and routing between small and large models",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 467
+     "outcomes": [
+      "Design a cascade where a small model answers first and refers hard cases",
+      "Choose a referral rule from confidence or a trained router",
+      "Explain why overconfident scores break a cascade"
+     ]
     }
    ]
   },
@@ -1845,54 +2254,67 @@
      "tn": "21.1",
      "title": "The cost model of an AI feature",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 475
+     "outcomes": [
+      "Compute the unit cost of one request and of one successful task",
+      "List the costs beyond tokens: retries, retrieval, tools and people",
+      "Split cost by token type and model"
+     ]
     },
     {
      "id": "c21-2",
      "tn": "21.2",
      "title": "Spending fewer tokens: prompts, caching and output length",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 455
+     "outcomes": [
+      "Cut tokens by shortening instructions and trimming retrieved text",
+      "Use prompt caching with a stable prefix",
+      "Check each saving against quality so rules and evidence are not lost"
+     ]
     },
     {
      "id": "c21-3",
      "tn": "21.3",
      "title": "Batch processing and off-peak work",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 468
+     "outcomes": [
+      "Identify work nobody waits for, such as nightly summaries and re-embedding",
+      "Use batch processing and its deadlines for a lower price",
+      "Plan capacity for peak, not only for batch times"
+     ]
     },
     {
      "id": "c21-4",
      "tn": "21.4",
      "title": "Routing requests to the cheapest model that meets the bar",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 434
+     "short": "Routing to the cheapest good model",
+     "outcomes": [
+      "Route each request type to the cheapest model that meets its quality bar",
+      "Evaluate each type separately before routing",
+      "Compare routing, which picks first, with a cascade, which tries small first"
+     ]
     },
     {
      "id": "c21-5",
      "tn": "21.5",
      "title": "Budgets, showback and chargeback",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 395
+     "outcomes": [
+      "Explain showback and chargeback",
+      "Tag usage so spend maps to a team and a feature",
+      "Set budget alerts at 50, 80 and 100 percent, soft or hard"
+     ]
     },
     {
      "id": "c21-6",
      "tn": "21.6",
      "title": "Commitments, negotiation and changing prices",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 490
+     "outcomes": [
+      "Compare committed spend with pay-as-you-go, given a forecast range",
+      "Commit only to base load that you are sure to use",
+      "Plan for falling prices and model retirements"
+     ]
     }
    ]
   },
@@ -1917,54 +2339,66 @@
      "tn": "22.1",
      "title": "Choosing where AI belongs in a product",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 508
+     "outcomes": [
+      "Decide where AI fits: hard-to-write rules, cheap mistakes, quick checks",
+      "Choose how much the AI decides: suggest, draft or act",
+      "Keep deterministic parts in code"
+     ]
     },
     {
      "id": "c22-2",
      "tn": "22.2",
      "title": "Showing uncertainty, sources and citations",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 460
+     "outcomes": [
+      "Show sources, citations and unsupported statements in an interface",
+      "Say in plain words how far to trust an answer",
+      "Check that a citation really supports the sentence beside it"
+     ]
     },
     {
      "id": "c22-3",
      "tn": "22.3",
      "title": "Streaming, latency and progress in the interface",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 468
+     "outcomes": [
+      "Acknowledge a request at once and stream the answer as it is written",
+      "Show an agent's finished steps and progress",
+      "Handle the risk that streamed text is wrong before validation finishes"
+     ]
     },
     {
      "id": "c22-4",
      "tn": "22.4",
      "title": "Human control: review, edit and undo",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 438
+     "outcomes": [
+      "Design draft, review and commit so a person approves before anything is sent",
+      "Offer undo with a clear time window where it is safe",
+      "Make key parameters and evidence prominent to prevent rubber-stamping"
+     ]
     },
     {
      "id": "c22-5",
      "tn": "22.5",
      "title": "Feedback loops in the interface",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 463
+     "outcomes": [
+      "Explain feedback bias in thumbs buttons",
+      "Collect feedback cheaply, with one follow-up question, tied to the answer",
+      "Measure a prompt change with feedback and other signals"
+     ]
     },
     {
      "id": "c22-6",
      "tn": "22.6",
      "title": "Onboarding, expectations and graceful failure",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 455
+     "outcomes": [
+      "Set honest expectations in onboarding with examples of what it does well",
+      "Design a response for each kind of failure",
+      "Offer a partial answer or a next step instead of a dead end"
+     ]
     }
    ]
   },
@@ -1989,45 +2423,56 @@
      "tn": "23.1",
      "title": "From obligation to control to evidence",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 491
+     "outcomes": [
+      "Turn an obligation into a control and an evidence record",
+      "Build an obligation, control and evidence table that an auditor can follow",
+      "Produce evidence from the system, not by hand"
+     ]
     },
     {
      "id": "c23-2",
      "tn": "23.2",
      "title": "Risk-based AI law: roles, risk tiers and duties (the EU AI Act as an example)",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 512
+     "short": "Risk-based AI law",
+     "outcomes": [
+      "Explain risk tiers and what each means, with the EU AI Act as example",
+      "Tell the duties of a provider from those of a deployer",
+      "Place two use cases in the same company in different tiers"
+     ]
     },
     {
      "id": "c23-3",
      "tn": "23.3",
      "title": "Privacy rights applied to LLM systems",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 483
+     "outcomes": [
+      "Name the privacy rights: access, correction and deletion",
+      "Find where personal data lives in an LLM system, including logs and vectors",
+      "Plan for deletion and for data a model has learned"
+     ]
     },
     {
      "id": "c23-4",
      "tn": "23.4",
      "title": "Transparency, labelling and record-keeping",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 487
+     "outcomes": [
+      "Disclose to users when they are talking to an AI",
+      "Label generated content for people and for software",
+      "Keep append-only, access-controlled decision records"
+     ]
     },
     {
      "id": "c23-5",
      "tn": "23.5",
      "title": "Audits, assurance and management-system standards",
      "tags": [],
-     "figures": 2,
-     "interactive": 2,
-     "words": 485
+     "outcomes": [
+      "Explain how an audit samples decisions and states its uncertainty",
+      "Draw a random sample, not a cherry-picked one",
+      "Name what a management-system standard such as ISO/IEC 42001 audits"
+     ]
     }
    ]
   },
@@ -2045,18 +2490,22 @@
      "tn": "C.1",
      "title": "Milestones, evidence and pass conditions",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 624
+     "outcomes": [
+      "Plan the capstone as eight milestones with evidence and pass conditions",
+      "Write each pass condition before you start the milestone",
+      "Keep the data and traffic modest and measure what is real"
+     ]
     },
     {
      "id": "app-c-int",
      "tn": "C.2",
      "title": "Explain it in an interview or design review",
      "tags": [],
-     "figures": 1,
-     "interactive": 1,
-     "words": 417
+     "outcomes": [
+      "Tell your system as a story: task, simplest solution, failures and operations",
+      "Label every number as simulated, measured locally, projected or operated",
+      "Answer an interview or design-review question with evidence"
+     ]
     }
    ],
    "hasIntro": true,
@@ -2078,19 +2527,13 @@
      "title": "Run it locally",
      "tags": [
       "cpu"
-     ],
-     "figures": 1,
-     "interactive": 1,
-     "words": 656
+     ]
     },
     {
      "id": "app-a-res",
      "tn": "A.2",
      "title": "What the actual run produced",
-     "tags": [],
-     "figures": 1,
-     "interactive": 0,
-     "words": 331
+     "tags": []
     }
    ],
    "hasIntro": false,
@@ -2101,7 +2544,7 @@
    "id": "app-b",
    "num": "B",
    "title": "Tool index",
-   "lede": "Every tool recommended in this manual on one page, with the chapter where it is used. These are starting points, not a stack to install at once: begin with NumPy, scikit-learn and small CPU experiments, and add one component when an evaluated need appears.",
+   "lede": "Every tool recommended in this course on one page, with the chapter where it is used. These are starting points, not a stack to install at once: begin with NumPy, scikit-learn and small CPU experiments, and add one component when an evaluated need appears.",
    "kind": "appendix",
    "part": "res",
    "www": {},
@@ -2113,10 +2556,7 @@
      "tags": [
       "cpu",
       "gpu"
-     ],
-     "figures": 0,
-     "interactive": 0,
-     "words": 1870
+     ]
     }
    ],
    "hasIntro": false,
@@ -2127,7 +2567,7 @@
    "id": "app-d",
    "num": "D",
    "title": "References and coverage",
-   "lede": "Primary sources for the main mechanisms, and a checklist of every roadmap topic with a link to where it is covered. Worked numbers and examples elsewhere in the manual are original teaching material.",
+   "lede": "Primary sources for the main mechanisms, and a checklist of every roadmap topic with a link to where it is covered. Worked numbers and examples elsewhere in the course are original teaching material.",
    "kind": "appendix",
    "part": "res",
    "www": {},
@@ -2136,19 +2576,13 @@
      "id": "app-d-refs",
      "tn": "D.1",
      "title": "Primary references",
-     "tags": [],
-     "figures": 0,
-     "interactive": 0,
-     "words": 487
+     "tags": []
     },
     {
      "id": "app-d-cov",
      "tn": "D.2",
      "title": "Coverage checklist: all 164 roadmap topics",
-     "tags": [],
-     "figures": 0,
-     "interactive": 0,
-     "words": 1401
+     "tags": []
     }
    ],
    "hasIntro": false,
@@ -2159,7 +2593,7 @@
    "id": "app-e",
    "num": "E",
    "title": "Evidence key",
-   "lede": "How to read every number and visual in this manual, and how to label your own claims.",
+   "lede": "How to read every number and visual in this course, and how to label your own claims.",
    "kind": "appendix",
    "part": "res",
    "www": {},
@@ -2173,10 +2607,49 @@
       "gpu",
       "real",
       "sim"
-     ],
-     "figures": 0,
-     "interactive": 0,
-     "words": 262
+     ]
+    }
+   ],
+   "hasIntro": false,
+   "hasOutro": false,
+   "hasLab": false
+  },
+  {
+   "id": "app-f",
+   "num": "F",
+   "title": "Paper walkthroughs",
+   "lede": "Four papers the course builds on, read in plain words: what problem each set out to solve, how its method works, the numbers it reports, and what those numbers do not show.",
+   "kind": "appendix",
+   "part": "res",
+   "www": {},
+   "topics": [
+    {
+     "id": "app-f-transformer",
+     "tn": "F.1",
+     "title": "Attention Is All You Need (Vaswani et al., 2017)",
+     "short": "The Transformer paper",
+     "tags": []
+    },
+    {
+     "id": "app-f-gpt3",
+     "tn": "F.2",
+     "title": "Language Models are Few-Shot Learners (Brown et al., 2020)",
+     "short": "The GPT-3 paper",
+     "tags": []
+    },
+    {
+     "id": "app-f-rag",
+     "tn": "F.3",
+     "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)",
+     "short": "The RAG paper",
+     "tags": []
+    },
+    {
+     "id": "app-f-lost",
+     "tn": "F.4",
+     "title": "Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023)",
+     "short": "The Lost in the Middle paper",
+     "tags": []
     }
    ],
    "hasIntro": false,

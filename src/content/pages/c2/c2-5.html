@@ -34,6 +34,7 @@
 <figure class="fig live" id="snip-vectorise"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"vectorise"}'></div></div>
 <figcaption><b>Vectorised Python and a reproducible run, in real Python.</b> Browser timings are slower than native Python and vary; read the ratio, not the seconds.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: vectorisation and a reproducible run <span class="tag cpu">Laptop · CPU</span></h5>
+<p>Setup, once: <code>uv pip install pandas matplotlib jupyterlab</code> in the environment from topic 2.1 (or <code>pip install</code> if you use <code>venv</code>). The chapter lab also uses JupyterLab; start it with <code>jupyter lab</code>.</p>
 <pre><code>import numpy as np, pandas as pd, time, json, hashlib
 rng = np.random.default_rng(seed=42)                 # explicit, seeded generator
 x = rng.standard_normal(1_000_000)

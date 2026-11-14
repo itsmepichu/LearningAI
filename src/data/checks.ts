@@ -12,6 +12,8 @@ export interface Mcq {
   /** Optional per-option explanation; "" for the right answer. */
   distractors?: string[]
   kind?: McqKind
+  /** Core questions form the topic's quick check. Missing means extended. */
+  tier?: 'core' | 'extended'
 }
 export interface InterviewQ {
   id: string
@@ -27,6 +29,7 @@ export type ChapterChecks = Record<string, Section>
 export const LEVEL_LABEL: Record<Level, string> = { fundamentals: 'Fundamentals', applied: 'Applied', 'system-design': 'System design' }
 export const KIND_LABEL: Record<McqKind, string> = { concept: 'Concept', calculation: 'Calculation', scenario: 'Scenario' }
 
+export const isCore = (q: Mcq) => q.tier === 'core'
 export const isMulti = (q: Mcq) => Array.isArray(q.answer)
 export const answerSet = (q: Mcq) => new Set(Array.isArray(q.answer) ? q.answer : [q.answer])
 export function isCorrect(q: Mcq, given: number | number[] | undefined): boolean | undefined {
@@ -36,7 +39,7 @@ export function isCorrect(q: Mcq, given: number | number[] | undefined): boolean
   return want.size === got.size && [...want].every((a) => got.has(a))
 }
 
-const loaders = import.meta.glob(['../content/checks/*.json', '!../content/checks/summary.json', '!../content/checks/legacy-quiz-map.json'], {
+const loaders = import.meta.glob(['../content/checks/*.json', '!../content/checks/legacy-quiz-map.json'], {
   import: 'default',
 }) as Record<string, () => Promise<ChapterChecks>>
 const cache = new Map<string, Promise<ChapterChecks>>()

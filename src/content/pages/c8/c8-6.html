@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <ul>
 <li><b><a class="gl" href="#gl-regression-suite">Regression suite</a></b>: a fixed, versioned set of cases that previously passed, run on every change. Includes cases from past bugs and incidents, each tagged with the issue it came from. A change that fixes 10 cases but breaks 4 others is visible in a case-level diff.</li>
-<li><b><a class="gl" href="#gl-adversarial-case">Adversarial cases</a></b>: prompt injection attempts in user input and in documents, jailbreaks, requests for other tenants' data, malformed inputs, extremely long inputs, contradictory sources (16.2, 16.7).</li>
+<li><b><a class="gl" href="#gl-adversarial-case">Adversarial cases</a></b>: <a class="gl" href="#gl-prompt-injection">prompt injection</a> attempts in user input and in documents, jailbreaks, requests for other tenants' data, malformed inputs, extremely long inputs, contradictory sources (16.2, 16.7).</li>
 <li><b>Multilingual cases</b>: every supported language, mixed-language inputs, right-to-left scripts, locale formats (dates 03/04 vs 04/03, decimal commas). Quality usually drops outside English; measure per language.</li>
 <li><b><a class="gl" href="#gl-contamination">Contamination</a></b>: if evaluation cases leaked into fine-tuning data, few-shot examples or the retrieval corpus in verbatim form, scores are inflated. Keep evaluation data in a separate access-controlled location, hash cases, and check n-gram overlap before training (6.2).</li>
 </ul>

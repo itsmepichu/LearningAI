@@ -31,6 +31,7 @@
     ],
     "answer": 0,
     "why": "Bidirectional attention suits understanding tasks: classification, extraction, embeddings and rerankers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -50,6 +51,7 @@
     ],
     "answer": 0,
     "why": "They are trained to predict the next token, which suits generation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -88,6 +90,7 @@
     ],
     "answer": 2,
     "why": "Most embedding models are encoders trained contrastively (4.4).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That is for speech.",
@@ -107,6 +110,7 @@
     ],
     "answer": 0,
     "why": "Next-token prediction needs no labels and covers chat, code and agents.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -202,6 +206,7 @@
     ],
     "answer": 0,
     "why": "Fixed labels, plenty of data and high volume suit a bidirectional encoder: cheap, fast and measurable.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -345,6 +350,7 @@
     ],
     "answer": 3,
     "why": "Each is a learned projection of the token's representation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They come from three different learned matrices.",
@@ -383,6 +389,7 @@
     ],
     "answer": 2,
     "why": "Dot products grow with dimension; scaling keeps the softmax from becoming nearly one-hot too early.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Division costs the same; it is about softmax behaviour.",
@@ -421,6 +428,7 @@
     ],
     "answer": 3,
     "why": "Different heads can learn different relations, such as syntax or coreference.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Every token attends in every head.",
@@ -440,6 +448,7 @@
     ],
     "answer": 2,
     "why": "Every query is compared with every key: 1,000 × 1,000. A causal mask hides about half, but they are still computed in a plain implementation.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That counts only the lower triangle; one head computes the full n × n matrix (masking comes after).",
@@ -516,6 +525,7 @@
     ],
     "answer": 0,
     "why": "e² ≈ 7.39 and e⁰ = 1, so the weight is 7.39 ÷ (7.39 + 1 + 1) ≈ 0.79.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -641,6 +651,7 @@
     ],
     "answer": 1,
     "why": "All experts must be resident, so weight memory follows total parameters.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Active parameters set compute per token; all 47B must still be in memory.",
@@ -698,6 +709,7 @@
     ],
     "answer": 2,
     "why": "Only the active experts run per token, so compute follows active parameters while memory follows the total.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Each token uses two experts plus shared layers.",
@@ -736,6 +748,7 @@
     ],
     "answer": 2,
     "why": "One set of keys and values per token, per layer.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It grows with every token.",
@@ -755,6 +768,7 @@
     ],
     "answer": 0,
     "why": "2 (K and V) × 32 × 8 × 128 × 2 bytes = 131,072 bytes = 128 KiB.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -812,6 +826,7 @@
     ],
     "answer": 3,
     "why": "“Fits in the window” does not mean “used well”; measure on your task.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The model reads them; it just uses some positions less reliably.",
@@ -974,6 +989,7 @@
     ],
     "answer": 0,
     "why": "Merges continue until the vocabulary reaches its target size; at tokenisation time they are applied in the same order.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -993,6 +1009,7 @@
     ],
     "answer": 3,
     "why": "Count adjacent pairs: u-g appears 3 times (hug, hug, pug); h-u, p-u and u-n appear twice each.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "u-n appears twice.",
@@ -1031,6 +1048,7 @@
     ],
     "answer": 2,
     "why": "Some scripts can need several times more tokens on older tokenizers.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Text in under-represented languages usually splits into more tokens.",
@@ -1069,6 +1087,7 @@
     ],
     "answer": 0,
     "why": "Character-level tasks should be done in code, with the LLM calling a tool (7.4).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1107,6 +1126,7 @@
     ],
     "answer": 0,
     "why": "Tamil text usually needs more tokens than English for the same meaning.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1251,6 +1271,7 @@
     ],
     "answer": 0,
     "why": "Word order must be injected, for example with RoPE or position embeddings.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1289,6 +1310,7 @@
     ],
     "answer": 2,
     "why": "Adding the input back gives gradients a direct path through many layers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Residuals add, they do not multiply.",
@@ -1308,6 +1330,7 @@
     ],
     "answer": 3,
     "why": "RMSNorm before attention and before the FFN is common.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Data normalisation is a different step.",
@@ -1327,6 +1350,7 @@
     ],
     "answer": 3,
     "why": "It typically widens the vector about 3.5–4× and often uses SwiGLU.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Every position goes through the FFN.",
@@ -1365,6 +1389,7 @@
     ],
     "answer": 0,
     "why": "3 × 4,096 × 14,336 ≈ 176M.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1545,6 +1570,7 @@
     ],
     "answer": 0,
     "why": "Softmax turns them into probabilities.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1564,6 +1590,7 @@
     ],
     "answer": 2,
     "why": "e² = 7.39, e¹ = 2.72, e^0.1 = 1.11; total 11.22, giving 0.66, 0.24 and 0.10.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Those are the logits themselves.",
@@ -1583,6 +1610,7 @@
     ],
     "answer": 2,
     "why": "−ln 0.24 ≈ 1.42.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the probability, not the loss.",
@@ -1640,6 +1668,7 @@
     ],
     "answer": 0,
     "why": "Token 50 cannot be computed before token 49.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1659,6 +1688,7 @@
     ],
     "answer": 1,
     "why": "Prefill is fast per token; decode is slow per token.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That reverses the order.",
@@ -1858,6 +1888,7 @@
     ],
     "answer": 3,
     "why": "Logits are divided by T before softmax; T < 1 exaggerates differences.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is temperature above 1.",
@@ -1896,6 +1927,7 @@
     ],
     "answer": 2,
     "why": "It removes the long tail of unlikely tokens.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That would be a probability threshold, not a count.",
@@ -1915,6 +1947,7 @@
     ],
     "answer": 3,
     "why": "The set adapts to how confident the model is.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That would be a threshold per token, not a cumulative set.",
@@ -1972,6 +2005,7 @@
     ],
     "answer": 0,
     "why": "Tiny numeric differences can flip a near-tie, and the texts then diverge.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2010,6 +2044,7 @@
     ],
     "answer": 1,
     "why": "Extraction needs predictable, valid output.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "High randomness invites invalid fields.",

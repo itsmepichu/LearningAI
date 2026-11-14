@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LearningAI practice notes (src/content/practice/<chapter>.json)",
+  "description": "topicId -> projectId -> note, plus a _lab key for the chapter's lab scenarios.",
+  "type": "object",
+  "properties": {
+    "_lab": {
+      "type": "object",
+      "description": "projectId -> { scenario }: an HTML scenario for doing the chapter lab with that project.",
+      "propertyNames": { "enum": ["harbor", "store", "bank", "travel"] },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["scenario"],
+        "properties": { "scenario": { "type": "string", "description": "HTML." } }
+      }
+    }
+  },
+  "additionalProperties": {
+    "type": "object",
+    "description": "One topic: a note for each of the four projects.",
+    "propertyNames": { "enum": ["harbor", "store", "bank", "travel"] },
+    "additionalProperties": { "$ref": "#/definitions/note" }
+  },
+  "definitions": {
+    "note": {
+      "type": "object",
+      "required": ["practice", "failure"],
+      "properties": {
+        "practice": { "type": "string", "description": "In practice: short HTML, about 25–45 words. Write the company and assistant as {company} and {assistant}." },
+        "failure": { "type": "string", "description": "Failure to avoid: short HTML, about 12–25 words." },
+        "tryIt": { "type": "string", "description": "Try it: what exactly to change in this topic's figure, or what to run on a laptop, with this project's dataset. About 25–45 words." },
+        "fit": { "enum": ["best", "good", "limited"], "description": "How well the project suits the topic. A limited topic needs another project rated best or good." },
+        "fitNote": { "type": "string", "description": "A short phrase on why the project suits the topic." }
+      }
+    }
+  }
+}

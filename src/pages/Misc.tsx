@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router'
 import { ListChecks, RotateCcw } from 'lucide-react'
-import { chapterCheckCount, courseTopics, progressChapters, totals } from '../data/course'
+import { chapterCheckCount, courseTopics, formatDuration, parts, progressChapters, sumMinutes, totals } from '../data/course'
 import { HtmlContent } from '../components/HtmlContent'
 import { useDocumentTitle, useNextTopic, usePage } from '../components/common'
 import { ProgressRing } from '../components/Icons'
 import { useProgress } from '../store/progress'
 
 export function Guide() {
-  useDocumentTitle('How to use this manual')
+  useDocumentTitle('How to use this course')
   const html = usePage('home', 'how')
   const loc = useLocation()
   useEffect(() => {
@@ -17,8 +17,48 @@ export function Guide() {
   return (
     <div className="page-narrow">
       <span className="c-kicker">Start here</span>
-      <h1 className="page-h">How to use this manual</h1>
+      <h1 className="page-h">How to use this course</h1>
       {html && <HtmlContent html={html} className="read topic lai-topic" />}
+    </div>
+  )
+}
+
+/** Study time per part and in total, from the same estimate the topic pages use. */
+function StudyTime() {
+  const rows = parts.map((p) => {
+    const ts = courseTopics.filter((t) => p.chapters.includes(t.chapter.id))
+    return { id: p.id, label: p.label, title: p.title, topics: ts.length, min: sumMinutes(ts) }
+  }).filter((r) => r.topics > 0)
+  const total = rows.reduce((a, r) => a + r.min, 0)
+  return (
+    <div className="tw">
+      <table>
+        <thead><tr><th>Part</th><th>Topics</th><th>Reading and figures</th></tr></thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.id}><td>{r.label} · {r.title}</td><td>{r.topics}</td><td>{formatDuration(r.min)}</td></tr>
+          ))}
+          <tr><td><b>The whole course</b></td><td><b>{totals.topics}</b></td><td><b>{formatDuration(total)}</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+export function StartPage() {
+  useDocumentTitle('Before you start')
+  const html = usePage('home', 'start')
+  const loc = useLocation()
+  useEffect(() => {
+    if (html && loc.hash) document.getElementById(loc.hash.slice(1))?.scrollIntoView({ block: 'start' })
+  }, [html, loc.hash])
+  const next = useNextTopic()
+  return (
+    <div className="page-narrow">
+      <span className="c-kicker">Read this first</span>
+      <h1 className="page-h">Before you start</h1>
+      {html && <HtmlContent html={html} className="read topic lai-topic" slots={{ time: <StudyTime /> }} />}
+      <p><Link className="btn primary" to={next.to}>{next.label}</Link></p>
     </div>
   )
 }
@@ -73,6 +113,15 @@ export function ProgressPage() {
           </div>
         ))}
       </div>
+      <section className="prog-parts" aria-label="Part reviews">
+        <h2>Part reviews and evidence</h2>
+        <p className="muted">After each part, a review of 20 mixed questions (core first), then the evidence to keep. <Link to="/evidence">Open Evidence</Link>.</p>
+        <ul>
+          {parts.filter((p) => p.id !== 'res').map((p) => (
+            <li key={p.id}><Link to={`/practice?part=${p.id}`}>{p.label} review</Link> <span className="muted small">· {p.title}</span></li>
+          ))}
+        </ul>
+      </section>
       <button
         type="button"
         className="btn"

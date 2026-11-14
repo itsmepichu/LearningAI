@@ -181,7 +181,7 @@
  },
  "_lab": {
   "harbor": {
-   "scenario": "<p>Use five Harbor tasks instead of your own:</p><ol><li>Check that every ticket in <code>tickets.csv</code> has an account ID.</li><li>Find the policy that covers client dinners.</li><li>Draft a reply to a billing ticket.</li><li>Predict resolution time (<code>resolved_hours</code>) for a new ticket.</li><li>Summarise a week of security tickets for the security lead.</li></ol><p>Write the ten acceptance examples for task 3, including one German and one Tamil ticket.</p>"
+   "scenario": "<p>Use these five Harbor tasks:</p><ol><li>Check that every ticket in <code>tickets.csv</code> has an account ID.</li><li>Find the policy that covers client dinners.</li><li>Draft a reply to a billing ticket.</li><li>Predict resolution time (<code>resolved_hours</code>) for a new ticket.</li><li>Summarise a week of security tickets for the security lead.</li></ol><p>Write the ten acceptance examples for task 3, including one German and one Tamil ticket.</p>"
   },
   "store": {
    "scenario": "<p>Use five {company} tasks:</p><ol><li>Flag orders in <code>orders.csv</code> with a missing city.</li><li>Find the returns rule for opened beauty products.</li><li>Reply to the chat “பணம் திரும்ப எப்போது கிடைக்கும்? UPI மூலம் செலுத்தினேன். (When will I get the refund? I paid by UPI.)”</li><li>Predict which orders will be returned.</li><li>Summarise this week's reviews for one product.</li></ol><p>Write ten acceptance examples for task 3, including Tamil messages from <code>chats.json</code>.</p>"

@@ -40,6 +40,7 @@
 <figure class="fig live" id="snip-training-loop"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"training-loop"}'></div></div>
 <figcaption><b>A training loop with checkpoints, in real Python.</b> It mirrors what PyTorch does; it does not show GPUs or automatic gradients.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: a complete training loop <span class="tag cpu">Laptop · CPU · ~1 minute</span></h5>
+<p>Setup, once: <code>uv pip install torch --index-url https://download.pytorch.org/whl/cpu</code>, the CPU-only build of <a href="https://pytorch.org/get-started/locally/">PyTorch</a>.</p>
 <pre><code>import torch, torch.nn as nn
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split

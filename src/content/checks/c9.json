@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Exact identifiers and codes favour lexical matching.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Paraphrased complaints are where dense retrieval's meaning-matching helps.",
@@ -31,6 +32,7 @@
     ],
     "answer": 3,
     "why": "Finding “refund” means reading one posting list.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Nothing is reversed; terms point to documents.",
@@ -50,6 +52,7 @@
     ],
     "answer": 0,
     "why": "Rare terms carry more weight than common ones.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -107,6 +110,7 @@
     ],
     "answer": 0,
     "why": "ln(1 + 7.5/1.5) = ln 6 ≈ 1.79.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -126,6 +130,7 @@
     ],
     "answer": 1,
     "why": "Dense retrieval matches meaning across different words.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "BM25 is not trained.",
@@ -325,6 +330,7 @@
     ],
     "answer": 0,
     "why": "RRF uses ranks only, so BM25 and cosine scores need not share a scale.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -344,6 +350,7 @@
     ],
     "answer": 2,
     "why": "Once the model has seen restricted text, the leak has already happened.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A prompt instruction cannot stop leaked content from being read.",
@@ -363,6 +370,7 @@
     ],
     "answer": 3,
     "why": "1/(60 + 1) + 1/(60 + 3) ≈ 0.0164 + 0.0159 = 0.0323.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That ignores k.",
@@ -382,6 +390,7 @@
     ],
     "answer": 2,
     "why": "Much more accurate than separate embeddings, but too slow for the whole corpus.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a bi-encoder.",
@@ -420,6 +429,7 @@
     ],
     "answer": 1,
     "why": "Apply selective filters inside the search.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Removing results does not improve the rest.",
@@ -639,6 +649,7 @@
     ],
     "answer": 0,
     "why": "RAG supplies missing facts with sources; fine-tuning changes format, style or decision patterns.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -677,6 +688,7 @@
     ],
     "answer": 1,
     "why": "Re-index on change and cite policy IDs.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Does not scale to thousands of policies.",
@@ -696,6 +708,7 @@
     ],
     "answer": 0,
     "why": "A behaviour gap that prompting cannot close cheaply.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -734,6 +747,7 @@
     ],
     "answer": 1,
     "why": "Deleting the source does not remove what the weights learned.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Models do not do that.",
@@ -753,6 +767,7 @@
     ],
     "answer": 1,
     "why": "Retrieved chunks carry IDs to cite.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Weights have no citations.",
@@ -934,6 +949,7 @@
     ],
     "answer": 0,
     "why": "Offline stages run continuously at scale (chapter 10).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -972,6 +988,7 @@
     ],
     "answer": 3,
     "why": "Small enough to be specific, large enough to be self-contained.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Fixed cuts break sentences and rules.",
@@ -991,6 +1008,7 @@
     ],
     "answer": 2,
     "why": "“The limit is 5 days per year” becomes unambiguous with its section path.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Headers add tokens.",
@@ -1067,6 +1085,7 @@
     ],
     "answer": 2,
     "why": "The chunking figure shows this directly.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The model never sees both together.",
@@ -1105,6 +1124,7 @@
     ],
     "answer": 2,
     "why": "6 chunks per document × 10,000 documents.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That assumes 1,000-token chunks.",
@@ -1250,6 +1270,7 @@
     ],
     "answer": 1,
     "why": "10⁷ × 768 ≈ 7.7 × 10⁹.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is one vector's dimension.",
@@ -1288,6 +1309,7 @@
     ],
     "answer": 2,
     "why": "Upper layers act as express lanes with long links.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is brute force.",
@@ -1345,6 +1367,7 @@
     ],
     "answer": 2,
     "why": "10⁷ × 768 × 4 bytes ≈ 30.7 GB, before index overhead.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the int8 size.",
@@ -1364,6 +1387,7 @@
     ],
     "answer": 2,
     "why": "4× smaller than float32. Binary would be about 0.96 GB (32× smaller).",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is float16.",
@@ -1402,6 +1426,7 @@
     ],
     "answer": 3,
     "why": "The right point depends on the application.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The gap matters for some uses.",
@@ -1546,6 +1571,7 @@
     ],
     "answer": 0,
     "why": "“What about for contractors?” needs the earlier context.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1660,6 +1686,7 @@
     ],
     "answer": 2,
     "why": "A confident wrong answer is worse than an honest “not found”.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Guesses mislead even with caveats.",
@@ -1679,6 +1706,7 @@
     ],
     "answer": 0,
     "why": "The follow-up alone is ambiguous.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1698,6 +1726,7 @@
     ],
     "answer": 1,
     "why": "Cite the specific chunk.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The reader cannot find the supporting clause.",
@@ -1736,6 +1765,7 @@
     ],
     "answer": 1,
     "why": "A compound question needs a retrieval per part; one query favours whichever part matches best.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Fewer chunks make the gap worse.",
@@ -1880,6 +1910,7 @@
     ],
     "answer": 2,
     "why": "Missing evidence caps answer quality.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is answer quality.",
@@ -1899,6 +1930,7 @@
     ],
     "answer": 2,
     "why": "2 ÷ 3 ≈ 0.67.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That divides 3 by 5.",
@@ -1937,6 +1969,7 @@
     ],
     "answer": 3,
     "why": "(1/2 + 1/1 + 1/4) ÷ 3 = 1.75 ÷ 3 ≈ 0.58.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is 1/3.",
@@ -1956,6 +1989,7 @@
     ],
     "answer": 1,
     "why": "3/log₂2 + 0 + 2/log₂4 = 3 + 0 + 1 = 4.0.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That miscomputes the discount.",
@@ -1994,6 +2028,7 @@
     ],
     "answer": 3,
     "why": "Pool results from several retrievers before labelling.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Metrics are computed; they are just biased.",

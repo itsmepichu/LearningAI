@@ -12,6 +12,7 @@
     ],
     "answer": 0,
     "why": "Errors are cheap and a person checks quickly.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -31,6 +32,7 @@
     ],
     "answer": 2,
     "why": "Deterministic code is cheaper, testable and exact (7.7).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unnecessary cost and risk.",
@@ -69,6 +71,7 @@
     ],
     "answer": 0,
     "why": "Reversible actions with low error rates can act, if undo is easy.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -126,6 +129,7 @@
     ],
     "answer": 3,
     "why": "Cheap errors and cheap checks allow more automation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Secondary.",
@@ -145,6 +149,7 @@
     ],
     "answer": 2,
     "why": "Each part goes to what does it best and safest.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Puts AI where rules work.",
@@ -308,6 +313,7 @@
     ],
     "answer": 0,
     "why": "Users trust cited sentences more; a false citation misleads.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -327,6 +333,7 @@
     ],
     "answer": 3,
     "why": "A label that matches observed accuracy can be trusted.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "They hold on the measured data.",
@@ -346,6 +353,7 @@
     ],
     "answer": 3,
     "why": "Unsupported claims should not look supported.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Draws trust to it.",
@@ -365,6 +373,7 @@
     ],
     "answer": 3,
     "why": "People interpret words more consistently than raw scores.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not generally.",
@@ -441,6 +450,7 @@
     ],
     "answer": 0,
     "why": "Abstaining beats guessing (9.6).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -602,6 +612,7 @@
     ],
     "answer": 0,
     "why": "Early feedback changes how long a wait feels.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -621,6 +632,7 @@
     ],
     "answer": 2,
     "why": "9 ÷ 0.8 ≈ 11.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the first-token time.",
@@ -659,6 +671,7 @@
     ],
     "answer": 1,
     "why": "Validate actions first; stream prose.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "They can be, but should not be.",
@@ -697,6 +710,7 @@
     ],
     "answer": 1,
     "why": "Visible progress stops users giving up or retrying.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Hostile and fragile.",
@@ -716,6 +730,7 @@
     ],
     "answer": 2,
     "why": "Instant acknowledgement prevents doubt and repeats.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unrelated.",
@@ -897,6 +912,7 @@
     ],
     "answer": 1,
     "why": "The approved version is the one that runs (11.7).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not reviewed.",
@@ -916,6 +932,7 @@
     ],
     "answer": 1,
     "why": "Only reversible actions can be undone.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Already delivered.",
@@ -935,6 +952,7 @@
     ],
     "answer": 0,
     "why": "6 × 0.8 ≈ 5.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -954,6 +972,7 @@
     ],
     "answer": 1,
     "why": "Near-zero edit rates signal inattentive review (13.2).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Unlikely given known error rates.",
@@ -992,6 +1011,7 @@
     ],
     "answer": 1,
     "why": "Approvals apply to one immutable version.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Approves something else.",
@@ -1192,6 +1212,7 @@
     ],
     "answer": 1,
     "why": "Feedback is self-selected and biased.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the issue.",
@@ -1211,6 +1232,7 @@
     ],
     "answer": 1,
     "why": "96 ÷ (96 + 176) ≈ 35%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "The true rate.",
@@ -1230,6 +1252,7 @@
     ],
     "answer": 0,
     "why": "Behavioural signals come from everyone (17.4).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1249,6 +1272,7 @@
     ],
     "answer": 1,
     "why": "Rare events need far more sessions to detect small changes (8.7).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not supported.",
@@ -1268,6 +1292,7 @@
     ],
     "answer": 2,
     "why": "Reasons point to the failure type.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Review still needed.",
@@ -1490,6 +1515,7 @@
     ],
     "answer": 2,
     "why": "Specific examples set honest expectations.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Length is not the issue.",
@@ -1509,6 +1535,7 @@
     ],
     "answer": 2,
     "why": "20% of 1,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Half.",
@@ -1528,6 +1555,7 @@
     ],
     "answer": 1,
     "why": "It explains and gives a next step.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A dead end.",
@@ -1547,6 +1575,7 @@
     ],
     "answer": 3,
     "why": "Partial help with honesty beats nothing.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Loses useful information.",
@@ -1642,6 +1671,7 @@
     ],
     "answer": 3,
     "why": "It turns a failure into a choice.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is visible.",

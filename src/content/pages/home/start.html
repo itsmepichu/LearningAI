@@ -1,0 +1,64 @@
+<p>Read this page first. It takes about ten minutes and tells you what the course expects, how a topic is built, and how long each part takes.</p>
+
+<h3 class="sub-h" id="start-who">Who this course is for</h3>
+<p>For beginner programmers and students who know basic Python; it ends at building professional AI applications. You do not need to know any machine learning, mathematics beyond school arithmetic, or any AI tool. Every new term is explained where it first appears, and you can look it up again in the Glossary, linked in the sidebar.</p>
+<p>The course is one sequence. Every chapter, section and topic is required, and each chapter builds on the ones before it, so work through them in order.</p>
+
+<h3 class="sub-h" id="start-need">What you need</h3>
+<ul>
+  <li><b>Python basics:</b> variables, lists, dictionaries, loops, functions, and reading a file.</li>
+  <li><b>A browser:</b> Part I runs in your browser. The figures and the small Python snippets run on this page, with nothing to install.</li>
+  <li><b>A terminal, from Part II on:</b> you will run short Python programs on your own laptop. Each lab says what to install, and only when you first need it. Nothing is installed up front.</li>
+  <li><b>A laptop, no GPU:</b> everything runs on an ordinary laptop. The few topics that need a GPU give a step-by-step guide for a free Google Colab session instead.</li>
+</ul>
+
+<h3 class="sub-h" id="start-check">Check your Python basics</h3>
+<p>Try each question in your head or in a Python prompt, then open the answer. If you miss more than two, work through the official Python tutorial first: <a href="https://docs.python.org/3/tutorial/">docs.python.org/3/tutorial</a>. Nothing here is saved or scored.</p>
+<ol class="start-q">
+  <li><p><code>names = ["ana", "bo", "cy"]</code>. What does <code>names[1]</code> give?</p>
+    <details><summary>Answer</summary><p><code>"bo"</code>. A list starts counting at 0, so index 1 is the second item.</p></details></li>
+  <li><p>What does <code>len("hello world")</code> return?</p>
+    <details><summary>Answer</summary><p><code>11</code>. It counts every character, including the space.</p></details></li>
+  <li><p><code>ages = {"ana": 31, "bo": 27}</code>. How do you read Bo's age, and how do you add Cy, who is 45?</p>
+    <details><summary>Answer</summary><p><code>ages["bo"]</code> gives 27. <code>ages["cy"] = 45</code> adds the new key.</p></details></li>
+  <li><p>What does this print? <code>total = 0</code>, then <code>for n in [2, 3, 5]: total = total + n</code>, then <code>print(total)</code></p>
+    <details><summary>Answer</summary><p><code>10</code>. The loop adds 2, then 3, then 5 to the running total.</p></details></li>
+  <li><p>Write a function <code>double(x)</code> that returns twice its input.</p>
+    <details><summary>Answer</summary><p><code>def double(x):</code> on one line, then <code>return x * 2</code> indented below it. <code>double(4)</code> gives 8.</p></details></li>
+  <li><p>What does <code>[w.upper() for w in ["a", "b"]]</code> give?</p>
+    <details><summary>Answer</summary><p><code>["A", "B"]</code>. It is a list comprehension: a short way to build a new list by changing each item.</p></details></li>
+  <li><p>What does <code>"to be or not to be".split()</code> give?</p>
+    <details><summary>Answer</summary><p>A list of the words: <code>["to", "be", "or", "not", "to", "be"]</code>. Without an argument, <code>split</code> cuts at spaces.</p></details></li>
+  <li><p>How do you read a text file called <code>notes.txt</code> into one string?</p>
+    <details><summary>Answer</summary><p><code>with open("notes.txt") as f:</code>, then <code>text = f.read()</code> indented below it. The <code>with</code> block closes the file for you.</p></details></li>
+  <li><p>What does <code>"cat" in "concatenate"</code> give, and what does <code>3 in [1, 2, 4]</code> give?</p>
+    <details><summary>Answer</summary><p><code>True</code> for the first, because <code>"cat"</code> appears inside the word. <code>False</code> for the second, because 3 is not in the list.</p></details></li>
+  <li><p>What is the difference between <code>5 / 2</code>, <code>5 // 2</code> and <code>5 % 2</code>?</p>
+    <details><summary>Answer</summary><p><code>2.5</code> is ordinary division, <code>2</code> is whole-number division that drops the remainder, and <code>1</code> is the remainder.</p></details></li>
+</ol>
+
+<h3 class="sub-h" id="start-topic">How a topic works</h3>
+<p>Each topic has the same five parts, in the same order:</p>
+<ol>
+  <li><b>Intuition:</b> the idea in plain words, with an analogy and no symbols.</li>
+  <li><b>Mechanism:</b> how it works, step by step, with a figure you can step through or change.</li>
+  <li><b>The numbers:</b> small worked examples with real arithmetic, such as <code>240 ÷ 100 = 2.4</code>.</li>
+  <li><b>Code:</b> a short program you can run, with a line on what to change to see something different.</li>
+  <li><b>Primary sources:</b> the papers and official documentation behind the topic, each with a line on why it is there.</li>
+</ol>
+<p>Between Code and Primary sources, an <b>In practice</b> card shows the idea inside one example system: what a team does with it, a mistake to avoid, and something to try. The card links to the chapter's <b>workshop</b>, where you choose among four example systems and apply the chapter to the one you pick. Each topic ends with a short <b>quick check</b>, and each part ends with a review and the <b>Evidence</b> you keep from its labs and capstone milestones.</p>
+<p>Look at the tags on a topic. A tag tells you what kind of result a figure gives you: <span class="tag real">Runs in browser</span> is real computation, <span class="tag sim">Simulation</span> is an animated model with made-up numbers, <span class="tag cpu">Laptop · CPU</span> runs on your laptop, and <span class="tag gpu">Colab · GPU</span> needs a free Google Colab session. <b>A simulation shows the shape of a trade-off; it does not measure anything.</b></p>
+
+<h3 class="sub-h" id="start-snippet">Run a snippet in your browser</h3>
+<p>Many topics have a <b>Code</b> section with a box that runs Python on the page. Press <b>Run</b> to execute it and see the output below. You can edit the code and run it again. The box says what the result shows and what it does not show. It uses only the Python standard library and NumPy, so there is nothing to install. <a href="#snip-tokens">Topic 1.4 has one you can try now.</a></p>
+
+<h3 class="sub-h" id="start-data">Open a dataset</h3>
+<p>The course uses four example systems, all fictional, each with small made-up data files. A chapter's workshop lets you pick one and lists the files its tasks use. The files are CSV or JSON: plain text, one record per line or per object. Counting rows, finding the most common value and spotting what looks wrong are the first skills you will use, and the explorer below does all three. Pick an example project in the top bar, then a file.</p>
+<figure class="fig live" id="start-explorer"><div class="stage"><div data-widget="data-explorer"></div></div><figcaption><b>Data explorer.</b> It opens the synthetic files of the project in the top bar and counts what you ask for. The counts describe these invented rows only.</figcaption></figure>
+
+<h3 class="sub-h" id="start-time">How long it takes</h3>
+<p>These are estimates from the length of each topic and the number of figures in it. Plan on more time for the labs and the chapter checks, and for anything you run yourself.</p>
+<div data-slot="time"></div>
+
+<h3 class="sub-h" id="start-go">Ready</h3>
+<p>Start with <a href="#c1-1">topic 1.1</a>. Chapter 1 ends with a lab where you run a small language model in your browser.</p>

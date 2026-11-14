@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "The model proposes; code computes amounts and enforces limits.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model proposes; it must not compute money.",
@@ -50,6 +51,7 @@
     ],
     "answer": 0,
     "why": "Rules must be exact, auditable and identical every time.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -69,6 +71,7 @@
     ],
     "answer": 1,
     "why": "Fuzzy tasks go to the model; exact ones to code.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Permissions must be exact: code.",
@@ -107,6 +110,7 @@
     ],
     "answer": 0,
     "why": "Exact, testable and auditable behaviour needs code.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -126,6 +130,7 @@
     ],
     "answer": 2,
     "why": "Never report success from model text.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Users need the real outcome.",
@@ -367,6 +372,7 @@
     ],
     "answer": 0,
     "why": "0.5 × 2³ = 4 s, then randomised by jitter.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -386,6 +392,7 @@
     ],
     "answer": 3,
     "why": "Synchronised retries can knock a recovering service over again.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Jitter adds random delay.",
@@ -443,6 +450,7 @@
     ],
     "answer": 0,
     "why": "A fallback that breaks the format causes new failures.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -485,6 +493,7 @@
     ],
     "answer": 3,
     "why": "Retries add load exactly when capacity is short.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "More requests add load to a struggling service.",
@@ -504,6 +513,7 @@
     ],
     "answer": 2,
     "why": "400 failures × 3 retries = 1,200 more requests per second at worst.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the failures only, retried once.",
@@ -630,6 +640,7 @@
     ],
     "answer": 0,
     "why": "Idle GPUs still cost money; hosted APIs charge only for use (14.8).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -668,6 +679,7 @@
     ],
     "answer": 2,
     "why": "Build a task-specific evaluation set instead.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They measure many skills.",
@@ -687,6 +699,7 @@
     ],
     "answer": 1,
     "why": "Small enough to build quickly, large enough to compare 3–5 candidates.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is far more than a first set needs.",
@@ -706,6 +719,7 @@
     ],
     "answer": 3,
     "why": "Choose the cheapest model that meets the bar; B passes at a fifth of the cost.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Cost breaks the tie.",
@@ -782,6 +796,7 @@
     ],
     "answer": 1,
     "why": "Choose with your own data (5.3, 5.7).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Advertised length is not evidence of quality.",
@@ -1003,6 +1018,7 @@
     ],
     "answer": 3,
     "why": "Examples are strong signals; diversity stops the model copying surface details.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "One example invites copying.",
@@ -1041,6 +1057,7 @@
     ],
     "answer": 3,
     "why": "For example: “answer in under 80 words”.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Positive instructions work better.",
@@ -1060,6 +1077,7 @@
     ],
     "answer": 3,
     "why": "Treat prompts as code (18.1).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "History is not versioned or reviewed.",
@@ -1079,6 +1097,7 @@
     ],
     "answer": 0,
     "why": "Every change needs the evaluation set.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1117,6 +1136,7 @@
     ],
     "answer": 1,
     "why": "The current prompt may have changed since then.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The prompt may have changed since.",
@@ -1263,6 +1283,7 @@
     ],
     "answer": 3,
     "why": "The window is a budget shared by instructions, tools, history, documents and output.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Context engineering changes inputs, not weights.",
@@ -1301,6 +1322,7 @@
     ],
     "answer": 1,
     "why": "Greedy inclusion by priority within the budget.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Random order wastes the budget.",
@@ -1343,6 +1365,7 @@
     ],
     "answer": 3,
     "why": "Models attend less reliably to the middle of very long contexts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Even spread puts much in the middle.",
@@ -1362,6 +1385,7 @@
     ],
     "answer": 2,
     "why": "5,300 tokens of input plus the 800-token output reserve.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That double-counts.",
@@ -1400,6 +1424,7 @@
     ],
     "answer": 3,
     "why": "Mark decision-critical text as never-summarise.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The answer changed, so something mattered.",
@@ -1562,6 +1587,7 @@
     ],
     "answer": 2,
     "why": "It makes model output usable by code.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Formatting is not a machine-readable contract.",
@@ -1600,6 +1626,7 @@
     ],
     "answer": 3,
     "why": "Validate values, not only shape.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Streaming does not check values.",
@@ -1619,6 +1646,7 @@
     ],
     "answer": 3,
     "why": "The model proposes; deterministic code disposes.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It requests calls to existing tools.",
@@ -1638,6 +1666,7 @@
     ],
     "answer": 0,
     "why": "Never trust model-supplied IDs for authorisation (16.3).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1676,6 +1705,7 @@
     ],
     "answer": 2,
     "why": "Partial JSON may be incomplete or invalid.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "There is nothing to act on yet.",
@@ -1859,6 +1889,7 @@
     ],
     "answer": 2,
     "why": "“Memory” is something your application builds.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Every call is independent, not just sessions.",
@@ -1878,6 +1909,7 @@
     ],
     "answer": 2,
     "why": "Simple, but early facts fall out.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is the simplest strategy.",
@@ -1954,6 +1986,7 @@
     ],
     "answer": 3,
     "why": "The context is a working view.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Provider logs are not yours to rely on.",
@@ -1973,6 +2006,7 @@
     ],
     "answer": 0,
     "why": "Structured facts plus a deterministic rule (7.7).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1992,6 +2026,7 @@
     ],
     "answer": 1,
     "why": "6 × 200 = 1,200; 24 × 200 = 4,800.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That reverses them.",

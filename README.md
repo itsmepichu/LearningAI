@@ -1,17 +1,17 @@
 # LearningAI
 
-An Interactive AI Course For My DD: the **Enterprise AI Field Manual**, rebuilt as a front-end-only React app.
+An interactive AI course, rebuilt as a front-end-only React app. For beginner programmers and students who know basic Python; it ends at building professional AI applications.
 
-23 required chapters take a software engineer from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale, and on to multimodal models, small models, cost, product design and regulation. Every chapter has the same structure:
+23 required chapters take you from tokens, vectors and gradients through transformers and training, to building, evaluating, securing and operating AI systems at enterprise scale, and on to multimodal models, small models, cost, product design and regulation. Every chapter has the same structure:
 
 - three opening panels (what it is, why we study it, where it applies)
 - topics with worked examples and diagrams
-- an **In practice** block for your chosen **example project**: how the idea applies, the failure to avoid, and a **Try it** exercise on that project's downloadable synthetic dataset
-- a lab, and a separate **chapter check** page with choose-the-answer and interview questions for every section
+- an **In practice** card for the topic's example project: how the idea applies, the failure to avoid, and a **Try it** exercise
+- a **workshop** page with the chapter lab and a hands-on task for each topic, on the example project you choose, a **quick check** at the end of every topic (3–5 core questions), and a separate **chapter check** page with choose-the-answer and interview questions for every section (system-design questions sit behind an Interview prep switch)
 
-There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. There is no choice to make up front: you start with Harbor and can switch at any time. When another project suits a topic better, a short note at the end of the topic says so. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes and run interview drills.
+There are four example projects: Harbor (an internal company assistant), an online store, a bank and a travel-booking agent. All are fictional. A lesson shows one project; you choose among the four on a chapter's workshop page, where a data explorer opens the synthetic files. A course-wide **Practice** page lets you filter questions, draw random sets, review mistakes, run interview drills and take a 20-question review at the end of each part. An **Evidence** page lists what to keep from each chapter lab and capstone milestone (ticks and notes stay in this browser).
 
-Status: all 23 chapters and the capstone have notes and lab scenarios for all four projects, every section has a full chapter check (1,794 choose-the-answer and 1,312 interview questions in all), and every topic uses the five-part structure with a runnable snippet (see [ROADMAP.md](ROADMAP.md)).
+Status: all 23 chapters and the capstone have a workshop with notes and lab scenarios for all four projects, every section has a full chapter check (1,794 choose-the-answer and 1,312 interview questions in all), and every topic uses the five-part structure with a runnable snippet (see [ROADMAP.md](ROADMAP.md)).
 
 Interactive figures run in the browser. Each one carries an evidence label:
 
@@ -31,24 +31,15 @@ npm run dev          # http://localhost:5173
 ```bash
 npm run build        # static site in dist/
 npm run preview      # serve dist/ on http://localhost:4173
-npm run typecheck
-npm run test:unit    # widget logic and scenarios, with Node's built-in test runner (Node 22.18 or later)
 ```
 
-End-to-end check: build, then run the preview server and the test. The test visits every route, starts every widget, and checks search, progress, the quiz, the theme switch and the 3D widget.
+`npm run test` compiles the TypeScript and builds the site once, to catch a broken import or malformed JSON. The project has no other tests and no automated checks; run it only as the last step before a pull request to `main`.
 
-```bash
-npx playwright install chromium   # once, to download the test browser
-npm run build && (npx vite preview --port 4173 &) && npm run test:e2e
-```
-
-Content checks run automatically before `dev` and `build` (`npm run check:content`): they validate the practice notes and chapter checks and write the question counts. Regenerate the synthetic datasets with `npm run datasets`.
-
-Screenshots are written to `tests/out/`. The test uses the Playwright package that is already installed globally. It isn't a project dependency.
+The generated files (topic counts, link targets, search text, question counts) are written automatically before `dev`, `build` and `test`, and after `npm install`; run `npm run generate` to rebuild them. Regenerate the synthetic datasets with `npm run datasets`.
 
 ## Deploy
 
-The site deploys on Vercel. `.github/workflows/ci.yml` runs the typecheck, unit tests and build on every pull request and every push to `main`.
+The site deploys on Vercel.
 
 The build copies `index.html` to `404.html` so that deep links such as `/c9/c9-3` work.
 
@@ -70,23 +61,23 @@ The build copies `index.html` to `404.html` so that deep links such as `/c9/c9-3
 src/
   content/
     manifest.json          chapters and topics (single source of course structure)
+    generated/             built by `npm run generate`, not committed: topic counts, link targets, search text, question counts
     projects.json          the four example projects and their datasets
     practice/<chapter>.json  In practice, failure, try-it notes and fit, per topic and project
-    checks/<chapter>.json  chapter check questions per section (summary.json is generated)
-    idmap.json             every content element id -> route (for in-content links)
-    search.json            plain text per topic, lazy-loaded by search
+    checks/<chapter>.json  chapter check questions per section
+    idmap.extra.json       link targets that cannot be derived from the pages
     pages/<chapter>/*.html topic bodies, chapter intro/outro, labs
   data/course.ts           typed access to the manifest and routes
   components/              layout, sidebar, search, quiz, HtmlContent renderer
-  pages/                   home, chapter, topic, chapter check, practice, guide, progress
+  pages/                   home, chapter, topic, chapter check, practice, evidence, guide, progress
   widgets/                 React widgets; registry.ts maps data-widget names to components
   legacy/                  v3 vanilla widgets and the runtime that mounts and cleans them up
   styles/                  content.css (design system and figures), app.css (app shell)
 public/datasets/<project>/ synthetic datasets (generated by scripts/make_datasets.py)
 scripts/import_legacy.py   one-time importer from the v3 single-file manual
-scripts/content-summary.mjs  content checker and question-count summary
-tests/e2e.cjs              Playwright smoke test
-src/widgets/*/*.test.ts    unit tests beside each widget
+scripts/generate.mjs       writes the generated files in src/content/generated/
+scripts/content-tools.mjs  authoring tools: merge notes and questions, revise questions
+scripts/datasets.mjs       runs make_datasets.py with whichever Python is installed
 ```
 
-See [ROADMAP.md](ROADMAP.md) for what comes next and [CLAUDE.md](CLAUDE.md) for authoring conventions.
+See [ROADMAP.md](ROADMAP.md) for what comes next (finished plans are in [docs/archive/](docs/archive/)) and [CLAUDE.md](CLAUDE.md) for authoring conventions.

@@ -1,0 +1,36 @@
+<p>This page walks through <a href="https://arxiv.org/abs/2005.11401">Lewis et al. (2020), Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a> in plain words. Section and table numbers point into the paper. It is the paper that named RAG.</p>
+
+<h3>1. The problem</h3>
+<p>A large language model keeps what it knows inside its weights. The authors list three weaknesses: you cannot easily expand or revise that memory, you cannot see what a prediction was based on, and the model may produce hallucinations (section 1). Earlier work had added a retrieval step to extractive question answering. This paper asks what happens when the generator is itself a sequence-to-sequence model that writes the answer.</p>
+
+<h3>2. The method, in steps</h3>
+<p>Scroll through the system one stage at a time. The diagram follows the step in the middle of the screen.</p>
+<div class="walkthru" id="walk-paper-rag"><div data-widget="walkthrough" data-props='{"story":"paper-rag"}'></div></div>
+<p>The two variants differ only in how they combine the retrieved passages (section 2.1). RAG-Sequence stays with one passage for a whole answer. RAG-Token may switch passages from word to word, which suits answers that draw on several sources.</p>
+
+<h3>3. What the paper reports</h3>
+<p>Table 1 reports exact-match scores on four open-domain question-answering sets. Selected rows for Natural Questions (NQ) and TriviaQA on the standard test split:</p>
+<div class="tw"><table><caption>Table 1 of the paper, exact match, selected rows</caption><thead><tr><th scope="col">Model</th><th scope="col">NQ</th><th scope="col">TriviaQA (standard split)</th></tr></thead><tbody>
+<tr><th scope="row">T5-11B, closed book</th><td>34.5</td><td>not reported</td></tr>
+<tr><th scope="row">DPR (retrieve, then extract a span)</th><td>41.5</td><td>57.9</td></tr>
+<tr><th scope="row">RAG-Token</th><td>44.1</td><td>55.2</td></tr>
+<tr><th scope="row">RAG-Sequence</th><td>44.5</td><td>56.8</td></tr>
+</tbody></table></div>
+<p>On the TriviaQA split that the closed-book T5 models used, RAG-Token scored 66.1 and RAG-Sequence 68.0. In section 4.1 the authors report that RAG still answered 11.8% of NQ questions correctly when the answer was in none of the retrieved passages, which an extractive model cannot do.</p>
+<p>For question generation (Jeopardy), 452 pairs of outputs were judged by people. Judges found the RAG output more factual than BART's in 42.7% of pairs and BART's more factual in 7.1% (Table 4, section 4.3).</p>
+<p>Section 4.5 swapped the index without retraining. For 82 world leaders, asked with "Who is {position}?", the 2016 index gave 70% correct for 2016 leaders and the 2018 index gave 68% for 2018 leaders. The mismatched pairs scored 12% and 4%. In the dev-set ablation (Table 6), a retriever that was trained scored 43.5 on NQ for RAG-Token, against 37.8 when it was frozen.</p>
+
+<h3>4. What it does and does not show</h3>
+<ul>
+<li><b>Shows:</b> a generator that reads retrieved passages beat a closed-book model of similar scale on NQ, and its answers could be traced to passages. It also shows that a knowledge source can be swapped without retraining.</li>
+<li><b>Does not show:</b> that RAG beats every retriever-only system. On the standard TriviaQA split DPR scored higher than both RAG models (Table 1), and on one of the other sets RAG-Token was below DPR.</li>
+<li><b>Does not show:</b> anything about company documents, permissions, chunking choices or modern chat models. The index is one Wikipedia dump, cut into 100-word chunks.</li>
+<li><b>Failure the authors report:</b> in story generation, the retriever sometimes learned to return the same passages whatever the input, and the generator then ignored them (Appendix H).</li>
+<li>The hot-swap test used a narrow question template about world leaders, so it shows the idea, not general freshness.</li>
+</ul>
+
+<h3>5. Where this course uses it</h3>
+<p>Topic <a href="#c1-5">1.5</a> introduces RAG as a response to stale knowledge. Topic <a href="#c9-1">9.1</a> asks when to use it and when to fine-tune. Topic <a href="#c9-2">9.2</a> builds the pipeline from the same stages. Topic <a href="#c9-4">9.4</a> covers the vector search and HNSW index the paper used for its passages. Topic <a href="#c9-6">9.6</a> covers citations, the answer to the paper's provenance problem.</p>
+
+<h3>6. Read the paper</h3>
+<p><a href="https://arxiv.org/abs/2005.11401">arXiv:2005.11401</a>. Read sections 1 to 3, then Table 1 and section 4.5.</p>

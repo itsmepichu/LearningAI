@@ -12,6 +12,7 @@
     ],
     "answer": 2,
     "why": "Behaviour/format gaps are what supervised fine-tuning addresses.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model already knows the policy; this is a behaviour gap.",
@@ -31,6 +32,7 @@
     ],
     "answer": 1,
     "why": "Each rung roughly multiplies cost, data needs and maintenance.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Fine-tuning is costly; cheaper rungs often suffice.",
@@ -50,6 +52,7 @@
     ],
     "answer": 0,
     "why": "Missing or changing facts are a retrieval problem (9.1).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -88,6 +91,7 @@
     ],
     "answer": 3,
     "why": "3,000,000 × $0.004 = $12,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Off by a factor of 10.",
@@ -107,6 +111,7 @@
     ],
     "answer": 0,
     "why": "Some licences restrict using outputs to train other models.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -344,6 +349,7 @@
     ],
     "answer": 0,
     "why": "r × (d_in + d_out) = 8 × 8,192 = 65,536.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -363,6 +369,7 @@
     ],
     "answer": 0,
     "why": "The layer computes W·x + (α/r)·B·A·x with W frozen.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -420,6 +427,7 @@
     ],
     "answer": 3,
     "why": "8 × 10⁹ × 16 bytes ≈ 128 GB, before activations.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Too high.",
@@ -439,6 +447,7 @@
     ],
     "answer": 0,
     "why": "This lets large models fit on a single GPU, at some speed cost.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -553,6 +562,7 @@
     ],
     "answer": 0,
     "why": "QLoRA on an 8B model fits a single 16–24 GB GPU.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -693,6 +703,7 @@
     ],
     "answer": 1,
     "why": "A weak baseline exaggerates the gain.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That ignores what prompting achieves.",
@@ -712,6 +723,7 @@
     ],
     "answer": 3,
     "why": "Run general suites before and after; LoRA forgets less, but not nothing.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a failed run.",
@@ -731,6 +743,7 @@
     ],
     "answer": 0,
     "why": "Probes and canaries test extraction.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -788,6 +801,7 @@
     ],
     "answer": 1,
     "why": "81.0 − 78.5 = 2.5 points ≤ 3.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "The drop can be computed.",
@@ -864,6 +878,7 @@
     ],
     "answer": 2,
     "why": "The honest baseline is the base model with your best prompt.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Averaging does not make a baseline honest.",
@@ -1004,6 +1019,7 @@
     ],
     "answer": 2,
     "why": "A versioned guideline makes labels consistent.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Schemas alone leave decisions unclear.",
@@ -1023,6 +1039,7 @@
     ],
     "answer": 1,
     "why": "Low agreement points to unclear rules.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Fix the guideline, not the annotators.",
@@ -1042,6 +1059,7 @@
     ],
     "answer": 3,
     "why": "κ = (0.90 − 0.50) / (1 − 0.50) = 0.80.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the formula.",
@@ -1061,6 +1079,7 @@
     ],
     "answer": 3,
     "why": "Their accepted records had three times the error rate.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The others found errors to fix.",
@@ -1160,6 +1179,7 @@
     ],
     "answer": 2,
     "why": "Real inputs match what the model will see.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model must learn hard cases.",
@@ -1321,6 +1341,7 @@
     ],
     "answer": 1,
     "why": "Without null examples, the model fabricates values.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Ease is not the reason.",
@@ -1359,6 +1380,7 @@
     ],
     "answer": 3,
     "why": "Small encoders classify well at a fraction of the cost.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Larger is costlier.",
@@ -1416,6 +1438,7 @@
     ],
     "answer": 1,
     "why": "The model must learn the whole loop.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model must see it.",
@@ -1515,6 +1538,7 @@
     ],
     "answer": 0,
     "why": "(600 + x) ÷ (30,000 + x) = 0.10 gives x ≈ 2,667.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1534,6 +1558,7 @@
     ],
     "answer": 2,
     "why": "When only the format is wrong, constrained decoding may be enough without training.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That adds cost without enforcing the format.",
@@ -1654,6 +1679,7 @@
     ],
     "answer": 0,
     "why": "Codenames, part numbers and terms of art are common misses.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1673,6 +1699,7 @@
     ],
     "answer": 2,
     "why": "They teach fine distinctions and matter more than more easy pairs.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Duplicates are not negatives.",
@@ -1768,6 +1795,7 @@
     ],
     "answer": 2,
     "why": "A judge or round-trip check removes bad pairs.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Length is not the aim.",
@@ -1791,6 +1819,7 @@
      3
     ],
     "why": "Human labelling is another source.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Random pairs are not relevant pairs.",
@@ -1848,6 +1877,7 @@
     ],
     "answer": 1,
     "why": "Evaluate on real human queries, not on synthetic ones like those you trained on.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "An average hides the real gap.",
@@ -1990,6 +2020,7 @@
     ],
     "answer": 2,
     "why": "Everything needed to rerun and trace it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not enough to rerun.",
@@ -2028,6 +2059,7 @@
     ],
     "answer": 2,
     "why": "Each version is traceable to its data and code.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A registry stores, not computes.",
@@ -2051,6 +2083,7 @@
      3
     ],
     "why": "Release needs gates, documentation, approval and a way back.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2089,6 +2122,7 @@
     ],
     "answer": 0,
     "why": "The adapter's behaviour depends on the exact base weights.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2127,6 +2161,7 @@
     ],
     "answer": 2,
     "why": "An immutable revision identifies exactly what was tested.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the reason.",

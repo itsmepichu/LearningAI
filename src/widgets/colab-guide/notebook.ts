@@ -107,8 +107,8 @@ const lines = (s: string) => s.split('\n').map((l, i, all) => (i < all.length - 
 /** The steps as a notebook, in the format Colab opens: one text cell per step, then its code. */
 export function toNotebook(meta: { title: string; section: string }, p: Pick<Project, 'company'> | null, steps: GuideStep[]): string {
   const about = p
-    ? `A guide from the Enterprise AI Field Manual, section ${meta.section}, using ${p.company}, a fictional company with invented data.`
-    : `A guide from the Enterprise AI Field Manual, section ${meta.section}.`
+    ? `A guide from the LearningAI course, section ${meta.section}, using ${p.company}, a fictional company with invented data.`
+    : `A guide from the LearningAI course, section ${meta.section}.`
   const cells = [
     { cell_type: 'markdown', metadata: {}, source: lines(`# ${meta.title}\n\n${about}\n\nBefore running anything, choose **Runtime, Change runtime type** and pick a GPU.`) },
     ...steps.flatMap((s, i) => [

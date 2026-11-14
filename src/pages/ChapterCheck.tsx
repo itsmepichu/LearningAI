@@ -17,7 +17,11 @@ export function ChapterCheckPage() {
   const [checks, setChecks] = useState<ChapterChecks | null>(null)
   const [mode, setMode] = useState<Mode>('practice')
   const [allProjects, setAllProjects] = useState(false)
+  // System-design questions stay behind this switch; they are for interview preparation.
+  const [prep, setPrep] = useState(false)
   const [open, setOpen] = useState<Record<string, boolean>>({})
+  // The questions still unanswered when the reader turned the filter on, so an answered one stays on screen with its feedback.
+  const [only, setOnly] = useState<Set<string> | null>(null)
   const { project } = useActiveProject()
   const answers = useProgress((s) => s.answers)
   const ratings = useProgress((s) => s.ratings)
@@ -45,21 +49,34 @@ export function ChapterCheckPage() {
 
   const totals = useMemo(() => {
     if (!checks || !ch) return null
-    let correct = 0, answered = 0, mcq = 0, iv = 0, practised = 0
+    let correct = 0, answered = 0, mcq = 0, iv = 0, practised = 0, design = 0, hiddenProject = 0
     for (const t of ch.topics) {
       const s = sectionScore(checks[t.id], answers)
       correct += s.correct
       answered += s.answered
       mcq += s.total
-      const v = visibleInterview(checks[t.id], project, allProjects)
+      const v = visibleInterview(checks[t.id], project, allProjects, prep)
       iv += v.length
+      hiddenProject += visibleInterview(checks[t.id], project, true, prep).length - v.length
+      design += (checks[t.id]?.interview ?? []).filter((q) => q.level === 'system-design').length
       practised += v.filter((q) => ratings[q.id]).length
     }
-    return { correct, answered, mcq, iv, practised }
-  }, [checks, ch, answers, ratings, project, allProjects])
+    return { correct, answered, mcq, iv, practised, design, hiddenProject }
+  }, [checks, ch, answers, ratings, project, allProjects, prep])
 
   if (!ch || ch.kind !== 'chapter') return <NotFound />
   const count = chapterCheckCount(ch.id)
+  const designCount = totals?.design ?? 0
+  const earlyPart = /^c[1-6]$/.test(ch.id)
+  const toggleOnly = (on: boolean) => {
+    if (!on || !checks) return setOnly(null)
+    const ids = new Set<string>()
+    for (const t of ch.topics) {
+      for (const q of checks[t.id]?.mcq ?? []) if (answers[q.id] === undefined) ids.add(q.id)
+      for (const q of visibleInterview(checks[t.id], project, allProjects, prep)) if (!ratings[q.id]) ids.add(q.id)
+    }
+    setOnly(ids)
+  }
 
   return (
     <div className="check-page">
@@ -68,7 +85,7 @@ export function ChapterCheckPage() {
         <span className="c-kicker">{partOf(ch)?.label} · Chapter check</span>
         <h1 className="page-h"><ListChecks size={28} /> Chapter {ch.num} check</h1>
         <p className="muted lead">
-          {count.mcq} choose-the-answer and {count.interview} interview questions, grouped by section. Your answers and ratings are saved in this browser and count on the{' '}
+          {count.mcq} choose-the-answer ({count.core} core, shown first) and {count.interview - (prep ? 0 : designCount)} interview questions, grouped by section.{designCount > 0 && !prep ? ` ${designCount} system-design questions are behind the Interview prep switch.` : ''} Your answers and ratings are saved in this browser and count on the{' '}
           <Link to="/practice">Practice page</Link> too.
         </p>
         <div className="ck-bar">
@@ -76,22 +93,30 @@ export function ChapterCheckPage() {
             <button type="button" role="radio" aria-checked={mode === 'practice'} tabIndex={mode === 'practice' ? 0 : -1} className={mode === 'practice' ? 'on' : ''} onClick={() => setMode('practice')}>
               Practice <small>feedback after each answer</small>
             </button>
-            <button type="button" role="radio" aria-checked={mode === 'check'} tabIndex={mode === 'check' ? 0 : -1} className={mode === 'check' ? 'on' : ''} onClick={() => setMode('check')}>
+            <button type="button" role="radio" aria-checked={mode === 'check'} tabIndex={mode === 'check' ? 0 : -1} className={mode === 'check' ? 'on' : ''} onClick={() => { setMode('check'); setOnly(null) }}>
               Check <small>answer a section, then score it</small>
             </button>
           </div>
           <label className="tgl">
             <input type="checkbox" checked={allProjects} onChange={(e) => setAllProjects(e.target.checked)} /> Show interview questions framed in all projects
           </label>
+          <label className="tgl">
+            <input type="checkbox" checked={!!only} disabled={mode === 'check' || !checks} onChange={(e) => toggleOnly(e.target.checked)} /> Not answered only
+          </label>
+          <label className="tgl">
+            <input type="checkbox" checked={prep} onChange={(e) => setPrep(e.target.checked)} /> Interview prep (system design)
+            {designCount > 0 && <small> {designCount}</small>}
+          </label>
+          {earlyPart && <span className="muted small">{prep ? 'System-design questions are shown. ' : ''}Come back to these after Part II.</span>}
           <ProjectFramingNote />
           {totals && (
             <span className="ck-score">
               <span aria-live="polite">
                 <b>{totals.correct}</b>/{totals.mcq} correct · <b>{totals.practised}</b>/{totals.iv} interview practised
               </span>
-              {count.interview > totals.iv && (
+              {totals.hiddenProject > 0 && (
                 <>
-                  {' '}· {count.interview - totals.iv} framed for other projects {count.interview - totals.iv === 1 ? 'is' : 'are'} hidden{' '}
+                  {' '}· {totals.hiddenProject} framed for other projects {totals.hiddenProject === 1 ? 'is' : 'are'} hidden{' '}
                   (<button type="button" className="linkish" onClick={() => setAllProjects(true)}>show them</button>)
                 </>
               )}
@@ -138,8 +163,10 @@ export function ChapterCheckPage() {
               mode={mode}
               project={project}
               allProjects={allProjects}
+              prep={prep}
               open={!!open[t.id]}
               onToggle={() => setOpen((o) => ({ ...o, [t.id]: !o[t.id] }))}
+              only={only}
             />
           ))}
         </div>

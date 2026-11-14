@@ -12,6 +12,7 @@
     ],
     "answer": 3,
     "why": "It includes failures and people and divides by what was achieved.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No link to value delivered.",
@@ -31,6 +32,7 @@
     ],
     "answer": 1,
     "why": "(0.017 + 0.15 × 1.20) ÷ 0.85 ≈ 0.197 ÷ 0.85 ≈ 0.23.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ignores failures.",
@@ -50,6 +52,7 @@
     ],
     "answer": 1,
     "why": "350 × 15 ÷ 1,000,000 = 0.00525.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ten times too little.",
@@ -69,6 +72,7 @@
     ],
     "answer": 3,
     "why": "Each avoided failure saves far more than its tokens.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Small saving on a minor line.",
@@ -145,6 +149,7 @@
     ],
     "answer": 3,
     "why": "Human time rarely appears in the AI bill but often dominates.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Visible in usage.",
@@ -311,6 +316,7 @@
     ],
     "answer": 1,
     "why": "A changing prefix means no cache hits.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A date is a few tokens.",
@@ -330,6 +336,7 @@
     ],
     "answer": 1,
     "why": "200 × 3,000,000 × 15 ÷ 1,000,000 = 9,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ten times too small.",
@@ -349,6 +356,7 @@
     ],
     "answer": 2,
     "why": "Fewer chunks can drop the evidence an answer needs.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Same requests, later.",
@@ -368,6 +376,7 @@
     ],
     "answer": 0,
     "why": "2,160 × 2.70 × 3,000,000 ÷ 1,000,000 ≈ 17,496.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -406,6 +415,7 @@
     ],
     "answer": 1,
     "why": "Higher per-token prices make output the biggest lever.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "True but not the main reason.",
@@ -609,6 +619,7 @@
     ],
     "answer": 3,
     "why": "No one is waiting and the deadline is days.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Users are waiting.",
@@ -628,6 +639,7 @@
     ],
     "answer": 2,
     "why": "4,000 × 0.5.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ten times too small.",
@@ -647,6 +659,7 @@
     ],
     "answer": 1,
     "why": "A 24-hour window can deliver after 08:00; use your own off-peak capacity.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "May arrive the next day.",
@@ -666,6 +679,7 @@
     ],
     "answer": 2,
     "why": "The capacity is already paid for; using it raises utilisation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Self-hosted, not a provider.",
@@ -742,6 +756,7 @@
     ],
     "answer": 1,
     "why": "22% × 50% = 11%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Half of the live share.",
@@ -907,6 +922,7 @@
     ],
     "answer": 1,
     "why": "Each type goes to the cheapest model that met the bar in evaluation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not a routing signal.",
@@ -926,6 +942,7 @@
     ],
     "answer": 3,
     "why": "0.08 + 0.675 + 0.90 = 1.655.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Arithmetic slip.",
@@ -945,6 +962,7 @@
     ],
     "answer": 2,
     "why": "Routing uses the request type; a cascade reacts to the small model’s result.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They differ.",
@@ -964,6 +982,7 @@
     ],
     "answer": 0,
     "why": "A rising fallback rate is a quality signal for that route.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1002,6 +1021,7 @@
     ],
     "answer": 3,
     "why": "Averages hide types where the cheap model fails.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the reason.",
@@ -1201,6 +1221,7 @@
     ],
     "answer": 1,
     "why": "It shows usage; chargeback moves the money.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a hard limit.",
@@ -1220,6 +1241,7 @@
     ],
     "answer": 0,
     "why": "2,000 × 4,000 ÷ 8,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1239,6 +1261,7 @@
     ],
     "answer": 3,
     "why": "5,000 ÷ 6,000 ≈ 83%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Past two thresholds.",
@@ -1258,6 +1281,7 @@
     ],
     "answer": 0,
     "why": "Enforcement at one choke point works; goodwill does not.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1277,6 +1301,7 @@
     ],
     "answer": 3,
     "why": "Moving money on disputed numbers causes conflict.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It needs tags too.",
@@ -1497,6 +1522,7 @@
     ],
     "answer": 3,
     "why": "You pay for the commitment whether or not you use it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not guaranteed unless negotiated.",
@@ -1516,6 +1542,7 @@
     ],
     "answer": 0,
     "why": "Commit to what you are confident of; burst on demand.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1535,6 +1562,7 @@
     ],
     "answer": 0,
     "why": "100 × 0.70 = 70 versus 60 × 1.00 = 60.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1554,6 +1582,7 @@
     ],
     "answer": 1,
     "why": "The committed rate is now higher than on demand.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not free.",
@@ -1592,6 +1621,7 @@
     ],
     "answer": 1,
     "why": "Fast price drops and deprecations make long terms risky.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They do.",

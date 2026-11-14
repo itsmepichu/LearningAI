@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Each step reads all weights for little arithmetic, so bandwidth dominates.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Small batches do little maths per weight read.",
@@ -31,6 +32,7 @@
     ],
     "answer": 1,
     "why": "Many tokens share each weight read, so the GPU runs near its FLOP limit.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Prefill is pure GPU work.",
@@ -50,6 +52,7 @@
     ],
     "answer": 1,
     "why": "TTFT grows with prompt length.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Prefill and queueing dominate.",
@@ -69,6 +72,7 @@
     ],
     "answer": 0,
     "why": "20,000 / 10,000 = 2 s.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -202,6 +206,7 @@
     ],
     "answer": 3,
     "why": "TTFT + (n − 1) × ITL = 0.3 + 199 × 0.02 ≈ 4.3 s.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is only the time to the first token.",
@@ -359,6 +364,7 @@
     ],
     "answer": 1,
     "why": "Slots sit idle while the longest request finishes.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It runs; it wastes slots.",
@@ -378,6 +384,7 @@
     ],
     "answer": 0,
     "why": "This typically multiplies throughput several-fold.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -416,6 +423,7 @@
     ],
     "answer": 3,
     "why": "Like virtual memory pages; blocks can be shared.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Far too slow.",
@@ -435,6 +443,7 @@
     ],
     "answer": 3,
     "why": "Only the unique part is prefilled on a hit.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That ignores the cache hit.",
@@ -511,6 +520,7 @@
     ],
     "answer": 1,
     "why": "Shared caches can leak information through timing or content if not designed carefully.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Shared blocks can expose tenant text.",
@@ -653,6 +663,7 @@
     ],
     "answer": 1,
     "why": "The tensor-parallel group serves as one unit; losing any GPU stops it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The four GPUs fail together as one unit.",
@@ -672,6 +683,7 @@
     ],
     "answer": 0,
     "why": "TP communicates every layer, usually over NVLink.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -729,6 +741,7 @@
     ],
     "answer": 0,
     "why": "Each pool can be sized for its workload.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -767,6 +780,7 @@
     ],
     "answer": 1,
     "why": "790 / 215 ≈ 3.7, so 4 units.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Far too few.",
@@ -843,6 +857,7 @@
     ],
     "answer": 2,
     "why": "Losing any GPU stops its whole unit, so redundancy is a spare unit, not a spare GPU.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "One spare GPU cannot replace a failed 4-GPU unit.",
@@ -962,6 +977,7 @@
     ],
     "answer": 2,
     "why": "2 × 32 × 8 × 128 × 2 bytes = 131,072 bytes = 128 KiB.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Missing the layer factor.",
@@ -981,6 +997,7 @@
     ],
     "answer": 0,
     "why": "KV cache grows with context × concurrent sequences.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1000,6 +1017,7 @@
     ],
     "answer": 1,
     "why": "Each KV head is shared by 4 query heads.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Fewer KV heads means less cache.",
@@ -1019,6 +1037,7 @@
     ],
     "answer": 2,
     "why": "56 GB / 128 KiB ≈ 427,000 tokens; / 8,192 ≈ 52.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the count at 128k context.",
@@ -1076,6 +1095,7 @@
     ],
     "answer": 1,
     "why": "KV grows linearly with context × users.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Far too small.",
@@ -1257,6 +1277,7 @@
     ],
     "answer": 0,
     "why": "Decode is memory-bandwidth-bound.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1276,6 +1297,7 @@
     ],
     "answer": 2,
     "why": "Always evaluate on your task suite.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Simple chat holds up best.",
@@ -1314,6 +1336,7 @@
     ],
     "answer": 0,
     "why": "(1 − 0.5⁵) / 0.5 = 0.96875 / 0.5 ≈ 1.94.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1333,6 +1356,7 @@
     ],
     "answer": 0,
     "why": "The target verifies drafts and accepts only the correct prefix.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1470,6 +1494,7 @@
     ],
     "answer": 2,
     "why": "Perplexity hides task losses, and non-English text often degrades first.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Perplexity is not your task.",
@@ -1591,6 +1616,7 @@
     ],
     "answer": 3,
     "why": "PagedAttention, continuous batching, prefix caching and an OpenAI-compatible server.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Now in maintenance mode.",
@@ -1633,6 +1659,7 @@
      3
     ],
     "why": "Together these can take several minutes.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1652,6 +1679,7 @@
     ],
     "answer": 1,
     "why": "Leading signals react before users wait.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is cheap to read.",
@@ -1709,6 +1737,7 @@
     ],
     "answer": 1,
     "why": "Reactive scaling cannot start replicas faster than the ramp.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That sends users to unready replicas.",
@@ -1804,6 +1833,7 @@
     ],
     "answer": 2,
     "why": "Those show waiting work; utilisation lags and misleads.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not on the request path.",
@@ -1928,6 +1958,7 @@
     ],
     "answer": 2,
     "why": "Shared weight reads raise throughput until compute-bound.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Batching raises throughput.",
@@ -1947,6 +1978,7 @@
     ],
     "answer": 0,
     "why": "e.g. maximise tokens/s subject to p95 ITL ≤ 50 ms.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1966,6 +1998,7 @@
     ],
     "answer": 1,
     "why": "Prefer tokens/s, MFU, bandwidth utilisation and KV usage.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a different metric.",
@@ -2046,6 +2079,7 @@
     ],
     "answer": 2,
     "why": "The best batch is the largest one under the SLO line.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That breaks the SLO.",
@@ -2103,6 +2137,7 @@
     ],
     "answer": 0,
     "why": "Rejecting early is better than missing the deadline after waiting (15.6).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2263,6 +2298,7 @@
     ],
     "answer": 2,
     "why": "API cost is variable; self-hosting is fixed capacity.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They cost money whether busy or not.",
@@ -2305,6 +2341,7 @@
     ],
     "answer": 2,
     "why": "20,000 million × $0.60 = $12,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Off by 10×.",
@@ -2362,6 +2399,7 @@
     ],
     "answer": 1,
     "why": "The full cost is much more than GPUs.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Far from the full cost.",
@@ -2438,6 +2476,7 @@
     ],
     "answer": 2,
     "why": "20 / 2.96 ≈ 6.8, rounded up to 7 (above the minimum of 2).",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the calculation.",
@@ -2457,6 +2496,7 @@
     ],
     "answer": 0,
     "why": "40 ÷ 2.96 ≈ 13.5, so 14 GPUs ≈ $25,600, plus $15,000 ops; the API costs 40,000 × $0.60.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",

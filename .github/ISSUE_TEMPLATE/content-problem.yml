@@ -1,0 +1,46 @@
+name: Content problem
+description: Something in a topic is wrong, unclear, broken or missing.
+title: "[content] "
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reading the course closely. This issue is public, so please do not paste personal data.
+  - type: input
+    id: topic
+    attributes:
+      label: Topic id
+      description: For example `c2-1`. The "Report a problem" link at the end of a topic fills this in.
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+      description: The address of the page where you saw the problem.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of problem is it?
+      options:
+        - Wrong or out of date
+        - Hard to understand
+        - A figure or widget does not work
+        - A link is broken
+        - A check question is wrong or unfair
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Quote the sentence or name the figure. Say what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested fix
+      description: Optional. A better sentence, a source, or a screenshot description.

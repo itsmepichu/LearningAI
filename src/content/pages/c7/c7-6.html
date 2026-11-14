@@ -55,7 +55,7 @@ def call_llm(req, primary, fallback, deadline_s=30, max_attempts=4):
 <ol>
 <li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">AWS Architecture Blog: Exponential Backoff and Jitter</a> <small>Simulations comparing backoff strategies, including full jitter.</small></li>
 <li><a href="https://www.rfc-editor.org/rfc/rfc9110#field.retry-after">RFC 9110: the Retry-After header</a> <small>How a server says when to come back.</small></li>
-<li><a href="https://sre.google/sre-book/handling-overload/">Google SRE book: Handling Overload</a> <small>Retry budgets, load shedding and graceful degradation.</small></li>
-<li><a href="https://docs.litellm.ai/docs/proxy/reliability">LiteLLM: Fallbacks and reliability</a> <small>Retries, fallbacks and budgets in a model gateway.</small></li>
+<li><a href="https://sre.google/sre-book/handling-overload/">Google SRE book: Handling Overload</a> <small>Retry budgets, <a class="gl" href="#gl-load-shedding">load shedding</a> and <a class="gl" href="#gl-graceful-degradation">graceful degradation</a>.</small></li>
+<li><a href="https://docs.litellm.ai/docs/proxy/reliability">LiteLLM: Fallbacks and reliability</a> <small>Retries, fallbacks and budgets in a <a class="gl" href="#gl-model-gateway">model gateway</a>.</small></li>
 </ol>
 </section>

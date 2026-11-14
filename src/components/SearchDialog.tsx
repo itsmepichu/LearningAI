@@ -1,10 +1,12 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useProgress } from '../store/progress'
+import { primaryProject, workshopPath } from '../data/workshop'
 import { AnimatePresence, motion } from 'motion/react'
 import { Search } from 'lucide-react'
 import type MiniSearch from 'minisearch'
 import { courseTopics, getChapter, getTopic } from '../data/course'
-import { fill, getProject, loadPractice, practiceChapterIds, projects } from '../data/projects'
+import { fill, getProject, isProjectId, loadPractice, practiceChapterIds, projects } from '../data/projects'
 
 interface Doc { id: string; ch: string; tn: string; title: string; text: string; topic: string; project?: string }
 interface Index { ms: MiniSearch<Doc>; byId: Map<string, Doc> }
@@ -13,7 +15,7 @@ let indexPromise: Promise<Index> | null = null
 function loadIndex(): Promise<Index> {
   indexPromise ??= Promise.all([
     import('minisearch'),
-    import('../content/search.json'),
+    import('../content/generated/search.json'),
     Promise.all(practiceChapterIds().map((c) => loadPractice(c).then((d) => [c, d] as const))),
   ]).then(([m, data, practice]) => {
     const docs = ((data.default ?? data) as Doc[]).map((d) => ({ ...d, topic: d.id }))
@@ -25,7 +27,7 @@ function loadIndex(): Promise<Index> {
         for (const p of projects) {
           const n = (notes as Record<string, { practice: string; failure: string; tryIt?: string }>)[p.id]
           if (!n) continue
-          docs.push({ id: `${topic}~${p.id}`, ch, topic, tn: t.tn, title: t.title, project: p.id, text: strip(fill([n.practice, n.failure, n.tryIt ?? ''].join(' '), p)) })
+          docs.push({ id: `${topic}~${p.id}`, ch, topic, tn: t.tn, title: t.short ?? t.title, project: p.id, text: strip(fill([n.practice, n.failure, n.tryIt ?? ''].join(' '), p)) })
         }
       }
     }
@@ -64,6 +66,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   const opener = useRef<HTMLElement | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const setProject = useProgress((s) => s.setProject)
 
   useEffect(() => {
     if (open) loadIndex().then(setIdx)
@@ -119,7 +122,15 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
 
   const go = (d: Doc) => {
     onClose()
-    navigate(`/${d.ch}/${d.topic}${d.project ? `?project=${d.project}` : ''}`)
+    // A note for the topic's own project opens the topic. A note for another project opens the workshop on that project.
+    // The capstone has no primary project: its topic shows the saved project, so the search result sets it.
+    if (isProjectId(d.project) && getChapter(d.ch)?.kind === 'capstone') {
+      setProject(d.project)
+      navigate(`/${d.ch}/${d.topic}`)
+    } else if (isProjectId(d.project) && d.project !== primaryProject(d.topic)) {
+      setProject(d.project)
+      navigate(workshopPath(d.ch, d.topic))
+    } else navigate(`/${d.ch}/${d.topic}`)
   }
 
   const onKey = (e: React.KeyboardEvent) => {

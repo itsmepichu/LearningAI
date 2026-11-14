@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { ArrowLeft, ArrowRight, Dumbbell, Filter, MessagesSquare, RotateCcw, Shuffle, Target } from 'lucide-react'
-import { chapterCheckCount, chaptersWithChecks, getTopic } from '../data/course'
+import { chapterCheckCount, chaptersWithChecks, getTopic, parts } from '../data/course'
+import { PART_REVIEW_SIZE, pickPartReview } from '../data/partReview'
 import { LEVEL_LABEL, isCorrect, loadChecks, type ChapterChecks, type InterviewQ, type Level, type Mcq } from '../data/checks'
 import { McqCard, InterviewCard } from '../components/Checks'
 import { ProjectFramingNote, useActiveProject } from '../components/Practice'
@@ -35,8 +36,13 @@ export function PracticePage() {
   useDocumentTitle('Practice')
   const [params, setParams] = useSearchParams()
   const available = chaptersWithChecks()
-  const fromUrl = (params.get('chapters') || '').split(',').filter((c) => available.some((a) => a.id === c))
+  // ?part=<id> opens the part review: a mixed set across that part's chapters
+  const part = parts.find((p) => p.id === params.get('part'))
+  const partChapters = (part?.chapters ?? []).filter((c) => available.some((a) => a.id === c))
+  const fromUrl = partChapters.length ? partChapters : (params.get('chapters') || '').split(',').filter((c) => available.some((a) => a.id === c))
   const [chapters, setChapters] = useState<string[]>(fromUrl.length ? fromUrl : available.map((c) => c.id))
+  // System-design questions stay out of the pool until the reader turns interview prep on.
+  const [prep, setPrep] = useState(params.get('prep') === '1')
   const [kind, setKind] = useState<'all' | 'mcq' | 'interview'>('all')
   const [level, setLevel] = useState<'all' | Level>('all')
   const [framing, setFraming] = useState<'mine' | 'all'>('mine')
@@ -81,6 +87,7 @@ export function PracticePage() {
         if (kind !== 'mcq')
           for (const q of sec.interview ?? []) {
             if (level !== 'all' && q.level !== level) continue
+            if (level === 'all' && !prep && q.level === 'system-design') continue
             if (q.project && framing === 'mine' && q.project !== project) continue
             out.push({ type: 'iv', q, ch, topic })
           }
@@ -92,7 +99,7 @@ export function PracticePage() {
       const wrong = it.type === 'mcq' ? isCorrect(it.q, answers[it.q.id]) === false : ratings[it.q.id] === 'missed'
       return status === 'new' ? !done : status === 'wrong' ? wrong : done
     })
-  }, [chapters, data, kind, level, framing, project, status, answers, ratings])
+  }, [chapters, data, kind, level, prep, framing, project, status, answers, ratings])
 
   const loading = chapters.some((c) => !data[c])
   const counts = { mcq: pool.filter((i) => i.type === 'mcq').length, iv: pool.filter((i) => i.type === 'iv').length }
@@ -111,8 +118,26 @@ export function PracticePage() {
     return shuffle(pool.filter((i) => i.type === 'iv')).sort((a, b) => order[ratings[a.q.id] ?? 'none'] - order[ratings[b.q.id] ?? 'none'])
     // re-order only when the pool changes, not on every rating
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.length, chapters, kind, level, framing, project, status])
+  }, [pool.length, chapters, kind, level, prep, framing, project, status])
   const [drillPos, setDrillPos] = useState(0)
+
+  const drawPartReview = () => {
+    const items: Item[] = []
+    for (const ch of partChapters) {
+      for (const [topic, sec] of Object.entries(data[ch] ?? {})) {
+        for (const q of sec.mcq ?? []) items.push({ type: 'mcq', q, ch, topic })
+        for (const q of sec.interview ?? []) if (!q.project || q.project === project) items.push({ type: 'iv', q, ch, topic })
+      }
+    }
+    setDrawn(pickPartReview(items, partChapters))
+    setPos(0)
+  }
+  // arriving from a part checkpoint, draw the review as soon as its chapters have loaded
+  const partReady = !!part && partChapters.every((c) => data[c])
+  useEffect(() => {
+    if (partReady && !drawn) drawPartReview()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [partReady])
 
   const toggleCh = (id: string) => {
     setChapters((cs) => (cs.includes(id) ? cs.filter((c) => c !== id) : [...cs, id]))
@@ -129,6 +154,17 @@ export function PracticePage() {
       <p className="muted lead">
         Drill the chapter check questions across the course. Everything you answer here also counts on each chapter's check page and on your progress page.
       </p>
+
+      {part && (
+        <section className="pf partrev" aria-label="Part review">
+          <p>
+            <b>{part.label} review</b> · {PART_REVIEW_SIZE} mixed questions across chapters {partChapters.map((c) => available.find((a) => a.id === c)?.num).join(', ')}, core questions first.
+          </p>
+          <button type="button" className="btn primary" onClick={() => { setTab('random'); drawPartReview() }} disabled={!partReady}>
+            <Shuffle size={15} /> {drawn ? 'Draw a new review' : 'Draw the review'}
+          </button>
+        </section>
+      )}
 
       <section className="pf" aria-label="Filters">
         <div className="pf-row">
@@ -175,6 +211,12 @@ export function PracticePage() {
               <option value="all">All projects</option>
             </select>
           </label>
+          <label className="tgl">
+            <input type="checkbox" checked={prep} onChange={(e) => setPrep(e.target.checked)} /> Interview prep (include system design)
+          </label>
+          <button type="button" className="btn" onClick={() => { setKind('interview'); setLevel('all'); setStatus('all'); setPrep(true); setTab('drill'); setDrillPos(0) }}>
+            <MessagesSquare size={15} /> Interview prep preset
+          </button>
           <ProjectFramingNote />
         </div>
         <p className="pf-count" aria-live="polite">

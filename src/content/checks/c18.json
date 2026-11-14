@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Behaviour depends on code, prompts, models, indexes and config together.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Flags switch versions; they do not record the whole set.",
@@ -31,6 +32,7 @@
     ],
     "answer": 3,
     "why": "Code, prompts, tools, model, embedder, index, config and evaluation suite.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not a technical record.",
@@ -92,6 +94,7 @@
      3
     ],
     "why": "Everything that can change behaviour.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -206,6 +209,7 @@
     ],
     "answer": 0,
     "why": "Restore a coherent, compatible system.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -225,6 +229,7 @@
     ],
     "answer": 0,
     "why": "Any behaviour-affecting input belongs in the manifest; otherwise bisecting cannot find it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -348,6 +353,7 @@
     ],
     "answer": 1,
     "why": "Shadowing a write creates real duplicate actions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Read-only access is how shadowing works.",
@@ -367,6 +373,7 @@
     ],
     "answer": 3,
     "why": "No user risk.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is disaster recovery.",
@@ -386,6 +393,7 @@
     ],
     "answer": 3,
     "why": "Compare with the baseline in the same window.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Too large for a canary.",
@@ -481,6 +489,7 @@
     ],
     "answer": 3,
     "why": "Automatic rollback.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The opposite.",
@@ -538,6 +547,7 @@
     ],
     "answer": 1,
     "why": "40,000 × 0.05 × 2 = 4,000 canary requests; 10% of them is 400.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is all the canary's requests.",
@@ -679,6 +689,7 @@
     ],
     "answer": 1,
     "why": "Critical invariants block regardless of average improvements.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A critical leak blocks release.",
@@ -698,6 +709,7 @@
     ],
     "answer": 2,
     "why": "Gates enforce acceptance and release criteria.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Flags route traffic; gates check.",
@@ -721,6 +733,7 @@
      3
     ],
     "why": "Quality, safety/security, performance and cost.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -759,6 +772,7 @@
     ],
     "answer": 0,
     "why": "Per-segment gates block hidden regressions.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -778,6 +792,7 @@
     ],
     "answer": 1,
     "why": "0.057 / 0.050 = 1.14.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Rises up to 10% pass.",
@@ -1012,6 +1027,7 @@
     ],
     "answer": 1,
     "why": "Rebuilding per environment means you never tested what you shipped.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Rollbacks still work.",
@@ -1050,6 +1066,7 @@
     ],
     "answer": 2,
     "why": "Gives an audit trail and rollback by revert.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is a practice.",
@@ -1069,6 +1086,7 @@
     ],
     "answer": 3,
     "why": "Pin model revisions.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Speed is minor.",
@@ -1111,6 +1129,7 @@
     ],
     "answer": 3,
     "why": "Tags can move.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not an identifier.",
@@ -1206,6 +1225,7 @@
     ],
     "answer": 2,
     "why": "Rebuilding per environment means you never tested what you shipped.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It would only catch the failure later.",
@@ -1348,6 +1368,7 @@
     ],
     "answer": 2,
     "why": "Run the full suite.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the reason.",
@@ -1386,6 +1407,7 @@
     ],
     "answer": 1,
     "why": "Add length guidance and re-check the cost gate.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It matters.",
@@ -1428,6 +1450,7 @@
      3
     ],
     "why": "Run with current and re-tuned prompts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unrelated.",
@@ -1542,6 +1565,7 @@
     ],
     "answer": 1,
     "why": "0.60 × 38% ≈ 23% more per task.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Input cost does not change.",
@@ -1561,6 +1585,7 @@
     ],
     "answer": 2,
     "why": "Tracking which features use which versions makes deprecations plannable.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Money does not show what to migrate.",
@@ -1688,6 +1713,7 @@
     ],
     "answer": 1,
     "why": "Edit fraction tracks quality per prompt version.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the value.",
@@ -1726,6 +1752,7 @@
     ],
     "answer": 1,
     "why": "Mixing makes evaluation measure memory.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No honest evaluation remains.",
@@ -1749,6 +1776,7 @@
      3
     ],
     "why": "Also a policy change. Triggers open a work item; gates still apply.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not a trigger.",
@@ -1825,6 +1853,7 @@
     ],
     "answer": 0,
     "why": "Fix root causes in the cheapest place.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1882,6 +1911,7 @@
     ],
     "answer": 1,
     "why": "(300 + 200) ÷ 2,000 = 0.25.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That counts only the heavy edits.",
@@ -2023,6 +2053,7 @@
     ],
     "answer": 2,
     "why": "Quality, cost, incidents and compliance need owners.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No one would act.",
@@ -2042,6 +2073,7 @@
     ],
     "answer": 2,
     "why": "R = responsible, C = consulted, I = informed.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not the term.",
@@ -2065,6 +2097,7 @@
      3
     ],
     "why": "Plus security review and cost budgets.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A demo is not readiness.",
@@ -2103,6 +2136,7 @@
     ],
     "answer": 0,
     "why": "The original team steps back only after joint ownership.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2236,6 +2270,7 @@
     ],
     "answer": 1,
     "why": "The review checks the system can be operated, not only observed.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A demo does not show it can be operated.",

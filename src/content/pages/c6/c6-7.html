@@ -7,14 +7,7 @@
 <section class="tp tp-mechanism" id="c6-7-mechanism">
 <h3 data-n="2">Mechanism</h3>
 <p>The best way to make the previous sections concrete is to run the whole loop at toy scale: tokenise text, build a model, compute cross-entropy on next-token prediction, follow gradients, watch loss fall, and sample. Below, a <b>character-level bigram model</b> (it predicts the next character from the current one) is trained with real gradient descent in your browser. It has one weight matrix of vocabulary × vocabulary logits. It is the smallest possible neural language model, and every concept (tokens, logits, softmax, cross-entropy, gradient, learning rate, sampling, temperature) is present.</p>
-<figure class="fig live"><div class="stage"><div class="wid">
-<label for="tlmText" style="display:block">Training corpus</label>
-<textarea id="tlmText">the cache stores keys and values. the model reads the cache. the server streams tokens to the user. the user reads the tokens. retries use backoff. the queue holds the jobs. the worker takes the jobs from the queue. the index stores the vectors. the query finds the nearest vectors.</textarea>
-<div class="row2"><label for="tlmLr">Learning rate <input type="range" id="tlmLr" min="1" max="100" value="50"><span id="tlmLrO"></span></label>
-<label for="tlmT">Sampling temperature <input type="range" id="tlmT" min="10" max="200" value="80"><span id="tlmTO"></span></label></div>
-<div class="ctl"><button class="btn primary" id="tlmTrain" type="button">Train 200 steps</button><button class="btn" id="tlmSample" type="button">Sample text</button><button class="btn" id="tlmReset" type="button">Reset weights</button><span class="count" id="tlmInfo"></span></div>
-<canvas id="tlmCan" width="640" height="150"></canvas>
-<div class="out" id="tlmOut">Press Train, then Sample. Before training, samples are random characters.</div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="bigram-lm"></div></div>
 <figcaption><b>A real language model trained in your browser.</b> The dashed line is ln(vocabulary size), the loss of uniform guessing. Loss falls toward the bigram entropy of the text; samples go from noise to word-like fragments. A bigram model cannot learn more because it only sees one character of context. Transformers fix exactly that limitation.</figcaption></figure>
 
 
@@ -69,6 +62,6 @@ python sample.py --out_dir=out-shakespeare-char --device=cpu</code></pre>
 <li><a href="https://github.com/karpathy/nanoGPT">Karpathy, nanoGPT</a> <small>The small, readable GPT training code used in the lab and the Colab guide.</small></li>
 <li><a href="https://github.com/karpathy/nanochat">Karpathy, nanochat</a> <small>The full pipeline, tokenizer to chat model, at small scale.</small></li>
 <li><a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">Karpathy, Let’s build GPT: from scratch, in code, spelled out (video)</a> <small>Builds this exact model line by line.</small></li>
-<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> <small>The architecture nanoGPT implements.</small></li>
+<li><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. (2017), Attention Is All You Need</a> <small>The architecture nanoGPT implements. <a href="#app-f-transformer">Plain-words walkthrough of this paper (Appendix F.1).</a></small></li>
 </ol>
 </section>

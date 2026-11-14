@@ -31,6 +31,7 @@
     ],
     "answer": 0,
     "why": "Traces propagate across services, queues and agents.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -50,6 +51,7 @@
     ],
     "answer": 1,
     "why": "Use traces and logs for detail.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Metrics are aggregates.",
@@ -69,6 +71,7 @@
     ],
     "answer": 0,
     "why": "The W3C traceparent header covers HTTP; queues need explicit metadata.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -88,6 +91,7 @@
     ],
     "answer": 1,
     "why": "It is a pipeline between services and backends.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not its job.",
@@ -221,6 +225,7 @@
     ],
     "answer": 3,
     "why": "Async work joins the original trace when its context travels with the message.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Names are not reliable links across systems.",
@@ -344,6 +349,7 @@
     ],
     "answer": 1,
     "why": "1.5% ÷ 0.1% = 15× (above the 14.4× paging threshold).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is the error rate as a multiple of 1%.",
@@ -363,6 +369,7 @@
     ],
     "answer": 0,
     "why": "Each alert links to a runbook.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -401,6 +408,7 @@
     ],
     "answer": 2,
     "why": "0.5% / 0.5% = 1, so the budget lasts exactly the window.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the ratio.",
@@ -443,6 +451,7 @@
      3
     ],
     "why": "Runbooks make alerts actionable.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Never.",
@@ -481,6 +490,7 @@
     ],
     "answer": 1,
     "why": "Action items have owners, including new evaluation cases and alerts.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It finds them.",
@@ -683,6 +693,7 @@
     ],
     "answer": 1,
     "why": "Transport health cannot see answer quality.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "HTTP status was fine, so golden signals stayed green.",
@@ -702,6 +713,7 @@
     ],
     "answer": 0,
     "why": "Implicit signals come from behaviour.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -740,6 +752,7 @@
     ],
     "answer": 3,
     "why": "Both too high and suddenly too low are signals.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A sudden fall needs checking.",
@@ -763,6 +776,7 @@
      2
     ],
     "why": "Retrieval failures often precede quality complaints.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -820,6 +834,7 @@
     ],
     "answer": 2,
     "why": "Self-reports are not evidence.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Agents can misreport.",
@@ -1025,6 +1040,7 @@
      3
     ],
     "why": "Also timings, tokens and cost, and what the user did next.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1063,6 +1079,7 @@
     ],
     "answer": 0,
     "why": "400 + 60 + 800 + 850 + 240 + 2,900 = 5,250.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1082,6 +1099,7 @@
     ],
     "answer": 2,
     "why": "Speed up the longest span on the critical path.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Only critical-path spans matter.",
@@ -1120,6 +1138,7 @@
     ],
     "answer": 0,
     "why": "Propagate context, or link child traces to the parent task.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1196,6 +1215,7 @@
     ],
     "answer": 2,
     "why": "The longest span on the critical path offers the biggest saving.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Saves at most 20 ms.",
@@ -1321,6 +1341,7 @@
     ],
     "answer": 2,
     "why": "For AI services, measure them per stage and per model.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the classic four.",
@@ -1340,6 +1361,7 @@
     ],
     "answer": 1,
     "why": "Report p50, p95 and p99.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is lower than the tail.",
@@ -1359,6 +1381,7 @@
     ],
     "answer": 2,
     "why": "Age directly measures delay.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Length can mislead.",
@@ -1420,6 +1443,7 @@
     ],
     "answer": 3,
     "why": "Per-tenant admission limits and a long-context pool fixed it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not the finding.",
@@ -1515,6 +1539,7 @@
     ],
     "answer": 1,
     "why": "(95 × 1 + 5 × 21) ÷ 100 = 2.0 s; the median is 1 s, and the slow 5% are hidden by both.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That swaps the two.",
@@ -1657,6 +1682,7 @@
     ],
     "answer": 1,
     "why": "Record input, cached input, output and reasoning tokens per call.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not a count.",
@@ -1680,6 +1706,7 @@
      3
     ],
     "why": "Also a hashed user ID.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "High cardinality and sensitive.",
@@ -1756,6 +1783,7 @@
     ],
     "answer": 1,
     "why": "Busy GPUs can still produce failed tasks.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Busy is not useful.",
@@ -1832,6 +1860,7 @@
     ],
     "answer": 2,
     "why": "They have different prices.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Types are priced differently.",
@@ -1851,6 +1880,7 @@
     ],
     "answer": 0,
     "why": "2,000 × $1/M + 4,000 × $0.10/M + 400 × $4/M = $0.0020 + $0.0004 + $0.0016.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1990,6 +2020,7 @@
     ],
     "answer": 2,
     "why": "Tail sampling decides after the trace completes.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is cheap.",
@@ -2013,6 +2044,7 @@
      3
     ],
     "why": "Plus a random baseline of the rest.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Only a baseline of those.",
@@ -2070,6 +2102,7 @@
     ],
     "answer": 0,
     "why": "Prompts and outputs need per-field decisions; secrets are never logged.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2089,6 +2122,7 @@
     ],
     "answer": 2,
     "why": "Missing telemetry must be visible.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the reason.",
@@ -2184,6 +2218,7 @@
     ],
     "answer": 0,
     "why": "200 × 86,400 ≈ 17.3M traces; × 0.0785 ≈ 1.36M; × 30 KB ≈ 41 GB.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -2325,6 +2360,7 @@
     ],
     "answer": 1,
     "why": "Topics, languages, query lengths and retrieval score distributions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Too late.",
@@ -2344,6 +2380,7 @@
     ],
     "answer": 3,
     "why": "Pin snapshots where offered and annotate dashboards on change.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the reason.",
@@ -2363,6 +2400,7 @@
     ],
     "answer": 0,
     "why": "Then report accuracy per prompt and model version.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2439,6 +2477,7 @@
     ],
     "answer": 3,
     "why": "Input-distribution monitors separate mix shifts from regressions.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Premature.",
@@ -2534,6 +2573,7 @@
     ],
     "answer": 1,
     "why": "Audits lag by 45 days, and a week of decisions needs another 7.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Proxies help, but they are not audits.",
@@ -2653,6 +2693,7 @@
     ],
     "answer": 2,
     "why": "Make the path from bad trace to test short.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They are real.",
@@ -2676,6 +2717,7 @@
      3
     ],
     "why": "Then fix the cause, deploy and monitor.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2714,6 +2756,7 @@
     ],
     "answer": 2,
     "why": "Raw customer conversations must not enter shared sets without review.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unsafe.",
@@ -2733,6 +2776,7 @@
     ],
     "answer": 3,
     "why": "See 8.6 and 18.3.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Misses new failures.",
@@ -2771,6 +2815,7 @@
     ],
     "answer": 3,
     "why": "One wording can be overfitted.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not the purpose.",
@@ -2986,6 +3031,7 @@
     ],
     "answer": 1,
     "why": "They let tools from different vendors understand your data.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not telemetry naming.",
@@ -3005,6 +3051,7 @@
     ],
     "answer": 1,
     "why": "Names and structure can change in breaking ways.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not withdrawn.",
@@ -3066,6 +3113,7 @@
      3
     ],
     "why": "Also abstract telemetry in one helper and re-check on each upgrade.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -3123,6 +3171,7 @@
     ],
     "answer": 3,
     "why": "Check the badge, not the project's reputation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Each area has its own status.",
@@ -3180,6 +3229,7 @@
     ],
     "answer": 3,
     "why": "Changing names in one place is cheap; Development status means renames will happen.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Duplication spreads across services.",

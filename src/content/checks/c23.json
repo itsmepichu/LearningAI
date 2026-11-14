@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "Controls make obligations real: approvals, logs, tests.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That may be evidence.",
@@ -31,6 +32,7 @@
     ],
     "answer": 2,
     "why": "Records produced continuously by the system prove the control ran.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Stale.",
@@ -50,6 +52,7 @@
     ],
     "answer": 3,
     "why": "250 > 180, so the evidence no longer counts.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Existence is not proof.",
@@ -69,6 +72,7 @@
     ],
     "answer": 1,
     "why": "Gaps are the real compliance risk.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Policies are not controls.",
@@ -164,6 +168,7 @@
     ],
     "answer": 0,
     "why": "Automatic evidence stays fresh and complete.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -308,6 +313,7 @@
     ],
     "answer": 2,
     "why": "Tier and role (provider or deployer) decide duties.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the main factor.",
@@ -327,6 +333,7 @@
     ],
     "answer": 1,
     "why": "Using it under its own authority makes it a deployer; employment is high risk.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Employment uses carry duties.",
@@ -346,6 +353,7 @@
     ],
     "answer": 2,
     "why": "Transparency duties apply to systems that interact with people.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is for some high-risk systems.",
@@ -422,6 +430,7 @@
     ],
     "answer": 2,
     "why": "Credit scoring is a typical high-risk area.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Pre-qualification still affects access.",
@@ -479,6 +488,7 @@
     ],
     "answer": 1,
     "why": "Building and offering a system makes you its provider.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Responsibility does not transfer.",
@@ -607,6 +617,7 @@
     ],
     "answer": 2,
     "why": "Chunks, vectors, caches, memories, logs and datasets all hold copies.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not forbidden.",
@@ -645,6 +656,7 @@
     ],
     "answer": 2,
     "why": "Retained data needs a documented legal reason.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Unlawful delay.",
@@ -664,6 +676,7 @@
     ],
     "answer": 1,
     "why": "Minimisation means fewer copies to find.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Increases copies.",
@@ -683,6 +696,7 @@
     ],
     "answer": 1,
     "why": "Models must be flagged for review or retraining (13.6).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Weights do not change.",
@@ -721,6 +735,7 @@
     ],
     "answer": 3,
     "why": "Relying on timing is fragile; act on every store.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Risky if retention changes or overlaps the deadline.",
@@ -905,6 +920,7 @@
     ],
     "answer": 3,
     "why": "Disclosure of AI interaction is the common baseline.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not required.",
@@ -924,6 +940,7 @@
     ],
     "answer": 1,
     "why": "Provenance metadata travels with the file.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Easily lost and not standard.",
@@ -981,6 +998,7 @@
     ],
     "answer": 3,
     "why": "Records must be append-only to be trusted.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Minor.",
@@ -1000,6 +1018,7 @@
     ],
     "answer": 0,
     "why": "Voice needs spoken disclosure; there is no banner.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1076,6 +1095,7 @@
     ],
     "answer": 1,
     "why": "75 ÷ 500.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Confuses count and percent.",
@@ -1203,6 +1223,7 @@
     ],
     "answer": 0,
     "why": "Selection lets problems be steered away from review.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1222,6 +1243,7 @@
     ],
     "answer": 2,
     "why": "The smallest n where 0.95 to the power n falls below 0.05 is 59.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "A guess from the numbers.",
@@ -1260,6 +1282,7 @@
     ],
     "answer": 2,
     "why": "The interval straddles 5%; the evidence is inconclusive.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The lower end is not the estimate.",
@@ -1279,6 +1302,7 @@
     ],
     "answer": 3,
     "why": "It audits the management system around AI.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is a standard, not a law.",
@@ -1298,6 +1322,7 @@
     ],
     "answer": 0,
     "why": "Stratifying by period shows where breaches concentrate.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",

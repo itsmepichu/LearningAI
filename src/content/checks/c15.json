@@ -31,6 +31,7 @@
     ],
     "answer": 2,
     "why": "Little's law: L = λW = 50 × 8 (an average, not a p99).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That divides 50 by 8 instead of multiplying.",
@@ -50,6 +51,7 @@
     ],
     "answer": 2,
     "why": "2M × 4 = 8M; × 0.15 = 1.2M per hour; / 3600 ≈ 333; × 3 ≈ 1,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That leaves out the burst factor.",
@@ -69,6 +71,7 @@
     ],
     "answer": 1,
     "why": "Concurrency = arrival rate × time in system, an average; plan headroom above it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It gives an average, not a tail.",
@@ -88,6 +91,7 @@
     ],
     "answer": 3,
     "why": "Use the average time; handle tails with headroom.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The arrival rate is not the issue.",
@@ -164,6 +168,7 @@
     ],
     "answer": 3,
     "why": "Background work competes with interactive traffic.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It should be queued separately.",
@@ -344,6 +349,7 @@
     ],
     "answer": 3,
     "why": "Cost per successful task ties cost to value.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They are not.",
@@ -363,6 +369,7 @@
     ],
     "answer": 2,
     "why": "(0.011 + 0.09 × 4) / 0.91 ≈ 0.371 / 0.91 ≈ $0.41.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That leaves out human cost.",
@@ -382,6 +389,7 @@
     ],
     "answer": 3,
     "why": "$10 / 50 = $0.20, plus the support cost of the failures.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the calculation.",
@@ -424,6 +432,7 @@
     ],
     "answer": 0,
     "why": "One tenant called summarise on every page view (17.5).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -481,6 +490,7 @@
     ],
     "answer": 3,
     "why": "Layered limits catch runaway use early.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Prompts do not enforce budgets.",
@@ -644,6 +654,7 @@
     ],
     "answer": 2,
     "why": "SLA is the contractual promise, usually looser.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is an SLA.",
@@ -663,6 +674,7 @@
     ],
     "answer": 0,
     "why": "0.1% × 140M = 140,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -720,6 +732,7 @@
     ],
     "answer": 3,
     "why": "Quality needs its own SLO (17.4).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Availability never dropped.",
@@ -739,6 +752,7 @@
     ],
     "answer": 0,
     "why": "Budgets guide release decisions (17.8).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -815,6 +829,7 @@
     ],
     "answer": 3,
     "why": "Cost per successful task belongs in the SLO set.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a latency SLO.",
@@ -955,6 +970,7 @@
     ],
     "answer": 0,
     "why": "e.g. a backfill saturating embedding GPUs used for query embeddings.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1050,6 +1066,7 @@
     ],
     "answer": 1,
     "why": "Separation must cover shared dependencies too.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Shared dependencies couple them again.",
@@ -1126,6 +1143,7 @@
     ],
     "answer": 3,
     "why": "Query embedding is on the critical path.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Too slow for query latency.",
@@ -1145,6 +1163,7 @@
     ],
     "answer": 3,
     "why": "Latency-critical and bulk work need separate pools; the backfill then just takes longer.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Users need search.",
@@ -1164,6 +1183,7 @@
     ],
     "answer": 1,
     "why": "2,000,000 ÷ 7,200 s ≈ 278 documents per second, ÷ 50 ≈ 5.6, so 6 workers.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the documents per second needed, not the workers.",
@@ -1285,6 +1305,7 @@
     ],
     "answer": 2,
     "why": "State lives in databases.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Memory is not the main reason.",
@@ -1304,6 +1325,7 @@
     ],
     "answer": 3,
     "why": "Queues give retries, backpressure and smoothing.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They belong to the request.",
@@ -1323,6 +1345,7 @@
     ],
     "answer": 1,
     "why": "Restrict it to FAQ-style content and include tenant and permission scope.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not the risk.",
@@ -1346,6 +1369,7 @@
      3
     ],
     "why": "Key = hash(tenant, normalised prompt, model, prompt version, ACL scope).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1479,6 +1503,7 @@
     ],
     "answer": 2,
     "why": "Tasks over about 30 s need asynchronous UX, not a held-open request.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Each retry restarts the agent.",
@@ -1621,6 +1646,7 @@
     ],
     "answer": 1,
     "why": "One API with credentials, routing, quotas, retries, caching, metering and policy.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Templates are content, not a service.",
@@ -1663,6 +1689,7 @@
      3
     ],
     "why": "Routing by identity of a person is not a criterion.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1682,6 +1709,7 @@
     ],
     "answer": 0,
     "why": "Token buckets allow short bursts within limits.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1701,6 +1729,7 @@
     ],
     "answer": 3,
     "why": "4 × 15 + 100 = 160 > 100, so FIFO waits grow for everyone.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "A's burst adds 90 units/s.",
@@ -1739,6 +1768,7 @@
     ],
     "answer": 2,
     "why": "Evaluate fallbacks for compatibility.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not necessarily.",
@@ -1960,6 +1990,7 @@
     ],
     "answer": 0,
     "why": "Do not accept work you cannot finish in time.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1979,6 +2010,7 @@
     ],
     "answer": 3,
     "why": "Shed early and cheaply so the rest succeed.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Highest priority should be kept.",
@@ -1998,6 +2030,7 @@
     ],
     "answer": 2,
     "why": "Then half-open trial calls decide whether to close.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That adds load.",
@@ -2116,6 +2149,7 @@
      3
     ],
     "why": "The final step is a clear status message, never silent guesses.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not acceptable; be explicit.",
@@ -2173,6 +2207,7 @@
     ],
     "answer": 2,
     "why": "600 ÷ 20 = 30 s, longer than the 10 s deadline, so the work would be wasted.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "It would miss its deadline anyway.",
@@ -2294,6 +2329,7 @@
     ],
     "answer": 2,
     "why": "Active-active is more complex for data consistency.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Region count does not define them.",
@@ -2313,6 +2349,7 @@
     ],
     "answer": 0,
     "why": "RTO is recovery time.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2332,6 +2369,7 @@
     ],
     "answer": 0,
     "why": "Test restores on a schedule.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -2465,6 +2503,7 @@
     ],
     "answer": 1,
     "why": "RPO is the data-loss window.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not a recovery measure.",
@@ -2503,6 +2542,7 @@
     ],
     "answer": 1,
     "why": "Residency constrains failover targets as well as normal routing.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Residency still applies during failover.",
@@ -2624,6 +2664,7 @@
     ],
     "answer": 2,
     "why": "Ramp beyond peak until SLOs fail.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Not a load test.",
@@ -2643,6 +2684,7 @@
     ],
     "answer": 1,
     "why": "Moderate load for 8–24 hours.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Sudden bursts.",
@@ -2662,6 +2704,7 @@
     ],
     "answer": 3,
     "why": "Replay sampled production traces.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Cost is not the issue.",
@@ -2681,6 +2724,7 @@
     ],
     "answer": 3,
     "why": "Use open-loop arrival rates.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a reporting bug.",
@@ -2814,6 +2858,7 @@
     ],
     "answer": 2,
     "why": "The closed-loop tester slowed down with the service and hid queueing.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "There is no such rule.",
@@ -2954,6 +2999,7 @@
     ],
     "answer": 3,
     "why": "It comes from a test you ran, under stated conditions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It is your own test.",
@@ -2973,6 +3019,7 @@
     ],
     "answer": 3,
     "why": "A calculation from measured numbers and assumptions.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Not telemetry.",
@@ -3011,6 +3058,7 @@
     ],
     "answer": 1,
     "why": "20 × 5,000 / 1,700 ≈ 59. Launch actually needed 52.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Not the ratio.",
@@ -3049,6 +3097,7 @@
     ],
     "answer": 1,
     "why": "Change the mix and you must re-measure.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It matters a lot.",
@@ -3163,6 +3212,7 @@
     ],
     "answer": 1,
     "why": "Label the kind of number and its conditions; a mock does not test model serving.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Staging tests are not production.",

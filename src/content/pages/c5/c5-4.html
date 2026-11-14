@@ -16,7 +16,7 @@
 <svg viewBox="0 0 760 210" role="img" aria-label="Attention mask patterns for three architectures">
 <g id="maskViz"></g>
 </svg></div><figcaption><b>Who can attend to whom.</b> Filled cell = row token may attend to column token. Decoder-only won for general-purpose models because one simple objective scales on any text and every task can be phrased as continuation.</figcaption></figure>
-<div class="box example"><h5>Example: picking architectures in one RAG system</h5><p>A bi-encoder (encoder-only) embeds documents and queries for fast vector search; a cross-encoder reranker (encoder-only, reading query and passage together) re-scores the top 50; a decoder-only LLM writes the answer. Three transformers, three architectures, each matched to its job.</p></div>
+<div class="box example"><h5>Example: picking architectures in one RAG system</h5><p>A bi-encoder (encoder-only) embeds documents and queries for fast <a class="gl" href="#gl-dense-retrieval">vector search</a>; a cross-encoder <a class="gl" href="#gl-reranker">reranker</a> (encoder-only, reading query and passage together) re-scores the top 50; a decoder-only LLM writes the answer. Three transformers, three architectures, each matched to its job.</p></div>
 </section>
 
 <section class="tp tp-math" id="c5-4-math">
@@ -44,7 +44,7 @@
 <h3 data-n="5">Primary sources</h3>
 <ol>
 <li><a href="https://arxiv.org/abs/1810.04805">Devlin et al. (2018), BERT</a> <small>The encoder-only model and its masked-language-model objective.</small></li>
-<li><a href="https://arxiv.org/abs/2005.14165">Brown et al. (2020), Language Models are Few-Shot Learners (GPT-3)</a> <small>A decoder-only model doing many tasks by continuation alone.</small></li>
+<li><a href="https://arxiv.org/abs/2005.14165">Brown et al. (2020), Language Models are Few-Shot Learners (GPT-3)</a> <small>A decoder-only model doing many tasks by continuation alone. <a href="#app-f-gpt3">Plain-words walkthrough of this paper (Appendix F.2).</a></small></li>
 <li><a href="https://arxiv.org/abs/1910.10683">Raffel et al. (2019), Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer (T5)</a> <small>Compares the three families and their objectives under one setup.</small></li>
 <li><a href="https://arxiv.org/abs/2212.04356">Radford et al. (2022), Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)</a> <small>An encoder–decoder model for speech, in production use.</small></li>
 </ol>

@@ -12,6 +12,7 @@
     ],
     "answer": 3,
     "why": "A fixed label set with many examples suits small models.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Rare topics need knowledge small models lack.",
@@ -31,6 +32,7 @@
     ],
     "answer": 1,
     "why": "1,000,000 × 0.004 = 4,000.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Off by a thousand.",
@@ -50,6 +52,7 @@
     ],
     "answer": 0,
     "why": "Compare against the strongest simple alternative on your own held-out data.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -88,6 +91,7 @@
     ],
     "answer": 1,
     "why": "Averages hide slices where the small model is much worse.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Quantisation is unrelated.",
@@ -107,6 +111,7 @@
     ],
     "answer": 1,
     "why": "At low volume the fixed costs of owning a model dominate (13.1).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Per-token cost is lower.",
@@ -311,6 +316,7 @@
     ],
     "answer": 2,
     "why": "The teacher produces the labels or outputs the student learns from.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is the evaluation.",
@@ -330,6 +336,7 @@
     ],
     "answer": 1,
     "why": "Teacher-labelled tests hide the teacher’s own mistakes.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No such refusal.",
@@ -368,6 +375,7 @@
     ],
     "answer": 0,
     "why": "Disagreement between samples signals uncertainty.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -425,6 +433,7 @@
     ],
     "answer": 0,
     "why": "Licence review is part of data provenance (16.6).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -444,6 +453,7 @@
     ],
     "answer": 3,
     "why": "3 ÷ 100.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Ten times too low.",
@@ -609,6 +619,7 @@
     ],
     "answer": 2,
     "why": "The student learns from the whole distribution, not only the top answer.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Unrelated to punctuation.",
@@ -628,6 +639,7 @@
     ],
     "answer": 2,
     "why": "Dividing scores by a larger number shrinks gaps between them.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a temperature below 1.",
@@ -666,6 +678,7 @@
     ],
     "answer": 1,
     "why": "Without probabilities, train on generated outputs.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Needs probabilities the API does not give.",
@@ -685,6 +698,7 @@
     ],
     "answer": 1,
     "why": "The probabilities say how wrong each wrong answer is.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Training still happens.",
@@ -723,6 +737,7 @@
     ],
     "answer": 1,
     "why": "The 0.08 marks the second answer as close.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "It is the least likely.",
@@ -906,6 +921,7 @@
     ],
     "answer": 2,
     "why": "Removing whole units makes matrices smaller, so it speeds things up.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is unstructured pruning.",
@@ -925,6 +941,7 @@
     ],
     "answer": 0,
     "why": "Without sparse support, zeros cost the same as other numbers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -944,6 +961,7 @@
     ],
     "answer": 3,
     "why": "2 billion × 0.55 ≈ 1.1 GB.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That assumes 8-bit.",
@@ -982,6 +1000,7 @@
     ],
     "answer": 3,
     "why": "Distillation from the original recovers much of the loss.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Skips recovery and the gate.",
@@ -1001,6 +1020,7 @@
     ],
     "answer": 2,
     "why": "Scattered zeros do not shrink the computation on ordinary hardware.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Prompt length would affect both.",
@@ -1202,6 +1222,7 @@
     ],
     "answer": 3,
     "why": "Privacy and offline use are key benefits.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Live data still needs the network.",
@@ -1221,6 +1242,7 @@
     ],
     "answer": 0,
     "why": "50 ÷ 1.7 ≈ 29.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1240,6 +1262,7 @@
     ],
     "answer": 3,
     "why": "Sustained heat forces lower clock speeds.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The weights do not grow.",
@@ -1278,6 +1301,7 @@
     ],
     "answer": 2,
     "why": "16 GB is more than the 8 GB available.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "It is twice the budget.",
@@ -1316,6 +1340,7 @@
     ],
     "answer": 1,
     "why": "Money decisions need central control and audit.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "They change often, which is worse.",
@@ -1499,6 +1524,7 @@
     ],
     "answer": 0,
     "why": "The small model goes first; the hard minority is escalated.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1518,6 +1544,7 @@
     ],
     "answer": 1,
     "why": "0.00002 + 0.15 × 0.004 = 0.00062.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Forgets the small model.",
@@ -1537,6 +1564,7 @@
     ],
     "answer": 2,
     "why": "A 90% score should mean 90% right before you rely on it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No speed effect.",
@@ -1575,6 +1603,7 @@
     ],
     "answer": 1,
     "why": "High-risk categories can be routed by rule regardless of confidence.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Confidence can be wrong where it matters most.",
@@ -1594,6 +1623,7 @@
     ],
     "answer": 2,
     "why": "Escalation share drives cost and signals drift.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Latency is secondary here.",

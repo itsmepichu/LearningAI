@@ -10,7 +10,7 @@
 <ul><li><b>Sliding window</b>: keep the last N turns. Simple; forgets early facts ("my account ID is…").</li>
 <li><b>Summarise and window</b>: keep a running summary of older turns plus recent turns verbatim.</li>
 <li><b>Extract facts</b>: pull durable facts (preferences, IDs, decisions) into a structured store and inject them as needed.</li>
-<li><b>Persistent memory</b>: facts that outlive a session (user prefers metric units; works on project X) stored in a database or vector store, retrieved by relevance, with user visibility and deletion controls (11.4, 16.5).</li></ul>
+<li><b><a class="gl" href="#gl-agent-memory">Persistent memory</a></b>: facts that outlive a session (user prefers metric units; works on project X) stored in a database or vector store, retrieved by relevance, with user visibility and deletion controls (11.4, 16.5).</li></ul>
 <p>Store the full transcript in your own database regardless; the model's context is a working view, not the system of record. Some providers offer server-side conversation state, which is convenient but still needs your own records for audit and evaluation.</p>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Turn 1–20 stored<small>full transcript in DB</small></div><div class="nd">Context nearing limit</div><div class="nd">Summarise turns 1–14<small>cheap model</small></div><div class="nd">Extract facts<small>{account: 88213, plan: Pro}</small></div><div class="nd">New context<small>summary + facts + turns 15–20</small></div></div>
@@ -41,6 +41,6 @@
 <ol>
 <li><a href="https://platform.claude.com/docs/en/build-with-claude/context-windows">Anthropic: Context windows</a> <small>How conversation history fills the window, turn by turn.</small></li>
 <li><a href="https://arxiv.org/abs/2310.08560">Packer et al. (2023), MemGPT: Towards LLMs as Operating Systems</a> <small>Managing short- and long-term memory outside the context window.</small></li>
-<li><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023), Lost in the Middle</a> <small>Why simply keeping everything in a long context is not enough.</small></li>
+<li><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023), Lost in the Middle</a> <small>Why simply keeping everything in a long context is not enough. <a href="#app-f-lost">Plain-words walkthrough of this paper (Appendix F.4).</a></small></li>
 </ol>
 </section>

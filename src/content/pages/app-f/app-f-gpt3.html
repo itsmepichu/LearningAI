@@ -1,0 +1,40 @@
+<p>This page walks through <a href="https://arxiv.org/abs/2005.14165">Brown et al. (2020), Language Models are Few-Shot Learners</a> in plain words. Section, table and figure numbers point into the paper. The model is usually called GPT-3.</p>
+
+<h3>1. The problem</h3>
+<p>The usual recipe was to pretrain a model, then fine-tune a copy for each task on thousands to hundreds of thousands of labelled examples (section 1). The authors give two reasons to want something better: labelled data is costly to collect for every new task, and a model fine-tuned on a narrow set can look good on a benchmark while understanding the task less than the score suggests. People, by contrast, can pick up a new task from an instruction and a few examples. The paper asks whether a much larger model can do the same without any weight updates, which it calls in-context learning (section 1, Figure 1.1).</p>
+
+<h3>2. The method, in steps</h3>
+<ol>
+<li><b>Train one very large next-word predictor.</b> The largest model has 175 billion parameters, 96 layers, a width of 12,288 and 96 attention heads. Eight smaller models from 125 million parameters up were trained the same way to show the trend (Table 2.1). All models saw 300 billion tokens and read a window of 2,048 tokens (section 2.1).</li>
+<li><b>Use a mix of text sources, sampled by quality, not by size.</b> Filtered Common Crawl made up 60% of the mix, WebText2 22%, two book collections 8% each and Wikipedia 3% (Table 2.2).</li>
+<li><b>Give the task as text, with no gradient updates.</b> Zero-shot gives only an instruction. One-shot adds one worked example. <a class="gl" href="#gl-few-shot">Few-shot</a> adds K worked examples, with K usually between 10 and 100, as many as fit in the window (sections 1 and 2.4).</li>
+<li><b>Score the answer.</b> For multiple-choice tasks the model compares the likelihood of each candidate. K is chosen on a development set and the best setting is run on the test set (section 2.4).</li>
+<li><b>Check for leaked test data.</b> The authors searched the training text for overlap with benchmark sets. A bug let some overlap through and retraining was too expensive, so section 4 measures its effect instead.</li>
+</ol>
+
+<h3>3. What the paper reports</h3>
+<p>Scores for the 175-billion-parameter model:</p>
+<div class="tw"><table><caption>Zero-shot, one-shot and few-shot results at 175B</caption><thead><tr><th scope="col">Task (table)</th><th scope="col">Zero-shot</th><th scope="col">One-shot</th><th scope="col">Few-shot</th></tr></thead><tbody>
+<tr><th scope="row">LAMBADA accuracy (Table 3.2)</th><td>76.2</td><td>72.5</td><td>86.4</td></tr>
+<tr><th scope="row">TriviaQA accuracy (Table 3.3)</th><td>64.3</td><td>68.0</td><td>71.2</td></tr>
+<tr><th scope="row">2-digit addition (Table 3.9)</th><td>76.9</td><td>99.6</td><td>100.0</td></tr>
+<tr><th scope="row">3-digit addition (Table 3.9)</th><td>34.2</td><td>65.5</td><td>80.4</td></tr>
+</tbody></table></div>
+<p>On SuperGLUE the few-shot average was 71.8, with 32 examples per task, against 89.0 for the best fine-tuned system (Table 3.8). In translation, few-shot German→English scored 40.6 BLEU against 40.2 for the supervised best, while English→German scored 29.7 against 41.2 (Table 3.4). The paper notes that translation into English is stronger than translation out of English.</p>
+<p>Across model sizes, the gap between zero-, one- and few-shot often widens as models grow, which the authors read as larger models using examples in the prompt more efficiently (section 1, Figure 1.2).</p>
+
+<h3>4. What it does and does not show</h3>
+<ul>
+<li><b>Shows:</b> for several tasks, a few examples written in the prompt can lift a large model close to, and sometimes past, fine-tuned systems, with no training on the task.</li>
+<li><b>Does not show:</b> that it matches fine-tuned systems in general. On SuperGLUE it was 17 points behind, and on word-in-context (WiC) few-shot accuracy was 49.4%, which is chance (section 3.7).</li>
+<li><b>Does not show:</b> whether the model learns a new task from the examples or recognises one it met in training. The authors say this is unclear (section 5).</li>
+<li><b>Contamination:</b> section 4 flags six groups of benchmarks for overlap with the training text. Potential overlap was high for a quarter of the benchmarks, yet scores on cleaned subsets usually changed little. The authors mark PIQA and Winograd with an asterisk and do not report the language-modelling tasks.</li>
+<li><b>Other limits the authors state (section 5):</b> text drifts or repeats over long passages, the training objective weights every token equally, the model reads far more text than a person does, and inference at this size is costly.</li>
+<li>These are 2020 results for a base model. They say nothing about later instruction-tuned models.</li>
+</ul>
+
+<h3>5. Where this course uses it</h3>
+<p>Topic <a href="#c1-2">1.2</a> places GPT-3 in the history of language models. Topic <a href="#c5-4">5.4</a> covers the decoder-only design it uses. Topic <a href="#c7-2">7.2</a> uses its main finding: examples in the prompt change the output, so you write, test and version them. Topic <a href="#c6-2">6.2</a> covers <a class="gl" href="#gl-contamination">contamination</a>, which this paper made a standard question to ask of any benchmark score.</p>
+
+<h3>6. Read the paper</h3>
+<p><a href="https://arxiv.org/abs/2005.14165">arXiv:2005.14165</a>. Read section 1, Figure 1.2, section 2 and section 5. The results sections are long; read the tables for the tasks you care about.</p>

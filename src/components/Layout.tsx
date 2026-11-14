@@ -8,6 +8,7 @@ import { Logo, ProgressRing } from './Icons'
 import { useTheme } from '../store/theme'
 import { useProgress } from '../store/progress'
 import { courseTopics, getChapter, getTopic } from '../data/course'
+import { lessonTopicAt } from '../data/workshop'
 
 // Matches the CSS breakpoint where the sidebar becomes an off-screen drawer.
 const DRAWER_QUERY = '(max-width: 1024px)'
@@ -91,11 +92,11 @@ export function Layout() {
         <button ref={toggleRef} className="icon-btn nav-toggle" type="button" aria-label="Open contents" aria-expanded={navOpen} onClick={() => setNavOpen(true)}>
           <Menu size={18} />
         </button>
-        <Link to="/" className="brand" aria-label="LearningAI Enterprise AI Field Manual, home">
+        <Link to="/" className="brand" aria-label="LearningAI, home">
           <Logo width={28} height={28} />
           <span className="brand-txt">
             <b>LearningAI</b>{' '}
-            <small>Enterprise AI Field Manual</small>
+            <small>AI from foundations to production systems</small>
           </span>
         </Link>
         <nav className="crumbs" aria-label="Breadcrumb">
@@ -110,7 +111,7 @@ export function Layout() {
             </span>
           )}
         </nav>
-        <ProjectPicker />
+        {!lessonTopicAt(loc.pathname) && <ProjectPicker />}
         <button className="search-btn" type="button" onClick={() => setSearchOpen(true)} aria-label="Search all topics">
           <Search size={15} />
           <span className="lbl">Search</span>

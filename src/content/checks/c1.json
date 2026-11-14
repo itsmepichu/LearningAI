@@ -12,6 +12,7 @@
     ],
     "answer": 1,
     "why": "The logic is explicit and must be exact, so a rule is cheaper, auditable and correct every time.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "An LLM follows examples but is not exact; a PO-number check must be right every time and cost almost nothing.",
@@ -50,6 +51,7 @@
     ],
     "answer": 2,
     "why": "The logic can be written down and must be exact, so code is deterministic, auditable and free to run.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The answer is in your own records, not on the web.",
@@ -69,6 +71,7 @@
     ],
     "answer": 3,
     "why": "Tabular data, a fixed output and plenty of labels fit traditional ML, which gives cheap, calibrated scores.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Search finds documents; it does not estimate a likelihood.",
@@ -88,6 +91,7 @@
     ],
     "answer": 3,
     "why": "Free text in, structured fields out is what LLMs do well, but the output must be validated (7.4) and checked by rules.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Copying text does not fill the structured fields the form needs.",
@@ -107,6 +111,7 @@
     ],
     "answer": 0,
     "why": "LLMs add cost, latency and risk; when a simpler method fits, it usually wins on all three.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -313,6 +318,7 @@
     ],
     "answer": 1,
     "why": "Generation picks plausible tokens; without the invoice in context, a plausible date is still the likely continuation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A bare LLM looks nothing up; without the invoice in context it can only produce a likely-looking date.",
@@ -332,6 +338,7 @@
     ],
     "answer": 3,
     "why": "Given the text so far, the model outputs a probability distribution over its whole vocabulary; generation picks one token and repeats.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The model outputs a distribution; a decoding rule then picks a token, and it need not be correct.",
@@ -484,6 +491,7 @@
     ],
     "answer": 1,
     "why": "Only supplying the facts and requiring citations closes the gap; bigger models and lower temperature still guess when facts are missing.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Consistent is not correct: the same likely-but-wrong answer every time.",
@@ -503,6 +511,7 @@
     ],
     "answer": 3,
     "why": "The model gives every vocabulary token a probability, and they sum to 1: 1 − (0.30 + 0.20 + 0.15) = 0.35 for everything else. A high probability means a common continuation, not a fact about this invoice.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "0.30 is how likely the text continues with “March”, not how likely the invoice is due then; no invoice is in the context.",
@@ -646,6 +655,7 @@
     ],
     "answer": 2,
     "why": "Only training updates parameters. Prompts, chats and retrieved text change the input only.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A conversation only changes the input; the weights stay fixed however long it runs.",
@@ -665,6 +675,7 @@
     ],
     "answer": 2,
     "why": "Tokens ≈ words ÷ 0.75, so 3,000 ÷ 0.75 = 4,000. Confirm with the model's own tokenizer, because other languages, code and numbers differ.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That assumes one token per word; common words are one token, but many words split.",
@@ -684,6 +695,7 @@
     ],
     "answer": 1,
     "why": "4,000 × $1/10⁶ = $0.004 and 270 × $4/10⁶ ≈ $0.00108, so about $0.005 per call.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That forgets to divide by one million.",
@@ -722,6 +734,7 @@
     ],
     "answer": 2,
     "why": "An embedding places text in a vector space where related meanings are near each other. It is not a reversible compression of the text.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "You cannot reliably decode the original document from an embedding.",
@@ -741,6 +754,7 @@
     ],
     "answer": 3,
     "why": "Everything outside the context window is invisible to the model, and the output must fit in it too.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a rate limit, set by the provider, not by the model.",
@@ -944,6 +958,7 @@
     ],
     "answer": 0,
     "why": "The four terms are nested sets. An LLM sits inside all of them, so it inherits the outer sets' concerns: it needs data, can overfit and behaves statistically.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -982,6 +997,7 @@
     ],
     "answer": 2,
     "why": "With plenty of labels and a fixed label set, a classical classifier is cheap to run and accurate on common categories.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "An LLM works with zero training data, but costs more per email and its label must be validated; with 20,000 labels you can do better cheaply.",
@@ -1100,6 +1116,7 @@
     ],
     "answer": 0,
     "why": "Rule-based systems encode a person's knowledge directly as rules; nothing is learned from data.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1138,6 +1155,7 @@
     ],
     "answer": 3,
     "why": "Rules are brittle when wording changes. With 20,000 labels, classical ML (or a fine-tuned encoder for harder paraphrase) learns the variations cheaply, and the rule is the baseline to beat.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The problem is routing; writing replies does not put the email in the right team.",
@@ -1265,6 +1283,7 @@
     ],
     "answer": 2,
     "why": "Expert systems worked in narrow domains but broke on anything unanticipated; learning weights from data made systems more robust to noise and variation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Rules are written by people; labelled data is what statistical ML needs.",
@@ -1303,6 +1322,7 @@
     ],
     "answer": 3,
     "why": "Backpropagation was popularised in 1986; the breakthrough came when GPUs and large datasets arrived, shown by AlexNet in 2012.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Transformers came in 2017, five years later.",
@@ -1341,6 +1361,7 @@
     ],
     "answer": 0,
     "why": "“Attention Is All You Need” removed recurrence and kept attention, which suits GPUs and scales to huge datasets.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1360,6 +1381,7 @@
     ],
     "answer": 0,
     "why": "Foundation models (BERT, GPT-2, GPT-3) are pretrained once on broad data and adapted to many tasks by prompting or fine-tuning.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1455,6 +1477,7 @@
     ],
     "answer": 2,
     "why": "Expert systems broke on cases the rules did not anticipate, and thousands of rules became unmaintainable. Statistical ML replaced hand-written rules with weights learned from data.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "GPUs speed up training neural networks; they do nothing for rules that miss new cases.",
@@ -1599,6 +1622,7 @@
     ],
     "answer": 0,
     "why": "When the model lacks a fact, a plausible-sounding fabrication is still the likely continuation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1618,6 +1642,7 @@
     ],
     "answer": 3,
     "why": "Knowledge in the weights is frozen at the cutoff, and your internal documents were never in training at all unless supplied in context.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Language is not the issue; the release happened after the training data was collected.",
@@ -1637,6 +1662,7 @@
     ],
     "answer": 2,
     "why": "Supply the facts, constrain the answer to cite them, and keep the case as a regression test.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "More sampling produces more plausible-looking fabrications, not the real flag.",
@@ -1656,6 +1682,7 @@
     ],
     "answer": 3,
     "why": "Even token probabilities are only loosely related to factual accuracy after instruction tuning; measure calibration before relying on any confidence.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The issue is not language; tone carries no information about correctness in any language.",
@@ -1698,6 +1725,7 @@
     ],
     "answer": 0,
     "why": "Associations learned from the world's skews can treat groups differently, which matters in hiring, lending and moderation.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",

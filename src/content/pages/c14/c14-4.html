@@ -11,7 +11,7 @@
 <li><b>Activation and KV-cache quantisation</b>: FP8 KV cache doubles capacity; W8A8 quantises both weights and activations to use INT8/FP8 matrix units for faster prefill.</li>
 <li><b>Quality cost</b>: usually small at 8-bit, noticeable on hard tasks at 4-bit for small models, larger at 2–3 bits. Long-context, maths, code and non-English often degrade first. <em>Always evaluate the quantised model on your task suite</em> rather than trusting perplexity.</li>
 <li><b><a class="gl" href="#gl-speculative-decoding">Speculative decoding</a></b>: a small fast <dfn>draft</dfn> model (or extra prediction heads, as in Medusa/EAGLE, or n-gram lookup) proposes k tokens; the large target model verifies all k in one forward pass and accepts the longest correct prefix, plus one token of its own. Output distribution is mathematically the same as the target model's. Speeds up decode when acceptance rates are high (predictable text, code) and batch sizes are small.</li>
-<li><b>Other compression</b>: distillation into smaller models (13.1), pruning (removing weights or whole layers/heads), and smaller vocabularies or shorter outputs.</li>
+<li><b>Other compression</b>: distillation into smaller models (13.1), <a class="gl" href="#gl-pruning">pruning</a> (removing weights or whole layers/heads), and smaller vocabularies or shorter outputs.</li>
 </ul>
 <figure class="fig sim"><div class="stage"><div class="wid">
 <div class="row2"><label for="sdK">Draft length k <input type="range" id="sdK" min="1" max="8" value="4"><span id="sdKO"></span></label>

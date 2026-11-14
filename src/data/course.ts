@@ -1,16 +1,29 @@
 import manifest from '../content/manifest.json'
-import idmap from '../content/idmap.json'
-import checkSummary from '../content/checks/summary.json'
+import idmap from '../content/generated/idmap.json'
+import checkSummary from '../content/generated/check-summary.json'
+import topicStats from '../content/generated/topic-stats.json'
 
 export type Tag = 'cpu' | 'real' | 'sim' | 'gpu'
-export interface Topic {
+/** A topic as the manifest authors it. */
+interface TopicEntry {
   id: string
   tn: string
   title: string
   tags: Tag[]
+  /** What the reader can do afterwards: 2–3 phrases that start with a verb. */
+  outcomes?: string[]
+  /** A display title of at most 6 words for the sidebar, pager, step dots and search. The page heading keeps `title`. */
+  short?: string
+  /** The example project the lesson card and figures use. Absent means the default project. */
+  primary?: string
+}
+/** A topic with the counts generated from its HTML (`npm run generate`): figures, interactive figures and words. */
+export interface Topic extends TopicEntry {
   figures: number
   interactive: number
   words: number
+  /** Ids of the topic's interactive figures, in page order. */
+  live?: string[]
 }
 export interface Chapter {
   id: string
@@ -28,7 +41,11 @@ export interface Chapter {
 export interface Part { id: string; label: string; title: string; chapters: string[] }
 
 export const parts = manifest.parts as Part[]
-export const chapters = manifest.chapters as Chapter[]
+const stats = topicStats as Record<string, Pick<Topic, 'figures' | 'interactive' | 'words' | 'live'>>
+export const chapters = (manifest.chapters as unknown as (Omit<Chapter, 'topics'> & { topics: TopicEntry[] })[]).map((c) => ({
+  ...c,
+  topics: c.topics.map((t) => ({ ...t, ...(stats[t.id] ?? { figures: 0, interactive: 0, words: 0 }) })),
+})) as Chapter[]
 export const courseChapters = chapters.filter((c) => c.kind === 'chapter')
 
 const chapterById = new Map(chapters.map((c) => [c.id, c]))
@@ -49,7 +66,15 @@ export const chapterPath = (c: Chapter) => `/${c.id}`
 /** Resolve a legacy in-page anchor ("#c9-3", "#bmQ") to an app route. */
 export const resolveAnchor = (id: string): string | undefined => (idmap as Record<string, string>)[id]
 
+/** The title to show in lists and links. */
+export const shortTitle = (t: { title: string; short?: string }) => t.short ?? t.title
+
 export const minutes = (t: Topic) => Math.max(3, Math.round(t.words / 200 + t.figures * 1.5))
+
+/** "45 min", "3.5 h" or "24 h", for a study-time estimate in minutes. */
+export const formatDuration = (m: number) => (m < 90 ? `${m} min` : `${(m / 60).toFixed(m < 600 ? 1 : 0)} h`)
+/** Estimated study minutes for a list of topics. */
+export const sumMinutes = (ts: Topic[]) => ts.reduce((a, t) => a + minutes(t), 0)
 
 export const partOf = (c: Chapter) => parts.find((p) => p.id === c.part)
 
@@ -62,11 +87,11 @@ export const totals = {
   interview: checkSummary.totals.interview,
 }
 
-export interface SectionCount { mcq: number; interview: number }
+export interface SectionCount { mcq: number; interview: number; core: number }
 const summaryChapters = checkSummary.chapters as Record<string, SectionCount & { sections: Record<string, SectionCount> }>
-export const chapterCheckCount = (chapterId: string): SectionCount => summaryChapters[chapterId] ?? { mcq: 0, interview: 0 }
+export const chapterCheckCount = (chapterId: string): SectionCount => summaryChapters[chapterId] ?? { mcq: 0, interview: 0, core: 0 }
 export const sectionCheckCount = (chapterId: string, topicId: string): SectionCount =>
-  summaryChapters[chapterId]?.sections[topicId] ?? { mcq: 0, interview: 0 }
+  summaryChapters[chapterId]?.sections[topicId] ?? { mcq: 0, interview: 0, core: 0 }
 export const chaptersWithChecks = () => chapters.filter((c) => summaryChapters[c.id])
 
 /** Lazy loaders for every HTML fragment, keyed by "<chapter>/<file>". */

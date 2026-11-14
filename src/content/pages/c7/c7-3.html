@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <p><dfn><a class="gl" href="#gl-context-engineering">Context engineering</a></dfn> is deciding, for every model call, exactly which tokens go into the window. The model only knows what is in context, and the window is a budget shared by instructions, tools, history, retrieved documents and the output. Too little context and the model guesses; too much and it gets slower, costlier and more distracted by irrelevant material.</p>
 <ul>
-<li><b>Assemble</b> from sources: system prompt, tool definitions, user profile, conversation history, retrieved chunks, scratchpad/agent state.</li>
+<li><b>Assemble</b> from sources: system prompt, tool definitions, user profile, conversation history, retrieved chunks, scratchpad/<a class="gl" href="#gl-agent">agent</a> state.</li>
 <li><b>Prioritise</b>: rank pieces by necessity (instructions, current question) and relevance score; drop lowest first.</li>
 <li><b>Compress</b>: summarise old turns, trim documents to relevant passages, remove duplicate chunks, replace long tool outputs with extracted key fields.</li>
 <li><b>Order</b>: important material near the start or end; models attend less reliably to the middle of very long contexts.</li>
@@ -46,7 +46,7 @@
 <h3 data-n="5">Primary sources</h3>
 <ol>
 <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a> <small>Context as a limited budget, and how to spend it.</small></li>
-<li><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023), Lost in the Middle</a> <small>Why the position of information in a long context matters.</small></li>
+<li><a href="https://arxiv.org/abs/2307.03172">Liu et al. (2023), Lost in the Middle</a> <small>Why the position of information in a long context matters. <a href="#app-f-lost">Plain-words walkthrough of this paper (Appendix F.4).</a></small></li>
 <li><a href="https://arxiv.org/abs/2310.05736">Jiang et al. (2023), LLMLingua: Compressing Prompts for Accelerated Inference</a> <small>Shrinking context while keeping what matters.</small></li>
 </ol>
 </section>

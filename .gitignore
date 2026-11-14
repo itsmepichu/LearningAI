@@ -2,4 +2,7 @@ node_modules
 dist
 *.local
 .DS_Store
-tests/out
+__pycache__/
+*.pyc
+.idea/
+src/content/generated/

@@ -32,24 +32,15 @@
 <path d="M650 70 H670" class="lna flowing"/><text x="660" y="125" text-anchor="middle" class="xs">micro-batches flow through</text><text x="660" y="150" text-anchor="middle" class="xs sig">pass activations between stages</text>
 <rect x="20" y="175" width="740" height="50" rx="4" class="fsunk"/><text x="390" y="197" text-anchor="middle">ZeRO-3 / FSDP: data parallel, but each GPU stores only 1/N of weights, gradients and optimiser state;</text><text x="390" y="214" text-anchor="middle">layers are all-gathered just before use and freed after.</text></g>
 </svg></div><figcaption><b>Ways to split training.</b> Large runs use TP inside a node, PP across a few nodes, and sharded DP across everything.</figcaption></figure>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<div class="row2"><label for="ppS">Pipeline stages (GPUs) <input type="range" id="ppS" min="2" max="6" value="4"><span id="ppSO"></span></label>
-<label for="ppM">Micro-batches <input type="range" id="ppM" min="1" max="12" value="4"><span id="ppMO"></span></label></div>
-<svg id="ppSvg" viewBox="0 0 700 200"></svg><div class="out" id="ppOut"></div></div></div>
+<figure class="fig sim"><div class="stage"><div data-widget="pipeline-bubble"></div></div>
 <figcaption><b>Pipeline bubble (GPipe schedule).</b> Each row is a GPU; F = forward, B = backward for a numbered micro-batch; grey = idle. Idle fraction = (stages − 1)/(micro-batches + stages − 1). More micro-batches shrink the bubble; schedules like 1F1B interleave forward and backward to reduce memory.</figcaption></figure>
-<figure class="fig sim"><div class="stage"><div class="wid">
-<div id="dpViz"></div>
-<div class="ctl"><button class="btn primary" type="button" id="dpNext">Next stage</button><button class="btn" type="button" id="dpReset">Reset</button><span class="count" id="dpOut"></span></div></div></div>
+<figure class="fig sim"><div class="stage"><div data-widget="data-parallel"></div></div>
 <figcaption><b>One synchronous data-parallel step.</b> Four workers hold identical copies of one weight (w = 2.00), compute gradients on different batches (illustrative values), average them with an all-reduce, and apply the same update, so the copies stay identical. The arithmetic is computed; real jobs move whole gradient tensors over NVLink or the network.</figcaption></figure>
-<figure class="fig live"><div class="stage"><div class="wid"><div class="row2">
-<label for="zrN">Parameters (B) <input type="range" id="zrN" min="1" max="180" value="8"><span id="zrNO"></span></label>
-<label for="zrG">GPUs <select id="zrG"><option>1</option><option>2</option><option>4</option><option selected>8</option><option>16</option><option>64</option><option>256</option></select></label>
-<label for="zrV">GPU memory <select id="zrV"><option value="24">24 GB</option><option value="40">40 GB</option><option value="80" selected>80 GB</option><option value="141">141 GB</option></select></label></div>
-<div class="bars" id="zrBars"></div><div class="out" id="zrOut"></div></div></div>
+<figure class="fig live"><div class="stage"><div data-widget="zero-calc"></div></div>
 <figcaption><b>ZeRO / FSDP memory per GPU</b> for mixed-precision Adam (2 bytes weights + 2 bytes gradients + 12 bytes optimiser state per parameter), excluding activations. Stage 1 shards optimiser state, stage 2 also gradients, stage 3 (≈ FSDP full sharding) also weights: per-GPU bytes are 16Ψ, 4Ψ + 12Ψ/N, 2Ψ + 14Ψ/N and 16Ψ/N for Ψ parameters on N GPUs.</figcaption></figure>
 <figure class="fig live" id="scene-zero"><div class="stage"><div data-widget="zero-sharding"></div></div>
 <figcaption><b>The same memory, per GPU, stage by stage.</b> GPUs go across, the ZeRO stage is the third axis and height is memory per GPU, split into weights, gradients and optimiser state, with the same formula as the figure above. Under plain data parallelism every GPU holds a full copy; each stage then keeps only 1/N of one more part on each GPU. The red line is the GPU's memory. Activations, which also need room, are not included.</figcaption></figure>
-<div class="box example"><h5>Example: fitting a 70B fine-tune</h5><p>Full fine-tuning 70B × 16 bytes ≈ 1.1 TB of state. On 8 × 80 GB GPUs (640 GB) it does not fit even with full sharding, before activations. Options: more nodes with FSDP, CPU offloading (slow), or parameter-efficient fine-tuning, where only small adapter matrices are trained (13.3). QLoRA can fine-tune a 70B model on a single 80 GB GPU.</p></div>
+<div class="box example"><h5>Example: fitting a 70B fine-tune</h5><p>Full fine-tuning 70B × 16 bytes ≈ 1.1 TB of state. On 8 × 80 GB GPUs (640 GB) it does not fit even with full sharding, before activations. Options: more nodes with FSDP, CPU offloading (slow), or parameter-efficient fine-tuning, where only small adapter matrices are trained (13.3). <a class="gl" href="#gl-qlora">QLoRA</a> can fine-tune a 70B model on a single 80 GB GPU.</p></div>
 </section>
 
 <section class="tp tp-math" id="c6-6-math">

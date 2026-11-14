@@ -1,6 +1,6 @@
 <section class="tp tp-intuition" id="c8-8-intuition">
 <h3 data-n="1">Intuition</h3>
-<p>Grading an agent by its final message is like grading a plumber by what they say at the door. You need to check the pipes: did they use the right tools, did they do it in a sensible order, is the leak actually fixed, and did they tell you the truth about what they did?</p>
+<p>Grading an <a class="gl" href="#gl-agent">agent</a> by its final message is like grading a plumber by what they say at the door. You need to check the pipes: did they use the right tools, did they do it in a sensible order, is the leak actually fixed, and did they tell you the truth about what they did?</p>
 <p>Agents also do not behave the same way every time. One success in five tries is not good enough for a job that runs every day, so test each case several times and count how often all of the runs succeed.</p>
 </section>
 
@@ -27,7 +27,7 @@
 <div class="tools">
 <h3 style="font-size:1.25rem;margin:30px 0 12px">Toolbox for evaluation</h3>
 <div class="cols3">
-<div class="card"><h5><a href="https://www.promptfoo.dev/docs/intro/">promptfoo</a></h5><span class="meta">prompt/model evals · red teaming · CI</span><p>YAML test cases with assertions (contains, JSON schema, LLM rubric), side-by-side model comparison, CI integration. Works against Ollama locally.</p></div>
+<div class="card"><h5><a href="https://www.promptfoo.dev/docs/intro/">promptfoo</a></h5><span class="meta">prompt/model evals · <a class="gl" href="#gl-red-teaming">red teaming</a> · CI</span><p>YAML test cases with assertions (contains, JSON schema, LLM rubric), side-by-side model comparison, CI integration. Works against Ollama locally.</p></div>
 <div class="card"><h5><a href="https://inspect.aisi.org.uk/">Inspect</a></h5><span class="meta">evals framework · agents · sandboxes</span><p>From the UK AI Security Institute. Datasets, solvers, scorers, tool use and Docker sandboxes for agent evals. Good for rigorous agent tasks.</p></div>
 <div class="card"><h5><a href="https://docs.ragas.io/">Ragas</a></h5><span class="meta">RAG metrics</span><p>Faithfulness, answer relevancy, context precision/recall and test-set generation. Uses an LLM judge; calibrate it (8.3).</p></div>
 <div class="card"><h5><a href="https://deepeval.com/docs/getting-started">DeepEval</a></h5><span class="meta">pytest-style LLM tests</span><p>Unit-test style metrics (G-Eval, hallucination, tool correctness) that run in CI.</p></div>

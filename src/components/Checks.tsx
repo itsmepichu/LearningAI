@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { BookmarkCheck, BookmarkPlus, CheckCircle2, ChevronDown, Eye, EyeOff, MessagesSquare, RotateCcw, XCircle } from 'lucide-react'
-import { KIND_LABEL, LEVEL_LABEL, answerSet, isCorrect, isMulti, type InterviewQ, type Mcq, type Section } from '../data/checks'
+import { KIND_LABEL, LEVEL_LABEL, answerSet, isCore, isCorrect, isMulti, type InterviewQ, type Mcq, type Section } from '../data/checks'
 import { fill, getProject, type ProjectId } from '../data/projects'
 import { useProgress, type Answer, type Rating } from '../store/progress'
 import { ProjectIcon } from './ProjectPicker'
@@ -21,10 +21,12 @@ interface McqProps {
   context?: React.ReactNode
   /** The card sits directly under the page h1, so its heading is an h2. */
   topLevel?: boolean
+  /** Heading level when the card sits under a section heading of its own (the topic's quick check). */
+  heading?: 'h2' | 'h3' | 'h4'
 }
 
-export function McqCard({ q, mode, draft, onDraft, reveal, index, context, topLevel }: McqProps) {
-  const H = topLevel ? 'h2' : 'h4'
+export function McqCard({ q, mode, draft, onDraft, reveal, index, context, topLevel, heading }: McqProps) {
+  const H = heading ?? (topLevel ? 'h2' : 'h4')
   const saved = useProgress((s) => s.answers[q.id])
   const answer = useProgress((s) => s.answer)
   const clear = useProgress((s) => s.clearAnswers)
@@ -58,6 +60,7 @@ export function McqCard({ q, mode, draft, onDraft, reveal, index, context, topLe
         <H id={`${q.id}-q`} className="as-h4">{q.q}</H>
       </header>
       <div className="mcq-meta">
+        {isCore(q) && <span className="badge core">Core</span>}
         {q.kind && <span className="badge">{KIND_LABEL[q.kind]}</span>}
         {multi && <span className="badge multi">Choose all that apply</span>}
         {context}
@@ -201,8 +204,9 @@ export function sectionScore(sec: Section | undefined, answers: Record<string, A
   return { total: mcq.length, answered: answered.length, correct }
 }
 
-export function visibleInterview(sec: Section | undefined, project: ProjectId, allProjects: boolean) {
-  return (sec?.interview ?? []).filter((q) => !q.project || allProjects || q.project === project)
+/** The interview questions to show. With `prep` off, system-design questions stay out of sight (nothing is deleted). */
+export function visibleInterview(sec: Section | undefined, project: ProjectId, allProjects: boolean, prep = true) {
+  return (sec?.interview ?? []).filter((q) => (!q.project || allProjects || q.project === project) && (prep || q.level !== 'system-design'))
 }
 
 interface SectionProps {
@@ -214,22 +218,30 @@ interface SectionProps {
   mode: Mode
   project: ProjectId
   allProjects: boolean
+  /** Interview prep switch: when false, system-design questions are not rendered. */
+  prep?: boolean
   open: boolean
   onToggle: () => void
+  /** When set, only these questions show: the ones still unanswered when the reader turned the filter on. */
+  only?: Set<string> | null
 }
 
-export function CheckSection({ id, tn, title, topicPath, sec, mode, project, allProjects, open, onToggle }: SectionProps) {
+export function CheckSection({ id, tn, title, topicPath, sec, mode, project, allProjects, prep = true, open, onToggle, only }: SectionProps) {
   const answers = useProgress((s) => s.answers)
   const ratings = useProgress((s) => s.ratings)
   const answer = useProgress((s) => s.answer)
   const clear = useProgress((s) => s.clearAnswers)
   const [draft, setDraft] = useState<Record<string, Answer>>({})
   const [submitted, setSubmitted] = useState(false)
-  const mcq = sec?.mcq ?? []
-  const iv = useMemo(() => visibleInterview(sec, project, allProjects), [sec, project, allProjects])
+  // Core questions come first; the sort keeps the published order within each group.
+  const ordered = useMemo(() => [...(sec?.mcq ?? [])].sort((a, b) => Number(isCore(b)) - Number(isCore(a))), [sec])
+  const mcq = useMemo(() => (only ? ordered.filter((q) => only.has(q.id)) : ordered), [ordered, only])
+  const allIv = useMemo(() => visibleInterview(sec, project, allProjects, prep), [sec, project, allProjects, prep])
+  const iv = useMemo(() => (only ? allIv.filter((q) => only.has(q.id)) : allIv), [allIv, only])
+  const coreCount = ordered.filter(isCore).length
   const score = sectionScore(sec, answers)
-  const practised = iv.filter((q) => ratings[q.id]).length
-  const empty = !mcq.length && !iv.length
+  const practised = allIv.filter((q) => ratings[q.id]).length
+  const empty = !ordered.length && !allIv.length
 
   const submit = () => {
     mcq.forEach((q) => draft[q.id] !== undefined && answer(q.id, draft[q.id], isCorrect(q, draft[q.id])!))
@@ -253,7 +265,7 @@ export function CheckSection({ id, tn, title, topicPath, sec, mode, project, all
             ) : (
               <>
                 {mcq.length > 0 && <span className={'pill' + (score.answered === score.total && score.total ? ' done' : '')}>{score.correct}/{score.total}</span>}
-                {iv.length > 0 && <span className="pill iv">{practised}/{iv.length} practised</span>}
+                {allIv.length > 0 && <span className="pill iv">{practised}/{allIv.length} practised</span>}
               </>
             )}
           </span>
@@ -267,9 +279,10 @@ export function CheckSection({ id, tn, title, topicPath, sec, mode, project, all
               Questions for this section are being written. Until then, re-read <Link to={topicPath}>the topic</Link>.
             </p>
           )}
+          {only && !empty && !mcq.length && !iv.length && <p className="muted">Everything in this section was answered when you turned the filter on.</p>}
           {mcq.length > 0 && (
             <>
-              <h3 className="csec-k">Choose the answer <small>{mcq.length}</small></h3>
+              <h3 className="csec-k">Choose the answer <small>{mcq.length}{coreCount > 0 && !only ? ` · ${coreCount} core first` : ''}</small></h3>
               {mode === 'check' && !submitted && (
                 <p className="muted small">Check mode: answer every question, then submit to see your score and the explanations.</p>
               )}

@@ -31,6 +31,7 @@
     ],
     "answer": 2,
     "why": "Pretraining teaches continuation; SFT and preference tuning make an assistant.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "A base model has learned no refusal behaviour.",
@@ -69,6 +70,7 @@
     ],
     "answer": 0,
     "why": "It teaches the conversation format and helpful behaviour from examples of ideal answers.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -88,6 +90,7 @@
     ],
     "answer": 2,
     "why": "RLHF and DPO use preferences; RL with verifiable rewards uses checks such as tests.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Rules may verify, but training uses comparisons or rewards.",
@@ -107,6 +110,7 @@
     ],
     "answer": 3,
     "why": "A base model continues text; it was not trained to treat the text as an instruction.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It did not refuse; it continued the text.",
@@ -202,6 +206,7 @@
     ],
     "answer": 3,
     "why": "Unlabelled domain text suits continued pretraining from base; the format is a behaviour taught by SFT on examples.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Preference pairs teach which reply is better, not domain language.",
@@ -345,6 +350,7 @@
     ],
     "answer": 1,
     "why": "About 2ND for the forward pass and 4ND for the backward pass.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "2ND is the forward pass alone; training adds about 4ND for the backward pass.",
@@ -364,6 +370,7 @@
     ],
     "answer": 2,
     "why": "6 × 8×10⁹ × 15×10¹² = 7.2×10²³.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Three orders of magnitude too low.",
@@ -383,6 +390,7 @@
     ],
     "answer": 0,
     "why": "8B × 20 = 160B tokens.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -497,6 +505,7 @@
     ],
     "answer": 3,
     "why": "Tokens seen again carry little new information.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Repetition mostly increases memorisation.",
@@ -516,6 +525,7 @@
     ],
     "answer": 2,
     "why": "They are empirical relationships used to plan runs.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They describe loss, not task accuracy.",
@@ -640,6 +650,7 @@
     ],
     "answer": 1,
     "why": "Loss on assistant tokens teaches the desired behaviour; predicting the user's words is not the goal.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Masking does not reduce memory; every token still goes through the model.",
@@ -659,6 +670,7 @@
     ],
     "answer": 1,
     "why": "Each model family has its own format; libraries apply it with apply_chat_template.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Templates add role markers; they do not compress.",
@@ -678,6 +690,7 @@
     ],
     "answer": 1,
     "why": "The model sees a format it was not trained on, without any error message.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Speed is unaffected.",
@@ -811,6 +824,7 @@
     ],
     "answer": 1,
     "why": "A wrong template or mask trains silently on the wrong tokens.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Necessary, but it does not catch silent data bugs.",
@@ -830,6 +844,7 @@
     ],
     "answer": 3,
     "why": "Without masking, the model learns to predict the prompts too, so it reproduces them.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "A small dataset gives weak answers, not echoed prompts.",
@@ -992,6 +1007,7 @@
     ],
     "answer": 0,
     "why": "Hashes catch identical text; MinHash and LSH scale near-duplicate detection to billions of documents.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1011,6 +1027,7 @@
     ],
     "answer": 0,
     "why": "Intersection 3 (b, c, d) ÷ union 5 (a–e) = 0.6.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1030,6 +1047,7 @@
     ],
     "answer": 0,
     "why": "It avoids comparing full n-gram sets.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1068,6 +1086,7 @@
     ],
     "answer": 3,
     "why": "It is detected by searching for n-gram overlap with test sets (8.6).",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is a safety filtering issue.",
@@ -1087,6 +1106,7 @@
     ],
     "answer": 0,
     "why": "Those 40 measure memorisation, not ability.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1290,6 +1310,7 @@
     ],
     "answer": 1,
     "why": "It is trained on preference data and used to score responses in RLHF.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The LLM outputs those.",
@@ -1309,6 +1330,7 @@
     ],
     "answer": 1,
     "why": "Staying close to the reference limits reward hacking.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "The KL term adds compute.",
@@ -1328,6 +1350,7 @@
     ],
     "answer": 0,
     "why": "A closed-form loss raises the preferred response's probability relative to a frozen reference.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1385,6 +1408,7 @@
     ],
     "answer": 0,
     "why": "Verifiers and reward models must be robust to it.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1461,6 +1485,7 @@
     ],
     "answer": 3,
     "why": "The policy found what the reward model over-rewards. A stronger KL term and a better reward or verifier limit it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The run used RLHF, and DPO does not always lengthen replies.",
@@ -1585,6 +1610,7 @@
     ],
     "answer": 2,
     "why": "8 × 10⁹ × 16 bytes = 128 GB, before activations.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is BF16 weights only.",
@@ -1604,6 +1630,7 @@
     ],
     "answer": 1,
     "why": "The averaged update keeps all copies identical.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is tensor parallelism.",
@@ -1623,6 +1650,7 @@
     ],
     "answer": 2,
     "why": "Sharding removes the memory redundancy of plain data parallelism.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Training still needs the optimiser.",
@@ -1642,6 +1670,7 @@
     ],
     "answer": 3,
     "why": "Splitting matrices requires communication within every layer.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They can, just too slowly.",
@@ -1718,6 +1747,7 @@
     ],
     "answer": 0,
     "why": "Options: more nodes, CPU offloading, or parameter-efficient fine-tuning (13.3).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1918,6 +1948,7 @@
     ],
     "answer": 0,
     "why": "ln 65 ≈ 4.17, the dashed line in the figure for this vocabulary.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1937,6 +1968,7 @@
     ],
     "answer": 2,
     "why": "One character of context limits how predictable the next character can be.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It falls quickly from the uniform level.",
@@ -1956,6 +1988,7 @@
     ],
     "answer": 2,
     "why": "Transformers fix exactly that limitation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "It has very few.",
@@ -2013,6 +2046,7 @@
     ],
     "answer": 0,
     "why": "Check held-out loss against a baseline instead.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -2051,6 +2085,7 @@
     ],
     "answer": 0,
     "why": "Lower loss is better; 2.850 − 2.271 ≈ 0.58 nats.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",

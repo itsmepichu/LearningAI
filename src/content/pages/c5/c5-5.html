@@ -13,7 +13,7 @@
 </div>
 <p>Two phases matter for performance. <b><a class="gl" href="#gl-prefill-decode">Prefill</a></b> processes the whole prompt in one parallel pass (fast per token). <b>Decode</b> then produces one token per forward pass (slow per token). To avoid recomputing keys and values for earlier tokens at each step, engines store them in the <dfn><a class="gl" href="#gl-kv-cache">KV cache</a></dfn> (14.1).</p>
 <figure class="fig"><div class="stage">
-<div id="genViz" class="wid"></div>
+<div data-widget="generation"></div>
 </div><figcaption><b>Autoregressive generation, animated.</b> Each step shows the top candidates and their probabilities (illustrative), the chosen token is appended, and the loop repeats until an end-of-sequence token.</figcaption></figure>
 </section>
 
@@ -38,6 +38,7 @@
 <figure class="fig live" id="snip-softmax"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"softmax"}'></div></div>
 <figcaption><b>From logits to a generated sentence, in real Python.</b> The operations are the ones an LLM uses; the model sees one word of context, so its output and loss are not comparable to an LLM's.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: look at real logits <span class="tag cpu">Laptop · CPU</span></h5>
+<p>Setup, once: <code>uv pip install transformers</code>, in the same environment that has PyTorch (topic 4.6). It downloads a small model the first time you run it.</p>
 <pre><code>import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 name = "HuggingFaceTB/SmolLM2-135M"                      # 135M params, ~270 MB, fast on CPU

@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowLeft, ArrowRight, Check, Clock, FlaskConical, Layers, ListChecks, MousePointerClick } from 'lucide-react'
-import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, topicPath } from '../data/course'
-import { PracticeBlock, ProjectFitNote, useChapterPractice } from '../components/Practice'
+import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, shortTitle, topicPath } from '../data/course'
+import { ExampleDataBanner, PracticeBlock, useChapterPractice } from '../components/Practice'
+import { hasWorkshop, workshopPath } from '../data/workshop'
 import { HtmlContent } from '../components/HtmlContent'
+import { QuickCheck } from '../components/QuickCheck'
+import { ReportProblem } from '../components/ReportProblem'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { useProgress } from '../store/progress'
 import { NotFound } from './NotFound'
@@ -101,8 +104,9 @@ export function TopicPage() {
         </div>
         <h1>
           <span className="tn">{topic.tn}</span>
-          {topic.title}
+          {shortTitle(topic)}
         </h1>
+        {topic.short && topic.short !== topic.title && <p className="t-covers"><b>Covers</b> {topic.title}</p>}
         <div className="t-meta">
           <span>
             <Clock size={14} /> about {minutes(topic)} min
@@ -125,8 +129,8 @@ export function TopicPage() {
         </div>
         <nav className="t-steps" aria-label="Topics in this chapter">
           {chapter.topics.map((t, i) => (
-            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${t.title}`} aria-current={i === pos ? 'page' : undefined}>
-              <span className="sr-only">{t.tn} {t.title}</span>
+            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${shortTitle(t)}`} aria-current={i === pos ? 'page' : undefined}>
+              <span className="sr-only">{t.tn} {shortTitle(t)}</span>
             </Link>
           ))}
         </nav>
@@ -144,23 +148,37 @@ export function TopicPage() {
           </ol>
         )}
         <p>
-          {chapter.hasLab && <Link to={`/${chapter.id}#lab`}><FlaskConical size={14} /> Chapter {chapter.num} lab</Link>}
-          <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>
+          {hasWorkshop(chapter.id) && <Link to={workshopPath(chapter.id, topic.id)}><FlaskConical size={14} /> Chapter {chapter.num} workshop</Link>}
+          {chapter.kind !== 'appendix' && <Link to={`/${chapter.id}/check#${topic.id}`}><ListChecks size={14} /> Check this section</Link>}
         </p>
       </details>
 
       <div className="t-grid">
         <div ref={body} className="t-body">
+          {!!topic.outcomes?.length && (
+            <section className="outcomes" aria-label="After this topic you can">
+              <h2>After this topic you can</h2>
+              <ul>{topic.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
+            </section>
+          )}
+          <ExampleDataBanner chapterId={chapter.id} topicId={topic.id} />
           {html === null ? (
             <div className="skeleton" aria-busy="true">
               <i /><i /><i /><i className="tall" /><i />
             </div>
           ) : (
-            <HtmlContent key={topic.id} html={html} className="topic lai-topic" slots={{ practice: <PracticeBlock practice={practice} /> }} />
+            <HtmlContent key={topic.id} html={html} className="topic lai-topic" autoGlossary slots={{ practice: <PracticeBlock practice={practice} chapterId={chapter.id} topicId={topic.id} /> }} />
           )}
 
-          {html !== null && <ProjectFitNote practice={practice} />}
-          {html !== null && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
+          {html !== null && <QuickCheck chapterId={chapter.id} topicId={topic.id} />}
+          {html !== null && chapter.kind !== 'appendix' && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
+
+          {html !== null && !!topic.outcomes?.length && (
+            <section className="outcomes recap" aria-label="Recap">
+              <h2>Recap: you can now</h2>
+              <ul>{topic.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
+            </section>
+          )}
 
           <div className="t-finish">
             <button type="button" className={'btn ' + (studied ? '' : 'primary')} onClick={() => setStudied(topic.id, !studied)}>
@@ -169,17 +187,19 @@ export function TopicPage() {
             <span className="muted">Progress is saved in this browser only.</span>
           </div>
 
+          <ReportProblem topicId={topic.id} title={topic.title} />
+
           <nav className="pager" aria-label="Previous and next topic">
             {prev ? (
               <Link to={topicPath(prev)} className="pg prev">
                 <small><ArrowLeft size={13} /> Previous <kbd>[</kbd></small>
-                <b><span className="mono">{prev.tn}</span> {prev.title}</b>
+                <b><span className="mono">{prev.tn}</span> {shortTitle(prev)}</b>
               </Link>
             ) : <span />}
             {next ? (
               <Link to={topicPath(next)} className="pg next">
                 <small>Next <kbd>]</kbd> <ArrowRight size={13} /></small>
-                <b><span className="mono">{next.tn}</span> {next.title}</b>
+                <b><span className="mono">{next.tn}</span> {shortTitle(next)}</b>
               </Link>
             ) : <span />}
           </nav>
@@ -198,14 +218,16 @@ export function TopicPage() {
               </ol>
             </>
           )}
-          {chapter.hasLab && (
-            <Link className="rail-lab" to={`/${chapter.id}#lab`}>
-              <span><FlaskConical size={13} /> Chapter {chapter.num} lab</span> <ArrowRight size={13} />
+          {hasWorkshop(chapter.id) && (
+            <Link className="rail-lab" to={workshopPath(chapter.id, topic.id)}>
+              <span><FlaskConical size={13} /> Chapter {chapter.num} workshop</span> <ArrowRight size={13} />
             </Link>
           )}
-          <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>
-            <span><ListChecks size={13} /> Check this section</span> <ArrowRight size={13} />
-          </Link>
+          {chapter.kind !== 'appendix' && (
+                      <Link className="rail-lab chk" to={`/${chapter.id}/check#${topic.id}`}>
+              <span><ListChecks size={13} /> Check this section</span> <ArrowRight size={13} />
+            </Link>
+          )}
         </aside>
       </div>
     </div>
@@ -230,14 +252,15 @@ function MarkLink({ mark, className }: { mark: Mark; className?: string }) {
 function SectionCheckLink({ chapterId, topicId, tn }: { chapterId: string; topicId: string; tn: string }) {
   const n = sectionCheckCount(chapterId, topicId)
   const total = n.mcq + n.interview
+  const more = n.mcq - n.core
   return (
     <Link to={`/${chapterId}/check#${topicId}`} className="seccheck">
       <ListChecks size={18} />
       <span>
-        <b>Check section {tn}</b>
+        <b>{n.core ? `More practice for section ${tn}` : `Check section ${tn}`}</b>
         <small>
           {total
-            ? `${n.mcq} choose-the-answer · ${n.interview} interview ${n.interview === 1 ? 'question' : 'questions'}`
+            ? `${n.core ? `${more} extended ${more === 1 ? 'question' : 'questions'}` : `${n.mcq} choose-the-answer`} · ${n.interview} interview ${n.interview === 1 ? 'question' : 'questions'}`
             : 'Questions for this section are being written'}
         </small>
       </span>

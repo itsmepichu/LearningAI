@@ -123,45 +123,6 @@ try{
 
 }catch(e){console.error("legacy widget: 1.6 decision tree",e)}
 try{
-/* ===== 2.1 vectors ===== */
-(function(){if(!$('vecSvg'))return;function r(){const a=val('va')*Math.PI/180,b=val('vb')*Math.PI/180,la=val('vla'),lb=val('vlb');setO('va',val('va')+'°');setO('vb',val('vb')+'°');
-  const ox=180,oy=150,A=[la*Math.cos(a),la*Math.sin(a)],B=[lb*Math.cos(b),lb*Math.sin(b)];const dot=(A[0]*B[0]+A[1]*B[1]);const cos=dot/(la*lb);const k=dot/(lb*lb),P=[B[0]*k,B[1]*k];
-  const X=v=>ox+v[0],Y=v=>oy-v[1];let s=`<defs><marker id="mA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="fa"/></marker><marker id="mB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="fv"/></marker></defs>`;
-  for(let g=-160;g<=160;g+=40){s+=`<line x1="${ox+g}" y1="5" x2="${ox+g}" y2="295" class="grid"/><line x1="5" y1="${oy+g}" x2="355" y2="${oy+g}" class="grid"/>`}
-  s+=`<line x1="${ox}" y1="${oy}" x2="${X(P)}" y2="${Y(P)}" class="lns" style="stroke-width:5;opacity:.8"/><line x1="${X(A)}" y1="${Y(A)}" x2="${X(P)}" y2="${Y(P)}" class="ln dash"/>`;
-  s+=`<line x1="${ox}" y1="${oy}" x2="${X(A)}" y2="${Y(A)}" class="lna" style="stroke-width:2.5" marker-end="url(#mA)"/><line x1="${ox}" y1="${oy}" x2="${X(B)}" y2="${Y(B)}" style="stroke:var(--sim);stroke-width:2.5;fill:none" marker-end="url(#mB)"/>`;
-  s+=`<text x="${X(A)+6}" y="${Y(A)-6}" class="acc lg">a</text><text x="${X(B)+6}" y="${Y(B)-6}" class="simc lg">b</text><circle cx="${ox}" cy="${oy}" r="3" class="fm"/>`;$('vecSvg').innerHTML=s;
-  const u=100;kpis('vecK',[['a · b (units of 100px)',fN(dot/u/u,2)],['‖a‖',fN(la/u,2)],['‖b‖',fN(lb/u,2)],['cosine similarity',fN(cos,3),cos>.7?'ok':cos<0?'bad':''],['angle between',fN(Math.acos(Math.max(-1,Math.min(1,cos)))*180/Math.PI,0)+'°'],['projection length of a on b',fN(dot/lb/u,2)]])}
-  bind(['va','vb','vla','vlb'],r)})();
-
-
-}catch(e){console.error("legacy widget: 2.1 vectors",e)}
-try{
-/* ===== 2.2 Bayes + CI ===== */
-(function(){if(!$('bayesGrid'))return;const g=$('bayesGrid');for(let i=0;i<1000;i++){const d=document.createElement('i');d.style.cssText='display:block;aspect-ratio:1;border-radius:1px';g.appendChild(d)}
-  function r(){const pr=val('bPrior')/1000,se=val('bSens')/100,fp=val('bFpr')/1000;setO('bPrior',fN(pr*100,1)+'%');setO('bSens',fN(se*100)+'%');setO('bFpr',fN(fp*100,1)+'%');
-    const F=Math.round(1000*pr),TP=Math.round(F*se),FN_=F-TP,L=1000-F,FP=Math.round(L*fp);[...g.children].forEach((d,i)=>{let bg='var(--sunk)',bd='none';if(i<TP)bg='var(--bad)';else if(i<F){bg='var(--surface)';bd='inset 0 0 0 1.5px var(--bad)'}else if(i<F+FP)bg='var(--signal)';d.style.background=bg;d.style.boxShadow=bd});
-    const prec=TP+FP?TP/(TP+FP):0;$('bayesOut').textContent=`Fraud cases: ${F} · caught: ${TP} · missed: ${FN_} · false alarms: ${FP}\nP(fraud | flagged) = ${TP} / (${TP} + ${FP}) = ${fN(prec*100,1)}%   ← precision\nP(flagged | fraud) = ${fN(se*100)}%   ← recall (what the model card advertises)`}
-  bind(['bPrior','bSens','bFpr'],r);
-  function ci(){const n=val('ciN'),p=val('ciP')/100,z=1.96;setO('ciN',fN(n));setO('ciP',fN(p*100)+'%');const den=1+z*z/n,c=(p+z*z/(2*n))/den,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/den,lo=c-h,hi=c+h;
-    const X=v=>20+v*560;let s=`<line x1="20" y1="45" x2="580" y2="45" class="grid"/>`;for(let t=0;t<=10;t++)s+=`<line x1="${X(t/10)}" y1="40" x2="${X(t/10)}" y2="50" class="grid"/><text x="${X(t/10)}" y="68" text-anchor="middle" class="xs mut">${t*10}%</text>`;
-    s+=`<rect x="${X(lo)}" y="33" width="${X(hi)-X(lo)}" height="24" rx="3" class="fas" style="stroke:var(--accent)"/><circle cx="${X(p)}" cy="45" r="5" class="fs"/><text x="${X(p)}" y="25" text-anchor="middle" class="sm">${fN(lo*100,1)}% – ${fN(hi*100,1)}%</text>`;$('ciSvg').innerHTML=s;
-    $('ciOut').textContent=`${Math.round(p*n)} / ${n} passed → 95% CI ${fN(lo*100,1)}% to ${fN(hi*100,1)}% (width ±${fN(h*100,1)} points)`}
-  bind(['ciN','ciP'],ci)})();
-
-
-}catch(e){console.error("legacy widget: 2.2 Bayes + CI",e)}
-try{
-/* ===== 2.4 information ===== */
-(function(){if(!$('infoSvg'))return;function r(){let p=[0,1,2].map(i=>val('ip'+i)),q=[0,1,2].map(i=>val('iq'+i));const sp=p.reduce((a,b)=>a+b,0)||1,sq=q.reduce((a,b)=>a+b,0);p=sp?p.map(v=>v/sp):[1/3,1/3,1/3];q=q.map(v=>v/sq);
-  const H=-p.reduce((s,v)=>s+(v>0?v*Math.log(v):0),0),CE=-p.reduce((s,v,i)=>s+(v>0?v*Math.log(q[i]):0),0);const lab=['yes','no','maybe'];let s='';
-  lab.forEach((l,i)=>{const x0=40+i*190;s+=`<text x="${x0+70}" y="112" text-anchor="middle" class="sm">"${l}"</text><rect x="${x0}" y="${95-p[i]*80}" width="60" height="${p[i]*80}" class="fas" style="stroke:var(--accent)"/><rect x="${x0+80}" y="${95-q[i]*80}" width="60" height="${q[i]*80}" class="fss" style="stroke:var(--signal)"/><text x="${x0+30}" y="${90-p[i]*80}" text-anchor="middle" class="xs acc">p ${fN(p[i]*100)}%</text><text x="${x0+110}" y="${90-q[i]*80}" text-anchor="middle" class="xs sig">q ${fN(q[i]*100)}%</text>`});
-  $('infoSvg').innerHTML=s;kpis('infoK',[['entropy H(p)',fN(H,3)+' nats'],['cross-entropy H(p,q) = loss',fN(CE,3)+' nats',CE>2?'bad':CE<.3?'ok':''],['KL(p‖q) = H(p,q) − H(p)',fN(CE-H,3)+' nats'],['perplexity e^H(p,q)',fN(Math.exp(CE),2)]])}
-  bind(['ip0','ip1','ip2','iq0','iq1','iq2'],r)})();
-
-
-}catch(e){console.error("legacy widget: 2.4 information",e)}
-try{
 /* ===== 2.6 gpu cores ===== */
 (function(){const g=$('gpuCores');if(!g)return;let s='';for(let r=0;r<8;r++)for(let c=0;c<20;c++)s+=`<rect x="${400+c*17}" y="${52+r*13}" width="14" height="10" rx="1.5" class="fa ${RM?'':'pulse'}" style="animation-delay:${((r*7+c*3)%17)/10}s;opacity:.85"/>`;g.innerHTML=s})();
 
@@ -183,17 +144,7 @@ try{
 try{
 /* ===== 3.4 split + overfit ===== */
 (function(){const g=$('splitRand');if(g){const r=mulberry(3);let s='';for(let i=0;i<60;i++){const u=r();s+=`<rect x="${10+i*12.3}" y="32" width="11" height="26" class="${u<.7?'fas':u<.85?'fss':'fvs'}"/>`}s+='<text x="10" y="76" class="xs mut">blue = train · amber = validation · violet = test (each cell one example, assigned at random)</text>';g.innerHTML=s}
-  if(!$('ofCan'))return;const r=mulberry(11),f=x=>0.8*Math.sin(2*Math.PI*x)+0.3*x;const tr=[],va=[];for(let i=0;i<14;i++){const x=(i+0.5)/14+(r()-.5)*.03;tr.push([x,f(x)+gauss(r)*.22])}for(let i=0;i<40;i++){const x=r();va.push([x,f(x)+gauss(r)*.22])}
-  function fit(d,lam){const n=d+1,A=Array.from({length:n},()=>Array(n+1).fill(0));tr.forEach(([x,y])=>{const z=2*x-1,ph=[];for(let k=0;k<n;k++)ph.push(z**k);for(let i=0;i<n;i++){for(let j=0;j<n;j++)A[i][j]+=ph[i]*ph[j];A[i][n]+=ph[i]*y}});for(let i=1;i<n;i++)A[i][i]+=lam;
-    for(let c=0;c<n;c++){let p=c;for(let i=c+1;i<n;i++)if(Math.abs(A[i][c])>Math.abs(A[p][c]))p=i;[A[c],A[p]]=[A[p],A[c]];const v=A[c][c]||1e-12;for(let j=c;j<=n;j++)A[c][j]/=v;for(let i=0;i<n;i++)if(i!==c){const m=A[i][c];for(let j=c;j<=n;j++)A[i][j]-=m*A[c][j]}}return A.map(rw=>rw[n])}
-  function pred(w,x){const z=2*x-1;return w.reduce((s,c,k)=>s+c*z**k,0)}
-  function draw(){const d=val('ofDeg'),lam=10**val('ofLam');setO('ofDeg',d);setO('ofLam','λ = '+(lam<1e-6?lam.toExponential(0):fN(lam,lam<1?4:1)));const w=fit(d,lam);const mse=s=>s.reduce((a,[x,y])=>a+(pred(w,x)-y)**2,0)/s.length;
-    const g=cv('ofCan');if(!g)return;const{x,W,H}=g,C=COL();const X=v=>20+v*(W-40),Y=v=>H/2-v*(H/2-20)/1.6;x.strokeStyle=C.rule;x.beginPath();x.moveTo(20,Y(0));x.lineTo(W-20,Y(0));x.stroke();
-    x.setLineDash([4,4]);x.strokeStyle=C.mut;x.beginPath();for(let i=0;i<=200;i++){const v=i/200;i?x.lineTo(X(v),Y(f(v))):x.moveTo(X(v),Y(f(v)))}x.stroke();x.setLineDash([]);
-    x.strokeStyle=C.acc;x.lineWidth=2.2;x.beginPath();for(let i=0;i<=400;i++){const v=i/400,y=Math.max(-3,Math.min(3,pred(w,v)));i?x.lineTo(X(v),Y(y)):x.moveTo(X(v),Y(y))}x.stroke();x.lineWidth=1;
-    va.forEach(([a,b])=>{x.strokeStyle=C.sig;x.beginPath();x.arc(X(a),Y(b),3.5,0,7);x.stroke()});tr.forEach(([a,b])=>{x.fillStyle=C.ink;x.beginPath();x.arc(X(a),Y(b),4,0,7);x.fill()});
-    x.fillStyle=C.mut;x.fillText('dashed = true function · line = fitted model',24,16);const tm=mse(tr),vm=mse(va);kpis('ofK',[['training error (MSE)',fN(tm,3),tm<.02?'warn':''],['validation error (MSE)',fN(vm,3),vm>.15?'bad':vm<.07?'ok':''],['gap (val − train)',fN(vm-tm,3)],['parameters',d+1]])}
-  bind(['ofDeg','ofLam'],draw)})();
+  })();
 
 
 }catch(e){console.error("legacy widget: 3.4 split + overfit",e)}
@@ -204,29 +155,8 @@ try{
 
 }catch(e){console.error("legacy widget: 3.6 shift",e)}
 try{
-/* ===== 4.1 neuron ===== */
-(function(){if(!$('neuSvg'))return;const acts={'ReLU':z=>Math.max(0,z),'GELU':z=>.5*z*(1+Math.tanh(Math.sqrt(2/Math.PI)*(z+.044715*z**3))),'sigmoid':z=>1/(1+Math.exp(-z)),'tanh':z=>Math.tanh(z),'none (linear)':z=>z};
-  function r(){const w1=val('nw1')/10,w2=val('nw2')/10,b=val('nb')/10,an=$('nact').value,f=acts[an];setO('nw1',fN(w1,1));setO('nw2',fN(w2,1));setO('nb',fN(b,1));const z=w1*1+w2*.5+b,a=f(z);
-    const ew=w=>1+Math.abs(w)*2,ec=w=>w>=0?'var(--accent)':'var(--bad)';
-    $('neuSvg').innerHTML=`<circle cx="40" cy="50" r="20" class="nd"/><text x="40" y="54" text-anchor="middle" class="sm">x₁=1</text><circle cx="40" cy="130" r="20" class="nd"/><text x="40" y="134" text-anchor="middle" class="sm">x₂=.5</text>
-    <line x1="60" y1="55" x2="140" y2="85" style="stroke:${ec(w1)};stroke-width:${ew(w1)}"/><line x1="60" y1="125" x2="140" y2="95" style="stroke:${ec(w2)};stroke-width:${ew(w2)}"/><text x="95" y="58" class="xs">w₁=${fN(w1,1)}</text><text x="95" y="132" class="xs">w₂=${fN(w2,1)}</text>
-    <circle cx="165" cy="90" r="26" class="nda"/><text x="165" y="86" text-anchor="middle" class="sm">Σ + b</text><text x="165" y="102" text-anchor="middle" class="xs">z=${fN(z,2)}</text><text x="165" y="138" text-anchor="middle" class="xs mut">b=${fN(b,1)}</text>
-    <line x1="191" y1="90" x2="225" y2="90" class="ln"/><rect x="225" y="72" width="40" height="36" rx="4" class="nds"/><text x="245" y="94" text-anchor="middle" class="xs">f(z)</text><line x1="265" y1="90" x2="285" y2="90" class="ln"/><text x="300" y="86" text-anchor="middle" class="sm">a =</text><text x="300" y="104" text-anchor="middle" class="sm acc">${fN(a,3)}</text>`;
-    const X=v=>20+(v+4)/8*260,Y=v=>90-v*(an==='none (linear)'?18:55);let p='';for(let i=0;i<=160;i++){const v=-4+8*i/160;p+=(i?'L':'M')+X(v)+' '+Math.max(5,Math.min(175,Y(f(v)))).toFixed(1)}
-    $('actSvg').innerHTML=`<line x1="20" y1="90" x2="280" y2="90" class="grid"/><line x1="150" y1="10" x2="150" y2="170" class="grid"/><path d="${p}" class="lna"/><circle cx="${X(Math.max(-4,Math.min(4,z)))}" cy="${Math.max(5,Math.min(175,Y(a)))}" r="6" class="fs"/><text x="24" y="20" class="xs mut">${an}</text><text x="276" y="104" text-anchor="end" class="xs mut">z</text>`}
-  bind(['nw1','nw2','nb','nact'],r)})();
-
-
-}catch(e){console.error("legacy widget: 4.1 neuron",e)}
-try{
 /* ===== 4.2 LR schedule, epochs ===== */
-(function(){if(!$('lrSvg'))return;function r(){const pk=val('lrPeak')*1e-4,wu=val('lrWarm')/100,k=$('lrKind').value,mn=pk*.1;setO('lrPeak',fN(val('lrPeak'))+'×10⁻⁴');setO('lrWarm',fN(wu*100)+'%');
-  const lr=t=>{if(t<wu)return pk*t/Math.max(wu,1e-9);const q=(t-wu)/Math.max(1-wu,1e-9);if(k==='cosine')return mn+.5*(pk-mn)*(1+Math.cos(Math.PI*q));if(k==='linear')return pk-(pk-mn)*q;if(k==='step')return pk*(t<.6?1:t<.85?.3:.09);return pk};
-  const X=t=>50+t*550,Y=v=>170-v/3e-3*150;let d='';for(let i=0;i<=300;i++){const t=i/300;d+=(i?'L':'M')+X(t).toFixed(1)+' '+Y(lr(t)).toFixed(1)}
-  let s=axis(50,15,600,170)+`<path d="${d}" class="lna" style="stroke-width:2.5"/>`;[0,1e-3,2e-3,3e-3].forEach(v=>s+=`<text x="44" y="${Y(v)+4}" text-anchor="end" class="xs mut">${v?fN(v*1e3,0)+'e-3':'0'}</text>`);[0,2500,5000,7500,10000].forEach(v=>s+=`<text x="${X(v/1e4)}" y="188" text-anchor="middle" class="xs mut">${fN(v)}</text>`);
-  if(wu>0)s+=`<rect x="50" y="15" width="${wu*550}" height="155" class="fss" style="opacity:.45"/><text x="${50+wu*275}" y="30" text-anchor="middle" class="xs sig">warm-up</text>`;$('lrSvg').innerHTML=s}
-  bind(['lrPeak','lrWarm','lrKind'],r);
-  const g=$('epochViz');if(!g)return;let s='';for(let e=0;e<3;e++){s+=`<text x="${10+e*236}" y="18" class="xs mut">epoch ${e+1}</text>`;for(let b=0;b<10;b++)s+=`<rect id="ep${e*10+b}" x="${10+e*236+b*22}" y="26" width="18" height="40" rx="2" class="fsunk" style="stroke:var(--rule)"/>`}g.innerHTML=s;
+(function(){const g=$('epochViz');if(!g)return;let s='';for(let e=0;e<3;e++){s+=`<text x="${10+e*236}" y="18" class="xs mut">epoch ${e+1}</text>`;for(let b=0;b<10;b++)s+=`<rect id="ep${e*10+b}" x="${10+e*236+b*22}" y="26" width="18" height="40" rx="2" class="fsunk" style="stroke:var(--rule)"/>`}g.innerHTML=s;
   let i=0;function tick(){for(let k=0;k<30;k++){const el=$('ep'+k);el.setAttribute('class',k<i?'fas':k===i?'fs':'fsunk')}i=(i+1)%31}tick();if(!RM)setInterval(tick,350)})();
 
 
@@ -262,27 +192,6 @@ try{
 
 }catch(e){console.error("legacy widget: 5.4 masks",e)}
 try{
-/* ===== 5.5 generation ===== */
-(function(){const el=$('genViz');if(!el)return;const prompt='The invoice is due on';const steps=[['␣the',[['␣the',.46],['␣March',.18],['␣or',.09]]],['␣15th',[['␣15th',.31],['␣1st',.22],['␣last',.12]]],['␣of',[['␣of',.88],['␣day',.04],[',',.03]]],['␣March',[['␣March',.29],['␣each',.24],['␣every',.11]]],['.',[['.',.71],['␣2027',.12],[',',.08]]],['⟨eos⟩',[['⟨eos⟩',.64],['␣Please',.20],['␣Late',.06]]]];let i=0,timer;
-  el.innerHTML='<div class="out" id="genTxt" style="font-size:.95rem"></div><div id="genBars" class="bars"></div><div class="ctl"><button class="btn primary" type="button" id="genNext">Next token</button><button class="btn" type="button" id="genAuto">Auto-play</button><button class="btn" type="button" id="genRe">Restart</button><span class="count" id="genC"></span></div>';
-  function draw(){const done=steps.slice(0,i).map(s=>s[0]).join('');$('genTxt').innerHTML=`<span style="color:var(--muted)">${prompt}</span><span style="color:var(--accent);font-weight:600">${esc(done.replace(/␣/g,' '))}</span><span class="pulse">▌</span>`;
-    if(i<steps.length){bars('genBars',steps[i][1].map(([t,p],k)=>({l:'candidate '+esc(t),v:p*100,c:k?'':'g'})),{unit:'%',max:100});$('genC').textContent=`step ${i+1}: model scores every token; the top three are shown; greedy picks the first`}else{$('genBars').innerHTML='';$('genC').textContent='end-of-sequence token chosen: generation stops'}}
-  $('genNext').onclick=()=>{if(i<steps.length){i++;draw()}};$('genRe').onclick=()=>{i=0;draw()};$('genAuto').onclick=()=>{clearInterval(timer);i=0;draw();timer=setInterval(()=>{if(i>=steps.length){clearInterval(timer);return}i++;draw()},1300)};draw()})();
-
-
-}catch(e){console.error("legacy widget: 5.5 generation",e)}
-try{
-/* ===== 5.6 decoding ===== */
-(function(){if(!$('decBars'))return;const toks=['␣strong','␣solid','␣better','␣disappointing','␣mixed','␣record','␣in','␣flat','␣excellent','␣bananas'],lg=[3.2,2.6,2.2,1.9,1.7,1.4,1.0,.8,.6,-1.5];let dist=[];
-  function comp(){const T=Math.max(.05,val('dT')/100),k=val('dK'),p=val('dP')/100;setO('dT',fN(T,2));setO('dK',k);setO('dP',fN(p,2));const z=lg.map(v=>v/T),m=Math.max(...z),e=z.map(v=>Math.exp(v-m)),s=e.reduce((a,b)=>a+b,0),pr=e.map(v=>v/s);
-    const ord=pr.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]);const keep=new Set();let cum=0;ord.forEach(([v,i],r)=>{if(r<k&&cum<p-1e-9){keep.add(i);cum+=v}});const ks=ord.filter(([v,i])=>keep.has(i)).reduce((a,[v])=>a+v,0);
-    dist=ord.map(([v,i])=>({i,v,f:keep.has(i)?v/ks:0}));bars('decBars',dist.map(d=>({l:esc(toks[d.i]),v:(d.f||d.v)*100,c:d.f?'':'b',t:d.f?fN(d.f*100,1)+'%':'excluded ('+fN(d.v*100,1)+'% before)'})),{max:100})}
-  $('dSample').onclick=()=>{const c={};for(let n=0;n<20;n++){let u=Math.random(),pick=dist.find(d=>d.f>0);for(const d of dist){if(!d.f)continue;u-=d.f;if(u<=0){pick=d;break}}c[toks[pick.i]]=(c[toks[pick.i]]||0)+1}
-    $('dChips').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`<span class="chip">${esc(t)} ×${n}</span>`).join('');$('dOut').textContent=`${Object.keys(c).length} distinct continuations in 20 samples`};bind(['dT','dK','dP'],comp)})();
-
-
-}catch(e){console.error("legacy widget: 5.6 decoding",e)}
-try{
 /* ===== 5.7 MoE + context ===== */
 (function(){const g=$('moeViz');if(g){const tk=[['The',[0,5]],['invoice',[2,6]],['total',[2,3]],['is',[0,5]],['€1,240',[3,7]]];let i=0;
   function draw(){const[t,ex]=tk[i];let s=`<rect x="20" y="85" width="110" height="44" rx="4" class="nds"/><text x="75" y="105" text-anchor="middle" class="sm">token</text><text x="75" y="121" text-anchor="middle" class="sm" style="font-weight:700">${esc(t)}</text>`;
@@ -291,10 +200,7 @@ try{
       if(on)s+=`<path d="M270 107 C 300 107, 300 ${y+25}, ${x} ${y+25}" class="lna ${RM?'':'flowing'}"/>`}
     s+=`<text x="20" y="200" class="xs mut">top-2 of 8 experts active for this token → ~¼ of FFN compute, but all 8 must be in memory</text><text x="20" y="20" class="xs mut">token ${i+1}/5</text>`;g.innerHTML=s;i=(i+1)%tk.length}
   draw();if(!RM)setInterval(draw,1500)}
-  if(!$('ctxN'))return;function r(){const n=2**val('ctxN');setO('ctxN',fS(n,0)+' tokens');const fl=4*n*n*4096*32,kv=n*131072;kpis('ctxK',[['attention FLOPs (32 layers)',fS(fl,1)],['KV cache per sequence',fB(kv)],['vs 8k context: attention',fN(n*n/(8192*8192),2)+'×'],['vs 8k context: KV',fN(n/8192,2)+'×']]);
-    const X=e=>50+(e-10)/7*540,Y=v=>140-v*120;let a='',b='';for(let e=10;e<=17;e+=.05){const m=2**e,mx=2**17;a+=(a?'L':'M')+X(e)+' '+Y(m/mx);b+=(b?'L':'M')+X(e)+' '+Y((m/mx)**2)}
-    let s=axis(50,15,590,140)+`<path d="${a}" class="lns"/><path d="${b}" class="lnb"/><line x1="${X(val('ctxN'))}" y1="15" x2="${X(val('ctxN'))}" y2="140" class="ln dash"/>`;for(let e=10;e<=17;e++)s+=`<text x="${X(e)}" y="158" text-anchor="middle" class="xs mut">${fS(2**e,0)}</text>`;
-    s+=`<text x="400" y="40" class="xs sig">KV cache (linear)</text><text x="400" y="56" class="xs bad">attention compute (quadratic)</text><text x="54" y="26" class="xs mut">relative to 128k value</text>`;$('ctxSvg').innerHTML=s}bind(['ctxN'],r)})();
+  })();
 
 
 
@@ -302,50 +208,12 @@ try{
 
 }catch(e){console.error("legacy widget: 5.7 MoE + context",e)}
 try{
-/* ===== 6.3 scaling calculator ===== */
-(function(){if(!$('scN'))return;function r(){const N=10**(-1+4*val('scN')/100)*1e9,R=10**(4*val('scR')/100),mfu=val('scMfu')/100,G=Math.round(10**(0.9+4.1*val('scG')/100));const D=N*R,C=6*N*D,gh=C/(989e12*mfu)/3600,days=gh/G/24;
-  setO('scN',fS(N,1));setO('scR',fN(R,R<10?1:0));setO('scMfu',fN(mfu*100)+'%');setO('scG',fN(G));
-  kpis('scK',[['training tokens D',fS(D,1)],['compute C = 6ND',C.toExponential(2)+' FLOPs'],['GPU-hours',fS(gh,1)],['wall-clock on '+fN(G)+' GPUs',days<1?fN(days*24,1)+' hours':fN(days,days<10?1:0)+' days',days>120?'bad':''],['cost at $2.50/GPU-h',fUSD(gh*2.5)],['Chinchilla-optimal D (20N)',fS(20*N,1)],['training state (16 B/param)',fB(16*N)]])}
-  bind(['scN','scR','scMfu','scG'],r)})();
-
-
-}catch(e){console.error("legacy widget: 6.3 scaling calculator",e)}
-try{
 /* ===== 6.4 loss mask tokens ===== */
 (function(){const el=$('maskTokens');if(!el)return;const T=[['<|im_start|>system',0],['\\n',0],['You',0],[' extract',0],[' invoice',0],[' fields',0],[' as',0],[' JSON',0],['.',0],['<|im_end|>',0],['\\n',0],['<|im_start|>user',0],['\\n',0],['Invoice',0],[' #',0],['44',0],['71',0],[' from',0],[' Acme',0],[' GmbH',0],[' …',0],['<|im_end|>',0],['\\n',0],['<|im_start|>assistant',0],['\\n',0],['{"',1],['number',1],['":"',1],['44',1],['71',1],['","',1],['vendor',1],['":"',1],['Acme',1],[' GmbH',1],['",…}',1],['<|im_end|>',1]];
   el.innerHTML=T.map(([t,m])=>`<span class="tok" style="${m?'background:var(--accent-soft);outline:1px solid var(--accent)':'background:var(--sunk);color:var(--muted)'}">${esc(t)}</span>`).join('')})();
 
 
 }catch(e){console.error("legacy widget: 6.4 loss mask tokens",e)}
-try{
-/* ===== 6.6 pipeline bubble ===== */
-(function(){if(!$('ppSvg'))return;function r(){const S=val('ppS'),M=val('ppM');setO('ppS',S);setO('ppM',M);const Tf=M+S-1,T=2*Tf,cw=Math.min(34,640/T),rh=Math.min(36,170/S);let s='';
-  for(let st=0;st<S;st++){s+=`<text x="4" y="${20+st*rh+rh/2+4}" class="xs mut">GPU${st}</text>`;for(let t=0;t<T;t++)s+=`<rect x="${44+t*cw}" y="${20+st*rh}" width="${cw-2}" height="${rh-3}" rx="2" class="fsunk"/>`;
-    for(let m=0;m<M;m++){const tf=st+m,tb=Tf+(S-1-st)+m;s+=`<rect x="${44+tf*cw}" y="${20+st*rh}" width="${cw-2}" height="${rh-3}" rx="2" class="fas" style="stroke:var(--accent)"/><text x="${44+tf*cw+cw/2-1}" y="${20+st*rh+rh/2+3}" text-anchor="middle" class="xs">F${m+1}</text><rect x="${44+tb*cw}" y="${20+st*rh}" width="${cw-2}" height="${rh-3}" rx="2" class="fss" style="stroke:var(--signal)"/><text x="${44+tb*cw+cw/2-1}" y="${20+st*rh+rh/2+3}" text-anchor="middle" class="xs">B${m+1}</text>`}}
-  s+=`<text x="44" y="12" class="xs mut">time →</text>`;$('ppSvg').innerHTML=s;const bub=(S-1)/(M+S-1);$('ppOut').textContent=`Total time slots: ${T} · busy slots per GPU: ${2*M} · idle (bubble) fraction: ${fN(bub*100,1)}%`}
-  bind(['ppS','ppM'],r)})();
-
-
-}catch(e){console.error("legacy widget: 6.6 pipeline bubble",e)}
-try{
-/* ===== 6.7 tiny bigram LM ===== */
-(function(){if(!$('tlmTrain'))return;let V,idx,Wt,Nc,rows,total,hist=[],floor=0,steps=0;
-  function setup(){const txt=$('tlmText').value.toLowerCase();V=[...new Set(txt)].sort();idx=Object.fromEntries(V.map((c,i)=>[c,i]));const n=V.length;Nc=Array.from({length:n},()=>new Float64Array(n));for(let i=0;i<txt.length-1;i++)Nc[idx[txt[i]]][idx[txt[i+1]]]++;rows=Nc.map(r=>r.reduce((a,b)=>a+b,0));total=rows.reduce((a,b)=>a+b,0);
-    floor=0;Nc.forEach((r,i)=>r.forEach(v=>{if(v)floor-=v*Math.log(v/rows[i])}));floor/=total;resetW()}
-  function resetW(){const n=V.length,r=mulberry(1);Wt=Array.from({length:n},()=>Float64Array.from({length:n},()=>(r()-.5)*.02));hist=[loss()];steps=0;draw();$('tlmOut').textContent='Weights reset. Samples now are random characters. Press Train.'}
-  function probs(i,T=1){const w=Wt[i],m=Math.max(...w),e=w.map(v=>Math.exp((v-m)/T)),s=e.reduce((a,b)=>a+b,0);return e.map(v=>v/s)}
-  function loss(){let L=0;for(let i=0;i<V.length;i++){if(!rows[i])continue;const p=probs(i);Nc[i].forEach((v,j)=>{if(v)L-=v*Math.log(p[j])})}return L/total}
-  function train(k){const lr=val('tlmLr');for(let s=0;s<k;s++){for(let i=0;i<V.length;i++){if(!rows[i])continue;const p=probs(i),w=Wt[i];for(let j=0;j<V.length;j++)w[j]-=lr*(rows[i]*p[j]-Nc[i][j])/total}steps++;if(s%5===4)hist.push(loss())}draw()}
-  function draw(){setO('tlmLr',val('tlmLr'));setO('tlmT',fN(val('tlmT')/100,2));const g=cv('tlmCan');if(!g)return;const{x,W,H}=g,C=COL(),mx=Math.log(V.length)*1.05,Y=v=>H-20-v/mx*(H-30),X=i=>40+i/Math.max(hist.length-1,1)*(W-60);
-    x.strokeStyle=C.rule;x.beginPath();x.moveTo(40,H-20);x.lineTo(W-20,H-20);x.stroke();x.setLineDash([5,4]);x.strokeStyle=C.mut;x.beginPath();x.moveTo(40,Y(Math.log(V.length)));x.lineTo(W-20,Y(Math.log(V.length)));x.stroke();
-    x.strokeStyle=C.sig;x.beginPath();x.moveTo(40,Y(floor));x.lineTo(W-20,Y(floor));x.stroke();x.setLineDash([]);x.fillStyle=C.mut;x.fillText('ln V = '+fN(Math.log(V.length),2),44,Y(Math.log(V.length))-4);x.fillStyle=C.sig;x.fillText('best possible bigram loss = '+fN(floor,2),44,Y(floor)-4);
-    x.strokeStyle=C.acc;x.lineWidth=2;x.beginPath();hist.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v)));x.stroke();x.lineWidth=1;
-    $('tlmInfo').textContent=`vocab ${V.length} chars · ${V.length*V.length} parameters · ${steps} steps · loss ${fN(hist[hist.length-1],3)} nats`}
-  function sample(){const T=val('tlmT')/100;let c=idx[' ']??0,out='';for(let n=0;n<220;n++){const p=probs(c,T);let u=Math.random(),j=0;for(;j<p.length-1;j++){u-=p[j];if(u<=0)break}out+=V[j];c=j}$('tlmOut').textContent=out}
-  $('tlmTrain').onclick=()=>train(200);$('tlmSample').onclick=sample;$('tlmReset').onclick=resetW;$('tlmText').addEventListener('change',setup);$('tlmLr').addEventListener('input',draw);$('tlmT').addEventListener('input',draw);onTheme(draw);setup()})();
-
-
-}catch(e){console.error("legacy widget: 6.7 tiny bigram LM",e)}
 try{
 /* ===== 7.6 retry storm ===== */
 (function(){if(!$('rtRun'))return;function run(){const jit=$('rtJit').checked,ev=[],cap=8,bin=.25,rec=6;const fails={},rnd=Math.random;let q=[];for(let c=0;c<30;c++)q.push({c,t:0,a:0});const hist=new Array(80).fill(0),served=new Array(80).fill(0);let failed=0;
@@ -678,71 +546,6 @@ try{
 
 
 }catch(e){console.error("legacy widget: 18.7 readiness",e)}
-try{
-/* ===== 2.6 laptop fit ===== */
-(function(){if(!$('lfM'))return;const M=[[0.49e9,24,2,64],[1.24e9,16,8,64],[3.2e9,28,8,128],[8.03e9,32,8,128],[14.7e9,48,8,128],[70.6e9,80,8,128]];
-  function r(){const[p,L,kv,hd]=M[+$('lfM').value],q=+$('lfQ').value,ram=+$('lfR').value*1e9,os=val('lfOs')*1e9,ctx=2**val('lfC'),bw=val('lfBw')*1e9;setO('lfOs',val('lfOs')+' GB');setO('lfC',fS(ctx,0)+' tokens');setO('lfBw',val('lfBw')+' GB/s');
-    const w=p*q,kvb=2*L*kv*hd*2*ctx,rt=0.4e9,need=w+kvb+rt,free=ram-os-need;const seg=(v,c,t)=>`<div title="${t}" style="width:${Math.max(0,v/Math.max(ram,os+need)*100)}%;background:${c};opacity:.8;border-right:1px solid var(--surface)"></div>`;
-    $('lfBar').innerHTML=seg(os,'var(--muted)','OS + apps')+seg(w,'var(--accent)','weights')+seg(kvb,'var(--signal)','KV cache')+seg(rt,'var(--sim)','runtime')+(free>0?seg(free,'var(--sunk)','free'):`<div style="flex:1;background:repeating-linear-gradient(45deg,var(--bad) 0 6px,var(--bad-soft) 6px 12px)" title="does not fit"></div>`);
-    const tps=bw/(w+kvb*0.5);kpis('lfK',[['weights',fB(w)],['KV cache at this context',fB(kvb)],['total needed (+0.4 GB runtime)',fB(need)],['verdict',free>2e9?'fits comfortably':free>0?'fits, but tight':'does not fit',free>2e9?'ok':free>0?'warn':'bad'],['decode speed ceiling',free>0?'≤ '+fN(tps,tps<10?1:0)+' tokens/s':'–']])}
-  bind(['lfM','lfQ','lfR','lfOs','lfC','lfBw'],r)})();
-
-
-}catch(e){console.error("legacy widget: 2.6 laptop fit",e)}
-try{
-/* ===== 4.1 neural-network playground ===== */
-(function(){if(!$('nnCan'))return;let P=[],L=[],net,run=false,raf,hist=[],epoch=0;
-  function data(){const r=mulberry(5),d=$('nnD').value;P=[];L=[];for(let i=0;i<240;i++){let x,y,c;if(d==='circle'){const a=r()*6.283,rad=r()<.5?r()*.45:.65+r()*.3;c=rad<.5?1:0;x=Math.cos(a)*rad;y=Math.sin(a)*rad}
-    else if(d==='xor'){x=r()*2-1;y=r()*2-1;c=(x*y>0)?1:0;x+=Math.sign(x)*.05;y+=Math.sign(y)*.05}
-    else if(d==='moons'){c=i%2;const a=r()*Math.PI;x=c?1-Math.cos(a)-.5:Math.cos(a)-.5;y=c?.35-Math.sin(a)+.15:Math.sin(a)-.15;x*=.75;y*=.8;x+=gauss(r)*.07;y+=gauss(r)*.07}
-    else{c=i%2;const t=(i>>1)/120*3.2+.25;x=t/3.6*Math.cos(t*2.4+c*Math.PI);y=t/3.6*Math.sin(t*2.4+c*Math.PI);x+=gauss(r)*.03;y+=gauss(r)*.03}P.push([x,y]);L.push(c)}}
-  function init(){const H=val('nnH'),r=mulberry(9),m=(a,b)=>Array.from({length:a},()=>Array.from({length:b},()=>gauss(r)*Math.sqrt(1/b)));net={H,W1:m(H,2),b1:Array(H).fill(0),W2:m(H,H),b2:Array(H).fill(0),W3:m(1,H)[0],b3:0};net.v=JSON.parse(JSON.stringify({W1:net.W1,b1:net.b1,W2:net.W2,b2:net.b2,W3:net.W3,b3:0},(k,v)=>typeof v==='number'?0:v));hist=[];epoch=0;draw()}
-  const act=()=>$('nnA').value,f=(z)=>{const a=act();return a==='tanh'?Math.tanh(z):a==='ReLU'?Math.max(0,z):z},df=(z,o)=>{const a=act();return a==='tanh'?1-o*o:a==='ReLU'?(z>0?1:0):1};
-  function fwd(x){const z1=net.W1.map((w,i)=>w[0]*x[0]+w[1]*x[1]+net.b1[i]),h1=z1.map(f),z2=net.W2.map((w,i)=>w.reduce((s,v,j)=>s+v*h1[j],net.b2[i])),h2=z2.map(f),z3=net.W3.reduce((s,v,j)=>s+v*h2[j],net.b3);return{z1,h1,z2,h2,p:1/(1+Math.exp(-z3))}}
-  function step(){const H=net.H,g={W1:net.W1.map(r=>r.map(()=>0)),b1:Array(H).fill(0),W2:net.W2.map(r=>r.map(()=>0)),b2:Array(H).fill(0),W3:Array(H).fill(0),b3:0};let loss=0,acc=0;
-    P.forEach((x,n)=>{const o=fwd(x),y=L[n];loss-=y*Math.log(o.p+1e-9)+(1-y)*Math.log(1-o.p+1e-9);acc+=((o.p>.5)===!!y)?1:0;const d3=o.p-y;g.b3+=d3;const d2=o.h2.map((h,j)=>{g.W3[j]+=d3*h;return d3*net.W3[j]*df(o.z2[j],h)});
-      d2.forEach((d,i)=>{g.b2[i]+=d;for(let j=0;j<H;j++)g.W2[i][j]+=d*o.h1[j]});const d1=o.h1.map((h,j)=>{let s=0;for(let i=0;i<H;i++)s+=d2[i]*net.W2[i][j];return s*df(o.z1[j],h)});d1.forEach((d,i)=>{g.b1[i]+=d;g.W1[i][0]+=d*x[0];g.W1[i][1]+=d*x[1]})});
-    const lr=val('nnLr')/100,N=P.length,mo=.9;const upd=(k,i,j)=>{if(j===undefined){if(i===undefined){net.v[k]=mo*net.v[k]-lr*g[k]/N;net[k]+=net.v[k]}else{net.v[k][i]=mo*net.v[k][i]-lr*g[k][i]/N;net[k][i]+=net.v[k][i]}}else{net.v[k][i][j]=mo*net.v[k][i][j]-lr*g[k][i][j]/N;net[k][i][j]+=net.v[k][i][j]}};
-    for(let i=0;i<H;i++){upd('W1',i,0);upd('W1',i,1);upd('b1',i);upd('W3',i);upd('b2',i);for(let j=0;j<H;j++)upd('W2',i,j)}upd('b3');epoch++;return[loss/N,acc/N]}
-  function draw(){setO('nnH',val('nnH'));setO('nnLr',fN(val('nnLr')/100,2));const g=cv('nnCan');if(!g||!net)return;const{x,W,H}=g,C=COL(),n=40,cs=W/n,toS=v=>(v+1.1)/2.2;
-    for(let i=0;i<n;i++)for(let j=0;j<n;j++){const px=-1.1+(i+.5)/n*2.2,py=1.1-(j+.5)/n*2.2,p=fwd([px,py]).p;x.fillStyle=p>.5?C.badS:C.accS;x.globalAlpha=.35+Math.abs(p-.5)*1.2;x.fillRect(i*cs,j*cs,cs+.5,cs+.5)}x.globalAlpha=1;
-    P.forEach((p,k)=>{x.fillStyle=L[k]?C.bad:C.acc;x.strokeStyle=C.surface||C.bg;x.beginPath();x.arc(toS(p[0])*W,(1-toS(p[1]))*H,3.4,0,7);x.fill()});
-    const lg=cv('nnLoss');if(lg){const X=lg.x,mx=Math.max(.75,...hist.map(h=>h[0]));X.strokeStyle=C.rule;X.beginPath();X.moveTo(30,140);X.lineTo(310,140);X.stroke();X.strokeStyle=C.acc;X.lineWidth=2;X.beginPath();hist.forEach((h,i)=>{const px=30+i/Math.max(1,hist.length-1)*280,py=140-h[0]/mx*125;i?X.lineTo(px,py):X.moveTo(px,py)});X.stroke();X.lineWidth=1;X.fillStyle=C.mut;X.fillText('training loss (cross-entropy)',34,14)}
-    const h=hist[hist.length-1];kpis('nnK',[['epochs',fN(epoch)],['loss',h?fN(h[0],3):'–'],['training accuracy',h?fN(h[1]*100,1)+'%':'–',h&&h[1]>.95?'ok':'']]);$('nnInfo').textContent=`${2*net.H+net.H+net.H*net.H+net.H+net.H+1} parameters`}
-  function loop(){for(let k=0;k<4;k++){hist.push(step())}if(hist.length>400)hist=hist.filter((_,i)=>i%2===0);draw();if(run)raf=requestAnimationFrame(loop)}
-  $('nnRun').onclick=()=>{run=!run;$('nnRun').textContent=run?'Pause':'Train';if(run)loop();else cancelAnimationFrame(raf)};$('nnReset').onclick=()=>{init()};
-  $('nnD').onchange=()=>{data();init()};$('nnH').addEventListener('change',init);$('nnA').onchange=init;$('nnH').addEventListener('input',()=>setO('nnH',val('nnH')));$('nnLr').addEventListener('input',()=>setO('nnLr',fN(val('nnLr')/100,2)));onTheme(draw);data();init();for(let k=0;k<60;k++)hist.push(step());draw()})();
-
-
-}catch(e){console.error("legacy widget: 4.1 neural-network playground",e)}
-try{
-/* ===== 5.3 transformer shape tracer ===== */
-(function(){if(!$('tsTbl'))return;const PR={l8:[4096,32,8,32,14336,128256,3,false],l3:[3072,24,8,28,8192,128256,3,true],l70:[8192,64,8,80,28672,128256,3,false],g2:[768,12,12,12,3072,50257,2,true]};
-  $('tsP').onchange=()=>{const p=PR[$('tsP').value];['tsD','tsH','tsKv','tsL','tsF','tsV'].forEach((id,i)=>$(id).value=p[i]);$('tsFt').value=p[6];$('tsTie').checked=p[7];r()};
-  function r(){const d=val('tsD'),h=Math.max(1,val('tsH')),kv=Math.max(1,Math.min(h,val('tsKv'))),L=val('tsL'),F=val('tsF'),V=val('tsV'),ft=+$('tsFt').value,tie=$('tsTie').checked,S=val('tsS'),B=val('tsB'),dh=Math.round(d/h),gpt=$('tsP').value==='g2';
-    const q=d*h*dh,k=d*kv*dh,o=h*dh*d,att=q+2*k+o,ffn=ft*d*F,blk=att+ffn,emb=V*d,head=tie?0:V*d,pos=gpt?1024*d:0,tot=L*blk+emb+head+pos;
-    const sh=a=>'['+a.map(fS).join(' × ')+']';const rows=[['Token embeddings','lookup',sh([B,S,d]),fS(emb)],['Q projection','x · W_Q',sh([B,S,h,dh]),fS(q)],['K and V projections (each)','x · W_K, x · W_V',sh([B,S,kv,dh]),fS(2*k)+' (both)'],['Attention scores per layer','Q · Kᵀ / √d_h',sh([B,h,S,S]),'0'],['Attention output','weights · V → W_O',sh([B,S,d]),fS(o)],['FFN up'+(ft===3?' + gate':''),'x · W_up',sh([B,S,F]),fS((ft-1)*d*F)],['FFN down','h · W_down',sh([B,S,d]),fS(d*F)],['Logits (LM head)','x · W_out',sh([B,S,V]),tie?'shared with embeddings':fS(head)]];
-    $('tsTbl').innerHTML='<tr><th>Step</th><th>Operation</th><th>Output shape</th><th>Parameters</th></tr>'+rows.map(x=>`<tr><td>${x[0]}</td><td><code>${x[1]}</code></td><td style="font-family:var(--f-mono);font-size:.78rem">${x[2]}</td><td>${x[3]}</td></tr>`).join('');
-    kpis('tsKp',[['head dimension',dh+(d%h?' (d not divisible!)':''),d%h?'bad':''],['attention params / layer',fS(att,1)],['FFN params / layer',fS(ffn,1)],['all layers',fS(L*blk,2)],['total parameters',fS(tot,2),'ok'],['attention score elements / layer',fS(B*h*S*S,1)]])}
-  ['tsD','tsH','tsKv','tsL','tsF','tsV','tsS','tsB','tsFt','tsTie'].forEach(id=>{$(id).addEventListener('input',r);$(id).addEventListener('change',r)});r()})();
-
-
-}catch(e){console.error("legacy widget: 5.3 transformer shape tracer",e)}
-try{
-/* ===== 6.6 data-parallel step + ZeRO ===== */
-(function(){if(!$('dpViz'))return;const G=[0.8,1.2,0.6,1.4],lr=.1;let s=0;const labels=['Replicas start identical','Each worker computes a gradient on its own batch','All-reduce: sum the gradients across workers','Average: divide by 4','Every worker applies the same update'];
-  function draw(){const avg=G.reduce((a,b)=>a+b,0)/4,w=s>=4?2-lr*avg:2;let h='<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">';
-    G.forEach((g,i)=>{h+=`<div class="card" style="text-align:center;${s===1?'border-color:var(--signal)':''}"><b style="font-size:.85rem">Worker ${i+1}</b><div style="font-family:var(--f-mono);font-size:.8rem;margin-top:6px">w = ${w.toFixed(2)}</div><div style="font-size:.74rem;color:var(--muted)">batch ${i*8+1}–${i*8+8}</div><div style="font-family:var(--f-mono);font-size:.8rem;margin-top:4px;color:var(--signal)">${s>=1?'∇ = '+g.toFixed(2):'∇ = ?'}</div>${s>=3?`<div style="font-family:var(--f-mono);font-size:.78rem;color:var(--accent)">avg = ${avg.toFixed(2)}</div>`:''}</div>`});
-    h+='</div>';if(s===2)h+=`<div class="out" style="margin-top:8px;text-align:center">ring all-reduce: ${G.map(g=>g.toFixed(2)).join(' + ')} = ${G.reduce((a,b)=>a+b,0).toFixed(2)} (every worker receives the sum)</div>`;if(s>=4)h+=`<div class="out" style="margin-top:8px;text-align:center">w ← 2.00 − ${lr} × ${avg.toFixed(2)} = ${w.toFixed(2)} on all four workers: the replicas are still identical</div>`;
-    $('dpViz').innerHTML=h;$('dpOut').textContent=`Stage ${s+1} of 5 · ${labels[s]}`}
-  $('dpNext').onclick=()=>{s=Math.min(4,s+1);draw()};$('dpReset').onclick=()=>{s=0;draw()};draw();
-  function z(){const N=val('zrN')*1e9,G2=+$('zrG').value,V=+$('zrV').value*1e9;setO('zrN',val('zrN')+'B');const st=[16*N,4*N+12*N/G2,2*N+14*N/G2,16*N/G2];
-    bars('zrBars',st.map((v,i)=>({l:['Stage 0 · plain data parallel','Stage 1 · shard optimiser state','Stage 2 · + shard gradients','Stage 3 / FSDP · + shard weights'][i],v,c:v>V?'b':v>V*.7?'s':'g',t:fB(v)+' per GPU'+(v>V?' · does not fit':'')})));
-    const ok=st.findIndex(v=>v<=V*.7);$('zrOut').textContent=ok<0?`Even stage 3 needs ${fB(st[3])} per GPU before activations: add GPUs, offload to CPU, or use LoRA/QLoRA (13.3).`:`Smallest stage leaving ≥ 30% headroom for activations: stage ${ok}.`}
-  bind(['zrN','zrG','zrV'],z)})();
-
-
-}catch(e){console.error("legacy widget: 6.6 data-parallel step + ZeRO",e)}
 try{
 /* ===== 8.8 pass@k vs pass^k ===== */
 (function(){if(!$('pkSvg'))return;function r(){const p=val('pkP')/100,k=val('pkK');setO('pkP',fN(p*100,1)+'%');setO('pkK',k);const X=n=>50+(n-1)/19*540,Y=v=>190-v*170;let a='',b='';for(let n=1;n<=20;n++){a+=(n>1?'L':'M')+X(n)+' '+Y(1-(1-p)**n);b+=(n>1?'L':'M')+X(n)+' '+Y(p**n)}

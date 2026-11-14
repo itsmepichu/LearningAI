@@ -1,0 +1,9 @@
+{
+  "json.schemas": [
+    { "fileMatch": ["/src/content/manifest.json"], "url": "./schemas/manifest.schema.json" },
+    { "fileMatch": ["/src/content/practice/*.json"], "url": "./schemas/practice.schema.json" },
+    { "fileMatch": ["/src/content/checks/c*.json"], "url": "./schemas/checks.schema.json" },
+    { "fileMatch": ["/src/content/glossary.json"], "url": "./schemas/glossary.schema.json" },
+    { "fileMatch": ["/src/content/projects.json"], "url": "./schemas/projects.schema.json" }
+  ]
+}

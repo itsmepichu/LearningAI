@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { Link, useLocation, useParams } from 'react-router'
+import { Link, Navigate, useLocation, useParams } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight, Check, Clock, FlaskConical, ListChecks, MousePointerClick } from 'lucide-react'
 import { chapterCheckCount, getChapter, minutes, partOf } from '../data/course'
-import { LabVariant, useChapterPractice } from '../components/Practice'
+import { hasWorkshop, workshopPath } from '../data/workshop'
+import { PartCheckpoint } from '../components/PartCheckpoint'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
 import { ProgressRing } from '../components/Icons'
@@ -22,13 +23,11 @@ export function ChapterPage() {
   const loc = useLocation()
   const intro = usePage(chapterId, '_intro', !!ch?.hasIntro)
   const outro = usePage(chapterId, '_outro', !!ch?.hasOutro)
-  const lab = usePage(chapterId, '_lab', !!ch?.hasLab)
   const studied = useProgress((s) => s.studied)
   const setMany = useProgress((s) => s.setMany)
-  const practice = useChapterPractice(chapterId)
   useDocumentTitle(ch ? `${ch.num} ${ch.title}` : 'Not found')
 
-  const ready = (!ch?.hasLab || lab !== null) && (!ch?.hasOutro || outro !== null)
+  const ready = !ch?.hasOutro || outro !== null
   useEffect(() => {
     if (!ready) return
     if (loc.hash) document.getElementById(loc.hash.slice(1))?.scrollIntoView({ block: 'start' })
@@ -36,6 +35,8 @@ export function ChapterPage() {
   }, [ready, loc.hash, chapterId])
 
   if (!ch) return <NotFound />
+  // The lab moved to the chapter's workshop. Old links to #lab and #lab-<chapter> still land on it.
+  if ((loc.hash === '#lab' || loc.hash === `#lab-${ch.id}`)) return <Navigate to={workshopPath(ch.id, 'lab')} replace />
   const part = partOf(ch)
   const ids = ch.topics.map((t) => t.id)
   const n = ids.filter((i) => studied[i]).length
@@ -64,7 +65,7 @@ export function ChapterPage() {
           </div>
           <span><Clock size={15} /> about {Math.round(mins / 5) * 5} min</span>
           {inter > 0 && <span><MousePointerClick size={15} /> {inter} interactive figures</span>}
-          {ch.hasLab && <a href="#lab" onClick={(e) => { e.preventDefault(); document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth' }) }}><FlaskConical size={15} /> Lab</a>}
+          {hasWorkshop(ch.id) && <Link to={workshopPath(ch.id)}><FlaskConical size={15} /> Workshop</Link>}
           {ch.kind === 'chapter' && <Link to={`/${ch.id}/check`}><ListChecks size={15} /> Chapter check</Link>}
           {firstOpen && (
             <Link className="btn primary" to={`/${ch.id}/${firstOpen.id}`}>
@@ -109,13 +110,9 @@ export function ChapterPage() {
 
       {outro && <HtmlContent html={outro} className="topic lai-topic c-outro" />}
 
-      {lab && (
-        <div id="lab" className="c-lab">
-          <HtmlContent html={lab} className="lai-lab" legacy={false} />
-          <LabVariant practice={practice} />
-        </div>
-      )}
+      {hasWorkshop(ch.id) && <WorkshopCard chapterId={ch.id} num={ch.num} lab={ch.hasLab} />}
       {ch.kind === 'chapter' && <ChapterCheckCard chapterId={ch.id} num={ch.num} />}
+      {ch.kind === 'chapter' && <PartCheckpoint chapterId={ch.id} />}
 
       {ids.length > 0 && (
         <div className="chdone2">
@@ -126,6 +123,23 @@ export function ChapterPage() {
         </div>
       )}
     </div>
+  )
+}
+
+function WorkshopCard({ chapterId, num, lab }: { chapterId: string; num: string; lab: boolean }) {
+  const done = useProgress((s) => !!s.workshopDone[chapterId])
+  return (
+    <Link to={workshopPath(chapterId)} className="checkcard workcard" id="workshop">
+      <span className="checkcard-ic"><FlaskConical size={26} /></span>
+      <span className="checkcard-b">
+        <span className="eyebrow-sm">{done ? 'Workshop done' : `Apply chapter ${num}`}</span>
+        <b>Chapter {num} workshop</b>
+        <small>
+          {lab ? 'The chapter lab, then a hands-on task for each topic' : 'A hands-on task for each topic'}, on the example project you choose: Harbor, Store, Bank or Travel.
+        </small>
+      </span>
+      <ArrowRight size={20} />
+    </Link>
   )
 }
 

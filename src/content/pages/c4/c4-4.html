@@ -20,10 +20,10 @@
 <g class="sm"><text x="460" y="40">Each dot = one text,</text><text x="460" y="58">projected from 384 dimensions</text><text x="460" y="76">to 2 for display.</text>
 <text x="460" y="116" class="acc">Billing cluster</text><text x="460" y="136" class="sig">Account access cluster</text><text x="460" y="156" class="simc">Delivery cluster</text><text x="460" y="176" class="bad">Unrelated outlier</text>
 <text x="460" y="216" class="xs mut">Distances in a 2-D projection are</text><text x="460" y="230" class="xs mut">approximate; similarity search uses</text><text x="460" y="244" class="xs mut">the full-dimensional vectors.</text></g>
-</svg></div><figcaption><b>Illustrative embedding space.</b> Texts with similar meaning land near each other regardless of wording ("bill" next to "invoice"). Retrieval, clustering, deduplication and routing all exploit this.</figcaption></figure>
+</svg></div><figcaption><b>Illustrative embedding space.</b> Texts with similar meaning land near each other regardless of wording ("bill" next to "invoice"). Retrieval, clustering, <a class="gl" href="#gl-deduplication">deduplication</a> and routing all exploit this.</figcaption></figure>
 <figure class="fig flow"><div class="stage">
 <div class="nodes"><div class="nd">Query<small>"reset my 2FA"</small></div><div class="nd">Positive passage<small>2FA reset guide</small></div><div class="nd">Negatives<small>other passages in batch</small></div><div class="nd">Encode all</div><div class="nd">Similarities</div><div class="nd">Contrastive loss<small>positive should win</small></div></div>
-<ol class="steps"><li data-n="0">Take a query from training pairs.</li><li data-n="1">Its matching passage is the positive.</li><li data-n="2">The other passages in the same batch serve as negatives ("in-batch negatives"); hard negatives (similar but wrong) help most.</li><li data-n="3">The same encoder turns each text into a vector.</li><li data-n="4">Compute cosine similarity of the query with every passage.</li><li data-n="5">Treat it as classification: softmax over similarities, cross-entropy with the positive as the correct class (InfoNCE loss). Training moves vectors so positives score highest.</li></ol></div>
+<ol class="steps"><li data-n="0">Take a query from training pairs.</li><li data-n="1">Its matching passage is the positive.</li><li data-n="2">The other passages in the same batch serve as negatives ("in-batch negatives"); hard negatives (similar but wrong) help most.</li><li data-n="3">The same encoder turns each text into a vector.</li><li data-n="4">Compute cosine similarity of the query with every passage.</li><li data-n="5">Treat it as classification: <a class="gl" href="#gl-softmax">softmax</a> over similarities, cross-entropy with the positive as the correct class (InfoNCE loss). Training moves vectors so positives score highest.</li></ol></div>
 <figcaption><b>How embedding models are trained.</b> You will reuse this when adapting embeddings to your domain (13.5).</figcaption></figure>
 </section>
 
@@ -40,6 +40,7 @@
 <figure class="fig live" id="snip-word-vectors"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"word-vectors"}'></div></div>
 <figcaption><b>Word vectors from your messages, in real Python.</b> A few hundred synthetic messages give rough neighbours; real embedding models learn from billions of sentences.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: embed and cluster <span class="tag cpu">Laptop · CPU</span></h5>
+<p>Setup, once: <code>uv pip install sentence-transformers</code>. It downloads a small embedding model (tens of MB) the first time you run it.</p>
 <pre><code>from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 texts = ["invoice overdue", "my bill is wrong", "refund please", "can't log in", "reset password",

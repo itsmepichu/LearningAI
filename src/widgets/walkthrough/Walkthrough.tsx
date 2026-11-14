@@ -114,9 +114,11 @@ function Walk({ def, seed, project }: { def: Story<unknown>; seed: unknown; proj
   const step = steps[Math.min(active, steps.length - 1)]
   return (
     <>
-      <DataSource project={project} files={def.files(seed)}>
-        {def.title}, told with {project.company}’s data.
-      </DataSource>
+      {def.files(seed).length > 0 && (
+        <DataSource project={project} files={def.files(seed)}>
+          {def.title}, told with {project.company}’s data.
+        </DataSource>
+      )}
       <div className="wt">
         <div className="wt-fig">
           <Diagram story={def} step={step} />

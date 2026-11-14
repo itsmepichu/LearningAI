@@ -8,7 +8,7 @@
 <h3 data-n="2">Mechanism</h3>
 <p>Real corpora are messy. A PDF is a page-description format: text may be stored as positioned glyphs with no reading order, columns, headers and footers mixed into the text stream, tables as lines and loose numbers, and scanned pages as images with no text at all.</p>
 <ul>
-<li><b>Born-digital PDFs</b>: extract text with layout analysis (reading order, columns, headings) using tools like PyMuPDF, pdfplumber or Docling.</li>
+<li><b>Born-digital PDFs</b>: extract text with <a class="gl" href="#gl-document-ai">layout analysis</a> (reading order, columns, headings) using tools like PyMuPDF, pdfplumber or Docling.</li>
 <li><b>Scanned documents</b>: need <dfn><a class="gl" href="#gl-ocr">OCR</a></dfn> (optical character recognition: image → text). Classic engines (Tesseract) are CPU-friendly; deep-learning OCR and vision-language models are more accurate on poor scans and handwriting but GPU-hungry. Record OCR confidence; low-confidence pages need review or a better model.</li>
 <li><b>Tables</b>: flattening a table to a text line loses which number belongs to which column. Extract tables as structured data (rows × columns), then store them as Markdown/HTML in a chunk, or as one row-as-sentence per chunk ("Plan: Pro; Monthly price: €49; Seats: 10"), and keep the original for display.</li>
 <li><b>Images and diagrams</b>: generate captions/descriptions with a vision-language model, OCR any text in the image, and index those; link back to the image. Multimodal embeddings can index images directly.</li>

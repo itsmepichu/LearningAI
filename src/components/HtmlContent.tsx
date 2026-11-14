@@ -7,6 +7,8 @@ import { useTheme } from '../store/theme'
 import { widgets } from '../widgets/registry'
 import { termId } from '../data/glossary'
 import { GlossaryTip } from './GlossaryTip'
+import { linkGlossary } from './autoGlossary'
+import { loadGlossary } from '../data/glossary'
 import { renderMath } from './math'
 
 interface Slot { el: HTMLElement; name: string; props: Record<string, unknown>; key: string }
@@ -48,10 +50,13 @@ export function HtmlContent({
   className,
   legacy = true,
   slots,
+  autoGlossary = false,
 }: {
   html: string
   className?: string
   legacy?: boolean
+  /** Mark the first mention of each glossary term the author did not link, so its definition shows on hover (topic bodies). */
+  autoGlossary?: boolean
   /** React content for `<div data-slot="name">` placeholders in the fragment. */
   slots?: Record<string, ReactNode>
 }) {
@@ -89,8 +94,13 @@ export function HtmlContent({
     setWidgetSlots(found)
     setSlotEls([...root.querySelectorAll<HTMLElement>('[data-slot]')].map((el) => ({ name: el.dataset.slot!, el })))
     let cancelled = false
+    if (autoGlossary) {
+      loadGlossary().then((g) => {
+        if (!cancelled) linkGlossary(root, g)
+      })
+    }
     if (legacy) {
-      mountLegacyWidgets(root).then((h) => {
+      mountLegacyWidgets(root, () => cancelled).then((h) => {
         if (cancelled) h.dispose()
         else handle.current = h
       })
@@ -100,7 +110,7 @@ export function HtmlContent({
       handle.current?.dispose()
       handle.current = null
     }
-  }, [html, legacy])
+  }, [html, legacy, autoGlossary])
 
   useEffect(() => {
     if (themeVersion) handle.current?.rerender()

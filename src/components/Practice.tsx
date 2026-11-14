@@ -1,24 +1,30 @@
-import { useEffect, useId, useState } from 'react'
-import { useSearchParams } from 'react-router'
-import { ArrowRightLeft, Database, Download, FlaskConical, Lightbulb, TriangleAlert } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useSearchParams } from 'react-router'
+import { ArrowRight, Database, Download, FlaskConical, Lightbulb, TriangleAlert } from 'lucide-react'
 import { fill, getProject, isProjectId, loadPractice, projects, datasetUrl, type ChapterPractice, type ProjectId, type TopicPractice } from '../data/projects'
+import { hasWorkshop, lessonTopicAt, primaryProject, workshopPath } from '../data/workshop'
 import { useProgress } from '../store/progress'
-import { onRovingKeyDown } from './common'
 import { ProjectIcon } from './ProjectPicker'
 
-/** The project to show on this page: a `?project=` override for this visit, else the saved default. */
+/**
+ * The project to show on this page. A lesson (a topic page) uses the topic's primary project; every other page uses the reader's
+ * saved workshop project. A `?project=` in the address overrides either for this visit: that is how a workshop task opens a figure.
+ */
 export function useActiveProject() {
   const saved = useProgress((s) => s.project)
+  const { pathname } = useLocation()
+  const lesson = lessonTopicAt(pathname)
+  const base: ProjectId = lesson ? primaryProject(lesson.id) : saved
   const [params, setParams] = useSearchParams()
   const q = params.get('project')
-  const override = isProjectId(q) && q !== saved ? q : undefined
+  const override = isProjectId(q) && q !== base ? q : undefined
   const setOverride = (id: ProjectId | undefined) => {
     const next = new URLSearchParams(params)
-    if (id && id !== saved) next.set('project', id)
+    if (id && id !== base) next.set('project', id)
     else next.delete('project')
     setParams(next, { replace: true, preventScrollReset: true })
   }
-  return { project: (override ?? saved) as ProjectId, saved, override, setOverride }
+  return { project: (override ?? base) as ProjectId, saved, base, lesson: !!lesson, override, setOverride }
 }
 
 export function useChapterPractice(chapterId: string | undefined) {
@@ -46,76 +52,60 @@ export function ProjectFramingNote() {
 
 const Html = ({ html, className }: { html: string; className?: string }) => <div className={className} dangerouslySetInnerHTML={{ __html: html }} />
 
-/** "In practice" block: one tab per example project, with the active project's note, failure, try-it steps and dataset. */
-export function PracticeBlock({ practice }: { practice: TopicPractice | undefined }) {
-  const { project, saved, setOverride } = useActiveProject()
-  const setProject = useProgress((s) => s.setProject)
-  const p = getProject(project)!
-  const note = practice?.[project]
-  const baseId = useId()
-  const tabId = (id: ProjectId) => `${baseId}-tab-${id}`
-  const panelId = `${baseId}-panel`
-
+/** The topic page's one card: the primary project's In practice, Failure to avoid and Try it, and the way to the workshop. */
+export function PracticeBlock({ practice, chapterId, topicId }: { practice: TopicPractice | undefined; chapterId: string; topicId: string }) {
+  const { base } = useActiveProject()
+  // The primary project always has a note; if a topic has none for it, show the first project that does.
+  const shown: ProjectId | undefined = practice?.[base] ? base : projects.find((x) => practice?.[x.id])?.id
+  if (!shown) return null
+  const p = getProject(shown)!
+  const note = practice![shown]!
   return (
     <section className="pb" aria-label="In practice" style={{ ['--pc' as string]: `var(${p.accent})` }}>
-      <div className="pb-tabs" role="tablist" aria-label="Example project" onKeyDown={onRovingKeyDown}>
-        {projects.map((x) => {
-          const has = !!practice?.[x.id]
-          return (
-            <button
-              key={x.id}
-              type="button"
-              role="tab"
-              id={tabId(x.id)}
-              aria-selected={x.id === project}
-              aria-controls={x.id === project ? panelId : undefined}
-              tabIndex={x.id === project ? 0 : -1}
-              className={'pb-tab' + (x.id === project ? ' on' : '') + (has ? '' : ' empty')}
-              style={{ ['--pc' as string]: `var(${x.accent})` }}
-              onClick={() => setOverride(x.id)}
-              title={has ? `${x.label} · ${x.company}` : `${x.label}: not written yet for this topic`}
-            >
-              <ProjectIcon id={x.id} size={14} />
-              <span>{x.label}</span>
-              {practice?.[x.id]?.fit === 'best' && <><i className="pb-best" title="Best fit for this topic" aria-hidden="true">★</i><span className="sr-only">best fit for this topic</span></>}
-            </button>
-          )
-        })}
+      <header className="pb-head">
+        <span className="pp-ico"><ProjectIcon id={shown} /></span>
+        <b>Example project: {p.label}</b>
+        <small>{p.company} · {p.kind}</small>
+      </header>
+      <div className="pb-body">
+        <div className="pb-row ip2">
+          <b><Lightbulb size={15} /> In practice</b>
+          <Html html={fill(note.practice, p)} />
+        </div>
+        <div className="pb-row fa3">
+          <b><TriangleAlert size={15} /> Failure to avoid</b>
+          <Html html={fill(note.failure, p)} />
+        </div>
+        {note.tryIt && (
+          <div className="pb-row try">
+            <b><FlaskConical size={15} /> Try it</b>
+            <Html html={fill(note.tryIt, p)} />
+          </div>
+        )}
+        {hasWorkshop(chapterId) && (
+          <p className="pb-more">
+            <Link className="btn sm" to={workshopPath(chapterId, topicId)}>
+              Do the chapter workshop <ArrowRight size={14} />
+            </Link>
+            <span className="muted small">Run this on any of the four example projects.</span>
+          </p>
+        )}
       </div>
-      {project !== saved && (
-        <div className="pb-peek">
-          You are viewing <b>{p.label}</b> for this topic only.
-          <button type="button" className="linkish" onClick={() => { setProject(project); setOverride(undefined) }}>Make {p.label} my default</button>
-          <button type="button" className="linkish" onClick={() => setOverride(undefined)}>Back to {getProject(saved)!.label}</button>
-        </div>
-      )}
-      {note ? (
-        <div className="pb-body" role="tabpanel" id={panelId} aria-labelledby={tabId(project)}>
-          <div className="pb-row ip2">
-            <b><Lightbulb size={15} /> In practice · {p.label} <small>({p.company})</small></b>
-            <Html html={fill(note.practice, p)} />
-          </div>
-          <div className="pb-row fa3">
-            <b><TriangleAlert size={15} /> Failure to avoid</b>
-            <Html html={fill(note.failure, p)} />
-          </div>
-          {note.tryIt && (
-            <div className="pb-row try">
-              <b><FlaskConical size={15} /> Try it with {p.company} data</b>
-              <Html html={fill(note.tryIt, p)} />
-            </div>
-          )}
-          <DatasetLinks projectId={project} />
-        </div>
-      ) : (
-        <div className="pb-body pb-empty" role="tabpanel" id={panelId} aria-labelledby={tabId(project)}>
-          The {p.label} version of this topic's practical note has not been written yet.
-          {practice?.harbor && project !== 'harbor' && (
-            <button type="button" className="linkish" onClick={() => setOverride('harbor')}>Read the Harbor version</button>
-          )}
-        </div>
-      )}
     </section>
+  )
+}
+
+/** One line on a topic page opened with `?project=`: the figures use that project's data. */
+export function ExampleDataBanner({ chapterId, topicId }: { chapterId: string; topicId: string }) {
+  const { override, setOverride } = useActiveProject()
+  if (!override) return null
+  const p = getProject(override)!
+  return (
+    <p className="pb-peek" role="note">
+      Example data: <b>{p.label}</b> ({p.company}).
+      {hasWorkshop(chapterId) && <Link to={workshopPath(chapterId, topicId)}>Back to the workshop</Link>}
+      <button type="button" className="linkish" onClick={() => setOverride(undefined)}>Use this topic's own example</button>
+    </p>
   )
 }
 
@@ -137,89 +127,5 @@ export function DatasetLinks({ projectId, full = false }: { projectId: ProjectId
         </ul>
       )}
     </div>
-  )
-}
-
-/** Small note at the end of a topic pointing to projects that suit it better (or also). */
-export function ProjectFitNote({ practice }: { practice: TopicPractice | undefined }) {
-  const { project, setOverride } = useActiveProject()
-  const setProject = useProgress((s) => s.setProject)
-  if (!practice) return null
-  const rated = projects.filter((p) => practice[p.id]?.fit)
-  if (!rated.length) return null
-  const mine = practice[project]?.fit
-  const better = rated.filter((p) => p.id !== project && (practice[p.id]!.fit === 'best' || (mine === 'limited' && practice[p.id]!.fit === 'good')))
-  const others = projects.filter((p) => p.id !== project && practice[p.id])
-  if (mine === 'limited' && better.length) {
-    const top = better.sort((a, b) => (practice[a.id]!.fit === 'best' ? -1 : 0) - (practice[b.id]!.fit === 'best' ? -1 : 0))
-    const first = top[0]
-    return (
-      <aside className="fitnote strong" aria-label="Other example projects">
-        <ArrowRightLeft size={16} />
-        <div>
-          <p>
-            <b>{getProject(project)!.label} has little to experiment with in this topic.</b>{' '}
-            {top.map((p, i) => (
-              <span key={p.id}>
-                {i > 0 && (i === top.length - 1 ? ' and ' : ', ')}
-                <b>{p.label}</b>
-                {practice[p.id]!.fitNote ? ` (${fill(practice[p.id]!.fitNote, p)})` : ''}
-              </span>
-            ))}{' '}
-            {top.length > 1 ? 'give' : 'gives'} you more to try.
-          </p>
-          <div className="fitnote-btns">
-            <button type="button" className="btn sm primary" onClick={() => { setOverride(first.id); document.querySelector('.pb')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}>
-              Try this topic with {first.label}
-            </button>
-            <button type="button" className="btn sm" onClick={() => { setProject(first.id); setOverride(undefined) }}>
-              Make {first.label} my default
-            </button>
-          </div>
-        </div>
-      </aside>
-    )
-  }
-  if (!others.length) return null
-  return (
-    <aside className="fitnote" aria-label="Other example projects">
-      <ArrowRightLeft size={15} />
-      <p>
-        Also explore this topic with{' '}
-        {others.map((p, i) => (
-          <span key={p.id}>
-            {i > 0 && ' · '}
-            <button type="button" className="linkish" onClick={() => { setOverride(p.id); document.querySelector('.pb')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}>
-              {p.label}
-              {practice[p.id]?.fit === 'best' ? ' ★' : ''}
-            </button>
-          </span>
-        ))}
-      </p>
-    </aside>
-  )
-}
-
-/** Project-specific scenario for a chapter lab. */
-export function LabVariant({ practice }: { practice: ChapterPractice | null }) {
-  const { project, setOverride } = useActiveProject()
-  const lab = practice?._lab
-  if (!lab) return null
-  const p = getProject(project)!
-  const v = lab[project]
-  return (
-    <section className="labvar" style={{ ['--pc' as string]: `var(${p.accent})` }} aria-label="Lab with your example project">
-      <header>
-        <span className="pp-ico"><ProjectIcon id={project} /></span>
-        <b>Do this lab with {p.label} <small>({p.company})</small></b>
-        <span className="labvar-tabs">
-          {projects.filter((x) => lab[x.id]).map((x) => (
-            <button key={x.id} type="button" className={'lchip' + (x.id === project ? ' on' : '')} onClick={() => setOverride(x.id)}>{x.label}</button>
-          ))}
-        </span>
-      </header>
-      {v ? <Html className="labvar-b" html={fill(v.scenario, p)} /> : <p className="muted">No {p.label} scenario for this lab yet.</p>}
-      <DatasetLinks projectId={project} />
-    </section>
   )
 }
