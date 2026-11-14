@@ -12,6 +12,7 @@
     ],
     "answer": 0,
     "why": "An image is cut into patches and each patch (or merged group) becomes a token, so one image is hundreds or thousands of tokens.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -31,6 +32,7 @@
     ],
     "answer": 2,
     "why": "74 × 55 = 4,070 patches; merging four into one gives about 1,018.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is the patch count before merging.",
@@ -88,6 +90,7 @@
     ],
     "answer": 2,
     "why": "Cropping removes irrelevant pixels, so far fewer tokens and less distraction.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Works sometimes, but adds effort and typos for users.",
@@ -107,6 +110,7 @@
     ],
     "answer": 2,
     "why": "Merging reduces the sequence length the language model must read.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Merging loses detail; it does not sharpen.",
@@ -126,6 +130,7 @@
     ],
     "answer": 0,
     "why": "A 12-megapixel photo would produce tens of thousands of patches; a maximum side keeps it bounded.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -307,6 +312,7 @@
     ],
     "answer": 1,
     "why": "It is the adapter between the vision encoder’s vectors and the language model’s input size.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Generation of images is a different model.",
@@ -326,6 +332,7 @@
     ],
     "answer": 0,
     "why": "(448 ÷ 14)² = 32 × 32 = 1,024 patches; ÷ 4 = 256.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -364,6 +371,7 @@
     ],
     "answer": 3,
     "why": "Exact counts of many similar objects are a known weakness.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Overall trends are usually read correctly.",
@@ -383,6 +391,7 @@
     ],
     "answer": 2,
     "why": "A model can swap digits; money movement needs a deterministic check (7.7).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Confidence in text is not a guarantee.",
@@ -478,6 +487,7 @@
     ],
     "answer": 2,
     "why": "Image tokens are part of the sequence, so each has keys and values in the cache.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Batching still works with images.",
@@ -605,6 +615,7 @@
     ],
     "answer": 2,
     "why": "The text is already there; extraction is free and exact, though reading order may need fixing.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Most expensive option for no gain.",
@@ -624,6 +635,7 @@
     ],
     "answer": 2,
     "why": "OCR finds text lines; the structure that pairs a value with its header is lost.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Digits are usually read fine.",
@@ -643,6 +655,7 @@
     ],
     "answer": 1,
     "why": "85,000 × 0.0015 + 15,000 × 0.004 = 127.50 + 60.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That is all-OCR.",
@@ -662,6 +675,7 @@
     ],
     "answer": 2,
     "why": "A deterministic check catches inconsistent totals without another model call.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Higher temperature adds randomness.",
@@ -776,6 +790,7 @@
     ],
     "answer": 2,
     "why": "These carry meaning in layout or marks that text extraction loses.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The text layer is already perfect.",
@@ -902,6 +917,7 @@
     ],
     "answer": 0,
     "why": "WER = (S + D + I) ÷ words in the reference.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -921,6 +937,7 @@
     ],
     "answer": 1,
     "why": "One substitution and one deletion over 5 words: 2 ÷ 5.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Divides one error by four words.",
@@ -940,6 +957,7 @@
     ],
     "answer": 2,
     "why": "The steps run in sequence: 300 + 250 + 450 + 200.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Misses one step.",
@@ -959,6 +977,7 @@
     ],
     "answer": 3,
     "why": "It finds the end of a turn so the system knows when to answer.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Language detection is separate.",
@@ -1016,6 +1035,7 @@
     ],
     "answer": 2,
     "why": "Cascades produce transcripts you can evaluate and audit.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Speech-to-speech is often faster.",
@@ -1201,6 +1221,7 @@
     ],
     "answer": 3,
     "why": "Images and text are embedded so similar meanings are close.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is OCR or captioning.",
@@ -1220,6 +1241,7 @@
     ],
     "answer": 0,
     "why": "1 ÷ 62 + 1 ÷ 65 ≈ 0.0161 + 0.0154.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "",
@@ -1239,6 +1261,7 @@
     ],
     "answer": 3,
     "why": "Appearance lives in the photos; image retrieval finds it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Keywords are absent from the text.",
@@ -1258,6 +1281,7 @@
     ],
     "answer": 2,
     "why": "Cosine scores and BM25 scores are not comparable; ranks are.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Scores are stored routinely.",
@@ -1296,6 +1320,7 @@
     ],
     "answer": 0,
     "why": "Embedding the page image keeps layout and charts.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1496,6 +1521,7 @@
     ],
     "answer": 0,
     "why": "The model reports content the image does not contain.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1515,6 +1541,7 @@
     ],
     "answer": 3,
     "why": "30 ÷ 200 = 15%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "Uses 100 as the base.",
@@ -1534,6 +1561,7 @@
     ],
     "answer": 3,
     "why": "Asking about absent objects reveals invention that captions hide.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "They test images specifically.",
@@ -1572,6 +1600,7 @@
     ],
     "answer": 2,
     "why": "Slicing by input quality shows where failures concentrate.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Temperature is unrelated.",
@@ -1591,6 +1620,7 @@
     ],
     "answer": 2,
     "why": "Text in images is content, the same as retrieved documents (16.2).",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Dangerous: an injection.",
