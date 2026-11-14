@@ -107,3 +107,34 @@ A reader who knows basic Python can start at page one, knows what is expected, n
 - Early terms are linked or reworded, and no formula symbol remains outside code.
 - Every chapter and capstone topic has outcomes.
 - Chapter 1 ends with something the reader ran; Part I needs no local install.
+
+## Results
+
+Commits: `ca9b606` (2a: 2.1, 2.2, 2.3 rendering, 2.7, 2.9), `3d8400c` (2.6), `39e3662` (2.4), `8043f95` (2.5), `82ee79d` (2.8), `bd41592` (2.3 content). Nothing was built, typechecked or opened in a browser (D9); the generator and scripts were run with Node and Python only.
+
+| Measure | Before | After |
+|---|---|---|
+| Start page | none | `/start` (required, not a topic): audience, prerequisites, ten Python self-check questions, how a topic works, study time per part computed from `minutes()`; linked from the sidebar, the home page and the guide |
+| Setup | one install block before chapter 1 | a tools table in the guide; install commands moved to topics 2.1, 2.5, 3.2, 4.4, 4.6, 5.5, 7.4 and 17.2 |
+| Topics with outcomes | 0 | 166 of 166, 2–3 each, shown at the top of the topic and as a recap |
+| Topics with a `short` title | 0 | 107 (every title over nine words or with three or more concepts; none over six words) |
+| Early glossary uses | 196 found by the throwaway search (208 at baseline by the plan's count) | 124 linked in 68 topics; 74 left (see below) |
+| Glossary entries | 316 | 346 (TF-IDF, logistic regression and BERT, plus 27 more taught in chapters 2–6) |
+| Formula symbols outside code | 37 in 9 topics | 0 |
+| Chapter 1 lab | on paper, "tasks from your own work" | step 1 runs the Appendix A tiny language model; the project scenario is the default |
+
+Early uses left unlinked (the throwaway search is not in the repository):
+- **Everyday words that matched an alias:** "provider" (28, an API provider, not the AI Act role), "step" and "batch" for epoch (10), "Zero" for ZeRO (6), "workflow" (4), "trace" (4), "queue" (2), "vector" in "support vector machines", "precision" for numeric precision, "agent" in reinforcement learning, "chargeback", "streaming" for dataset streaming.
+- **Source titles:** BERT in "Sentence-BERT" and a tokenizer widget name, Scaling Laws (2), autograd (2), ReAct, Red teaming, Semantic conventions, right to erasure.
+- **Other meaning:** "canary" for planted test strings (3), "transformer" in "pre-transformer", risk tier in a figure label.
+
+Glossary gaps from chapters 1–6 not added (the cap was 30): bias, variance, warm-up, one-hot, sparse, alignment, policy (reinforcement learning), the training loss, embedding table, and a few more everyday-technical words.
+
+Part I labs and topics that still need a local install (Part I is not browser-only): 2.1 (NumPy), 2.5 and the chapter 2 lab (pandas, matplotlib, JupyterLab), 3.2 (scikit-learn), 4.4 (sentence-transformers), 4.6 (PyTorch), 5.5 (transformers) and 6.7 (nanoGPT: torch and others). Each has its install line at the first use. Making Part I fully browser-only would mean moving these laptop labs to the browser snippets; not done, as the plan only asks to list them.
+
+Other changes: `generate.mjs` indexes the ids on `/start`; the search index now shows a topic's `short` title and keeps the full title in the searchable text; the manifest schema, the `new:topic` scaffold and `src/content/CLAUDE.md` carry the new fields and the three rules (outcomes, early terms, no formula symbols).
+
+Known limits:
+- `/start` says "Download the data file from the card"; phase 3 replaces the topic cards, so its data section needs updating then (it is on the phase 3 list).
+- Outcomes were written from each topic's opening, headings and its chapter-check questions, not a line-by-line read of every topic; read a few against the text.
+- The 10 self-check answers on `/start` are not saved or scored.
