@@ -26,6 +26,7 @@ Where a revamp decision (D1 to D9 below) differs from this scope, the decision w
 
 - **The revamp** (`project_revamp/`, six phases, run one per session): audience and title, one source of truth for generated data, a beginner on-ramp, one project in each lesson with a workshop page per chapter, quick checks and an Evidence page, then depth and reader feedback.
 - **Paper walkthroughs:** four first (phase 5 of the revamp, D6), more only after reader feedback.
+- **Phase 0 leftovers (owner):** delete the six stale branches on `origin` and the folder `.claude/worktrees/happy-ardinghelli-1a1294` (commands in `project_revamp/phase-0-decide-and-tidy.md`, Results).
 - **Legacy widgets:** whether to port the v3 blocks left in `src/legacy/widgets.js` (see Open decisions).
 - **Colab guides** for a vision-language model (19.2) and logit distillation (20.3): a possible follow-up; both topics run on a CPU today.
 

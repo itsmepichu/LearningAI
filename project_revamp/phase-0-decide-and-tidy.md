@@ -127,3 +127,27 @@ The rules in this file are conventions: follow them by reading and writing caref
 - The root holds three short documents: `README.md`, `CLAUDE.md`, `ROADMAP.md`.
 - The D1 sentence appears in four places and the old course name appears nowhere.
 - The repository contains no test, no test helper, no CI workflow and no checker rule.
+
+## Results
+
+Commits: `234d20c` (0.1–0.4), `2a88318` (0.5), `1d64057` (0.6), `b479c92` (0.7), `aaf869b` (0.8), `88de249` (0.9). Nothing was built, typechecked or run, as D9 requires.
+
+| Measure | Before | After |
+|---|---|---|
+| Test files, helpers, `tests/`, CI, Colab check scripts | 51 + 2 + 3 files + 1 workflow + 2 scripts | none (60 files deleted in all) |
+| `package.json` scripts | `typecheck`, `check:content`, `test:unit`, `test:e2e` | one `test` (`tsc --noEmit && npm run build`); `playwright` and `@axe-core/playwright` removed from `package.json` and the lock file |
+| `scripts/content-summary.mjs` | 200 lines, about 40 rules, exits non-zero | 30 lines: writes `checks/summary.json` only (counts unchanged: 1,794 and 1,312) |
+| Root `CLAUDE.md` | 133 lines | 25 lines; `src/content/CLAUDE.md` (72) and `src/widgets/CLAUDE.md` (41) hold the rest word for word |
+| `ROADMAP.md` | 500 lines | 60 lines; the rest is in `docs/archive/roadmap-phases-1-7.md` (460 lines, verified no line lost except one `---`) |
+| Stale git items | worktree, 8 branch names, tracked `.pyc` | worktree metadata pruned, `.pyc` untracked, local `develop` and local `claude/happy-ardinghelli-1a1294` deleted |
+
+Other changes: `Home.tsx` now derives the chapter count and the part count from the manifest and lists all five evidence labels; the course map and the hero use the D1 sentence; "this manual" became "this course" in 11 files (the Appendix A dataset label is now "The course's own text"); `.label-grid` wraps to fit five labels; the snippet field `check` is optional.
+
+Deferred (needs your machine):
+- The six stale branches on `origin` are not deleted: this environment has no SSH access to GitHub. Run: `git push origin --delete claude/happy-ardinghelli-1a1294 phase-1-react-app phase-2-projects-and-checks phase-3-rollout plan-example-projects-and-checks ui-improvements-plan`
+- The folder `.claude/worktrees/happy-ardinghelli-1a1294` is half removed (git no longer lists it; the mounted drive is too slow to finish deleting `node_modules`). It is ignored by git. Delete it in Explorer.
+- Nothing was pushed. `development` is ahead of `origin/development`.
+
+Notes for later phases:
+- The working tree on this machine uses CRLF while the repository stores LF (`core.autocrlf` is on for you). Files edited here are saved with LF; git treats both the same.
+- The how.html figure caption still says "Four bands"; it was outside this phase's scope.
