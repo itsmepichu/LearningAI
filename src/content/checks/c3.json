@@ -12,6 +12,7 @@
     ],
     "answer": 2,
     "why": "Accuracy rewards the majority class; recall on the rare class reveals the failure.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Predicting the majority class for every ticket is right 98% of the time, not 2%.",
@@ -50,6 +51,7 @@
     ],
     "answer": 1,
     "why": "Disagreement shows the definition is unclear; fix it first or the labels will be noisy.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "More labels under an unclear guideline multiply the same disagreement.",
@@ -73,6 +75,7 @@
      2
     ],
     "why": "Weights, resampling and threshold tuning all help, measured with precision and recall.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -92,6 +95,7 @@
     ],
     "answer": 0,
     "why": "Split first, then resample only the training split.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -149,6 +153,7 @@
     ],
     "answer": 2,
     "why": "98 ÷ 2 = 49.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That would be 100 ÷ 2.",
@@ -313,6 +318,7 @@
     ],
     "answer": 1,
     "why": "Month-total refunds include future information that is not available on day 3.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Plan type is known on day 3, so it is a legitimate feature.",
@@ -332,6 +338,7 @@
     ],
     "answer": 1,
     "why": "The test set is held back and used once at the end.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Weights are fitted on the training set.",
@@ -351,6 +358,7 @@
     ],
     "answer": 1,
     "why": "Generalisation, performing well on new data, is what matters.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is underfitting.",
@@ -389,6 +397,7 @@
     ],
     "answer": 1,
     "why": "For churned customers the feature was large only because they had already left: future information leaked in.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The model's inputs were wrong offline; a threshold cannot fix leakage.",
@@ -408,6 +417,7 @@
     ],
     "answer": 3,
     "why": "A random split leaks the future into training.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "That trains on the future and tests on the past.",
@@ -609,6 +619,7 @@
     ],
     "answer": 1,
     "why": "With rare positives, ROC can look good while precision is poor; PR curves expose that.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "With balanced classes ROC is informative and PR adds little.",
@@ -628,6 +639,7 @@
     ],
     "answer": 3,
     "why": "Precision = TP/(TP + FP) = 40/50 = 80%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That mixes the counts.",
@@ -647,6 +659,7 @@
     ],
     "answer": 3,
     "why": "Recall = TP/(TP + FN) = 40/60 ≈ 67%.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "80% is precision: 40 / (40 + 10).",
@@ -723,6 +736,7 @@
     ],
     "answer": 1,
     "why": "Misses are 80 times more expensive than false alarms, so catching more fraud is worth more alerts.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "0.5 ignores the costs.",
@@ -780,6 +794,7 @@
     ],
     "answer": 0,
     "why": "The product requirement is a precision floor; F1 can pick a threshold that breaks it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -941,6 +956,7 @@
     ],
     "answer": 2,
     "why": "Every position in the text provides its own target, so no annotation is needed.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "No one labels tokens; the next token is the label.",
@@ -998,6 +1014,7 @@
     ],
     "answer": 0,
     "why": "The system takes an action (a layout), observes a reward (clicks) and shifts towards better actions.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1017,6 +1034,7 @@
     ],
     "answer": 2,
     "why": "Past orders with returned or not-returned outcomes are labelled examples.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "It is a standard ML problem.",
@@ -1055,6 +1073,7 @@
     ],
     "answer": 3,
     "why": "The paradigm is defined by what the learner is told, not by the model type.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Every paradigm runs in the same languages.",
@@ -1200,6 +1219,7 @@
     ],
     "answer": 2,
     "why": "Linear regression fits y = w·x + b by minimising squared error.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is classification.",
@@ -1257,6 +1277,7 @@
     ],
     "answer": 1,
     "why": "It stops when assignments stop changing.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "That is gradient descent; k-means needs no gradients.",
@@ -1276,6 +1297,7 @@
     ],
     "answer": 1,
     "why": "Forests average many trees on random subsets; boosting stacks trees on residual errors.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Boosting adds many trees, usually shallow.",
@@ -1314,6 +1336,7 @@
     ],
     "answer": 3,
     "why": "Always predicting “general” already scores 88%, so the model adds 3 points, and rare-class recall may still be poor.",
+    "tier": "core",
     "kind": "calculation",
     "distractors": [
      "That ignores the baseline.",
@@ -1333,6 +1356,7 @@
     ],
     "answer": 0,
     "why": "Report the baseline next to every result; if the gain is tiny, the complexity may not be worth it.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "",
@@ -1498,6 +1522,7 @@
     ],
     "answer": 0,
     "why": "The biggest bucket, weighted by impact, tells you what to fix next.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1536,6 +1561,7 @@
     ],
     "answer": 3,
     "why": "Touch the test set once; tune on validation.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "Training scores reward memorising.",
@@ -1574,6 +1600,7 @@
     ],
     "answer": 0,
     "why": "The input distribution moves, so the model sees regions it rarely trained on.",
+    "tier": "core",
     "kind": "concept",
     "distractors": [
      "",
@@ -1593,6 +1620,7 @@
     ],
     "answer": 2,
     "why": "The class balance changed; the input-label relationship did not.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "The tactics, and so the input–label link, are unchanged.",
@@ -1612,6 +1640,7 @@
     ],
     "answer": 3,
     "why": "The relationship between inputs and the label has changed.",
+    "tier": "core",
     "kind": "scenario",
     "distractors": [
      "Overfitting is about training, not the world changing.",
