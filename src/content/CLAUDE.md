@@ -77,7 +77,7 @@ These rules cover the course content: topics, example projects, notes, glossary,
 - The Evidence page (`/evidence`) lists each chapter lab's "Keep as evidence" and pass condition (the `.ev` block in `_lab.html`) and the capstone milestone table. `npm run generate` extracts them into `src/content/generated/evidence.json`, so keep those blocks and the table's row format (`<b>N · Title</b>`) intact. Milestone 0 (Part I) is written in `src/data/evidence.ts`. Part checkpoints (last chapter of each part) link the part review, the milestones and Evidence.
 - Explain why the right answer is right. Use distractors that are real misconceptions, not filler, and explain each one in `distractors` (aligned with `options`, `""` for right answers). Every question needs them.
 - Do not let length give the answer away: write wrong options as specific and as long as the right one. Do not make a right answer 1.4 times the wrong options' average length or more.
-- Quota for a new section (D4 in `project_revamp/`; a convention, nothing enforces it; sections already published are not trimmed):
+- Quota for a new section (D4 in `docs/archive/project-revamp/`; a convention, nothing enforces it; sections already published are not trimmed):
   - At least 6 `mcq`, of which 3–5 are core (`"tier": "core"`). The core set covers the topic's outcomes and includes at least one `scenario` or `calculation`. A question without `tier` is extended.
   - At least one third of the `mcq` (rounded up) are `scenario` or `calculation`, not plain recall. Published sections hold 10–12, with at least 4 of these.
   - At least 4 `interview` questions, each with a `followUp`, the question an interviewer would ask next; at most 2 are project-framed.

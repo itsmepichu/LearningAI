@@ -6,11 +6,11 @@
 - The site deploys on Vercel. There is no GitHub Pages integration, so do not refer to it or suggest enabling it.
 
 ## Current state
-- Phase 6b is done and phase 7 has started.
+- Course content is complete for all 23 chapters and the capstone.
 - Every chapter and the capstone have a workshop page with notes for all four projects and lab scenarios. A topic page shows one project (its `primary` in the manifest, else Harbor).
 - Every section has a full chapter check (10–12 choose-the-answer and 8–10 interview questions) that follows the quality rules in `src/content/CLAUDE.md`.
 - Every chapter (c1–c23, with c19–c23 in Part V) and the capstone use the topic structure in `src/content/CLAUDE.md`.
-- Phase 7 still has the paper walkthroughs to do. The revamp plan is in `project_revamp/`.
+- The revamp (phases 0–5) is finished; its plan is archived in `docs/archive/project-revamp/`. Open work is in `ROADMAP.md`.
 
 ## Where the rules are
 - Content, example projects, topic structure and chapter checks: `src/content/CLAUDE.md`.

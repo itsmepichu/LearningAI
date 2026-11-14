@@ -98,3 +98,16 @@ This is feedback from people reading the course, not a software test.
 - The reader-feedback kit is with the owner, and any returned findings are open items in `ROADMAP.md`.
 - Part I is free of legacy widgets.
 - The four paper walkthroughs and the two Colab guides are published.
+
+## Results
+
+Done 15 November 2026 on `development`. Commits: 5a reader-feedback kit and report link; 5b Part I widgets; 5c paper walkthroughs; 5d Colab guides; 5e close-out.
+
+- **5.1 Reader-feedback kit:** `docs/reader-feedback.md` (who to invite, the path, what to note, a results template). The owner still has to run the 3–5 reader sessions. Findings go into `ROADMAP.md` as open items.
+- **5.2 Report a problem:** a link on every topic page opens a prefilled GitHub issue (`.github/ISSUE_TEMPLATE/content-problem.yml`, `src/components/ReportProblem.tsx`).
+- **5.3 Paper walkthroughs:** Appendix F, four pages: Attention Is All You Need, GPT-3, RAG and Lost in the Middle. Two have scroll-driven walkthroughs (`paper-transformer`, `paper-rag`). Linked from ten citing topics.
+- **5.4 Legacy widgets:** the 18 blocks on Part I pages are React widgets (vectors, bayes-grid, confidence-interval, cross-entropy, laptop-fit, overfit, neuron, nn-playground, lr-schedule, shape-tracer, generation, decoding, context-cost, scaling-calc, pipeline-bubble, data-parallel, zero-calc, bigram-lm) on 14 pages; `.wid` is gone from chapters 1–6. 33 legacy `.wid` embeds remain on pages in chapters 7–18 (51 before).
+- **5.5 Colab guides:** 19.2 (`vlm.ts`, Qwen2-VL-2B in float16) and 20.3 (`distill.ts`, Qwen3-1.7B to Qwen3-0.6B logit distillation). Neither has been run in Colab by anyone. The owner should run each once on a free T4 and fix any install or API drift. Installs use bounded ranges (`transformers>=4.56,<5`, `peft>=0.17,<1`), not `==` pins, because PyPI could not be reached while writing them. Pin exact versions after the first good run.
+- **5.6 Close:** this folder moved to `docs/archive/project-revamp/`; `ROADMAP.md` lists open work only and has a "How to add a topic" section.
+- **Beginner review:** `docs/beginner-review.md`.
+- **5.7:** see the commit log for the `npm run test` run and any repair commits.
