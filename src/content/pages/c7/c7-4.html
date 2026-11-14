@@ -32,6 +32,7 @@
 <figure class="fig live" id="snip-validate-calls"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"validate-calls"}'></div></div>
 <figcaption><b>Checking a model’s tool calls, in real Python.</b> The proposals are written by hand, not by a model.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: structured output, tool call and streaming with Ollama <span class="tag cpu">Laptop · CPU</span></h5>
+<p>Setup, once: install <a href="https://ollama.com/download">Ollama</a>, a program that runs small language models on your laptop. Then run the <code>pip install</code> and <code>ollama pull</code> line below. The model is about 1 GB. <a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> is an alternative runtime.</p>
 <pre><code># pip install ollama pydantic ; ollama pull qwen2.5:1.5b
 from typing import Literal
 from pydantic import BaseModel, ValidationError

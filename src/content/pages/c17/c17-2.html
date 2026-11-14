@@ -30,6 +30,7 @@
 <figure class="fig live" id="snip-critical-path"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"critical-path"}'></div></div>
 <figcaption><b>Critical path, in real Python.</b> The timings are illustrative.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: trace a local RAG call into Jaeger <span class="tag cpu">Laptop · CPU · Docker</span></h5>
+<p>Setup, once: install <a href="https://docs.docker.com/get-started/get-docker/">Docker Desktop</a>. It runs the Jaeger trace viewer below in a container.</p>
 <pre><code>docker run --rm -p 16686:16686 -p 4317:4317 -p 4318:4318 jaegertracing/jaeger:latest     # UI: http://localhost:16686
 pip install opentelemetry-sdk opentelemetry-exporter-otlp-proto-http ollama</code></pre>
 <pre><code>import ollama

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
 import { Check, ChevronRight } from 'lucide-react'
-import { chapters, getChapter, parts } from '../data/course'
+import { chapters, getChapter, parts, shortTitle } from '../data/course'
 import { useProgress } from '../store/progress'
 import { dueIds } from '../data/flashcards'
 
@@ -25,6 +25,9 @@ export function Sidebar() {
     <div className="side-list" ref={listRef}>
       <NavLink to="/" end className="side-top">
         Overview
+      </NavLink>
+      <NavLink to="/start" className="side-top">
+        Before you start
       </NavLink>
       <NavLink to="/guide" className="side-top">
         How to use this course
@@ -81,7 +84,7 @@ export function Sidebar() {
                       <li key={t.id}>
                         <NavLink to={`/${c.id}/${t.id}`} className={studied[t.id] ? 'done' : ''}>
                           <span className="n">{t.tn}</span>
-                          <span className="t">{t.title}</span>
+                          <span className="t">{shortTitle(t)}</span>
                         </NavLink>
                       </li>
                     ))}

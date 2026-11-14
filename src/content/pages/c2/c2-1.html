@@ -46,6 +46,9 @@
 <figure class="fig live" id="snip-similarity"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"similarity"}'></div></div>
 <figcaption><b>Dot product and cosine similarity, in real Python.</b> Word counts do not capture meaning; embeddings (9.3) do.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab <span class="tag cpu">Laptop · CPU</span></h5>
+<p><b>First time on your laptop?</b> Make one Python environment for the course, in a terminal. <a href="https://docs.astral.sh/uv/">uv</a> is a fast package manager; plain <code>python -m venv</code> works too.</p>
+<pre><code>uv venv ai-course &amp;&amp; source ai-course/bin/activate     # Windows: ai-course\Scripts\activate
+uv pip install numpy</code></pre>
 <pre><code>import numpy as np
 E = np.array([[0.9,0.1,0.2],[0.8,0.2,0.3],[0.1,0.9,0.1]])   # rows = vectors
 E = E / np.linalg.norm(E, axis=1, keepdims=True)              # normalise

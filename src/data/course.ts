@@ -10,6 +10,10 @@ interface TopicEntry {
   tn: string
   title: string
   tags: Tag[]
+  /** What the reader can do afterwards: 2–3 phrases that start with a verb. */
+  outcomes?: string[]
+  /** A display title of at most 6 words for the sidebar, pager, step dots and search. The page heading keeps `title`. */
+  short?: string
 }
 /** A topic with the counts generated from its HTML (`npm run generate`): figures, interactive figures and words. */
 export interface Topic extends TopicEntry {
@@ -58,7 +62,15 @@ export const chapterPath = (c: Chapter) => `/${c.id}`
 /** Resolve a legacy in-page anchor ("#c9-3", "#bmQ") to an app route. */
 export const resolveAnchor = (id: string): string | undefined => (idmap as Record<string, string>)[id]
 
+/** The title to show in lists and links. */
+export const shortTitle = (t: { title: string; short?: string }) => t.short ?? t.title
+
 export const minutes = (t: Topic) => Math.max(3, Math.round(t.words / 200 + t.figures * 1.5))
+
+/** "45 min", "3.5 h" or "24 h", for a study-time estimate in minutes. */
+export const formatDuration = (m: number) => (m < 90 ? `${m} min` : `${(m / 60).toFixed(m < 600 ? 1 : 0)} h`)
+/** Estimated study minutes for a list of topics. */
+export const sumMinutes = (ts: Topic[]) => ts.reduce((a, t) => a + minutes(t), 0)
 
 export const partOf = (c: Chapter) => parts.find((p) => p.id === c.part)
 

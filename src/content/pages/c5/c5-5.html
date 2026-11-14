@@ -38,6 +38,7 @@
 <figure class="fig live" id="snip-softmax"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"softmax"}'></div></div>
 <figcaption><b>From logits to a generated sentence, in real Python.</b> The operations are the ones an LLM uses; the model sees one word of context, so its output and loss are not comparable to an LLM's.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: look at real logits <span class="tag cpu">Laptop · CPU</span></h5>
+<p>Setup, once: <code>uv pip install transformers</code>, in the same environment that has PyTorch (topic 4.6). It downloads a small model the first time you run it.</p>
 <pre><code>import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 name = "HuggingFaceTB/SmolLM2-135M"                      # 135M params, ~270 MB, fast on CPU

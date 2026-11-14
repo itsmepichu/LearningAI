@@ -73,3 +73,17 @@ a.gl:hover,a.gl:focus-visible{color:var(--accent);text-decoration-style:solid}
 .fc-deck li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule);font-size:var(--fs-sm)}
 .fc-deck .fc-q{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 @media (max-width:560px){.fc-grades{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* /start: self-check questions with an answer under each */
+.start-q{padding-left:1.4em}
+.start-q>li{margin:0 0 14px}
+.start-q details{margin-top:4px}
+.start-q summary{cursor:pointer;color:var(--accent);min-height:24px}
+.start-q details p{margin:6px 0 0;color:var(--muted)}
+
+/* Topic outcomes: shown at the top and again as a recap */
+.outcomes{margin:0 0 22px;padding:14px 18px;border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:var(--r-1);background:var(--surface)}
+.outcomes h2{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.outcomes ul{margin:0;padding-left:1.2em}
+.outcomes li{margin:3px 0}
+.outcomes.recap{margin:28px 0 0}

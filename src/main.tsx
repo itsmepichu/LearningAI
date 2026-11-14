@@ -21,7 +21,7 @@ import { Layout } from './components/Layout'
 import { Home } from './pages/Home'
 import { ChapterPage } from './pages/Chapter'
 import { TopicPage } from './pages/Topic'
-import { Guide, ProgressPage } from './pages/Misc'
+import { Guide, ProgressPage, StartPage } from './pages/Misc'
 import { ChapterCheckPage } from './pages/ChapterCheck'
 import { PracticePage } from './pages/PracticePage'
 import { FlashcardsPage } from './pages/Flashcards'
@@ -38,6 +38,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="start" element={<StartPage />} />
             <Route path="guide" element={<Guide />} />
             <Route path="progress" element={<ProgressPage />} />
             <Route path="practice" element={<PracticePage />} />

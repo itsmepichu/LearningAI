@@ -40,6 +40,7 @@
 <figure class="fig live" id="snip-word-vectors"><div class="stage"><div data-widget="py-snippet" data-props='{"snippet":"word-vectors"}'></div></div>
 <figcaption><b>Word vectors from your messages, in real Python.</b> A few hundred synthetic messages give rough neighbours; real embedding models learn from billions of sentences.</figcaption></figure>
 <div class="box lab"><h5>Laptop lab: embed and cluster <span class="tag cpu">Laptop · CPU</span></h5>
+<p>Setup, once: <code>uv pip install sentence-transformers</code>. It downloads a small embedding model (tens of MB) the first time you run it.</p>
 <pre><code>from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 texts = ["invoice overdue", "my bill is wrong", "refund please", "can't log in", "reset password",

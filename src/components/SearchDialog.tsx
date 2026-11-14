@@ -25,7 +25,7 @@ function loadIndex(): Promise<Index> {
         for (const p of projects) {
           const n = (notes as Record<string, { practice: string; failure: string; tryIt?: string }>)[p.id]
           if (!n) continue
-          docs.push({ id: `${topic}~${p.id}`, ch, topic, tn: t.tn, title: t.title, project: p.id, text: strip(fill([n.practice, n.failure, n.tryIt ?? ''].join(' '), p)) })
+          docs.push({ id: `${topic}~${p.id}`, ch, topic, tn: t.tn, title: t.short ?? t.title, project: p.id, text: strip(fill([n.practice, n.failure, n.tryIt ?? ''].join(' '), p)) })
         }
       }
     }

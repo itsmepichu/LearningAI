@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight, BookOpen, Compass, Dumbbell, FlaskConical, MousePointerClick } from 'lucide-react'
 import { ProjectPicker } from '../components/ProjectPicker'
-import { chapters, courseTopics, getChapter, getTopic, parts, totals } from '../data/course'
+import { chapters, courseTopics, formatDuration, getChapter, getTopic, parts, sumMinutes, totals } from '../data/course'
 import { ProgressRing } from '../components/Icons'
 import { useDocumentTitle, useNextTopic } from '../components/common'
 import { useProgress } from '../store/progress'
@@ -17,6 +17,7 @@ export function Home() {
   const nextTopic = useNextTopic()
   const mainParts = parts.filter((p) => p.id !== 'res').length
   const lastTopic = last ? getTopic(last.split('/')[2]) : undefined
+  const studyTime = formatDuration(sumMinutes(courseTopics))
 
   return (
     <div className="home">
@@ -29,7 +30,7 @@ export function Home() {
           <p>
             An interactive course. For beginner programmers and students who know basic Python; it ends at building professional AI applications. It starts from what a token is and goes on through how models are trained and served, to building,
             evaluating, securing and operating AI systems that retrieve across millions of documents and serve millions of users. Every chapter,
-            section and topic is required; the course takes a beginner to professional AI application building.
+            section and topic is required; the course takes a beginner to professional AI application building. Plan on about {studyTime} of reading and figures, plus the labs and chapter checks.
           </p>
           <div className="hero-cta">
             {lastTopic ? (
@@ -37,8 +38,8 @@ export function Home() {
                 Continue · {lastTopic.tn} {lastTopic.title.length > 38 ? lastTopic.title.slice(0, 36) + '…' : lastTopic.title} <ArrowRight size={16} />
               </Link>
             ) : (
-              <Link className="btn primary lg" to="/c1/c1-1">
-                Start with chapter 1 <ArrowRight size={16} />
+              <Link className="btn primary lg" to="/start">
+                Start here <ArrowRight size={16} />
               </Link>
             )}
             <Link className="btn lg" to="/guide">
@@ -105,7 +106,7 @@ export function Home() {
                     <span className="ch-card-b">
                       <b>{c.title}</b>
                       <small>
-                        {c.topics.length} topics{inter ? ` · ${inter} interactive` : ''}
+                        {c.topics.length} topics · about {formatDuration(sumMinutes(c.topics))}{inter ? ` · ${inter} interactive` : ''}
                       </small>
                       {c.kind !== 'appendix' && (
                         <span className="mini-bar" aria-label={`${n} of ${c.topics.length} studied`}>

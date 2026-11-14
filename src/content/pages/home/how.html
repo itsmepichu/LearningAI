@@ -36,25 +36,22 @@
   <li>Label anything that calls a paid or external service, and set a spending limit before you start.</li>
   <li>No model available? Run stubbed outputs through the same validators and checks, and label the results as mocked.</li>
   <li>Say what each result does and does not prove ("300-example toy sample; does not establish production accuracy").</li></ul></div>
-  <h3 class="sub-h">Your laptop setup (do this once)</h3>
-  <div class="box lab"><h5>Laptop lab <span class="tag cpu">Laptop · CPU</span></h5>
-  <p>Create one isolated Python environment for the whole course. <a href="https://docs.astral.sh/uv/">uv</a> is a fast package manager; plain <code>python -m venv</code> works too.</p>
-<pre><code># 1. Python environment
-uv venv ai-course &amp;&amp; source ai-course/bin/activate     # Windows: ai-course\Scripts\activate
-uv pip install numpy pandas matplotlib jupyterlab scikit-learn
-uv pip install torch --index-url https://download.pytorch.org/whl/cpu   # CPU-only PyTorch build
-uv pip install transformers datasets sentence-transformers faiss-cpu bm25s pydantic
-
-# 2. Local model runtime (pick one)
-#    Ollama: install from https://ollama.com, then:
-ollama pull llama3.2:1b          # ~1.3 GB, usable on CPU
-ollama pull qwen2.5:1.5b         # alternative small model
-#    llama.cpp: https://github.com/ggml-org/llama.cpp (prebuilt binaries in Releases)
-
-# 3. Optional: Docker for vector databases, tracing and dashboards
-docker --version</code></pre>
+  <h3 class="sub-h">Tools, and when you first need them</h3>
+  <p>Nothing is installed up front. Part I's figures and snippets run in your browser. Each tool below is installed in the lab or topic that first uses it, with the command there.</p>
+  <div class="tw"><table>
+    <tr><th>Tool</th><th>What it is for</th><th>First needed</th></tr>
+    <tr><td>Python 3 and <a href="https://docs.astral.sh/uv/">uv</a> (or <code>venv</code>)</td><td>An isolated environment for the course</td><td><a href="#c2-1">2.1</a></td></tr>
+    <tr><td>NumPy, pandas, matplotlib, JupyterLab</td><td>Arrays, tables, charts and notebooks</td><td><a href="#c2-1">2.1</a> and <a href="#c2-5">2.5</a></td></tr>
+    <tr><td>scikit-learn</td><td>Classic machine learning</td><td><a href="#c3-2">3.2</a></td></tr>
+    <tr><td>sentence-transformers</td><td>Turning text into embeddings</td><td><a href="#c4-4">4.4</a></td></tr>
+    <tr><td>PyTorch (CPU build)</td><td>Training small neural networks</td><td><a href="#c4-6">4.6</a></td></tr>
+    <tr><td>transformers</td><td>Loading real models and reading their outputs</td><td><a href="#c5-5">5.5</a></td></tr>
+    <tr><td><a href="https://ollama.com/">Ollama</a></td><td>Running a small language model on your laptop</td><td><a href="#c7-4">7.4</a></td></tr>
+    <tr><td>BM25 and FAISS libraries</td><td>Keyword and vector search</td><td><a href="#c9-5">9.5</a></td></tr>
+    <tr><td><a href="https://docs.docker.com/get-started/get-docker/">Docker</a></td><td>Running a trace viewer and databases in containers</td><td><a href="#c17-2">17.2</a></td></tr>
+    <tr><td>Google Colab</td><td>A free GPU for the few GPU topics; nothing to install</td><td><a href="#colab-decoding">5.6</a></td></tr>
+  </table></div>
   <p><b>Limitations to expect:</b> small models (0.5–3B parameters) run at a few to a few dozen tokens per second on CPU. They are good enough to learn APIs, prompting, RAG plumbing, agents and evaluation, but they reason worse than large hosted models. When a lab needs quality, call a hosted API instead and keep the rest of the code the same.</p>
-  </div>
 
   <h3 class="sub-h">The course map</h3>
   <figure class="fig"><div class="stage">

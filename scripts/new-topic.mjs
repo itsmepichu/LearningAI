@@ -69,7 +69,7 @@ writeFileSync(pagePath(chapterId, topicId), html)
 touched.push(`src/content/pages/${chapterId}/${topicId}.html`)
 
 // 2. manifest entry
-chapter.topics.push({ id: topicId, tn, title, tags: [] })
+chapter.topics.push({ id: topicId, tn, title, tags: [], outcomes: ['TODO: first thing the reader can do afterwards', 'TODO: second thing the reader can do afterwards'] })
 writeJson(join(CONTENT, 'manifest.json'), m)
 touched.push('src/content/manifest.json')
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowLeft, ArrowRight, Check, Clock, FlaskConical, Layers, ListChecks, MousePointerClick } from 'lucide-react'
-import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, topicPath } from '../data/course'
+import { allTopics, getChapter, getTopic, minutes, partOf, sectionCheckCount, shortTitle, topicPath } from '../data/course'
 import { PracticeBlock, ProjectFitNote, useChapterPractice } from '../components/Practice'
 import { HtmlContent } from '../components/HtmlContent'
 import { Tags, useDocumentTitle, usePage } from '../components/common'
@@ -125,8 +125,8 @@ export function TopicPage() {
         </div>
         <nav className="t-steps" aria-label="Topics in this chapter">
           {chapter.topics.map((t, i) => (
-            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${t.title}`} aria-current={i === pos ? 'page' : undefined}>
-              <span className="sr-only">{t.tn} {t.title}</span>
+            <Link key={t.id} to={`/${chapter.id}/${t.id}`} className={(i === pos ? 'cur ' : '') + (studiedMap[t.id] ? 'done' : '')} title={`${t.tn} ${shortTitle(t)}`} aria-current={i === pos ? 'page' : undefined}>
+              <span className="sr-only">{t.tn} {shortTitle(t)}</span>
             </Link>
           ))}
         </nav>
@@ -151,6 +151,12 @@ export function TopicPage() {
 
       <div className="t-grid">
         <div ref={body} className="t-body">
+          {!!topic.outcomes?.length && (
+            <section className="outcomes" aria-label="After this topic you can">
+              <h2>After this topic you can</h2>
+              <ul>{topic.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
+            </section>
+          )}
           {html === null ? (
             <div className="skeleton" aria-busy="true">
               <i /><i /><i /><i className="tall" /><i />
@@ -161,6 +167,13 @@ export function TopicPage() {
 
           {html !== null && <ProjectFitNote practice={practice} />}
           {html !== null && <SectionCheckLink chapterId={chapter.id} topicId={topic.id} tn={topic.tn} />}
+
+          {html !== null && !!topic.outcomes?.length && (
+            <section className="outcomes recap" aria-label="Recap">
+              <h2>Recap: you can now</h2>
+              <ul>{topic.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
+            </section>
+          )}
 
           <div className="t-finish">
             <button type="button" className={'btn ' + (studied ? '' : 'primary')} onClick={() => setStudied(topic.id, !studied)}>
@@ -173,13 +186,13 @@ export function TopicPage() {
             {prev ? (
               <Link to={topicPath(prev)} className="pg prev">
                 <small><ArrowLeft size={13} /> Previous <kbd>[</kbd></small>
-                <b><span className="mono">{prev.tn}</span> {prev.title}</b>
+                <b><span className="mono">{prev.tn}</span> {shortTitle(prev)}</b>
               </Link>
             ) : <span />}
             {next ? (
               <Link to={topicPath(next)} className="pg next">
                 <small>Next <kbd>]</kbd> <ArrowRight size={13} /></small>
-                <b><span className="mono">{next.tn}</span> {next.title}</b>
+                <b><span className="mono">{next.tn}</span> {shortTitle(next)}</b>
               </Link>
             ) : <span />}
           </nav>

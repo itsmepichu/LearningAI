@@ -33,7 +33,7 @@ for (const c of m.chapters) {
   for (const t of c.topics) {
     const html = readText(pagePath(c.id, t.id))
     stats[t.id] = topicStats(html)
-    search.push({ id: t.id, ch: c.id, tn: t.tn, title: t.title, text: stripTags(html) })
+    search.push({ id: t.id, ch: c.id, tn: t.tn, title: t.short ?? t.title, text: (t.short ? t.title + '. ' : '') + stripTags(html) })
   }
 }
 writeGenerated('topic-stats.json', stats)
@@ -41,7 +41,7 @@ writeGenerated('search.json', search)
 
 // ---- idmap.json
 // A topic id maps to its page, a chapter id to the chapter, and every other element id in a topic page to the page and the anchor.
-// A chapter's lab and chapter check are `lab-<chapter>` and `quiz-<chapter>`. The first page to use an id wins. The guide's ids map to /guide. Entries that cannot be derived live in idmap.extra.json.
+// A chapter's lab and chapter check are `lab-<chapter>` and `quiz-<chapter>`. The first page to use an id wins. The guide's ids map to /guide and the start page's to /start. Entries that cannot be derived live in idmap.extra.json.
 const idmap = {}
 const add = (id, route) => { if (!(id in idmap)) idmap[id] = route }
 const idsOf = (html) => [...html.matchAll(/\sid="([^"]+)"/g)].map((x) => x[1])
@@ -49,6 +49,11 @@ const how = join(CONTENT, 'pages', 'home', 'how.html')
 if (existsSync(how)) {
   for (const id of idsOf(readText(how))) add(id, '/guide#' + id)
   add('how', '/guide')
+}
+const start = join(CONTENT, 'pages', 'home', 'start.html')
+if (existsSync(start)) {
+  for (const id of idsOf(readText(start))) add(id, '/start#' + id)
+  add('start', '/start')
 }
 for (const c of m.chapters) {
   for (const t of c.topics) {
